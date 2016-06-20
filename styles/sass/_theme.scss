@@ -1,0 +1,641 @@
+/* =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ========================================================================================= */
+
+html {
+  -ms-overflow-style: scrollbar;
+  overflow-y: scroll;
+}
+
+// BASIC CORNERS
+
+.basic-corner-style {
+	-moz-border-radius: $cornerRadius;
+	-webkit-border-radius: $cornerRadius;
+	border-radius: $cornerRadius;
+}
+
+.basic-corner-style-default {
+	@extend .basic-corner-style;
+	border: 1px solid $borderColorDefault;
+}
+
+.basic-corner-style-active {
+	@extend .basic-corner-style;
+	border: 1px solid $borderColorActive;
+}
+
+.basic-corner-style-content {
+	@extend .basic-corner-style;
+	border: 1px solid $borderColorContent;
+}
+
+.basic-corner-style-alert {
+	@extend .basic-corner-style;
+	border: 1px solid $borderColorError;
+}
+
+.basic-corner-style-highlight {
+	@extend .basic-corner-style;
+	border: 1px solid $borderColorHighlight;
+}
+
+// BASIC BODY
+
+@if $BackgroundColour {
+	body {
+		background-color: $BackgroundColour;
+	}
+}
+@if $Background {
+body {
+	background-image: url($Background);
+	}
+}
+
+// BASIC FONT
+
+@if $FontFamily {
+	body, h1, h2, h3, h4, h5, h6, p, ul, ol, dl, table, td, th, form, button, input, select, textarea {
+		font-family: $FontFamily;
+	}
+}
+
+// LINKS / PSEUDO LINKS
+
+a {
+	text-decoration: underline;
+	&:visited:hover, &:visited:focus {
+		color: $link-hover-color;
+		text-decoration: $link-hover-decoration;
+  }
+}
+
+a.btn {
+	text-decoration: none;
+	font-weight: normal;
+}
+
+a:visited.btn-default, .ui-widget-content .btn-default {
+	color: $btn-default-color;
+}
+
+.SimulateLink {
+	color: $LinkColour;
+	cursor: pointer;
+	&:hover, &:focus {
+		color: $ALinkColour;
+		text-decoration: $link-hover-decoration;
+	}
+}
+
+.NoLineLink {
+	text-decoration: none;
+	font-weight: bold;
+
+	img {
+		vertical-align : middle;
+	}
+
+	:hover {
+		text-decoration: underline;
+	}
+}
+
+@if $LinkColour {
+	a { color: $LinkColour; }
+}
+@if $ALinkColour {
+	a:active {
+		color: $ALinkColour;
+	}
+}
+@if $VLinkColour {
+	a:visited {
+		color: $VLinkColour;
+	}
+}
+
+// ALERTS
+
+.Alert, .Alert:visited, .Alert:active {
+	color: $AlertColour;
+	font-weight: bold;
+}
+
+.AlertBox {
+	background-color: $AlertColour;
+	font-weight: bold;
+}
+
+.AlertBorder {
+    border-color: $AlertColour;
+}
+
+.AlertBubble {
+	@extend .basic-corner-style-alert;
+	display: inline-block;
+	color: $fcError;
+	background-color: $bgColorError;
+	font-weight: bold;
+	padding: 0.5em;
+	margin-bottom: 0.75em;
+
+	> ul {
+		margin: 0 0;
+		padding: 0.5em 0.5em 0.5em 1.5em;
+	}
+}
+
+.AlertStrike, .AlertStrike a
+{
+	text-decoration: line-through;
+	font-style: italic;
+	color: $AlertColour;
+}
+
+.alert {
+	@extend .basic-corner-style;
+	padding: 10px;
+	margin-bottom: 20px;
+	border: 1px solid transparent;
+}
+
+.alert-error {
+	color: $fcError;
+	background-color: $bgColorError;
+	border: 1px solid $borderColorError;
+}
+
+.alert-highlight {
+	color: $fcHighlight;
+	background-color: $bgColorHighlight;
+	border: 1px solid $borderColorHighlight;
+}
+
+.alert-dismissable, .alert-dismissible {
+	  padding-right: 25px;
+}
+
+.alert-stack .alert {
+	margin-bottom: 0;
+	margin-top: 10px;
+}
+
+.close {
+  float: right;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  filter: alpha(opacity=20);
+  opacity: .2;
+}
+
+button.close {
+  -webkit-appearance: none;
+  padding: 0;
+  cursor: pointer;
+  background: 0 0;
+  border: 0;
+}
+
+.alert-dismissable .close, .alert-dismissible .close {
+  position: relative;
+  top: -2px;
+  right: -16px;
+  color: inherit;
+}
+
+.close:focus, .close:hover {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  filter: alpha(opacity=50);
+  opacity: .5;
+}
+
+// TITLES
+
+.TitleBox { 
+	color: $TitleFontColour;
+	background-color: $TitleBgColour;
+	font-weight: bold;
+	font-size: 1.2em;
+	padding: 0.2em 0.5em;
+}
+
+.TitleBoxSm {
+	@extend .TitleBox;
+	font-size: 1em;
+}
+
+.RevTitleBox {
+	color: $fcTitle;
+	background-color: $bgColorTitle;
+	font-weight: bold;
+	font-size: 1.05em;
+	padding: 0.2em 0.5em;
+}
+.RevTitleText, a.RevTitleText, .RevTitleText:link, .RevTitleText:visited, .RevTitleText:active, .RevTitleText .SimulateLink {
+	color: $fcTitle;
+}
+
+.RecordDetailsHeader {
+	h2, .h2, h3, .h3 {
+		margin-top: ($line-height-computed / 2);
+	}
+
+	a.RecordDetailsHeaderText {
+		color: $TitleFontColour;
+		font-weight: bold;
+		text-decoration: underline;
+	}
+}
+
+.MenuMessageBox {
+	color: $MenuFontColour;
+	background-color: $MenuBgColour;
+}
+
+.SideBarBox {
+	@extend .basic-corner-style-content;
+	color: $fcContent;
+	background-color: $bgColorContent;
+	font-weight: normal;
+	padding: 0.5em;
+}
+
+.FieldContents {
+	@extend .basic-corner-style-active;
+	color: $fcActive;
+	background-color: $bgColorActive;
+	font-weight: normal;
+	padding: 0.5em;
+}
+
+h2.BoxHeader, h2.RevBoxHeader {
+	@extend .basic-corner-style;
+	font-weight: bold;
+	font-size: 120%;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	padding: 0.2em 0.5em;
+}
+
+h2.BoxHeader {
+	color: $TitleFontColour;
+	background-color: $TitleBgColour;
+	border: 1px solid $TitleFontColour;
+}
+
+h2.BoxHeader a, h2.BoxHeader a:visited {
+	color: $TitleFontColour;
+	text-decoration: none;
+}
+
+h2.RevBoxHeader {
+	color: $fcTitle;
+	background-color: $bgColorTitle;
+	border: 1px solid $borderColorTitle;
+}
+
+h2.RevBoxHeader a, h2.RevBoxHeader a:visited {
+	color: $fcTitle;
+	text-decoration: none;
+}
+
+h2.BoxHeader a:hover, h2.RevBoxHeader a:hover {
+	text-decoration: underline;
+}
+
+.SubBoxHeader {
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.ButtonLink a, a.ButtonLink {
+	@extend .basic-corner-style-default;
+	display: inline-block;
+	font-weight: bold;
+	margin: 0.1em;
+	padding: 0.1em 0.3em;
+	color: $fcDefault;
+	background-color: $bgColorDefault;
+	text-decoration: none;
+}
+
+.ButtonLink a:hover, a.ButtonLink:hover {
+	color: $fcHover;
+	background-color: $bgColorHover;
+	border: 1px solid $borderColorHover;
+}
+
+.HighLight {
+	@extend .basic-corner-style;
+	padding: 0.1em 0.2em;
+	color: $fcHighlight;
+	background-color: $bgColorHighlight;
+	font-weight: bold;
+}
+
+.HighLight a {
+	color: $fcHighlight;
+}
+
+div.MoreTermInfo {
+	@extend .basic-corner-style;
+	color: $fcActive;
+	background-color: $bgColorActive;
+	border: 1px solid $borderColorActive;
+}
+
+.TermList {
+	@extend .basic-corner-style;
+	color: $fcActive;
+	background-color: $bgColorActive;
+	border: 1px solid $borderColorActive;
+}
+
+a.TaxLinkInactive, span.TaxLinkInactive, span.TaxInactive {
+	color: $AlertColour;
+}
+
+iframe.Search {
+	overflow: visible;
+	width: 100%;
+	border: 1px solid $borderColorContent;
+	-moz-border-radius: $cornerRadius;
+	-webkit-border-radius: $cornerRadius;
+	border-radius: $cornerRadius;
+}
+
+
+.MobileShowField, .MobileShowFieldNormal {
+	display: none;
+}
+
+.force-word-break {
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+}
+
+.change-view-box {
+	text-align: left;
+}
+
+.change-view-box select, .change-view-box input {
+	margin-bottom: 0.5em;
+}
+
+table.cell-border-bottom > tbody > tr > td,
+.block-border-bottom {
+	border-bottom: 1px solid $borderColorContent;
+}
+
+table.cell-border-top > tbody > tr > td,
+.block-border-top {
+	border-top: 1px solid $borderColorContent;
+}
+.arrow:after {
+	border: 1px solid $borderColorContent;
+	background: $bgColorContent;
+	color: $fcContent
+}
+.arrow {
+	width: 70px;
+	height: 16px;
+	overflow: hidden;
+	position: absolute;
+	left: 50%;
+	margin-left: -35px;
+	bottom: -16px;
+}
+.arrow.top {
+	top: -16px;
+	bottom: auto;
+}
+.arrow.left {
+	left: 20%;
+}
+.arrow:after {
+	content: "";
+	position: absolute;
+	left: 20px;
+	top: -20px;
+	width: 25px;
+	height: 25px;
+	-o-box-shadow: 0 0 5px #aaa;
+	-moz-box-shadow: 0 0 5px #aaa;
+	-webkit-box-shadow: 0 0 5px #aaa;
+	box-shadow: 0 0 5px #aaa;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.arrow.top:after {
+	bottom: -20px;
+	top: auto;
+}
+.language-help-text {
+	max-width: 300px;
+}
+
+/* Bootstrap */
+.badge {
+	vertical-align: text-bottom;
+}
+
+.btn-default {
+	background-image: linear-gradient(to bottom, $btn-default-bg 0px, $btn-default-border 100%);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset, 0 1px 1px rgba(0, 0, 0, 0.075);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset, 0 1px 1px rgba(0, 0, 0, 0.075);
+
+	&:hover, &:focus {
+		background-image: none;
+	}
+}
+
+/* End Bootstrap */
+
+@media (min-width: 769px) {
+	.change-view-box {
+		text-align: right;
+	}
+}
+
+@media screen and (max-width: 1023px)  {
+	/* Force table to not be like tables anymore */
+	table.ResponsiveResults, .ResponsiveResults > thead, .ResponsiveResults > tbody, .ResponsiveResults > thead > tr > th, .ResponsiveResults > tbody > tr > td, .ResponsiveResults > tbody > tr {
+		display: block;
+	}
+
+	.ResponsiveResults > tbody > tr > td.MobileHideField,
+	.ResponsiveResults > thead > tr > th.MobileHideField {
+		display: none;
+	}
+
+	table.ResponsiveResults td {
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+	}
+
+	/* Hide table headers (but not display: none;, for accessibility) */
+	.ResponsiveResults thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	table.ResponsiveResults { 
+		border-left: 1px solid $borderColorContent;
+		border-right: 1px solid $borderColorContent;
+		border-top: none;
+		border-bottom: none;
+	}
+	.ResponsiveResults > tbody > tr { 
+		border-top: 1px solid $borderColorContent;
+		border-bottom: 1px solid $borderColorContent;
+	}
+
+	table.ResponsiveResults > tbody > tr > td {
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid $borderColorContent;
+		position: relative;
+		padding: 6px;
+		padding-left: 40%;
+	}
+	table.ResponsiveResults > tbody > tr > td.MobileShowField {
+		padding: 6px;
+	}
+	.ResponsiveResults > tbody > tr > td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 38%;
+		white-space: nowrap;
+		font-weight: bold;
+		overflow-x: hidden;
+	}
+	.MobileMiniColumnSpan {
+		margin-right: 5px;
+		vertical-align: middle;
+	}
+	.MobileAlertColumnBubble {
+		display: inline-block;
+		color: $fcContent;
+		padding: 0.25em;
+		background-color: $bgColorContent;
+		border: 1px solid $borderColorContent;
+		-moz-border-radius: $cornerRadius;
+		-webkit-border-radius: $cornerRadius;
+		border-radius: $cornerRadius;
+	}
+}
+
+@media screen and (max-width: $screen-sm) {
+	table.ResponsiveResults > tbody > tr > td {
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid $borderColorContent;
+		position: static;
+		padding: 6px;
+	}
+	.ResponsiveResults > tbody > tr > td:before {
+		/* Now like a table header */
+		display: block;
+		position: static;
+		/* Top/left values mimic padding */
+		padding-bottom: 10px;
+		white-space: nowrap;
+		font-weight: bold;
+		width: 100%;
+	}
+
+	.record-data, .record-data tbody, .record-data thead, .record-data tr, .record-data td, .record-data th {
+		display: block;
+	}
+
+	.record-data .FieldLabelLeft {
+		border-right: 0px;
+	}
+	table.BasicBorder.record-data,
+		table.BasicBorder.record-data > tr > td,
+		table.BasicBorder.record-data > tr > th,
+		table.BasicBorder.record-data > thead > tr > th,
+		table.BasicBorder.record-data > tbody > tr > td,
+		table.BasicBorder.record-data > tbody > tr > th {
+		border-bottom: none;
+	}
+	.record-data > tbody > tr:last-of-type > td:first-of-type {
+		-moz-border-bottom-left-radius: none;
+		-webkit-border-bottom-left-radius: none;
+		border-bottom-left-radius: none;
+	}
+
+	#ActionList {
+		max-width: 100%;
+	}
+}
+
+
+// DEPRECATED, DO NOT USE
+
+.Header {
+	margin: 0px 0px 8px 0px;
+	width: 100%;
+	border-spacing: 0px;
+	border-collapse: collapse;
+	border-color: #000000;
+}
+
+.TitleBoxLink {
+	text-decoration: none;
+	margin: 2px;
+	padding: 3px;
+	border-style: outset;
+	border-width: medium;
+}
+
+.TitleBoxLink a {
+	background-color: $TitleBgColour;
+	color: $TitleFontColour;
+}
+
+.TitleBoxLink:hover {
+	background-color: $TitleBgColour;
+	color: $TitleFontColour;
+}
+
+.TitleText, .TitleText:visited, .TitleText:active {
+	color: $TitleFontColour;
+	font-weight: bold;
+}
+
+.MenuText, .MenuText:visited, .MenuText:active {
+	text-decoration: none;
+	color: $MenuFontColour;
+	font-weight: bold;
+}
+
+.MenuBox {
+	color: $MenuFontColour;
+	background-color: $MenuBgColour;
+	font-weight: bold;
+}

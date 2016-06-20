@@ -1,0 +1,6 @@
+SET IDENTITY_INSERT [dbo].[GBL_OrgLocationService] ON
+INSERT INTO [dbo].[GBL_OrgLocationService] ([OLS_ID], [CREATED_DATE], [CREATED_BY], [MODIFIED_DATE], [MODIFIED_BY], [Code], [DisplayOrder]) VALUES (1, NULL, NULL, NULL, NULL, 'AGENCY', 0)
+INSERT INTO [dbo].[GBL_OrgLocationService] ([OLS_ID], [CREATED_DATE], [CREATED_BY], [MODIFIED_DATE], [MODIFIED_BY], [Code], [DisplayOrder]) VALUES (2, NULL, NULL, NULL, NULL, 'SITE', 1)
+INSERT INTO [dbo].[GBL_OrgLocationService] ([OLS_ID], [CREATED_DATE], [CREATED_BY], [MODIFIED_DATE], [MODIFIED_BY], [Code], [DisplayOrder]) VALUES (3, NULL, NULL, NULL, NULL, 'SERVICE', 2)
+INSERT INTO [dbo].[GBL_OrgLocationService] ([OLS_ID], [CREATED_DATE], [CREATED_BY], [MODIFIED_DATE], [MODIFIED_BY], [Code], [DisplayOrder]) VALUES (4, NULL, NULL, NULL, NULL, 'TOPIC', 3)
+SET IDENTITY_INSERT [dbo].[GBL_OrgLocationService] OFF

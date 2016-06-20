@@ -1,0 +1,29 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_TAX_Facet_l]
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.1
+	Checked by: KL
+	Checked on: 19-Jan-2012
+	Action: NO ACTION REQUIRED
+*/
+
+SELECT f.*, fn.Facet
+	FROM TAX_Facet f
+	INNER JOIN TAX_Facet_Name fn
+		ON f.FC_ID=fn.FC_ID AND LangID=(SELECT TOP 1 LangID FROM TAX_Facet_Name WHERE fn.FC_ID=FC_ID ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
+ORDER BY Facet
+
+SET NOCOUNT OFF
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_TAX_Facet_l] TO [cioc_login_role]
+GO

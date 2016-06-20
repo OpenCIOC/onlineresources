@@ -1,0 +1,66 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<ul>
+	<li><a href="#intro">Une initiation aux rappels</a></li>
+	<li><a href="#reminderlist">Travailler avec votre liste de rappels</a></li>
+	<li><a href="#configure">Configurer vos rappels</a></li>
+</ul>
+
+<hr>
+<a name="intro"></a>
+<h2>Une initiation aux rappels</h2>
+<p>Le syst&egrave;me de rappels vise &agrave; aider les utilisateurs &agrave; cr&eacute;er des listes de t&acirc;ches pour eux-m&ecirc;mes ou d'autres utilisateurs, ainsi qu'&agrave; offrir un moyen de communication avec d'autres utilisateurs de CIOC. Les rappels peuvent porter sur des t&acirc;ches g&eacute;n&eacute;rales ou ils peuvent &ecirc;tre associ&eacute;s &agrave; un ou plusieurs dossiers. Vous pouvez travailler avec les rappels en cliquant sur le lien Rappels dans la barre sup&eacute;rieure ou (dans le cas de rappels associ&eacute;s &agrave; des dossiers pr&eacute;cis) par la page de d&eacute;tails du dossier. Vous pouvez &eacute;galement cr&eacute;er un rappel pour un groupe de dossiers par vos r&eacute;sultats de recherche.</p>
+<p>Les rappels ont plusieurs &eacute;tats possibles :</p>
+<ul>
+	<li>Un rappel <strong>en court</strong> est une t&acirc;che active qui n'est pas en retard. Cela signifie qu'il n'a pas de date de d&eacute;but sp&eacute;cifique ou que la date de d&eacute;but est d&eacute;j&agrave; pass&eacute;e. Il n'a pas de date d'&eacute;ch&eacute;ance ou sa date d'&eacute;ch&eacute;ance est dans le futur. Si vous avez un rappel en court et pas de rappel en retard, vous verrez une ic&ocirc;ne de rappel <img alt="Ic&ocirc;ne rappel" src="../images/remind.gif" width="17" height="17"> &agrave; c&ocirc;t&eacute; du lien de rappels dans votre barre sup&eacute;rieure, ainsi que dans les dossiers auquel le rappel s'applique.</li>
+	<li>Un rappel <strong>en retard</strong> a une date d'&eacute;ch&eacute;ance qui est pass&eacute;e. Si vous avez un rappel en retard, vous verrez une ic&ocirc;ne de rappel <img alt="Ic&ocirc;ne d'alerte" src="../images/reminder_alert.gif" width="15" height="14"> &agrave; c&ocirc;t&eacute; du lien de rappels dans votre barre sup&eacute;rieure, ainsi que dans les dossiers auquel le rappel s'applique.</li>
+	<li>Un rappel <strong>en attente</strong> n'a pas encore atteint la date de d&eacute;but.</li>
+	<li>Un rappel <strong>rejet&eacute;</strong> a &eacute;t&eacute; retir&eacute; de la liste, habituellement car la t&acirc;che a &eacute;t&eacute; accomplie ou la communication a &eacute;t&eacute; lue. Les rappels ayant &eacute;t&eacute; rejet&eacute;s pour tous les utilisateurs d&eacute;sign&eacute;s sont r&eacute;guli&egrave;rement supprim&eacute;s de la base de donn&eacute;es, au moins une semaine apr&egrave;s le derni&egrave;re rejet.</li>
+</ul>
+
+<a name="reminderlist"></a>
+<h2>Travailler avec votre liste de rappels</h2>
+<p>La liste de rappels fonctionne de la m&ecirc;me mani&egrave;re, que vous travailliez dans la page de d&eacute;tails des dossiers ou sur la page des rappels. Lorsque qu'ils travaillent sur la page des rappels, certains utilisateurs peuvent aussi acc&eacute;der &agrave; la section <strong>Avis admin</strong>. Il s'agit de la section o&ugrave; les super-utilisateurs globaux re&ccedil;oivent les demandes de changements de configuration dans une base de donn&eacute;es multimembre. La nouvelle page de rappels remplace l'ancienne page <em>Avis</em>.</p>
+<p>Lorsque vous consulterez votre liste de rappel pour la premi&egrave;re fois, vous verrez tous les rappels <strong><em>en cours</em></strong> et <strong><em>en retard</em></strong>. Les rappels en retard incluront la date d'&eacute;ch&eacute;ance du rappel en couleur d'alerte. Chaque liste est divis&eacute;e en fonction des rappels <em><strong>cr&eacute;&eacute;s pour moi</strong></em> (assign&eacute;s &agrave; vous par vous-m&ecirc;me ou un autre utilisateur) ou <strong><em>cr&eacute;&eacute;s pour d'autres</em></strong> (cr&eacute;&eacute;s par vous, mais assign&eacute;s &agrave; un autre utilisateur). Si vous avez des rappels dont la date de d&eacute;but n'est pas encore pass&eacute;e, vous pouvez cliquer sur le lien <em><strong>Rappels en attente</strong></em> pour consulter la liste des futurs rappels ; cliquez de nouveau pour masquer la liste.</p>
+<p>Par d&eacute;faut, les rappels rejet&eacute;s ne sont pas inclus dans votre liste. Si vous avez un rappel rejet&eacute; qui n'a pas encore &eacute;t&eacute; supprim&eacute;, vous pouvez cliquer sur le bouton <strong>Afficher les rejets</strong> pour les inclure dans votre liste. Le fait de cliquer sur le bouton de nouveau masquera les rappels rejet&eacute;s.</p>
+<p>Les actions ou informations suivantes sont accessibles depuis votre liste de rappels :</p>
+<ul>
+	<li><img alt="Ic&ocirc;ne de rappel Info rapide" src="../images/reminder_info.gif">&nbsp;<strong>Info rapide</strong> - Cliquez sur l'ic&ocirc;ne de page pour voir rapidement qui a cr&eacute;&eacute; le rappel (si ce n'est pas vous), &agrave; qui le rappel est assign&eacute;, quand il deviendra actif (pour les rappels en attente).</li>
+	<li><img alt="Ic&ocirc;ne de rappel modification" src="../images/reminder_edit.gif">&nbsp;<strong>Modifier</strong> - Si vous avez l'autorisation de modifier le rappel, cliquez sur l'ic&ocirc;ne de dossier pour ouvrir le rappel et consulter les d&eacute;tails ou pour modifier le rappel.</li>
+	<li><img alt="Ic&ocirc;ne de rappel recherche" src="../images/reminder_search.gif">&nbsp;<strong>Rechercher</strong> - Si le rappel est associ&eacute; &agrave; des dossiers, passez la souris au-dessus de l'ic&ocirc;ne de loupe pour voir combien de dossiers d'information communautaire ou d'occasions de b&eacute;n&eacute;volat sont associ&eacute;s au rappel. Si le rappel est associ&eacute; &agrave; des dossiers des deux modules, vous verrez deux ic&ocirc;nes. Cliquez sur l'ic&ocirc;ne pour lancer une recherche contenant ces dossiers ; &agrave; noter que vous ne pouvez retourner que les dossiers qui sont accessibles dans votre vue actuelle.</li>
+	<li><img alt="Ic&ocirc;ne de rappel rejet" src="../images/reminder_dismiss.gif">&nbsp;<strong>Rejeter</strong> - Si vous avez accompli la t&acirc;che ou lu la communication, vous pouvez supprimer le rappel de votre liste en utilisant l'ic&ocirc;ne X. Vous pourriez avoir le choix de supprimer le rappel pour tout le monde ; si c'est le cas, faites-le seulement si vous avez enti&egrave;rement accompli la t&acirc;che et si les autres n'ont plus besoin du rappel.</li>
+	<li><img alt="Ic&ocirc;ne de rappel restauration" src="../images/reminder_restore.gif">&nbsp;<strong>Restaurer</strong> - Vous pouvez restaurer un rappel rejet&eacute; de votre liste normale en utilisant l'ic&ocirc;ne rafra&icirc;chir. &Agrave; noter que les rappels rejet&eacute;s sont supprim&eacute;s r&eacute;guli&egrave;rement, au moins une semaine apr&egrave;s le rejet du rappel par tous les utilisateurs associ&eacute;s.</li>
+	<li><img alt="Ic&ocirc;ne de priorit&eacute; &eacute;lev&eacute;e" src="../images/alert.gif">&nbsp;<strong>Priorit&eacute; &eacute;lev&eacute;e</strong> - Si vous &ecirc;tes assign&eacute; &agrave; un type de note hautement prioritaire d'un dossier, vous verrez l'ic&ocirc;ne de haute priorit&eacute; &agrave; c&ocirc;t&eacute; du rappel dans votre liste.</li>
+</ul>
+
+<a name="configure"></a>
+<h2>Configurer vos rappels</h2>
+<p>Que vous configuriez votre rappel depuis la page de d&eacute;tails d'un dossier, de la page de rappels ou par vos r&eacute;sultats de recherche, le formulaire de modification du rappel est exactement le m&ecirc;me.</p>
+<p>Si vous souhaitez associer votre rappel &agrave; un dossier ou plus, vous pouvez le faire dans la section <strong>Dossiers</strong> en saisissant les num&eacute;ros de dossiers. Vous pouvez saisir une combinaison de dossiers d'information communautaire ou d'occasions de b&eacute;n&eacute;volat. Vous pouvez passer votre souris sur des dossiers ajout&eacute;s auparavant pour voir le nom complet du dossier (cela ne s'applique aux dossiers nouvellement ajout&eacute;s avant d'avoir soumis le formulaire). Cliquez sur l'ic&ocirc;ne de recherche <img alt="Ic&ocirc;ne de rappel recherche" src="../images/reminder_search.gif"> si disponible pour retourner un &eacute;cran de r&eacute;sultats de recherche avec les dossiers associ&eacute;s au rappel.</p>
+<p>De mani&egrave;re optionnelle, vous pouvez pr&eacute;ciser que votre rappel s'applique uniquement &agrave; une <strong>langue</strong> sp&eacute;cifique du dossier. Par exemple, si vous choisissez uniquement l'anglais, le rappel s'affichera uniquement si vous consultez la version anglaise du dossier.</p>
+<p>Si vous ne pr&eacute;cisez pas explicitement <strong>&agrave; qui s'adresse</strong> le rappel, il est entendu que le rappel s'applique juste &agrave; vous. Vous pouvez pr&eacute;ciser que le rappel est pour vous ou d'autres utilisateurs de la base de donn&eacute;es. Les super-utilisateurs peuvent assigner des rappels aux membres de leur agence. <span class="Alert">Veuillez ne pas inonder les autres utilisateurs de votre base de donn&eacute;es avec des rappels</span> ; assignez les rappels uniquement aux utilisateurs qui doivent les consulter ou en accomplir la t&acirc;che.</p>
+<p>Certains rappels exigent que chaque utilisateur les consulte ou en accomplisse la t&acirc;che, alors que d'autres n'ont besoin que de l'un des utilisateurs. Utilisez la section <strong>Rejet</strong> pour indiquer si un utilisateur peut rejeter le rappel juste pour lui-m&ecirc;me ou pour tous les utilisateurs (p.ex., parce qu'il a accompli la t&acirc;che et que plus personne d'autre n'a besoin de l'accomplir).</p>
+<p>Une date de <strong>d&eacute;but</strong> s'av&egrave;re utile quand vous savez qu'une t&acirc;che n'a pas besoin d'&ecirc;tre accomplie dans l'imm&eacute;diat. En mettant une date future dans le champ <em>D&eacute;bit</em> de votre rappel, vous pouvez choisir d'exclure ce rappel de vos t&acirc;ches actives jusqu'au moment o&ugrave; vous devrez vraiment travailler &agrave; accomplir la t&acirc;che. La date de d&eacute;part doit g&eacute;n&eacute;ralement &ecirc;tre pos&eacute;e bien avant la date d'&eacute;ch&eacute;ance afin de vous permettre d'accomplir la t&acirc;che avant son &eacute;ch&eacute;ance. Ceci est un champ facultatif.</p>
+<p>Si vous devez accomplir votre t&acirc;che avant une date sp&eacute;cifique, vous pouvez saisir une date d'<strong>&eacute;ch&eacute;ance</strong>. Si la t&acirc;che n'est pas rejet&eacute;e avant la date d'&eacute;ch&eacute;ance, elle deviendra un rappel en retard et une alerte appara&icirc;tra sur votre barre sup&eacute;rieure ainsi que le dossier auquel il s'applique.</p>
+<p>Comme avec le champ Note interne, vous pouvez choisir un <strong>type</strong> de note pour votre rappel. Ces types de notes sont partag&eacute;es avec le champ Note interne et vous pouvez avoir de nombreux types ou aucun dans votre base de donn&eacute;es. Des types suppl&eacute;mentaires peuvent &ecirc;tre configur&eacute;s dans les param&egrave;tres de types de notes dans les listes de contr&ocirc;le g&eacute;n&eacute;rales partag&eacute;es. Si le type de note est marqu&eacute; comme hautement prioritaire, une ic&ocirc;ne de point d'exclamation appara&icirc;tra &agrave; c&ocirc;t&eacute; du rappel, indiquant qu'il s'agit d'une priorit&eacute;.</p>
+<p>La seule information que vous devez remplir dans un rappel est la section des <strong>D&eacute;tails</strong>. Il s'agit de la section o&ugrave; vous saisissez les d&eacute;tails sp&eacute;cifiques de votre t&acirc;che ou communication.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

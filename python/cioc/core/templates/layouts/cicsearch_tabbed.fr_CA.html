@@ -1,0 +1,143 @@
+﻿[IF:SEARCH_RIGHT_CONTENT]
+<div class="search-right search-user-content-right">
+	[SEARCH_RIGHT_CONTENT]
+</div>
+[ENDIF:SEARCH_RIGHT_CONTENT]
+<div class="search-left">
+	[IF:SEARCH_ALERT]
+	<div class="search-alert-box ui-state-error ui-corner-all">
+		[IF:SEARCH_ALERT_TITLE]
+		<h3 class="main-menu-title">
+			[IF:SEARCH_ALERT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_ALERT_GLYPH]" aria-hidden="true"></span>[ENDIF:SEARCH_ALERT_GLYPH]
+			[SEARCH_ALERT_TITLE]
+		</h3>
+		[ENDIF:SEARCH_ALERT_TITLE]
+		<div class="main-menu-message[IFNOT:SEARCH_ALERT_TITLE] main-menu-top[ENDIFNOT:SEARCH_ALERT_TITLE]">
+			[SEARCH_ALERT]
+		</div>
+	</div>
+	[ENDIF:SEARCH_ALERT]
+
+	[IF:SEARCH_MENU]
+	<nav class="search-cioc-menu">
+		[IF:MENU_TITLE]
+		<h3 class="main-menu-title">
+			[IF:MENU_GLYPH]<span class="glyphicon glyphicon-[MENU_GLYPH]" aria-hidden="true"></span>[ENDIF:MENU_GLYPH]
+			[MENU_TITLE]
+		</h3>
+		[ENDIF:MENU_TITLE]
+		[IF:MENU_MESSAGE]
+		<div class="main-menu-message[IFNOT:MENU_TITLE] main-menu-top[ENDIFNOT:MENU_TITLE]">
+			[MENU_MESSAGE]
+		</div>
+		[ENDIF:MENU_MESSAGE]
+		<ul class="menu">
+			[FOR:OTHER_LANGS]
+			<li class="menu"><a href="[LINK]">[DISPLAY]</a></li>
+			[ENDFOR:OTHER_LANGS]
+			[IF:VOL_LINK]
+			<li class="menu">
+				<a href="[VOL_LINK]">[VOL_LINK_TEXT]</a>
+				[ENDIF:VOL_LINK]
+				[FOR:CUSTOM_MENU_ITEMS]
+			<li class="menu"><a href="[LINK]">[DISPLAY]</a></li>
+			[ENDFOR:CUSTOM_MENU_ITEMS]
+			[FOR:SEARCH_MENU_ITEMS]
+			<li class="menu"><a href="[LINK]">[DISPLAY]</a></li>
+			[ENDFOR:SEARCH_MENU_ITEMS]
+		</ul>
+		[IF:CHANGE_VIEW]
+		[CHANGE_VIEW]
+		[ENDIF:CHANGE_VIEW]
+	</nav>
+	[ENDIF:SEARCH_MENU]
+
+	[IF:SEARCH_LEFT_CONTENT]
+	<div class="search-user-content-left ui-state-active ui-corner-all">
+		[SEARCH_LEFT_CONTENT]
+	</div>
+	[ENDIF:SEARCH_LEFT_CONTENT]
+</div>
+
+[IF:HAS_CENTRE_SECTION]
+<div class="search-form">
+	<div id="search-tabs" class="make-me-tabbed">
+		<ul>
+			[IF:BASIC_SEARCH_SECTION]
+			<li><a href="#basic-search">Recherche simple</a></li>
+			[ENDIF:BASIC_SEARCH_SECTION]
+			[IF:QUICK_SEARCHES_NOTAB]
+			<li><a href="#quick-search">[QUICK_SEARCH_TITLE]</a></li>
+			[ENDIF:QUICK_SEARCHES_NOTAB]
+			[FOR:TOPIC_SEARCHES]
+			<li><a href="[LINK]">[TITLE]</a></li>
+			[ENDFOR:TOPIC_SEARCHES]
+			[FOR:QUICK_SEARCHES_TAB]
+			<li><a href="[URL]">[NAME]</a></li>
+			[ENDFOR:QUICK_SEARCHES_TAB]
+			[IF:CHILDCARE_SEARCH_URL]
+			<li><a href="[CHILDCARE_SEARCH_URL]">Garde d'enfants</a></li>[ENDIF:CHILDCARE_SEARCH_URL]
+			[IF:BROWSE_BY_INDUSTRY_URL]
+			<li><a href="[BROWSE_BY_INDUSTRY_URL]">Recherche par industrie</a></li>[ENDIF:BROWSE_BY_INDUSTRY_URL]
+			[IF:LOGGED_IN][IF:SERVICE_CATEGORY]
+			<li><a href="#service-category">Catégorie de service</a></li>[ENDIF:SERVICE_CATEGORY][ENDIF:LOGGED_IN]
+			[IF:SERVICE_CATEGORY_URL]
+			<li><a href="[SERVICE_CATEGORY_URL]">Catégorie de service</a></li>[ENDIF:SERVICE_CATEGORY_URL]
+			[IF:BROWSE]
+			<li><a href="#browse">Explorer</a></li>[ENDIF:BROWSE]
+		</ul>
+		[IF:BASIC_SEARCH_SECTION]
+		<div id="basic-search">
+			[BASIC_SEARCH]
+		</div>
+		[ENDIF:BASIC_SEARCH_SECTION]
+
+		[IF:QUICK_SEARCHES_NOTAB]
+		<div id="quick-search">
+			[FOR:QUICK_SEARCHES_NOTAB]
+			[IF:COUNT]<br>[ENDIF:COUNT]<a href="[URL]">[NAME]</a>
+			[ENDFOR:QUICK_SEARCHES_NOTAB]
+		</div>
+		[ENDIF:QUICK_SEARCHES_NOTAB]
+
+		[IF:LOGGED_IN]
+		[IF:SERVICE_CATEGORY]
+		<div id="service-category">
+			[SERVICE_CATEGORY]
+		</div>
+		[ENDIF:SERVICE_CATEGORY]
+		[ENDIF:LOGGED_IN]
+
+		[IF:BROWSE]
+		<div id="browse" style="float: left;">
+			[IF:BROWSE_ORG_ITEMS]
+			<h2 class="RevBoxHeader">[BROWSE_ORG_TITLE]</h2>
+			<div class="SubBoxHeader clearfix" style="float: left;">
+				[FOR:BROWSE_ORG_ITEMS]
+				<a href="[LINK]">
+					<div class="browse-by-item">[DISPLAY]</div>
+				</a>
+				[ENDFOR:BROWSE_ORG_ITEMS]
+			</div>
+			<div class="clearfix"></div>
+			[ENDIF:BROWSE_ORG_ITEMS]
+
+			[IF:BROWSE_SUBJ_ITEMS]
+			<h2 class="RevBoxHeader">Parcourir par sujet</h2>
+			<div class="SubBoxHeader clearfix" style="float: left;">
+				[FOR:BROWSE_SUBJ_ITEMS]
+				<a href="[LINK]">
+					<div class="browse-by-item">[DISPLAY]</div>
+				</a>
+				[ENDFOR:BROWSE_SUBJ_ITEMS]
+			</div>
+			<div class="clearfix"></div>
+			[ENDIF:BROWSE_SUBJ_ITEMS]
+		</div>
+		[ENDIF:BROWSE]
+
+	</div>
+
+</div>
+[ENDIF:HAS_CENTRE_SECTION]
+<div class="clearfix"></div>

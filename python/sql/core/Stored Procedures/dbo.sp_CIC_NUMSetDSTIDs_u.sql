@@ -1,0 +1,47 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_CIC_NUMSetDSTIDs_u]
+	@NUM varchar(8),
+	@IdList varchar(max)
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.1
+	Checked by: KL
+	Checked on: 06-Apr-2012
+	Action: NO ACTION REQUIRED
+	Notes: For future, incoporate MERGE statement
+*/
+
+DECLARE @tmpDSTIDs TABLE(
+	DST_ID int NOT NULL PRIMARY KEY
+)
+
+INSERT INTO @tmpDSTIDs SELECT DISTINCT tm.*
+	FROM dbo.fn_GBL_ParseIntIDList(@IdList,',') tm
+	INNER JOIN CIC_Distribution dst
+		ON tm.ItemID=dst.DST_ID
+
+DELETE pr
+	FROM CIC_BT_DST pr
+	LEFT JOIN @tmpDSTIDs tm
+		ON pr.DST_ID = tm.DST_ID
+WHERE tm.DST_ID IS NULL AND NUM=@NUM
+
+INSERT INTO CIC_BT_DST (NUM, DST_ID) SELECT NUM=@NUM, tm.DST_ID
+	FROM @tmpDSTIDs tm
+WHERE NOT EXISTS(SELECT * FROM CIC_BT_DST pr WHERE NUM=@NUM AND pr.DST_ID=tm.DST_ID)
+
+SET NOCOUNT OFF
+
+
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_CIC_NUMSetDSTIDs_u] TO [cioc_login_role]
+GO

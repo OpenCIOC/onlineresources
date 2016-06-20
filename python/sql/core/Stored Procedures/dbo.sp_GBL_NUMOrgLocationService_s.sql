@@ -1,0 +1,45 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE PROCEDURE [dbo].[sp_GBL_NUMOrgLocationService_s]
+	@NUM varchar(8)
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.5
+	Checked by: CL
+	Checked on: 31-Jan-2012
+	Action: NO ACTION REQUIRED
+*/
+
+DECLARE	@Error int
+SET @Error = 0
+
+SELECT ols.OLS_ID, olsn.LangID, ISNULL(olsn.Name,ols.Code) AS OrgLocationService,
+		ols.Code AS Code,
+		CAST(CASE WHEN pr.NUM IS NULL THEN 0 ELSE 1 END AS BIT) AS IS_SELECTED,
+		CAST(CASE 
+				WHEN ols.Code='AGENCY' AND EXISTS(SELECT * FROM GBL_BaseTable bto WHERE bto.NUM<>@NUM AND bto.ORG_NUM IS NOT NULL AND bto.ORG_NUM=@NUM) THEN 1 
+				WHEN ols.Code='SITE' AND EXISTS(SELECT * FROM GBL_BT_LOCATION_SERVICE WHERE LOCATION_NUM=@NUM) THEN 1
+				WHEN ols.Code='SERVICE' AND EXISTS(SELECT * FROM GBL_BT_LOCATION_SERVICE WHERE SERVICE_NUM=@NUM) THEN 1
+				WHEN ols.Code='TOPIC' AND EXISTS(SELECT * FROM GBL_BT_LOCATION_SERVICE WHERE SERVICE_NUM=@NUM) THEN 1
+				ELSE 0
+			END AS bit) AS CANT_UNSELECT
+	FROM GBL_OrgLocationService ols
+	LEFT JOIN GBL_OrgLocationService_Name olsn
+		ON ols.OLS_ID=olsn.OLS_ID AND olsn.LangID=@@LANGID
+	LEFT JOIN GBL_BT_OLS pr
+		ON ols.OLS_ID = pr.OLS_ID AND pr.NUM=@NUM
+ORDER BY ols.DisplayOrder, olsn.Name
+
+RETURN @Error
+
+SET NOCOUNT OFF
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_GBL_NUMOrgLocationService_s] TO [cioc_login_role]
+GO

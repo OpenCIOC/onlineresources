@@ -1,0 +1,46 @@
+CREATE TABLE [dbo].[CIC_BT_CM_Notes]
+(
+[BT_CM_ID] [int] NOT NULL,
+[LangID] [smallint] NOT NULL,
+[Notes] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NOT NULL
+) ON [PRIMARY]
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE TRIGGER [dbo].[tr_CIC_BT_CM_Notes_iud] ON [dbo].[CIC_BT_CM_Notes]
+FOR INSERT, UPDATE, DELETE AS
+
+SET NOCOUNT ON
+
+IF (SELECT COUNT(*) FROM Inserted) > 0 BEGIN
+	DELETE prn
+	FROM CIC_BT_CM_Notes prn
+	INNER JOIN Inserted i
+		ON prn.BT_CM_ID = i.BT_CM_ID AND prn.LangID=i.LangID
+	WHERE prn.Notes IS NULL
+END
+
+UPDATE cbtd
+	SET	CMP_AreasServed = dbo.fn_CIC_NUMToAreasServed(cbtd.NUM,cbtd.AREAS_SERVED_NOTES,cbtd.LangID)
+	FROM CIC_BaseTable_Description cbtd
+	WHERE EXISTS(SELECT * FROM CIC_BT_CM pr INNER JOIN Inserted i ON pr.BT_CM_ID=i.BT_CM_ID WHERE pr.NUM=cbtd.NUM)
+		OR EXISTS(SELECT * FROM CIC_BT_CM pr INNER JOIN Deleted d ON pr.BT_CM_ID=d.BT_CM_ID WHERE pr.NUM=cbtd.NUM)
+
+SET NOCOUNT OFF
+GO
+ALTER TABLE [dbo].[CIC_BT_CM_Notes] ADD CONSTRAINT [PK_CIC_BT_CM_Notes] PRIMARY KEY CLUSTERED  ([BT_CM_ID], [LangID]) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_CIC_BT_CM_Notes] ON [dbo].[CIC_BT_CM_Notes] ([BT_CM_ID], [LangID]) INCLUDE ([Notes]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[CIC_BT_CM_Notes] ADD CONSTRAINT [FK_CIC_BT_CM_Notes_CIC_BT_CM] FOREIGN KEY ([BT_CM_ID]) REFERENCES [dbo].[CIC_BT_CM] ([BT_CM_ID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[CIC_BT_CM_Notes] ADD CONSTRAINT [FK_CIC_BT_CM_Notes_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
+GO
+GRANT SELECT ON  [dbo].[CIC_BT_CM_Notes] TO [cioc_cic_search_role]
+GRANT SELECT ON  [dbo].[CIC_BT_CM_Notes] TO [cioc_login_role]
+GRANT INSERT ON  [dbo].[CIC_BT_CM_Notes] TO [cioc_login_role]
+GRANT DELETE ON  [dbo].[CIC_BT_CM_Notes] TO [cioc_login_role]
+GRANT UPDATE ON  [dbo].[CIC_BT_CM_Notes] TO [cioc_login_role]
+GO

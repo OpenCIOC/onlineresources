@@ -1,0 +1,21 @@
+CREATE TABLE [dbo].[CIC_BT_EXC_Notes]
+(
+[BT_EXC_ID] [int] NOT NULL,
+[LangID] [smallint] NOT NULL,
+[Notes] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[CIC_BT_EXC_Notes] ADD CONSTRAINT [PK_CIC_BT_EXC_Notes] PRIMARY KEY CLUSTERED  ([BT_EXC_ID], [LangID]) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_CIC_BT_EXC_Notes] ON [dbo].[CIC_BT_EXC_Notes] ([BT_EXC_ID], [LangID]) INCLUDE ([Notes]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[CIC_BT_EXC_Notes] ADD CONSTRAINT [FK_CIC_BT_EXC_Notes_CIC_BT_EXC] FOREIGN KEY ([BT_EXC_ID]) REFERENCES [dbo].[CIC_BT_EXC] ([BT_EXC_ID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[CIC_BT_EXC_Notes] ADD CONSTRAINT [FK_CIC_BT_EXC_Notes_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
+GO
+GRANT SELECT ON  [dbo].[CIC_BT_EXC_Notes] TO [cioc_cic_search_role]
+GRANT SELECT ON  [dbo].[CIC_BT_EXC_Notes] TO [cioc_login_role]
+GRANT INSERT ON  [dbo].[CIC_BT_EXC_Notes] TO [cioc_login_role]
+GRANT DELETE ON  [dbo].[CIC_BT_EXC_Notes] TO [cioc_login_role]
+GRANT UPDATE ON  [dbo].[CIC_BT_EXC_Notes] TO [cioc_login_role]
+GO

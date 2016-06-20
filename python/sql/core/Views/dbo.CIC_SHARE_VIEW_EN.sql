@@ -1,0 +1,809 @@
+
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+
+
+
+CREATE VIEW [dbo].[CIC_SHARE_VIEW_EN]
+AS
+
+/*
+	Checked for Release: 3.6
+	Checked by: KL
+	Checked on: 27-Sep-2014
+	Action: NO ACTION REQUIRED
+*/
+
+SELECT bt.NUM,
+		bt.RECORD_OWNER,
+		bt.PRIVACY_PROFILE AS XPRIVACY,
+		bte.NON_PUBLIC AS XNP,
+		bte.DELETION_DATE  AS XDEL,
+		bte.UPDATE_DATE AS XUPD,
+		1 AS HAS_ENGLISH, 
+		0 AS HAS_FRENCH,
+ACCESSIBILITY = (
+	SELECT
+		bte.ACCESSIBILITY_NOTES "@N",
+		(SELECT
+				ac.Code "@CD",
+				acne.Name "@V",
+				prne.Notes "@N"
+			FROM GBL_BT_AC pr
+			LEFT JOIN GBL_BT_AC_Notes prne
+				ON pr.BT_AC_ID=prne.BT_AC_ID AND prne.LangID=bte.LangID
+			INNER JOIN GBL_Accessibility ac
+				ON pr.AC_ID=ac.AC_ID
+			INNER JOIN GBL_Accessibility_Name acne
+				ON ac.AC_ID=acne.AC_ID AND acne.LangID=(SELECT TOP 1 LangID FROM GBL_Accessibility_Name WHERE AC_ID=acne.AC_ID ORDER BY CASE WHEN LangID=bte.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE pr.NUM=bt.NUM
+			FOR XML PATH('CHK'), TYPE)
+	FOR XML PATH('ACCESSIBILITY'), TYPE
+	),
+ACCREDITED = ISNULL((
+	SELECT
+		acr.Code "@CD",
+		acrne.Name "@V"
+	FROM CIC_Accreditation acr
+	INNER JOIN CIC_Accreditation_Name acrne
+		ON acrne.ACR_ID=acr.ACR_ID AND acrne.LangID=(SELECT TOP 1 LangID FROM CIC_Accreditation_Name WHERE ACR_ID=acrne.ACR_ID ORDER BY CASE WHEN LangID=bte.LangID THEN 0 ELSE 1 END, LangID)
+	WHERE acr.ACR_ID=cbt.ACCREDITED
+	FOR XML PATH('ACCREDITED'), TYPE
+	), CAST('<ACCREDITED/>' AS xml)),
+ACTIVITY_INFO = (
+	SELECT
+		cbte.ACTIVITY_NOTES "@N",
+		(SELECT
+				pr.GUID "@GID",
+				prne.ActivityName "@NM",
+				prne.ActivityDescription "@DESC",
+				asne.Name "@STAT",
+				prne.Notes "@N"
+			FROM CIC_BT_ACT pr
+			LEFT JOIN CIC_BT_ACT_Notes prne
+				ON pr.BT_ACT_ID=prne.BT_ACT_ID AND prne.LangID=bte.LangID
+			LEFT JOIN CIC_Activity_Status ast
+				ON pr.ASTAT_ID=ast.ASTAT_ID
+			LEFT JOIN CIC_Activity_Status_Name asne
+				ON ast.ASTAT_ID=asne.ASTAT_ID AND asne.LangID=(SELECT TOP 1 LangID FROM CIC_Activity_Status_Name WHERE ASTAT_ID=asne.ASTAT_ID ORDER BY CASE WHEN LangID=bte.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE pr.NUM=bt.NUM
+			FOR XML PATH('UNIT'), TYPE)
+	FOR XML PATH('ACTIVITY_INFO'), TYPE
+	),
+AFTER_HRS_PHONE = (SELECT cbte.AFTER_HRS_PHONE "@V" FOR XML PATH('AFTER_HRS_PHONE'), TYPE),
+ALT_ORG = ISNULL((
+	SELECT
+		(SELECT
+				ao.ALT_ORG "@V",
+				ao.PUBLISH "@PB",
+				CASE WHEN ao.LangID=0 THEN 'E' WHEN LangID=2 THEN 'F' ELSE '?' END "@LANG"
+			FROM GBL_BT_ALTORG ao
+			WHERE ao.NUM=bt.NUM AND (ao.LangID=bte.LangID)
+			FOR XML PATH('NM'), TYPE)
+	FOR XML PATH('ALT_ORG'), TYPE
+	),CAST('<ALT_ORG/>' AS xml)),
+[APPLICATION] = (SELECT cbte.APPLICATION "@V" FOR XML PATH('APPLICATION'), TYPE),
+AREAS_SERVED = (
+	SELECT
+		cbte.AREAS_SERVED_NOTES "@N",
+		(SELECT
+				cm.Code "@CD",
+				cmne.Name "@V",
+				dbo.fn_GBL_Community_AuthParent(cm.CM_ID,cm.CM_ID,5,bte.LangID) "@AP",
+				pst.NameOrCode AS "@PRV",
+				pst.Country AS "@CTRY",
+				prne.Notes "@N"
+			FROM CIC_BT_CM pr
+			LEFT JOIN CIC_BT_CM_Notes prne
+				ON pr.BT_CM_ID=prne.BT_CM_ID AND prne.LangID=bte.LangID
+			INNER JOIN GBL_Community cm
+				ON pr.CM_ID=cm.CM_ID
+			INNER JOIN GBL_Community_Name cmne
+				ON cm.CM_ID=cmne.CM_ID AND cmne.LangID=(SELECT TOP 1 LangID FROM GBL_Community_Name WHERE CM_ID=cmne.CM_ID ORDER BY CASE WHEN LangID=bte.LangID THEN 0 ELSE 1 END, LangID)
+			LEFT JOIN GBL_ProvinceState pst
+				ON cm.ProvinceState=pst.ProvID
+			WHERE pr.NUM=bt.NUM
+			FOR XML PATH('CM'),TYPE)
+	FOR XML PATH('AREAS_SERVED'),TYPE
+	),
+BEST_TIME_TO_CALL = (SELECT ccbte.BEST_TIME_TO_CALL "@V" FOR XML PATH('BEST_TIME_TO_CALL'), TYPE),
+BILLING_ADDRESSES = (
+	SELECT
+		(SELECT
+			CASE WHEN LangID=0 THEN 'E' WHEN ba.LangID=2 THEN 'F' ELSE '?' END "@LANG",
+			ba.GUID "@GID",
+			AT.Code "@TYPE",
+			ba.PRIORITY "@PRI",
+			ba.SITE_CODE "@CD",
+			ba.CAS_CONFIRMATION_DATE "@CCD",
+			ba.LINE_1 "@LN1",
+			ba.LINE_2 "@LN2",
+			ba.LINE_3 "@LN3",
+			ba.LINE_4 "@LN4",
+			ba.CITY "@CTY",
+			ba.PROVINCE "@PRV",
+			ba.COUNTRY "@CTRY",
+			ba.POSTAL_CODE "@PC"
+		FROM GBL_BT_BILLINGADDRESS ba
+		INNER JOIN GBL_BillingAddressType AT
+			ON ba.ADDRTYPE=AT.AddressTypeID
+		WHERE ba.NUM=bt.NUM AND (ba.LangID=bte.LangID)
+		FOR XML PATH('ADDR'), TYPE)
+	FOR XML PATH('BILLING_ADDRESSES'), TYPE
+	),
+BOUNDARIES = (SELECT cbte.BOUNDARIES "@V" FOR XML PATH('BOUNDARIES'), TYPE),
+BUS_ROUTES = ISNULL((
+	SELECT
+		(SELECT
+				br.RouteNumber "@NO",
+				brne.NAME "@NM",
+				cmne.NAME "@MUN"
+			FROM CIC_BT_BR pr
+			INNER JOIN CIC_BusRoute br
+				ON pr.BR_ID=br.BR_ID
+			LEFT JOIN CIC_BusRoute_Name brne
+				ON br.BR_ID=brne.BR_ID AND brne.LangID=(SELECT TOP 1 LangID FROM CIC_BusRoute_Name WHERE BR_ID=brne.BR_ID ORDER BY CASE WHEN LangID=bte.LangID THEN 0 ELSE 1 END, LangID)
+			LEFT JOIN GBL_Community cm
+				ON br.Municipality=cm.CM_ID
+			LEFT JOIN GBL_Community_Name cmne
+				ON cm.CM_ID=cmne.CM_ID AND cmne.LangID=(SELECT TOP 1 LangID FROM GBL_Community_Name WHERE CM_ID=cmne.CM_ID ORDER BY CASE WHEN LangID=bte.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE pr.NUM=bt.NUM
+			FOR XML PATH('RT'), TYPE)
+	FOR XML PATH('BUS_ROUTES'), TYPE
+	),CAST('<BUS_ROUTES/>' AS XML)),
+CC_LICENSE_INFO = (
+	SELECT
+		ccbt.LICENSE_NUMBER "@NO",
+		ccbt.LICENSE_RENEWAL "@DATE",
+		ccbt.LC_TOTAL "@TOT",
+		ccbt.LC_INFANT "@INF",
+		ccbt.LC_TODDLER "@TOD",
+		ccbt.LC_PRESCHOOL "@PRE",
+		ccbt.LC_KINDERGARTEN "@KIN",
+		ccbt.LC_SCHOOLAGE "@SCH",
+		ccbte.LC_NOTES "@N"
+	FOR XML PATH('CC_LICENSE_INFO'), TYPE
+	),
+CERTIFIED = ISNULL((
+	SELECT
+		crt.Code "@CD",
+		crtne.NAME "@V"
+	FROM CIC_Certification crt
+	INNER JOIN CIC_Certification_Name crtne
+		ON crtne.CRT_ID=crt.CRT_ID AND crtne.LangID=(SELECT TOP 1 LangID FROM CIC_Certification_Name WHERE CRT_ID=crtne.CRT_ID ORDER BY CASE WHEN LangID=bte.LangID THEN 0 ELSE 1 END, LangID)
+	WHERE crt.CRT_ID=cbt.CERTIFIED
+	FOR XML PATH('CERTIFIED'), TYPE
+	), CAST('<CERTIFIED/>' AS XML)),
+COLLECTED_BY = (SELECT bte.COLLECTED_BY "@V" FOR XML PATH('COLLECTED_BY'), TYPE),
+COLLECTED_DATE = (SELECT bte.COLLECTED_DATE "@V" FOR XML PATH('COLLECTED_DATE'), TYPE),
+COMMENTS = (SELECT cbte.COMMENTS "@V" FOR XML PATH('COMMENTS'), TYPE),
+CONTACT_1 = (SELECT	dbo.fn_GBL_XML_Contact(
+			'CONTACT_1',bt.NUM,
+			1,
+			0) AS [node()] FOR XML PATH('CONTACT_1'),TYPE),
+CONTACT_2 = (SELECT	dbo.fn_GBL_XML_Contact(
+			'CONTACT_2',bt.NUM,
+			1,
+			0) AS [node()] FOR XML PATH('CONTACT_2'),TYPE),
+CONTRACT_SIGNATURE = (
+	SELECT
+		(SELECT
+			cts.GUID "@GID",
+			sig.Code "@STATUS",
+			cts.SIGNATORY "@SIGNAME",
+			cts.DATE "@DATE",
+			cts.NOTES "@N"
+		FROM GBL_BT_CONTRACTSIGNATURE cts
+		INNER JOIN GBL_SignatureStatus sig
+			ON cts.SIGSTATUS=sig.SIG_ID
+		WHERE cts.NUM=bt.NUM
+		FOR XML PATH('SIGNATURE'), TYPE)
+	FOR XML PATH('CONTRACT_SIGNATURE'), TYPE
+	),
+CORP_REG_NO = (SELECT cbt.CORP_REG_NO "@V" FOR XML PATH('CORP_REG_NO'), TYPE),
+CREATED_BY = (SELECT bte.CREATED_BY "@V" FOR XML PATH('CREATED_BY'), TYPE),
+CREATED_DATE = (SELECT bte.CREATED_DATE "@V" FOR XML PATH('CREATED_DATE'), TYPE),
+CRISIS_PHONE = (SELECT cbte.CRISIS_PHONE "@V" FOR XML PATH('CRISIS_PHONE'), TYPE),
+DATES = (SELECT cbte.DATES "@V" FOR XML PATH('DATES'), TYPE),
+DD_CODE = (SELECT cbt.DD_CODE "@V" FOR XML PATH('DD_CODE'), TYPE),
+DELETED_BY = (SELECT bte.DELETED_BY "@V" FOR XML PATH('DELETED_BY'), TYPE),
+DELETION_DATE = (SELECT bte.DELETION_DATE "@V" FOR XML PATH('DELETION_DATE'), TYPE),
+[DESCRIPTION] = (SELECT bte.DESCRIPTION "@V" FOR XML PATH('DESCRIPTION'), TYPE),
+E_MAIL = (SELECT bte.E_MAIL "@V" FOR XML PATH('E_MAIL'), TYPE),
+ELECTIONS = (SELECT cbte.ELECTIONS "@V" FOR XML PATH('ELECTIONS'), TYPE),
+ELIGIBILITY = (
+	SELECT
+		cbt.MIN_AGE "@MIN_AGE",
+		cbt.MAX_AGE "@MAX_AGE",
+		cbte.ELIGIBILITY_NOTES "@N"
+	FOR XML PATH('ELIGIBILITY'), TYPE
+	),
+EMAIL_UPDATE_DATE = (SELECT bt.EMAIL_UPDATE_DATE "@V" FOR XML PATH('EMAIL_UPDATE_DATE'), TYPE),
+EMPLOYEES = (
+	SELECT
+		cbt.EMPLOYEES_FT "@FT",
+		cbt.EMPLOYEES_PT "@PT",
+		cbt.EMPLOYEES_TOTAL "@TOT"
+	FOR XML PATH('EMPLOYEES'), TYPE
+	),
+ESTABLISHED = (SELECT bte.ESTABLISHED "@V" FOR XML PATH('ESTABLISHED'), TYPE),
+EXEC_1 = (SELECT	dbo.fn_GBL_XML_Contact(
+			'EXEC_1',bt.NUM,
+			1,
+			0) AS [node()] FOR XML PATH('EXEC_1'),TYPE),
+EXEC_2 = (SELECT	dbo.fn_GBL_XML_Contact(
+			'EXEC_2',bt.NUM,
+			1,
+			0) AS [node()] FOR XML PATH('EXEC_2'),TYPE),
+EXTERNAL_ID = (SELECT bt.EXTERNAL_ID "@V" FOR XML PATH('EXTERNAL_ID'), TYPE),
+EXTRA_CONTACT_A = (SELECT	dbo.fn_GBL_XML_Contact(
+			'EXTRA_CONTACT_A',bt.NUM,
+			1,
+			0) AS [node()] FOR XML PATH('EXTRA_CONTACT_A'),TYPE),
+FAX = (SELECT bte.FAX "@V" FOR XML PATH('FAX'), TYPE),
+FEES = (
+	SELECT
+		cbte.FEE_NOTES "@N",
+		cbt.FEE_ASSISTANCE_AVAILABLE "@ASSIST",
+		cbte.FEE_ASSISTANCE_FOR "@ASSIST_FOR",
+		cbte.FEE_ASSISTANCE_FROM "@ASSIST_FROM",
+		(SELECT
+				ft.Code "@CD",
+				ftne.NAME "@V",
+				prne.Notes "@N"
+			FROM CIC_BT_FT pr
+			LEFT JOIN CIC_BT_FT_Notes prne
+				ON pr.BT_FT_ID=prne.BT_FT_ID AND prne.LangID=bte.LangID
+			INNER JOIN CIC_FeeType ft
+				ON pr.FT_ID=ft.FT_ID
+			INNER JOIN CIC_FeeType_Name ftne
+				ON ft.FT_ID=ftne.FT_ID AND ftne.LangID=(SELECT TOP 1 LangID FROM CIC_FeeType_Name WHERE FT_ID=ftne.FT_ID ORDER BY CASE WHEN LangID=bte.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE pr.NUM=bt.NUM
+			FOR XML PATH('CHK'),TYPE)
+	FOR XML PATH('FEES'),TYPE
+	),
+FISCAL_YEAR_END = ISNULL((
+	SELECT
+		fye.Code "@CD",
+		(SELECT fyene.NAME FROM CIC_FiscalYearEnd_Name fyene WHERE fyene.FYE_ID=fye.FYE_ID AND fyene.LangID=bte.LangID) "@V"
+	FROM CIC_FiscalYearEnd fye
+	WHERE fye.FYE_ID=cbt.FISCAL_YEAR_END
+	FOR XML PATH('FISCAL_YEAR_END'), TYPE
+	), CAST('<FISCAL_YEAR_END/>' AS XML)),
+FORMER_ORG = ISNULL((
+	SELECT
+		(SELECT
+				fo.FORMER_ORG "@V",
+				fo.DATE_OF_CHANGE "@DATE",
+				fo.PUBLISH "@PB",
+				CASE WHEN fo.LangID=0 THEN 'E' WHEN LangID=2 THEN 'F' ELSE '?' END "@LANG"
+			FROM GBL_BT_FORMERORG fo
+			WHERE fo.NUM=bt.NUM AND (fo.LangID=bte.LangID)
+			FOR XML PATH('NM'), TYPE)
+	FOR XML PATH('FORMER_ORG'), TYPE
+	),CAST('<FORMER_ORG/>' AS XML)),
+FUNDING = (
+	SELECT
+		cbte.FUNDING_NOTES "@N",
+		(SELECT
+				fd.Code "@CD",
+				fdne.NAME "@V",
+				prne.Notes "@N"
+			FROM CIC_BT_FD pr
+			LEFT JOIN CIC_BT_FD_Notes prne
+				ON pr.BT_FD_ID=prne.BT_FD_ID AND prne.LangID=bte.LangID
+			INNER JOIN CIC_Funding fd
+				ON pr.FD_ID=fd.FD_ID
+			LEFT JOIN CIC_Funding_Name fdne
+				ON fd.FD_ID=fdne.FD_ID AND fdne.LangID=bte.LangID
+			WHERE pr.NUM=bt.NUM
+			FOR XML PATH('CHK'),TYPE)
+	FOR XML PATH('FUNDING'),TYPE
+	),
+GEOCODE = (
+	SELECT
+		bt.GEOCODE_TYPE "@TYPE",
+		bt.LATITUDE "@LAT",
+		bt.LONGITUDE "@LONG",
+		bte.GEOCODE_NOTES "@N"
+	FOR XML PATH('GEOCODE'), TYPE
+	),
+[HOURS] = (SELECT cbte.HOURS "@V" FOR XML PATH('HOURS'), TYPE),
+INTERNAL_MEMO = (SELECT	dbo.fn_GBL_XML_RecordNote(
+			'INTERNAL_MEMO',bt.NUM,
+			1,
+			0) AS [node()] FOR XML PATH('INTERNAL_MEMO'),TYPE),
+INTERSECTION = (SELECT cbte.INTERSECTION "@V" FOR XML PATH('INTERSECTION'), TYPE),
+LANGUAGES = (
+	SELECT
+		cbte.LANGUAGE_NOTES "@N",
+		(SELECT
+				ln.Code "@CD",
+				COALESCE(lnne.Name,ln.Code) "@V",
+				prne.Notes "@N",
+				(SELECT
+						lnd.Code "@CD",
+						COALESCE(lndne.Name,ln.Code) "@V"
+					FROM dbo.CIC_BT_LN_LND prlnd
+					INNER JOIN dbo.GBL_Language_Details lnd
+						ON lnd.LND_ID=prlnd.LND_ID
+					LEFT JOIN dbo.GBL_Language_Details_Name lndne
+						ON lnd.LND_ID=lndne.LND_ID AND lndne.LangID=bte.LangID
+					WHERE prlnd.BT_LN_ID=pr.BT_LN_ID
+					FOR XML PATH('SERVICE_TYPE'), TYPE)
+			FROM CIC_BT_LN pr
+			LEFT JOIN CIC_BT_LN_Notes prne
+				ON pr.BT_LN_ID=prne.BT_LN_ID AND prne.LangID=bte.LangID
+			INNER JOIN GBL_Language ln
+				ON pr.LN_ID=ln.LN_ID
+			LEFT JOIN GBL_Language_Name lnne
+				ON ln.LN_ID=lnne.LN_ID AND lnne.LangID=bte.LangID
+			WHERE pr.NUM=bt.NUM
+			FOR XML PATH('CHK'),TYPE)
+	FOR XML PATH('LANGUAGES'),TYPE
+	),
+LEGAL_ORG = (
+	SELECT
+		bte.LEGAL_ORG "@V",
+		bte.LO_PUBLISH "@PB"
+	FOR XML PATH('LEGAL_ORG'), TYPE
+	),
+LOCATED_IN_CM = ISNULL((
+	SELECT
+		cm.Code "@CD",
+		(SELECT cmne.NAME FROM GBL_Community_Name cmne WHERE cmne.CM_ID=cm.CM_ID AND cmne.LangID=(SELECT TOP 1 LangID FROM GBL_Community_Name WHERE CM_ID=cmne.CM_ID ORDER BY CASE WHEN LangID=bte.LangID THEN 0 ELSE 1 END, LangID)) "@V",
+		dbo.fn_GBL_Community_AuthParent(cm.CM_ID,cm.CM_ID,5,bte.LangID) "@AP",
+		pst.NameOrCode AS "@PRV",
+		pst.Country AS "@CTRY"
+	FROM GBL_Community cm
+	LEFT JOIN GBL_ProvinceState pst
+		ON cm.ProvinceState=pst.ProvID
+	WHERE cm.CM_ID=bt.LOCATED_IN_CM
+	FOR XML PATH('LOCATED_IN_CM'), TYPE
+	), CAST('<LOCATED_IN_CM/>' AS XML)),
+LOCATION_DESCRIPTION = (SELECT bte.LOCATION_DESCRIPTION "@V" FOR XML PATH('LOCATION_DESCRIPTION'), TYPE),
+LOCATION_NAME = (
+	SELECT
+		bte.LOCATION_NAME "@V"
+	FOR XML PATH('LOCATION_NAME'), TYPE
+	),
+LOCATION_SERVICES = (
+	SELECT
+		(SELECT
+				pr.SERVICE_NUM "@V"
+			FROM GBL_BT_LOCATION_SERVICE pr
+			WHERE pr.LOCATION_NUM=bt.NUM
+			FOR XML PATH('SERVICE_NUM'),TYPE)
+	FOR XML PATH('LOCATION_SERVICES'),TYPE
+	),
+LOGO_ADDRESS = (SELECT cbte.LOGO_ADDRESS "@V" FOR XML PATH('LOGO_ADDRESS'), TYPE),
+MAIL_ADDRESS = (
+	SELECT 
+		bte.MAIL_CARE_OF "@CO",
+		bte.MAIL_BOX_TYPE "@BXTP",
+		bte.MAIL_PO_BOX "@BOX",
+		bte.MAIL_BUILDING "@BLD",
+		bte.MAIL_STREET_NUMBER "@STNUM",
+		bte.MAIL_STREET "@ST",
+		bte.MAIL_STREET_TYPE "@STTYPE",
+		bte.MAIL_STREET_TYPE_AFTER "@STTYPEAFTER",
+		bte.MAIL_STREET_DIR "@STDIR",
+		bte.MAIL_SUFFIX "@SFX",
+		bte.MAIL_CITY "@CTY",
+		bte.MAIL_PROVINCE "@PRV",
+		bte.MAIL_COUNTRY "@CTRY",
+		bt.MAIL_POSTAL_CODE "@PC"
+	FOR XML PATH('MAIL_ADDRESS'), TYPE
+	),
+MEETINGS = (SELECT cbte.MEETINGS "@V" FOR XML PATH('MEETINGS'), TYPE),
+MEMBERSHIP = (
+	SELECT
+		cbte.MEMBERSHIP_NOTES "@N",
+		(SELECT
+				mt.Code "@CD",
+				mtne.NAME "@V"
+			FROM CIC_BT_MT pr
+			INNER JOIN CIC_MembershipType mt
+				ON pr.MT_ID=mt.MT_ID
+			LEFT JOIN CIC_MembershipType_Name mtne
+				ON mt.MT_ID=mtne.MT_ID AND mtne.LangID=bte.LangID
+			WHERE pr.NUM=bt.NUM
+			FOR XML PATH('CHK'),TYPE)
+	FOR XML PATH('MEMBERSHIP'),TYPE
+	),
+MODIFIED_BY = (SELECT bte.MODIFIED_BY "@V" FOR XML PATH('MODIFIED_BY'), TYPE),
+MODIFIED_DATE = (SELECT bte.MODIFIED_DATE "@V" FOR XML PATH('MODIFIED_DATE'), TYPE),
+NAICS = (
+	SELECT
+		(SELECT
+				pr.Code "@V"
+			FROM CIC_BT_NC pr
+			WHERE pr.NUM=bt.NUM
+			FOR XML PATH('CD'),TYPE)
+	FOR XML PATH('NAICS'),TYPE
+	),
+NO_UPDATE_EMAIL = (SELECT bt.NO_UPDATE_EMAIL "@V" FOR XML PATH('NO_UPDATE_EMAIL'), TYPE),
+NON_PUBLIC = (SELECT bte.NON_PUBLIC "@V" FOR XML PATH('NON_PUBLIC'), TYPE),
+OCG_NO = (SELECT cbt.OCG_NO "@V" FOR XML PATH('OCG_NO'), TYPE),
+OFFICE_PHONE = (SELECT bte.OFFICE_PHONE "@V" FOR XML PATH('OFFICE_PHONE'), TYPE),
+ORG_DESCRIPTION = (SELECT bte.ORG_DESCRIPTION "@V" FOR XML PATH('ORG_DESCRIPTION'), TYPE),
+ORG_LEVEL_1 = (
+	SELECT
+		bte.ORG_LEVEL_1 "@V"
+	FOR XML PATH('ORG_LEVEL_1'), TYPE
+	),
+ORG_LEVEL_2 = (
+	SELECT
+		bte.ORG_LEVEL_2 "@V",
+		bte.O2_PUBLISH "@PB"
+	FOR XML PATH('ORG_LEVEL_2'), TYPE
+	),
+ORG_LEVEL_3 = (
+	SELECT
+		bte.ORG_LEVEL_3 "@V",
+		bte.O3_PUBLISH "@PB"
+	FOR XML PATH('ORG_LEVEL_3'), TYPE
+	),
+ORG_LEVEL_4 = (
+	SELECT
+		bte.ORG_LEVEL_4 "@V",
+		bte.O4_PUBLISH "@PB"
+	FOR XML PATH('ORG_LEVEL_4'), TYPE
+	),
+ORG_LEVEL_5 = (
+	SELECT
+		bte.ORG_LEVEL_5 "@V",
+		bte.O5_PUBLISH "@PB"
+	FOR XML PATH('ORG_LEVEL_5'), TYPE
+	),
+ORG_LOCATION_SERVICE = (
+	SELECT
+		(SELECT
+				ols.Code "@V"
+			FROM GBL_BT_OLS pr
+			INNER JOIN GBL_OrgLocationService ols
+				ON pr.OLS_ID=ols.OLS_ID
+			WHERE pr.NUM=bt.NUM
+			FOR XML PATH('CD'), TYPE)
+	FOR XML PATH('ORG_LOCATION_SERVICE'), TYPE
+	),
+ORG_NUM = (SELECT
+		bt.ORG_NUM "@V",
+		bt.DISPLAY_ORG_NAME "@DISPLAY_ORG_NAME"
+	FOR XML PATH('ORG_NUM'), TYPE),
+OTHER_ADDRESSES = (
+	SELECT
+		(SELECT
+			CASE WHEN LangID=0 THEN 'E' WHEN pr.LangID=2 THEN 'F' ELSE '?' END "@LANG",
+			pr.GUID "@GID",
+			pr.TITLE "@TTL",
+			pr.SITE_CODE "@CD",
+			pr.CARE_OF "@CO",
+			pr.BOX_TYPE "@BXTP",
+			pr.PO_BOX "@BOX",
+			pr.BUILDING "@BLD",
+			pr.STREET_NUMBER "@STNUM",
+			pr.STREET "@ST",
+			pr.STREET_TYPE "@STTYPE",
+			pr.STREET_TYPE_AFTER "@STTYPEAFTER",
+			pr.STREET_DIR "@STDIR",
+			pr.SUFFIX "@SFX",
+			pr.CITY "@CTY",
+			pr.PROVINCE "@PRV",
+			pr.COUNTRY "@CTRY",
+			pr.POSTAL_CODE "@PC"
+			FROM CIC_BT_OTHERADDRESS pr
+			WHERE pr.NUM=bt.NUM AND (pr.LangID=bte.LangID)
+			FOR XML PATH('ADDR'),TYPE)
+	FOR XML PATH('OTHER_ADDRESSES'),TYPE
+	),
+PAYMENT_TERMS = ISNULL((
+	SELECT
+		pyt.Code "@CD",
+		(SELECT pytne.NAME FROM GBL_PaymentTerms_Name pytne WHERE pytne.PYT_ID=pyt.PYT_ID AND pytne.LangID=bte.LangID) "@V"
+	FROM GBL_PaymentTerms pyt
+	WHERE pyt.PYT_ID=cbt.PAYMENT_TERMS
+	FOR XML PATH('PAYMENT_TERMS'), TYPE
+	), CAST('<PAYMENT_TERMS/>' AS XML)),
+PREF_CURRENCY = ISNULL((
+	SELECT
+		cur.Currency "@V"
+	FROM GBL_Currency cur
+	WHERE cur.CUR_ID=cbt.PREF_CURRENCY
+	FOR XML PATH('PREF_CURRENCY'), TYPE
+	), CAST('<PREF_CURRENCY/>' AS XML)),
+PREF_PAYMENT_METHOD = ISNULL((
+	SELECT
+		pay.Code "@CD",
+		(SELECT payne.NAME FROM GBL_PaymentMethod_Name payne WHERE payne.PAY_ID=pay.PAY_ID AND payne.LangID=bte.LangID) "@V"
+	FROM GBL_PaymentMethod pay
+	WHERE pay.PAY_ID=cbt.PREF_PAYMENT_METHOD
+	FOR XML PATH('PREF_PAYMENT_METHOD'), TYPE
+	), CAST('<PREF_PAYMENT_METHOD/>' AS XML)),
+PRINT_MATERIAL = (SELECT cbte.PRINT_MATERIAL "@V" FOR XML PATH('PRINT_MATERIAL'), TYPE),
+PUBLIC_COMMENTS = (SELECT cbte.PUBLIC_COMMENTS "@V" FOR XML PATH('PUBLIC_COMMENTS'), TYPE),
+QUALITY = ISNULL((
+	SELECT
+		rq.Quality "@V"
+	FROM CIC_Quality rq
+	WHERE rq.RQ_ID=cbt.QUALITY
+	FOR XML PATH('QUALITY'), TYPE
+	), CAST('<QUALITY/>' AS XML)),
+RECORD_TYPE = ISNULL((
+	SELECT
+		rt.RecordType "@V"
+	FROM CIC_RecordType rt
+	WHERE rt.RT_ID=cbt.RECORD_TYPE
+	FOR XML PATH('RECORD_TYPE'), TYPE
+	), CAST('<RECORD_TYPE/>' AS XML)),
+RESOURCES = (SELECT cbte.RESOURCES "@V" FOR XML PATH('RESOURCES'), TYPE),
+SERVICE_LEVEL = (
+	SELECT
+		(SELECT
+				sl.ServiceLevelCode "@V"
+			FROM CIC_BT_SL pr
+			INNER JOIN CIC_ServiceLevel sl
+				ON pr.SL_ID=sl.SL_ID
+			WHERE pr.NUM=bt.NUM
+			FOR XML PATH('CD'),TYPE)
+	FOR XML PATH('SERVICE_LEVEL'),TYPE
+	),
+SERVICE_NAME_LEVEL_1 = (
+	SELECT
+		bte.SERVICE_NAME_LEVEL_1 "@V",
+		bte.S1_PUBLISH "@PB"
+	FOR XML PATH('SERVICE_NAME_LEVEL_1'), TYPE
+	),
+SERVICE_NAME_LEVEL_2 = (
+	SELECT
+		bte.SERVICE_NAME_LEVEL_2 "@V",
+		bte.S2_PUBLISH "@PB"
+	FOR XML PATH('SERVICE_NAME_LEVEL_2'), TYPE
+	),
+SCHOOL_ESCORT = (
+	SELECT
+		ccbte.SCHOOL_ESCORT_NOTES "@N",
+		(SELECT
+				schne.NAME "@V",
+				sch.SchoolBoard "@BRD",				
+				prne.EscortNotes "@N"
+			FROM CCR_BT_SCH pr
+			LEFT JOIN CCR_BT_SCH_Notes prne
+				ON pr.BT_SCH_ID=prne.BT_SCH_ID AND prne.LangID=bte.LangID
+			INNER JOIN CCR_School sch
+				ON pr.SCH_ID=sch.SCH_ID
+			INNER JOIN CCR_School_Name schne
+				ON sch.SCH_ID=schne.SCH_ID AND schne.LangID=bte.LangID
+			WHERE pr.NUM=bt.NUM
+				AND pr.Escort=1
+			FOR XML PATH('CHK'),TYPE)
+	FOR XML PATH('SCHOOL_ESCORT'),TYPE
+	),
+SCHOOLS_IN_AREA = (
+	SELECT
+		ccbte.SCHOOLS_IN_AREA_NOTES "@N",
+		(SELECT
+				schne.NAME "@V",
+				sch.SchoolBoard "@BRD",				
+				prne.InAreaNotes "@N"
+			FROM CCR_BT_SCH pr
+			LEFT JOIN CCR_BT_SCH_Notes prne
+				ON pr.BT_SCH_ID=prne.BT_SCH_ID AND prne.LangID=bte.LangID
+			INNER JOIN CCR_School sch
+				ON pr.SCH_ID=sch.SCH_ID
+			INNER JOIN CCR_School_Name schne
+				ON sch.SCH_ID=schne.SCH_ID AND schne.LangID=bte.LangID
+			WHERE pr.NUM=bt.NUM
+				AND pr.InArea=1
+			FOR XML PATH('CHK'),TYPE)
+	FOR XML PATH('SCHOOLS_IN_AREA'),TYPE
+	),
+SITE_ADDRESS = (
+	SELECT 
+		bte.SITE_BUILDING "@BLD",
+		bte.SITE_STREET_NUMBER "@STNUM",
+		bte.SITE_STREET "@ST",
+		bte.SITE_STREET_TYPE "@STTYPE",
+		bte.SITE_STREET_TYPE_AFTER "@STTYPEAFTER",
+		bte.SITE_STREET_DIR "@STDIR",
+		bte.SITE_SUFFIX "@SFX",
+		bte.SITE_CITY "@CTY",
+		bte.SITE_PROVINCE "@PRV",
+		bte.SITE_COUNTRY "@CTRY",
+		bt.SITE_POSTAL_CODE "@PC"
+	FOR XML PATH('SITE_ADDRESS'), TYPE
+	),
+SITE_LOCATION = (SELECT cbte.SITE_LOCATION "@V" FOR XML PATH('SITE_LOCATION'), TYPE),
+SOCIAL_MEDIA = (
+	SELECT
+		(SELECT
+				sm.DefaultName "@NM",
+				CASE WHEN pr.Protocol <> 'http://' THEN Protocol ELSE NULL END "@PROTOCOL",
+				pr.URL "@URL",
+				CASE WHEN pr.LangID=0 THEN 'E' WHEN LangID=2 THEN 'F' ELSE '?' END "@LANG"
+			FROM GBL_BT_SM pr
+			INNER JOIN GBL_SocialMedia sm
+				ON pr.SM_ID=sm.SM_ID
+			WHERE pr.NUM=bt.NUM AND pr.LangID=bte.LangID
+			FOR XML PATH('TYPE'), TYPE)
+	FOR XML PATH('SOCIAL_MEDIA'), TYPE
+	),
+SORT_AS = (SELECT bte.SORT_AS "@V" FOR XML PATH('SORT_AS'), TYPE),
+[SOURCE] = (
+	SELECT 
+		bte.SOURCE_NAME "@NM",
+		bte.SOURCE_TITLE "@TTL",
+		bte.SOURCE_ORG "@ORG",
+		bte.SOURCE_PHONE "@PHN",
+		bte.SOURCE_FAX "@FAX",
+		bte.SOURCE_EMAIL "@EML",
+		bte.SOURCE_BUILDING "@BLD",
+		bte.SOURCE_ADDRESS "@ADDR",
+		bte.SOURCE_CITY "@CTY",
+		bte.SOURCE_PROVINCE "@PRV",
+		bte.SOURCE_POSTAL_CODE "@PC"
+	FOR XML PATH('SOURCE'), TYPE
+	),
+SPACE_AVAILABLE = (
+	SELECT
+		ccbt.SPACE_AVAILABLE "@V",
+		ccbte.SPACE_AVAILABLE_NOTES "@N",
+		ccbt.SPACE_AVAILABLE_DATE "@DATE"
+	FOR XML PATH('SPACE_AVAILABLE'), TYPE
+	),
+SUBJECTS = (
+	SELECT
+		(SELECT
+				sjne.NAME "@V"
+			FROM CIC_BT_SBJ pr
+			INNER JOIN THS_Subject sj
+				ON pr.Subj_ID=sj.Subj_ID
+			LEFT JOIN THS_Subject_Name sjne
+				ON sj.Subj_ID=sjne.Subj_ID AND sjne.LangID=(SELECT TOP 1 LangID FROM THS_Subject_Name WHERE Subj_ID=sjne.Subj_ID ORDER BY CASE WHEN LangID=bte.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE pr.NUM=bt.NUM
+			FOR XML PATH('TM'),TYPE)
+	FOR XML PATH('SUBJECTS'),TYPE
+	),
+SUBSIDY = (SELECT ccbt.SUBSIDY "@V" FOR XML PATH('SUBSIDY'), TYPE),
+SUP_DESCRIPTION = (SELECT cbte.SUP_DESCRIPTION "@V" FOR XML PATH('SUP_DESCRIPTION'), TYPE),
+TAX_REG_NO = (SELECT cbt.TAX_REG_NO "@V" FOR XML PATH('TAX_REG_NO'), TYPE),
+TAXONOMY = (
+	SELECT
+		cbt.TAX_MODIFIED_BY "@MODBY",
+		cbt.TAX_MODIFIED_DATE "@MOD",
+		(SELECT
+			(SELECT
+				tlt.Code "@V"
+			FROM CIC_BT_TAX_TM tlt
+			WHERE tlt.BT_TAX_ID = tl.BT_TAX_ID
+			FOR XML PATH('TM'),TYPE)
+		FROM CIC_BT_TAX tl
+		WHERE tl.NUM = bt.NUM
+		FOR XML PATH('LNK'),TYPE)
+	FOR XML PATH('TAXONOMY'),TYPE
+	),
+TDD_PHONE = (SELECT cbte.TDD_PHONE "@V" FOR XML PATH('TDD_PHONE'), TYPE),
+TOLL_FREE_PHONE = (SELECT bte.TOLL_FREE_PHONE "@V" FOR XML PATH('TOLL_FREE_PHONE'), TYPE),
+TRANSPORTATION = (SELECT cbte.TRANSPORTATION "@V" FOR XML PATH('TRANSPORTATION'), TYPE),
+TYPE_OF_CARE = (
+	SELECT
+		ccbte.TYPE_OF_CARE_NOTES "@N",
+		(SELECT
+				tocne.NAME "@V",
+				prne.Notes "@N"
+			FROM CCR_BT_TOC pr
+			LEFT JOIN CCR_BT_TOC_Notes prne
+				ON pr.BT_TOC_ID=prne.BT_TOC_ID AND prne.LangID=bte.LangID
+			INNER JOIN CCR_TypeOfCare toc
+				ON pr.TOC_ID=toc.TOC_ID
+			LEFT JOIN CCR_TypeOfCare_Name tocne
+				ON toc.TOC_ID=tocne.TOC_ID AND tocne.LangID=bte.LangID
+			WHERE pr.NUM=bt.NUM
+			FOR XML PATH('CHK'),TYPE)
+	FOR XML PATH('TYPE_OF_CARE'),TYPE
+	),
+TYPE_OF_PROGRAM = ISNULL((
+	SELECT
+		[top].Code "@CD",
+		(SELECT topne.NAME FROM CCR_TypeOfProgram_Name topne WHERE topne.TOP_ID=[top].TOP_ID AND topne.LangID=bte.LangID) "@V"
+	FROM CCR_TypeOfProgram [top]
+	WHERE [top].TOP_ID=ccbt.TYPE_OF_PROGRAM
+	FOR XML PATH('TYPE_OF_PROGRAM'), TYPE
+	), CAST('<TYPE_OF_PROGRAM/>' AS XML)),
+UPDATE_DATE = (SELECT bte.UPDATE_DATE "@V" FOR XML PATH('UPDATE_DATE'), TYPE),
+UPDATE_EMAIL = (SELECT bt.UPDATE_EMAIL "@V" FOR XML PATH('UPDATE_EMAIL'), TYPE),
+UPDATE_HISTORY = (SELECT bte.UPDATE_HISTORY "@V" FOR XML PATH('UPDATE_HISTORY'), TYPE),
+UPDATE_SCHEDULE = (SELECT bte.UPDATE_SCHEDULE "@V" FOR XML PATH('UPDATE_SCHEDULE'), TYPE),
+UPDATED_BY = (SELECT bte.UPDATED_BY "@V" FOR XML PATH('UPDATED_BY'), TYPE),
+VACANCY_INFO = (
+	SELECT
+		cbte.VACANCY_NOTES "@N",
+		(SELECT
+			pr.GUID "@GID",
+			prne.ServiceTitle "@SVC",
+			vutne.NAME "@NM",
+			pr.Capacity "@CAP",
+			pr.FundedCapacity "@FUNDCAP",
+			pr.HoursPerDay "@HOURS",
+			pr.DaysPerWeek "@DAYS",
+			pr.WeeksPerYear "@WEEKS",
+			pr.FullTimeEquivalent "@FTE",
+			pr.Vacancy "@VAC",
+			pr.WaitList "@WAIT",
+			pr.WaitListDate "@WAITD",
+			prne.Notes "@N",
+			vut.MODIFIED_DATE "@MOD",
+			(SELECT
+				vtpne.NAME "@NM"
+				FROM CIC_BT_VUT_TP vtp
+				INNER JOIN CIC_Vacancy_TargetPop tp
+					ON vtp.VTP_ID = tp.VTP_ID
+				LEFT JOIN CIC_Vacancy_TargetPop_Name vtpne
+					ON vtp.VTP_ID=vtpne.VTP_ID AND vtpne.LangID=bte.LangID
+				WHERE vtp.BT_VUT_ID = pr.BT_VUT_ID
+				FOR XML PATH('TP'),TYPE)
+			FROM CIC_BT_VUT pr
+			LEFT JOIN CIC_BT_VUT_Notes prne
+				ON pr.BT_VUT_ID=prne.BT_VUT_ID AND prne.LangID=bte.LangID
+			INNER JOIN CIC_Vacancy_UnitType vut
+				ON pr.VUT_ID=vut.VUT_ID
+			LEFT JOIN CIC_Vacancy_UnitType_Name vutne
+				ON vut.VUT_ID=vutne.VUT_ID AND vutne.LangID=bte.LangID
+			WHERE pr.NUM=bt.NUM
+			FOR XML PATH('UNIT'),TYPE)
+	FOR XML PATH('VACANCY_INFO'),TYPE
+	),
+VOLCONTACT = (SELECT	dbo.fn_GBL_XML_Contact(
+			'VOLCONTACT',bt.NUM,
+			1,
+			0) AS [node()] FOR XML PATH('VOLCONTACT'),TYPE),
+WARD = ISNULL((
+	SELECT
+		wd.WardNumber "@V",
+		(SELECT cmne.NAME FROM GBL_Community_Name cmne WHERE cmne.CM_ID=cm.CM_ID AND cmne.LangID=bte.LangID) "@MUN",
+		dbo.fn_GBL_Community_AuthParent(cm.CM_ID,cm.CM_ID,5,bte.LangID) "@AP",
+		pst.NameOrCode AS "@PRV",
+		pst.Country AS "@CTRY"
+	FROM CIC_Ward wd
+	LEFT JOIN GBL_Community cm
+		ON wd.Municipality=cm.CM_ID
+	LEFT JOIN GBL_ProvinceState pst
+		ON cm.ProvinceState=pst.ProvID
+	WHERE wd.WD_ID=cbt.WARD
+	FOR XML PATH('WARD'), TYPE
+	), CAST('<WARD/>' AS XML)),
+WCB_NO = (SELECT cbt.WCB_NO "@V" FOR XML PATH('WCB_NO'), TYPE),
+WWW_ADDRESS = (SELECT bte.WWW_ADDRESS "@V" FOR XML PATH('WWW_ADDRESS'), TYPE)
+FROM GBL_BaseTable bt
+	INNER JOIN GBL_BaseTable_Description bte
+		ON bt.NUM=bte.NUM AND bte.LangID=0
+	LEFT JOIN CIC_BaseTable cbt
+		ON bt.NUM = cbt.NUM
+	LEFT JOIN CIC_BaseTable_Description cbte
+		ON cbt.NUM=cbte.NUM AND cbte.LangID=bte.LangID
+	LEFT JOIN CCR_BaseTable ccbt
+		ON bt.NUM = ccbt.NUM
+	LEFT JOIN CCR_BaseTable_Description ccbte
+		ON ccbt.NUM=ccbte.NUM AND ccbte.LangID=bte.LangID
+
+
+
+
+
+
+
+
+
+
+
+
+GO
+
+
+
+
+GRANT SELECT ON  [dbo].[CIC_SHARE_VIEW_EN] TO [cioc_login_role]
+GO

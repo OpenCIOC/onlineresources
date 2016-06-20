@@ -1,0 +1,68 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>Deux types d'outils statistiques sont fournis dans votre base de donn&eacute;es CIOC :</p>
+<h4>Statistiques sur les dossiers consult&eacute;s</h4>
+<p>Ces statistiques sont g&eacute;n&eacute;r&eacute;es dans votre base de donn&eacute;es lorsque quelqu'un acc&egrave;de &agrave; un dossier de la base de donn&eacute;es. Sont enregistr&eacute;s : la date et l'heure, l'adresse IP, la vue, l'identifiant d'utilisateur, le num&eacute;ro de dossier et la langue. <span class="Alert">Les statistiques sur les dossiers consult&eacute;s ne sont pas conserv&eacute;es lorsque vous passez en mode impression ou changez de vue temporairement</span>, pour ne pas gonfler les statistiques si quelqu'un consulte plusieurs versions d'un m&ecirc;me dossier pour les m&ecirc;mes raisons. Ces statistiques s'av&egrave;rent le plus utile pour :</p>
+	<ul>
+		<li>comprendre quels dossiers de votre base de donn&eacute;es sont les plus populaires</li>
+		<li>comprendre de quelle mani&egrave;re chacune des vue est utilis&eacute;e</li>
+		<li>comprendre les diff&eacute;rences de consultation pour chaque langue des dossiers</li>
+		<li>identifier la mani&egrave;re dont un utilisateur ou groupe d'utilisateurs particulier utilise la base de donn&eacute;es</li>
+	</ul>
+<p>Les super-utilisateurs peuvent acc&eacute;der aux statistiques sur les dossiers consult&eacute;s sur une base de donn&eacute;es Microsoft Access hors ligne accessible par le menu de t&eacute;l&eacute;chargement, aux fins d'analyses plus pouss&eacute;es si besoin.</p>
+<h4>Statistiques sur les connexions web</h4>
+<p>Ces statistiques repr&eacute;sentent l'utilisation totale de votre base de donn&eacute;es et incluent tous les types de fichiers (y compris les images, CSS, JavaScript et autres fichiers). Ces statistiques s'av&egrave;rent tr&egrave;s utiles pour comprendre l'utilisation globale de votre base de donn&eacute;es et la croissance du trafic au fil du temps. Les statistiques sur les connexions web sont conserv&eacute;es dans un emplacement distinct de votre base de donn&eacute;es ; le contact technique officiel de votre membri&eacute;t&eacute; peut communiquer avec le personnel de CIOC afin d'obtenir un compte pour cet outil. Contre des frais minimes, des zones d'outils statistiques web distinctes associ&eacute;es &agrave; votre compte peuvent &ecirc;tre configur&eacute;es pour les noms de domaines sp&eacute;cifiques utilis&eacute;s par votre base de donn&eacute;es. Communiquez avec le personnel technique de CIOC pour des renseignements.</p>
+<h4></h4>
+<p><span class="Alert">Cette page contient les statistiques principales sur les dossiers consult&eacute;s et un formulaire de rapport</span>, ainsi que des liens vers d'autres outils statistiques : <em>Utilisation totale des dossiers</em>, <em>50 premiers dossiers</em>, <em>Rapports automatiques</em> et <em>Supprimer les statistiques anciennes</em>.</p>
+
+<h4>L'adresse IP de l'utilisateur commence par</h4>
+<p>Si vous connaissez l'IP d'un utilisateur sp&eacute;cifique (ou le d&eacute;but d'un bloc d'adresses IP) et tentez de d&eacute;terminer l'utilisation de la base de donn&eacute;es par cette IP, saisissez la dans ce champ. Par exemple, si vous savez que les adresses IP de votre CASC local commencent toutes par 199.235.235.XXX, o&ugrave; XXX repr&eacute;sente plusieurs num&eacute;ros d'identification diff&eacute;rents pour des ordinateurs de ce CASC, saisissez 199.235.235 dans le champ ; les r&eacute;sultats doivent refl&eacute;ter pr&eacute;cis&eacute;ment l'utilisation de la base de donn&eacute;es par le CASC local.</p>
+
+<h4>Utilisateurs avec type d'utilisateur</h4>
+<p>Vous pouvez limiter les statistiques uniquement aux dossiers consult&eacute;s par des utilisateurs dont le compte est associ&eacute; &agrave; un type d'utilisateur particulier.</p>
+
+<h4>Recherche par vue</h4>
+<p>Vous pouvez limiter les statistiques uniquement aux dossiers consult&eacute;s dans une vue particuli&egrave;re (ce qui ne prend pas en compte si l'utilisateur est connect&eacute; ou le type d'utilisateur).</p>
+
+<h4>Recherche par date</h4>
+<p><strong>le ou apr&egrave;s le</strong> - saisissez la date &agrave; laquelle vous souhaitez faire d&eacute;buter le rapport statistique. Cette date <em>sera</em> comprise dans les r&eacute;sultats.</p>
+<p><strong>avant le</strong> - saisissez la date suivant le jour auquel vous souhaitez faire cesser le rapport statistique. Cette date <em>ne sera pas</em> comprise dans les r&eacute;sultats. Pour g&eacute;n&eacute;rer un rapport correspondant exactement au mois pr&eacute;c&eacute;dent, cliquez sur les boutons « Premier du dernier mois » et « Premier de ce mois ».</p>
+
+<h4>Dossiers appartenant &agrave;</h4>
+<p>S'il existe plus d'un propri&eacute;taire de dossiers dans la base de donn&eacute;es, vous pouvez demander ici de retourner des r&eacute;sultats en fonction de ce crit&egrave;re.</p>
+
+<h4>Dossiers consult&eacute;s par</h4>
+<p>Retourne des r&eacute;sultats en fonction :</p>
+<ul>
+	<li>de <em>n'importe quel</em> utilisateur de la base de donn&eacute;es, ou</li>
+	<li>des <em>utilisateurs connect&eacute;s</em> uniquement, ou</li>
+	<li>des utilisateurs <em>du public</em> (non connect&eacute;s) uniquement.</li>
+</ul>
+
+<h4>Dossiers consult&eacute;s en</h4>
+<p>Limite les statistiques aux dossiers consult&eacute;s dans une langue particuli&egrave;re.</p>
+
+<h4>Vues des dossiers sur les moteurs de recherche</h4>
+<p>Inclue ou exclue le trafic des moteurs de recherche connus ou affiche le trafic par moteur de recherche sp&eacute;cifique. <span class="Alert">Soyez conscient que cet outil ne peut qu'estimer le trafic des moteurs de recherche en fonction d'adresses connues ; il ne prend pas en compte tous les robots de votre base de donn&eacute;es.</span></p>
+
+<h4>Version imprimable</h4>
+<p>Si vous souhaitez publier le rapport en mode impression, s&eacute;lectionnez <em>Oui</em> pour cette option. Les rapports ex&eacute;cut&eacute;s en version imprimable s'ouvrent dans une nouvelle fen&ecirc;tre.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

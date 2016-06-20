@@ -1,0 +1,55 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+
+CREATE PROCEDURE [dbo].[sp_CIC_NUMSetLNDIDs_u]
+	@NUM varchar(8),
+	@IdList varchar(MAX)
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.7
+	Checked by: CL
+	Checked on: 26-Jul-2015
+	Action: NO ACTION REQUIRED
+	Notes: For future, incoporate MERGE statement
+*/
+
+DECLARE @tmpLNDIDs table(
+	LN_ID int NOT NULL,
+	LND_ID int NOT NULL
+	PRIMARY KEY (LN_ID, LND_ID)
+)
+
+INSERT INTO @tmpLNDIDs SELECT DISTINCT tm.*
+	FROM dbo.fn_GBL_ParseIntIDPairList(@IdList,',', ';') tm
+	WHERE EXISTS(SELECT * FROM GBL_Language WHERE LN_ID = tm.LeftID)
+		AND EXISTS(SELECT * FROM GBL_Language_Details WHERE LND_ID=tm.RightID)
+
+DELETE pr
+	FROM CIC_BT_LN_LND pr
+	INNER JOIN CIC_BT_LN ln
+		ON ln.BT_LN_ID = pr.BT_LN_ID
+	LEFT JOIN @tmpLNDIDs tm
+		ON pr.LND_ID = tm.LND_ID AND ln.LN_ID=tm.LN_ID
+WHERE tm.LND_ID IS NULL AND NUM=@NUM
+
+INSERT INTO CIC_BT_LN_LND (BT_LN_ID, LND_ID) SELECT ln.BT_LN_ID, tm.LND_ID
+	FROM @tmpLNDIDs tm
+	INNER JOIN CIC_BT_LN ln
+		ON tm.LN_ID=ln.LN_ID AND ln.NUM=@NUM
+WHERE NOT EXISTS(SELECT * FROM CIC_BT_LN_LND pr WHERE BT_LN_ID=ln.BT_LN_ID AND pr.LND_ID=tm.LND_ID)
+
+SET NOCOUNT OFF
+
+
+
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_CIC_NUMSetLNDIDs_u] TO [cioc_login_role]
+GO

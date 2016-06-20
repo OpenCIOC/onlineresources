@@ -1,0 +1,108 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>The <em>&quot;Add / Edit Publication&quot;</em> page allows you to either edit an existing Publication or add a new Publication to the database. If you are editing an existing Publication, the existing settings will be in the form. If you are adding a new Publication, you will be presented with a blank form. The only required setting for any Publication is the unique <strong>code</strong> that will represent the Publication.</p>
+
+<ul>
+	<li><a href="#dataelements">Publication Data Elements</a></li>
+	<li><a href="#intro">General Headings</a>
+		<ul>
+			<li><a href="#whatareheadings">What are General Headings?</a></li>
+			<li><a href="#taxvsregular">Taxonomy Headings vs. Regular Headings</a></li>
+			<li><a href="#headinggroups">General Headings Groups</a></li>
+			<li><a href="#manageheadings">Manage General Headings</a></li>
+		</ul>
+	</li>
+</ul>
+
+<hr>
+<a name="dataelements"></a>
+<h2>Publication Data Elements</h2>
+<h4>Status</h4>
+<p>If you have chosen to edit an existing Publication, this section will display information about that Publication. If you are adding a new Publication, this section will not appear. Inside the <em>Status</em> section is information about whether the Publication is currently in use, either by a database View or in Organization / Program records. The record count given is for the number of records associated with this Publication <strong>in the entire database</strong> (not just the current View).</p>
+<p>If the Publication is being used in records, you will see a <em>&quot;Search&quot;</em> link which will allow you to bring up a results set which shows you the records <strong>in your current View</strong> that belong to this Publication. If the Publication is being used, either by a database View or in individual records, you cannot delete it. If it is not being used, you will have the option of deleting the Publication using the <em>&quot;Delete&quot;</em> button that will appear at the bottom of the form.</p>
+
+<h4>Created/Modified Information</h4>
+<p>Created and Modified dates / names are set automatically by the software as records are added and updated.</p>
+
+<h4>Code</h4>
+<p>The Publication Code is a unique, descriptive &quot;short form&quot; to identify the Publication. Only alpha-numeric characters and the dash &quot;-&quot; are allowed in this field, and the maximum length of the code is 20 characters.</p>
+
+<h4>Publication Notes</h4>
+<p>It is recommended that a description of the purpose of each publication code is entered into this fields as a reminder of how it is intended to be use. This will help prevent confusion or mistaken use, and make it easier to tidy up unused codes in the future.</p>
+
+<h4>Name</h4>
+<p>Names are sometimes used in addition or instead of codes Publication drop-down such as the<em>&quot;Quick List&quot;</em>. Whether names or codes are used (or both) depends on the page being viewed, and also the settings for Publication <em>&quot;friendly names&quot;</em> from within the View setup.</p>
+<p><span class="Alert">Note</span>: It is important to make this a <strong>very brief but clear</strong> description as it will impact on the width of the drop down menu that appears for the &quot;Quick List&quot;.</p>
+
+<h4>Non-Public</h4>
+<p>Checking this box will prevent the Publication from being visible in Publication drop-down lists in any Views of the database that are not permitted to see non-public records. It will not, however, hide the Publication code from showing up in the <em>Publication</em> field of any record that has been assigned to the Publication.</p>
+
+<h4>Field Use</h4>
+<p>There are two types of Publication fields; the <em>Description</em> (a block of text up to 8000 characters) and <em>General Headings</em> (a custom classification system for records belonging to this Publication). General Headings can be further subdivided into a number of different variations. The full list of Publication field types are:</p>
+<ul>
+	<li><strong>*_DESC</strong>: Publication Description (display, feedback)</li>
+	<li><strong>*_HEADINGS</strong>: Public General Headings assigned to this record (display, feedback)</li>
+	<li><strong>*_HEADINGS_NP</strong>: All General Headings assigned to this record (display, feedback, update)</li>
+	<li><strong>*_HEADINGGROUPS</strong>: Heading Groups associated with the public General Headings assigned to this record (display)</li>
+	<li><strong>*_HEADINGGROUPS_NP</strong>: Heading Groups associated with any of the General Headings assigned to this record (display)</li>
+</ul>	
+<p>By selecting the <em>Allow on Display and Forms</em> checkboxes, you will make these fields available for use on both the <em>&quot;Record Details&quot;</em> page, the <em>&quot;Suggest an Update&quot;</em> page (aka the Feedback Form), and in the case of HEADINGS_NP fields also the regular Update Form. If these checkboxes are not selected, the only place to view or edit Publication fields will be through the <em>&quot;Update Publications&quot;</em> page for each record (which is not available to the public).</p>
+<p><span class="Alert">Important Note</span>: selecting a Publication for display does not automatically add it to any pages or forms; A Super User must go to <em>Setup &gt; Field Display</em> and name the new fields, and then into the View setup to add it to the View(s) they want to display the field(s). However, deselecting this box <strong>will</strong> remove the field(s) from all pages and forms currently using them.</p>
+
+<hr>
+
+<a name="headings"></a>
+<h2>General Headings</h2>
+<a name="intro"></a>
+<h3>Introduction to General Headings</h3>
+
+<a name="whatareheadings"></a>
+<h3>What are General Headings?</h3>
+<p>General Headings allow you to classify records within a Publication. In Publication-based Views, Headings may be used to create the "Quick List" search on the basic search form. Headings are also searchable from the Advanced Search form in any View that has access to that Publication. Records must be first assigned to a Publication before they can be indexed to that Publication's General Headings.</p>
+<p>It is possible to create custom display fields using the Headings for any given Publication. Like other classifications such as the Thesaurus or Taxonomy, these Heading display fields will be linked to allow users to perform searches for other records that use the given Heading Terms. It is not necessary for the View to be based on the Publication in order to display the Headings field for that Publication.</p>
+<p>When using CIOC's print tools, Headings can be used to generate a topical (subject-based) record index. Some features of General Headings are solely for use in the subject index of Print Tools, including the ability to create an "Unused Term" (that points to one or more preferred Headings to be used instead), or a list of Related Terms ("See Also ...").</p>
+
+<a name="taxvsregular"></a>
+<h3>Taxonomy Headings vs. Regular Headings</h3>
+<p>"Regular" or traditional General Headings are manually assigned to records. It is up to the data manager to ensure that the indexing of Headings to records is maintained as records are added or changed. There are tools available to assist data managers in keeping this indexing up-to-date, including the ability to synchronize Heading indexing from one Publication to another.</p>
+<p>For those that use the AIRS / INFO LINE Taxonomy in their database, a more automated indexing option is available. Taxonomy Headings include a component describing a Taxonomy Search; any record assigned to the Publication that matches the search criteria will automatically be indexed to the Heading. Indexing is automatically updated every time a record is added or removed from the Publication or has its Taxonomy indexing changed. All records in the Publication are re-evaluated for indexing to the Heading whenever the its Taxonomy search criteria is updated. <span class="Alert">Note</span>: Taxonomy-based Headings cannot be manually assigned to records; they must match the given Taxonomy search criteria to be indexed.</p>
+<p><strong>Each Publication's Headings can be made up of a mix of Taxonomy and regular Headings.</strong></p>
+
+<a name="headinggroups"></a>
+<h3>General Headings Groups</h3>
+<p>Headings Groups allow you to cluster a number of different Headings under a broader category. Headings can be assigned to more than one Group. These Groups can optionally be made searchable through the Quick List setup for Publication-based Views; searches for a Heading Group will match records indexed to any of its Headings. Records cannot be directly assigned to Heading Groups. Click the <em>&quot;Add Group&quot;</em> button to add a new row to the table for a creating a new group entry. Adding Headings to groups is done using the Manage General Headings tools (see below).</p>
+
+<a name="manageheadings"></a>
+<h3>Manage General Headings</h3>
+<p>The <em>&quot;Manage General Headings&quot;</em> section will take you to a page where you can add, edit or remove items from the list of General Headings for this Publication. <span class="Alert">Note: Make sure you submit any changes you have made in this form before going to the <em>Manage General Headings</em> page, or you will lose your changes</span>.</p>
+
+<h4>Edit an Existing Heading</h4>
+<p>To view or edit the settings of an existing Heading, select the it from the list and click <em>&quot;View / Edit General Heading&quot;</em></p>
+
+<h4>Create New Heading</h4>
+<p>Links are provided to create a new regular Heading or Taxonomy-based Heading. Clicking the links will take you to the appropriate blank data entry form for creating the new Heading.</p>
+
+<h4>Quick Add Taxonomy General Headings</h4>
+<p>Using a Taxonomy drill-down search, you may select a number of Taxonomy Terms at once and create a new set of General Headings based on the selected Terms. You will not be able to add Terms that already exist in your list of Headings (this includes regular Headings with the same name as the Taxonomy Term). This tool creates one Heading per Term; it does not support linked Terms or creating Headings based on multiple Terms, but you may edit the Terms list later if you require a more complex search.</p>
+
+<h4>Copy General Headings</h4>
+<p>If there is another Publication in the database containing all or many of the Headings you wish to use for this Publication, you can use the Copy General Headings tool to select a Publication and add some or all of the Headings into the current Publication. Although indexing Taxonomy-based Headings will begin automatically for Taxonomy-based Headings that are copied, this is not the case for Regular Headings which much be indexed manually. For regular Headings, this feature is often used effectively in combination with the record <strong>Synchronize Headings</strong> option that is part of the <em>&quot;Add/Remove Headings&quot;</em> bulk update tool available through the search results.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified: $Date$</p>

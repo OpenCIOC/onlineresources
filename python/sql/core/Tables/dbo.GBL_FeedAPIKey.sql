@@ -1,0 +1,18 @@
+CREATE TABLE [dbo].[GBL_FeedAPIKey]
+(
+[FeedAPIKey] [uniqueidentifier] NOT NULL CONSTRAINT [DF_GBL_FeedAPIKey_APIKey] DEFAULT (newid()),
+[CREATED_DATE] [smalldatetime] NULL CONSTRAINT [DF_GBL_FeedAPIKey_CREATED_DATE] DEFAULT (getdate()),
+[CREATED_BY] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
+[MODIFIED_DATE] [smalldatetime] NULL CONSTRAINT [DF_GBL_FeedAPIKey_MODIFIED_DATE] DEFAULT (getdate()),
+[MODIFIED_BY] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
+[MemberID] [int] NULL,
+[Owner] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NOT NULL,
+[CIC] [bit] NOT NULL CONSTRAINT [DF_GBL_FeedAPIKey_CIC] DEFAULT ((1)),
+[VOL] [bit] NOT NULL CONSTRAINT [DF_GBL_FeedAPIKey_VOL] DEFAULT ((1)),
+[Inactive] [bit] NOT NULL CONSTRAINT [DF_GBL_FeedAPIKey_Inactive] DEFAULT ((0))
+) ON [PRIMARY]
+ALTER TABLE [dbo].[GBL_FeedAPIKey] ADD 
+CONSTRAINT [PK_GBL_FeedAPIKey] PRIMARY KEY CLUSTERED  ([FeedAPIKey]) ON [PRIMARY]
+ALTER TABLE [dbo].[GBL_FeedAPIKey] ADD
+CONSTRAINT [FK_GBL_FeedAPIKey_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
+GO

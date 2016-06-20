@@ -1,0 +1,11 @@
+CREATE TABLE [dbo].[GBL_ExternalAPI]
+(
+[API_ID] [int] NOT NULL IDENTITY(1, 1),
+[Code] [nvarchar] (20) COLLATE Latin1_General_100_CI_AI NOT NULL,
+[CIC] [bit] NOT NULL CONSTRAINT [DF_GBL_ExternalAPI_CIC] DEFAULT ((0)),
+[VOL] [bit] NOT NULL CONSTRAINT [DF_GBL_ExternalAPI_VOL] DEFAULT ((0)),
+[SchemaLocation] [varchar] (200) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[GBL_ExternalAPI] ADD CONSTRAINT [PK_GBL_ExternalAPI] PRIMARY KEY CLUSTERED  ([API_ID]) ON [PRIMARY]
+GO

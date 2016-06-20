@@ -1,0 +1,108 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>La page <em>« Ajouter / Modifier une publication »</em> vous permet soit de modifier une publication existante, soit d'ajouter une nouvelle publication &agrave; la base de donn&eacute;es. Si vous modifiez une publication existante, les param&egrave;tres existants seront indiqu&eacute;s dans le formulaire. Si vous ajoutez une nouvelle publication, le formulaire sera vide. Le seul param&egrave;tre obligatoire d'une publication est le <strong>code</strong> unique qui la repr&eacute;sentera.</p>
+
+<ul>
+	<li><a href="#dataelements">&Eacute;l&eacute;ments de donn&eacute;es d'une publication</a></li>
+	<li><a href="#intro">En-t&ecirc;tes g&eacute;n&eacute;raux</a>
+		<ul>
+			<li><a href="#whatareheadings">Que sont les en-t&ecirc;tes g&eacute;n&eacute;raux ?</a></li>
+			<li><a href="#taxvsregular">En-t&ecirc;tes taxonomiques et En-t&ecirc;tes ordinaires</a></li>
+			<li><a href="#headinggroups">Groupes d'en-t&ecirc;tes g&eacute;n&eacute;raux</a></li>
+			<li><a href="#manageheadings">G&eacute;rer les en-t&ecirc;tes g&eacute;n&eacute;raux</a></li>
+		</ul>
+	</li>
+</ul>
+
+<hr>
+<a name="dataelements"></a>
+<h2>&Eacute;l&eacute;ments de donn&eacute;es d'une publication</h2>
+<h4>Statut</h4>
+<p>Si vous avez choisi de modifier une publication existante, cette section donne des informations sur cette publication. Si vous ajoutez une nouvelle publication, cette section n'appara&icirc;t pas. La section <em>Statut</em> indique si la publication est actuellement utilis&eacute;e, soit dans une vue de la base de donn&eacute;es, soit par des dossiers d'organismes / programmes. Le d&eacute;compte des dossiers donn&eacute; est le nombre de dossiers associ&eacute;s &agrave; cette publication <strong>dans toute la base de donn&eacute;es</strong> (pas uniquement la vue actuelle).</p>
+<p>Si la publication est utilis&eacute;e dans des dossiers, vous verrez un lien <em>« Rechercher »</em> qui vous permet de retourner un ensemble de r&eacute;sultats affichant les dossiers <strong>dans votre vue actuelle</strong> qui appartiennent &agrave; cette publication. Si la publication est utilis&eacute;e, soit dans une vue de la base de donn&eacute;es, soit par des dossiers d'organismes / programmes, vous ne pouvez pas la supprimer. Si elle n'est pas utilis&eacute;e, vous avez le choix de supprimer la publication en utilisant le bouton <em>« Supprimer »</em> en bas du formulaire.</p>
+
+<h4>Renseignement de cr&eacute;ation / modification</h4>
+<p>Les dates de cr&eacute;ation et de modification et les noms sont &eacute;tablis automatiquement par le logiciel lorsque des dossiers sont ajout&eacute;s et mis &agrave; jour.</p>
+
+<h4>Code</h4>
+<p>Le code de publication est la « forme courte » unique et descriptive qui identifie la publication. Seuls les caract&egrave;res alphanum&eacute;riques et le tiret « - » sont autoris&eacute;s dans ce champ et la longueur maximale du code est de 20 caract&egrave;res.</p>
+
+<h4>Notes de publications</h4>
+<p>Il est recommand&eacute; de saisir dans ce champ une description de la finalit&eacute; de chaque code de publication, afin de rappeler la mani&egrave;re dont on l'utilise. Cela emp&ecirc;che toute confusion ou utilisation erron&eacute;e et facilitera le nettoyage des codes inutilis&eacute;s dans le futur.</p>
+
+<h4>Nom</h4>
+<p>Les noms sont parfois utilis&eacute;s en plus ou &agrave; la place des codes dans les menus d&eacute;roulants des publications, comme dans la <em>« liste rapide »</em>. L'utilisation des noms ou des codes (ou des deux) d&eacute;pend de la page consult&eacute;e, ainsi que des param&egrave;tres de <em>« noms conviviaux »</em> dans la configuration de la vue.</p>
+<p><span class="Alert">Remarque :</span> il est important que la description soit <strong>tr&egrave;s courte mais claire</strong>, car cela affectera la largeur du menu d&eacute;roulant qui appara&icirc;t dans la « liste rapide ».</p>
+
+<h4>Interne</h4>
+<p>Le fait de cocher cette case emp&ecirc;che la publication d'appara&icirc;tre dans les listes d&eacute;roulantes des publications, dans toutes les vues de la base de donn&eacute;es qui ne sont pas autoris&eacute;es &agrave; afficher les dossiers internes. Cependant, cela n'emp&ecirc;chera pas le code de publication de s'afficher dans le champ <em>Publication</em> de tout dossier assign&eacute; &agrave; cette publication.</p>
+
+<h4>Utilisation du champ</h4>
+<p>Il y a deux types de champs de publication : <em>Description</em> (un bloc de texte jusqu'&agrave; 8 000 caract&egrave;res) et <em>En-t&ecirc;tes g&eacute;n&eacute;raux</em> (un syst&egrave;me de classification personnalis&eacute; des dossiers appartenant &agrave; cette publication). Les en-t&ecirc;tes g&eacute;n&eacute;raux peuvent &ecirc;tre encore divis&eacute;s en plusieurs sections. La liste compl&egrave;te des types de champs Publication sont :</p>
+<ul>
+	<li><strong>*_DESC</strong> : Description de la publication (affichage, r&eacute;troaction)</li>
+	<li><strong>*_HEADINGS</strong> : En-t&ecirc;tes g&eacute;n&eacute;raux publics assign&eacute;s &agrave; ce dossier (affichage, r&eacute;troaction)</li>
+	<li><strong>*_HEADINGS_NP</strong> : Tous les en-t&ecirc;tes g&eacute;n&eacute;raux assign&eacute;s &agrave; ce dossier (affichage, r&eacute;troaction)</li>
+	<li><strong>*_HEADINGGROUPS</strong> : Groupes d'en-t&ecirc;tes associ&eacute;s aux en-t&ecirc;tes g&eacute;n&eacute;raux publics assign&eacute;s &agrave; ce dossier (affichage)</li>
+	<li><strong>*_HEADINGGROUPS_NP</strong> : Groupes d'en-t&ecirc;tes associ&eacute;s &agrave; tous les en-t&ecirc;te g&eacute;n&eacute;raux assign&eacute;s &agrave; ce dossier (affichage)</li>
+</ul>	
+<p>En cochant les cases <em>Autoriser &agrave; l'affichage et sur les formulaires</em>, vous rendrez ces champs utilisables &agrave; la fois sur la page de <em>« D&eacute;tails sur le dossier »</em>, la page <em>« Proposer une mise &agrave; jour »</em> (c'.-&agrave;-d. le formulaire de r&eacute;troaction) et, dans le cas des champs HEADINGS_NP, le formulaire de mise &agrave; jour ordinaire. Si ces cases ne sont pas coch&eacute;es, le seul endroit o&ugrave; l'on pourra consulter ou modifier les champs de publication sera la page <em>« Mettre &agrave; jour les publications »</em> pour chaque dossier individuel (qui n'est pas accessible au public).</p>
+<p><span class="Alert">Remarque importante :</span> le fait de s&eacute;lectionner une publication &agrave; afficher ne l'ajoute pas automatiquement &agrave; toutes les pages ou formulaires ; un super-utilisateur doit aller sur <em>Configuration &gt; Affichage des champs</em> et nommer les nouveaux champs, puis dans la configuration des vues pour l'ajouter aux vues o&ugrave; on souhaite afficher les champs. Cependant, le fait de d&eacute;cocher la case <strong>retirera</strong> les champs de toutes les pages ou formulaires utilisant la publication.</p>
+
+<hr>
+
+<a name="headings"></a>
+<h2>En-t&ecirc;tes g&eacute;n&eacute;raux</h2>
+<a name="intro"></a>
+<h3>Initiation aux en-t&ecirc;tes g&eacute;n&eacute;raux</h3>
+
+<a name="whatareheadings"></a>
+<h3>Que sont les en-t&ecirc;tes g&eacute;n&eacute;raux ?</h3>
+<p>Les en-t&ecirc;tes g&eacute;n&eacute;raux vous permettent de classifier des dossiers dans une publication. Dans les vues bas&eacute;es sur des publications, on peut utiliser les en-t&ecirc;tes pour cr&eacute;er des recherches par « listes rapides » sur le formulaire de recherche simple. Les en-t&ecirc;tes sont &eacute;galement interrogeables depuis le formulaire de recherche avanc&eacute;e dans n'importe quelle vue ayant acc&egrave;s &agrave; cette publication. On doit d'abord assigner les dossiers &agrave; une publication avant de pouvoir les indexer aux en-t&ecirc;tes g&eacute;n&eacute;raux de cette publication.</p>
+<p>Il est possible de cr&eacute;er des champs d'affichage personnalis&eacute; qui utilisent les en-t&ecirc;tes de n'importe quelle publication donn&eacute;e. De la m&ecirc;me mani&egrave;re que les autres classifications comme le Th&eacute;saurus ou la Taxonomie, ces champs d'affichage des en-t&ecirc;tes seront hyperli&eacute;s pour permettre aux utilisateurs de rechercher les autres dossiers qui utilisent les en-t&ecirc;tes g&eacute;n&eacute;raux en question. Il n'est pas n&eacute;cessaire que la vue soit bas&eacute;e sur la publication pour afficher le champ En-t&ecirc;tes de cette publication.</p>
+<p>Lorsqu'on utilise les outils d'impression CIOC, on peut utiliser les en-t&ecirc;tes pour g&eacute;n&eacute;rer un index des dossiers par sujet (bas&eacute; sur les sujets). Certaines fonctionnalit&eacute;s des en-t&ecirc;tes g&eacute;n&eacute;raux servent uniquement &agrave; l'index des sujets des outils d'impression, y compris la capacit&eacute; &agrave; cr&eacute;er des « termes non utilis&eacute;s » (qui pointent vers un ou plusieurs en-t&ecirc;tes pr&eacute;f&eacute;r&eacute;s &agrave; utiliser &agrave; la place) ou &agrave; une liste des termes apparent&eacute;s (« Voir aussi... »).</p>
+
+<a name="taxvsregular"></a>
+<h3>En-t&ecirc;tes taxonomiques et En-t&ecirc;tes ordinaires</h3>
+<p>Les en-t&ecirc;tes « ordinaires » ou g&eacute;n&eacute;raux traditionnels sont assign&eacute;s aux dossiers manuellement. C'est au gestionnaire de donn&eacute;es de s'assurer du maintien de l'indexation des dossiers ajout&eacute;s ou modifi&eacute;s avec les en-t&ecirc;tes. Des outils sont disponibles pour aider les gestionnaires de donn&eacute;es &agrave; garder leur base de donn&eacute;es &agrave; jour, y compris la capacit&eacute; &agrave; synchroniser l'indexation avec les en-t&ecirc;tes d'une publication &agrave; l'autre.</p>
+<p>Pour ceux qui utilisent la Taxonomie AIRS / INFO LINE dans leur base de donn&eacute;es, un choix d'indexation automatis&eacute;e est disponible. Les en-t&ecirc;tes taxonomiques comprennent une composante qui d&eacute;crit une recherche par la Taxonomie ; tout dossier assign&eacute; &agrave; la publication qui correspond au crit&egrave;re de recherche sera automatique index&eacute; avec l'en-t&ecirc;te. L'indexation est mise &agrave; jour automatiquement chaque fois qu'un dossier est ajout&eacute; ou retir&eacute; de la publication ou que son indexation avec la Taxonomie change. Tous les dossiers de la publication sont r&eacute;&eacute;valu&eacute;s pour indexation avec l'en-t&ecirc;te, chaque fois que les crit&egrave;res de recherche avec la Taxonomie sont modifi&eacute;s. <span class="Alert">Remarque :</span> les en-t&ecirc;tes taxonomiques ne peuvent pas &ecirc;tre assign&eacute;s aux dossiers manuellement ; ils doivent correspondre aux crit&egrave;res de recherche sur la Taxonomie pour &ecirc;tre index&eacute;s.</p>
+<p><strong>Les en-t&ecirc;tes de chaque publication peuvent inclure &agrave; la fois des en-t&ecirc;tes ordinaires et des en-t&ecirc;tes taxonomiques.</strong></p>
+
+<a name="headinggroups"></a>
+<h3>Groupes d'en-t&ecirc;tes g&eacute;n&eacute;raux</h3>
+<p>Les groupes d'en-t&ecirc;tes vous permettent de regrouper plusieurs en-t&ecirc;tes diff&eacute;rents sous une cat&eacute;gorie plus large. On peut assigner des en-t&ecirc;tes &agrave; plus d'un groupe &agrave; la fois. De mani&egrave;re optionnelle, il est possible de rendre ces groupes interrogeables par les param&egrave;tres de la liste rapide dans les vues bas&eacute;es sur des publications ; les recherches sur un groupe d'en-t&ecirc;te correspondront aux dossiers index&eacute;s &agrave; l'un de ces en-t&ecirc;tes. On ne peut pas assigner des dossiers &agrave; des groupes d'en-t&ecirc;tes directement. Cliquez sur le bouton <em>« Ajouter un groupe »</em> pour ajouter une nouvelle rang&eacute;e au tableau et cr&eacute;er une nouveau groupe. On ajoute des en-t&ecirc;tes aux groupes en utilisant l'outil des gestion des en-t&ecirc;tes g&eacute;n&eacute;raux (voir ci-dessous).</p>
+
+<a name="manageheadings"></a>
+<h3>G&eacute;rer les en-t&ecirc;tes g&eacute;n&eacute;raux</h3>
+<p>La section <em>« G&eacute;rer les en-t&ecirc;tes g&eacute;n&eacute;raux »</em> vous dirigera vers une page pour ajouter, modifier ou retirer des &eacute;l&eacute;ments de la liste des en-t&ecirc;tes g&eacute;n&eacute;raux de cette publication. <span class="Alert">Remarque : assurez-vous de soumettre d'abord toute modification effectu&eacute;e sur ce formulaire avant d'aller sur la page <em>G&eacute;rer les en-t&ecirc;tes g&eacute;n&eacute;raux</em> ou vos changements seront perdus</span>.</p>
+
+<h4>Modifier un en-t&ecirc;te existant</h4>
+<p>Pour consulter ou modifier les param&egrave;tres d'un en-t&ecirc;te existant, s&eacute;lectionnez le dans la liste, puis cliquez sur <em>« Voir / Modifier l'en-t&ecirc;te »</em>.</p>
+
+<h4>Cr&eacute;er un nouvel en-t&ecirc;te</h4>
+<p>Des liens sont fournis pour cr&eacute;er un nouvel en-t&ecirc;te ordinaire ou un en-t&ecirc;te taxonomique. Le fait de cliquer sur les liens vous dirigera vers le formulaire vide appropri&eacute; pour cr&eacute;er le nouvel en-t&ecirc;te.</p>
+
+<h4>Ajout rapide d'un en-t&ecirc;te g&eacute;n&eacute;ral taxonomique</h4>
+<p>En utilisant la recherche hi&eacute;rarchique de la Taxonomie, vous pouvez s&eacute;lectionner plusieurs termes de la Taxonomie &agrave; la fois et cr&eacute;er un nouvel ensemble d'en-t&ecirc;tes g&eacute;n&eacute;raux bas&eacute;s sur les termes s&eacute;lectionn&eacute;s. Vous ne pourrez pas ajouter des termes qui existent d&eacute;j&agrave; dans votre liste d'en-t&ecirc;tes (cela comprend les en-t&ecirc;tes ordinaires ayant le m&ecirc;me nom que le terme de la Taxonomie). Cet outil cr&eacute;&eacute; un en-t&ecirc;te par terme ; il ne prend pas en compte les termes li&eacute;s ou la cr&eacute;ation d'en-t&ecirc;tes bas&eacute;s sur plusieurs termes, mais vous pouvez modifier la liste des termes plus tard si vous avez besoin d'une recherche plus complexe.</p>
+
+<h4>Copier les en-t&ecirc;tes g&eacute;n&eacute;raux</h4>
+<p>S'il existe une autre publication dans la base de donn&eacute;es qui contient tous ou la plupart des en-t&ecirc;tes que vous souhaitez utiliser pour cette publication, vous pouvez utiliser l'outil de copie des en-t&ecirc;tes g&eacute;n&eacute;raux pour s&eacute;lectionner une publication et ajouter certains ou tous les en-t&ecirc;tes de la publication actuelle. Bien que l'indexation par en-t&ecirc;tes taxonomiques d&eacute;bute automatiquement lorsque les en-t&ecirc;tes taxonomiques sont copi&eacute;s, ce n'est pas le cas des en-t&ecirc;tes ordinaires dont l'indexation est manuelle. Pour les en-t&ecirc;tes ordinaires, cette fonctionnalit&eacute; est souvent utilis&eacute;e de mani&egrave;re efficace en combinaison avec l'option <strong>Synchroniser les en-t&ecirc;tes</strong> d'un dossier, qui fait partie de l'outil de mise &agrave; jour en nombre<em>« Ajouter / Supprimer un en-t&ecirc;te »</em> disponible par les r&eacute;sultats de recherche.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

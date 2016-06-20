@@ -1,0 +1,12 @@
+CREATE TABLE [dbo].[GBL_PageMsg_PageInfo]
+(
+[PageName] [varchar] (255) COLLATE Latin1_General_100_CS_AS NOT NULL,
+[PageMsgID] [int] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[GBL_PageMsg_PageInfo] ADD CONSTRAINT [PK_GBL_PageMsg_PageInfo] PRIMARY KEY CLUSTERED  ([PageName], [PageMsgID]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[GBL_PageMsg_PageInfo] ADD CONSTRAINT [FK_GBL_PageMsg_PageInfo_GBL_PageMsg] FOREIGN KEY ([PageMsgID]) REFERENCES [dbo].[GBL_PageMsg] ([PageMsgID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[GBL_PageMsg_PageInfo] ADD CONSTRAINT [FK_GBL_PageMsg_PageInfo_GBL_PageInfo] FOREIGN KEY ([PageName]) REFERENCES [dbo].[GBL_PageInfo] ([PageName]) ON DELETE CASCADE ON UPDATE CASCADE
+GO

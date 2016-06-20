@@ -1,0 +1,47 @@
+CREATE TABLE [dbo].[CCR_BT_TOC_Notes]
+(
+[BT_TOC_ID] [int] NOT NULL,
+[LangID] [smallint] NOT NULL,
+[Notes] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NOT NULL
+) ON [PRIMARY]
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE TRIGGER [dbo].[tr_CCR_BT_TOC_Notes_iu] ON [dbo].[CCR_BT_TOC_Notes]
+FOR INSERT, UPDATE AS
+
+SET NOCOUNT ON
+
+DELETE prn
+FROM CCR_BT_TOC_Notes prn
+INNER JOIN Inserted i
+	ON prn.BT_TOC_ID = i.BT_TOC_ID AND prn.LangID=i.LangID
+WHERE prn.Notes IS NULL
+
+UPDATE btd
+		SET SRCH_Anywhere_U = 1
+	FROM GBL_BaseTable_Description btd
+	INNER JOIN CCR_BT_TOC pr
+		ON btd.NUM=pr.NUM
+	WHERE	btd.SRCH_Anywhere_U <> 1
+		AND (EXISTS(SELECT * FROM Inserted i WHERE pr.BT_TOC_ID=i.BT_TOC_ID AND btd.LangID=i.LangID)
+		OR EXISTS(SELECT * FROM Deleted d WHERE pr.BT_TOC_ID=d.BT_TOC_ID AND btd.LangID=d.LangID))
+
+SET NOCOUNT OFF
+GO
+ALTER TABLE [dbo].[CCR_BT_TOC_Notes] ADD CONSTRAINT [PK_CCR_BT_TOC_Notes] PRIMARY KEY CLUSTERED  ([BT_TOC_ID], [LangID]) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_CCR_BT_TOC_Notes] ON [dbo].[CCR_BT_TOC_Notes] ([BT_TOC_ID], [LangID]) INCLUDE ([Notes]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[CCR_BT_TOC_Notes] ADD CONSTRAINT [FK_CCR_BT_TOC_Notes_CCR_BT_TOC] FOREIGN KEY ([BT_TOC_ID]) REFERENCES [dbo].[CCR_BT_TOC] ([BT_TOC_ID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[CCR_BT_TOC_Notes] ADD CONSTRAINT [FK_CCR_BT_TOC_Notes_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
+GO
+GRANT SELECT ON  [dbo].[CCR_BT_TOC_Notes] TO [cioc_cic_search_role]
+GRANT SELECT ON  [dbo].[CCR_BT_TOC_Notes] TO [cioc_login_role]
+GRANT INSERT ON  [dbo].[CCR_BT_TOC_Notes] TO [cioc_login_role]
+GRANT DELETE ON  [dbo].[CCR_BT_TOC_Notes] TO [cioc_login_role]
+GRANT UPDATE ON  [dbo].[CCR_BT_TOC_Notes] TO [cioc_login_role]
+GO

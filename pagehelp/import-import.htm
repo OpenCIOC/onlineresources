@@ -1,0 +1,38 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>The main <em>Import Record Data</em> page is the main menu for the Import Tool. The Import Tool allows you to upload XML files in the <em>CIOC Sharing Format</em> that have been exported from other databases. The menu on this page gives you list of existing export files to work with and provides a link to <em>Load New Dataset</em> to upload a new export file.</p>
+<hr>
+<p><span class="Alert">Important Note</span>: The <strong>Update / Add Records</strong> functions of the Import Tool require a great deal of resources from the server, and can interfere with the normal operation of the database. It is strongly advised that the tool not be used during peak operating times (9am EST - 5pm EST). Use of the <em>Import Queue</em> utility may assist you in planning your Imports for non-peak times. The process of loading the file <strong>does not</strong> cause a performance problem on the server, and can be done at any time; however, it is recommended that you not leave a large number of unprocessed export files loaded into the database, due to space considerations.</p>
+
+<hr>
+
+<h3>Loading a New Dataset</h3>
+<p>To work with a new export file, click the <em>Load New Dataset</em> link; a new pop-up window will open with the file-loading tool. <strong>You must use a current, valid CIOC Sharing Format XML file</strong>; the tool does not accept any other format of data, and may not accept a file from an older or newer version of the software.</p>
+<p>From within the pop-up window, click the <em>&quot;Browse&quot;</em> button to find the export file on your computer that you want to load. Using the <em>&quot;Import As&quot;</em> field, you can optionally give the file you are loading a friendly name to help you remember where it came from and when, i.e. &quot;FindHelp Bilingual Data, Jan 2007&quot;. If you do not specify a name, the regular filename will be used when displaying information about the file. It is possible to load the same file twice, and to give two files the same &quot;friendly&quot; name, so be thoughtful when loading and naming files.</p>
+<p>After selecting the file on your computer, select <em>&quot;Upload File&quot;</em>. The file will be validated to ensure it is a valid <strong>CIOC Sharing Format XML file</strong>. If there are any issues validating the file, you will receive an error report, and some or all of the file will not be loaded. <span class="Alert">Report any errors to the person who sent the export file and ask them to make a new export. If you receive errors but some records appear to have loaded successfully, you may import those records as they have passed the validation step.</span></p>
+
+<h3>Working with an Existing Dataset</h3>
+<p>Once a dataset has been loaded, it will appear in a list of datasets on the main menu of the Import Tool. Records to be imported will be grouped under <em>Add</em> or <em>Update</em>, and records that have been imported will be under <em>Completed</em>; record counts will appear next to each link. To add or update records, click on the appropriate link to be taken to the <em>Add / Update</em> page, or click <em>&quot;Queue&quot;</em> to add the import file to the Import Queue to be imported at a later time. Files in the <em>Import Queue</em> can be processed by clicking the <em>&quot;Process Now&quot;</em> link; the Queue will process an unlimited number of files, both additions and updates, for up to 12 hours at a time. To view a report about records that have already been imported, click on the <em>Completed</em> link.</p>
+<p>A report about the file you loaded is available under the <em>&quot;More Info&quot;</em> link. It is recommended that you carefully review the <em>More Info</em> report before you run any import. The report will indicate the filename, friendly name, number of records to add or update, which language the records are available in, the Publication and/or Distribution Codes included, and the fields that will be updated. It is important to make sure the file includes the data you expect, so you do not accidentally overwrite fields or codes where you wish to preserve your own data. You will have the opportunity to view data for individual records during the Add / Update process.</p>
+<p>You can only Add or Update a record from a loaded file once, as the data you loaded is replaced with an import report after the record has been imported; if you need to redo an import, you must reload the export file.</p>
+<p>Once you have completed importing records, or if you do not require a dataset any more, you can delete the dataset using the <em>&quot;Delete Dataset&quot;</em> link. Note that the import report will <strong>no longer be available</strong> once you delete the dataset, so if it contains any information that needs to be kept for documentation purposes you should save or print the import report available through the <em>Completed</em> link.</p>
+<p>You may see some records marked as <em>&quot;Cannot Import&quot;</em>; this occurs if you are trying to import a record with the same record number as a record that is owned by another CIOC Member in your database. Rather than importing the record, it must be shared with you by the member using a Sharing Profile. If you wish to have your own copy of the record that is owned by you, you must manually change the record number by opening the XML file in a text editor and supplying a new unique record number before you load the file.</p>
+<hr>
+<p class="Alert">There are a number of resources available on the <a href="http://community.cioc.ca/">CIOC Community Site</a> to help you with sharing your records. Access the Resources area, or post on the Message Board, for more information.</p>
+<p class="SmallNote">Last Modified: $Date$</p>

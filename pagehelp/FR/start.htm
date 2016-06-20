@@ -1,0 +1,111 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>&Agrave; noter que certaines options de recherche d&eacute;crites plus bas peuvent vous &ecirc;tre inaccessibles, en fonction de la mani&egrave;re dont le formulaire de recherche a &eacute;t&eacute; configur&eacute; dans votre vue.</p>
+<p class="Alert">Les &eacute;l&eacute;ments de recherche du formulaire de recherche simple sont regroup&eacute;s. Vos r&eacute;sultats seront bas&eacute;s sur les dossiers qui correspondent &agrave; chaque crit&egrave;re saisi sur ce formulaire.</p>
+<ul>
+	<li><a href="#keyword">Recherche par mots-cl&eacute;s</a></li>
+	<li><a href="#community">Recherche par communaut&eacute;</a></li>
+	<li><a href="#volunteer">Organismes avec occasions de b&eacute;n&eacute;volat</a></li>
+	<li><a href="#age">Recherche par groupe d'&acirc;ge</a></li>
+	<li><a href="#quicklist">Recherche par la liste rapide</a></li>
+	<li><a href="#more">Options de recherche suppl&eacute;mentaires</a></li>
+	<li><a href="#other">Liens vers d'autres types de recherches</a></li>
+</ul>
+
+<hr>
+
+<a name="keyword"></a>
+<h3>Recherche par mots-cl&eacute;s</h3>
+<p>Le moyen de recherche principal dans le logiciel est la recherche par mots-cl&eacute;s. Quatre champs de recherche par mots-cl&eacute;s potentiels sont disponibles, en fonction de ce qui a &eacute;t&eacute; rendu disponible sur votre formulaire de recherche actuel. Ils comprennent :</p>
+<ul>
+	<li><strong>Nom(s) d'organisme</strong> - Tous les niveaux hi&eacute;rarchiques de l'organisme, ainsi que les noms alternatifs et ant&eacute;rieurs.</li>
+	<li><strong>Sujets</strong> - Tous les sujets locaux et autoris&eacute;s, ainsi que les termes « employ&eacute;s pour » associ&eacute;s aux sujets et tous les termes g&eacute;n&eacute;riques de ces sujets.</li>
+	<li><strong>Cat&eacute;gories de service</strong> - Tous les termes de la Taxonomie AIRS / InfoLine index&eacute;s aux dossiers, ainsi que les synonymes de ces termes et les niveaux sup&eacute;rieurs, &agrave; l'exclusion des niveaux 1.</li>
+	<li><strong>Mots-cl&eacute;s</strong> - Toutes les options ci-dessus, ainsi que les r&eacute;gions desservies, les notes sur l'adresse, l'&eacute;difice, les noms des personnes contact et des dirigeants, l'admissibilit&eacute;, l'accessibilit&eacute;, le transport, les frais, les bailleurs de fonds, les langues, la description, la description suppl&eacute;mentaire, les codes SCIAN, le type de programme, le type de garde, les &eacute;coles avoisinantes et tous champs suppl&eacute;mentaires configur&eacute;s pour &ecirc;tre int&eacute;gr&eacute;s &agrave; la recherche par mots-cl&eacute;s.</li>
+</ul>
+
+<h4>Information g&eacute;n&eacute;rale sur la correspondance des mots-cl&eacute;s</h4>
+<p>Le formulaire de recherche par mots-cl&eacute;s sur la page de recherche principale fait toujours correspondre <strong><em>tous</em></strong> les mots-cl&eacute;s fournis (recherche « AND »). Si vous devez effectuer une recherche plus complexe (comme trouver soit « chat », soit « chien »), utilisez plut&ocirc;t le formulaire de recherche avanc&eacute;e.</p>
+<p>Le logiciel cherche automatiquement les diff&eacute;rentes formes d'un mot dans la langue utilis&eacute;e. Par exemple, <em>animal</em> ou <em>animaux</em> produit le m&ecirc;me r&eacute;sultat ; on peut donc utiliser l'un ou l'autre. Vous pouvez emp&ecirc;cher la recherche sur les formes d'un mot en utilisant les guillemets anglais (voir plus bas).</p>
+<p class="Alert">Remarque importante : si un dossier a un profil confidentiel, les champs marqu&eacute;s comme confidentiels sont toujours exclus de la recherche par mots-cl&eacute;s, m&ecirc;me si vous avez l'autorisation d'acc&eacute;der aux donn&eacute;es confidentielles.</p>
+
+<h4>Utilisation des ast&eacute;risques m&eacute;tacaract&egrave;res</h4>
+<p>Vous pouvez utiliser un ast&eacute;risque &agrave; la <strong>fin</strong> de tout mot de recherche, par exemple :</p>
+<ul>
+	<li><strong>enfan*</strong> trouvera <em>enfant ; enfants ; enfance ; enfantin</em></li>
+	<li><strong>aggr*</strong> trouvera <em>agression ; agress&eacute; ; agresseur</em></li>
+	<li><strong>enfan* aggr*</strong> trouvera n'importe quelle des combinaisons mentionn&eacute;es ci-dessus</li>
+</ul>
+<p>Dans de nombreux cas, il est plus efficace de laisser la fonction int&eacute;gr&eacute;e du logiciel rechercher les formes d'un mot, que d'utiliser l'ast&eacute;risque pour les variantes simples du m&ecirc;me mot (enfant et enfants, aide et aider). Cela r&eacute;duit le nombre de correspondances non d&eacute;sir&eacute;es, comme <em>hand*</em> retrouvant <em>handball</em>, alors qu'on souhaite seulement retrouver les correspondances &agrave; <em>handicap</em>, <em>handicap&eacute;s</em> et <em>handisport</em>.</p>
+
+<h4>Utilisation des guillemets anglais</h4>
+<p>Vous pouvez chercher des mots entre guillemets anglais... ainsi : <strong><em>&quot;clinique m&eacute;dicale&quot;</em></strong> retournera tous les dossiers qui ont exactement des <strong>deux</strong> mots de mani&egrave;re adjacente, dans le m&ecirc;me ordre et dans le <strong>m&ecirc;me</strong> champ. <br><strong><em>&quot;acti* soci*&quot;</em></strong> retournera les dossiers comportant <em>&quot;action sociale&quot;</em> <strong>ou</strong> <em>&quot;activit&eacute;s socialisantes&quot;</em> <strong>or</strong> <em>&quot;actionnariat soci&eacute;taire&quot;</em> dans un champ unique, de mani&egrave;re adjacente et dans le m&ecirc;me ordre.</p>
+<p>&Agrave; noter que l'utilisation des guillemets anglaises d&eacute;sactive la capacit&eacute; du logiciel &agrave; recherche les formes d'un mot (comme mentionn&eacute; plus haut). Ainsi, une recherche sur <em>&quot;animal&quot;</em> ne trouvera pas <em>&quot;animaux&quot;</em>.</p>
+
+<a name="community"></a>
+<h3>Recherche par communaut&eacute;</h3>
+<p>Cette fonctionnalit&eacute; vous permet de restreindre les r&eacute;sultats par g&eacute;ographie ; soit en fonction de l'emplacement physique du service/programme, soit en fonction de la zone g&eacute;ographique de service pr&eacute;cis&eacute;e dans le dossier. Si vous recherchez un service sp&eacute;cifique dans une r&eacute;gion identifi&eacute;e, il est recommand&eacute; d'utiliser ces fonctionnalit&eacute;s pour restreindre vos r&eacute;sultats.</p>
+
+<a name="volunteer"></a>
+<h3>Organismes avec occasions de b&eacute;n&eacute;volat</h3>
+<p>Cette option est disponible uniquement dans les communaut&eacute;s qui utilisent &agrave; la fois les modules B&eacute;n&eacute;volat et Information communautaire ; elle limite les r&eacute;sultats aux dossiers avec des occasions de b&eacute;n&eacute;volat associ&eacute;es. Cette recherche fait correspondre uniquement les occasions de b&eacute;n&eacute;volat qui vous sont accessibles dans votre vue du module B&eacute;n&eacute;volat actuelle et exclue les occasions supprim&eacute;es.</p>
+
+<a name="age"></a>
+<h3>Recherche par groupe d'&acirc;ge</h3>
+<p>La recherche par groupe d'&acirc;ge vous permet de trouver les dossiers d&eacute;sign&eacute;s comme desservant une tranche d'&acirc;ge particuli&egrave;re. &Agrave; noter que les dossiers correspondants doivent desservir n'importe quelle portion de la tranche d'&acirc;ge : ainsi, lorsqu'on recherche une tranche d'&acirc;ge qui comprend les 12-18 ans, cela correspondra aux dossiers desservant les 6-12 ans, car ils comprennent l'&acirc;ge de 12 ans. Les ann&eacute;es incompl&egrave;tes, si pr&eacute;cis&eacute;es dans le dossier ou les param&egrave;tres de groupes d'&acirc;ge, sont utilis&eacute;es pour la correspondance (p. ex., 3.8 ans). On peut configurer les groupes d'&acirc;ge dans la zone de configuration du logiciel, donc vos valeurs particuli&egrave;res peuvent varier. Les groupes d'&acirc;ge peuvent se chevaucher.</p>
+
+<p class="Alert">&Agrave; noter que si aucun &acirc;ge sp&eacute;cifique n'est saisi dans le dossier, il est admis que le dossier dessert tous les &acirc;ges.</p>
+
+<a name="quicklist"></a>
+<h3>Recherche par la liste rapide</h3>
+<p>Cet outil de recherche pour permet de limiter la port&eacute;e des dossiers recherch&eacute;s &agrave; un ensemble de dossiers pr&eacute;d&eacute;termin&eacute;s, souvent regroup&eacute;s par sujet ou emplacement g&eacute;ographique. En fonction de la mani&egrave;re dont votre formulaire de recherche est configur&eacute;, vous pouvez avoir un menu d&eacute;roulant (permettant un choix) ou un ensemble de cases &agrave; cocher (permettant plusieurs choix). Dans la plupart des cas, votre recherche devra correspondre &agrave; <em>toutes</em> vos s&eacute;lections, mais il est possible de param&eacute;trer le formulaire de recherche de mani&egrave;re &agrave; faire correspondre n'importe quels choix de la liste rapide. Le formulaire de recherche n'indique pas cela, mais vos r&eacute;sultats de recherche montreront si <strong>toutes</strong> ou <strong>l'une ou plusieurs</strong> de vos s&eacute;lections ont &eacute;t&eacute; recherch&eacute;es.</p>
+
+<a name="more"></a>
+<h3>Options de recherche suppl&eacute;mentaires</h3>
+
+<h4>Organismes avec sites web</h4>
+<p>On peut limiter les r&eacute;sultats de recherche uniquement aux dossiers ayant un site web saisi dans le champ WWW.</p>
+
+<h4>Num&eacute;ro de dossier</h4>
+<p>Vous pouvez retourner <strong>un dossier sp&eacute;cifique</strong> dans les r&eacute;sultats de recherche en fonction de son num&eacute;ro de dossier, c'est-&agrave;-dire l'identifiant unique compos&eacute; de trois lettres et quatre chiffres assign&eacute; &agrave; chaque dossier : p. ex., HAM2233 ; QBC4489 ; SIM3112, etc. Si vous recherchez par num&eacute;ro de dossier, ne pr&eacute;cisez aucun autre crit&egrave;re de recherche, car cette recherche, par d&eacute;finition, ne peut avoir <strong>qu'un seul</strong> dossier dans les r&eacute;sultats ; d'autres crit&egrave;res ne sont pas applicables. Cela ne s'av&egrave;re utile que si vous connaissez le num&eacute;ro de dossier de l'organisme recherch&eacute;.</p>
+<h4>Recherche par places disponibles</h4>
+<p>Si vous utilisez les champs sp&eacute;cialis&eacute;s de places disponibles du logiciel, cette recherche vous permet de rechercher des dossiers en fonction de la disponibilit&eacute; des places, des listes d'attente et des publics cibles (le type de personne pouvant acc&eacute;der au service).</p>
+
+<h4>Parcourir les dossiers par nom ou par sujet</h4>
+<p>Parcourir est le fait de consulter une liste pr&eacute;d&eacute;finie de valeurs tri&eacute;es par ordre alphab&eacute;tique.</p>
+<ul>
+	<li><strong>Parcourir par organisme</strong> - vous permet de consulter une liste de services en fonction de la premi&egrave;re lettre du <strong>1er niveau</strong> du nom d'organisme pr&eacute;cis&eacute; dans le dossier.</li>
+	<li><strong>Parcourir par sujet</strong> - vous permet de consulter une liste alphab&eacute;tique des sujets du Th&eacute;saurus ; cela inclut le nombre de dossiers utilisant chaque terme et, en cliquant sur le lien, vous lancez une recherche correspondant &agrave; ces dossiers.</li>
+</ul>
+
+<a name="other"></a>
+<h3>Liens vers d'autres types de recherches</h3>
+
+<h4>Recherche par le SCIAN (Syst&egrave;me de Classification des Industries de l'Am&eacute;rique du Nord)</h4>
+<p>Si ce syst&egrave;me de classification est utilis&eacute;, un lien peut &ecirc;tre disponible pour parcourir les cat&eacute;gories et sous-cat&eacute;gories. Le SCIAN est principalement utilis&eacute; pour les r&eacute;pertoires d'entreprises, mais peut &ecirc;tre utilis&eacute; pour classifier plusieurs types d'organismes.</p>
+<h4>Recherche de garderies</h4>
+<p>Si la fonctionnalit&eacute; sur les garderies est activ&eacute;e dans votre vue actuelle, la recherche de garderies vous permet de recherche par certains ou tous les crit&egrave;res suivants : mots-cl&eacute;s, communaut&eacute;, type de garderie, type de programme, &acirc;ge(s) des enfants, date de garderie requise, &eacute;coles locales, accompagnement &agrave; l'&eacute;cole, disponibilit&eacute; de subvention, places disponibles, ligne(s) de bus &agrave; proximit&eacute; et proximit&eacute; g&eacute;ographique.</p>
+<h4>Recherche par cat&eacute;gories de service / Taxonomie AIRS/InfoLine</h4>
+<p>Vous pouvez avoir acc&egrave;s &agrave; certaines ou toutes les fonctionnalit&eacute;s de recherche suivantes :</p>
+<ul>
+	<li><strong>Parcourir par cat&eacute;gorie de service</strong> - parcourir les cat&eacute;gories et sous-cat&eacute;gories de la Taxonomie, y compris les termes associ&eacute;s. En fonction de la configuration de cette recherche, des descriptions d&eacute;taill&eacute;es de chaque terme peuvent &ecirc;tre incluses &agrave; certains ou tous les niveaux de la hi&eacute;rarchie de la Taxonomie.</li>
+	<li><strong>Recherche simple sur la Taxonomie</strong> - comprend des mani&egrave;res plus sophistiqu&eacute;es de recherche des termes de la Taxonomie, comme parcourir les niveaux de la hi&eacute;rarchie, rechercher par mot-cl&eacute;, rechercher par code et d'autres options.</li>
+	<li><strong>Recherche avanc&eacute;e sur la Taxonomie</strong> - comprend toutes les options de recherche de la recherche simple, ainsi que la possibilit&eacute; de rechercher plusieurs combinaisons de termes.</li>
+</ul>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

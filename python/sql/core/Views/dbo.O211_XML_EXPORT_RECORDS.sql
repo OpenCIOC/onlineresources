@@ -1,0 +1,434 @@
+
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE VIEW [dbo].[O211_XML_EXPORT_RECORDS]
+AS
+
+/*
+	Checked for Release: 3.7.1
+	Checked by: KL
+	Checked on: 14-Sep-2015
+	Action: TESTING REQUIRED
+*/
+
+SELECT
+	bt.RSN AS FID,
+	CASE WHEN btd.LangID=2 THEN 'fr' ELSE 'en' END AS LNG,
+	bt.NUM AS ORGID,
+	dbo.fn_GBL_DisplayFullOrgName_O211(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2) AS ORGNAME,
+	(SELECT ISNULL(Display,[Name])
+		FROM GBL_Community cm
+		INNER JOIN GBL_Community_Name cmn
+			ON cm.CM_ID=cmn.CM_ID AND cmn.LangID=(SELECT TOP 1 LangID FROM GBL_Community_Name WHERE CM_ID=cmn.CM_ID ORDER BY CASE WHEN LangID=btd.LangID THEN 0 ELSE 1 END, LangID)
+		WHERE cm.CM_ID=bt.LOCATED_IN_CM) AS LOCNAME,
+	
+	(SELECT
+		bt.RSN AS [@RSN],
+	--Record Language
+		CASE WHEN btd.LangID=0 THEN 'en' ELSE 'fr' END AS [LNG],
+	--Org Identification
+		bt.NUM AS [ORGID],
+	--Org Names
+		CASE WHEN dbo.fn_GBL_DisplayFullOrgName_O211(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2) IS NULL
+			AND CMP_AltOrg IS NULL AND LEGAL_ORG IS NULL AND CMP_FormerOrg IS NULL THEN NULL ELSE
+		(SELECT
+			CASE WHEN dbo.fn_GBL_DisplayFullOrgName_O211(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2) IS NULL THEN NULL ELSE (SELECT 'current' AS [@TYPE], '1' AS [@LEVEL], dbo.fn_GBL_DisplayFullOrgName_O211(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2) AS [data()] FOR XML PATH('ORGNAME'), TYPE) END AS [node()],
+			CASE WHEN btd.CMP_AltOrg IS NULL THEN NULL ELSE (SELECT 'alternative' AS [@TYPE], btd.CMP_AltOrg AS [data()] FOR XML PATH('ORGNAME'), TYPE) END AS [node()],
+			CASE WHEN btd.LEGAL_ORG IS NULL THEN NULL ELSE (SELECT 'legal' AS [@TYPE], btd.LEGAL_ORG AS [data()] FOR XML PATH('ORGNAME'), TYPE) END AS [node()],
+			CASE WHEN btd.CMP_FormerOrg IS NULL THEN NULL ELSE (SELECT 'former' AS [@TYPE], btd.CMP_FormerOrg AS [data()] FOR XML PATH('ORGNAME'), TYPE) END AS [node()]
+				FOR XML PATH(''), TYPE) END AS [ORGNAMES],
+	--Org Comments
+		CASE WHEN COMMENTS IS NULL AND PUBLIC_COMMENTS IS NULL THEN NULL ELSE
+		(SELECT
+			CASE WHEN COMMENTS IS NULL THEN NULL ELSE (SELECT 'internal' AS [@TYPE], COMMENTS AS [data()] FOR XML PATH('COMMENTS'), TYPE) END AS [node()],
+			CASE WHEN PUBLIC_COMMENTS IS NULL THEN NULL ELSE (SELECT 'public' AS [@TYPE], PUBLIC_COMMENTS AS [data()] FOR XML PATH('COMMENTS'), TYPE) END AS [node()]
+		FOR XML PATH(''),TYPE) END AS [ORGCOMMENTS],
+	--Phones
+		CASE WHEN OFFICE_PHONE IS NULL AND TDD_PHONE IS NULL AND
+			TOLL_FREE_PHONE IS NULL AND CRISIS_PHONE IS NULL AND
+			AFTER_HRS_PHONE IS NULL AND FAX IS NULL THEN NULL ELSE
+		(SELECT
+			CASE WHEN OFFICE_PHONE IS NULL THEN NULL ELSE (SELECT 'office' AS [@TYPE], btd.OFFICE_PHONE AS [data()] FOR XML PATH('PHONE'), TYPE) END AS [node()],
+			CASE WHEN TDD_PHONE IS NULL THEN NULL ELSE (SELECT 'tdd' AS [@TYPE], cbtd.TDD_PHONE AS [data()] FOR XML PATH('PHONE'), TYPE) END AS [node()],
+			CASE WHEN TOLL_FREE_PHONE IS NULL THEN NULL ELSE (SELECT 'tollfree' AS [@TYPE], btd.TOLL_FREE_PHONE AS [data()] FOR XML PATH('PHONE'), TYPE) END AS [node()],
+			CASE WHEN CRISIS_PHONE IS NULL THEN NULL ELSE (SELECT 'crisis' AS [@TYPE], cbtd.CRISIS_PHONE AS [data()] FOR XML PATH('PHONE'), TYPE) END AS [node()],
+			CASE WHEN AFTER_HRS_PHONE IS NULL THEN NULL ELSE (SELECT 'afterhours' AS [@TYPE], cbtd.AFTER_HRS_PHONE AS [data()] FOR XML PATH('PHONE'), TYPE) END AS [node()],
+			CASE WHEN FAX IS NULL THEN NULL ELSE (SELECT 'fax' AS [@TYPE], btd.FAX AS [data()] FOR XML PATH('PHONE'), TYPE) END AS [node()]
+		FOR XML PATH(''), TYPE) END AS [PHONES],
+	--Internet
+		E_MAIL AS EMAIL,
+		WWW_ADDRESS AS WWW,
+	--Site Address
+		CASE WHEN btd.SITE_BUILDING IS NULL AND btd.SITE_STREET_NUMBER IS NULL AND
+			btd.SITE_STREET IS NULL AND btd.SITE_STREET_TYPE IS NULL AND
+			btd.SITE_STREET_DIR IS NULL AND btd.SITE_SUFFIX IS NULL AND
+			btd.SITE_CITY IS NULL AND btd.SITE_PROVINCE IS NULL AND
+			bt.SITE_POSTAL_CODE IS NULL THEN NULL ELSE
+		(SELECT
+			btd.SITE_BUILDING AS BUILDING,
+			btd.SITE_STREET_NUMBER AS STREET_NUMBER,
+			btd.SITE_STREET AS STREET,
+			btd.SITE_STREET_TYPE AS STREET_TYPE,
+			btd.SITE_STREET_DIR AS STREET_DIRECTION,
+			btd.SITE_SUFFIX AS SUFFIX,
+			btd.SITE_CITY AS CITY,
+			btd.SITE_PROVINCE AS PROVINCE,
+			bt.SITE_POSTAL_CODE AS POSTAL_CODE
+		FOR XML PATH(''), TYPE) END AS [SITE_ADDRESS],
+	--Location
+		CASE WHEN WARD IS NULL AND INTERSECTION IS NULL AND LOCATED_IN_CM IS NULL THEN NULL ELSE				
+		(SELECT
+			dbo.fn_CIC_FullWard(cbt.WARD) AS WARD,
+			INTERSECTION AS MAIN_INTERSECTION,
+			(SELECT
+				ISNULL(Display,[Name]) AS NAME,
+				cmid.CM_ID AS [id],
+				cm.CM_GUID AS [GUID],
+				PARENTCOMMUNITY AS parent
+				FROM dbo.fn_O211_CommunityList(LOCATED_IN_CM) cmid
+				INNER JOIN GBL_Community cm
+					ON cmid.cm_id=cm.cm_id
+				INNER JOIN GBL_Community_Name cmn
+					ON cm.CM_ID=cmn.CM_ID AND cmn.LangID=(SELECT TOP 1 LangID FROM GBL_Community_Name WHERE CM_ID=cmn.CM_ID ORDER BY CASE WHEN LangID=btd.LangID THEN 0 ELSE 1 END, LangID)
+			FOR XML PATH('COMMUNITY'), TYPE) AS [HIERARCHY],
+			SITE_LOCATION
+		FOR XML PATH(''), TYPE) END AS [LOCATION],
+	--Service areas
+		CASE WHEN AREAS_SERVED_NOTES IS NULL AND BOUNDARIES IS NULL AND
+			NOT EXISTS(SELECT * FROM CIC_BT_CM cmbt WHERE bt.NUM=cmbt.NUM) THEN NULL ELSE				
+		(SELECT
+			cbtd.AREAS_SERVED_NOTES AS NOTES,
+			cbtd.BOUNDARIES,
+			(SELECT
+				cmn.Name AS [NAME],
+				prn.Notes AS [NOTES],
+				cm.CM_ID AS [id],
+				cm.CM_GUID AS [GUID]
+				FROM CIC_BT_CM pr
+				LEFT JOIN CIC_BT_CM_Notes prn
+					ON pr.BT_CM_ID=prn.BT_CM_ID AND prn.LangID=btd.LangID
+				INNER JOIN GBL_Community cm
+					ON pr.CM_ID=cm.CM_ID
+				INNER JOIN GBL_Community_Name cmn
+					ON cm.CM_ID=cmn.CM_ID AND cmn.LangID=(SELECT TOP 1 LangID FROM GBL_Community_Name WHERE CM_ID=cmn.CM_ID ORDER BY CASE WHEN LangID=btd.LangID THEN 0 ELSE 1 END, LangID)
+				WHERE pr.NUM=bt.NUM
+			FOR XML PATH('COMMUNITY'), TYPE) AS [COMMUNITIES]
+		FOR XML PATH(''), TYPE) END AS [SERVICE_AREA],
+	--Accessibility
+		CASE WHEN ACCESSIBILITY_NOTES IS NULL AND
+			NOT EXISTS(SELECT * FROM GBL_BT_AC acbt WHERE bt.NUM=acbt.NUM) THEN NULL ELSE				
+		(SELECT
+			(SELECT
+				acn.Name AS ACCESS_TYPE,
+				prn.NOTES AS DESCRIPTION
+				FROM GBL_BT_AC pr
+				LEFT JOIN GBL_BT_AC_Notes prn
+					ON pr.BT_AC_ID=prn.BT_AC_ID AND prn.LangID=btd.LangID
+				INNER JOIN GBL_Accessibility ac
+					ON pr.AC_ID=ac.AC_ID
+				INNER JOIN GBL_Accessibility_Name acn
+					ON ac.AC_ID=acn.AC_ID AND acn.LangID=btd.LangID
+				WHERE pr.NUM=bt.NUM
+			FOR XML PATH('LEVEL'), TYPE) AS [node()],
+			ACCESSIBILITY_NOTES AS NOTES
+		FOR XML PATH(''), TYPE) END AS [ACCESSIBILITY],
+	--Mail Address
+		CASE WHEN btd.MAIL_CARE_OF IS NULL AND btd.MAIL_BUILDING IS NULL AND
+			btd.MAIL_STREET_NUMBER IS NULL AND btd.MAIL_STREET IS NULL AND
+			btd.MAIL_STREET_TYPE IS NULL AND btd.MAIL_STREET_DIR IS NULL AND
+			btd.MAIL_SUFFIX IS NULL AND btd.MAIL_CITY IS NULL AND
+			btd.MAIL_PROVINCE IS NULL AND bt.MAIL_POSTAL_CODE IS NULL AND
+			btd.MAIL_BOX_TYPE IS NULL AND btd.MAIL_PO_BOX IS NULL THEN NULL ELSE				
+		(SELECT
+			btd.MAIL_CARE_OF AS MAIL_CARE_OF,
+			btd.MAIL_BUILDING AS BUILDING,
+			btd.MAIL_STREET_NUMBER AS STREET_NUMBER,
+			btd.MAIL_STREET AS STREET,
+			btd.MAIL_STREET_TYPE AS STREET_TYPE,
+			btd.MAIL_STREET_DIR AS STREET_DIRECTION,
+			btd.MAIL_SUFFIX AS SUFFIX,
+			btd.MAIL_CITY AS CITY,
+			btd.MAIL_PROVINCE AS PROVINCE,
+			bt.MAIL_POSTAL_CODE AS POSTAL_CODE,
+			btd.MAIL_BOX_TYPE,
+			btd.MAIL_PO_BOX
+		FOR XML PATH(''), TYPE) END AS [MAILADDRESS],
+	--Contacts
+		(SELECT
+			(SELECT
+				CASE
+					WHEN GblContactType LIKE 'VOLCONTACT' THEN 'volunteer'
+					WHEN GblContactType LIKE 'EXEC%' THEN 'executive'
+					ELSE 'contact'
+				END AS "@TYPE",
+				CASE
+					WHEN GblContactType LIKE '%_1' THEN 1
+					WHEN GblContactType LIKE '%_2' THEN CASE WHEN EXISTS(SELECT * FROM GBL_Contact WHERE GblNUM=c.GblNUM AND LangID=c.LangID AND GblContactType LIKE REPLACE(c.GblContactType,'2','1')) THEN 2 ELSE 1 END
+					ELSE NULL
+				END AS "@ORDER",
+				CMP_Name AS NAME, TITLE, ORG AS ORGANIZATION, CMP_PhoneFull AS PHONE, CMP_Fax AS FAX, EMAIL
+				FROM GBL_Contact c
+				WHERE	GblContactType IN ('CONTACT_1','CONTACT_2','EXEC_1','EXEC_2','VOLCONTACT')
+						AND GblNUM=bt.NUM
+						AND LangID=btd.LangID
+			FOR XML PATH('CONTACT'), TYPE) AS [node()]
+		FOR XML PATH(''),TYPE) AS CONTACTS,
+	--Eligibility
+		CASE WHEN MIN_AGE IS NULL AND MAX_AGE IS NULL AND ELIGIBILITY_NOTES IS NULL THEN NULL ELSE				
+		(SELECT
+			CAST(CAST(MIN_AGE AS float) AS varchar) AS MIN_AGE,
+			CAST(CAST(MAX_AGE AS float) AS varchar) AS MAX_AGE,
+			ELIGIBILITY_NOTES
+		FOR XML PATH(''), TYPE) END AS [ELIGIBILITY],
+	--Organization Information
+		CASE WHEN LANGUAGE_NOTES IS NULL AND
+			NOT EXISTS(SELECT * FROM CIC_BT_LN lnbt WHERE bt.NUM = lnbt.NUM) THEN NULL ELSE				
+		(SELECT
+			LANGUAGE_NOTES AS NOTES,
+			(SELECT
+				DisplayOrder AS [@ORDER],
+				lnn.Name AS NAME,
+				CASE WHEN prn.Notes IS NULL AND NOT EXISTS(SELECT * FROM dbo.CIC_BT_LN_LND WHERE BT_LN_ID=pr.BT_LN_ID) THEN NULL ELSE
+					ISNULL((SELECT STUFF((SELECT ', ' + ISNULL(lndn.Name,lnd.Code)
+						FROM dbo.CIC_BT_LN_LND prlnd
+						INNER JOIN dbo.GBL_Language_Details lnd
+							ON lnd.LND_ID = prlnd.LND_ID
+						LEFT JOIN dbo.GBL_Language_Details_Name lndn
+							ON lndn.LND_ID = lnd.LND_ID AND lndn.LangID=btd.LangID
+						WHERE prlnd.BT_LN_ID=pr.BT_LN_ID
+						FOR XML PATH('')) ,1,2,'')),'')
+					+ CASE WHEN prn.Notes IS NULL THEN ''
+						ELSE CASE WHEN EXISTS(SELECT * FROM dbo.CIC_BT_LN_LND prlnd WHERE prlnd.BT_LN_ID=pr.BT_LN_ID)
+						THEN ', ' ELSE '' END + prn.Notes END
+					END AS NOTES
+				FROM CIC_BT_LN pr
+				LEFT JOIN CIC_BT_LN_Notes prn
+					ON pr.BT_LN_ID=prn.BT_LN_ID AND prn.LangID=btd.LangID
+				INNER JOIN GBL_Language ln
+					ON pr.LN_ID=ln.LN_ID
+				INNER JOIN GBL_Language_Name lnn
+					ON ln.LN_ID=lnn.LN_ID AND lnn.LangID=(SELECT TOP 1 LangID FROM GBL_Language_Name WHERE LN_ID=lnn.LN_ID ORDER BY CASE WHEN LangID=btd.LangID THEN 0 ELSE 1 END, LangID)
+				WHERE pr.NUM=bt.NUM
+			FOR XML PATH('LANGUAGE'), TYPE) AS [node()]
+		FOR XML PATH(''), TYPE) END AS [LANGUAGES],
+		APPLICATION,
+		CMP_Fees AS FEES,
+		CASE WHEN NOT EXISTS(SELECT * FROM CIC_BT_SBJ sbjbt WHERE sbjbt.NUM=bt.NUM)
+			AND NOT EXISTS(SELECT * FROM CIC_BT_TAX btt WHERE btt.NUM=bt.NUM) THEN NULL ELSE
+		(SELECT
+			(SELECT
+				't' AS [@t],
+				dbo.fn_O211_Taxonomy_Link_Term(BT_TAX_ID, btd.LangID) AS [data()]
+				FROM CIC_BT_TAX btt WHERE btt.NUM=bt.NUM
+			FOR XML PATH('K'), TYPE) AS [node()],
+			(SELECT
+				'd' AS [@t],
+				REPLACE(REPLACE(dbo.fn_O211_Taxonomy_Link_Term(BT_TAX_ID, btd.LangID),'''s','s'),'s''','s') AS [data()]
+				FROM CIC_BT_TAX btt WHERE btt.NUM=bt.NUM
+					AND EXISTS(SELECT * FROM CIC_BT_TAX_TM bttt INNER JOIN TAX_Term_Description tt ON bttt.Code=tt.Code
+					WHERE bttt.BT_TAX_ID=btt.BT_TAX_ID AND
+						(tt.Term LIKE '%''s %' OR tt.Term LIKE '%''s' OR tt.Term LIKE '%s'' ' OR tt.Term LIKE '%s'''))
+			FOR XML PATH('K'), TYPE) AS [node()],
+			(SELECT DISTINCT
+				'u' AS [@t],
+				Term AS [data()]
+				FROM CIC_BT_TAX pr
+				INNER JOIN CIC_BT_TAX_TM fr
+					ON pr.BT_TAX_ID=fr.BT_TAX_ID
+				INNER JOIN TAX_Unused ut
+					ON fr.Code = ut.Code AND ut.LangID=btd.LangID
+						AND ut.Active=1
+				WHERE     (pr.NUM = bt.NUM)
+			FOR XML PATH('K'), TYPE) AS [node()],
+			(SELECT DISTINCT
+				'd' AS [@t],
+				REPLACE(REPLACE(Term,'''s','s'),'s''','s') AS [data()]
+				FROM CIC_BT_TAX pr
+				INNER JOIN CIC_BT_TAX_TM fr
+					ON pr.BT_TAX_ID=fr.BT_TAX_ID
+				INNER JOIN TAX_Unused ut
+					ON fr.Code = ut.Code AND ut.LangID=btd.LangID
+						AND ut.Active=1
+				WHERE     (pr.NUM = bt.NUM)
+					AND (Term LIKE '%''s %' OR Term LIKE '%''s' OR Term LIKE '%s'' ' OR Term LIKE '%s''')
+					
+			FOR XML PATH('K'), TYPE) AS [node()]
+		FOR XML PATH(''), TYPE) END AS [KEYWORDS],
+		COALESCE(btd.DESCRIPTION, btd.ORG_DESCRIPTION, btd.LOCATION_DESCRIPTION) AS DESCRIPTION,
+		SUP_DESCRIPTION,
+		MEETINGS,
+		ESTABLISHED,
+		PRINT_MATERIAL,
+		RESOURCES,
+		DATES,
+		HOURS,
+		(SELECT
+			PubCode AS [CODE],
+			ISNULL(pbn.Name, '') AS [PUBNAME]
+			FROM CIC_BT_PB pr
+			INNER JOIN CIC_Publication pb
+				ON pr.PB_ID=pb.PB_ID
+			LEFT JOIN CIC_Publication_Name pbn
+				ON pb.PB_ID=pbn.PB_ID AND pbn.LangID=btd.LangID
+			WHERE pr.NUM=bt.NUM
+			ORDER BY PubCode
+		FOR XML PATH('PUBLICATION'), TYPE) AS [PUBLICATIONS],
+		(SELECT
+			ServiceLevelCode AS [CODE],
+			sln.Name AS [SERVICE_LEVEL]
+			FROM CIC_BT_SL pr
+			INNER JOIN CIC_ServiceLevel sl
+				ON pr.SL_ID=sl.SL_ID
+			LEFT JOIN CIC_ServiceLevel_Name sln
+				ON sln.SL_ID=sl.SL_ID AND sln.LangID=btd.LangID
+			WHERE pr.NUM=bt.NUM
+			ORDER BY ServiceLevelCode
+		FOR XML PATH('SERVICE'), TYPE) AS [SERVICES],
+	--"Extra" Fileds for Organization Data
+		-- these extra fields are likely no longer relevant and should be reviewed
+		CASE WHEN NOT EXISTS(SELECT * FROM CIC_BT_EXTRA_TEXT WHERE NUM=bt.NUM AND LangID=btd.LangID
+			AND FieldName IN ('EXTRA_A','EXTRA_B','EXTRA_D')) THEN NULL ELSE
+		(SELECT
+			(SELECT [Value] FROM CIC_BT_EXTRA_TEXT WHERE NUM=cbtd.NUM AND LangID=btd.LangID AND FieldName='EXTRA_A') AS EXTRA_A,
+			(SELECT [Value] FROM CIC_BT_EXTRA_TEXT WHERE NUM=cbtd.NUM AND LangID=btd.LangID AND FieldName='EXTRA_B') AS EXTRA_B,
+			(SELECT [Value] FROM CIC_BT_EXTRA_TEXT WHERE NUM=cbtd.NUM AND LangID=btd.LangID AND FieldName='EXTRA_D') AS EXTRA_D
+		FOR XML PATH(''), TYPE) END AS [EXTRA],
+	--Editorial Data
+		(SELECT
+			-- quality field is likely no longer relevant and should be reviewed
+			(SELECT Quality FROM CIC_Quality WHERE RQ_ID=cbt.QUALITY) AS QUALITY,
+			CMP_FUNDING AS FUNDING,
+			RECORD_OWNER,
+			dbo.fn_GBL_NUMToRecordNote('INTERNAL_MEMO',bt.NUM,btd.LangID) AS INTERNAL_MEMO,
+			(SELECT RecordType FROM CIC_RecordType WHERE RT_ID=cbt.RECORD_TYPE) AS RECORD_TYPE,
+			dbo.fn_O211_XML_DateFormat(bt.CREATED_DATE) AS CREATED_DATE,
+			bt.CREATED_BY,
+			dbo.fn_O211_XML_DateFormat(UPDATE_DATE) AS UPDATE_DATE,
+			UPDATED_BY,
+			dbo.fn_O211_XML_DateFormat(bt.MODIFIED_DATE) AS MODIFIED_DATE,
+			bt.MODIFIED_BY,
+			dbo.fn_O211_XML_DateFormat(DELETION_DATE) AS DELETION_DATE,
+			dbo.fn_O211_XML_DateFormat(COLLECTED_DATE) AS COLLECTED_DATE,
+			COLLECTED_BY,
+			dbo.fn_O211_XML_DateFormat(EMAIL_UPDATE_DATE) AS EMAIL_UPDATE_DATE,
+			NO_UPDATE_EMAIL,
+			--IMPORT_DATE,
+			CASE WHEN SOURCE_DB IS NULL AND bt.MemberID <> 5000 THEN
+				 (SELECT TOP 1
+					'&copy; <a href="' + 
+					CASE WHEN ISNULL(m.FullSSLCompatible, 0)=0 OR tmpl.FullSSLCompatible_Cache=0 THEN 'http://' ELSE 'https://' END + m.DomainName + '/?Ln=' + (SELECT l.Culture FROM STP_Language l WHERE l.LangID=btd.LangID) +
+					'">' + CASE WHEN mem.UseMemberNameAsSourceDB=1 THEN ISNULL(memd.MemberNameCIC,memd.MemberName) ELSE memd.DatabaseNameCIC END + '</a>'
+					FROM STP_Member mem
+					INNER JOIN STP_Member_Description memd
+						ON mem.MemberID=memd.MemberID AND memd.LangID=(SELECT TOP 1 LangID FROM STP_Member_Description WHERE MemberID=mem.MemberID ORDER BY CASE WHEN LangID=btd.LangID THEN 0 ELSE 1 END, LangID)
+					INNER JOIN GBL_View_DomainMap m
+						ON m.DomainName=mem.BaseURLCIC AND m.MemberID=mem.MemberID
+					INNER JOIN CIC_View vw
+						ON vw.ViewType=ISNULL(m.CICViewType, mem.DefaultViewCIC)
+					INNER JOIN GBL_Template tmpl
+						ON tmpl.Template_ID = vw.Template
+					WHERE mem.MemberID=bt.MemberID
+				 ) 
+			ELSE SOURCE_DB
+			END AS SOURCE_DB,
+			CASE WHEN SUBMIT_CHANGES_TO IS NULL
+				THEN
+					(SELECT TOP 1 
+					 m.DomainName + '/feedback.asp?NUM=' + bt.NUM + '&Ln=' + (SELECT l.Culture FROM STP_Language l WHERE btd.LangID=l.LangID)
+						FROM STP_Member mem
+						INNER JOIN GBL_View_DomainMap m
+							ON m.DomainName=mem.BaseURLCIC AND m.MemberID=mem.MemberID
+						WHERE m.MemberID=bt.MemberID)
+				ELSE
+					SUBMIT_CHANGES_TO
+			END AS SUBMIT_CHANGES_TO,
+			CASE WHEN SUBMIT_CHANGES_TO_PROTOCOL IS NULL THEN
+				(CASE WHEN SUBMIT_CHANGES_TO IS NULL
+				THEN
+					 (SELECT TOP 1
+						CASE WHEN ISNULL(m.FullSSLCompatible, 0)=0 OR tmpl.FullSSLCompatible_Cache=0 THEN 'http://' ELSE 'https://' END
+						FROM STP_Member mem
+						INNER JOIN GBL_View_DomainMap m
+							ON m.DomainName=mem.BaseURLCIC AND m.MemberID=mem.MemberID
+						INNER JOIN CIC_View vw
+							ON vw.ViewType=ISNULL(m.CICViewType, mem.DefaultViewCIC)
+						INNER JOIN GBL_Template tmpl
+							ON tmpl.Template_ID = vw.Template
+						WHERE mem.MemberID=bt.MemberID
+					 ) 
+				 ELSE 
+					'http://'
+				 END)
+				ELSE
+					 SUBMIT_CHANGES_TO_PROTOCOL
+			 END AS SUBMIT_CHANGES_TO_PROTOCOL
+		FOR XML PATH(''), TYPE) AS [EDITORIAL],
+		CASE WHEN SOURCE_TITLE IS NULL AND SOURCE_ORG IS NULL AND
+			SOURCE_PHONE IS NULL AND SOURCE_FAX IS NULL AND
+			SOURCE_EMAIL IS NULL AND SOURCE_BUILDING IS NULL AND
+			SOURCE_ADDRESS IS NULL AND SOURCE_CITY IS NULL AND
+			SOURCE_PROVINCE IS NULL AND SOURCE_POSTAL_CODE IS NULL THEN NULL ELSE				
+		(SELECT
+			SOURCE_TITLE AS TITLE,
+			SOURCE_ORG AS ORGANIZATION,
+			SOURCE_PHONE AS PHONE,
+			SOURCE_FAX AS FAX,
+			SOURCE_EMAIL AS EMAIL,
+			SOURCE_BUILDING AS BUILDING,
+			SOURCE_ADDRESS AS ADDRESS,
+			SOURCE_CITY AS CITY,
+			SOURCE_PROVINCE AS PROVINCE,
+			SOURCE_POSTAL_CODE AS POSTAL_CODE
+		FOR XML PATH(''), TYPE) END AS [SOURCE],
+	--Technical Data
+		CMP_CROSSREF AS CROSS_REFERENCE,
+		SORT_AS,
+		(SELECT
+				DistCode AS CODE
+				FROM CIC_BT_DST pr INNER JOIN CIC_Distribution ds
+					ON pr.DST_ID=ds.DST_ID
+				WHERE pr.NUM=bt.NUM
+		FOR XML PATH(''), TYPE) AS [DISTRIBUTION]
+	FOR XML PATH ('DOC'),TYPE) AS XDOC,
+	LATITUDE,
+	LONGITUDE,
+	dbo.fn_O211_XML_DateFormat(bt.CREATED_DATE) AS CDATE,
+	dbo.fn_O211_XML_DateFormat(bt.MODIFIED_DATE) AS MDATE,
+	dbo.fn_O211_XML_DateFormat(UPDATE_DATE) AS LCDATE,
+	bt.CREATED_BY AS CUSER,
+	bt.MODIFIED_BY AS MUSER,
+	UPDATED_BY AS LCUSER,
+	(SELECT CASE WHEN (btd.DELETION_DATE IS NOT NULL AND DELETION_DATE <= GETDATE())
+				THEN 0 ELSE 1 END) AS STATUS,
+	NON_PUBLIC
+FROM GBL_BaseTable bt
+LEFT JOIN GBL_BaseTable_Description btd
+	ON bt.NUM=btd.NUM
+LEFT JOIN CIC_BaseTable cbt
+	ON bt.NUM = cbt.NUM
+LEFT JOIN CIC_BaseTable_Description cbtd
+	ON cbt.NUM=cbtd.NUM AND btd.LangID=cbtd.LangID
+WHERE NOT EXISTS(SELECT * FROM CIC_BT_PB pbr INNER JOIN CIC_Publication pb ON pbr.PB_ID=pb.PB_ID WHERE pbr.NUM=bt.NUM AND pb.PubCode='211NOTWEB')
+	AND btd.NON_PUBLIC=0
+	AND (btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE())
+
+
+
+
+
+
+
+GO
+
+
+
+
+
+
+
+GRANT SELECT ON  [dbo].[O211_XML_EXPORT_RECORDS] TO [cioc_cic_search_role]
+GRANT SELECT ON  [dbo].[O211_XML_EXPORT_RECORDS] TO [cioc_login_role]
+GO

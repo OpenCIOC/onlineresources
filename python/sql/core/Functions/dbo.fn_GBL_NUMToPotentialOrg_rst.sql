@@ -1,0 +1,56 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE FUNCTION [dbo].[fn_GBL_NUMToPotentialOrg_rst](
+	@NUM varchar(8)
+)
+RETURNS @OrgList TABLE (
+	[NUM] varchar(8) NOT NULL,
+	[ORG_NAME_FULL] nvarchar(1100)
+) WITH EXECUTE AS CALLER
+AS 
+BEGIN
+
+/*
+	Checked for Release: 3.5.2
+	Checked by: KL
+	Checked on: 06-Oct-2013
+	Action: NO ACTION REQUIRED
+*/
+
+INSERT INTO @OrgList
+SELECT	DISTINCT obtd.NUM,
+		dbo.fn_GBL_DisplayFullOrgName_2(obtd.NUM,obtd.ORG_LEVEL_1,obtd.ORG_LEVEL_2,obtd.ORG_LEVEL_3,obtd.ORG_LEVEL_4,obtd.ORG_LEVEL_5,obtd.LOCATION_NAME,obtd.SERVICE_NAME_LEVEL_1,obtd.SERVICE_NAME_LEVEL_2,obt.DISPLAY_LOCATION_NAME,obt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL
+	FROM GBL_BaseTable_Description obtd
+	INNER JOIN GBL_BaseTable obt
+		ON obtd.NUM=obt.NUM
+	INNER JOIN GBL_BaseTable_Description btd
+		ON btd.NUM=@NUM
+			AND btd.LangID=@@LANGID
+			AND btd.NUM<>obtd.NUM
+			AND obtd.ORG_LEVEL_1=btd.ORG_LEVEL_1
+			AND (
+				EXISTS(SELECT *
+					FROM GBL_BT_OLS pr
+					INNER JOIN GBL_OrgLocationService ols
+						ON pr.OLS_ID=ols.OLS_ID AND ols.Code='AGENCY'
+					WHERE pr.NUM=obtd.NUM)
+				OR (
+				((obtd.ORG_LEVEL_2=btd.ORG_LEVEL_2 OR obtd.ORG_LEVEL_2 IS NULL) AND btd.ORG_LEVEL_2 IS NOT NULL)
+				AND (obtd.ORG_LEVEL_3=btd.ORG_LEVEL_3 OR (obtd.ORG_LEVEL_3 IS NULL AND (obtd.ORG_LEVEL_2 IS NULL OR btd.ORG_LEVEL_3 IS NOT NULL)))
+				AND (obtd.ORG_LEVEL_4=btd.ORG_LEVEL_4 OR (obtd.ORG_LEVEL_4 IS NULL AND (obtd.ORG_LEVEL_3 IS NULL OR btd.ORG_LEVEL_4 IS NOT NULL)))
+				AND (obtd.ORG_LEVEL_5=btd.ORG_LEVEL_5 OR (obtd.ORG_LEVEL_5 IS NULL AND (obtd.ORG_LEVEL_4 IS NULL OR btd.ORG_LEVEL_5 IS NOT NULL)))
+				)
+			)
+	INNER JOIN GBL_BaseTable bt
+		ON bt.NUM=btd.NUM
+WHERE obtd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=obtd.NUM ORDER BY CASE WHEN LangID=btd.LangID THEN 0 ELSE 1 END, LangID)
+ORDER BY ORG_NAME_FULL
+
+RETURN
+
+END
+
+GO

@@ -1,0 +1,154 @@
+	<div class="footer footer-narrow">
+		<div class="row">
+			[IF:HAS_CONTACT_SECTION]
+			<div class="col-sm-4">
+				[IF:CONTACT_AGENCY]
+				<h2>[CONTACT_AGENCY]</h2>
+				[ENDIF:CONTACT_AGENCY]
+				<div class="table link-table">
+					[IF:CONTACT_ADDRESS]
+					<div class="table-row">
+						<div class="table-cell icon-cell">
+							<span class="fa-stack">
+								<i class="fa fa-circle fa-stack-2x"></i>
+								<i class="fa fa-map-marker fa-inverse fa-stack-1x"></i>
+							</span>
+						</div>
+						<div class="table-cell icon-cell-text">[CONTACT_ADDRESS]</div>
+					</div>
+					[ENDIF:CONTACT_ADDRESS]
+					[IF:CONTACT_PHONE]
+					<div class="table-row">
+						<div class="table-cell icon-cell">
+							<span class="fa-stack">
+								<i class="fa fa-circle fa-stack-2x"></i>
+								<i class="fa fa-phone fa-inverse fa-stack-1x"></i>
+							</span>
+						</div>
+						<div class="table-cell icon-cell-text">[CONTACT_PHONE]</div>
+					</div>
+					[ENDIF:CONTACT_PHONE]
+					[IF:CONTACT_EMAIL]
+					<div class="table-row">
+						<div class="table-cell icon-cell">
+							<span class="fa-stack">
+								<i class="fa fa-circle fa-stack-2x"></i>
+								<i class="fa fa-envelope fa-inverse fa-stack-1x"></i>
+							</span>
+						</div>
+						<div class="table-cell icon-cell-text"><a href="[CONTACT_EMAIL]">[CONTACT_EMAIL_LABEL]</a></div>
+					</div>
+					[ENDIF:CONTACT_EMAIL]
+					[IF:CONTACT_WEB]
+					<div class="table-row">
+						<div class="table-cell icon-cell">
+							<span class="fa-stack">
+								<i class="fa fa-circle fa-stack-2x"></i>
+								<i class="fa fa-link fa-inverse fa-stack-1x"></i>
+							</span>
+						</div>
+						<div class="table-cell icon-cell-text"><a href="[CONTACT_WEB]">[CONTACT_WEB_LABEL]</a></div>
+					</div>
+					[ENDIF:CONTACT_WEB]
+					[IF:CONTACT_FACEBOOK]
+					<div class="table-row">
+						<div class="table-cell icon-cell">
+							<span class="fa-stack">
+								<i class="fa fa-circle fa-stack-2x"></i>
+								<i class="fa fa-facebook fa-inverse fa-stack-1x"></i>
+							</span>
+						</div>
+						<div class="table-cell icon-cell-text"><a href="[CONTACT_FACEBOOK]">Facebook</a></div>
+					</div>
+					[ENDIF:CONTACT_FACEBOOK]
+					[IF:CONTACT_TWITTER]
+					<div class="table-row">
+						<div class="table-cell icon-cell">
+							<span class="fa-stack">
+								<i class="fa fa-circle fa-stack-2x"></i>
+								<i class="fa fa-twitter fa-inverse fa-stack-1x"></i>
+							</span>
+						</div>
+						<div class="table-cell icon-cell-text"><a href="[CONTACT_TWITTER]">Twitter</a></div>
+					</div>
+					[ENDIF:CONTACT_TWITTER]
+					[IF:CONTACT_INSTAGRAM]
+					<div class="table-row">
+						<div class="table-cell icon-cell">
+							<span class="fa-stack">
+								<i class="fa fa-circle fa-stack-2x"></i>
+								<i class="fa fa-instagram fa-inverse fa-stack-1x"></i>
+							</span>
+						</div>
+						<div class="table-cell icon-cell-text"><a href="[CONTACT_INSTAGRAM]">Instagram</a></div>
+					</div>
+					[ENDIF:CONTACT_INSTAGRAM]
+					[IF:CONTACT_LINKEDIN]
+					<div class="table-row">
+						<div class="table-cell icon-cell">
+							<span class="fa-stack">
+								<i class="fa fa-circle fa-stack-2x"></i>
+								<i class="fa fa-linkedin fa-inverse fa-stack-1x"></i>
+							</span>
+						</div>
+						<div class="table-cell icon-cell-text"><a href="[CONTACT_LINKEDIN]">LinkedIn</a></div>
+					</div>
+					[ENDIF:CONTACT_LINKEDIN]
+					[IF:CONTACT_YOUTUBE]
+					<div class="table-row">
+						<div class="table-cell icon-cell">
+							<span class="fa-stack">
+								<i class="fa fa-circle fa-stack-2x"></i>
+								<i class="fa fa-youtube fa-inverse fa-stack-1x"></i>
+							</span>
+						</div>
+						<div class="table-cell icon-cell-text"><a href="[CONTACT_YOUTUBE]">YouTube</a></div>
+					</div>
+					[ENDIF:CONTACT_YOUTUBE]
+					[IF:TERMS_OF_USE_LINK]
+					<div class="table-row">
+						<div class="table-cell icon-cell">
+							<span class="fa-stack">
+								<i class="fa fa-circle fa-stack-2x"></i>
+								<i class="fa fa-info fa-inverse fa-stack-1x"></i>
+							</span>
+						</div>
+						<div class="table-cell icon-cell-text"><a href="[TERMS_OF_USE_LINK]">[TERMS_OF_USE_LABEL]</a></div>
+					</div>
+					[ENDIF:TERMS_OF_USE_LINK]
+					[IF:FOOTER_NOTICE_CONTACT]
+					[FOOTER_NOTICE_CONTACT]
+					[ENDIF:FOOTER_NOTICE_CONTACT]
+				</div>
+			</div>
+			[ENDIF:HAS_CONTACT_SECTION]
+			[IF:FOOTER_NOTICE]
+			<div class="[IFANY:FOOTER_NOTICE_2,FOOTER_MENU]col-sm-4[ENDIFANY:FOOTER_NOTICE_2,FOOTER_MENU][IFNOTANY:FOOTER_NOTICE_2,FOOTER_MENU]col-sm-8[ENDIFNOTANY:FOOTER_NOTICE_2,FOOTER_MENU]">
+				[FOOTER_NOTICE]
+			</div>
+			[ENDIF:FOOTER_NOTICE]
+			[IFANY:FOOTER_NOTICE_2,FOOTER_MENU]
+			<div class="col-sm-4">
+				[IF:FOOTER_NOTICE_2]
+				[FOOTER_NOTICE_2]
+				[ENDIF:FOOTER_NOTICE_2]
+				[IF:NOT_PRINT_MODE]
+				<div class="table link-table">
+					[FOR:FOOTER_MENU]
+					<div class="table-row">
+						<div class="table-cell icon-cell">
+							<span class="fa-stack">
+								<i class="fa fa-circle fa-stack-2x"></i>
+								<i class="fa fa-angle-double-right fa-inverse fa-stack-1x"></i>
+							</span>
+						</div>
+						<div class="table-cell icon-cell-text"><a href="[LINK]">[DISPLAY]</a></div>
+					</div>
+					[ENDFOR:FOOTER_MENU]
+				</div>
+				[ENDIF:NOT_PRINT_MODE]
+			</div>
+			[ENDIFANY:FOOTER_NOTICE_2,FOOTER_MENU]
+		</div>
+	</div>
+</div>

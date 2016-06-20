@@ -1,0 +1,78 @@
+[IF:SEARCH_RIGHT_CONTENT]
+<div class="search-right search-user-content-right">
+[SEARCH_RIGHT_CONTENT]
+</div>
+[ENDIF:SEARCH_RIGHT_CONTENT]
+<div class="search-left">
+[IF:SEARCH_ALERT]
+<div class="search-alert-box ui-state-error ui-corner-all">
+[SEARCH_ALERT]
+</div>
+[ENDIF:SEARCH_ALERT]
+
+[IF:SEARCH_MENU]
+<nav class="search-cioc-menu">
+<div id="MainPageMenu">
+[IF:MENU_MESSAGE]
+<div class="MenuMessageBox[IF:NOT_LOGGED_IN] no-main-menu[ENDIF:NOT_LOGGED_IN]">
+[MENU_MESSAGE]
+</div>
+[ENDIF:MENU_MESSAGE]
+[IF:LOGGED_IN]
+<h3 class="main-menu-title">[MENU_TITLE]</h3>
+[ENDIF:LOGGED_IN]
+<ul class="menu">
+[FOR:OTHER_LANGS]
+<li class="menu"><a href="[LINK]">[DISPLAY]</a></li>
+[ENDFOR:OTHER_LANGS]
+[IF:CIC_LINK]
+<li class="menu"><a href="[CIC_LINK]">[CIC_LINK_TEXT]</a></li>
+[ENDIF:CIC_LINK]
+[FOR:CUSTOM_MENU_ITEMS]
+<li class="menu"><a href="[LINK]">[DISPLAY]</a></li>
+[ENDFOR:CUSTOM_MENU_ITEMS]
+[FOR:SEARCH_MENU_ITEMS]
+<li class="menu"><a href="[LINK]">[DISPLAY]</a></li>
+[ENDFOR:SEARCH_MENU_ITEMS]
+</ul>
+[IF:CHANGE_VIEW]
+[CHANGE_VIEW]
+[ENDIF:CHANGE_VIEW]
+</div>
+</nav>
+[ENDIF:SEARCH_MENU]
+
+[IF:SEARCH_LEFT_CONTENT]
+<div class="search-user-content-left ui-state-active ui-corner-all">
+[SEARCH_LEFT_CONTENT]
+</div>
+[ENDIF:SEARCH_LEFT_CONTENT]
+</div>
+
+[IF:HAS_SEARCH_AREA]
+<div class="search-form">
+<div id="search-tabs" class="make-me-tabbed">
+<ul>
+	[IF:BASIC_SEARCH_SECTION]<li><a href="#basic-search">Recherche</a></li>[ENDIF:BASIC_SEARCH_SECTION]
+	[IF:BROWSE_OP_ITEMS]<li><a href="browsebyinterest.asp?InlineMode=on">Explorer par catégorie / intérêt</a></li>[ENDIF:BROWSE_OP_ITEMS]
+	[IF:BROWSE_ORG_ITEMS]<li><a href="browsebyorg.asp?InlineMode=on">Explorer par organisme</a></li>[ENDIF:BROWSE_ORG_ITEMS]
+</ul>
+[IF:BASIC_SEARCH_SECTION]
+<div id="basic-search">
+[IF:VOL_SEARCH_MENU]
+<h3>[SEARCH_PROMPT]</h3>
+[VOL_SEARCH_MENU]
+[ENDIF:VOL_SEARCH_MENU]
+[IF:BASIC_SEARCH]
+<div style="float:left; padding-bottom: 1em">
+<h2 class="RevBoxHeader">Recherche par mot clé</h2>
+[BASIC_SEARCH]
+</div>
+[ENDIF:BASIC_SEARCH]
+</div>
+[ENDIF:BASIC_SEARCH_SECTION]
+
+</div>
+
+</div><div class="clearfix"></div>
+[ENDIF:HAS_SEARCH_AREA]

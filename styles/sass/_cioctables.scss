@@ -1,0 +1,208 @@
+﻿/* =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ========================================================================================= */
+
+// TABLE STYLES
+
+tr {
+  vertical-align: top;
+}
+
+table.BasicBorder {
+	border-spacing: 0px;
+	border-collapse: collapse;
+	border: none;
+	
+	&, & > tr > td, & > tr > th, & > thead > tr > th, & > tbody > tr > td, & > tbody > tr > th {
+		border: 1px solid $borderColorContent;
+	}
+}
+
+table.NoBorder {
+	border-spacing: 0px;
+	border-collapse: collapse;
+	&, & > tr > td, & > tr > th, & > thead > tr > th, & > tbody > tr > td, & > tbody > tr > th {
+		border: 0 none;
+	}
+}
+
+table.cell-padding-4 {
+	& > tr > td, & > tr > th, & > thead > tr > th, & > tbody > tr > td, & > tbody > tr > th {
+		padding: 4px 6px;
+	}
+}
+
+table.cell-padding-3 {
+	& > tr > td, & > tr > th, & > thead > tr > th, & > tbody > tr > td, & > tbody > tr > th {
+		padding: 3px 5px;
+	}
+}
+
+table.cell-padding-2 {
+	& > tr > td, & > tr > th, & > thead > tr > th, & > tbody > tr > td, & > tbody > tr > th {
+		padding: 2px 3px;
+	}
+}
+
+table.cell-padding-1 {
+	& > tr > td, & > tr > th, & > thead > tr > th, & > tbody > tr > td, & > tbody > tr > th {
+		padding: 1px;
+	}
+}
+
+table.sortable_table {
+	thead tr th, tfoot tr th {
+		vertical-align: middle;
+	}
+
+	thead tr {
+		.header {
+			cursor: pointer;
+		}
+		.headerSortUp {
+			padding-right: 16px;
+			background-image: url(../images/down.gif);
+			background-repeat: no-repeat;
+			background-position: center right;
+		}
+		.headerSortDown {
+			padding-right: 16px;
+			background-image: url(../images/up.gif);
+			background-repeat: no-repeat;
+			background-position: center right;
+		}
+	}
+}
+
+.table-cell-100 {
+	width: 100%;
+}
+
+div.table {
+	display: table;
+
+	div.table-row {
+		display: table-row;
+	}
+
+	div.table-cell {
+		display: table-cell;
+		padding-bottom: 3px;
+		vertical-align: top;
+
+		&.vertical-center {
+			vertical-align: middle;
+			padding-bottom: 0px;
+		}
+
+		&.button-cell {
+			padding-bottom: 1px;
+		}
+
+		&.icon-cell {
+			width: 2.5em;
+		}
+
+		&.icon-cell-text {
+			padding-top: .2em;
+		}
+
+		&.field-label-cell, &.field-label-cell-widelabel {
+			color: $fcLabel;
+			background-color: $FieldLabelColour;
+			font-weight: bold;
+		}
+		&.field-label-cell-clr {
+			font-weight: bold;
+		}
+	}
+}
+
+table.responsive-table {
+	width: 100%;
+
+	@media (max-width: $screen-xs-max) {
+		.field-data-cell, &.form-table .field-data-cell,
+			.field-label-cell, &.form-table .field-label-cell,
+			.field-label-cell-widelabel, &.form-table .field-label-cell-widelabel,
+			.field-label-cell-clr, &.form-table .field-label-cell-clr {
+			width: 100%;
+			display: inline-block;
+		}
+	}
+}
+
+table.form-table {
+	.field-icon-cell {
+		&.icon-2 {
+			width: 60px;
+		}
+		&.icon-1 {
+			width: 38px;
+		}
+		.glyphicon, .fa {
+			margin-right: 0;
+			padding: 2px;
+		}
+	}
+
+	.field-label-cell, .field-label-cell-clr {
+		width: 20%;
+		text-align: left;
+	}
+
+	.field-label-cell-widelabel {
+		width: 25%;
+	}
+
+	@media (max-width: $screen-sm-max) {
+		.field-icon-cell.icon-2 {
+			width: 38px;
+		}
+	}
+}
+
+table.inset-table {
+	border-left: none;
+	border-bottom: none;
+	border-right: none;
+
+	& > tr > td, & > tr > th, & > thead > tr > th, & > tbody > tr > td, & > tbody > tr > th {
+		&:first-of-type {
+			border-left: none;
+		}
+		&:last-of-type {
+			border-right: none;
+		}
+	}
+	& > tr, & > thead > tr, & > tbody > tr {
+		&:last-of-type {
+			&, & > td, & > th {
+				border-bottom: none;
+			}
+		}
+	}
+
+	& > tbody > tr:last-of-type > td:first-of-type {
+		-moz-border-bottom-left-radius: $cornerRadius;
+		-webkit-border-bottom-left-radius: $cornerRadius;
+		border-bottom-left-radius: $cornerRadius;
+	}
+	& > tbody > tr:last-of-type > td:last-of-type {
+		-moz-border-bottom-right-radius: $cornerRadius;
+		-webkit-border-bottom-right-radius: $cornerRadius;
+		border-bottom-right-radius: $cornerRadius;
+	}
+}

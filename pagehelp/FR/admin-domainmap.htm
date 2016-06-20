@@ -1,0 +1,61 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<ul>
+	<li><a href="#intro">Initiation aux noms de domaines dans CIOC</a></li>
+	<li><a href="#list">Travailler avec votre liste de noms de domaines</a></li>
+</ul>
+
+<hr>
+<a name="intro"></a>
+<h2>Initiation aux noms de domaines dans CIOC</h2>
+<p>Lorsqu'une nouvelle base de donn&eacute;es h&eacute;berg&eacute;e par CIOC est cr&eacute;&eacute;e, on lui donne un nom de domaine de type <strong><em>votreregion</em>.cioc.ca</strong> pour acc&eacute;der &agrave; la base de donn&eacute;es. Bien que vous puissiez ajouter de nouveaux noms &agrave; votre site au fil du temps, ce nom cioc.ca sera toujours important pour vous connecter &agrave; votre base de donn&eacute;es, car il offre une page de connexion s&eacute;curis&eacute;e. De nouvelles URL peuvent &ecirc;tre ajout&eacute;es &agrave; votre site, sur demande, soit pour &ecirc;tre utilis&eacute;es dans votre site public principal, soit pour &ecirc;tre utilis&eacute;es comme nom m&eacute;morisable pour les portails ou vues &agrave; usage sp&eacute;cifique que vous d&eacute;veloppez. Ces nouveaux noms peuvent &ecirc;tre des nouveaux noms de type cioc.ca, des sous-domaines bas&eacute;s sur l'URL d'un autre site existant ou un nouveau nom de domaine enregistr&eacute; pour l'occasion. Si vous souhaitez ajouter un nouveau nom de domaine &agrave; votre base de donn&eacute;es, veuillez lire l'article <a href="http://community.cioc.ca/resources/how-to/custom-domain">How to add a new Domain (URL) to your database</a> (en anglais) sur le site de la communaut&eacute; CIOC.</p>
+
+<h3>Noms de domaines et sites publics / sites &agrave; connexion</h3>
+<p><span class="Alert">Les noms de domaines s'av&egrave;rent utiles uniquement pour les sites publics</span> ; il n'est donc pas recommand&eacute; d'ajouter de nouveaux noms juste pour des utilisateurs devant se connecter. Si vous devez cr&eacute;er un nouveau nom de domaine pour des utilisations n&eacute;cessitant une connexion, consid&eacute;rez plut&ocirc;t un nom de type cioc.ca, afin que les utilisateurs puissent utiliser une URL &agrave; connexion s&eacute;curis&eacute;e. Soyez conscient que, contrairement au public, la vue sur laquelle l'utilisateur travaille est d&eacute;termin&eacute;e par son authentifiant de s&eacute;curit&eacute;, et non pas le nom domaine utilis&eacute; pour acc&eacute;der au site.</p>
+
+<a name="list"></a>
+<h2>Travailler avec votre liste de noms de domaines</h2>
+<p class="Alert">Dans la majorit&eacute; des cas, vous n'aurez pas &agrave; modifier les informations sur cette page. Si vous avez un doute au sujet du changement que vous souhaitez effectuer, demandez plut&ocirc;t au contact officiel de votre base de donn&eacute;es de faire une demande de changement directement aupr&egrave;s des administrateurs techniques de CIOC. Veuillez ne modifier aucune valeur de configuration de votre nom de domaine que vous ne comprenez pas.</p>
+
+<h3>Ajouter un nouveau nom de domaine</h3>
+<p>L'ajout d'un nouveau nom de domaine doit toujours &ecirc;tre g&eacute;r&eacute; par les administrateurs techniques de CIOC, car cela implique la configuration du serveur web. Veuillez lire l'article <a href="http://community.cioc.ca/resources/how-to/custom-domain">How to add a new Domain (URL) to your database</a> (en anglais) sur le site de la communaut&eacute; CIOC pour plus d'informations.</p>
+
+<hr>
+<h3>Modifier la langue par d&eacute;faut</h3>
+<p>Pour les sites publics offrant des fonctionnalit&eacute;s de recherche dans plusieurs langues, chaque enregistrement de nom de domaine comprend une indication sur quelle langue doit &ecirc;tre utilis&eacute;e si la langue n'est pas pr&eacute;cis&eacute;e explicitement. Par exemple, <em>monsite.cioc.ca?Ln=fr-CA</em> demande explicitement le fran&ccedil;ais si celui-ci est disponible, alors que monsite.cioc.ca utilisera la langue par d&eacute;faut s&eacute;lectionn&eacute;e lors de la configuration. Pour que cette option s'av&egrave;re utile, la vue doit &ecirc;tre configur&eacute;e de mani&egrave;re &agrave; &ecirc;tre accessible dans cette langue. Il est recommand&eacute; de s&eacute;lectionner la langue principale de la communaut&eacute; que vous ciblez.</p>
+
+<hr>
+<h3>Modifier la vue</h3>
+<p></p>
+<h4>-- Vue par d&eacute;faut de la base de donn&eacute;es --</h4>
+<p>En s&eacute;lectionnant cette option, l'utilisateur sera automatiquement dirig&eacute; vers la vue actuellement s&eacute;lectionn&eacute;e comme vue publique par d&eacute;faut. Il est fortement recommand&eacute; de s&eacute;lectionner cette option, plut&ocirc;t que d'aller s&eacute;lectionner le nom de votre vue publique par d&eacute;faut dans la liste.</p>
+<h4>Nom sp&eacute;cifique de la vue</h4>
+<p>Sachez qu'il existe des vues non-publiques dans cette liste, indiqu&eacute;es par un *. Cela peut s'av&eacute;rer utile pour vous aider &agrave; pr&eacute;parer avant le lancement, mais les utilisateurs du public seront dirig&eacute;s vers la vue publique par d&eacute;faut si vous s&eacute;lectionnez une vue non-publique. <span class="Alert">En aucun cas vous ne devez choisir une vue non-publique de mani&egrave;re intentionnelle - n'oubliez pas que les utilisateurs connect&eacute;s obtiendront la vue sp&eacute;cifi&eacute;e dans la configuration pour leur type d'utilisateur et que les utilisateurs du public ne peuvent pas acc&eacute;der aux vues priv&eacute;es ; ce choix ne s'av&egrave;re donc pas utile.</span></p>
+
+<hr>
+<h3>Noms secondaires</h3>
+<p>Si vous avez plusieurs noms de domaines renvoyant vers la m&ecirc;me vue, vous devriez en s&eacute;lectionner un comme nom pr&eacute;f&eacute;r&eacute; et marquer les autres comme « secondaires » (p. ex., si vous avez monpremiernom.com et mondeuxiemenom.com, ou des variations comme www.monsite.com et monsite.com, qui envoient toutes vers la m&ecirc;me chose). Cela &eacute;vite, par exemple, des d&eacute;doublements inutiles dans la liste des domaines / vues lors de l'envoi des demandes de mise &agrave; jour par courriel, et cela aide &eacute;galement le logiciel &agrave; s&eacute;lectionner un nom pr&eacute;f&eacute;r&eacute; lors de la cr&eacute;ation de liens pour les courriels sortants (p. ex., courriels des profils b&eacute;n&eacute;voles).</p>
+
+<hr>
+<h3>Google Maps</h3>
+<p>Des cl&eacute;s API Google Maps ou les renseignements d'identifiant du client Enterprise ou Enterprise Channel sont requis afin d'utiliser l'outil Google Maps int&eacute;gr&eacute; &agrave; CIOC. Lorsque vous demandez qu'un nouveau nom de domaine soit ajout&eacute; &agrave; votre site, vous pouvez demander aux administrateurs techniques de CIOC qu'ils configurent &eacute;galement la cl&eacute; Google Maps, si vous &ecirc;tes admissibles (au minimum, le site accessible au public d'un organisme sans but lucratif ou caritatif). Si vous le souhaitez, vous pouvez demander vous-m&ecirc;me une cl&eacute; API pour votre nom de domaine autre que cioc.ca, et le saisir ici. Si vous n'&ecirc;tes pas admissible &agrave; une cl&eacute; API gratuite et si vous d&eacute;tenez un compte Enterprise aupr&egrave;s de Google, vous pouvez &eacute;galement utiliser cette zone pour saisir vos informations d'identification client Enterprise Google Maps et Channel.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

@@ -1,0 +1,86 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_CIC_ImportEntry_GBL_Check_i]
+	@MemberID int,
+	@NUM varchar(8) OUTPUT,
+	@EXTERNAL_ID varchar(50),
+	@OWNER char(3),
+	@HAS_ENGLISH bit OUTPUT,
+	@HAS_FRENCH bit OUTPUT
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.5.1
+	Checked by: KL
+	Checked on: 10-Mar-2013
+	Action: NO ACTION REQUIRED
+*/
+
+DECLARE @Error int
+SET @Error = 0
+
+-- Member ID given ?
+IF @MemberID IS NULL BEGIN
+	SET @Error = 10 -- Required Field
+-- Member ID exists ?
+END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
+	SET @Error = 3 -- No Such Record
+	SET @MemberID = NULL
+END
+
+IF @MemberID IS NOT NULL
+		AND (@NUM LIKE '[A-Z][A-Z][A-Z][0-9][0-9][0-9][0-9]'
+			OR @NUM LIKE '[A-Z][A-Z][A-Z][0-9][0-9][0-9][0-9][0-9]'
+			OR (@NUM IS NULL AND @EXTERNAL_ID IS NOT NULL)
+		) BEGIN
+	
+	SELECT TOP 1 @NUM=NUM FROM GBL_BaseTable WHERE EXTERNAL_ID=@EXTERNAL_ID AND @NUM IS NULL
+	
+	IF @NUM IS NULL OR NOT EXISTS(SELECT * FROM GBL_BaseTable WHERE NUM=@NUM) BEGIN
+		INSERT INTO GBL_BaseTable (
+			MemberID,
+			NUM,
+			RECORD_OWNER,
+			EXTERNAL_ID,
+			CREATED_DATE,
+			CREATED_BY,
+			MODIFIED_DATE,
+			MODIFIED_BY
+		) VALUES (
+			@MemberID,
+			ISNULL(@NUM, dbo.fn_GBL_LowestUnusedNUM(@OWNER)),
+			@OWNER,
+			@EXTERNAL_ID,
+			GETDATE(),
+			'(Import)',
+			GETDATE(),
+			'(Import)'
+		)
+		
+		IF @NUM IS NULL BEGIN
+			SELECT @NUM=NUM FROM GBL_BaseTable WHERE RSN=SCOPE_IDENTITY()
+		END
+	END
+
+	IF @HAS_ENGLISH=1 BEGIN
+		EXEC sp_CIC_ImportEntry_GBLE_Check_i @MemberID, @NUM
+		SET @HAS_ENGLISH = CASE WHEN EXISTS(SELECT * FROM GBL_BaseTable_Description WHERE NUM=@NUM AND LangID=0) THEN 1 ELSE 0 END
+	END
+	IF @HAS_FRENCH=1 BEGIN
+		EXEC sp_CIC_ImportEntry_GBLF_Check_i @MemberID, @NUM
+		SET @HAS_FRENCH = CASE WHEN EXISTS(SELECT * FROM GBL_BaseTable_Description WHERE NUM=@NUM AND LangID=2) THEN 1 ELSE 0 END
+	END
+END ELSE BEGIN
+	SET @NUM = NULL
+END
+
+SET NOCOUNT OFF
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_CIC_ImportEntry_GBL_Check_i] TO [cioc_login_role]
+GO

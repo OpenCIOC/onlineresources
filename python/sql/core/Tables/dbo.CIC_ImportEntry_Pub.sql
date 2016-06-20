@@ -1,0 +1,22 @@
+CREATE TABLE [dbo].[CIC_ImportEntry_Pub]
+(
+[EP_ID] [int] NOT NULL IDENTITY(1, 1),
+[EF_ID] [int] NOT NULL,
+[PB_ID] [int] NOT NULL,
+[CODE] [varchar] (20) COLLATE Latin1_General_100_CI_AI NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[CIC_ImportEntry_Pub] ADD CONSTRAINT [PK_GBL_ImportEntry_Pub] PRIMARY KEY CLUSTERED  ([EP_ID]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[CIC_ImportEntry_Pub] ADD CONSTRAINT [IX_GBL_ImportEntry_Pub_UniquePair1] UNIQUE NONCLUSTERED  ([EP_ID], [CODE]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[CIC_ImportEntry_Pub] ADD CONSTRAINT [IX_GBL_ImportEntry_Pub_UniquePair2] UNIQUE NONCLUSTERED  ([EP_ID], [PB_ID]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_GBL_ImportEntry_Pub] ON [dbo].[CIC_ImportEntry_Pub] ([EP_ID]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[CIC_ImportEntry_Pub] ADD CONSTRAINT [FK_CIC_ImportEntry_Pub_CIC_ImportEntry] FOREIGN KEY ([EF_ID]) REFERENCES [dbo].[CIC_ImportEntry] ([EF_ID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[CIC_ImportEntry_Pub] ADD CONSTRAINT [FK_GBL_ImportEntry_Pub_CIC_Publication] FOREIGN KEY ([PB_ID]) REFERENCES [dbo].[CIC_Publication] ([PB_ID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+GRANT SELECT ON  [dbo].[CIC_ImportEntry_Pub] TO [cioc_cic_search_role]
+GO

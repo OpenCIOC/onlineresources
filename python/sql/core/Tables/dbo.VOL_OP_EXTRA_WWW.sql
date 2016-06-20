@@ -1,0 +1,22 @@
+CREATE TABLE [dbo].[VOL_OP_EXTRA_WWW]
+(
+[OP_EXT_ID] [int] NOT NULL IDENTITY(1, 1),
+[FieldName] [varchar] (100) COLLATE Latin1_General_100_CI_AI NOT NULL,
+[VNUM] [varchar] (10) COLLATE Latin1_General_100_CI_AI NOT NULL,
+[LangID] [smallint] NOT NULL,
+[Value] [nvarchar] (200) COLLATE Latin1_General_100_CI_AI NOT NULL,
+[Protocol] [varchar] (8) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_OP_EXTRA_WWW] ADD CONSTRAINT [PK_VOL_OP_EXTRA_WWW] PRIMARY KEY CLUSTERED  ([OP_EXT_ID]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_OP_EXTRA_WWW] ADD CONSTRAINT [FK_VOL_OP_EXTRA_WWW_VOL_FieldOption] FOREIGN KEY ([FieldName]) REFERENCES [dbo].[VOL_FieldOption] ([FieldName]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[VOL_OP_EXTRA_WWW] ADD CONSTRAINT [FK_VOL_OP_EXTRA_WWW_VOL_Opportunity_Description] FOREIGN KEY ([VNUM], [LangID]) REFERENCES [dbo].[VOL_Opportunity_Description] ([VNUM], [LangID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+GRANT SELECT ON  [dbo].[VOL_OP_EXTRA_WWW] TO [cioc_login_role]
+GRANT INSERT ON  [dbo].[VOL_OP_EXTRA_WWW] TO [cioc_login_role]
+GRANT DELETE ON  [dbo].[VOL_OP_EXTRA_WWW] TO [cioc_login_role]
+GRANT UPDATE ON  [dbo].[VOL_OP_EXTRA_WWW] TO [cioc_login_role]
+GRANT SELECT ON  [dbo].[VOL_OP_EXTRA_WWW] TO [cioc_vol_search_role]
+GO

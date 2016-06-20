@@ -1,0 +1,64 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<ul>
+	<li>Alternative Search Areas vs. Standard Hierarchy Communities</li>
+	<li><a href="#adding">Adding A New Community</a></li>
+	<li><a href="#editing">Editing An Existing Community</a></li>
+	<li><a href="#languages">Working with Languages</a></li>
+</ul>
+<p>This page is used to either add a new community to the database, or to edit information for an existing community. For the most part, the fields will be identical whether you are adding a new community or editing an existing one. Some additional information is available when editing an existing community. This will be outlined below.</p>
+<p class="Alert">Remember that this is a shared classification system, used by both the Community Information and Volunteer Opportunities modules. Please be respectful of partner agencies when modifying these values.</p>
+<hr>
+<a name="adding"></a>
+<h3>Alternative Search Areas vs. Standard Hierarchy Communities</h3>
+<p>There are two types of communities, both of which can be added to search forms and records:</p>
+<ul>
+	<li><strong>Standard Hierarchy Communities</strong> - these provide the basic list of Communities, grouping smaller areas into larger ones. Each of these communities has exactly one parent community.</li>
+	<li><strong>Alternative Search Areas</strong> - these provide a way to describe areas that do not fit into the hierarchy, for example because they cross boundaries or group a number of regions together for a special designation such as a health service area.</li>
+</ul>
+<p>The data entry form on this page changes depending on which type of Community you are editing.</p>
+<h3>Adding A New Community</h3>
+<p><strong>Note:</strong> Communities that you add to the database other than through an import from the official repository are considered <em>local</em> or <em>unauthorized</em>. Any communities added locally are available in <em>your</em> application, but will <em>not</em> be available in other CIOC databases. In order to &quot;authorize&quot; your communities, please submit your change requests through the <a href="http://community-repository.cioc.ca" target="_blank">CIOC Communities Repository</a>.</p>
+<h4>Name</h4>
+<p>Enter the name of the new community here. Note that if you try to enter a community name that is already in use in the database, you will receive an error when you submit the form, and be prompted to return to the form and try again. You may need to be creative with your community names if you find duplicate values in the database. If a multi-lingual version of the software is being used, you may also enter names in other languages if it differs.</p>
+<h4>Display</h4>
+<p>You may enter a different version of the Community name to be used on search forms and under the <em>&quot;Located In&quot;</em> value of search results. This is particularly useful if you have had to modify or lengthen the name in order to get a unique name for the community. If the bilingual version of the software is being used, you may also enter a French version of the display name if it differs from the English version.</p>
+<h4>Parent Community</h4>
+<p><em>Every</em> community entered has a parent community, except for the community &quot;highest&quot; on the hierarchy (Unknown). When you enter a new community name, you <em>must</em> also assign a parent community. This information is necessary for <em>&quot;Located In&quot;</em> and <em>&quot;Areas Served&quot;</em> searches in the database. If you do not know what the parent community should be, you can use the <a href="../comfind.asp">community finder</a> tool which is linked from record update/add forms (in the <em>&quot;Located In&quot;</em> and <em>&quot;Areas Served&quot;</em> fields) to determine this information. Select a value from the <em>&quot;Parent Community&quot;</em> drop-down menu to assign to a newly added community name.</p>
+<h4>Province, State and/or Country</h4>
+<p>Optionally, you may specify the Province/State and/or Country by selecting from the drop-down list provided. This is only necessary to disambiguate cases where there are multiple Communities with the same name.</p>
+<h4>Alternate Names</h4>
+<p>You may specify one or more Alternate Names per Community; these cannot be the same as any other Community name in the database. Alternate Names are not visible anywhere in the software, but are used when searching for Communities such as in the &quot;Other Community&quot; box on the search page or when doing data entry.</p>
+<h4>Search Communities</h4>
+<p>When managing an Alternative Search Area, an extra section is added to the form to allow you to select which Communities from the hierarchy will be searched whenever this Alternative Search Area is used. Adding an Alternative Search Area to a record or search form is equivalent to adding all the Communities chosen in this section.</p>
+
+<a name="editing"></a>
+<h3>Editing An Existing Community</h3>
+<p>The form to edit an existing community provides all the fields listed in <em>&quot;Add New&quot;</em> above, as well as a status section and a search link to review the records associated with the given Community.</p>
+<h4>Status</h4>
+<p>The <strong>Status</strong> section indicates how the Community is being used by Organization/Program or Volunteer Opportunity records, other Communities, or related items such as Bus Routes and Wards.</p>
+<p>If the community is not being used, a delete button will be available. If you wish to delete this community and there is no delete button available, you will first need to remove the community from any records it is associated with and then return to this page.</p>
+<p><span class="Alert">Note: Deleting an Authorized community is not recommended. If you wish to suggest changes to Authorized Communities, please submit your change requests through the <a href="http://community-repository.cioc.ca" target="_blank">CIOC Communities Repository</a>.</span></p>
+
+<a name="languages"></a>
+<h3>Working with languages</h3>
+<p>In multi-language databases, the software will normally default to the regular working languages of your database (generally, English and French). If additional languages are available for editing, you will see checkboxes at the top of the form; select the additional language(s) you wish to edit by checking the box next to the language, and they will be added to the form.</p>
+<p>Important note: If you do not specify a value in every language, the first available language name will be used. It is not necessary to duplicate the name for each language, but neither does it cause a problem to do so.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified:	$Date$</p>

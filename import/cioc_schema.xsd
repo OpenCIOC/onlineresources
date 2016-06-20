@@ -1,0 +1,1404 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<xsd:schema
+		attributeFormDefault="unqualified"
+		elementFormDefault="qualified"
+		version="4.5.6"
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns="urn:ciocshare-schema"
+		targetNamespace="urn:ciocshare-schema">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				Your current release of the schema is always available at:
+				http://your_cioc_database_address/import/cioc_schema.xsd
+
+				In addition, an up-to-date copy can be found at:
+				http://test.cioc.ca/import/cioc_schema.xsd
+				The Test Site copy is the location where pre-release versions of the schema will be
+				posted for review prior to general software upgrades.
+
+				This Schema defines the format for standard imports into CIOC software (www.cioc.ca).
+				Versions of this schema are not guaranteed to be backwards-compatible. Changes to
+				the schema will be announced on the CIOC Community site (http://community.cioc.ca/)
+				and to the CIOC Sharing Format Email distribution list.
+
+				The XSD is structured presenting first a list of common data types in use within the
+				schema, followed by the main layout of the format (its elements and attributes).
+				The general body structure consists of:
+
+				-> Source database information (optional)
+				- indicates where the data originated (name/URL of database).
+				-> Privacy Profile list (optional)
+				- applicable if private information is included in the file; names one or more
+				privacy "profiles" which consist of a list of private fields. Only include
+				profiles that are referenced by records in the document.
+				-> Distribution Code list (optional)
+				- applicable if the distribution field is being shared. Only include codes that
+				are referenced by the records in the document. All referenced codes in use in the
+				target system will be reset	to match the included list for each record. Codes not
+				in this list should be ignored by the target database (left as-is).
+				-> Publication Code list (optional)
+				- applicable if the publication field is being shared. Only include codes that
+				are referenced by the records in the document. All referenced codes in use in the
+				target system will be reset	to match the included list for each record. Codes not
+				in this list should be ignored by the target database (left as-is).
+				-> Record list (required)
+
+				Records output in this format may be designated as French, English, or bilingual.
+				Elements and attributes with multilingual values generally have a duplicate name
+				with the "F" suffix (e.g. "V" -> English Value and "VF" -> French Value).
+
+				The only necessary values are the RECORD element with attributes:
+				- NUM (record number e.g. ABC0001)
+				- RECORD_OWNER (record owner e.g. ABC)
+				- HAS_FRENCH or HAS_ENGLISH or both (designating the language(s) of the record)
+
+				Common short-forms for elements / attributes in this document include:
+				AP/APF -> Authorized Parent
+				ADDR/ADDRF -> Address
+				ASSIST -> Assistance Available
+				BLD -> Building
+				BRD -> Board
+				CAP -> Capacity
+				CD -> Code
+				CHK -> Checklist item
+				CM -> Community
+				CO -> Care of
+				CTY/CTYF -> City
+				DESC/DESCF -> Description
+				EML/EMLF -> Email
+				FT -> Full Time
+				GID -> Globally Unique Identifier
+				LANG -> Language
+				LAT -> Latitude
+				LNK -> Link (as between classification terms)
+				LONG -> Longitude
+				N/NF -> Notes
+				NM/NMF -> Name
+				NO -> Number
+				MOD -> Modified Date
+				MODBY - > Modified By
+				MUN/MUNF -> Municipality
+				ORG/ORGF -> Organization
+				PC -> Postal Code
+				PB/PBF -> Publish
+				PHN/PHNF/PH1/PH2/PH3 -> Phone
+				PRV/PRVF -> Province
+				PT -> Part Time
+				RT -> Route
+				ST/STF -> Street Name
+				STAT/STATF -> Status
+				STDIR/STDIRF -> Street Direction
+				STNUM/STNUMF -> Street Number
+				STTYPE/STTYPEF -> Street Type
+				STTYPEAFTER/STTYPEAFTERF -> Street Type occurs after name
+				SFX/SFXF -> Suffix
+				SVC/SVCF -> Service name or title
+				TM -> Term name
+				TOT -> Total
+				TP -> Target Population
+				TTL/TTLF -> Title
+				V/VF -> Value
+				VAC -> Vacancy
+				WAIT -> Wait List
+				WAITD -> Wait List Date
+
+				Questions about the CIOC sharing format should be directed to the CIOC Community
+				site at http://community.cioc.ca/
+			</xsd:documentation>
+		</xsd:annotation>
+
+	<xsd:simpleType name="s-AgeType">
+		<xsd:restriction base="xsd:decimal">
+			<xsd:fractionDigits value="2"/>
+			<xsd:minInclusive value="0"/>
+			<xsd:maxInclusive value="200"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-BillingPriorityType">
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="0"/>
+			<xsd:maxInclusive value="50"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-BooleanType">
+		<xsd:restriction base="xsd:int">
+			<xsd:enumeration value="0"/>
+			<xsd:enumeration value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-CharCodeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-Z]"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-CodeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-Z0-9\-]+"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="20"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-CodeBasicType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="20"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-DateType">
+		<xsd:restriction base="xsd:dateTime">
+			<xsd:minInclusive value="1900-01-01T00:00:00" />
+			<xsd:maxInclusive value="2079-06-06T00:00:00" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-EmailType">
+		<xsd:restriction base="xsd:string">
+			<!-- <xsd:pattern value="(([A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+(\.[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+)*@[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+(\.[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+)*)(\s*,*\s*))*"/> -->
+			<xsd:pattern value="(([^@\s,]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6})(\s*,*\s*))*"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="60"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-GeocodeType">
+		<xsd:restriction base="xsd:integer">
+			<xsd:enumeration value="0">
+				<xsd:annotation>
+					<xsd:documentation>Blank / Do not geocode</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="1">
+				<xsd:annotation>
+					<xsd:documentation>Site Address</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="2">
+				<xsd:annotation>
+					<xsd:documentation>Intersection</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="3">
+				<xsd:annotation>
+					<xsd:documentation>Manual Placement</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-GUID">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-LatLongType">
+		<xsd:restriction base="xsd:decimal">
+			<xsd:fractionDigits value="7"/>
+			<xsd:minInclusive value="-180"/>
+			<xsd:maxInclusive value="180"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-LangType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="E">
+				<xsd:annotation>
+					<xsd:documentation>English</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="F">
+				<xsd:annotation>
+					<xsd:documentation>French</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="?">
+				<xsd:annotation>
+					<xsd:documentation>Unknown</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-MultipleIDType">
+		<xsd:annotation>
+			<xsd:documentation>Values may be a CIOC NUM, positive long integer, or GUID type. Values other than CIOC NUM are treated as an External ID, and a new NUM will be generated on import.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(([A-Z]){3}([0-9]){4,5})|([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})|([1-9][0-9]{0,9})|0|([A-Z]{5,20})"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-NAICSCodeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]{1,6}"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="6"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-NUMType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="([A-Z]){3}([0-9]){4,5}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-OLSType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="AGENCY"/>
+			<xsd:enumeration value="SITE"/>
+			<xsd:enumeration value="SERVICE"/>
+			<xsd:enumeration value="TOPIC"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-OwnerType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="([A-Z]){3}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-PosIntType">
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="0"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-PosDecimalType">
+		<xsd:restriction base="xsd:decimal">
+			<xsd:fractionDigits value="1"/>
+			<xsd:minInclusive value="0"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-PostalCodeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="([A-Z]\d[A-Z] \d[A-Z]\d)|(\d{5}(( |-)\d{4})?)"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="20"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-ServiceLevelType">
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="1"/>
+			<xsd:maxInclusive value="99"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-SigStatusType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="S">
+				<xsd:annotation>
+					<xsd:documentation>Signed</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="O">
+				<xsd:annotation>
+					<xsd:documentation>Awaiting Signature</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="N">
+				<xsd:annotation>
+					<xsd:documentation>Not Applicable</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-StreetDirType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="E"/>
+			<xsd:enumeration value="N"/>
+			<xsd:enumeration value="NE"/>
+			<xsd:enumeration value="NW"/>
+			<xsd:enumeration value="S"/>
+			<xsd:enumeration value="SE"/>
+			<xsd:enumeration value="SW"/>
+			<xsd:enumeration value="W"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-TaxonomyCodeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-Za-z]([A-Za-z](\-[0-9]{4}(\.[0-9]{4}(\-[0-9]{3}(\.[0-9]{2})?)?)?)?)?"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text2Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="2"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text3Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="3"/>
+			<xsd:maxLength value="3"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text5Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="5"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text10Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="10"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text20Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="20"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text25Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="25"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text30Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="30"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text50Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="50"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text60Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="60"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text100Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="100"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text150Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="150"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text200Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="200"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text255Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="255"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text500Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="500"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text1000Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="1000"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text2000Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="1000"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text4000Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="4000"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text8000Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="8000"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text10000Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="10000"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-Text20000Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="20000"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-URLType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="((\d{1,3}(\.\d{1,3}){3})|([\w_-]+(\.[\w\._-]+)*))(:[0-9]+)?([/?][^\s]*)?"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="200"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-URLWithProtocolType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(http://|https://)((\d{1,3}(\.\d{1,3}){3})|([\w_-]+(\.[\w\._-]+)*))(:[0-9]+)?([/?][^\s]*)?"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="200"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-URLProtocolType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="http://"/>
+			<xsd:enumeration value="https://"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="s-WardType">
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="1"/>
+			<xsd:maxInclusive value="999"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="c-Bilingual50Type">
+		<xsd:attribute name="V" type="s-Text50Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text50Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-Bilingual100Type">
+		<xsd:attribute name="V" type="s-Text100Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text100Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-Bilingual150Type">
+		<xsd:attribute name="V" type="s-Text150Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text150Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-Bilingual200Type">
+		<xsd:attribute name="V" type="s-Text200Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text200Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-Bilingual255Type">
+		<xsd:attribute name="V" type="s-Text255Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text255Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-Bilingual500Type">
+		<xsd:attribute name="V" type="s-Text500Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text500Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-Bilingual1000Type">
+		<xsd:attribute name="V" type="s-Text1000Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text1000Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-Bilingual2000Type">
+		<xsd:attribute name="V" type="s-Text1000Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text1000Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-Bilingual4000Type">
+		<xsd:attribute name="V" type="s-Text4000Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text4000Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-Bilingual8000Type">
+		<xsd:attribute name="V" type="s-Text8000Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text8000Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-Bilingual10000Type">
+		<xsd:attribute name="V" type="s-Text10000Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text10000Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-Bilingual20000Type">
+		<xsd:attribute name="V" type="s-Text20000Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text20000Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-BilingualBooleanType">
+		<xsd:attribute name="V" type="s-BooleanType" use="optional"/>
+		<xsd:attribute name="VF" type="s-BooleanType" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-BooleanType">
+		<xsd:attribute name="V" type="s-BooleanType" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-CharCodeType">
+		<xsd:attribute name="V" type="s-CharCodeType" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-ChecklistType">
+		<xsd:sequence>
+			<xsd:element name="CHK" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:attribute name="CD" type="s-CodeBasicType" use="optional"/>
+					<xsd:attribute name="V" type="s-Text200Type" use="required"/>
+					<xsd:attribute name="VF" type="s-Text200Type" use="optional"/>
+					<xsd:attribute name="N" type="s-Text255Type" use="optional"/>
+					<xsd:attribute name="NF" type="s-Text255Type" use="optional"/>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="N" type="s-Text4000Type" use="optional"/>
+		<xsd:attribute name="NF" type="s-Text4000Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-ChecklistTypeExtra">
+		<xsd:sequence>
+			<xsd:element name="CHK" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:attribute name="CD" type="s-CodeBasicType" use="optional"/>
+					<xsd:attribute name="V" type="s-Text100Type" use="required"/>
+					<xsd:attribute name="VF" type="s-Text100Type" use="optional"/>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="FLD" type="s-Text30Type" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-ContactType">
+		<xsd:sequence>
+			<xsd:element name="CONTACT" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:attribute name="LANG" type="s-LangType" use="required"/>
+					<xsd:attribute name="NMH" type="s-Text20Type" use="optional"/>
+					<xsd:attribute name="NMFIRST" type="s-Text60Type" use="optional"/>
+					<xsd:attribute name="NMLAST" type="s-Text100Type" use="optional"/>
+					<xsd:attribute name="NMS" type="s-Text30Type" use="optional"/>
+					<xsd:attribute name="TTL" type="s-Text100Type" use="optional"/>
+					<xsd:attribute name="ORG" type="s-Text100Type" use="optional"/>
+					<xsd:attribute name="EML" type="s-EmailType" use="optional"/>
+					<xsd:attribute name="FAXN" type="s-Text100Type" use="optional"/>
+					<xsd:attribute name="FAXNO" type="s-Text20Type" use="optional"/>
+					<xsd:attribute name="FAXEXT" type="s-Text10Type" use="optional"/>
+					<xsd:attribute name="FAXCALL" type="s-BooleanType" use="optional"/>
+					<xsd:attribute name="PH1TYPE" type="s-Text20Type" use="optional"/>
+					<xsd:attribute name="PH1N" type="s-Text100Type" use="optional"/>
+					<xsd:attribute name="PH1NO" type="s-Text20Type" use="optional"/>
+					<xsd:attribute name="PH1EXT" type="s-Text10Type" use="optional"/>
+					<xsd:attribute name="PH1OPT" type="s-Text10Type" use="optional"/>
+					<xsd:attribute name="PH2TYPE" type="s-Text20Type" use="optional"/>
+					<xsd:attribute name="PH2N" type="s-Text100Type" use="optional"/>
+					<xsd:attribute name="PH2NO" type="s-Text20Type" use="optional"/>
+					<xsd:attribute name="PH2EXT" type="s-Text10Type" use="optional"/>
+					<xsd:attribute name="PH2OPT" type="s-Text10Type" use="optional"/>
+					<xsd:attribute name="PH3TYPE" type="s-Text20Type" use="optional"/>
+					<xsd:attribute name="PH3N" type="s-Text100Type" use="optional"/>
+					<xsd:attribute name="PH3NO" type="s-Text20Type" use="optional"/>
+					<xsd:attribute name="PH3EXT" type="s-Text10Type" use="optional"/>
+					<xsd:attribute name="PH3OPT" type="s-Text10Type" use="optional"/>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="c-DropDownType">
+		<xsd:attribute name="CD" type="s-CodeBasicType" use="optional"/>
+		<xsd:attribute name="V" type="s-Text200Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text200Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-DropDownTypeExtra">
+		<xsd:attribute name="FLD" type="s-Text30Type" use="required"/>
+		<xsd:attribute name="CD" type="s-CodeBasicType" use="optional"/>
+		<xsd:attribute name="V" type="s-Text200Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text200Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-DateType">
+		<xsd:attribute name="V" type="s-DateType" use="optional"/>
+		<xsd:attribute name="VF" type="s-DateType" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-EmailType">
+		<xsd:attribute name="V" type="s-EmailType" use="optional"/>
+		<xsd:attribute name="VF" type="s-EmailType" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-FeeChecklistType">
+		<xsd:sequence>
+			<xsd:element name="CHK" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:attribute name="CD" type="s-CodeBasicType" use="optional"/>
+					<xsd:attribute name="V" type="s-Text200Type" use="required"/>
+					<xsd:attribute name="VF" type="s-Text200Type" use="optional"/>
+					<xsd:attribute name="N" type="s-Text255Type" use="optional"/>
+					<xsd:attribute name="NF" type="s-Text255Type" use="optional"/>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="N" type="s-Text4000Type" use="optional"/>
+		<xsd:attribute name="NF" type="s-Text4000Type" use="optional"/>
+		<xsd:attribute name="ASSIST" type="s-BooleanType" use="optional" default="0"/>
+		<xsd:attribute name="ASSIST_FOR" type="s-Text200Type" use="optional"/>
+		<xsd:attribute name="ASSIST_FORF" type="s-Text200Type" use="optional"/>
+		<xsd:attribute name="ASSIST_FROM" type="s-Text200Type" use="optional"/>
+		<xsd:attribute name="ASSIST_FROMF" type="s-Text200Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-LanguageChecklistType">
+		<xsd:sequence>
+			<xsd:element name="CHK" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="SERVICE_TYPE" minOccurs="0" maxOccurs="unbounded">
+							<xsd:complexType>
+								<xsd:attribute name="CD" type="s-CodeBasicType" use="optional"/>
+								<xsd:attribute name="V" type="s-Text200Type" use="required"/>
+								<xsd:attribute name="VF" type="s-Text200Type" use="optional"/>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+					<xsd:attribute name="CD" type="s-CodeBasicType" use="optional"/>
+					<xsd:attribute name="V" type="s-Text200Type" use="required"/>
+					<xsd:attribute name="VF" type="s-Text200Type" use="optional"/>
+					<xsd:attribute name="N" type="s-Text255Type" use="optional"/>
+					<xsd:attribute name="NF" type="s-Text255Type" use="optional"/>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="N" type="s-Text4000Type" use="optional"/>
+		<xsd:attribute name="NF" type="s-Text4000Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-NAICSCodeType">
+		<xsd:attribute name="V" type="s-NAICSCodeType" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-OrgNameType">
+		<xsd:attribute name="V" type="s-Text200Type" use="optional"/>
+		<xsd:attribute name="VF" type="s-Text200Type" use="optional"/>
+		<xsd:attribute name="PB" type="s-BooleanType" use="optional" default="0"/>
+		<xsd:attribute name="PBF" type="s-BooleanType" use="optional" default="0"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-RecordNoteType">
+		<xsd:sequence>
+			<xsd:element name="N" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:attribute name="GID" type="s-GUID" use="required"/>
+					<xsd:attribute name="CREATED" type="s-DateType" use="required"/>
+					<xsd:attribute name="CREATEDBY" type="s-Text50Type" use="optional"/>
+					<xsd:attribute name="MOD" type="s-DateType" use="required"/>
+					<xsd:attribute name="MODBY" type="s-Text50Type" use="optional"/>
+					<xsd:attribute name="LANG" type="s-LangType" use="required"/>
+					<xsd:attribute name="CD" type="s-CodeBasicType" use="optional"/>
+					<xsd:attribute name="V" type="s-Text10000Type" use="required"/>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="c-SchoolChecklistType">
+		<xsd:sequence>
+			<xsd:element name="CHK" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:attribute name="V" type="s-Text200Type" use="required"/>
+					<xsd:attribute name="VF" type="s-Text200Type" use="optional"/>
+					<xsd:attribute name="BRD" type="s-Text100Type" use="optional"/>
+					<xsd:attribute name="N" type="s-Text255Type" use="optional"/>
+					<xsd:attribute name="NF" type="s-Text255Type" use="optional"/>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="N" type="s-Text4000Type" use="optional"/>
+		<xsd:attribute name="NF" type="s-Text4000Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-SimpleCodeType">
+		<xsd:attribute name="V" type="s-CodeType" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-Text100Type">
+		<xsd:attribute name="V" type="s-Text100Type" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="c-URLType">
+		<xsd:attribute name="V" type="s-URLType" use="optional"/>
+		<xsd:attribute name="VF" type="s-URLType" use="optional"/>
+	</xsd:complexType>
+	
+	<xsd:annotation>
+		<xsd:documentation>
+		Begin main document structure:
+			-> Source database information (optional)
+			-> Privacy Profile list (optional)
+			-> Distribution Code list (optional)
+			-> Publication Code list (optional)
+			-> Record list (required)
+		</xsd:documentation>
+	</xsd:annotation>
+	
+	<xsd:element name="ROOT">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="SOURCE_DB" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:attribute name="NM" type="s-Text255Type" use="optional"/>
+						<xsd:attribute name="NMF" type="s-Text255Type" use="optional"/>
+						<xsd:attribute name="URL" type="s-URLWithProtocolType" use="optional"/>
+						<xsd:attribute name="URLF" type="s-URLWithProtocolType" use="optional"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="PRIVACY_PROFILE_LIST" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="PR" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="FLD" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="V" type="s-Text100Type" use="required"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+									<xsd:attribute name="V" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="VF" type="s-Text100Type" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="DIST_CODE_LIST" minOccurs="1" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="CD" type="c-SimpleCodeType" minOccurs="0" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="PUB_CODE_LIST" minOccurs="1" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="CD" type="c-SimpleCodeType" minOccurs="0" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="RECORD" minOccurs="1" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="SUBMIT_CHANGES_TO" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="V" type="s-URLType" use="optional"/>
+									<xsd:attribute name="P" type="s-URLProtocolType" use="optional"/>
+									<xsd:attribute name="VF" type="s-URLType" use="optional"/>
+									<xsd:attribute name="PF" type="s-URLProtocolType" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="ACCESSIBILITY" type="c-ChecklistType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ACCREDITED" type="c-DropDownType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ACTIVITY_INFO" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="UNIT" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="GID" type="s-GUID" use="required"/>
+												<xsd:attribute name="NM" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="NMF" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="DESC" type="s-Text2000Type" use="optional"/>
+												<xsd:attribute name="DESCF" type="s-Text2000Type" use="optional"/>
+												<xsd:attribute name="STAT" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="STATF" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="N" type="s-Text2000Type" use="optional"/>
+												<xsd:attribute name="NF" type="s-Text2000Type" use="optional"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+									<xsd:attribute name="N" type="s-Text4000Type" use="optional"/>
+									<xsd:attribute name="NF" type="s-Text4000Type" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="AFTER_HRS_PHONE" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ALT_ORG" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="NM" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="V" type="s-Text255Type" use="required"/>
+												<xsd:attribute name="PB" type="s-BooleanType" use="optional" default="0"/>
+												<xsd:attribute name="LANG" type="s-LangType" use="required"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="APPLICATION" type="c-Bilingual8000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="AREAS_SERVED" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="CM" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="V" type="s-Text200Type" use="required"/>
+												<xsd:attribute name="VF" type="s-Text200Type" use="optional"/>
+												<xsd:attribute name="AP" type="s-Text200Type" use="optional"/>
+												<xsd:attribute name="APF" type="s-Text200Type" use="optional"/>
+												<xsd:attribute name="PRV" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="CTRY" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="N" type="s-Text255Type" use="optional"/>
+												<xsd:attribute name="NF" type="s-Text255Type" use="optional"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+									<xsd:attribute name="N" type="s-Text4000Type" use="optional"/>
+									<xsd:attribute name="NF" type="s-Text4000Type" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="BEST_TIME_TO_CALL" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BILLING_ADDRESSES" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="ADDR" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="GID" type="s-GUID" use="required"/>
+												<xsd:attribute name="LANG" type="s-LangType" use="required"/>
+												<xsd:attribute name="TYPE" type="s-Text20Type" use="required"/>
+												<xsd:attribute name="PRI" type="s-BillingPriorityType" use="required"/>
+												<xsd:attribute name="CD" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="CCD" type="s-DateType" use="optional"/>
+												<xsd:attribute name="LN1" type="s-Text200Type" use="optional"/>
+												<xsd:attribute name="LN2" type="s-Text200Type" use="optional"/>
+												<xsd:attribute name="LN3" type="s-Text200Type" use="optional"/>
+												<xsd:attribute name="LN4" type="s-Text200Type" use="optional"/>
+												<xsd:attribute name="CTY" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="PRV" type="s-Text2Type" use="optional"/>
+												<xsd:attribute name="CTRY" type="s-Text60Type" use="optional"/>
+												<xsd:attribute name="PC" type="s-PostalCodeType" use="optional"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="BOUNDARIES" type="c-Bilingual8000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BUS_ROUTES" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="RT" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="NO" type="s-Text20Type" use="optional"/>
+												<xsd:attribute name="NM" type="s-Text200Type" use="optional"/>
+												<xsd:attribute name="NMF" type="s-Text200Type" use="optional"/>
+												<xsd:attribute name="MUN" type="s-Text200Type" use="optional"/>
+												<xsd:attribute name="MUNF" type="s-Text200Type" use="optional"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="CC_LICENSE_INFO" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="NO" type="s-Text50Type" use="optional"/>
+									<xsd:attribute name="DATE" type="s-DateType" use="optional"/>
+									<xsd:attribute name="TOT" type="s-PosIntType" use="optional"/>
+									<xsd:attribute name="INF" type="s-PosIntType" use="optional"/>
+									<xsd:attribute name="TOD" type="s-PosIntType" use="optional"/>
+									<xsd:attribute name="PRE" type="s-PosIntType" use="optional"/>
+									<xsd:attribute name="KIN" type="s-PosIntType" use="optional"/>
+									<xsd:attribute name="SCH" type="s-PosIntType" use="optional"/>
+									<xsd:attribute name="N" type="s-Text4000Type" use="optional"/>
+									<xsd:attribute name="NF" type="s-Text4000Type" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="CERTIFIED" type="c-DropDownType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COLLECTED_BY" type="c-Bilingual50Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COLLECTED_DATE" type="c-DateType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COMMENTS" type="c-Bilingual4000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CONTACT_1" type="c-ContactType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CONTACT_2" type="c-ContactType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CONTRACT_SIGNATURE" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="SIGNATURE" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="GID" type="s-GUID" use="required"/>
+												<xsd:attribute name="STATUS" type="s-SigStatusType" use="required"/>
+												<xsd:attribute name="SIGNAME" type="s-Text255Type" use="optional"/>
+												<xsd:attribute name="DATE" type="s-DateType" use="optional"/>
+												<xsd:attribute name="N" type="s-Text255Type" use="optional"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="CORP_REG_NO" type="c-Bilingual100Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CREATED_BY" type="c-Bilingual50Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CREATED_DATE" type="c-DateType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CRISIS_PHONE" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DATES" type="c-Bilingual4000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DD_CODE" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="V" type="s-Text8000Type" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="DELETED_BY" type="c-Bilingual50Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DELETION_DATE" type="c-DateType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DESCRIPTION" type="c-Bilingual20000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="E_MAIL" type="c-EmailType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ELECTIONS" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ELIGIBILITY" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="MIN_AGE" type="s-AgeType" use="optional"/>
+									<xsd:attribute name="MAX_AGE" type="s-AgeType" use="optional" />
+									<xsd:attribute name="N" type="s-Text4000Type" use="optional"/>
+									<xsd:attribute name="NF" type="s-Text4000Type" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="EMAIL_UPDATE_DATE" type="c-DateType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EMPLOYEES" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="FT" type="s-PosIntType" use="optional"/>
+									<xsd:attribute name="PT" type="s-PosIntType" use="optional"/>
+									<xsd:attribute name="TOT" type="s-PosIntType" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="EMPLOYEES_RANGE" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="MIN" type="s-PosIntType" use="required"/>
+									<xsd:attribute name="MAX" type="s-PosIntType" use="required"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="ESTABLISHED" type="c-Bilingual150Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EXEC_1" type="c-ContactType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EXEC_2" type="c-ContactType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EXTERNAL_ID" minOccurs="0" maxOccurs="1">
+								<xsd:annotation>
+									<xsd:documentation>May be used to set an External ID for synchronizing data. It is recommended that this not be used if the NUM attribute of this record is already a non-CIOC record ID Type (e.g. Long Integer or GUID) that will be entered in the EXTERNAL_ID field automatically on import.</xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:attribute name="V" type="s-MultipleIDType" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="EXTRA" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:attribute name="FLD" type="s-Text30Type" use="required"/>
+									<xsd:attribute name="V" type="s-Text8000Type" use="optional"/>
+									<xsd:attribute name="VF" type="s-Text8000Type" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="EXTRA_CHECKLIST" type="c-ChecklistTypeExtra" minOccurs="0" maxOccurs="unbounded"/>
+							<xsd:element name="EXTRA_CONTACT_A" type="c-ContactType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EXTRA_DATE" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:attribute name="FLD" type="s-Text30Type" use="required"/>
+									<xsd:attribute name="V" type="s-DateType" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="EXTRA_DROPDOWN" type="c-DropDownTypeExtra" minOccurs="0" maxOccurs="unbounded"/>
+							<xsd:element name="EXTRA_EMAIL" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:attribute name="FLD" type="s-Text30Type" use="required"/>
+									<xsd:attribute name="V" type="s-EmailType" use="optional"/>
+									<xsd:attribute name="VF" type="s-EmailType" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="EXTRA_RADIO" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:attribute name="FLD" type="s-Text30Type" use="required"/>
+									<xsd:attribute name="V" type="s-BooleanType" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="EXTRA_WWW" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:attribute name="FLD" type="s-Text30Type" use="required"/>
+									<xsd:attribute name="V" type="s-URLType" use="optional"/>
+									<xsd:attribute name="VF" type="s-URLType" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="FAX" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="FEES" type="c-FeeChecklistType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="FISCAL_YEAR_END" type="c-DropDownType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="FORMER_ORG" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="NM" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="V" type="s-Text255Type" use="required"/>
+												<xsd:attribute name="DATE" type="s-Text20Type" use="optional"/>
+												<xsd:attribute name="PB" type="s-BooleanType" use="optional" default="0"/>
+												<xsd:attribute name="LANG" type="s-LangType" use="required"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="FUNDING" type="c-ChecklistType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="GEOCODE" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="TYPE" type="s-GeocodeType" use="required"/>
+									<xsd:attribute name="LAT" type="s-LatLongType" use="optional"/>
+									<xsd:attribute name="LONG" type="s-LatLongType" use="optional"/>
+									<xsd:attribute name="N" type="s-Text255Type" use="optional"/>
+									<xsd:attribute name="NF" type="s-Text255Type" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="HOURS" type="c-Bilingual4000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="INTERNAL_MEMO" type="c-RecordNoteType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="INTERSECTION" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="LANGUAGES" type="c-LanguageChecklistType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="LEGAL_ORG" type="c-OrgNameType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="LOCATED_IN_CM" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="V" type="s-Text200Type" use="optional"/>
+									<xsd:attribute name="VF" type="s-Text200Type" use="optional"/>
+									<xsd:attribute name="AP" type="s-Text200Type" use="optional"/>
+									<xsd:attribute name="APF" type="s-Text200Type" use="optional"/>
+									<xsd:attribute name="PRV" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="CTRY" type="s-Text100Type" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="LOCATION_DESCRIPTION" type="c-Bilingual8000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="LOCATION_NAME" type="c-OrgNameType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="LOCATION_SERVICES" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="SERVICE_NUM" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="V" type="s-MultipleIDType" use="required"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="LOGO_ADDRESS" type="c-URLType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MAIL_ADDRESS" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="CO" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="COF" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="BXTP" type="s-Text20Type" use="optional"/>
+									<xsd:attribute name="BXTPF" type="s-Text20Type" use="optional"/>
+									<xsd:attribute name="BOX" type="s-Text20Type" use="optional"/>
+									<xsd:attribute name="BOXF" type="s-Text20Type" use="optional"/>
+									<xsd:attribute name="BLD" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="BLDF" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="STNUM" type="s-Text30Type" use="optional"/>
+									<xsd:attribute name="STNUMF" type="s-Text30Type" use="optional"/>
+									<xsd:attribute name="ST" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="STF" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="STTYPE" type="s-Text20Type" use="optional"/>
+									<xsd:attribute name="STTYPEF" type="s-Text20Type" use="optional"/>
+									<xsd:attribute name="STTYPEAFTER" type="s-BooleanType" use="optional"/>
+									<xsd:attribute name="STTYPEAFTERF" type="s-BooleanType" use="optional"/>
+									<xsd:attribute name="STDIR" type="s-StreetDirType" use="optional"/>
+									<xsd:attribute name="STDIRF" type="s-StreetDirType" use="optional"/>
+									<xsd:attribute name="SFX" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="SFXF" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="CTY" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="CTYF" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="PRV" type="s-Text2Type" use="optional"/>
+									<xsd:attribute name="PRVF" type="s-Text2Type" use="optional"/>
+									<xsd:attribute name="CTRY" type="s-Text60Type" use="optional"/>
+									<xsd:attribute name="CTRYF" type="s-Text60Type" use="optional"/>
+									<xsd:attribute name="PC" type="s-PostalCodeType" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="MEETINGS" type="c-Bilingual8000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MEMBERSHIP" type="c-ChecklistType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MODIFIED_BY" type="c-Bilingual50Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MODIFIED_DATE" type="c-DateType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="NAICS" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="CD" type="c-NAICSCodeType" minOccurs="0" maxOccurs="unbounded"/>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="NO_UPDATE_EMAIL" type="c-BooleanType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="NON_PUBLIC" type="c-BilingualBooleanType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="OCG_NO" type="c-Text100Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="OFFICE_PHONE" type="c-Bilingual1000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ORG_DESCRIPTION" type="c-Bilingual8000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ORG_LEVEL_1" type="c-Bilingual200Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ORG_LEVEL_2" type="c-OrgNameType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ORG_LEVEL_3" type="c-OrgNameType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ORG_LEVEL_4" type="c-OrgNameType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ORG_LEVEL_5" type="c-OrgNameType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ORG_LOCATION_SERVICE" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="CD" minOccurs="0" maxOccurs="4">
+											<xsd:complexType>
+												<xsd:attribute name="V" type="s-OLSType" use="required"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="ORG_NUM" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="V" type="s-MultipleIDType" use="optional"/>
+									<xsd:attribute name="DISPLAY_ORG_NAME" type="s-BooleanType" use="optional" default="0" />
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="OTHER_ADDRESSES" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="ADDR" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="GID" type="s-GUID" use="required"/>
+												<xsd:attribute name="LANG" type="s-LangType" use="required"/>
+												<xsd:attribute name="TTL" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="CD" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="CO" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="BXTP" type="s-Text20Type" use="optional"/>
+												<xsd:attribute name="BOX" type="s-Text20Type" use="optional"/>
+												<xsd:attribute name="BLD" type="s-Text150Type" use="optional"/>
+												<xsd:attribute name="STNUM" type="s-Text30Type" use="optional"/>
+												<xsd:attribute name="ST" type="s-Text150Type" use="optional"/>
+												<xsd:attribute name="STTYPE" type="s-Text20Type" use="optional"/>
+												<xsd:attribute name="STTYPEAFTER" type="s-BooleanType" use="optional"/>
+												<xsd:attribute name="STDIR" type="s-StreetDirType" use="optional"/>
+												<xsd:attribute name="SFX" type="s-Text150Type" use="optional"/>
+												<xsd:attribute name="CTY" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="PRV" type="s-Text2Type" use="optional"/>
+												<xsd:attribute name="CTRY" type="s-Text60Type" use="optional"/>
+												<xsd:attribute name="PC" type="s-PostalCodeType" use="optional"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="PAYMENT_TERMS" type="c-DropDownType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PREF_CURRENCY" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="V" type="s-Text3Type" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="PREF_PAYMENT_METHOD" type="c-DropDownType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PRINT_MATERIAL" type="c-Bilingual1000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PUBLIC_COMMENTS" type="c-Bilingual4000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="QUALITY" type="c-CharCodeType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RECORD_TYPE" type="c-CharCodeType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RESOURCES" type="c-Bilingual8000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SCHOOL_ESCORT" type="c-SchoolChecklistType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SCHOOLS_IN_AREA" type="c-SchoolChecklistType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SERVICE_LEVEL" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="CD" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="V" type="s-ServiceLevelType" />
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="SERVICE_NAME_LEVEL_1" type="c-OrgNameType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SERVICE_NAME_LEVEL_2" type="c-OrgNameType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SITE_ADDRESS" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="BLD" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="BLDF" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="STNUM" type="s-Text30Type" use="optional"/>
+									<xsd:attribute name="STNUMF" type="s-Text30Type" use="optional"/>
+									<xsd:attribute name="ST" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="STF" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="STTYPE" type="s-Text20Type" use="optional"/>
+									<xsd:attribute name="STTYPEF" type="s-Text20Type" use="optional"/>
+									<xsd:attribute name="STTYPEAFTER" type="s-BooleanType" use="optional"/>
+									<xsd:attribute name="STTYPEAFTERF" type="s-BooleanType" use="optional"/>
+									<xsd:attribute name="STDIR" type="s-StreetDirType" use="optional"/>
+									<xsd:attribute name="STDIRF" type="s-StreetDirType" use="optional"/>
+									<xsd:attribute name="SFX" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="SFXF" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="CTY" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="CTYF" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="PRV" type="s-Text2Type" use="optional"/>
+									<xsd:attribute name="PRVF" type="s-Text2Type" use="optional"/>
+									<xsd:attribute name="CTRY" type="s-Text60Type" use="optional"/>
+									<xsd:attribute name="CTRYF" type="s-Text60Type" use="optional"/>
+									<xsd:attribute name="PC" type="s-PostalCodeType" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="SITE_LOCATION" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SOCIAL_MEDIA" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="TYPE" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="NM" type="s-Text100Type" use="required"/>
+												<xsd:attribute name="PROTOCOL" type="s-URLProtocolType" use="optional" default="http://"/>
+												<xsd:attribute name="URL" type="s-URLType" use="required"/>
+												<xsd:attribute name="LANG" type="s-LangType" use="required"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="SORT_AS" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SOURCE" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="NM" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="NMF" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="TTL" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="TTLF" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="ORG" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="ORGF" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="PHN" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="PHNF" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="FAX" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="FAXF" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="EML" type="s-EmailType" use="optional"/>
+									<xsd:attribute name="EMLF" type="s-EmailType" use="optional"/>
+									<xsd:attribute name="BLD" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="BLDF" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="ADDR" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="ADDRF" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="CTY" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="CTYF" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="PRV" type="s-Text2Type" use="optional"/>
+									<xsd:attribute name="PRVF" type="s-Text2Type" use="optional"/>
+									<xsd:attribute name="PC" type="s-Text20Type" use="optional"/>
+									<xsd:attribute name="PCF" type="s-Text20Type" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="SPACE_AVAILABLE" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="V" type="s-BooleanType" use="optional"/>
+									<xsd:attribute name="N" type="s-Text255Type" use="optional"/>
+									<xsd:attribute name="NF" type="s-Text255Type" use="optional"/>
+									<xsd:attribute name="DATE" type="s-DateType" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="SUBJECTS" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="TM" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="V" type="s-Text200Type" use="required"/>
+												<xsd:attribute name="VF" type="s-Text200Type" use="optional"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="SUBSIDY" type="c-BooleanType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SUP_DESCRIPTION" type="c-Bilingual8000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TAX_REG_NO" type="c-Text100Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TAXONOMY" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="LNK" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="TM" minOccurs="0" maxOccurs="unbounded">
+														<xsd:complexType>
+															<xsd:attribute name="V" type="s-TaxonomyCodeType" use="required"/>
+														</xsd:complexType>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+									<xsd:attribute name="MODBY" type="s-Text50Type" use="optional"/>
+									<xsd:attribute name="MOD" type="s-DateType" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="TDD_PHONE" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TOLL_FREE_PHONE" type="c-Bilingual1000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TRANSPORTATION" type="c-Bilingual500Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TYPE_OF_CARE" type="c-ChecklistType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TYPE_OF_PROGRAM" type="c-Bilingual150Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="UPDATE_DATE" type="c-DateType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="UPDATE_EMAIL" type="c-EmailType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="UPDATE_HISTORY" type="c-Bilingual8000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="UPDATE_SCHEDULE" type="c-DateType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="UPDATED_BY" type="c-Bilingual50Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VACANCY_INFO" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="UNIT" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="TP" minOccurs="0" maxOccurs="unbounded">
+														<xsd:complexType>
+															<xsd:attribute name="NM" type="s-Text100Type" use="required"/>
+															<xsd:attribute name="NMF" type="s-Text100Type" use="optional"/>
+														</xsd:complexType>
+													</xsd:element>
+												</xsd:sequence>
+												<xsd:attribute name="GID" type="s-GUID" use="required"/>
+												<xsd:attribute name="SVC" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="SVCF" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="NM" type="s-Text100Type" use="required"/>
+												<xsd:attribute name="NMF" type="s-Text100Type" use="optional"/>
+												<xsd:attribute name="CAP" type="s-PosIntType" use="required"/>
+												<xsd:attribute name="FUNDCAP" type="s-PosIntType" use="optional"/>
+												<xsd:attribute name="VAC" type="s-PosIntType" use="optional"/>
+												<xsd:attribute name="HOURS" type="s-PosDecimalType" use="optional"/>
+												<xsd:attribute name="DAYS" type="s-PosDecimalType" use="optional"/>
+												<xsd:attribute name="WEEKS" type="s-PosDecimalType" use="optional"/>
+												<xsd:attribute name="FTE" type="s-PosDecimalType" use="optional"/>
+												<xsd:attribute name="WAIT" type="s-BooleanType" use="optional"/>
+												<xsd:attribute name="WAITD" type="s-DateType" use="optional"/>
+												<xsd:attribute name="N" type="s-Text2000Type" use="optional"/>
+												<xsd:attribute name="NF" type="s-Text2000Type" use="optional"/>
+												<xsd:attribute name="MOD" type="s-DateType" use="optional"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+									<xsd:attribute name="N" type="s-Text4000Type" use="optional"/>
+									<xsd:attribute name="NF" type="s-Text4000Type" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="VOLCONTACT" type="c-ContactType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="WARD" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:attribute name="V" type="s-WardType" use="optional"/>
+									<xsd:attribute name="MUN" type="s-Text200Type" use="optional"/>
+									<xsd:attribute name="MUNF" type="s-Text200Type" use="optional"/>
+									<xsd:attribute name="PRV" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="CTRY" type="s-Text100Type" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="WCB_NO" type="c-Text100Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="WWW_ADDRESS" type="c-URLType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PUBLICATION" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="CD" minOccurs="0" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="HEADINGS" minOccurs="0" maxOccurs="1">
+														<xsd:complexType>
+															<xsd:sequence>
+																<xsd:element name="HD" minOccurs="0" maxOccurs="unbounded">
+																	<xsd:complexType>
+																		<xsd:attribute name="V" type="s-Text200Type" use="required"/>
+																		<xsd:attribute name="VF" type="s-Text200Type" use="optional"/>
+																	</xsd:complexType>
+																</xsd:element>
+															</xsd:sequence>
+														</xsd:complexType>
+													</xsd:element>
+												</xsd:sequence>
+												<xsd:attribute name="V" type="s-CodeType" use="required"/>
+												<xsd:attribute name="N" type="s-Text8000Type" use="optional"/>
+												<xsd:attribute name="NF" type="s-Text8000Type" use="optional"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="DISTRIBUTION" minOccurs="0" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="CD" type="c-SimpleCodeType" minOccurs="0" maxOccurs="unbounded"/>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+						<xsd:attribute name="NUM" type="s-MultipleIDType" use="required"/>
+						<xsd:attribute name="RECORD_OWNER" type="s-OwnerType" use="required"/>
+						<xsd:attribute name="HAS_ENGLISH" type="s-BooleanType" use="optional" default="0"/>
+						<xsd:attribute name="HAS_FRENCH" type="s-BooleanType" use="optional" default="0"/>
+						<xsd:attribute name="PRIVACY_PROFILE" type="s-Text100Type" use="optional"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

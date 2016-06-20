@@ -1,0 +1,100 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>The <strong><em>Edit Account</em></strong> page allows you to modify the account details for database logins other than your own. Depending on your permissions, not all settings will be available for you to modify.</p>
+
+<ul>
+	<li><a href="#lastlogin">Last Login</a></li>
+	<li><a href="#lockedaccount">Locked Account</a></li>
+	<li><a href="#status">Status</a></li>
+	<li><a href="#agency">Agency</a></li>
+	<li><a href="#usertype">User Type</a></li>
+	<li><a href="#startpage">Start Page</a></li>
+	<li><a href="#username">User Name</a></li>
+	<li><a href="#name">Name</a></li>
+	<li><a href="#email">Email</a></li>
+	<li><a href="#savedsearch">Saved Search</a></li>
+	<li><a href="#singlelogin">Single Login</a></li>
+	<li><a href="#accountupdates">Account Updates</a></li>
+	<li><a href="#changepassword">Change Password</a></li>
+	<li><a href="#submit">Submit Updates / Reset Form</a></li>
+</ul>
+
+<hr>
+
+<a name="lastlogin"></a>
+<h3>Last Login</h3>
+<p>This section shows the last date this login was successfully used (if available) and the IP Address used to access the account.</p>
+
+<a name="lockedaccount"></a>
+<h3>Locked Account</h3>
+<p>If this account is locked, a section called <em>Locked Account</em> will be available. It will show the last login attempt made on this account and the IP Address used for the attempt. A user with account management privileges can unlock the account by checking the &quot;Unlock this account&quot; checkbox and submitting the form.</p>
+
+<a name="status"></a>
+<h3>Status</h3>
+<p>Checking the <em>User is Inactive</em> box will change the account status to inactive and the user will no longer be allowed to log in to the database. If the user is currently logged in, they will be logged out the next time they perform any operation in the database. Because the system does not allow you to delete user logins, this is the method that should be used to block an account that is no longer in use.</p>
+
+<a name="agency"></a>
+<h3>Agency</h3>
+<p>Each user account must be associated with an <em>Agency</em> that has been configured in the database. A Super User can add to or edit the list of Agencies by going to the <em>Agencies</em> setup link in the Main Menu.</p>
+
+<a name="usertype"></a>
+<h3>User Type</h3>
+<p><em>User Types</em> represent the security level under which the user will be able to access any particular module. Selecting a User Type will determine which View the user sees when they log in and what permissions they have to access and modify information in the database. User Types are set individually for each module of the database (Community Information and Volunteer). Depending on your permissions, you may not be able to modify the settings for all the modules in your database.</p>
+<p>If you leave the User Type blank for any module, the software will give the user the same permissions as a non-logged in user whenever they are working in that module.</p>
+<p>You cannot change a user's existing User Type to one that has greater permissions than your own User Type. For example, if you are not a Super User you would not be permitted to grant a user Super User privileges within the database. However, the user's current User Type will <strong>always</strong> be available in the list and selected by default, even if they have more permissions than you.</p>
+<p>A Super User can modify User Types by going to <em>Setup</em> from the Main Menu and then selecting <em>User Types</em>.</p>
+
+<a name="startpage"></a>
+<h3>Start Page</h3>
+<p>The <em>Start Page</em> setting allows you to specify which database module (Community Information or Volunteer) and language that the user will be taken to when they first log in to the database. If you do not use multiple languages or multiple database modules, you may not see this account setting.</p>
+
+<a name="username"></a>
+<h3>User Name</h3>
+<p>Specify a unique login name for this account. The user will use this along with their password to log in to the database.</p>
+
+<a name="name"></a>
+<h3>Name</h3>
+<p>First and last name of user, as well as initials. Depending on the database settings, initials may be used in various areas of the software to indicate who performed modifications and updates; therefore, <strong>all initials should be unique in the database</strong>. If you have more than one users with the same initials, use middle names or add some special designation to distinguish between them, such as an Agency Code.</p>
+
+<a name="email"></a>
+<h3>Email</h3>
+<p>The user's email will be used to notify them in case of a locked account, and in the future may be used for password resets or other account-related security. In the past this was not a required field, so it is possible for older accounts to exist that have no email address associated with them. In such a case, you will not be able to modify the account without first adding an email.</p>
+
+<a name="savedsearch"></a>
+<h3>Saved Search</h3>
+<p>Specify the number of saved searches this user is allowed to have at any one time; this number does not include searches shared with this user by another user.</p>
+
+<a name="accountupdates"></a>
+<h3>Account Updates</h3>
+<p>You may specify whether the user is allowed to update their own basic account information, or must submit a request for a change to their account. In general, it is useful to allow users to maintain their own basic account details except under special circumstances such as a 3rd party account (e.g. leased login) or a shared account. <span class="Alert">If you disallow self-updating on any part of the user account, please ensure that the setup for this user's Agency includes an email for sending account update requests.</span></p>
+
+<a name="singlelogin"></a>
+<h3>Single Login</h3>
+<p>Users with a <em>&quot;Single Login&quot;</em> account cannot log in at multiple locations or with multiple browsers at the same time. If a new login occurs, the former login session will be terminated. This is not usually a recommended setting for database managers or other regular database users, but can be useful when providing a 3rd party with a login that you do not want shared by multiple users, or whenever extra security is desired.</p>
+
+<a name="changepassword"></a>
+<h3>Change Password</h3>
+<p><em>Change Password</em> allows the person setting up the account to change a user's password. <span class="Alert">Note:</span> Please follow the instructions around password security very carefully. Passwords created to allow new users to first log in to the database should be changed as soon as the new user is able to do so.</p>
+
+<a name="submit"></a>
+<h3>Submit Updates / Reset Form</h3>
+<p>When you finish entering/editing the information; click on <em>&quot;Submit Updates&quot;</em> to save the information. Clicking <em>&quot;Reset Form&quot;</em> will return the page to whatever settings were displayed when the page was first loaded.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified: $Date$</p>

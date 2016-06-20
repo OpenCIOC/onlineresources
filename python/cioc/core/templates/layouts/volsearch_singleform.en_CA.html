@@ -1,0 +1,106 @@
+<div id="vol-search-area">
+
+[IF:HAS_LEFT_CONTENT]
+<div class="search-left">
+[IF:SEARCH_ALERT]
+<div class="search-alert-box ui-state-error ui-corner-all">
+[SEARCH_ALERT]
+</div>
+[ENDIF:SEARCH_ALERT]
+
+[IF:SEARCH_MENU]
+<nav class="search-cioc-menu">
+<div id="MainPageMenu">
+[IF:MENU_MESSAGE]
+<div class="MenuMessageBox[IF:NOT_LOGGED_IN] no-main-menu[ENDIF:NOT_LOGGED_IN]">
+[MENU_MESSAGE]
+</div>
+[ENDIF:MENU_MESSAGE]
+[IF:LOGGED_IN]
+<h3 class="main-menu-title">[MENU_TITLE]</h3>
+[ENDIF:LOGGED_IN]
+<ul class="menu">
+[FOR:OTHER_LANGS]
+<li class="menu"><a href="[LINK]">[DISPLAY]</a></li>
+[ENDFOR:OTHER_LANGS]
+[IF:CIC_LINK]
+<li class="menu"><a href="[CIC_LINK]">[CIC_LINK_TEXT]</a></li>
+[ENDIF:CIC_LINK]
+[FOR:CUSTOM_MENU_ITEMS]
+<li class="menu"><a href="[LINK]">[DISPLAY]</a></li>
+[ENDFOR:CUSTOM_MENU_ITEMS]
+[FOR:SEARCH_MENU_ITEMS]
+<li class="menu"><a href="[LINK]">[DISPLAY]</a></li>
+[ENDFOR:SEARCH_MENU_ITEMS]
+</ul>
+[IF:CHANGE_VIEW]
+[CHANGE_VIEW]
+[ENDIF:CHANGE_VIEW]
+</div>
+</nav>
+[ENDIF:SEARCH_MENU]
+
+[IF:SEARCH_LEFT_CONTENT]
+<div class="search-user-content-left ui-state-active ui-corner-all">
+[SEARCH_LEFT_CONTENT]
+</div>
+[ENDIF:SEARCH_LEFT_CONTENT]
+</div>
+[ENDIF:HAS_LEFT_CONTENT]
+
+[IF:HAS_SEARCH_AREA]
+<div class="search-form">
+
+[IF:VOL_SEARCH_MENU]
+<div id="vol-search-prompt">
+<h2 class="RevBoxHeader" style="margin-top: 0;">[SEARCH_PROMPT]</h2>
+<div class="SubBoxHeader">
+	[VOL_SEARCH_MENU]
+</div>
+</div>
+[ENDIF:VOL_SEARCH_MENU]
+
+[IF:BASIC_SEARCH]
+<div id="basic-search">
+<h2 class="RevBoxHeader">Keyword Search</h2>
+<div class="SubBoxHeader">[BASIC_SEARCH]</div>
+</div>
+[ENDIF:BASIC_SEARCH]
+
+[IF:BROWSE]
+<div id="browse">
+[IF:BROWSE_ORG_ITEMS]
+<h2 class="RevBoxHeader">Browse by Organization</h2>
+<div class="SubBoxHeader clearfix" style="float: left;">
+	[FOR:BROWSE_ORG_ITEMS]
+	<a href="[LINK]">
+		<div class="browse-by-item">[DISPLAY]</div>
+	</a>
+	[ENDFOR:BROWSE_ORG_ITEMS]
+</div>
+<div class="clearfix"></div>
+[ENDIF:BROWSE_ORG_ITEMS]
+
+[IF:BROWSE_OP_ITEMS]
+<h2 class="RevBoxHeader">Browse by Area of Interest</h2>
+<div class="SubBoxHeader clearfix" style="float: left;">
+	[FOR:BROWSE_OP_ITEMS]
+	<a href="[LINK]">
+		<div class="browse-by-item">[DISPLAY]</div>
+	</a>
+	[ENDFOR:BROWSE_OP_ITEMS]
+</div>
+<div class="clearfix"></div>
+[ENDIF:BROWSE_OP_ITEMS]
+</div>
+[ENDIF:BROWSE]
+</div>
+[ENDIF:HAS_SEARCH_AREA]
+
+[IF:SEARCH_RIGHT_CONTENT]
+<div class="search-right search-user-content-right">
+[SEARCH_RIGHT_CONTENT]
+</div>
+[ENDIF:SEARCH_RIGHT_CONTENT]
+
+</div><div class="clearfix"></div>

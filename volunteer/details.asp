@@ -1,0 +1,771 @@
+<%@LANGUAGE="VBSCRIPT"%>
+<%Option Explicit%>
+
+<%
+' =========================================================================================
+'  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+'
+'  Licensed under the Apache License, Version 2.0 (the "License");
+'  you may not use this file except in compliance with the License.
+'  You may obtain a copy of the License at
+'
+'      http://www.apache.org/licenses/LICENSE-2.0
+'
+'  Unless required by applicable law or agreed to in writing, software
+'  distributed under the License is distributed on an "AS IS" BASIS,
+'  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+'  See the License for the specific language governing permissions and
+'  limitations under the License.
+' =========================================================================================
+%>
+
+<% 'Base includes %>
+<!--#include file="../includes/core/adovbs.inc" -->
+<!--#include file="../includes/core/incVBUtils.asp" -->
+<!--#include file="../includes/validation/incBasicTypes.asp" -->
+<!--#include file="../includes/core/incRExpFuncs.asp" -->
+<!--#include file="../includes/core/incHandleError.asp" -->
+<!--#include file="../includes/core/incSetLanguage.asp" -->
+<!--#include file="../includes/core/incPassVars.asp" -->
+<!--#include file="../text/txtGeneral.asp" -->
+<!--#include file="../text/txtError.asp" -->
+<!--#include file="../includes/core/incConnection.asp" -->
+<!--#include file="../includes/core/incSetup.asp" -->
+<%
+Dim bIsSEFriendlyURL
+If Request.ServerVariables("HTTP_CIOC_FRIENDLY_RECORD_URL") = "on" Then
+	bIsSEFriendlyURL = True
+Else
+	bIsSEFriendlyURL = False
+End If
+
+' setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart, strFocus)
+Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
+%>
+<!--#include file="../includes/core/incCrypto.asp" -->
+<!--#include file="../includes/core/incSecurity.asp" -->
+<!--#include file="../includes/core/incHeader.asp" -->
+<!--#include file="../includes/core/incFooter.asp" -->
+<!--#include file="../text/txtMenu.asp" -->
+<% 'End Base includes %>
+<!--#include file="../text/txtAgencyContact.asp" -->
+<!--#include file="../text/txtClientTracker.asp" -->
+<!--#include file="../text/txtDetails.asp" -->
+<!--#include file="../text/txtDetailsVOL.asp" -->
+<!--#include file="../text/txtMgmtFields.asp" -->
+<!--#include file="../text/txtRecordPages.asp" -->
+<!--#include file="../includes/core/incChangeViews.asp" -->
+<!--#include file="../includes/core/incFormat.asp" -->
+<!--#include file="../includes/search/incMyList.asp" -->
+<!--#include file="../includes/stats/incInsertStat.asp" -->
+<!--#include file="../includes/update/incAgencyUpdateInfo.asp" -->
+
+<%
+
+Dim strSearchList
+If intLastSearchNumber >= 0 And Not g_bPrintMode Then
+	If intLastSearchNumber >= intCurSearchNumber And Not (intCurSearchNumber = 0 And intCurSearchNumber = intLastSearchNumber) Then
+		If intCurSearchNumber > 0 Then
+			strSearchList = "<span style=""white-space: nowrap""><a id=""first_link_*"" class=""NoLineLink DetailsLink"" data-num=" & AttrQs(aGetSearchArray(0)) &" href=""" & makeVOLDetailsLink(aGetSearchArray(0), "Number=0",vbNullString) & """><img src=""" & ps_strPathToStart & "images/first.gif"" aria-hidden=" & AttrQs("true") & " border=""0"">&nbsp;" & TXT_FIRST & "</a></span> " & _
+				"<span style=""white-space: nowrap""><a id=""prev_link_*"" class=""NoLineLink DetailsLink"" data-num=" & AttrQs(aGetSearchArray(intCurSearchNumber-1)) &" href=""" & makeVOLDetailsLink(aGetSearchArray(intCurSearchNumber-1), "Number=" & intCurSearchNumber-1,vbNullString) & """><img src=""" & ps_strPathToStart & "images/previous.gif"" aria-hidden=" & AttrQs("true") & " border=""0"">&nbsp;" & TXT_PREVIOUS & "</a></span>"
+		End If
+		If intCurSearchNumber < intLastSearchNumber Then
+			If intCurSearchNumber > 0 Then
+				strSearchList = strSearchList & " | "
+			End If
+			strSearchList = strSearchList & "<span class=""NoWrap""><a id=""next_link_*"" class=""NoLineLink DetailsLink"" data-num=" & AttrQs(aGetSearchArray(intCurSearchNumber+1)) &" href=""" & makeVOLDetailsLink(aGetSearchArray(intCurSearchNumber+1), "Number=" & intCurSearchNumber+1,vbNullString) & """>" & TXT_NEXT & "&nbsp;<img src=""" & ps_strPathToStart & "images/next.gif"" aria-hidden=" & AttrQs("true") & " border=""0""></a></span> " & _
+				"<span class=""NoWrap""><a id=""last_link_*"" class=""NoLineLink DetailsLink"" data-num=" & AttrQs(aGetSearchArray(intLastSearchNumber)) &" href=""" & makeVOLDetailsLink(aGetSearchArray(intLastSearchNumber), "Number=" & intLastSearchNumber,vbNullString) & """>" & TXT_LAST & "&nbsp;<img src=""" & ps_strPathToStart & "images/last.gif"" aria-hidden=" & AttrQs("true") & " border=""0""></a></span>"
+		End If
+	End If
+	strSearchList = "<strong>" & TXT_OTHER_RESULTS & "</strong> " & _
+		strSearchList & " <span class=""NoWrap"">(" & intCurSearchNumber+1 & TXT_OF & intLastSearchNumber+1 & _
+		" <a id=""total_link_*"" class=""NoLineLink SearchTotalLink"" href=""" & _
+		makeLinkB("~/volunteer/presults.asp") & """>" & TXT_TOTAL & "</a>)</span>"
+End If
+
+Sub printSearchList(strType)
+%>
+<span id="search-list-<%= strType %>"><%=Replace(strSearchList,"_link_*","_link_" & strType)%></span>
+<%
+End Sub
+
+Sub makeFieldRow(strDisplay,strContents)
+%>
+<tr><td class="FieldLabelLeft"><%=strDisplay%></td><td><%=strContents%></td></tr>
+<%
+End Sub
+
+Dim xmlLangDoc, xmlRecordLangNode, xmlLangNode
+Sub loadLanguageXML()
+	Set xmlLangDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
+	With xmlLangDoc
+		.async = False
+		.setProperty "SelectionLanguage", "XPath"
+	End With
+	
+	xmlLangDoc.loadXML "<RECORD_LANG>" & Nz(rsOrg("RECORD_LANG").Value,"") & "</RECORD_LANG>"
+	Set xmlRecordLangNode = xmlLangDoc.selectSingleNode("/RECORD_LANG")
+End Sub
+
+Function linkOtherLangs(bSkipFirst)
+	Dim strReturn, _
+		strCon
+
+	strReturn = vbNullString
+	strCon = StringIf(Not bSkipFirst, " | ")
+
+	If g_bMultiLingual Then
+	
+		Dim bLangActive, bCanSeeLang
+		
+		For Each xmlLangNode In xmlRecordLangNode.childNodes
+			If xmlLangNode.getAttribute("Culture") <> strCurCulture Then
+				bLangActive = CInt(Nz(xmlLangNode.getAttribute("Active"),SQL_FALSE)) = SQL_TRUE
+				bCanSeeLang = CInt(Nz(xmlLangNode.getAttribute("CAN_SEE"),SQL_FALSE)) = SQL_TRUE
+				If bCanSeeLang Then
+					If xmlLangNode.getAttribute("Active") Then
+						strReturn = strReturn & vbCrLf & strCon & _
+							"<span style=""white-space: nowrap"">" & _
+							"<a class=""NoLineLink"" href=""" & makeVOLDetailsLink(strVNUM, strNumberLink & "&Ln=" & xmlLangNode.getAttribute("Culture"), "Ln") & """>" & _
+							"<img src=""/images/" & xmlLangNode.getAttribute("Culture") & ".gif"" border=""0"">" & _
+							"&nbsp;" & xmlLangNode.getAttribute("LanguageName") & "</a></span>"
+					Else
+						strReturn = strReturn & vbCrLf & strCon & _
+							"<span style=""white-space: nowrap"">" & _
+							"<a class=""NoLineLink"" href=""" & makeVOLDetailsLink(strVNUM, strDetailsNumberLink & StringIf(Not Nl(strDetailsNumberLink), "&") & "TmpLn=" & xmlLangNode.getAttribute("Culture"), vbNullString) & """>" & _
+							"&nbsp;" & xmlLangNode.getAttribute("LanguageName") & "</a></span>"
+					End If
+					strCon = " | "
+				End If
+			End If
+		Next
+	End If
+	linkOtherLangs = strReturn
+End Function
+
+Function reminderNotice()
+	Dim xmlReminderDoc, xmlRemindersNode
+	Set xmlReminderDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
+	With xmlReminderDoc
+		.async = False
+		.setProperty "SelectionLanguage", "XPath"
+	End With
+	
+	xmlReminderDoc.loadXML Nz(rsOrg("REMINDERS").Value,"<reminders Total=""0"" PastDue=""0""/>")
+	Set xmlRemindersNode = xmlReminderDoc.selectSingleNode("/reminders")
+	Dim strReturn, _
+		intDue, _
+		intCount
+
+	intCount = CInt(Nz(xmlRemindersNode.getAttribute("Total"), 0))
+	intDue = CInt(Nz(xmlRemindersNode.getAttribute("PastDue"), 0))
+
+	strReturn = "<span class=""HideNoJs""> | <a id=""reminders"" style=""cursor: pointer;"" class=""NoLineLink" & StringIf(intDue > 0, " Alert") & """ title=""" & _
+		IIf(intCount=1,TXT_REMINDER_COUNT_SINGLE, Replace(TXT_REMINDER_COUNT_MULTIPLE, "[COUNT]", intCount)) & _ 
+		StringIf (intDue > 0, IIf(intDue = 1, TXT_REMINDER_DUE_SINGLE, Replace(TXT_REMINDER_DUE_MULTIPLE, "[COUNT]", intDue))) & _
+		TXT_CLICK_TO_VIEW & """>" & IIf(intDue > 0, "<span class=""ui-state-error"" style=""border: none; background: inherit""><span style=""display: inline-block; vertical-align: text-bottom;"" class=""ui-icon ui-icon-alert""></span> </span>", _
+		StringIf(intCount > 0, "<img src=""" & ps_strPathToStart & "images/remind.gif""> ")) & TXT_FLAG_REMINDERS & "</a></span>"
+
+	reminderNotice = strReturn
+End Function
+	
+
+'On Error Resume Next
+
+Dim intOPID, _
+	strVNUM, _
+	bVNUMError
+
+intOPID = Request("OPID")
+strVNUM = UCase(Trim(Request("VNUM")))
+bVNUMError = False
+
+If Nl(intOPID) And Nl(strVNUM) Then
+	Call makePageHeader(TXT_RECORD_DETAILS, TXT_RECORD_DETAILS, True, False, True, True)
+	Call handleError(TXT_NO_RECORD_CHOSEN, vbNullString, vbNullString)
+	bVNUMError = True
+ElseIf Not IsIDType(intOPID) And Not IsVNUMType(strVNUM) Then
+	Call makePageHeader(TXT_RECORD_DETAILS, TXT_RECORD_DETAILS, True, False, True, True)
+	If Not IsNUMType(strVNUM) Then
+		Call handleError(TXT_INVALID_ID & Server.HTMLEncode(strVNUM) & ".", vbNullString, vbNullString)
+	Else
+		Call handleError(TXT_INVALID_OPID & Server.HTMLEncode(intOPID) & ".", vbNullString, vbNullString)
+	End If
+	bVNUMError = True
+ElseIf Nl(strVNUM) Then
+	intOPID = CLng(intOPID)
+	Dim cmdGetVNUM, rsGetVNUM
+	Set cmdGetVNUM = Server.CreateObject("ADODB.Command")
+	With cmdGetVNUM
+		.ActiveConnection = getCurrentVOLBasicCnn()
+		.CommandType = adCmdText
+		.CommandText = "SELECT VNUM FROM VOL_Opportunity vo WHERE vo.OP_ID=" & intOPID
+		.CommandTimeout = 0
+		Set rsGetVNUM = .Execute
+	End With
+	If Not rsGetVNUM.EOF Then
+		strVNUM = rsGetVNUM("VNUM")
+		Response.Status = "301 Moved Permanently"
+		Response.AddHeader "Location", makeVOLDetailsLink(strVNUM, vbNullString, vbNullString) 
+		%><!--#include file="../includes/core/incClose.asp" --><%
+		Response.End
+	Else
+		Call makePageHeader(TXT_RECORD_DETAILS, TXT_RECORD_DETAILS, True, False, True, True)
+		Call handleError(TXT_NO_RECORD_EXISTS_VNUM & intOPID & ".", vbNullString, vbNullString)
+		bVNUMError = True
+	End If
+	intOPID = Null
+End If
+
+If Not bVNUMError Then
+
+
+Dim strCurCulture, _
+	strRestoreCulture
+
+strCurCulture = Left(Trim(Request("TmpLn")),5)
+strRestoreCulture = g_objCurrentLang.Culture
+
+If Not Nl(Application("Culture_" & strCurCulture)) Then
+	If Not Nl(Application("Culture_" & strCurCulture & "_LanguageAlias")) Then
+		Call setSessionLanguage(strCurCulture)
+	Else
+		strCurCulture = g_objCurrentLang.Culture
+	End If
+Else
+	strCurCulture = g_objCurrentLang.Culture
+End If
+
+Dim cmdFields, rsFields
+Set cmdFields = Server.CreateObject("ADODB.Command")
+With cmdFields
+	.ActiveConnection = getCurrentVOLBasicCnn()
+	.CommandType = adCmdStoredProc
+	.CommandText = "sp_VOL_View_DisplayFields"
+	.CommandTimeout = 0
+	.Parameters.Append .CreateParameter("@ViewType", adInteger, adParamInput, 4, g_intViewTypeVOL)
+	.Parameters.Append .CreateParameter("@WebEnable", adBoolean, adParamInput, 1, IIf(g_bPrintMode,SQL_FALSE,SQL_TRUE))
+	.Parameters.Append .CreateParameter("@VNUM", adVarChar, adParamInput, 10, strVNUM)
+	.Parameters.Append .CreateParameter("@HTTPVals", adVarChar, adParamInput, 500, Nz(g_strCacheHTTPVals,Null))
+	.Parameters.Append .CreateParameter("@PathToStart", adVarChar, adParamInput, 50, ps_strPathToStart)
+End With
+Set rsFields = Server.CreateObject("ADODB.Recordset")
+With rsFields
+	.CursorLocation = adUseClient
+	.CursorType = adOpenStatic
+	.Open cmdFields
+End With
+
+Dim strSQL, _
+	strCon
+
+strSQL = "SELECT vo.MemberID, vod.POSITION_TITLE," & _
+	"dbo.fn_VOL_RecordInView(vo.VNUM," & g_intViewTypeVOL & ",vod.LangID,0,GETDATE()) AS IN_VIEW," & _
+	IIf(user_bVOL,"dbo.fn_VOL_RecordInView(vo.VNUM," & user_intViewVOL & ",vod.LangID,0,GETDATE()) AS IN_DEFAULT_VIEW,","0 AS IN_DEFAULT_VIEW,") & _
+	"dbo.fn_CIC_RecordInView(bt.NUM," & g_intViewTypeCIC & ",btd.LangID,0,GETDATE()) AS IN_CIC_VIEW," & _
+	"dbo.fn_VOL_VNUMToReferrals(" & g_intMemberID & ",vo.VNUM) AS REFERRALS,"
+If user_bLoggedIn Then
+	'SQL for information Flags:
+	'- Can the user update this record?
+	'- Can an Email update request be sent to this record?
+	'- Does this record have feedback?
+
+	strSQL = strSQL & "dbo.fn_VOL_CanUpdateRecord(vo.VNUM," & user_intID & "," & g_intViewTypeVOL & ",@@LANGID,GETDATE()) AS CAN_UPDATE," & vbCrLf & _
+	"dbo.fn_VOL_Reminders(vo.VNUM," & user_intID & ",@@LANGID,GETDATE()) AS REMINDERS,"
+End If
+strSQL = strSQL & "CASE WHEN EXISTS(SELECT FB_ID FROM VOL_Feedback fb WHERE fb.VNUM=vo.VNUM) " & _
+		"THEN 1 ELSE 0 END AS HAS_FEEDBACK," & _
+	"CASE WHEN ((EXISTS(SELECT * FROM GBL_Contact WHERE VolContactType='CONTACT' AND VolVNUM=vo.VNUM AND EMAIL IS NOT NULL) OR vo.UPDATE_EMAIL IS NOT NULL) AND vo.NO_UPDATE_EMAIL=0) " & _
+		"THEN 1 ELSE 0 END AS CAN_EMAIL," & _
+	"vo.VNUM, vo.OP_ID, vod.OPD_ID, vo.RECORD_OWNER," & _
+	"vod.NON_PUBLIC," & _
+	"cioc_shared.dbo.fn_SHR_GBL_DateString(vod.MODIFIED_DATE) AS MODIFIED_DATE," & vbCrLf & _
+	"cioc_shared.dbo.fn_SHR_GBL_DateString(vod.UPDATE_DATE) AS UPDATE_DATE," & vbCrLf & _
+	"cioc_shared.dbo.fn_SHR_GBL_DateString(vod.UPDATE_SCHEDULE) AS UPDATE_SCHEDULE," & vbCrLf & _
+	"cioc_shared.dbo.fn_SHR_GBL_DateString(vod.DELETION_DATE) AS DELETION_DATE," & vbCrLf & _
+	"cioc_shared.dbo.fn_SHR_GBL_DateString(vo.DISPLAY_UNTIL) AS DISPLAY_UNTIL"
+	
+If g_bDataMgmtFieldsVOL Then
+	strSQL = strSQL & "," & vbCrLf & _
+		"cioc_shared.dbo.fn_SHR_GBL_DateString(vod.CREATED_DATE) AS CREATED_DATE"
+End If
+
+If user_bCanRequestUpdateVOL Then
+	strSQL = strSQL & "," & vbCrLf & _
+		"cioc_shared.dbo.fn_SHR_GBL_DateString(vo.EMAIL_UPDATE_DATE) AS EMAIL_UPDATE_DATE"
+End If
+
+'Does this record have an Equivalent Record
+strSQL = strSQL & "," & vbCrLf & _
+	"(SELECT Culture,LangID,LanguageName,LanguageAlias,LCID,Active," & _
+	"CASE WHEN EXISTS(SELECT * FROM VOL_Opportunity_Description WHERE VNUM=vo.VNUM AND LangID=LANG.LangID) THEN 1 ELSE 0 END AS HAS_LANG," & vbCrLf & _
+	"dbo.fn_VOL_RecordInView(vo.VNUM," & g_intViewTypeVOL & ",LangID,0,GETDATE()) AS CAN_SEE" & vbCrLf & _
+	StringIf(user_bLoggedIn, ",dbo.fn_VOL_CanCreateEquivalent(vo.VNUM," & user_intID & "," & g_intViewTypeVOL & ",LangID,GETDATE(),@@LANGID) AS CAN_UPDATE" & vbCrLf) & _
+	"FROM STP_Language LANG WHERE " & IIf(g_bViewOtherLangsVOL,"ActiveRecord=1","EXISTS(SELECT * FROM VOL_View_Description WHERE ViewType=" & g_intViewTypeVOL & " AND LangID=LANG.LangID)") & vbCrLf & _
+	"ORDER BY CASE WHEN Active=1 THEN 0 ELSE 1 END, LanguageName FOR XML AUTO) AS RECORD_LANG"
+
+'Get SQL for fetching custom data to display for this record in this View
+With rsFields
+	While Not .EOF
+		If Not reEquals(.Fields("FieldName"), _
+				"((VNUM)|(OP_ID)|(RECORD_OWNER)|(NON_PUBLIC)|(DELETION_DATE)|(UPDATE_DATE)|(UPDATE_SCHEDULE)|(MODIFIED_DATE)|(DISPLAY_UNTIL)|(POSITION_TITLE)|(REFERRALS)" & StringIf(g_bDataMgmtFieldsVOL,"|(CREATED_DATE)") & StringIf(user_bCanRequestUpdateVOL,"|(EMAIL_UPDATE_DATE)") & ")", _
+				True,False,True,False) Then
+				strSQL = strSQL & "," & vbCrLf & .Fields("FieldSelect")
+		End If
+		.MoveNext
+	Wend
+	If Not .RecordCount = 0 Then
+		.MoveFirst
+	End If
+End With
+
+strSQL = strSQL & vbCrLf & ",vod.VNUM AS LangVNUM" & vbCrLf & _
+	"FROM VOL_Opportunity vo" & vbCrLf & _
+	"LEFT JOIN VOL_Opportunity_Description vod ON vo.VNUM=vod.VNUM AND vod.LangID=@@LANGID" & vbCrLf & _
+	"INNER JOIN GBL_BaseTable bt ON vo.NUM=bt.NUM" & vbCrLf & _
+	"LEFT JOIN GBL_BaseTable_Description btd ON bt.NUM=btd.NUM AND btd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=btd.NUM ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)" & vbCrLf & _
+	"WHERE vo.VNUM=" & QsN(strVNUM)
+
+'Response.Write("<pre>" & Server.HTMLEncode(strSQL) & "</pre>")
+'Response.Flush()
+
+Dim cmdOrg, rsOrg
+Set cmdOrg = Server.CreateObject("ADODB.Command")
+With cmdOrg
+	.ActiveConnection = getCurrentVOLBasicCnn()
+	.CommandType = adCmdText
+	.CommandText = strSQL
+	.CommandTimeout = 0
+	Set rsOrg = .Execute
+End With
+
+Call setSessionLanguage(strRestoreCulture)
+
+If Err.Number <> 0 Then
+	Call makePageHeader(TXT_RECORD_DETAILS, TXT_RECORD_DETAILS, True, False, True, True)
+	Call handleError(TXT_ERROR & Nz(Err.Description,TXT_UNKNOWN_ERROR_OCCURED), vbNullString, vbNullString)
+	bVNUMError = True
+ElseIf rsOrg.EOF Then
+	If bIsSEFriendlyURL Then
+		Response.Status = "404 Not Found"
+	End If
+	Call makePageHeader(TXT_RECORD_DETAILS, TXT_RECORD_DETAILS, True, False, True, True)
+	Call handleError(TXT_NO_RECORD_EXISTS_VNUM & Server.HTMLEncode(strVNUM) & ".", vbNullString, vbNullString)
+	bVNUMError = True
+End If
+
+
+If Not bVNUMError Then
+	Dim strNumberLink, _
+		strDetailsNumberLink, _
+		strVNUMLink, _
+		strVNUMNumberLink, _
+		strIDListLink
+
+	strNumberLink = "Number=" & intCurSearchNumber
+	strVNUMLink = "VNUM=" & strVNUM
+	strDetailsNumberLink = StringIf(intCurSearchNumber >= 0, strNumberLink)
+	strVNUMNumberLink = strVNUMLink & StringIf(intCurSearchNumber >= 0,"&" & strNumberLink)
+	strIDListLink = "IDList=" & strVNUM & StringIf(intCurSearchNumber >= 0,"&" & strNumberLink)
+
+If Nl(rsOrg("OPD_ID")) Then
+	Dim strOtherLangList
+	Call loadLanguageXML()
+	strOtherLangList = linkOtherLangs(True)
+	Call makePageHeader(TXT_RECORD_DETAILS, TXT_RECORD_DETAILS, True, False, True, True)
+	Call handleError(TXT_ERROR & TXT_RECORD_NOT_AVAILABLE_LANGUAGE & StringIf(Not Nl(strOtherLangList),"<br>" & TXT_RECORD_DETAILS & TXT_COLON & strOtherLangList), vbNullString, vbNullString)
+	bVNUMError = True
+ElseIf Not (rsOrg("IN_DEFAULT_VIEW") Or rsOrg("IN_VIEW")) Then
+	Call getROInfo(rsOrg("RECORD_OWNER"),ps_intDbArea)
+	Call makePageHeader(TXT_RECORD_DETAILS, TXT_RECORD_DETAILS, True, False, True, True)
+	Call handleError(TXT_ERROR & TXT_RECORD_YOU_REQUESTED & TXT_RECORD_EXISTS_BUT, vbNullString, vbNullString)
+%>
+<p><%=TXT_CONCERNS & TXT_COLON%><strong><%=strROName%></strong></p>
+<%
+	Call printROContactInfo(False)
+	bVNUMError = True
+End If
+End If
+
+If Not bVNUMError Then
+	Call loadLanguageXML()
+	Call setSessionLanguage(strCurCulture)
+
+	Dim bExpired
+	bExpired = False
+	If Not Nl(rsOrg("DISPLAY_UNTIL")) Then
+		If DateValue(rsOrg("DISPLAY_UNTIL")) < Date() Then
+			bExpired = True
+		End If
+	End If
+
+Dim strOrgName
+strOrgName = rsOrg.Fields("ORG_NAME_FULL")
+
+Call makePageHeader(TXT_RECORD_DETAILS, rsOrg("POSITION_TITLE") & " (" & strOrgName & ")", True, False, IIf(g_bPrintMode,True,False), True)
+
+If Not g_bPrintMode And Nl(Request("UseVOLVwTmp")) Then
+	Call insertStat(rsOrg("OP_ID"),False,strVNUM)
+End If
+
+If Not g_bPrintMode Then
+
+Response.Write(render_gtranslate_ui())
+
+Dim strFormAction, strChangeViewExtraSkip
+If Nl(strRecordRoot) Then
+	strFormAction = ps_strThisPage
+	strChangeViewExtraSkip = vbNullString
+Else
+	strFormAction = strVNUM
+	strChangeViewExtraSkip = "(VNUM)"
+End If
+
+If Not Nl(strSearchList) Or user_bVOL Then
+%>
+<form action="<%=strFormAction%>" id="change_view_form" name="ChangeViewForm">
+<p>
+<%
+	If Not Nl(strSearchList) Then
+		Call printSearchList("top")
+	End If
+	If user_bVOL Then
+		If Not Nl(strSearchList) Then
+		%> &nbsp; <%
+		End If
+		Call printChangeViewsFormContents(True,DM_CIC,strChangeViewExtraSkip)
+	End If
+%>
+</p>
+<%
+End If
+%>
+</form>
+<%
+End If
+%>
+<div class="cioc-grid-row">
+	<div class="cioc-col-md-12">
+		<div class="record-details">
+			<div class="TitleBox RecordDetailsHeader">
+				<h2><%=rsOrg("POSITION_TITLE")%></h2>
+				<h3>(<%=strOrgName%>)</h3>
+			</div>
+			<table class="BasicBorder cell-padding-3 record-data">			
+<%
+Dim bReferral
+bReferral = user_bSuperUserVOL Or (user_strAgency=rsOrg("RECORD_OWNER") And user_bCanManageReferrals)
+
+If Not g_bPrintMode Then
+%>
+<form action="/volunteer/<%=IIf(bReferral,"referral_edit.asp","volunteer.asp")%>" method="post">
+<div style="display:none">
+<%=g_strCacheFormVals%>
+<input type="hidden" name="VNUM" value="<%=rsOrg("VNUM")%>">
+<%If intCurSearchNumber >= 0 Then%>
+<input type="hidden" name="Number" value="<%=intCurSearchNumber%>">
+<%End If%>
+</div>
+<tr>
+	<td colspan="2" class="RevTitleBox" align="center"><button id="VolApplyButton" type="submit" class="btn btn-default"><span class="glyphicon glyphicon-check" aria-hidden="true"></span> <strong><%=IIf(bReferral,TXT_CREATE_REFERRAL,TXT_YES_VOLUNTEER)%></strong></button></td>
+</tr>
+</form>
+<%
+End If
+%>
+<tr><td colspan="2">
+<%
+If Not g_bPrintMode Then
+%>
+<div class="clearfix">
+<%If g_bSocialMediaShareVOL Then%>
+<!-- AddThis Button BEGIN -->
+<div class="HideNoJs share-wrapper">
+<label class="share-label"><%=TXT_SHARE%></label>
+<div class="addthis_toolbox addthis_default_style share-toolbox">
+<a class="addthis_button_preferred_1"></a>
+<a class="addthis_button_preferred_2"></a>
+<a class="addthis_button_preferred_3"></a>
+<a class="addthis_button_preferred_4"></a>
+<a class="addthis_button_compact"></a>
+<a class="addthis_counter addthis_bubble_style"></a>
+</div>
+</div>
+<!-- AddThis Button END -->
+<%End If%>
+<div style="font-weight:bold; float:left" class="HideListUI clear-line-below">[
+	<% Call myListDetailsAddRecord(CStr(strVNUM)) %>
+	<span style="white-space: nowrap"><a class="NoLineLink" href="<%=makeLink("~/volunteer/feedback.asp",strVNUMNumberLink,vbNullString)%>"><img src="/images/edit.gif" aria-hidden="true" border="0">&nbsp;<%=TXT_SUGGEST_UPDATE%></a></span>
+	<%= linkOtherLangs(False) %>
+<%If bReferral And rsOrg("REFERRALS") > 0 Then%>
+	| <a class="NoLineLink" href="<%=makeLink("~/volunteer/referral_list.asp",strVNUMNumberLink,vbNullString)%>"><img src="/images/referral.gif" aria-hidden="true" border="0">&nbsp;<%= TXT_LIST_REFERRALS %> (<%=rsOrg("REFERRALS")%>)</a>
+<%End If%>
+<%If (user_bLoggedIn Or g_bPrintModePublic) And Not Nl(g_intPrintDesignVOL) Then%>
+	| <span style="white-space: nowrap"><a class="NoLineLink" href="<%=makeVOLDetailsLink(strVNUM, "PrintMd=on&UseVOLVwTmp=" & Request("UseVOLVwTmp"),vbNullString)%>" target="_BLANK"><img src="/images/printer.gif" border="0">&nbsp;<%=TXT_PRINT_VERSION%></a></span>
+<%End If%>
+<%If rsOrg("NON_PUBLIC") And user_bLoggedIn Then%>
+	| <span class="Alert"><%=TXT_FLAG_NON_PUBLIC%></span>
+<%End If%>
+<%If bExpired Then%>
+	| <span class="Alert"><%=TXT_FLAG_EXPIRED%></span>
+<%End If%>
+<%
+If Not Nl(rsOrg("DELETION_DATE")) Then
+	If CDate(rsOrg("DELETION_DATE")) <= Date() Then
+%>
+	| <span class="Alert"><%=TXT_FLAG_DELETED%></span>
+<%	
+	ElseIf user_bLoggedIn Then
+%>
+	| <span class="Alert"><%=TXT_FLAG_TO_BE_DELETED%></span>
+<%
+	End If
+End If
+%>
+<%If user_bFeedbackAlertVOL And rsOrg("HAS_FEEDBACK") Then%>
+	| <a class="Alert NoLineLink" href="<%=makeLink("~/volunteer/revfeedback_view.asp",strVNUMNumberLink,vbNullString)%>"><%=TXT_FLAG_CHECK_FEEDBACK%></a>
+<%
+End If
+If user_bLoggedIn Then
+%><%= reminderNotice() %><%
+End If
+%>
+]
+</div>
+</div>
+<%
+End If
+
+If user_bLoggedIn Then
+	Dim strCreateEquivalent,bHasLang,bCanEdit
+	strCreateEquivalent = vbNullString
+	If g_bMultiLingual And Not g_bPrintMode Then
+		For Each xmlLangNode In xmlRecordLangNode.childNodes
+			bHasLang = CInt(Nz(xmlLangNode.getAttribute("HAS_LANG"),SQL_FALSE)) = SQL_TRUE
+			bCanEdit = CInt(Nz(xmlLangNode.getAttribute("CAN_UPDATE"),SQL_FALSE)) = SQL_TRUE
+			If Not bHasLang And bCanEdit Then
+				strCreateEquivalent = strCreateEquivalent & "<option href=""" & makeLink("~/volunteer/copy.asp",strVNUMNumberLink & "&CopyLn=" & xmlLangNode.getAttribute("Culture"),vbNullString) & """>" & TXT_CREATE_EQUIVALENT & " - " & xmlLangNode.getAttribute("LanguageName") & "</option>"
+			End If
+		Next
+	End If
+
+If Not g_bPrintMode And ( _
+		rsOrg("CAN_UPDATE") = 1 Or _
+		(rsOrg("CAN_UPDATE") = -2 And Not Nl(strCreateEquivalent)) Or _
+		user_bSuperUserVOL Or _
+		user_bCopyVOL Or _
+		(user_bCanRequestUpdateVOL And (user_bSuperUserVOL Or (user_strAgency = rsOrg("RECORD_OWNER"))) And rsOrg("CAN_EMAIL") And Not g_bNoEmail) _
+		) _
+	Then
+
+%>
+	<div class="form-inline-always clear-line-below">
+		<div class="form-group">
+			<label for="ActionList"><%=TXT_ACTION & TXT_COLON%></label>
+			<select name="ActionList" id="ActionList" onchange="do_drop_down_navigation()" class="form-control">
+				<option selected></option>
+<%
+	If rsOrg("CAN_UPDATE") = 1 Or rsOrg("CAN_UPDATE") = -2 Or (rsOrg("CAN_UPDATE") <> 0 And user_bCopyVOL) Then
+%>
+				<optgroup label="<%=TXT_DATA_MANAGEMENT%>">
+					<% If rsOrg("CAN_UPDATE") <> -2 Then %>
+					<option id="AL_Update" href="<%=makeLink("~/volunteer/entryform.asp",strVNUMNumberLink,vbNullString)%>"><%=TXT_UPDATE_RECORD%></option>
+					<% End If %>
+					<%= strCreateEquivalent %>
+<%
+					If user_bCopyVOL Then%>
+					<option id="AL_Copy" href="<%=makeLink("~/volunteer/copy.asp",strVNUMLink,vbNullString)%>"><%=TXT_COPY_RECORD%></option>
+					<%End If%>
+					<%If (user_bSuperUserVOL Or user_bCanDeleteRecordVOL) And rsOrg("CAN_UPDATE")=1 Then
+						If user_bSuperUserVOL Or rsOrg("CAN_UPDATE") Then
+							If Nl(rsOrg("DELETION_DATE")) Then%>
+					<option href="<%=makeLink("~/volunteer/delete_mark.asp","IdList=" & rsOrg("OPD_ID"),vbNullString)%>"><%=TXT_DELETE_RECORD%></option>
+							<%Else%>
+					<option class="NoLineLink" href="<%=makeLink("~/volunteer/delete_mark.asp","IdList=" & rsOrg("OPD_ID") & "&Unmark=on",vbNullString)%>"><%=TXT_RESTORE_RECORD%></option>
+							<%End If
+						End If
+					End If
+%>
+				</optgroup>
+<%
+	End If
+
+If user_bCanRequestUpdateVOL And (user_bSuperUserVOL Or user_strAgency = rsOrg("RECORD_OWNER")) And rsOrg("CAN_EMAIL") And Not g_bNoEmail Then
+%>
+				<optgroup label="Request Update">
+				<option href="<%=makeLinkAdmin("email_prep.asp",strIDListLink & "&DM=" & DM_VOL)%>"><%=TXT_EMAIL_UPDATE_REQUEST%></option>
+				</optgroup>
+<%
+End If
+%>
+			</select>
+		</div>
+	</div>
+<%
+End If
+End If
+%>
+<table class="NoBorder cell-padding-3">
+<tr>
+	<td><strong>Position ID<%=TXT_COLON%></strong> <%=rsOrg("VNUM")%></td>
+<%If g_bLastModifiedDateVOL Then%>
+	<td><strong><%=TXT_LAST_MODIFIED%></strong><%=TXT_COLON%><span class="NoWrap"><%=Nz(rsOrg("MODIFIED_DATE"),TXT_UNKNOWN)%></span></td>
+<%End If%>
+	<td><strong><%=TXT_LAST_UPDATE%></strong><%=TXT_COLON%><span class="NoWrap"><%=Nz(rsOrg("UPDATE_DATE"),TXT_UNKNOWN)%></span></td>
+<%If g_bDataMgmtFieldsVOL Then
+	Dim dUpdateSchedule
+	dUpdateSchedule = Null
+	If Not Nl(rsOrg("UPDATE_SCHEDULE")) Then
+		dUpdateSchedule = DateValue(rsOrg("UPDATE_SCHEDULE"))	
+	End If%>
+	<td><strong><%=TXT_UPDATE_SCHEDULE%></strong><%=TXT_COLON%><span class="NoWrap"><%If Now() > dUpdateSchedule Or Nl(dUpdateSchedule) Then%><span class="Alert"><%End If%><%=Nz(rsOrg("UPDATE_SCHEDULE"),TXT_UNKNOWN)%><%If Now() > dUpdateSchedule Or Nl(dUpdateSchedule) Then%></span><%End If%></span></td>
+	<%If Not g_bLastModifiedDateVOL And user_bCanRequestUpdateVOL Then%>
+	<td>&nbsp;</td>
+	<%End If%>
+<%End If%>
+</tr>
+<%If g_bDataMgmtFieldsVOL Then%>
+<tr>
+	<td><strong><%=TXT_RECORD_OWNER%></strong><%=TXT_COLON%><%=rsOrg("RECORD_OWNER")%></td>
+	<td><strong><%=TXT_DATE_CREATED%></strong><%=TXT_COLON%><span class="NoWrap"><%=IIf(Nl(rsOrg("CREATED_DATE")),TXT_UNKNOWN,DateString(rsOrg("CREATED_DATE"),True))%></span></td>
+	<td><strong><%=TXT_DATE_DELETED%></strong><%=TXT_COLON%><span class="NoWrap"><%=IIf(Nl(rsOrg("DELETION_DATE")),TXT_NA,DateString(rsOrg("DELETION_DATE"),True))%></span></td>
+<%If user_bCanRequestUpdateVOL Then%>
+	<td><strong><%=TXT_LAST_EMAIL%><%=TXT_COLON%></strong><%=Nz(rsOrg("EMAIL_UPDATE_DATE"),TXT_NA)%></td>
+<%ElseIf g_bLastModifiedDateVOL Then%>
+	<td>&nbsp;</td>
+<%End If%>
+</tr>
+<%End If%>
+</table></td></tr>
+<tr><th colspan="2" class="RevTitleBox">Opportunity Details</th></tr>
+<%
+	Dim strFieldName, strFieldContents, bOrgFields
+	bOrgFields = False
+	While Not (rsFields.EOF Or bOrgFields)
+		strFieldName = rsFields.Fields("FieldName")
+		bOrgFields = Not rsFields.Fields("IS_VOL")
+		If Not bOrgFields Then
+			If Not Nl(rsOrg(strFieldName)) Then
+				If rsFields.Fields("CheckMultiline") Then
+					strFieldContents = textToHTML(rsOrg(strFieldName))
+				Else
+					strFieldContents = rsOrg(strFieldName)
+				End If
+				Call makeFieldRow(rsFields.Fields("FieldDisplay"),strFieldContents)
+			End If
+			rsFields.MoveNext
+		End If
+	Wend
+%>
+<tr><th colspan="2" class="RevTitleBox">Agency Details</th></tr>
+<%
+	If Not g_bPrintMode Then
+%>
+<tr><td colspan="2" align="center">[
+<%If (user_bLoggedIn Or g_bUseCIC) And rsOrg("IN_CIC_VIEW") Then%>
+	<span class="NoWrap"><a class="NoLineLink" href="<%=makeDetailsLink(rsOrg("NUM"),vbNullString,vbNullString)%>"><%If Not user_bLoggedIn Then%><img src="/images/zoom.gif" aria-hidden="true" border="0">&nbsp;<%End If%><%= TXT_MORE_AGENCY_INFO %></a></span> |
+<%End If%>
+	<span class="NoWrap"><a class="NoLineLink" href="<%=makeLink("~/volunteer/results.asp","NUM=" & rsOrg("NUM"),vbNullString)%>"><%If Not user_bLoggedIn Then%><img src="/images/handshake.gif" aria-hidden="true" border="0">&nbsp;<%End If%><%= TXT_OTHER_OPPORTUNITIES %></a></span> |
+<%If user_bAddVOL Then%>
+	<span class="NoWrap"><a class="NoLineLink" href="<%=makeLink("~/volunteer/entryform.asp","NUM=" & rsOrg("NUM"),vbNullString)%>"><%=TXT_CREATE_NEW_OPP%></a></span>
+<%Else%>
+	<span class="NoWrap"><a class="NoLineLink" href="<%=makeLink("~/volunteer/feedback.asp","NUM=" & rsOrg("NUM"),vbNullString)%>"><%If Not user_bLoggedIn Then%><img src="/images/new.gif" aria-hidden="true" border="0">&nbsp;<%End If%><%= TXT_SUGGEST_NEW_OPPORTUNITY %></a></span>
+<%
+End If
+If user_bCanRequestUpdateVOL And user_bCanDoBulkOpsVOL And Not g_bNoEmail Then
+%>
+	| <a class="NoLineLink" href="<%=makeLinkAdmin("email_prep.asp","IDList=" & rsOrg("NUM") & "&MR=1&DM=" & DM_VOL)%>"><%=TXT_EMAIL_UPDATE_ALL_VOL_OPP%></a>
+<%End If%>
+]</td></tr>
+<%
+	End If
+	Call makeFieldRow(TXT_ORGNAME,strOrgName)
+
+	While Not rsFields.EOF
+		strFieldName = rsFields.Fields("FieldName")
+		If Not reEquals(strFieldName, "((NUM)|(ORG_NAME_FULL))",True,False,True,False) Then
+			If Not Nl(rsOrg(strFieldName)) Then
+				If rsFields.Fields("CheckMultiline") Then
+					strFieldContents = textToHTML(rsOrg(strFieldName))
+				Else
+					strFieldContents = rsOrg(strFieldName)
+				End If
+				Call makeFieldRow(rsFields.Fields("FieldDisplay"),strFieldContents)
+			End If
+		End If
+		rsFields.MoveNext
+	Wend
+
+	rsFields.Close
+	Set rsFields = Nothing
+	Set cmdFields = Nothing
+%>
+			</table>
+		</div>
+	</div>
+</div>
+<%
+If user_bLoggedIn And Not g_bPrintMode Then
+%>
+<div id="reminder-dialog" style="display: none;">
+<div id="existing-reminders-page">
+</div>
+</div>
+<div id="reminder-edit-dialog" style="display: none;">
+</div>
+<%
+End If
+%>
+
+<form class="NotVisible" name="stateForm" id="stateForm">
+<textarea id="cache_form_values"></textarea>
+</form>
+<%= makeJQueryScriptTags() %>
+<%= JSVerScriptTag("scripts/details.js") %>
+<% g_bListScriptLoaded = True %>
+<script type="text/javascript">
+	(function() {
+		var initialize = function() {
+			init_cached_state();
+
+			var target = document.getElementById('ActionList');
+			if (!target) {
+				return;
+			}
+			target.options[0].selected = true;
+			<% If user_bLoggedIn Then %>
+				initialize_reminders('<%= TXT_REMINDERS %>', <%= JSONQs(makeLinkB("~/jsonfeeds/users"), True) %>,
+						<%= JSONQs(makeLink("~/reminders", "VNUM=" & strVNUM, vbNullString), True) %>, 
+						<%= JSONQs(makeLinkB("~/reminders/dismiss/IDIDID"), True) %>,
+						"<%= TXT_COLON %>",
+						<%= JSONQS(TXT_READ_MORE, True)%>, <%= JSONQs(TXT_READ_LESS, True) %>,
+						<%= JSONQs(TXT_LOADING, True) %>,
+						<%= JSONQs(makeLinkB("~/reminders/delete/IDIDID"), True) %>,
+						<%= JSONQs(TXT_NOT_FOUND, True) %>);
+			<% End If %>
+
+				do_drop_down_navigation()
+		};
+
+		jQuery(initialize);
+	})()
+	<% If g_bSocialMediaShareVOL Then %>
+	var addthis_exclude = 'print';
+	<% End If %>
+</script>
+<% If Not g_bPrintMode And g_bSocialMediaShareVOL Then %>
+<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f7b02c913a929bb"></script>
+<% End If %>
+<%
+End If
+End If
+
+If user_bLoggedIn And Not g_bPrintMode And Not Nl(strSearchList) Then
+%>
+<p><%=strSearchList%></p>
+<%
+End If
+
+Call makePageFooter(True)
+%>
+<!--#include file="../includes/core/incClose.asp" -->

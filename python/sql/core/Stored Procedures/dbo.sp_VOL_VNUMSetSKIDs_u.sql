@@ -1,0 +1,44 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+
+CREATE PROCEDURE [dbo].[sp_VOL_VNUMSetSKIDs_u]
+	@VNUM varchar(10),
+	@IdList varchar(max)
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.6
+	Checked by: CL
+	Checked on: 27-Sep-2014
+	Action: TESTING REQUIRED
+*/
+
+DECLARE @tmpSKIDs TABLE(SK_ID int)
+
+INSERT INTO @tmpSKIDs SELECT DISTINCT tm.*
+	FROM dbo.fn_GBL_ParseIntIDList(@IdList,',') tm
+	INNER JOIN VOL_Skill sk
+		ON tm.ItemID=sk.SK_ID
+
+DELETE pr
+	FROM VOL_OP_SK pr
+	LEFT JOIN @tmpSKIDs tm
+		ON pr.SK_ID = tm.SK_ID
+WHERE tm.SK_ID IS NULL AND VNUM=@VNUM
+
+INSERT INTO VOL_OP_SK (VNUM, SK_ID) SELECT VNUM=@VNUM, tm.SK_ID
+	FROM @tmpSKIDs tm
+WHERE NOT EXISTS(SELECT * FROM VOL_OP_SK pr WHERE VNUM=@VNUM AND pr.SK_ID=tm.SK_ID)
+
+SET NOCOUNT OFF
+
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_VOL_VNUMSetSKIDs_u] TO [cioc_login_role]
+GO

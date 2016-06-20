@@ -1,0 +1,43 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_GBL_NUMSetMAPIDs_u]
+	@NUM varchar(8),
+	@IdList varchar(max)
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.1
+	Checked by: KL
+	Checked on: 23-Dec-2011
+	Action: NO ACTION REQUIRED
+	Notes: For future, incoporate MERGE statement
+*/
+
+DECLARE @tmpMAPIDs TABLE(MAP_ID int)
+
+INSERT INTO @tmpMAPIDs SELECT DISTINCT tm.*
+	FROM dbo.fn_GBL_ParseIntIDList(@IdList,',') tm
+	INNER JOIN GBL_MappingSystem map
+		ON tm.ItemID=map.MAP_ID
+
+DELETE pr
+	FROM GBL_BT_MAP pr
+	LEFT JOIN @tmpMAPIDs tm
+		ON pr.MAP_ID = tm.MAP_ID
+WHERE tm.MAP_ID IS NULL AND NUM=@NUM
+
+INSERT INTO GBL_BT_MAP (NUM, MAP_ID) SELECT NUM=@NUM, tm.MAP_ID
+	FROM @tmpMAPIDs tm
+WHERE NOT EXISTS(SELECT * FROM GBL_BT_MAP pr WHERE NUM=@NUM AND pr.MAP_ID=tm.MAP_ID)
+
+SET NOCOUNT OFF
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_GBL_NUMSetMAPIDs_u] TO [cioc_login_role]
+GO

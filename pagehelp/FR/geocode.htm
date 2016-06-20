@@ -1,0 +1,36 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>La page <em>Mettre &agrave; jour le g&eacute;ocodage des dossiers s&eacute;lectionn&eacute;s</em> utilise vos choix sur le type de cartographie (<em>Configuration du dossier actuel</em>, <em>Adresse du site</em>, <em>Intersection</em> ou <em>Aucune valeur (ne pas cartographier)</em>), ainsi que les param&egrave;tres de la cat&eacute;gorie de cartographie (marqueurs de cartes) que vous avez s&eacute;lectionn&eacute;s sur la page pr&eacute;c&eacute;dente pour mettre &agrave; jour l'emplacement sur la carte et les param&egrave;tres des dossiers s&eacute;lectionn&eacute;s.</p>
+<h3>Certaines choses importantes &agrave; savoir :</h3>
+<ul>
+	<li>Vous avez l'autorisation de g&eacute;ocoder un maximum de 15 000 emplacements par jour, par adresse IP. Cela comprend n'importe quel emplacement saisi pour la recherche &agrave; proximit&eacute;.</li>
+	<li>Le g&eacute;ocodage se fait un dossier &agrave; la fois. <span class="Alert">Si vous quittez la page avant que le statut du dernier dossier de la page ne soit &eacute;tabli, votre g&eacute;ocodage ne sera pas termin&eacute;.</span></li>
+	<li>Si la colonne de statut indique <strong>Mis &agrave; jour</strong>, alors les informations de g&eacute;ocodage du dossier ont &eacute;t&eacute; &eacute;tablies (ou r&eacute;initialis&eacute;es) avec la latitude et la longitude re&ccedil;ues du fournisseur de carte. Si vous avez s&eacute;lectionn&eacute; une cat&eacute;gorie ou un type de cartographie, ces nouvelles valeurs seront &eacute;galement mises &agrave; jour dans le dossier.</li>
+	<li>Si la colonne de statut indique <strong>Inchang&eacute;</strong>, alors les informations de g&eacute;ocodage restent <em>compl&egrave;tement inchang&eacute;es</em> dans le dossier (y compris tous les changements du type ou de la cat&eacute;gorie de cartographie demand&eacute;s). Cela peut survenir pour l'une des raisons suivantes :
+		<ul>
+			<li>Vous n'avez pas l'autorisation de mettre &agrave; jour les dossiers s&eacute;lectionn&eacute;s ; ou</li>
+			<li>Vous avez s&eacute;lectionn&eacute; « Configuration du dossier actuel » et le type actuel de cartographie est <em>Aucune valeur (ne pas cartographier)</em> ou <em>Placement manuel</em> ; ou</li>
+			<li>Vous avez s&eacute;lectionn&eacute; un type de cartographie <em>Intersection</em> ou <em>Adresse du site</em>, mais ces champs ne contiennent aucune valeur valide.</li>
+		</ul>
+	</li>
+	<li>Si la colonne de statut indique que <strong>L'adresse est introuvable</strong>, alors le fournisseur de carte n'a pas pu localiser l'emplacement sp&eacute;cifi&eacute;. Cela peut survenir si certaines parties de l'adresse sont erron&eacute;es (le plus souvent, le type de rue, l'orientation ou le code postal) ; il faut donc r&eacute;viser les dossiers pour trouver les erreurs possibles. Certains emplacements nouveaux ou ruraux ne peuvent &ecirc;tre cartographi&eacute;s automatiquement ; dans ce cas, utilisez le placement manuel.</li>
+	<li>Si la colonne de statut indique <strong>Contactez votre administrateur syst&egrave;me</strong>, cela peut survenir souvent lorsque vous tentez de cartographier un grand nombre de dossiers les uns apr&egrave;s les autres. Essayez de cartographier de plus petits ensembles, moins de 500 dossiers &agrave; la fois, et laissez passer quelques minutes entre chaque ensemble.</li>
+</ul>
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

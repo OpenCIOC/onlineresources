@@ -1,0 +1,49 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>Following are instructions for each section of the View / Edit Subject Form. Note that throughout the form are links to various related Subject Terms; you should ensure you submit and save any changes you make on the form before following links to other Subject Terms.</p>
+<p><span class="Alert">Access to fields on this form is determined by your permissions</span>. If you are working in a multi-member database with other CIOC Members and you are not a Global Super User, you may not have access to alter some portions of this information. If you need to make changes, use the provided link at the top of the page to send a notice to your Global Super User.</p>
+<h3>Status</h3>
+<p>This information is read only and indicates whether the Term is being used by Organization/Program records, or by other Subject Terms. If a Term is being used, you will not be allowed to delete it.</p>
+<h3>Created/Modified Information</h3>
+<p>Created and Modified dates / names are set automatically by the software as records are added and updated.</p>
+<h3>Term Name</h3>
+<p>You must specify a <em>unique</em> English name for all Subjects. Optionally, you may also provide a <em>unique</em> French name as well. If you do not provide a French name for a Subject Term, it will not be available when searching in French or viewing French subject information.</p>
+<h3>Authorization</h3>
+<p>Indicates whether a subject is authorized for general use, or specific to the local system. Local (non-authorized) subjects can optionally be excluded from a given View (done via the View setup).</p>
+<h3>Term Usage</h3>
+<p><em>Used</em> Terms may be added to Organization / Program records. Unused Terms may not be added to a record. <em>Unused</em> Terms generally contain alternate terminology, and must point to a preferred <em>Used</em> Term to use instead.</p>
+<p>If the given term is being used as a preferred Term by other Terms, it will have a list under the heading <strong>Used For</strong>. If the preferred Term designation is covered by more than one term, the other term will also be referenced. For example, if the Unused Term <em>&quot;Challenged adults&quot;</em> has a preferred use of the terms <em>&quot;Adults&quot;</em> together with the term <em>&quot;Disabilities&quot;</em>, then when Viewing the Term <em>&quot;Adults&quot;</em>, the Used for Listing will display <em>&quot;Challenged adults (With Disabilities)&quot;</em></p>
+<h3>Broader/Narrower Terms</h3>
+<p><em>Broader</em> and <em>Narrower</em> terms are two sides of the same relationship between two terms. On the form, you may specify <em>Broader</em> Term(s) for the record which represent more general subject areas associated with the Term; the term will automatically become a <em>Narrower</em> Term of chosen subject(s).</p>
+<p>Although you can view the list of Narrower Terms, the relationship can only be edited from the edit form of the associated Narrower Term.</p>
+<h3>Related Terms</h3>
+<p>A <em>Related Term</em> references a sibling type relationship between two terms, where a <em>Broader/Narrower Term</em> would reference a parent-child relationship between two terms.</p>
+<p>The relationship between <em>Related Terms</em> is always bidirectional; If you relate Subject A to Subject B, then Subject B will automatically have a <em>Related Term</em> listing for Subject A. Likewise, if you remove the relationship between A &amp; B, it also removes the relationship between B &amp; A.</p>
+<h3>Category</h3>
+<p>You may optionally select one general category that applies to the Term. Note that at this time, there is no ability to edit the list of categories.</p>
+<h3>Source</h3>
+<p>Indicate the classification system or catalogue from which the term was sourced (i.e. the InformOntario/ACICO Thesaurus). The list of sources may be customized (see link on main Thesaurus management page).</p>
+<h3>Notes</h3>
+<p>You may optionally provide usage or data management notes in each available language.</p>
+<h3>Inactive</h3>
+<p>An inactive term cannot be added to your records and will be excluded from all areas of the system except the Thesaurus management tool. Links to inactive terms will appear in the current <span class="Alert"><em>Alert</em> colour</span>.</p>
+<p>Note that you cannot change a Term's active status if it is being used by Organization / Program records or another Subject Term. Activations are membership-specific; making a term Inactive for your membership does not impact other CIOC Members in your database (if applicable).</p>
+<h3>Record Deletion</h3>
+<p>You will only see a Delete button at the bottom of the form if the record is available for deletion (not used by Organization / Program records or other Subject Terms).</p>
+<p class="SmallNote">Last Modified: $Date$</p>

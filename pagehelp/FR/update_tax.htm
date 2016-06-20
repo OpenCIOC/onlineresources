@@ -1,0 +1,141 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p class="Alert">Remarque : cette recherche n&eacute;cessite un navigateur &agrave; jour supportant les CSS et dont les options JavaScript sont activ&eacute;es. Si vous avez des difficult&eacute;s &agrave; faire fonctionner les recherches, vous devez vous assurez que JavaScript est activ&eacute; pour ce site.</p>
+<table class="NoBorder cell-padding-2">
+	<tr valign="TOP">
+		<td><ul>
+				<li><a href="#keyword">Recherche par mots-cl&eacute;s</a></li>
+				<li><a href="#code">Recherche par code</a></li>
+				<li><a href="#drill-down">Recherche hi&eacute;rarchique</a></li>
+				<li><a href="#concept">Recherche par concept associ&eacute;</a></li>
+				<li><a href="#by-record">Recherche par dossier</a></li>
+				<li><a href="#more-info">Afficher plus d'informations sur les termes</a></li>
+			</ul></td>
+		<td><ul>
+				<li><a href="#sort">Modifier l'ordre de tri</a></li>
+				<li><a href="#settings">Param&egrave;tres de recherche</a></li>
+				<li><a href="#back-button">Cons&eacute;quences de l'utilisation du bouton retour</a></li>
+				<li><a href="#index">Indexer le dossier</a></li>
+				<li><a href="#help">Ressources d'indexation</a></li>
+			</ul></td>
+	</tr>
+</table>
+
+<hr>
+
+<a name="keyword"></a>
+<h3>Recherche par mots-cl&eacute;s</h3>
+<p>En g&eacute;n&eacute;ral, la recherche par <em>mots-cl&eacute;s</em> sur des termes de la Taxonomie se comporte de la m&ecirc;me mani&egrave;re que la recherche par mots-cl&eacute;s du formulaire de recherche simple. Tous les mots ou phrases saisies doivent correspondre et certains mots r&eacute;serv&eacute;s ou tr&egrave;s communs - comme <em>« et »</em> et <em>« ou »</em> sont ignor&eacute;s automatiquement. Vous pouvez rechercher une phrase en ins&eacute;rant les mots recherch&eacute;s entre guillemets anglaises. Les caract&egrave;res accentu&eacute;s sont automatiquement ignor&eacute;s par le logiciel et ne sont pas n&eacute;cessaires pour obtenir des correspondances, m&ecirc;me en fran&ccedil;ais.</p>
+<p>Le logiciel cherche automatiquement les diff&eacute;rentes formes d'un mot dans la langue utilis&eacute;e. Par exemple, <em>animal</em> ou <em>animaux</em> produit le m&ecirc;me r&eacute;sultat ; on peut donc utiliser l'un ou l'autre. Vous pouvez emp&ecirc;cher la recherche sur les formes d'un mot en ins&eacute;rant le mot ou la phrase entre guillemets anglais. Vous pouvez &eacute;galement ajouter le m&eacute;tacaract&egrave;re <strong>*</strong> au <em>d&eacute;but</em> ou &agrave; la <em>fin</em> d'un mot de votre recherche pour permettre une correspondance partielle (p. ex., <em>enfant*</em> trouvera <em>enfant, enfants, enfance, enfantin</em>, etc. ; <em>aggr*</em> trouvera <em>agression, agress&eacute;, agresseur</em>, etc.). Dans de nombreux cas, il est plus efficace de laisser la fonction int&eacute;gr&eacute;e du logiciel rechercher les formes d'un mot, que d'utiliser l'ast&eacute;risque pour les variantes simples du m&ecirc;me mot (enfant et enfants, aide et aider). Cela r&eacute;duit le nombre de correspondances non d&eacute;sir&eacute;es, comme <em>hand*</em> retrouvant <em>handball</em>, alors qu'on souhaite seulement retrouver les correspondances &agrave; <em>handicap</em>, <em>handicap&eacute;s</em> et <em>handisport</em>.</p>
+<p>La recherche par <em>mots-cl&eacute;s</em> vous permet de trouver les mots-cl&eacute;s dans le <em>nom</em> du terme (ou du <em>synonyme</em>) et - si vous s&eacute;lectionnez l'option <em>Partout</em> - dans la <em>d&eacute;finition</em> ou la <em>d&eacute;finition alternative</em>. <strong>Tous</strong> les mots-cl&eacute;s sp&eacute;cifi&eacute;s doivent appara&icirc;tre dans l'<strong>un</strong> des champs que vous recherchez. Cela signifie que si vous recherchez les mots-cl&eacute;s <em>« violence »</em> et <em>« maltraitance »</em> en utilisant l'option <em>Partout</em>, vous trouverez ces deux mots dans le <em>nom / nom alternatif</em> <strong>ou</strong> dans la <em>d&eacute;finition / d&eacute;finition alternative</em>. Vous n'aurez pas de r&eacute;sultat si <em>« violence »</em> se trouve dans le <em>nom</em> et <em>« maltraitance »</em> dans la <em>d&eacute;finition</em>.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<hr>
+
+<a name="code"></a>
+<h3>Recherche par code</h3>
+<p>La recherche par <em>code</em> vous permet de lister tous les termes contenus dans la branche d'un code taxonomique donn&eacute;. Vous devez saisir un <strong>code valide</strong> pour effectuer cette recherche. Cela signifie que si vous recherchez <em>TA-04</em>, vous n'aurez pas de r&eacute;sultat ; cependant, <em>TA-0400</em> affichera <em>TA-0400</em> et tous ses termes inf&eacute;rieurs, car il s'agit d'un code valide.</p>
+<p>Souvent, la recherche <em>hi&eacute;rarchique</em> se r&eacute;v&egrave;le un meilleur choix si vous souhaitez parcourir les sections de la hi&eacute;rarchie taxonomique. Cependant, contrairement &agrave; la recherche <em>hi&eacute;rarchique</em>, une recherche par <em>code</em> vous permet de trier par nom et d'afficher toute la branche directement sans avoir &agrave; la d&eacute;rouler auparavant. Vous &ecirc;tes &eacute;galement dirig&eacute; vers la recherche par <em>code</em> si vous cliquez sur un terme inf&eacute;rieur, sup&eacute;rieur ou associ&eacute; depuis l'encart <a href="#more-info">Afficher plus d'informations sur les termes</a>.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<hr>
+
+<a name="drill-down"></a>
+<h3>Recherche hi&eacute;rarchique</h3>
+<p>La recherche <em>hi&eacute;rarchique</em> vous permet de parcourir une ou plusieurs branches de la hi&eacute;rarchie taxonomique. Elle comporte des fonctionnalit&eacute;s similaires aux autres recherches, sauf le tri des r&eacute;sultats. Contrairement aux autres types de recherches, le fait de modifier vos param&egrave;tres ou de quitter la page a toujours pour effet de r&eacute;initialiser la recherche et de refermer toutes les branches (voir <a href="#back-button"><em>Cons&eacute;quences de l'utilisation du bouton retour</em></a>).</p>
+<p>Pour d&eacute;rouler une branche de la hi&eacute;rarchie, cliquez sur le signe plus (<img src="../images/plus.gif" width="14" height="14">) disponible &agrave; c&ocirc;t&eacute; de la branche &agrave; d&eacute;rouler. Le prochain niveau de termes s'affichera automatiquement et la branche se d&eacute;roulera, transformant le signe plus en signe moins (<img src="../images/minus.gif" width="14" height="14">). &Agrave; noter que vous devez <strong>attendre que la branche se d&eacute;roule</strong>, ce qui peut &ecirc;tre long s'il existe de nombreux termes &agrave; afficher. Si un signe moins appara&icirc;t apr&egrave;s avoir cliqu&eacute;, cela signifie que votre navigateur est en attente de l'envoi du terme et l'affichera quand il sera pr&ecirc;t. Si vous cliquez sur le signe moins, vous demandez de refermer la branche et les termes n'appara&icirc;tront pas du tout.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<hr>
+
+<a name="concept"></a>
+<h3>Recherche par concept associ&eacute;</h3>
+<p>Pour consulter une liste de termes attach&eacute;s &agrave; un <em>concept associ&eacute;</em>, s&eacute;lectionnez un concept &agrave; afficher, puis cliquez sur <em>Rechercher</em>.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<hr>
+
+<a name="by-record"></a>
+<h3>Recherche par dossier</h3>
+<p>Si vous savez qu'il existe des dossiers classifi&eacute;s de la mani&egrave;re que celui que vous indexez, vous pouvez lancer une recherche par mots-cl&eacute;s pour retourner une liste de dossiers. Pour chaque dossier index&eacute; figurant dans les r&eacute;sultats de recherche, vous pouvez cliquer sur le Nom d'organisme pour consulter la liste des termes associ&eacute;s &agrave; ce dossier. Vous pouvez ajouter ces termes &agrave; votre dossier, comme d&eacute;crit dans la section <a href="#index"><em>Indexer le dossier</em></a>. Pour masquer la liste des termes, cliquez de nouveau sur le Nom d'organisme.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<hr>
+
+<a name="more-info"></a>
+<h3>Afficher plus d'informations sur les termes</h3>
+<p>Lorsque vous consultez une liste de termes de la Taxonomie retourn&eacute;s suite &agrave; l'une des recherches mentionn&eacute;es plus haut, vous pouvez consulter des renseignements plus d&eacute;taill&eacute;s sur le terme en cliquant sur son nom. La <em>d&eacute;finition</em> du terme (ou d&eacute;finition alternative) s'affichera, ainsi que tout <em>concept associ&eacute;</em> et le <em>terme g&eacute;n&eacute;rique</em>, les <em>sous-sujets</em> ou les <em>sujets associ&eacute;s</em> du terme. Les concepts sont li&eacute;s &agrave; une <a href="#concept"><em>recherche par concept associ&eacute;</em></a>, alors que chaque terme affiche le nombre de dossiers l'utilisant et sera li&eacute; &agrave; une <a href="#code">recherche par code</a> sur ce terme. Les super-utilisateurs auront acc&egrave;s &agrave; des champs de gestion des donn&eacute;es suppl&eacute;mentaires.</p>
+<p>Vous pouvez afficher les renseignements suppl&eacute;mentaires d'un terme pour plusieurs termes &agrave; la fois dans vos r&eacute;sultats de recherche. Pour masquer ces renseignements suppl&eacute;mentaires, cliquez de nouveau sur le nom du terme.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<hr>
+
+<a name="sort"></a>
+<h3>Modifier l'ordre de tri</h3>
+<p>On peut modifier l'ordre de tri des r&eacute;sultats de recherche pour chaque type de recherche, sauf la recherche <em>hi&eacute;rarchique</em>. L'ordre de tri initial d&eacute;pend du type de recherche effectu&eacute;e ; par exemple, la recherche par <em>mots-cl&eacute;s</em> trie par nom par d&eacute;faut, alors que la recherche par <em>code</em> trie initialement par code. &Agrave; noter que l'ordre de tri n'est pas m&eacute;moris&eacute; entre chaque recherche.</p>
+<p>Votre ordre de tri actuel est indiqu&eacute; par une fl&egrave;che &agrave; c&ocirc;t&eacute; du nom de la colonne (<img src="../images/up.gif" width="14" height="14"> ou <img src="../images/down.gif" width="14" height="14">). La fl&egrave;che indique quelle colonne est tri&eacute;e et si le tri est <em>ascendant</em> ou <em>descendant</em>. Pour modifier la colonne de tri ou modifier l'ordre de tri d'une colonne donn&eacute;e, cliquez sur le nom de la colonne dans l'en-t&ecirc;te du tableau et vos r&eacute;sultats seront r&eacute;organis&eacute;s. Si vous modifiez l'ordre de tri, cela peut refermer certains ou tous les encarts <a href="#more-info"><em>Plus d'informations</em></a> que vous avez ouverts.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<hr>
+
+<a name="settings"></a>
+<h3>Param&egrave;tres de recherche</h3>
+<p>Les param&egrave;tres de recherche du menu de recherche restent jusqu'&agrave; ce vous quittiez la page de <em>Mettre &agrave; jour les cat&eacute;gories de service</em>. Si vous activez l'un de ces param&egrave;tres de recherche, il sera surlign&eacute; pour vous rappeler qu'il est actif.</p>
+<p>&Agrave; noter que le fait de modifier vos param&egrave;tres aura pour effet de r&eacute;initialiser la recherche ou de r&eacute;-afficher vos r&eacute;sultats de recherche actuels. Dans le cas de la recherche hi&eacute;rarchique, vous devrez red&eacute;rouler les branches qui &eacute;taient affich&eacute;es avant la modification des param&egrave;tres.</p>
+
+<h4>Termes avec dossiers / Afficher tous les termes</h4>
+<p>Vous pouvez choisir d'afficher tous les termes (par d&eacute;faut) ou seulement ceux qui sont associ&eacute;s &agrave; des dossiers dans votre vue actuelle. Si vous avez choisi de n'afficher que les termes avec dossiers, le menu s'adaptera en surlignant <em>Afficher tous les termes</em>. Si vous avez des difficult&eacute;s &agrave; trouver le terme appropri&eacute;, v&eacute;rifiez que vous affichez bien tous les termes ; m&ecirc;me s'il n'y a pas de dossier associ&eacute; au terme, vous pourrez utiliser la fonctionnalit&eacute; <a href="#more-info">Plus d'informations sur les termes</a> pour trouver des termes associ&eacute;s ou sp&eacute;cifiques associ&eacute;s &agrave; des dossiers.</p>
+
+<h4>Afficher / Masquer les termes inactifs</h4>
+<p>Vous pouvez choisir d'inclure dans votre recherche les termes inactifs et les synonymes en activant l'option <em>Afficher les termes inactifs</em>.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<hr>
+
+<a name="back-button"></a>
+<h3>Cons&eacute;quences de l'utilisation du bouton retour</h3>
+<p>Certaines fonctionnalit&eacute;s de cette recherche utilise JavaScript pour modifier l'affichage sans avoir &agrave; recharger la page. Des exemples comprennent l'affichage de l'encart <a href="#more-info"><em>Plus d'informations sur les termes</em></a>, le d&eacute;roulement des branches lors d'une <a href="#drill-down"><em>recherche hi&eacute;rarchique</em></a> ou le fait de <a href="#sort"><em>modifier l'ordre de tri</em></a>. Vous perdrez &eacute;galement votre liste et tous les changements d'<a href="#index">indexation</a> apport&eacute;es au dossier si vous quittez cette page et y revenez avec le bouton retour.</p>
+<p>Cela signifie que l'utilisation du bouton retour du navigateur apr&egrave;s avoir quitt&eacute; la page (par exemple, apr&egrave;s avoir quitt&eacute; la page pour lancer une recherche sur des dossiers, modifier un terme ou s&eacute;lectionner une autre option de recherche) peut vous emp&ecirc;cher de revenir au m&ecirc;me &eacute;tat de r&eacute;sultats. De plus, le bouton retour n'annulera pas les types d'actions mentionn&eacute;es plus haut qui sont contr&ocirc;l&eacute;es par JavaScript. Utilisez les m&eacute;thodes expliqu&eacute;es dans ce fichier d'aide si vous souhaitez revenir &agrave; votre ordre de tri, fermer l'encart <em>Plus d'informations sur les termes</em> ou refermer une branche de la hi&eacute;rarchie dans une recherche <em>hi&eacute;rarchique</em> - le bouton retour ne fonctionnera pas dans ces cas-l&agrave; !</p>
+<p>Ne comptez pas sur le bouton retour du navigateur - prenez l'habitude de toujours utiliser les &eacute;l&eacute;ments disponibles du menu pour effectuer votre recherche et parcourir le site.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<hr>
+
+<a name="index"></a>
+<h3>Indexer le dossier</h3>
+
+<h4>La liste de recherche</h4>
+<p>Si des dossiers sont associ&eacute;s &agrave; un terme ou l'un de ses sous-sujets dans cette vue, leur d&eacute;compte sera indiqu&eacute; et une ic&ocirc;ne de loupe appara&icirc;tra &agrave; c&ocirc;t&eacute; du terme (<img src="../images/select.gif" width="14" height="14">). Le fait de cliquer sur cette ic&ocirc;ne ajoutera le terme &agrave; votre liste.</p>
+<p>Si vous souhaitez rechercher un ensemble de termes li&eacute;s, vous pouvez s&eacute;lectionner d'autres termes et les ajouter &agrave; votre liste pour constituer une liste de termes li&eacute;s. Vous pouvez g&eacute;n&eacute;rer une liste des termes li&eacute;s possibles relative &agrave; votre liste actuelle en cliquant sur le bouton <em>Suggestion de relation</em> apr&egrave;s avoir ajout&eacute; au moins un terme &agrave; votre liste. Vous pouvez retirer des termes individuels de votre liste de termes li&eacute;s en cliquant sur l'image <img src="../images/x.gif" width="14" height="14"> &agrave; c&ocirc;t&eacute; du terme que vous souhaitez retirer.</p>
+<p>Une fois que vous avez pr&eacute;cis&eacute; les termes ou les termes li&eacute;s &agrave; rechercher, il faut les ajouter &agrave; votre liste d'indexation <em><strong>Termes pour ce dossier</strong></em>. Avant d'ajouter les termes &agrave; la liste, vous pouvez cliquer sur le bouton <em>Suggestion de terme</em> pour rechercher d'autres termes pr&eacute;sents dans les dossiers utilisant les termes actuellement contenus dans la <em>liste</em>. Apr&egrave;s avoir ajout&eacute; les termes &agrave; votre liste d'indexation, vous pouvez recopier un terme ou un ensemble de termes li&eacute;s dans la liste initiale pour utiliser la fonctionnalit&eacute; <em>Suggestion de terme</em> ou pour lier des termes entre eux (voir la section suivante).</p>
+
+<h4>Liste des termes pour ce dossier</h4>
+<p>La liste des <em>Termes pour ce dossier</em> contient les termes individuels ou les termes li&eacute;s s&eacute;lectionn&eacute;s pour ce dossier. Vous pouvez retirer des termes individuels de votre liste de termes li&eacute;s en cliquant sur l'image <img src="../images/x.gif" width="14" height="14"> &agrave; c&ocirc;t&eacute; du terme ou de l'ensemble de termes li&eacute;s que vous souhaitez retirer. &Agrave; noter que dans le cas des termes li&eacute;s, vous devez retirer l'ensemble. Si vous souhaitez modifier une liste de termes ou de termes li&eacute;s, vous pouvez cliquer sur l'ic&ocirc;ne de modification (<img src="../images/edit.gif" width="17" height="15">) &agrave; c&ocirc;t&eacute; du terme ou de l'ensemble de termes li&eacute;s, ce qui <strong>copiera</strong> le terme ou l'ensemble dans la liste initiale, vous permettant de la modifier (p. ex., pour ajouter des termes li&eacute;s) ou d'obtenir des suggestions d'autres termes. Vous devrez quand m&ecirc;me retirer le terme original qui a &eacute;t&eacute; copi&eacute; si vous souhaitez le remplacer par un autre terme ou ensemble.</p>
+
+<h4>Soumettre vos modifications</h4>
+<p>N'oubliez pas de <strong>sauvegarder votre travail</strong> ! Le dossier ne sera mis &agrave; jour avec vos changements que quand vous cliquez sur le bouton <em>Soumettre</em>.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<hr>
+
+<a name="help"></a>
+<h3>Ressources d'indexation</h3>
+<p>Ce fichier d'aide ne vous apprend pas &agrave; utiliser la Taxonomie. Vos politiques internes d'indexation, documents de formation, ainsi que les ressources et les zones d'aide de <a href="http://www.211taxonomy.org">211taxonomy.org</a> (en anglais) sont des pistes pour obtenir plus d'informations sur la mani&egrave;re correcte d'utiliser la Taxonomie pour indexer vos dossiers.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

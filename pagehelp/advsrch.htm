@@ -1,0 +1,251 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<a name="top"></a>
+<p>The <strong><em>Advanced Search</em></strong> page allows for a number ways of customizing and refining your search of the database that are not available from the basic search menu. Note that the options on this page can be used in combination with one another to build your search. Depending on your account permissions and the setup of your database, one or more of the options on this page may not be available to you. The search options available on this page are determined by your <em>User Type</em> as well as the settings for the current <em>View</em>.</p>
+<p>Use the quick links below to jump to the heading of interest on the advanced search page.</p>
+<table class="NoBorder cell-padding-2">
+	<tr valign="TOP">
+		<td><ul>
+				<li><a href="#terms">Search Terms</a></li>
+				<li><a href="#num">Record #</a></li>
+				<li><a href="#communities">Communities</a></li>
+				<li><a href="#naics">NAICS</a></li>
+				<li><a href="#address">Street Address</a></li>
+				<li><a href="#postalcode">Postal Code</a></li>
+				<li><a href="#locatednear">Located Near</a></li>
+				<li><a href="#ages">Ages</a></li>
+				<li><a href="#vacancy">Availability</a></li>
+				<li><a href="#employees"># Employees</a></li>
+				<li><a href="#email_update">Last Email Requesting Update</a></li>
+				<li><a href="#date">&quot;Custom&quot; Date Fields</a></li>
+			</ul></td>
+		<td><ul>
+				<li><a href="#custom_drops">&quot;Custom&quot; Text Fields</a></li>
+				<li><a href="#owner">Record Owner</a></li>
+				<li><a href="#volunteer">Volunteer Opportunities</a></li>
+				<li><a href="#pubs">Publications / General Headings</a></li>
+				<li><a href="#email">Email</a></li>
+				<li><a href="#public">Public Status</a></li>
+				<li><a href="#language">Language</a></li>
+				<li><a href="#childcare">Child Care Resource</a></li>
+				<li><a href="#deleted">Deleted Status</a></li>
+				<li><a href="#addsql">SQL</a></li>
+				<li><a href="#checklist">Checklist Searches</a></li>
+			</ul></td>
+	</tr>
+</table>
+<hr>
+<a name="terms"></a>
+<h3>Search Terms</h3>
+
+<p>The main search mechanism in the software is the keyword search. Four potential keyword search fields are available, depending on what has been made available on your current search form. These include:</p>
+<ul>
+	<li><strong>Organization Name(s)</strong> - All levels of the organization hierarchy, as well as alternate and former names</li>
+	<li><strong>Subjects</strong> - All local and authorized Subjects, as well as "Used For" Terms associated with those Subjects and any Broader Terms for those Subjects.</li>
+	<li><strong>Service Categories</strong> - All AIRS / InfoLine Taxonomy Terms indexed to the record, as well as Use References for those Terms and broader level terms excluding Level 1.</li>
+	<li><strong>Keywords</strong> - All of the above, as well as Areas Served, Site Location, Intersection, Site Building, Contact and Executive names, Eligibility, Accessibility, Transportation, Fees, Funding, Languages, Description, Supplemental Description, NAICS, Type of Program, Type of Care, Schools in Area, and any &quot;Extra&quot; fields that are configured to be part of the keyword search.</li>
+</ul>
+
+<p>Unlike the basic search page which always searches for <em>all</em> the terms and phrases you enter, the <em>Advanced Search</em> allows you to specify whether you will match <em>All the Terms</em> (e.g. the search string <strong>cat dog horse</strong> would search <strong>cat AND dog AND horse</strong>) or <em>Any of the Terms</em> (e.g. the search string <strong>cat dog horse</strong> would search <strong>cat OR dog OR horse</strong>).</p>
+<p>The third option, <em>Boolean</em>, is not available in all Views and requires that you have knowledge of Boolean searching; it allows you to include the keywords <em>AND</em>, <em>OR</em> and <em>NOT</em> in your search to construct your own, custom search string. The software will not correct errors in your search, so you must have a correctly structured search string to perform this kind of search. All terms and phrases must be separated by <em>AND</em>, <em>OR</em>, <em>AND NOT</em>, or <em>OR NOT</em>. You may also use brackets to group different parts of your search. For example: <strong>(cats AND dogs) OR (pigs AND cows) OR &quot;orange monkeys</strong>&quot;, or <strong>cross AND NOT red</strong>.</p>
+<p>Advanced users may also make use of the special SQL Server <em>FORMSOF</em> function from within a Boolean search which allows you to search word forms. For example, FORMSOF(INFLECTIONAL, run) would match all the different tenses of the word &quot;run&quot;: &quot;run&quot;, &quot;runs&quot;, &quot;running&quot;, and &quot;ran&quot;. Alternatively, FORMSOF(THESAURUS, happy) ** would match alternate meanings of the word &quot;happy&quot;, like: &quot;happy&quot;, &quot;cheerful&quot;, &quot;glad&quot;, etc.</p>
+<p><span class="Alert">** Note</span>: the use of THESAURUS is dependent on creating a Thesaurus file for each language in SQL Server. Because CIOC has not currently created Thesaurus files for any language on its servers, this feature cannot be used effectively at this time.</p>
+
+<h4>General Information About Keyword Matching</h4>
+<p>The software automatically searches many different word forms for the current language. For instance, typing in <em>library</em> or <em>libraries</em> produces the same result, so either can be used. You can explicitly prevent the searching of word forms by using quotation marks (see below).</p>
+<p class="Alert">Important note: if a record has a Privacy Profile, fields marked as private are always excluded from keyword searches, even if you have permission to access private data.</p>
+
+<h4>Use of Wildcard Asterisks</h4>
+<p>You can use an asterisk at the <strong>end</strong> of any search word, for example:</p>
+<ul>
+	<li><strong>child*</strong> will find <em>child; children; child's; childlike; childish</em></li>
+	<li><strong>abus*</strong> will find <em>abuse; abuser; abused; abusing</em></li>
+	<li><strong>child* abus*</strong> will find any of the combinations outlined above</li>
+</ul>
+<p>In many cases, allowing the software to use its built-in ability to search word forms is more effective than using the asterisk for simple variations of the same word (child and children, help and helping). This is because it reduces the number of unwanted extra matches, such as <em>scan*</em> matching <em>scant</em> and <em>scandal</em> when what was intended was just matching <em>scan</em>, <em>scans</em>, and <em>scanning</em>.</p>
+
+<h4>Use of Quotation Marks</h4>
+<p>You can search with terms enclosed in quotation marks ... thus:
+<strong><em>&quot;child abuse&quot;</em></strong> will result in any records that have <strong>both</strong> of those exact words adjacent to each other in that order and in the <strong>same</strong> field.
+<br><strong><em>&quot;child* abus*&quot;</em></strong> will result in records that have <em>&quot;child abuse&quot;</em> <strong>or</strong> <em>&quot;child abuser&quot;</em> <strong>or</strong> <em>&quot;childish abuser&quot;</em> in a single field, in that order, adjacent to each other.</p>
+<p>Note that using quotation marks turns off the software's ability to search word forms (as mentioned above). Thus, searching <em>&quot;library&quot;</em> will not match <em>libraries</em>.</p>
+
+<h4>Subject Sidebar</h4>
+<p>If the Thesaurus is being used, the <strong>Subject Sidebar</strong> option is selected by default. If selected, the Subject Sidebar will display a box of matching entries from the Subject Thesaurus whenever you perform a keyword search in either <em>Subjects</em> or <em>Keywords</em>.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="num"></a>
+<h3>Record #</h3>
+<p>Specify a single record number (e.g. ACT0001) or a list of record numbers separated by a space, comma, or semi-colon.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="communities"></a>
+<h3>Communities</h3>
+<p>Allows you to set parameters around your results based on <em>&quot;Located In&quot;</em> or <em>&quot;Areas Served&quot;</em>. Depending on the setup of your current database View, you may have access to an <em>&quot;Other Community&quot;</em> search box to select a community not in the pre-selected list of checkboxes. Note that you can only enter Community names exactly as they appear in the list of names in the database; if you do not know the proper name of the community to use, use the link to the <em>Community Finder</em> to locate the appropriate name. If you have JavaScript enabled, you should receive suggestions for Community names after typing a few characters.</p>
+<p>Note that records that do not contain proper <em>Areas Served</em> or <em>Located In</em> information can cause issues for your search. Records with no <em>Areas Served</em> information will <strong>never</strong> appear in searches by <em>Areas Served</em>. Records with no <em>Located In</em> information will <strong>always</strong> appear in searches by <em>Located In</em>, because they are assumed to have no specific location. To ensure good searches, always makes sure that both <em>Located In</em> and <em>Areas Served</em> information are complete and accurate for all records.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="naics"></a>
+<h3>NAICS</h3>
+<p>Enter any valid <em>NAICS</em> Code to search all records containing the Term or any of it's child Terms.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="address"></a>
+<h3>Street Address</h3>
+<p>Specify a Street <em>Name</em> and optionally also the <em>Type</em> and <em>Direction</em> to search for records whose Street addresses are located on that Street. This search does not cover the Mailing Address or "Other" Addresses fields.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="postalcode"></a>
+<h3>Postal Code</h3>
+<p>Enter a complete or partial Postal Code or Zip Code to match all records whose <em>Street Address</em> or <em>Mailing Address</em> Postal Code field <strong>begin with</strong> the given value.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="locatednear"></a>
+<h3>Located Near</h3>
+<p>Enter an address, postal code, intersection, or major landmark. You may need to include the city or province to clarify to the mapping provider which location to use when more than one such location exists in the world. After entering your location, click the <img src="../images/zoom.gif" width="17" height="14"> icon to map your location. By default, entering a location will cause the search results to sort with the nearest locations first (unmapped locations will occur at the end of the list). You can optionally remove this sorting, specify that the records must occur within a specific distance of the target location, and/or specify whether unmapped records should be included in the search.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="ages"></a>
+<h3>Ages</h3>
+<p>Allows you to specify a specific age (from Eligibility field) to refine your search based on the ages served. To have records searched appropriately, you must have filled out the <em>Minimum Age</em> and <em>Maximum Age</em> fields in your records. A record with no minimum and maximum age specified is assumed to serve all ages.</p>
+<p>To search for a single age, enter the age into the first box. The field will accept whole numbers as well as decimals, for example 2.5 years.</p>
+<p>To search for an age range, enter the lower limit into the first box and the upper limit into the second box. You can specify that <em>Any</em> or <em>All</em> the ages in the given range must match. To illustrate the difference between these two types:</p>
+<p>Assume an age <strong>range of 4-6</strong> was given, and that we have 4 records in our database: one serving <strong>4 and under</strong>, one serving <strong>2-6</strong>, one serving <strong>5 and up</strong>, and one serving <strong>All Ages</strong> (no min or max specified). With an <em>Any in given range</em> search, all 4 records would match, because they all have at least some crossover with the 4-6 age range. With an <em>All in given range</em> search, only <strong>2-6</strong> and <strong>All Ages</strong> would match, because those are the only records that serve every age between 4 and 6 (inclusive).</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="vacancy"></a>
+<h3>Availability</h3>
+<p>Allows you to search the Vacancy Information field to determine <em>capacity for a specific target population</em>, or <em>vacancy and/or waitlist information</em> either in general or for a specific target population. This search only returns records for which capacity information has been provided; if no target population information is connected to the service's capacity, it is assumed that the record serves all target populations.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="employees"></a>
+<h3># Employees</h3>
+<p>Search for records that have specified a value from the pre-defined list of ranges <em>OR</em> search for records that have a specific employee count that falls within the specific range you specify (at least (X) employees and/or no more than (X) employees) along with which part of the specific <em># Employees</em> field to search (<em>Total</em>, <em>Full-Time</em>, or <em>Part-Time</em>). : the <em># Employees</em> search is only as accurate as the information you specify within your records; this search will only search records that have the relevant Employee information specified.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="email_update"></a>
+<h3>Last Email Update Request</h3>
+<p>Search for records where the organization was sent an Email Update Request through the database in the past (X) days. The date the email was last sent is set automatically by the software.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="date"></a>
+<h3>&quot;Custom&quot; Date Fields Search</h3>
+<p>You may select up to two date fields to search in. Your search may confine the date to a pre-defined range from a drop-down list, for example <em>&quot;Past</em>&quot;, <em>&quot;Future&quot;</em>, &quot;<em>Last 7 Days&quot;</em>, etc and well as <em>&quot;Is Null&quot;</em> (the selected field(s) must be empty) and <em>&quot;Is Not Null</em>&quot; (the selected field(s) must <strong>not</strong> be empty). You may also select an upper and/or lower bound for the date by providing specific date(s). There are two entries available for creating a custom date search; if you create a search for both entries, both must match.</p>
+<p>The list of dates is created from available date types in the software. If you have renamed your date fields from the standard name that ships with the software, or added your own &quot;Extra&quot; date fields, <em>your names may differ from the list below</em>:</p>
+<ul>
+	<li><strong>Date Collected</strong>: Date the information was gathered (User set)</li>
+	<li><strong>Date Created</strong>: Date the record was created (System set)</li>
+	<li><strong>Date Deleted</strong>: Date the record was deleted, or date of pending deletion (User set)</li>
+	<li><strong>Date Imported</strong>: Date the record was imported into the database (System set)</li>
+	<li><strong>Date Modified (Main Record)</strong>: Date the main record content was modified (System set)</li>
+	<li><strong>Date Modified (Taxonomy)</strong>: Date the list of &quot;Service Categories&quot; for the record were modified (System set)</li>
+	<li><strong>Date Updated</strong>: Date the record was fully updated (User set)</li>
+	<li><strong>Last Email Request</strong>: Date the system last sent an email request to update the record (System set)</li>
+	<li><strong>Update Schedule</strong>: Date for the next full record update (User set)</li>
+</ul>
+<p>In addition to the Dates listed above, be aware that <em>Publication</em> information contains its own modified date on a per-Publication Code basis. These dates are not available from the custom date search and can currently only be searched via <a href="#addsql">SQL Search</a>. Note that in many cases, system-set dates will include a time-stamp as well, even though this is not displayed to the end user; the above searches accommodate for the time stamp if it is present.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="custom_drops"></a>
+<h3>&quot;Custom&quot; Text Fields Search</h3>
+<p>You may perform up to two custom text field searches. The list of fields available for you to search will be determined by which text fields are available on the <em>Record Details</em> page of the current <em>View</em>. You can use either one or both of these custom search menus at the same time; if you use both, then the records must match both searches.</p>
+<p>There are two drop down menus which allow you to choose fields that are in the database base table and return results based on the fields you have chosen. The centre drop down menus contain 4 choices:</p>
+<ul>
+	<li><strong>Contains:</strong> Records must contain the exact search string you enter anywhere in the selected fields(s)</li>
+	<li><strong>Does Not Contain:</strong> Records cannot contain the exact search string you enter anywhere in the selected fields(s)</li>
+	<li><strong>Is Null:</strong> The selected field(s) must be NULL (empty)</li>
+	<li><strong>Is Not Null</strong> The selected field(s) must <strong>not</strong> be NULL (not empty)</li>
+</ul>
+<p>Within each text search, you may select / unselect multiple fields by holding down the <em>CTRL</em> key while clicking on fields from the list. If you perform a search where you have selected multiple fields from the single list, the default option is that any one of the fields can match your criteria. If you want <strong>all</strong> the fields to match your criteria, you must select the checkbox <em>&quot;All the selected fields must match&quot;</em>.</p>
+<p>You may choose to include the field(s) you are searching as a temporary addition to your search results table by choosing the <em>&quot;Include selected field(s) in results display table&quot;</em> checkbox. This will not change your <em>Change Display Options</em> settings, and the extra field(s) will only be displayed in the results table for this one search.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="owner"></a>
+<h3>Record Owner Agency</h3>
+<p>Allows you to return only results where the record owner Agency matches any one of the Agencies you select from the drop down list (This option is only useful if you have multiple record owner Agencies in your database). The list of Agencies available here is determined by which Agencies are marked as owning records in the current module (Community Information or Volunteer) in the <em>Agency Setup</em> area.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="volunteer"></a>
+<h3>Volunteer Opportunities</h3>
+<p>If the Volunteer module is being used, records can be searched based on having (or not having) volunteer opportunities.</p>
+<ul>
+	<li><strong>Has any opportunities</strong> - Has at least one Volunteer Opportunity associated with it; does not distinguish whether the opportunity is actually available to be viewed (e.g. not current, non-public, deleted, etc).</li>
+	<li><strong>Has any opportunities in this View</strong> - Has opportunities that are available in your current <em>Volunteer</em> database View (some of which may have expired).</li>
+	<li><strong>Has current opportunities in this View</strong> - Has opportunities that have not passed their <em>Display Until</em> date, and are available in your current <em>Volunteer</em> database View.</li>
+	<li><strong>Has current, public, non-deleted opportunities in this View</strong> - Has available opportunities; current, public, and non-deleted opportunities generally means the opportunities that are available for the public to access.</li>
+	<li><strong>Has no opportunities</strong> - Does not have any volunteer opportunities associated with it (including opportunities that have been deleted, are past or non-public, etc).</li>
+</ul>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="pubs"></a>
+<h3>Publications / General Headings</h3>
+<p>Using the <em>Publications</em> options allows you to return records based on the Publication Codes that have been assigned to records in the database. You may use the two tables, <em>&quot;Include Pub Codes&quot;</em> and <em>&quot;Exclude Pub Codes&quot;</em> either separately or in combination.</p>
+<ul>
+	<li><strong>Has None</strong> will return records that have no publication codes assigned.</li>
+	<li><strong>Has Any</strong> will return records that have at least one publication code assigned.</li>
+	<li><strong>Has Any From</strong> allows you to choose from the list box one or more publications to return results with only certain publications assigned.</li>
+	<li>The <strong>&quot;Exclude Pub Code(s)&quot;</strong> table can be used to specify publications to <em>not include</em> in the returned results.</li>
+</ul>
+<p>If some of the publications available to you in your current View contain General Headings, you will be able to select them from the Publications drop-down list under the section entitle &quot;General Headings&quot;. Search parameters work just as noted above for Publication Codes.</p>
+<p>If you are operating in a <em>Limited</em> Publication View, you will only see a list of <em>General Headings</em> for your particular Publication, rather than a list of Publication Codes.
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="email"></a>
+<h3>Email</h3>
+<p>Search for records based on the status of the <em>Email</em> and <em>Update Email</em> fields.</p>
+<ul>
+	<li><strong>All Records</strong> - Return all records, regardless of whether they have an email address.</li>
+	<li><strong>Only With Email</strong> - Records that have either an <em>Email</em> or <em>Update Email</em>.</li>
+	<li><strong>Only Without Email</strong> - Records that have <strong>no</strong> <em>Email</em> or <em>Update Email</em>.</li>
+	<li><strong>Can Send Update Requests</strong> - Records that have either an <em>Email</em> or <em>Update Email</em>, and <strong>do not</strong> have the <em>Block Update Email</em> field set.</li>
+	<li><strong>Cannot Send Update Requests</strong> - Records that have no <em>Email</em> or <em>Update Email</em>, or have the <em>Block Update Email</em> field set.</li>
+</ul>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="public"></a>
+<h3>Public Status</h3>
+<p>Allows you to specify whether to return all records, only those marked as public records or only those marked as non-public records. This search is only visible in Views that include non-public records.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="language"></a>
+<h3>Language</h3>
+<p>Allows you to to return records with or without an equivalent in another language. This search does not currently allow you to be specific about which language the record is available in; it only locates records that have an equivalent in a language other than the current one.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="childcare"></a>
+<h3>Child Care Status</h3>
+<p>Allows you to return records that are or are not designated as child care resources.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="deleted"></a>
+<h3>Deleted Status</h3>
+<p>If you have permissions to see deleted records, you can select this box to have them display in your search results. This applies only to records whose deletion date is in the past. Records with a deletion date in the future (&quot;pending&quot; deletion) are not considered deleted until the date has passed. This search is only visible in Views that include deleted records.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="addsql"></a>
+<h3>SQL</h3>
+<p>An advanced search technique that requires knowledge of the underlying data structure and naming conventions used in the database. Refer to the link in this field &quot;SQL Search Help&quot; for some ideas on possible search strings.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="checklist"></a>
+<h3>Checklists</h3>
+<p>This tool allows you to select from a list of available checklists to perform searches that require or exclude particular values (a similar search to the one referenced above for <a href="#pubs">Publication / General Heading searches</a>). To search a specific checklists, pick it from the drop-down list and click <em>&quot;Add&quot;</em> to display a search for for that checklist. You search one or many different checklists. Note that the checklists available to search are determined in the setup for the current View.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<p class="SmallNote">Last Modified: $Date$</p>

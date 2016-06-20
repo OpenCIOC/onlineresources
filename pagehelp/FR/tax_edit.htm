@@ -1,0 +1,73 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>Ce qui suit sont les instructions pour chaque section du formulaire Voir / Modifier un terme de la Taxonomie. Si vous n'&ecirc;tes pas familier avec la terminologie ou les concepts de la Taxonomie, utilisez des r&eacute;f&eacute;rences officielles comme les ressources sur <a href="http://www.211taxonomy.org">211taxonomy.org</a> (en anglais).</p>
+<p><span class="Alert">Remarque :</span> des liens vers plusieurs termes et concepts de la Taxonomie figurent sur le formulaire ; vous devriez vous assurer que tout changement effectu&eacute; sur le formulaire est soumis et sauvegard&eacute; avant de suivre des liens vers d'autres termes et concepts de la Taxonomie, ou vos modifications seront perdues.</p>
+<h3>Statut</h3>
+<p>Cette information est en lecture seule et indique si le terme est utilis&eacute; dans des dossiers d'organismes / programmes. Si un terme est utilis&eacute;, vous ne serez pas autoris&eacute; &agrave; le supprimer.</p>
+<h3>Renseignement de cr&eacute;ation / modification</h3>
+<p>Les dates de cr&eacute;ation et de modification et les noms sont &eacute;tablis automatiquement par le logiciel lorsque des dossiers sont ajout&eacute;s et mis &agrave; jour.</p>
+
+<h3>Code</h3>
+<p>Tous les termes de la Taxonomie doivent avoir un code unique les identifiant. Le code comporte jusqu'&agrave; 6 niveaux, plus la d&eacute;signation <em>Autoris&eacute; ou Local</em>. Lorsqu'on modifie ce champ, il y a une bo&icirc;te pour chaque niveau de la Taxonomie et le statut <em>Autoris&eacute;</em> est &eacute;tabli dans un autre champ. Le format g&eacute;n&eacute;ral d'un code taxonomique est : AA-####.####-###.##-L (le -L indique si le terme est <em>Local / Non-autoris&eacute;</em>).</p>
+<p>&Agrave; noter que pour faire fonctionner la structure de la Taxonomie correctement, chaque terme n&eacute;cessite un terme parent - cela signifie que pour un nouveau terme de niveau 4 avec le code « AB-1111.2222 », un terme avec le code « AB-1111 » doit d&eacute;j&agrave; exister.</p>
+
+<h3>Autoris&eacute;</h3>
+<p>Indique si un terme est un terme « officiel » de la Taxonomie INFO LINE ou sp&eacute;cifique au syst&egrave;me local. <strong>L'utilisation de termes locaux est fortement d&eacute;courag&eacute;e !</strong></p>
+
+<h3>Nom du terme</h3>
+<p>Vous devez donner un nom <em>unique</em> au terme dans au moins une langue. Si vous ne donnez pas de nom &agrave; un terme de la Taxonomie dans une langue donn&eacute;e, il ne sera pas accessible pour la recherche ou l'indexation dans cette langue.</p>
+
+<h3>Source</h3>
+<p>Indique le syst&egrave;me de classification ou le catalogue &agrave; l'origine du terme (p. ex., la Taxonomie AIRS/INFO LINE). La liste des sources peut &ecirc;tre personnalis&eacute;e (voir le lien sur la page de gestion principale de la Taxonomie).</p>
+
+<h3>D&eacute;finition</h3>
+<p>Chaque terme doit avoir une <em>d&eacute;finition</em> officielle indiquant la signification exacte du terme et la mani&egrave;re de l'utiliser. Il est possible de fournir une <em>d&eacute;finition alternative</em> (plus bas dans le formulaire) qui sera &eacute;galement accessible par les recherches par mots-cl&eacute;s, etc., et utilis&eacute;e &agrave; la place de la d&eacute;finition officielle dans tous les affichages autres que ce formulaire. Si vous souhaitez modifier la d&eacute;finition d'un terme autoris&eacute;, vous devriez toujours modifier la <em>d&eacute;finition alternative</em> plut&ocirc;t que la d&eacute;finition officielle.</p>
+
+<h3>Facette</h3>
+<p>De mani&egrave;re optionnelle, vous pouvez s&eacute;lectionner une cat&eacute;gorie g&eacute;n&eacute;rale s'appliquant au terme. La liste des facettes peut &ecirc;tre personnalis&eacute;e (voir le lien sur la page de gestion principale de la Taxonomie).</p>
+<h3>Synonymes</h3>
+<p>Les synonymes repr&eacute;sentent des formulations alternatives et des &eacute;quivalents d'un terme officiel de la Taxonomie. Les synonymes doivent &ecirc;tre uniques - vous ne pouvez pas cr&eacute;er un synonyme qui est d&eacute;j&agrave; utilis&eacute; comme nom ou nom alternatif d'un terme existant.</p>
+<p>Chaque <em>synonyme</em> comporte un statut <em>autoris&eacute;</em>, indiquant si le synonyme provient d'une source officielle ou s'il est local. Toute nouvelle r&eacute;f&eacute;rence ajout&eacute;e doit &ecirc;tre marqu&eacute;e comme Local / Non-autoris&eacute;.</p>
+
+<h3>Renvois (Voir aussi)</h3>
+<p>Un <em>renvoi</em> indique une relations parall&egrave;le entre deux termes (termes connexes). La relation entre termes apparent&eacute;s est toujours bi-directionnelle ; si vous reliez le terme A au terme B, alors le terme B sera automatiquement un <em>renvoi</em> du terme A. De la m&ecirc;me mani&egrave;re, si vous supprimez la relation entre A et B, cela supprimera la relation entre B et A.</p>
+<p>Chaque <em>renvoi</em> a un statut <em>autoris&eacute;</em>, indiquant si le renvoi provient d'une source officielle ou s'il est local, et un statut <em>actif</em>, indiquant si vous pouvez utilisez ce renvoi particulier ou non. Si vous ne souhaitez pas accepter un <em>renvoi</em> autoris&eacute;, vous pouvez l'inactiver plut&ocirc;t que le supprimer. Toute nouvelle r&eacute;f&eacute;rence ajout&eacute;e doit &ecirc;tre marqu&eacute;e comme Local / Non-autoris&eacute;.</p>
+
+<h3>Concepts associ&eacute;s</h3>
+<p>Un terme peut &ecirc;tre associ&eacute; &agrave; plusieurs concepts ou sujets g&eacute;n&eacute;raux appel&eacute;s <em>concepts associ&eacute;s</em>. La liste des concepts associ&eacute;s peut &ecirc;tre personnalis&eacute;e (voir le lien sur la page de gestion principale de la Taxonomie).</p>
+<p>Chaque <em>concept associ&eacute;</em> a un statut <em>autoris&eacute;</em>, indiquant si le concept provient d'une source officielle ou s'il est local, et un statut <em>actif</em>, indiquant si vous pouvez utilisez ce concept particulier ou non. Si vous ne souhaitez pas accepter un <em>concept associ&eacute;</em> autoris&eacute;, vous pouvez l'inactiver plut&ocirc;t que le supprimer. Toute nouvelle r&eacute;f&eacute;rence ajout&eacute;e doit &ecirc;tre marqu&eacute;e comme Local / Non-autoris&eacute;.</p>
+
+<h3>Commentaires</h3>
+<p>De mani&egrave;re optionnelle, vous pouvez pr&eacute;ciser des notes de gestion de donn&eacute;es dans n'importe quelle langue disponible. Cela peut s'av&eacute;rer utile pour indiquer pourquoi un synonyme est d&eacute;sactiv&eacute; ou une d&eacute;finition alternative fournie, par exemple.</p>
+
+<h3>Nom alternatif / D&eacute;finition alternative</h3>
+<p>Si vous ne souhaitez pas utiliser ou afficher le nom ou la d&eacute;finition officielle, vous pouvez fournir un nom ou une d&eacute;finition alternative dans chaque langue disponible. Les noms et d&eacute;finitions alternatives sont inclus dans les recherches par mots-cl&eacute;s sur la Taxonomie et sont utilis&eacute;es &agrave; la place des versions « officielles » dans toutes les sections du logiciel o&ugrave; des termes sont affich&eacute;s.</p>
+
+<h3>URL de l'ic&ocirc;ne</h3>
+<p>De mani&egrave;re optionnelle, vous pouvez fournir un lien vers une image &agrave; afficher &agrave; c&ocirc;t&eacute; du nom du terme dans la recherche <em>Parcourir par cat&eacute;gorie de service</em> (recherche publique). Les ic&ocirc;nes devraient &ecirc;tre de petite taille - il est recommand&eacute; de les limiter &agrave; moins de 20 x 20 pixels.</p>
+
+<h3>Actif</h3>
+<p>Un terme inactif ne peut pas &ecirc;tre ajout&eacute; &agrave; vos dossiers et sera exclu de toutes les sections du syst&egrave;me, sauf la recherche simple sur la Taxonomie pour les super-utilisateurs. Les liens vers des termes inactifs appara&icirc;tront dans la <span class="Alert">couleur d'<em>alerte</em></span> actuelle.</p>
+<p>&Agrave; noter que vous ne pouvez pas modifier le statut d'activation d'un terme s'il est utilis&eacute; par des dossiers d'organismes / programmes.</p>
+<p>On peut &eacute;galement g&eacute;rer les activations en utilisant l'<strong>Outil d'activation</strong> de la Taxonomie ou l'outil <strong>Rapport des recommandations d'activation</strong> de la Taxonomie, tous deux accessibles depuis le menu de gestion principale de la Taxonomie.</p>
+
+<h3>Suppression de l'enregistrement</h3>
+<p>Vous ne verrez le bouton Supprimer en bas du formulaire que s'il est possible de supprimer le terme (il n'est pas utilis&eacute; par un dossier d'organisme / programme ou un autre sujet). Un &eacute;cran de confirmation de la requ&ecirc;te s'affichera lorsque vous supprimez un terme.</p>
+
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

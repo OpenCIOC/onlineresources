@@ -1,0 +1,1 @@
+UPDATE GBL_Template SET bgColorLogo=bgColorHeader

@@ -1,0 +1,216 @@
+﻿/* =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ========================================================================================= */
+
+// FORMS (GENERAL)
+
+.inline-radio-list > label, .inline-checkbox-list label, .inline-no-bold label {
+	font-weight: normal;
+}
+
+@media (min-width: $screen-sm-min) {
+	.inline-radio-list, .inline-checkbox-list {
+	    padding-top: ($padding-base-vertical + 1);
+	}
+}
+
+input[type="checkbox"], input[type="radio"] {
+  margin-right: 0.5em;
+}
+
+input.input-expand, select.input-expand, textarea.input-expand {
+	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.form-inline-always {
+	.form-group {
+		display: inline-block;
+		margin-bottom: 0;
+		vertical-align: middle;
+	}
+	// In navbar-form, allow folks to *not* use `.form-group`
+	.form-control {
+		display: inline-block;
+		width: auto; // Prevent labels from stacking above inputs in `.form-group`
+		vertical-align: middle;
+	}
+	// Make static controls behave like regular ones
+	.form-control-static {
+		display: inline-block;
+	}
+
+	.input-group {
+		display: inline-table;
+		vertical-align: middle;
+
+		.input-group-addon,
+		.input-group-btn,
+		.form-control {
+			width: auto;
+		}
+	}
+	// Input groups need that 100% width though
+	.input-group > .form-control {
+		width: 100%;
+	}
+
+	.control-label {
+		margin-bottom: 0;
+		vertical-align: middle;
+	}
+	// Remove default margin on radios/checkboxes that were used for stacking, and
+	// then undo the floating of radios and checkboxes to match.
+	.radio,
+	.checkbox {
+		display: inline-block;
+		margin-top: 0;
+		margin-bottom: 0;
+		vertical-align: middle;
+
+		label {
+			padding-left: 0;
+		}
+	}
+
+	.radio input[type="radio"],
+	.checkbox input[type="checkbox"] {
+		position: relative;
+		margin-left: 0;
+	}
+	// Re-override the feedback icon.
+	.has-feedback .form-control-feedback {
+		top: 0;
+	}
+}
+
+// FIELD LABELS AND ROWS
+
+div.row-border-bottom {
+	.form-group {
+		margin-top: $form-group-margin-bottom/2;
+		margin-bottom: $form-group-margin-bottom/2;
+	}
+	border-bottom: thin solid $borderColorContent;
+}
+
+.field-label-basic {
+	color: $fcLabel;
+	background-color: $FieldLabelColour;
+	font-weight: bold;
+}
+
+.field-label-basic-clr {
+	font-weight: bold;
+	vertical-align : baseline;
+}
+
+.field-label-cell {
+	@extend .field-label-basic;
+}
+
+.field-label-cell-widelabel {
+	@extend .field-label-basic;
+}
+
+.field-label-cell-clr {
+	@extend .field-label-basic-clr;
+}
+
+.has-feedback-border {
+	border-left: 4px solid $AlertColour !important;
+}
+
+.feedback-item {
+	padding-top: 0.25em;
+}
+
+.form-horizontal .control-label.control-label-left {
+	text-align: left;
+}
+
+.FieldLabel {
+	@extend .field-label-basic;
+	text-align: right;
+}
+
+.FieldLabelLeft {
+	@extend .field-label-basic;
+	text-align: left;
+}
+
+.FieldLabelClr {
+	@extend .field-label-basic-clr;
+	text-align: right;
+}
+
+div.FieldLabelLeftClr {
+	padding-top: 1em;
+}
+
+.FieldLabelLeftClr {
+	@extend .field-label-basic-clr;
+	text-align: left;
+}
+
+.FieldLabelCenterClr {
+	@extend .field-label-basic-clr;
+	text-align: center;
+}
+
+.min-width-fieldlabel {
+	min-width: 11em;
+}
+
+label.error {
+	color: $AlertColour;
+	margin: 0px 4px;
+}
+
+.required-notice label.error {
+	margin: 0px;
+}
+
+.search-group-header label {
+	font-weight: bold;
+}
+
+@media (min-width: $screen-sm-min) {
+	.entryform-checklist-add-wrapper {
+		height: 40px;
+		position: relative;
+	}
+	.entryform-checklist-add-left {
+		left: 0;
+		position: absolute;
+		right: 115px;
+		top: 0;
+	}
+	.entryform-checklist-add-right {
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 90px;
+	}
+}
+select.form-control.placeholder {
+	color: $input-color-placeholder;
+
+	option {
+		color: $input-color;
+	}
+}

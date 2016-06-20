@@ -1,0 +1,156 @@
+[IF:NOT_PRINT_MODE]
+<nav class="navbar navbar-inverse navbar-static-top" id="CIOC_topnav">
+	<div class="container-fluid">
+		[IFALL:VIEW_TITLE,SMALL_TITLE]
+		<div class="navbar-header visible-sm-block visible-xs-block">
+			<div class="navbar-brand navbar-center">[VIEW_TITLE]</div>
+		</div>
+		[ENDIFALL:VIEW_TITLE,SMALL_TITLE]
+		<div class="collapse navbar-collapse CIOC_nav_collapse">
+			[IF:NOT_LOGGED_IN]
+			[IF:LOGOLINK]
+			<ul class="nav navbar-nav navbar-left">
+				<li><a href="[LOGOLINK]"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> [LOGO_ALT_TEXT]</a></li>
+			</ul>
+			[ENDIF:LOGOLINK]
+			[IF:CONTACT_EMAIL]
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="[CONTACT_EMAIL]"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> [CONTACT_US_TEXT]</a></li>
+			</ul>
+			[ENDIF:CONTACT_EMAIL]
+			[ENDIF:NOT_LOGGED_IN]
+			<ul class="nav navbar-nav navbar-right">
+				[IF:VIEW_NAME]
+				<li><a href="#">[VIEW_NAME]</a></li>
+				[ENDIF:VIEW_NAME]
+				[FOR:SITE_BAR_ITEMS]
+				<li><a href="[LINK]">[DISPLAY]</a></li>
+				[ENDFOR:SITE_BAR_ITEMS]
+			</ul>
+			[IFALL:VIEW_TITLE,SMALL_TITLE]
+			<div class="navbar-brand navbar-nav [IF:NOT_LOGGED_IN]navbar-center[ENDIF:NOT_LOGGED_IN][IF:SITE_BAR_ITEMS]navbar-left[ENDIF:SITE_BAR_ITEMS] hidden-sm hidden-xs">[VIEW_TITLE]</div>
+			[ENDIFALL:VIEW_TITLE,SMALL_TITLE]
+		</div>
+	</div>
+</nav>
+[ENDIF:NOT_PRINT_MODE]
+<div class="container[IF:CONTAINER_FLUID]-fluid[ENDIF:CONTAINER_FLUID] [IFNOT:CONTAINER_CONTRAST]container-nocontrast[ENDIFNOT:CONTAINER_CONTRAST][IF:CONTAINER_CONTRAST]container-contrast[ENDIF:CONTAINER_CONTRAST]">
+	<div class="site-header"[IFNOT:CONTAINER_CONTRAST] style="border-top: 0;"[ENDIFNOT:CONTAINER_CONTRAST][IF:CONTAINER_FLUID] style="border-top: 0;"[ENDIF:CONTAINER_FLUID]>
+		[IFANY:LOGO,BANNER,HEADER_NOTICE,VIEW_TITLE]
+		[IF:VIEW_TITLE][IFNOT:SMALL_TITLE]
+		<div class="site-title">
+			<h1>[VIEW_TITLE]</h1>
+		</div>
+		[ENDIFNOT:SMALL_TITLE][ENDIF:VIEW_TITLE]
+		[IFANY:LOGO,BANNER,HEADER_NOTICE]
+		<div class="header-image header-logo [IFNOT:LOGO]header-no-logo[ENDIFNOT:LOGO]" [IF:BANNER] style="background-image: url('[BANNER]')" [ENDIF:BANNER]>
+			<div class="row">
+				[IF:LOGO]
+				<div class="[IF:HEADER_NOTICE]col-sm-4[ENDIF:HEADER_NOTICE][IFNOT:HEADER_NOTICE]col-xs-12[ENDIFNOT:HEADER_NOTICE]">
+					<div id="CIOC_logo">
+						[IF:LOGOLINK]<a class="header-logo-link" href="[LOGOLINK]">
+							[ENDIF:LOGOLINK]
+							<img src="[LOGO]" class="img-rounded img-responsive site-logo" [IF:LOGO_ALT_TEXT]alt="[LOGO_ALT_TEXT]" [ENDIF:LOGO_ALT_TEXT]>
+							[IF:LOGOLINK]
+						</a>[ENDIF:LOGOLINK]
+					</div>
+				</div>
+				[ENDIF:LOGO]
+				[IF:HEADER_NOTICE]
+				<div class="[IF:LOGO]col-sm-8[ENDIF:LOGO][IFNOT:LOGO]col-xs-12[ENDIFNOT:LOGO] hidden-xs">
+					<div class="CIOC_vertical_center_parent" id="CIOC_header_text">
+						<div class="CIOC_vertical_center_child CIOC_header_text_child">
+							[HEADER_NOTICE]
+						</div>
+					</div>
+				</div>
+				[ENDIF:HEADER_NOTICE]
+			</div>
+		</div>
+		[ENDIFANY:LOGO,BANNER,HEADER_NOTICE]
+		[ENDIFANY:LOGO,BANNER,HEADER_NOTICE,VIEW_TITLE]
+		<nav class="navbar navbar-default navbar-static-top" id="CIOC_mainnav">
+			<div class="" id="CIOC_mainnav_container">
+				[IF:NOT_PRINT_MODE]
+				<div class="navbar-header" id="CIOC_mainnav_header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".CIOC_nav_collapse" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">[TOGGLE_MENU_TEXT]</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				</div>
+				<div class="collapse navbar-collapse navbar-left CIOC_nav_collapse CIOC_center_navbar" id="CIOC_mainnav_navbar">
+					<ul class="nav navbar-nav">
+						[FOR:SITE_MENU]
+						<li><a href="[LINK]">[DISPLAY]</a></li>
+						[ENDFOR:SITE_MENU]
+						[IF:SITE_MENU_GROUP_4]
+						<li class="dropdown">
+							<a class="dropdown-toggle" aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" href="#">[HEADERGROUP4] <span class="caret"></span></a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								[FOR:SITE_MENU_GROUP_4]
+								<li><a href="[LINK]">[DISPLAY]</a></li>
+								[ENDFOR:SITE_MENU_GROUP_4]
+							</ul>
+						</li>
+						[ENDIF:SITE_MENU_GROUP_4]
+						[IF:SITE_MENU_GROUP_1]
+						<li class="dropdown">
+							<a class="dropdown-toggle" aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" href="#">[HEADERGROUP1] <span class="caret"></span></a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								[FOR:SITE_MENU_GROUP_1]
+								<li><a href="[LINK]">[DISPLAY]</a></li>
+								[ENDFOR:SITE_MENU_GROUP_1]
+							</ul>
+						</li>
+						[ENDIF:SITE_MENU_GROUP_1]
+						[IF:SITE_MENU_GROUP_2]
+						<li class="dropdown">
+							<a class="dropdown-toggle" aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" href="#">[HEADERGROUP2] <span class="caret"></span></a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								[FOR:SITE_MENU_GROUP_2]
+								<li><a href="[LINK]">[DISPLAY]</a></li>
+								[ENDFOR:SITE_MENU_GROUP_2]
+							</ul>
+						</li>
+						[ENDIF:SITE_MENU_GROUP_2]
+						[IF:SITE_MENU_GROUP_3]
+						<li class="dropdown">
+							<a class="dropdown-toggle" aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" href="#">[HEADERGROUP3] <span class="caret"></span></a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								[FOR:SITE_MENU_GROUP_3]
+								<li><a href="[LINK]">[DISPLAY]</a></li>
+								[ENDFOR:SITE_MENU_GROUP_3]
+							</ul>
+						</li>
+						[ENDIF:SITE_MENU_GROUP_3]
+						<li style="display:none;">[MY_LIST]</li>
+					</ul>
+				</div>
+				[ENDIF:NOT_PRINT_MODE]
+			</div>
+		</nav>
+	</div>
+
+	[IF:VIEW_TAG_LINE]
+	<div class="site-tag-line-bar">
+		<h3 class="site-tag-line">[VIEW_TAG_LINE]</h3>
+	</div>
+	[ENDIF:VIEW_TAG_LINE]
+	[IF:HEADER_NOTICE_MOBILE]
+	<div class="visible-xs">[HEADER_NOTICE_MOBILE]</div>
+	[ENDIF:HEADER_NOTICE_MOBILE]
+
+	[IF:NOT_PRINT_MODE]
+	<ol class="breadcrumb">
+		<li><a href="[NEW_SEARCH]">[HOME]</a></li>
+		<li class="active">
+			[PAGE_NAME]
+			[IF:HELP_LINK]
+			<a href="[HELP_LINK]" target="pHelp" id="CIOC_pagehelplink" onClick="openWinL('[HELP_LINK]', 'pHelp')"><span class="glyphicon glyphicon-question-sign font-size-large" aria-hidden="true" title="[PAGE_HELP_TITLE]"></span></a>
+			[ENDIF:HELP_LINK]
+		</li>
+	</ol>
+	[ENDIF:NOT_PRINT_MODE]
+

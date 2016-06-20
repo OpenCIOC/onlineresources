@@ -1,0 +1,15 @@
+CREATE TABLE [dbo].[VOL_ImportEntry_Data]
+(
+[ER_ID] [int] NOT NULL IDENTITY(1, 1),
+[EF_ID] [int] NOT NULL,
+[OWNER] [char] (3) COLLATE Latin1_General_100_CI_AI NOT NULL,
+[VNUM] [varchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
+[EXTERNAL_ID] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
+[DATA] [xml] NULL,
+[REPORT] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_ImportEntry_Data] ADD CONSTRAINT [PK_VOL_ImportEntry_Data] PRIMARY KEY CLUSTERED  ([ER_ID]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_ImportEntry_Data] ADD CONSTRAINT [FK_VOL_ImportEntry_Data_VOL_ImportEntry_Data] FOREIGN KEY ([EF_ID]) REFERENCES [dbo].[VOL_ImportEntry] ([EF_ID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO

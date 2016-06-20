@@ -1,0 +1,34 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+
+CREATE PROCEDURE [dbo].[sp_VOL_Feedback_u_VNUM]
+	@FB_ID int,
+	@VNUM varchar(10)
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.6
+	Checked by: CL
+	Checked on: 27-Sep-2014
+	Action: TESTING REQUIRED
+*/
+
+IF EXISTS(SELECT * FROM VOL_Opportunity vo WHERE vo.VNUM=@VNUM) BEGIN
+	UPDATE VOL_Feedback
+		SET VNUM=@VNUM
+	WHERE @FB_ID=FB_ID
+		AND VNUM IS NULL
+END
+
+SET NOCOUNT OFF
+
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_VOL_Feedback_u_VNUM] TO [cioc_login_role]
+GO

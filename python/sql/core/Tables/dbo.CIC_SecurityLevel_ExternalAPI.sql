@@ -1,0 +1,12 @@
+CREATE TABLE [dbo].[CIC_SecurityLevel_ExternalAPI]
+(
+[SL_ID] [int] NOT NULL,
+[API_ID] [int] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[CIC_SecurityLevel_ExternalAPI] ADD CONSTRAINT [PK_CIC_SecurityLevel_ExternalAPI] PRIMARY KEY CLUSTERED  ([SL_ID], [API_ID]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[CIC_SecurityLevel_ExternalAPI] ADD CONSTRAINT [FK_CIC_SecurityLevel_ExternalAPI_GBL_ExternalAPI] FOREIGN KEY ([API_ID]) REFERENCES [dbo].[GBL_ExternalAPI] ([API_ID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[CIC_SecurityLevel_ExternalAPI] ADD CONSTRAINT [FK_CIC_SecurityLevel_ExternalAPI_CIC_SecurityLevel] FOREIGN KEY ([SL_ID]) REFERENCES [dbo].[CIC_SecurityLevel] ([SL_ID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO

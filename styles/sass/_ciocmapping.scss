@@ -1,0 +1,209 @@
+﻿/* =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ========================================================================================= */
+
+// MAPPING RELATED
+
+div.GeocodeRecordUpdate {
+	margin-left: 20px;
+	width: 350px;
+	height: 275px;
+}
+
+div.GeocodeRecordFeedback {
+	margin-left: 20px;
+	width: 350px;
+	height: 225px;
+}
+
+div.DetailsMapCanvas {
+	width: 330px;
+	height: 175px;
+	float: right;
+}
+
+div.SearchNearMapCanvas {
+	width: 100%;
+	height: 175px;
+	max-width: 400px;
+}
+
+.MapSearchResults {
+	padding: 0px;
+	overflow: hidden;
+}
+
+.MapSearchResultsSide {
+	right: 0px;
+	top: 0px;
+	height: 100%;
+}
+
+#map_container.MapSearchResultsSide {
+	width: 400px;
+}
+
+#map_canvas.MapSearchResultsSide {
+	width: 393px; 
+}
+
+.MapSearchResultsBottom {
+	width: 100%;
+	bottom: 0px;
+	left: 0px;
+}
+
+#map_container.MapSearchResultsBottom {
+	height: 300px;
+}
+
+#map_canvas.MapSearchResultsBottom {
+	height: 290px;
+}
+
+div.MapSearchShift {
+	position: absolute;
+	overflow: auto; 
+	margin: 0px;
+	padding: 0px;
+	top: 0px;
+	left: 0px;
+}
+div.MapSearchShiftSide {
+	height: 100%;
+}
+
+div.MapSearchShiftBottom {
+	width: 100%;
+}
+
+div.MapPopup {
+	padding: 10px 0px 15px 0px;
+}
+
+#SearchResultsArea {
+	margin-bottom: 20px;
+}
+
+#map_container {
+	border-collapse: collapse;
+	border-spacing: 0px;
+	border-width: 0px;
+
+	td {
+		padding: 0px;
+	}
+}
+
+#bottom-handle, #side-handle {
+	padding: 0px;
+	vertical-align: top;
+	background: #EFEFEF none repeat scroll 0 0;
+}
+
+#side-handle {
+	left: 0;
+}
+#bottom-handle{
+	top: 0;
+	height: 10px;
+}
+
+#map_drag_handle_bottom {
+	margin-left: -10px;
+	margin-top: 2px;
+	position: absolute;
+	right: 50%;
+	width: 20px;
+}
+
+#map_drag_icon_left {
+	border-color: #EFEFEF #666666 #EFEFEF #EFEFEF;
+	border-style: solid;
+	border-width: 5px 5px 5px 0px;
+	height: 0;
+	width: 0;
+	position: absolute;
+	top: 50%;
+	margin-top: -5px;
+}
+#map_drag_icon_right {
+	border-color: #EFEFEF #EFEFEF #EFEFEF #666666;
+	border-style: solid;
+	border-width: 5px 0px 5px 5px;
+	height: 0;
+	width: 0;
+	position: absolute;
+	top: 50%;
+	margin-top: 5px;
+}
+
+#map_drag_icon_up {
+	border-color: #EFEFEF #EFEFEF #666666 #EFEFEF;
+	border-style: solid;
+	border-width: 0px 5px 5px 5px;
+	height: 0;
+	width: 0;
+	float: left;
+}
+
+#map_drag_icon_down {
+	border-color: #666666 #EFEFEF #EFEFEF #EFEFEF;
+	border-style: solid;
+	border-width: 5px 5px 0px 5px;
+	height: 0;
+	width: 0;
+	float: right;
+}
+
+.MapLegendContainer {
+	position: absolute;
+	bottom: 17px;
+	left: -.1em;
+	width: 15.2em;
+	background-color: white;
+	border: 1px solid black;
+	text-align: left;
+}
+
+ul.MapLegendList {
+	padding: 5px 5px 5px 25px;
+	margin: 0px;
+
+	li {
+		margin: auto;
+		padding: 0px;
+	}
+}
+
+@media (max-width: 767px) {
+	div.DetailsMapCanvas {
+		float: none;
+		width: 100%;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+}
+
+.HideMapColumn.ResponsiveResults > thead > tr > th.MapColumn,
+.HideMapColumn.ResponsiveResults > tbody > tr > td.MapColumn,
+.HideMapColumn .MapColumnMobile {
+	display: none;
+}
+
+.address-mapped {
+	float: left;
+}

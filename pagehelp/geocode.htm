@@ -1,0 +1,36 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>The <em>Update Geocoding on Selected Records</em> page uses your choices about mapping type (<em>Current record setting</em>, <em>Site address</em>, <em>Intersection</em>, or <em>No value (do not map)</em>) as well as the mapping category (aka map pin) setting that you selected on the previous page to update the map location and settings of the selected records.</p>
+<h3>Some important things to note:</h3>
+<ul>
+	<li>You are permitted to geocode a maximum of 15,000 locations per day, per IP Address. This would include any locations entered for proximity searching.</li>
+	<li>The geocoding occurs one record at a time. <span class="Alert">If you leave the page before the status has been set for the very last record on the page, your geocoding will not be completed.</span></li>
+	<li>If the status column indicates <strong>Updated</strong>, then the geocoding information in the record has been set (or reset) with a latitude and longitude received from the mapping provider. If a new mapping category or mapping type was selected, those new values have also been updated in the record.</li>
+	<li>If the status column indicates <strong>Unchanged</strong>, then the geocoding information has remained <em>completely unaltered</em> in the record (including any mapping type or mapping category changes you have requested). This occurs for one of the following reasons:
+		<ul>
+			<li>You do not have permission to update the selected record, or</li>
+			<li>You have selected &quot;Current Setting&quot; and the current mapping type is <em>No value (do not map)</em> or <em>Manual placement</em>, or</li>
+			<li>You have selected a mapping type of <em>Intersection</em> or <em>Site address</em> but there are no valid values in those fields.</li>
+		</ul>
+	</li>
+	<li>If the status column indicates that the <strong>Address cannot be found</strong>, then the mapping provider was unable to located the specified location. This may be because some aspect of the address is incorrect (most often street type, street direction, or postal code), so you should review the record for possible errors. Some new or rural locations cannot be mapped automatically; in these cases, use manual placement.</li>
+	<li>If the status column indicates that you should <strong>Contact your system administrator</strong>, this can often occur if you attempt to map large numbers or records in quick succession. Try mapping in smaller sets of less than 500 records at a time, and leave a few minutes in between requests.</li>
+</ul>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified: $Date$</p>

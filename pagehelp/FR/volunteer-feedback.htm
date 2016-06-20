@@ -1,0 +1,48 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>La page <em>« R&eacute;troaction sur le dossier »</em> sert &agrave; deux finalit&eacute;s : sugg&eacute;rer un nouveau dossier ou sugg&eacute;rer des modifications &agrave; un dossier existant. Il s'agit du m&ecirc;me formulaire et des m&ecirc;mes exigences relatives &agrave; la saisie des donn&eacute;es dans les deux cas. Le public (utilisateurs non connect&eacute;s) et les utilisateurs connect&eacute;s peuvent acc&eacute;der &agrave; ces deux fonctions. Si vous souhaitez que le public ait acc&egrave;s &agrave; la version <em>« Proposer un nouveau dossier »</em> du formulaire de r&eacute;troaction, vous devrez fournir un lien vers une page de r&eacute;troaction vide depuis le menu, l'en-t&ecirc;te ou le pied de page dans la vue publique, car ce lien n'est pas fournit automatiquement par le logiciel.</p>
+<p>Contrairement au formulaire de mise &agrave; jour de dossiers, le formulaire de <em>« R&eacute;troaction »</em> ne permet pas de modifier le dossier imm&eacute;diatement. Les changements apport&eacute;s par l'entremise d'une r&eacute;troaction doivent &ecirc;tre r&eacute;vis&eacute;s et valid&eacute;s par le <em>formulaire de mise &agrave; jour</em> avant d'&ecirc;tre mis en &oelig;uvre.</p>
+<p>Un super-utilisateur peut modifier les champs disponibles sur le formulaire de r&eacute;troaction de la vue actuelle, depuis la configuration de la vue.</p>
+<h3>Politique d'inclusion des dossiers</h3>
+<p>Si vous sugg&eacute;rez un nouveau dossier, un lien vers la Politique d'inclusion des dossiers appara&icirc;tra en haut du formulaire, le cas &eacute;ch&eacute;ant. Si vous donnez un lien au public pour sugg&eacute;rer un nouveau dossier, vous devez vous assurer qu'une Politique d'inclusion est disponible. Votre politique d'inclusion des dossiers doit mentionner clairement quels types de dossiers sont inclus dans votre base de donn&eacute;es et sous quelles conditions. Un super-utilisateur peut ajouter ou modifier une politique en allant dans le menu <em>Configuration &gt; Politiques d'inclusion des dossiers</em>.</p>
+<h3>Renseignements sur les champs</h3>
+<p>Si de l'aide sur un champ est disponible, une ic&ocirc;ne de point d'interrogation appara&icirc;tra &agrave; c&ocirc;t&eacute; du champ <img alt="Aide" border="0" src="../images/help.gif" />. Le fait de cliquer sur cette image ouvrira une fen&ecirc;tre contextuelle contenant l'aide sur le champ. Pour personnaliser l'aide sur les champs en fonction de vos besoins et utilisations locales, un super-utilisateur peut modifier le contenu depuis la section <em>Aide pour les champs de renseignements</em> de la <em>Configuration</em>.</p>
+<p><span class="Alert">*</span> - Si un champ est d&eacute;sign&eacute; comme « exig&eacute; », un ast&eacute;risque d'alerte de couleur rouge appara&icirc;tra &agrave; c&ocirc;t&eacute;. &Agrave; noter que le formulaire de r&eacute;troaction ne vous <em>force</em> pas &agrave; remplir les &eacute;l&eacute;ments de donn&eacute;es obligatoires d'un dossier, m&ecirc;me si l'option « Appliquer les champs obligatoires » est activ&eacute;e dans le logiciel - Le <span class="Alert">*</span> n'a pour but que d'informer.</p>
+<h3>Avant d'envoyer...</h3>
+<p>Au bas du formulaire, un ensemble de champs obligatoires doivent &ecirc;tre remplis avant de soumettre la mise &agrave; jour. Cette section du formulaire peut contenir diff&eacute;rentes directives, selon si la personne qui soumet la r&eacute;troaction est connect&eacute;e, ses autorisations et les param&egrave;tres de la vue actuelle.</p>
+<ul>
+	<li><strong>Renseignements personnels</strong> - Si l'utilisateur n'est pas connect&eacute;, il devra saisir son nom et son t&eacute;l&eacute;phone ou adresse courriel. Les autres renseignements dans cette section sont facultatifs.</li>
+	<li><strong>Source de l'information</strong> - Si l'utilisateur est connect&eacute;, il doit pr&eacute;ciser d'o&ugrave; proviennent les informations sur les changements. Les sources d'information pr&eacute;c&eacute;dentes seront d&eacute;j&agrave; r&eacute;f&eacute;renc&eacute;es dans ces champs.</li>
+	<li><strong>Directives particuli&egrave;res</strong> - Facultatif, s'il existe des commentaires g&eacute;n&eacute;raux relatifs aux modifications sugg&eacute;r&eacute;es.</li>
+	<li><strong>Nature des changements apport&eacute;s</strong> - Tous les utilisateurs doivent pr&eacute;ciser si les modifications sugg&eacute;r&eacute;es constituent une mise &agrave; jour compl&egrave;te ou partielle, ou si le dossier doit &ecirc;tre retir&eacute;.</li>
+	<li><strong>Notifications</strong> - Cette section sera visible si votre niveau de s&eacute;curit&eacute; vous permet de supprimer les notifications par courriel. Les notifications seront supprim&eacute;es par d&eacute;faut (consultez la section suivante pour des informations sur les notifications par courriel).</li>
+	<li><strong>Test de protection</strong> - Si l'utilisateur n'est pas connect&eacute;, il doit r&eacute;pondre &agrave; une question simple pour s'assurer qu'une vraie personne envoie le formulaire et non un robot spammeur.</li>
+</ul>
+<h3>Notifications par courriel</h3>
+<p>Lorsqu'une r&eacute;troaction est envoy&eacute;e, une entr&eacute;e pour cette r&eacute;troaction est cr&eacute;&eacute;e dans la base de donn&eacute;es, puis utilis&eacute;e plus tard pour rendre les changements accessibles lors de la mise &agrave; jour ou de la cr&eacute;ation du dossier. En plus de cette entr&eacute;e dans la base de donn&eacute;es, un certain nombre de notifications par courriel peuvent &ecirc;tre envoy&eacute;es (en admettant qu'elles n'ont pas &eacute;t&eacute; supprim&eacute;es - consultez <em>Notifications</em> dans <em>« Avant d'envoyer... »</em> ci-dessus). Les notifications par courriel comprendront un r&eacute;sum&eacute; de tous les changements au dossier requis ; chaque agence doit disposer d'une politique officielle pr&eacute;cisant si ces courriels sont conserv&eacute;s pour consultation future et pour combien de temps.</p>
+<p>Qui re&ccedil;oit ces courriels ?</p>
+<ul>
+	<li>Si la soumission provient d'un utilisateur <em>non connect&eacute;</em> et que ce <strong>d&eacute;posant</strong> a fourni une adresse courriel, il recevra un courriel de confirmation.</li>
+	<li>Si la <strong>personne contact</strong> de l'occasion mise &agrave; jour dispose d'une adresse courriel qui est diff&eacute;rente de l'adresse du d&eacute;posant, la personne contact recevra un courriel. On peut supprimer ce courriel.</li>
+	<li>Le courriel des mises &agrave; jour associ&eacute;es &agrave; l'<strong>agence propri&eacute;taire des dossiers</strong> recevra une copie des changements sugg&eacute;r&eacute;s. On peut modifier l'adresse courriel depuis la page de configuration <em>Agences</em>. On peut supprimer ce courriel.</li>
+</ul>
+<h3>Apr&egrave;s avoir envoy&eacute;</h3>
+<p>Si tous les renseignements requis dans <em>Avant d'envoyer</em> sont remplis correctement, l'utilisateur recevra une notification indiquant les changements accept&eacute;s. Un super-utilisateur peut personnaliser le message que l'utilisateur recevra dans <em>Installation &gt; Options g&eacute;n&eacute;rales de configuration</em>. S'il s'agit d'une r&eacute;troaction sur un dossier existant, l'utilisateur sera redirig&eacute; vers la page <em>D&eacute;tails sur le dossier d'organisme</em>.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

@@ -1,0 +1,730 @@
+
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_GBL_BaseTable_i_CopyLang]
+	@MODIFIED_BY varchar(50),
+	@NUM varchar(8),
+	@NewLangID smallint,
+	@ErrMsg nvarchar(500) OUTPUT
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.5.2
+	Checked by: KL
+	Checked on: 06-Oct-2013
+	Action: NO ACTION REQUIRED
+*/
+
+DECLARE	@Error	int
+SET @Error = 0
+
+DECLARE	@OrganizationObjectName nvarchar(60),
+		@RecordNumberName nvarchar(60)
+
+SET @OrganizationObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Organization / Program Record')
+SET @RecordNumberName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Record #')
+
+DECLARE	@MODIFIED_DATE datetime
+SET @MODIFIED_DATE = GETDATE()
+
+SET @NUM = RTRIM(LTRIM(@NUM))
+
+/* Identify errors that will prevent the record from being updated */
+-- Record Number provided ?
+IF @NUM IS NULL OR @NUM = '' BEGIN
+	SET @Error = 10 -- Required field
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @RecordNumberName, @OrganizationObjectName)
+-- Copy Record exists ?
+END ELSE IF NOT EXISTS(SELECT * FROM GBL_BaseTable_Description WHERE NUM=@NUM AND LangID=@@LANGID) BEGIN
+	SET @Error = 3 -- No Such Record
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @NUM, @OrganizationObjectName)
+-- Copy To Record exists ?
+END ELSE IF EXISTS(SELECT * FROM GBL_BaseTable_Description WHERE NUM=@NUM AND LangID=@NewLangID) BEGIN
+	SET @Error = 6 -- Value exists
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, (SELECT LanguageName FROM STP_Language WHERE LangID=@NewLangID), @OrganizationObjectName)
+END ELSE BEGIN
+	INSERT INTO GBL_BaseTable_Description (
+		NUM,
+		LangID,
+		CREATED_DATE,
+		CREATED_BY,
+		MODIFIED_DATE,
+		MODIFIED_BY,
+		NON_PUBLIC,
+		ORG_LEVEL_1,
+		ORG_LEVEL_2,
+		ORG_LEVEL_3,
+		ORG_LEVEL_4,
+		ORG_LEVEL_5,
+		O2_PUBLISH,
+		O3_PUBLISH,
+		O4_PUBLISH,
+		O5_PUBLISH,
+		LEGAL_ORG,
+		LO_PUBLISH,
+		LOCATION_NAME,
+		SERVICE_NAME_LEVEL_1,
+		SERVICE_NAME_LEVEL_2,
+		S1_PUBLISH,
+		S2_PUBLISH,
+		SORT_AS,
+		SORT_AS_USELETTER,
+		ACCESSIBILITY_NOTES,
+		ORG_DESCRIPTION,
+		LOCATION_DESCRIPTION,
+		DESCRIPTION,
+		ESTABLISHED,
+		E_MAIL,
+		FAX,
+		GEOCODE_NOTES,
+		MAIL_CARE_OF,
+		MAIL_BOX_TYPE,
+		MAIL_PO_BOX,
+		MAIL_BUILDING,
+		MAIL_STREET_NUMBER,
+		MAIL_STREET,
+		MAIL_STREET_TYPE,
+		MAIL_STREET_TYPE_AFTER,
+		MAIL_STREET_DIR,
+		MAIL_SUFFIX,
+		MAIL_CITY,
+		MAIL_PROVINCE,
+		MAIL_COUNTRY,
+		OFFICE_PHONE,
+		TOLL_FREE_PHONE,
+		SITE_BUILDING,
+		SITE_STREET_NUMBER,
+		SITE_STREET,
+		SITE_STREET_TYPE,
+		SITE_STREET_TYPE_AFTER,
+		SITE_STREET_DIR,
+		SITE_SUFFIX,
+		SITE_CITY,
+		SITE_PROVINCE,
+		SITE_COUNTRY,
+		WWW_ADDRESS,
+		SOURCE_NAME,
+		SOURCE_TITLE,
+		SOURCE_ORG,
+		SOURCE_PHONE,
+		SOURCE_FAX,
+		SOURCE_EMAIL,
+		SOURCE_BUILDING,
+		SOURCE_ADDRESS,
+		SOURCE_CITY,
+		SOURCE_PROVINCE,
+		SOURCE_POSTAL_CODE,
+		SOURCE_DB,
+		SUBMIT_CHANGES_TO,
+		SUBMIT_CHANGES_TO_PROTOCOL
+	)
+	SELECT 	NUM,
+			@NewLangID,
+			GETDATE(),
+			@MODIFIED_BY,
+			GETDATE(),
+			@MODIFIED_BY,
+			1,
+			ORG_LEVEL_1,
+			ORG_LEVEL_2,
+			ORG_LEVEL_3,
+			ORG_LEVEL_4,
+			ORG_LEVEL_5,
+			O2_PUBLISH,
+			O3_PUBLISH,
+			O4_PUBLISH,
+			O5_PUBLISH,
+			LEGAL_ORG,
+			LO_PUBLISH,
+			LOCATION_NAME,
+			SERVICE_NAME_LEVEL_1,
+			SERVICE_NAME_LEVEL_2,
+			S1_PUBLISH,
+			S2_PUBLISH,
+			SORT_AS,
+			SORT_AS_USELETTER,
+			ACCESSIBILITY_NOTES,
+			ORG_DESCRIPTION,
+			LOCATION_DESCRIPTION,
+			DESCRIPTION,
+			ESTABLISHED,
+			E_MAIL,
+			FAX,
+			GEOCODE_NOTES,
+			MAIL_CARE_OF,
+			MAIL_BOX_TYPE,
+			MAIL_PO_BOX,
+			MAIL_BUILDING,
+			MAIL_STREET_NUMBER,
+			MAIL_STREET,
+			MAIL_STREET_TYPE,
+			MAIL_STREET_TYPE_AFTER,
+			MAIL_STREET_DIR,
+			MAIL_SUFFIX,
+			MAIL_CITY,
+			MAIL_PROVINCE,
+			MAIL_COUNTRY,
+			OFFICE_PHONE,
+			TOLL_FREE_PHONE,
+			SITE_BUILDING,
+			SITE_STREET_NUMBER,
+			SITE_STREET,
+			SITE_STREET_TYPE,
+			SITE_STREET_TYPE_AFTER,
+			SITE_STREET_DIR,
+			SITE_SUFFIX,
+			SITE_CITY,
+			SITE_PROVINCE,
+			SITE_COUNTRY,
+			WWW_ADDRESS,
+			SOURCE_NAME,
+			SOURCE_TITLE,
+			SOURCE_ORG,
+			SOURCE_PHONE,
+			SOURCE_FAX,
+			SOURCE_EMAIL,
+			SOURCE_BUILDING,
+			SOURCE_ADDRESS,
+			SOURCE_CITY,
+			SOURCE_PROVINCE,
+			SOURCE_POSTAL_CODE,
+			SOURCE_DB,
+			SUBMIT_CHANGES_TO,
+			SUBMIT_CHANGES_TO_PROTOCOL
+		FROM GBL_BaseTable_Description WHERE NUM=@NUM AND LangID=@@LANGID
+
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	IF @Error = 0 BEGIN
+		INSERT INTO CIC_BaseTable_Description (
+			NUM,
+			LangID,
+			CREATED_DATE,
+			CREATED_BY,
+			MODIFIED_DATE,
+			MODIFIED_BY,
+			ACTIVITY_NOTES,
+			AFTER_HRS_PHONE,
+			APPLICATION,
+			AREAS_SERVED_NOTES,
+			BOUNDARIES,
+			COMMENTS,
+			CRISIS_PHONE,
+			DATES,
+			ELIGIBILITY_NOTES,
+			ELECTIONS,
+			FEE_ASSISTANCE_FOR,
+			FEE_ASSISTANCE_FROM,
+			FEE_NOTES,
+			FUNDING_NOTES,
+			HOURS,
+			INTERSECTION,
+			LANGUAGE_NOTES,
+			LOGO_ADDRESS,
+			LOGO_ADDRESS_LINK,
+			MEETINGS,
+			MEMBERSHIP_NOTES,
+			PUBLIC_COMMENTS,
+			PRINT_MATERIAL,
+			RESOURCES,
+			SITE_LOCATION,
+			SUP_DESCRIPTION,
+			TDD_PHONE,
+			TRANSPORTATION,
+			VACANCY_NOTES,
+			SRCH_Taxonomy_U,
+			SRCH_Subjects_U
+		)
+		SELECT 	NUM,
+				@NewLangID,
+				GETDATE(),
+				@MODIFIED_BY,
+				GETDATE(),
+				@MODIFIED_BY,
+				ACTIVITY_NOTES,
+				AFTER_HRS_PHONE,
+				APPLICATION,
+				AREAS_SERVED_NOTES,
+				BOUNDARIES,
+				COMMENTS,
+				CRISIS_PHONE,
+				DATES,
+				ELIGIBILITY_NOTES,
+				ELECTIONS,
+				FEE_ASSISTANCE_FOR,
+				FEE_ASSISTANCE_FROM,
+				FEE_NOTES,
+				FUNDING_NOTES,
+				HOURS,
+				INTERSECTION,
+				LANGUAGE_NOTES,
+				LOGO_ADDRESS,
+				LOGO_ADDRESS_LINK,
+				MEETINGS,
+				MEMBERSHIP_NOTES,
+				PUBLIC_COMMENTS,
+				PRINT_MATERIAL,
+				RESOURCES,
+				SITE_LOCATION,
+				SUP_DESCRIPTION,
+				TDD_PHONE,
+				TRANSPORTATION,
+				VACANCY_NOTES,
+				1,
+				1
+			FROM CIC_BaseTable_Description WHERE NUM=@NUM AND LangID=@@LANGID
+
+		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+	END
+
+	IF @Error = 0 BEGIN
+		INSERT INTO CCR_BaseTable_Description (
+			NUM,
+			LangID,
+			CREATED_DATE,
+			CREATED_BY,
+			MODIFIED_DATE,
+			MODIFIED_BY,
+			BEST_TIME_TO_CALL,
+			LC_NOTES,
+			SCHOOL_ESCORT_NOTES,
+			SCHOOLS_IN_AREA_NOTES,
+			SPACE_AVAILABLE_NOTES,
+			TYPE_OF_CARE_NOTES
+		)
+		SELECT 	NUM,
+				@NewLangID,
+				GETDATE(),
+				@MODIFIED_BY,
+				GETDATE(),
+				@MODIFIED_BY,
+				BEST_TIME_TO_CALL,
+				LC_NOTES,
+				SCHOOL_ESCORT_NOTES,
+				SCHOOLS_IN_AREA_NOTES,
+				SPACE_AVAILABLE_NOTES,
+				TYPE_OF_CARE_NOTES
+			FROM CCR_BaseTable_Description WHERE NUM=@NUM AND LangID=@@LANGID
+
+		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+	END
+
+	INSERT INTO CCR_BT_SCH_Notes (
+		BT_SCH_ID,
+		LangID,
+		EscortNotes,
+		InAreaNotes
+	)
+	SELECT	n1.BT_SCH_ID,
+			@NewLangID,
+			EscortNotes,
+			InAreaNotes
+		FROM CCR_BT_SCH_Notes n1
+		INNER JOIN CCR_BT_SCH n2
+			ON n1.BT_SCH_ID=n2.BT_SCH_ID
+		WHERE NUM=@NUM AND LangID=@@LANGID
+			AND NOT EXISTS(SELECT * FROM CCR_BT_SCH_Notes WHERE BT_SCH_ID=n1.BT_SCH_ID AND LangID=@NewLangID)
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO CCR_BT_TOC_Notes (
+		BT_TOC_ID,
+		LangID,
+		Notes
+	)
+	SELECT	n1.BT_TOC_ID,
+			@NewLangID,
+			Notes
+		FROM CCR_BT_TOC_Notes n1
+		INNER JOIN CCR_BT_TOC n2
+			ON n1.BT_TOC_ID=n2.BT_TOC_ID
+		WHERE NUM=@NUM AND LangID=@@LANGID
+			AND NOT EXISTS(SELECT * FROM CCR_BT_TOC_Notes WHERE BT_TOC_ID=n1.BT_TOC_ID AND LangID=@NewLangID)
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO CIC_BT_ACT_Notes (
+		BT_ACT_ID,
+		LangID,
+		ActivityName,
+		ActivityDescription,
+		Notes
+	)
+	SELECT	n1.BT_ACT_ID,
+			@NewLangID,
+			ActivityName,
+			ActivityDescription,
+			Notes
+		FROM CIC_BT_ACT_Notes n1
+		INNER JOIN CIC_BT_ACT n2
+			ON n1.BT_ACT_ID=n2.BT_ACT_ID
+		WHERE NUM=@NUM AND LangID=@@LANGID
+			AND NOT EXISTS(SELECT * FROM CIC_BT_ACT_Notes WHERE BT_ACT_ID=n1.BT_ACT_ID AND LangID=@NewLangID)
+
+	INSERT INTO CIC_BT_CM_Notes (
+		BT_CM_ID,
+		LangID,
+		Notes
+	)
+	SELECT	n1.BT_CM_ID,
+			@NewLangID,
+			Notes
+		FROM CIC_BT_CM_Notes n1
+		INNER JOIN CIC_BT_CM n2
+			ON n1.BT_CM_ID=n2.BT_CM_ID
+		WHERE NUM=@NUM AND LangID=@@LANGID
+			AND NOT EXISTS(SELECT * FROM CIC_BT_CM_Notes WHERE BT_CM_ID=n1.BT_CM_ID AND LangID=@NewLangID)
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO CIC_BT_EXTRA_EMAIL (
+		FieldName,
+		NUM,
+		[LangID],
+		[Value]
+	)
+	SELECT	FieldName,
+		NUM,
+		@NewLangID,
+		[Value]
+		FROM CIC_BT_EXTRA_EMAIL
+		WHERE NUM=@NUM AND LangID=@@LANGID
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO CIC_BT_EXTRA_TEXT (
+		FieldName,
+		NUM,
+		[LangID],
+		[Value]
+	)
+	SELECT	FieldName,
+		NUM,
+		@NewLangID,
+		[Value]
+		FROM CIC_BT_EXTRA_TEXT
+		WHERE NUM=@NUM AND LangID=@@LANGID
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO CIC_BT_EXTRA_WWW (
+		FieldName,
+		NUM,
+		[LangID],
+		[Value]
+	)
+	SELECT	FieldName,
+		NUM,
+		@NewLangID,
+		[Value]
+		FROM CIC_BT_EXTRA_WWW
+		WHERE NUM=@NUM AND LangID=@@LANGID
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO CIC_BT_FD_Notes (
+		BT_FD_ID,
+		LangID,
+		Notes
+	)
+	SELECT	n1.BT_FD_ID,
+			@NewLangID,
+			Notes
+		FROM CIC_BT_FD_Notes n1
+		INNER JOIN CIC_BT_FD n2
+			ON n1.BT_FD_ID=n2.BT_FD_ID
+		WHERE NUM=@NUM AND LangID=@@LANGID
+			AND NOT EXISTS(SELECT * FROM CIC_BT_FD_Notes WHERE BT_FD_ID=n1.BT_FD_ID AND LangID=@NewLangID)
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO CIC_BT_FT_Notes (
+		BT_FT_ID,
+		LangID,
+		Notes
+	)
+	SELECT	n1.BT_FT_ID,
+			@NewLangID,
+			Notes
+		FROM CIC_BT_FT_Notes n1
+		INNER JOIN CIC_BT_FT n2
+			ON n1.BT_FT_ID=n2.BT_FT_ID
+		WHERE NUM=@NUM AND LangID=@@LANGID
+			AND NOT EXISTS(SELECT * FROM CIC_BT_FT_Notes WHERE BT_FT_ID=n1.BT_FT_ID AND LangID=@NewLangID)
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO CIC_BT_LN_Notes (
+		BT_LN_ID,
+		LangID,
+		Notes
+	)
+	SELECT	n1.BT_LN_ID,
+			@NewLangID,
+			Notes
+		FROM CIC_BT_LN_Notes n1
+		INNER JOIN CIC_BT_LN n2
+			ON n1.BT_LN_ID=n2.BT_LN_ID
+		WHERE NUM=@NUM AND LangID=@@LANGID
+			AND NOT EXISTS(SELECT * FROM CIC_BT_LN_Notes WHERE BT_LN_ID=n1.BT_LN_ID AND LangID=@NewLangID)
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO CIC_BT_OTHERADDRESS (
+		NUM,
+		LangID,
+		TITLE,
+		SITE_CODE,
+		CARE_OF,
+		BOX_TYPE,
+		PO_BOX,
+		BUILDING,
+		STREET_NUMBER,
+		STREET,
+		STREET_TYPE,
+		STREET_TYPE_AFTER,
+		STREET_DIR,
+		SUFFIX,
+		CITY,
+		PROVINCE,
+		COUNTRY,
+		POSTAL_CODE,
+		MAP_LINK
+	)
+	SELECT	NUM,
+			@NewLangID,
+			TITLE,
+			SITE_CODE,
+			CARE_OF,
+			BOX_TYPE,
+			PO_BOX,
+			BUILDING,
+			STREET_NUMBER,
+			STREET,
+			STREET_TYPE,
+			STREET_TYPE_AFTER,
+			STREET_DIR,
+			SUFFIX,
+			CITY,
+			PROVINCE,
+			COUNTRY,
+			POSTAL_CODE,
+			MAP_LINK
+		FROM CIC_BT_OTHERADDRESS
+		WHERE NUM=@NUM AND LangID=@@LANGID
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO CIC_BT_VUT_Notes (
+		BT_VUT_ID,
+		LangID,
+		ServiceTitle,
+		Notes
+	)
+	SELECT	n1.BT_VUT_ID,
+			@NewLangID,
+			ServiceTitle,
+			Notes
+		FROM CIC_BT_VUT_Notes n1
+		INNER JOIN CIC_BT_VUT n2
+			ON n1.BT_VUT_ID=n2.BT_VUT_ID
+		WHERE NUM=@NUM AND LangID=@@LANGID
+			AND NOT EXISTS(SELECT * FROM CIC_BT_VUT_Notes WHERE BT_VUT_ID=n1.BT_VUT_ID AND LangID=@NewLangID)
+
+	INSERT INTO GBL_BT_AC_Notes (
+		BT_AC_ID,
+		LangID,
+		Notes
+	)
+	SELECT	n1.BT_AC_ID,
+			@NewLangID,
+			Notes
+		FROM GBL_BT_AC_Notes n1
+		INNER JOIN GBL_BT_AC n2
+			ON n1.BT_AC_ID=n2.BT_AC_ID
+		WHERE NUM=@NUM AND LangID=@@LANGID
+			AND NOT EXISTS(SELECT * FROM GBL_BT_AC_Notes WHERE BT_AC_ID=n1.BT_AC_ID AND LangID=@NewLangID)
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO GBL_BT_ALTORG (
+		NUM,
+		LangID,
+		ALT_ORG,
+		PUBLISH
+	)
+	SELECT	NUM,
+			@NewLangID,
+			ALT_ORG,
+			PUBLISH
+		FROM GBL_BT_ALTORG n1
+		WHERE NUM=@NUM AND LangID=@@LANGID
+			AND NOT EXISTS(SELECT * FROM GBL_BT_ALTORG WHERE NUM=n1.NUM AND LangID=@NewLangID AND ALT_ORG=n1.ALT_ORG)
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO GBL_BT_BILLINGADDRESS (
+		NUM,
+		LangID,
+		ADDRTYPE,
+		SITE_CODE,
+		LINE_1,
+		LINE_2,
+		LINE_3,
+		LINE_4,
+		CITY,
+		PROVINCE,
+		COUNTRY,
+		POSTAL_CODE
+	)
+	SELECT	NUM,
+			@NewLangID,
+			ADDRTYPE,
+			SITE_CODE,
+			LINE_1,
+			LINE_2,
+			LINE_3,
+			LINE_4,
+			CITY,
+			PROVINCE,
+			COUNTRY,
+			POSTAL_CODE
+		FROM GBL_BT_BILLINGADDRESS
+		WHERE NUM=@NUM AND LangID=@@LANGID
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO GBL_BT_FORMERORG (
+		NUM,
+		LangID,
+		FORMER_ORG,
+		DATE_OF_CHANGE,
+		PUBLISH
+	)
+	SELECT	NUM,
+			@NewLangID,
+			FORMER_ORG,
+			DATE_OF_CHANGE,
+			PUBLISH
+		FROM GBL_BT_FORMERORG n1
+		WHERE NUM=@NUM AND LangID=@@LANGID
+			AND NOT EXISTS(SELECT * FROM GBL_BT_FORMERORG WHERE NUM=n1.NUM AND LangID=@NewLangID AND FORMER_ORG=n1.FORMER_ORG)
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO GBL_BT_SM (
+		NUM,
+		LangID,
+		SM_ID,
+		Protocol,
+		URL
+	)
+	SELECT	NUM,
+			@NewLangID,
+			SM_ID,
+			Protocol,
+			URL
+		FROM GBL_BT_SM s1
+		WHERE NUM=@NUM AND LangID=@@LANGID
+			AND NOT EXISTS(SELECT * FROM GBL_BT_SM WHERE NUM=s1.NUM AND LangID=@NewLangID AND SM_ID=s1.SM_ID)
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	INSERT INTO GBL_Contact (
+		GblContactType,
+		GblNUM,
+		LangID,
+		CREATED_DATE, CREATED_BY, MODIFIED_DATE, MODIFIED_BY,
+		NAME_HONORIFIC,
+		NAME_FIRST,
+		NAME_LAST,
+		NAME_SUFFIX,
+		TITLE,
+		ORG,
+		EMAIL,
+		FAX_NOTE,
+		FAX_NO,
+		FAX_EXT,
+		FAX_CALLFIRST,
+		PHONE_1_TYPE,
+		PHONE_1_NOTE,
+		PHONE_1_NO,
+		PHONE_1_EXT,
+		PHONE_1_OPTION,
+		PHONE_2_TYPE,
+		PHONE_2_NOTE,
+		PHONE_2_NO,
+		PHONE_2_EXT,
+		PHONE_2_OPTION,
+		PHONE_3_TYPE,
+		PHONE_3_NOTE,
+		PHONE_3_NO,
+		PHONE_3_EXT,
+		PHONE_3_OPTION
+	)
+	SELECT
+		GblContactType,
+		GblNUM,
+		@NewLangID,
+		@MODIFIED_DATE, @MODIFIED_BY, @MODIFIED_DATE, @MODIFIED_BY,
+		NAME_HONORIFIC,
+		NAME_FIRST,
+		NAME_LAST,
+		NAME_SUFFIX,
+		TITLE,
+		ORG,
+		EMAIL,
+		FAX_NOTE,
+		FAX_NO,
+		FAX_EXT,
+		FAX_CALLFIRST,
+		PHONE_1_TYPE,
+		PHONE_1_NOTE,
+		PHONE_1_NO,
+		PHONE_1_EXT,
+		PHONE_1_OPTION,
+		PHONE_2_TYPE,
+		PHONE_2_NOTE,
+		PHONE_2_NO,
+		PHONE_2_EXT,
+		PHONE_2_OPTION,
+		PHONE_3_TYPE,
+		PHONE_3_NOTE,
+		PHONE_3_NO,
+		PHONE_3_EXT,
+		PHONE_3_OPTION
+		FROM GBL_Contact
+		WHERE GblNUM=@NUM AND LangID=@@LANGID
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+	
+	INSERT INTO GBL_RecordNote (
+		GblNoteType,
+		GblNUM,
+		LangID,
+		CREATED_DATE, CREATED_BY, MODIFIED_DATE, MODIFIED_BY,
+		CANCELLED_DATE, CANCELLED_BY, CancelError,
+		NoteTypeID,
+		Value
+	)
+	SELECT
+		GblNoteType,
+		GblNUM,
+		@NewLangID,
+		CREATED_DATE, CREATED_BY, MODIFIED_DATE, MODIFIED_BY,
+		CANCELLED_DATE, CANCELLED_BY, CancelError,
+		NoteTypeID,
+		Value
+		FROM GBL_RecordNote
+		WHERE GblNUM=@NUM AND LangID=@@LANGID
+	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
+
+	IF @Error = 0 BEGIN
+		EXEC sp_CIC_SRCH_u
+		EXEC sp_GBL_BaseTable_History_i @MODIFIED_BY, @MODIFIED_DATE, @NUM, NULL, 0, @NewLangID
+	END
+
+END
+
+RETURN @Error
+
+SET NOCOUNT OFF
+
+
+
+
+
+
+GO
+
+GRANT EXECUTE ON  [dbo].[sp_GBL_BaseTable_i_CopyLang] TO [cioc_login_role]
+GO

@@ -1,0 +1,12 @@
+CREATE TABLE [dbo].[VOL_Page_View]
+(
+[PageID] [int] NOT NULL,
+[ViewType] [int] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_Page_View] ADD CONSTRAINT [PK_VOL_Page_View] PRIMARY KEY CLUSTERED  ([PageID], [ViewType]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_Page_View] ADD CONSTRAINT [FK_VOL_Page_View_GBL_Page] FOREIGN KEY ([PageID]) REFERENCES [dbo].[GBL_Page] ([PageID]) ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[VOL_Page_View] ADD CONSTRAINT [FK_VOL_Page_View_VOL_View] FOREIGN KEY ([ViewType]) REFERENCES [dbo].[VOL_View] ([ViewType]) ON DELETE CASCADE
+GO

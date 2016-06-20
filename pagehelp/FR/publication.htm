@@ -1,0 +1,73 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>Cette page vous permet de cr&eacute;er un nouveau code pour une <em>publication</em> (un regroupement de dossiers) ou de modifier un code de publication existant. Cette page <strong>n'est pas</strong> utilis&eacute;e pour modifier les renseignements de dossiers inclus dans une publication - seulement les informations sur la publication elle-m&ecirc;me.</p>
+<p>Une publication s'av&egrave;re utile pour :</p>
+<ul>
+	<li>marquer des ensembles de dossiers que vous devez souvent imprimer en groupe</li>
+	<li>cr&eacute;er un ensemble de dossiers connexes &agrave; utiliser dans le menu d&eacute;roulant <em>« Liste rapide »</em> sur la page de recherche simple</li>
+	<li>cr&eacute;er une vue de la base de donn&eacute;es qui ne contient qu'une s&eacute;lection de vos dossiers (appel&eacute; &eacute;galement <em>« vue par publication »</em></li>
+	<li>cr&eacute;er une classification personnalis&eacute;e s'appliquant uniquement &agrave; la s&eacute;lection de dossiers (effectu&eacute; par le syst&egrave;me d'en-t&ecirc;tes g&eacute;n&eacute;raux qui font partie des publications)</li>
+	<li>cr&eacute;er un champ de texte personnalis&eacute; s'appliquant uniquement &agrave; certains dossiers (effectu&eacute; par l'utilisation d'un champ Description de publication)</li>
+</ul>
+<p>Pour les regroupements de dossiers tr&egrave;s simples (exportation de donn&eacute;es, partage, utilisation interne, etc.), les <em>codes de distribution</em> peuvent repr&eacute;senter un choix plus adapt&eacute;s, car ils sont plus simples &agrave; g&eacute;rer.</p>
+
+<h3>Listes des publications</h3>
+<p>Les publications sur cette page sont r&eacute;parties en trois sections :</p>
+<ul>
+	<li>Liste principale des <strong>publications d&eacute;tenues/g&eacute;r&eacute;es par vous (votre membri&eacute;t&eacute;)</strong>. Dans une base de donn&eacute;es &agrave; membre unique, c'est la seule liste disponible.</li>
+	<li><strong>Publications partag&eacute;es</strong>. Dans une base de donn&eacute;es multimembre, il s'agit des publications qui peuvent &ecirc;tre utilis&eacute;es par tous les membres de la base de donn&eacute;es. Seuls les super-utilisateurs globaux peuvent cr&eacute;er et g&eacute;rer les publications partag&eacute;es, mais n'importe quel membre peut ajouter ces publications aux dossiers. Si vous ne souhaitez pas utiliser de publication partag&eacute;e, vous pouvez la <em>« Masquer »</em> en cochant la case &agrave; c&ocirc;t&eacute; de la publication appropri&eacute;e et en cliquant sur le bouton <em>« Mettre &agrave; jour »</em> en bas du formulaire.</li>
+	<li><strong>Publications d&eacute;tenues par d'autres membres</strong>. Dans une base de donn&eacute;es multimembre, un lien est fourni pour consulter la liste de codes utilis&eacute;s exclusivement par les autres membres CIOC d'une m&ecirc;me base de donn&eacute;es. Les super-utilisateurs globaux peuvent les convertir en publications <em>partag&eacute;es</em>, ce qui les rendra accessibles aux autres membres.</li>
+</ul>
+<p>Les colonnes dans le tableau listant les publications incluent certains ou tous les &eacute;l&eacute;ments suivants :</p>
+<ul>
+	<li><strong>Code</strong> - Le code alphanum&eacute;rique unique identifiant cette publication.</li>
+	<li><strong>Nom</strong> - Le nom « convivial » associ&eacute; &agrave; cette publication. Si rien n'appara&icirc;t dans cette colonne &agrave; c&ocirc;t&eacute; d'une publication, cela signifie qu'aucun nom convivial n'a &eacute;t&eacute; cr&eacute;&eacute; pour ce code.</li>
+	<li><strong>Interne</strong> - Un ast&eacute;risque appara&icirc;tra dans cette colonne si la publication est marqu&eacute;e comme interne.</li>
+	<li><strong>En-t&ecirc;tes</strong> - Si des en-t&ecirc;tes sont associ&eacute;s &agrave; cette publication, un lien est disponible pour consulter la liste des en-t&ecirc;tes. En mode d'impression, le nombre d'en-t&ecirc;tes g&eacute;n&eacute;raux associ&eacute;s &agrave; la publication est imprim&eacute; &agrave; la place du lien.</li>
+	<li><strong>Dossiers (locaux)</strong> - Le nombre de vos dossiers associ&eacute;s &agrave; cette publication.</li>
+	<li><strong>Autres dossiers</strong> - Dans une base de donn&eacute;es multimembre, le nombre de dossiers appartenant aux autres membres CIOC dans votre base de donn&eacute;es qui sont associ&eacute;s &agrave; cette publication.</li>
+	<li><strong>Vue (locales)</strong> - Le nombre de vos vues utilisant cette publication pour limiter les dossiers accessibles (une « vue par publication »).</li>
+	<li><strong>Autres vues</strong> - Dans une base de donn&eacute;es multimembre, le nombre de vues appartenant aux autres membres CIOC dans votre base de donn&eacute;es. Seuls les super-utilisateurs globaux peuvent le voir.</li>
+	<li><strong>Liste rapide (locale)</strong> - Le nombre de vues dans lesquelles cette publication fait partie de la liste rapide sur la page de recherche principale. Visible uniquement en consultant la version imprimable de la liste des publications.</li>
+	<li><strong>Autre liste rapide</strong> - Dans une base de donn&eacute;es multimembre, le nombre de vues appartenant &agrave; d'autres membres CIOC dans votre base de donn&eacute;es, dans lesquelles cette publication fait partie de la liste rapide sur la page de recherche principale. Seuls les super-utilisateurs globaux peuvent le voir, uniquement en consultant la version imprimable de la liste des publications.</li>
+</ul>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<h3>Modifier une publication existante</h3>
+<p>Pour consulter ou modifier les param&egrave;tres d'une publication existante, cliquez sur le lien <em>« Modifier »</em> &agrave; c&ocirc;t&eacute; de la publication.</p>
+<p>Dans une base de donn&eacute;es multimembre, vous pourriez ne pas avoir le droit de modifier toutes les publications. Les restrictions de s&eacute;curit&eacute; suivantes sont en vigueur :</p>
+<ul>
+	<li>Seuls les super-utilisateurs globaux peuvent modifier les publications partag&eacute;es utilisables par n'importe quel membre de la base de donn&eacute;es.</li>
+	<li>Seuls les super-utilisateurs globaux peuvent convertir une publication appartenant exclusivement &agrave; un membre en publication partag&eacute;e.</li>
+	<li>Les super-utilisateurs globaux ne peuvent pas modifier les publications appartenant exclusivement &agrave; un membre sans les convertir auparavant en publications partag&eacute;es.</li>
+</ul>
+
+<h3>Cr&eacute;er une nouvelle publication</h3>
+<p>Cliquez sur le lien « Ajouter une nouvelle publication » en haut de la page pour cr&eacute;er un nouveau code de publication.</p>
+<p>Toute nouvelle publication appartient exclusivement au membre qui l'a cr&eacute;&eacute;e. Dans une base de donn&eacute;es multimembre, un super-utilisateur global pourra plus tard la convertir en publication partag&eacute;e utilisable par d'autres membres.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<h3>Imprimer un rapport de vos publications</h3>
+<p>Le fait de cliquer sur le lien <em>« Version imprimable (nouvelle fen&ecirc;tre) »</em> ouvrira une liste imprimable de tous les codes de publication dans la base de donn&eacute;es.</p>
+<p>La page <em>« Liste des publications »</em> fournit une liste imprimable de toutes les publications actuellement accessibles dans la base de donn&eacute;es par votre membri&eacute;t&eacute; CIOC. Dans une base de donn&eacute;es multimembre, ce rapport n'inclut pas les publications appartenant exclusivement &agrave; un autre membre. Il inclut certains renseignements non disponibles sur le tableau principal, comme mentionn&eacute; dans la section pr&eacute;c&eacute;dente qui d&eacute;crit les &eacute;l&eacute;ments du tableau listant les publications.</p>
+<p>Cette liste est affich&eacute;e en <em>« mode d'impression »</em> - si vous disposez d'un mod&egrave;le d'impression configur&eacute; dans votre vue actuelle, ce mod&egrave;le sera utilis&eacute; pour afficher les dossiers.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

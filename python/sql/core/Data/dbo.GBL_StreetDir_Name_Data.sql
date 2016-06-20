@@ -1,0 +1,8 @@
+INSERT INTO [dbo].[GBL_StreetDir_Name] ([Dir], [LangID], [Name]) VALUES ('E', 2, N'Est')
+INSERT INTO [dbo].[GBL_StreetDir_Name] ([Dir], [LangID], [Name]) VALUES ('N', 2, N'Nord')
+INSERT INTO [dbo].[GBL_StreetDir_Name] ([Dir], [LangID], [Name]) VALUES ('NE', 2, N'Nord-Est')
+INSERT INTO [dbo].[GBL_StreetDir_Name] ([Dir], [LangID], [Name]) VALUES ('NW', 2, N'Nord-Ouest')
+INSERT INTO [dbo].[GBL_StreetDir_Name] ([Dir], [LangID], [Name]) VALUES ('S', 2, N'Sud')
+INSERT INTO [dbo].[GBL_StreetDir_Name] ([Dir], [LangID], [Name]) VALUES ('SE', 2, N'Sud-Est')
+INSERT INTO [dbo].[GBL_StreetDir_Name] ([Dir], [LangID], [Name]) VALUES ('SW', 2, N'Sud-Ouest')
+INSERT INTO [dbo].[GBL_StreetDir_Name] ([Dir], [LangID], [Name]) VALUES ('W', 2, N'Ouest')

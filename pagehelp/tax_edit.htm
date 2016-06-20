@@ -1,0 +1,77 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>Following are the instructions for each section of the View / Edit Taxonomy Term Form. If you are unfamiliar with any of the Taxonomy's terminology or concepts, use an official reference such as the library on <a href="http://www.211taxonomy.org">211taxonomy.org</a>.</p>
+<p><span class="Alert">Note</span>: throughout the form are links to various related Taxonomy Terms and Concepts; you must submit and save any changes you make on the form before following links to other Taxonomy Terms or Concepts, or your changes will be lost.</p>
+
+<h3>Status</h3>
+<p>This information is read-only and indicates whether the Term is being used by Organization/Program records. If a Term is being used, you will not be allowed to delete it.</p>
+<h3>Created/Modified Information</h3>
+<p>Created and Modified dates / names are set automatically by the software as records are added and updated.</p>
+
+<h3>Code</h3>
+<p>All Taxonomy Terms must have a unique Code identifying the Term. The Code is made up of 6 Levels, plus the designation of <em>Authorized or Local</em>. When editing this field, there is one box for each Taxonomy Level, and the <em>Authorized</em> status is set in a different field. The overall format of a Taxonomy Code is: AA-####.####-###.##-L (the -L indicates the term is <em>Local/Non-Authorized</em>)</p>
+<p>Note that for the Taxonomy structure to work effectively, each new Term needs a parent Term - this means that for a new Level 4 Term with the Code &quot;AB-1111-2222&quot;, there must already be a Term with the Code &quot;AB-1111&quot;.</p>
+
+<h3>Authorization</h3>
+<p>Indicates whether a Term is an &quot;official&quot; INFO LINE Taxonomy Term, or specific to the local system. <strong>Use of Local Terms is strongly discouraged</strong>!</p>
+
+<h3>Preferred Term</h3>
+<p>If using a list of Preferred Terms for activation, indicates whether the current Term is in the Preferred Term list. Note that there is a separate tool for updating the list of Preferred Terms, available from the main Manage Taxonomy page.</p>
+
+<h3>Term Name</h3>
+<p>You must specify a <em>unique</em> name for the Term in at least one language. If you do not provide a name for a Taxonomy Term in a given language, it will not be available when searching or indexing in that language.</p>
+
+<h3>Source</h3>
+<p>Indicate the classification system or catalogue from which the term was sourced (i.e. the AIRS/INFO LINE Taxonomy). The list of sources may be customized (see link on main Taxonomy management page).</p>
+
+<h3>Definition</h3>
+<p>Each Term should have an official <em>Definition</em> indicating the exact meaning of the Term and how it is used. If desired, an <em>Alternate Definition</em> can also be provided (further down on this form) which is also available for keyword searches etc, and which is used instead of the official Definition when displayed anywhere other than this form. If you want to alter the Definition of an Authorized Term, you should always change the <em>Alternate Definition</em> rather than the official one.</p>
+
+<h3>Facet</h3>
+<p>You may optionally select one general category that applies to the Term. The list of Facets may be customized (see link on main Taxonomy management page).</p>
+<h3>Use References</h3>
+<p>Use References represent alternate wordings and synonyms for an official Taxonomy Term. Use References must be unique - you cannot create a Use Reference that is already being used as a Name or Alternate Name for an existing Term.</p>
+<p>Each <em>Use Reference</em> has an <em>Authorized</em> Status, indicating whether the reference came from the official source or is local. Any new references you add should be marked as Local / Non-Authorized.</p>
+
+<h3>See Also References</h3>
+<p>A <em>See Also Reference</em> indicates a sibling-type relationship between two terms (related Terms). The relationship between related Terms is always bidirectional; If you relate Term A to Term B, then Term B will automatically have a <em>See Also Reference</em> listing for Term A. Likewise, if you remove the relationship between A &amp; B, it also removes the relationship between B &amp; A.</p>
+<p>Each <em>See Also Reference</em> has an <em>Authorized</em> Status, indicating whether the reference came from the official source or is local, and an <em>Active</em> status, indicating whether or not you want to use this particular reference. If you do not want to accept an Authorized <em>See Also Reference</em> you should set it to Inactive rather than deleting it. Any new references you add should be marked as Local / Non-Authorized.</p>
+
+<h3>Related Concepts</h3>
+<p>A Term may be associated with any number of general concepts or topics called <em>Related Concepts</em>. The list of Related Concepts may be customized (see link on main Taxonomy management page).</p>
+<p>Each <em>Related Concept</em> reference has an <em>Authorized</em> Status, indicating whether the reference came from the official source or is local, and an <em>Active</em> status, indicating whether or not you want to use this particular reference. If you do not want to accept an Authorized <em>Related Concept</em> reference you should set it to Inactive rather than deleting it. Any new references you add should be marked as Local / Non-Authorized.</p>
+
+<h3>Comments</h3>
+<p>You may optionally provide data management notes in any of the available languages. This may be useful to indicate why Use References were deactivated or an Alternative Definition provided, for example.</p>
+
+<h3>Alternate Name / Alternate Definition</h3>
+<p>If you do not want to use/display the official Term Name or Definition, you can provide an Alternate Name or Definition in each available language. Alternate Names and Definitions are included in keyword searches of the Taxonomy, and are used instead of the &quot;official&quot; versions in all areas of the software where Terms are displayed.</p>
+
+<h3>Icon URL</h3>
+<p>Optionally, you can provide a link to an image to display beside the Term's name in the <em>Browse by Service Category</em> Search (Public Search). Icons should be small - it is recommended that they be no larger than 20 x 20 pixels.</p>
+
+<h3>Active</h3>
+<p>An inactive term cannot be added to records and will be excluded from all areas of the system except the Basic Taxonomy Search for Super Users. Links to inactive terms will appear in the current <span class="Alert"><em>Alert</em> colour</span>.</p>
+<p>Note that you cannot change a Term's active status if it is being used by Organization / Program records.</p>
+<p>Activations can also be managed using the Taxonomy <strong>Activation Tool</strong> or the Taxonomy <strong>Activation Recommendation Report</strong> Tool, both of which are available from the main Manage Taxonomy menu.</p>
+
+<h3>Record Deletion</h3>
+<p>You will only see a Delete button at the bottom of the form if the Term is available for deletion (not used by Organization / Program records). You will receive a confirmation request screen when you delete a Term.</p>
+
+<p class="SmallNote">Last Modified: $Date$</p>

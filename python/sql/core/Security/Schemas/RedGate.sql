@@ -1,0 +1,3 @@
+CREATE SCHEMA [RedGate]
+AUTHORIZATION [dbo]
+GO

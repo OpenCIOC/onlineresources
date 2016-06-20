@@ -1,0 +1,193 @@
+/* =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ========================================================================================= */
+
+.TaxLink {
+	font-weight:bold;
+	text-decoration:none;
+}
+
+.TaxLink:hover {
+	text-decoration:underline;
+}
+
+/* need to be explicit to override .SimulateLink 
+ * which is in document body */
+a.TaxLinkInactive, span.TaxLinkInactive {
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.TaxLinkInactive:hover {
+	text-decoration:underline;
+}
+
+div.TermListTitle {
+	font-weight: bold;
+	margin-bottom: 0.5em;
+	text-align:left;
+}
+
+.TermList {
+	font-weight: normal;
+	margin-bottom: 0.5em;
+	padding: 0.5em;
+}
+
+div.TermListTitle.First {
+	padding-top: 0px;
+}
+
+div.MoreTermInfo {
+	font-weight: normal;
+	margin-top: 0.1em;
+	margin-bottom: 0.1em;
+	padding: 0.5em;
+}
+
+div.MoreTermInfo > dl > dt {
+	font-weight: bold;
+}
+
+.TermList ul, div.MoreTermInfo ul {
+	padding-left: .75em;
+	margin-left: .75em;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.TermList ul > li, div.MoreTermInfo ul > li {
+	list-style-type: disc;
+}
+
+p.MoreTermInfo {
+	padding-bottom: 2px;
+	padding-bottom: 10px;
+}
+
+a.MoreTermInfo {
+	font-weight: bold;
+	text-decoration: none;
+}
+
+a.MoreTermInfo:hover {
+	text-decoration: underline;
+}
+
+span.TaxTerm {
+	font-weight: bold;
+	font-style: italic;
+}
+
+td.TaxBrowseDetail {
+	padding: .25em 1em;
+}
+
+td.TaxBasic {
+	vertical-align:top;
+	font-weight:bold;
+	background-color:#FFFFFF;
+	color: #000000;
+	padding: 2px 5px 2px 5px;
+}
+
+td.TaxBasicB {
+	vertical-align:top;
+	font-weight:bold;
+	background-color:#F9F9F9;
+	color: #000000;
+	padding: 2px 5px 2px 5px;
+}
+
+td.TaxLevel1 {
+	vertical-align:top;
+	font-weight:bold;
+	background-color:#F3F3F3;
+	color:#000000;
+	padding: 2px 5px 2px 5px;
+}
+
+td.TaxLevel2 {
+	vertical-align:top;
+	font-weight:bold;
+	background-color:#F9F9F9;
+	color:#000000;
+	padding: 2px 5px 2px 5px;
+}
+
+div.CodeLevel1 {
+	padding-left: 0em;
+	padding-right: 0.5em;
+}
+div.CodeLevel2 {
+	padding-left: 2em;
+	padding-right: 0.5em;
+}
+
+div.CodeLevel3 {
+	padding-left: 4em;
+	padding-right: 0.5em;
+}
+
+div.CodeLevel4 {
+	padding-left: 6em;
+	padding-right: 0.5em;
+}
+
+div.CodeLevel5 {
+	padding-left: 8em;
+	padding-right: 0.5em;
+}
+
+div.CodeLevel6 {
+	padding-left: 10em;
+	padding-right: 0.5em;
+}
+
+div.CommunityList {
+	padding-top: 1em;
+}
+
+div.TermList ul {
+	padding-left: 0px;
+	margin-left: 0px;
+}
+
+div.TermList ul > li {
+	list-style-type: none;
+}
+
+.action-icon {
+	display: inline-block;
+	vertical-align: bottom;
+	width: 15px;
+	height: 15px;
+	text-indent: -99999px;
+	overflow: hidden;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+.activate {
+	background-image: url("../images/greencheck.gif")
+}
+
+.deactivate {
+	background-image: url("../images/redx.gif")
+}
+
+.rollup {
+	background-image: url("../images/rollup.gif")
+}

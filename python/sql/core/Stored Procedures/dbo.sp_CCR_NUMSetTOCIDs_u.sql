@@ -1,0 +1,52 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_CCR_NUMSetTOCIDs_u]
+	@NUM varchar(8),
+	@IdList varchar(max)
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.1
+	Checked by: KL
+	Checked on: 06-Apr-2012
+	Action: NO ACTION REQUIRED
+	Notes: For future, incoporate MERGE statement
+*/
+
+DECLARE @tmpTOCIDs TABLE(
+	TOC_ID int NOT NULL PRIMARY KEY
+)
+
+INSERT INTO @tmpTOCIDs
+	SELECT DISTINCT tm.*
+	FROM dbo.fn_GBL_ParseIntIDList(@IdList,',') tm
+	INNER JOIN CCR_TypeOfCare toc
+		ON tm.ItemID = toc.TOC_ID
+DELETE pr
+	FROM CCR_BT_TOC pr
+	LEFT JOIN @tmpTOCIDs tm
+		ON pr.TOC_ID = tm.TOC_ID
+WHERE tm.TOC_ID IS NULL AND NUM=@NUM
+
+INSERT INTO CCR_BT_TOC (
+	NUM,
+	TOC_ID
+)
+SELECT
+	@NUM,
+	tm.TOC_ID
+FROM @tmpTOCIDs tm
+WHERE NOT EXISTS(SELECT * FROM CCR_BT_TOC pr WHERE NUM=@NUM AND pr.TOC_ID=tm.TOC_ID)
+
+SET NOCOUNT OFF
+
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_CCR_NUMSetTOCIDs_u] TO [cioc_login_role]
+GO

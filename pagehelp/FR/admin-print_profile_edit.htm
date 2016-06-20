@@ -1,0 +1,69 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>Les <strong><em>profils d'impression</em></strong> vous permettent de cr&eacute;er des mod&egrave;les personnalis&eacute;s pour l'impression de listes de dossiers.</p>
+<ul>
+	<li><a href="#basics">Profils d'impression : les fondamentaux</a></li>
+	<li><a href="#edit">Modifier votre profil d'impression</a></li>
+	<li><a href="#general">Configuration g&eacute;n&eacute;rale du profil</a></li>
+</ul>
+<p class="Alert">Remarque : les champs de ce profil sont g&eacute;r&eacute;s sur une <a href="pagehelp?Page=admin%2Fprint_profile_edit_fields.asp&Ln=en-CA">autre page</a>. Un lien vers la page de gestion des champs est fourni en bas du formulaire ; veuillez <em>soumettre vos changements</em> avant de cliquer sur le lien vers la gestion des profils.</p>
+<hr>
+<a name="basics"></a>
+<h3>Profils d'impression : les fondamentaux</h3>
+<p>Cr&eacute;er un profil d'impression vous permettra de g&eacute;n&eacute;rer une liste de dossiers bien format&eacute;s pour l'impression, sans information de menu superflue, et int&eacute;grant tous les champs que vous aurez s&eacute;lectionn&eacute;s. Contrairement aux r&eacute;sultats de recherche, o&ugrave; la mise en page est un tableau de champs &agrave; l'horizontal, l'outil d'impression affiche les dossiers dans un format vertical personnalisable ; chaque champ est affich&eacute; sur sa propre ligne (bien qu'il soit possible de combiner des donn&eacute;es de plusieurs champs en une seule). Les profils d'impression sont associ&eacute;s &agrave; des vues particuli&egrave;res.</p>
+<p>L'outil d'impression fonctionne en HTML. Cela signifie que :</p>
+<ul>
+	<li>Il est tr&egrave;s utile de conna&icirc;tre le HTML et les feuilles de style en cascade (CSS) pour utiliser les fonctionnalit&eacute;s plus avanc&eacute;es de l'outil. Si vous ne connaissez pas le HTML, vous pourrez quand m&ecirc;me utiliser l'outil. D'autres membres peuvent vous aider en fournissant des exemples de feuilles de style (CSS) et d'options de configuration.</li>
+	<li>Dans la plupart des cas, les donn&eacute;es des dossiers s'afficheront de la m&ecirc;me mani&egrave;re que sur les pages de d&eacute;tails des dossiers. Tous les champs qui supportent la saisie de HTML pour l'affichage sur la page de d&eacute;tails de dossier supportent &eacute;galement le HTML dans l'outil d'impression, et les m&ecirc;mes r&egrave;gles de formatage s'appliquent. Tout code HTML suppl&eacute;mentaire ins&eacute;r&eacute; automatiquement dans les pages de d&eacute;tails de dossiers par le logiciel (comme un lien vers un site Internet) sera supprim&eacute; lors de l'utilisation de l'outil d'impression.</li>
+	<li>Le concept de « page » est limit&eacute; en HTML, car l'affichage &agrave; l'&eacute;cran peut varier d'un utilisateur &agrave; l'autre. Ainsi, la capacit&eacute; &agrave; ajouter des &eacute;l&eacute;ments de page sp&eacute;cifiques, comme des en-t&ecirc;tes et des pieds de pages, la num&eacute;rotation de page, etc., est limit&eacute;e.<strong>De nombreux navigateurs web offrent des options de configuration d'impression personnalisables</strong> qui peuvent vous permettre d'ajouter des en-t&ecirc;tes, pieds de page, num&eacute;rotation, etc.</li>
+	<li>Votre rapport g&eacute;n&eacute;r&eacute; par l'outil d'impression devrait pouvoir &ecirc;tre utilis&eacute; par la plupart des <strong>programmes de traitement de texte</strong> principaux, y compris Microsoft Word. Des logiciels de traitement de texte plus r&eacute;cents interpr&egrave;teront plus facilement le HTML et les styles que des versions plus anciennes. Vous pouvez utiliser un logiciel de traitement de texte pour faire des actions comme personnaliser les emplacements des sauts de page, ajouter des en-t&ecirc;tes et des pieds de page, cr&eacute;er des colonnes et ajouter la num&eacute;rotation des pages.</li>
+</ul>
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<a name="edit"></a>
+<hr>
+<h3>Modifier votre profil d'impression</h3>
+<p>Votre profil d'impression se g&egrave;re en deux parties :</p>
+<ol>
+	<li>Vos <strong>configurations g&eacute;n&eacute;rales du profil</strong> (y compris les feuilles de style CSS, les en-t&ecirc;tes et pieds de page, etc.).</li>
+	<li>La <strong>configuration des champs</strong> du profil, o&ugrave; vous s&eacute;lectionnez vos champs et pr&eacute;cisez la mani&egrave;re dont ils sont affich&eacute;s.</li>
+</ol>
+<p>Cette page traite particuli&egrave;rement de vos configurations g&eacute;n&eacute;rales du profil ; vous pouvez trouver de l'aide pour &eacute;tablir vos champs dans l'aide sur la page de configuration des champs. On peut trouver le lien vers les donn&eacute;es de gestion des champs au bas de la page de configuration g&eacute;n&eacute;rale ; vous devriez toujours soumettre les changements apport&eacute;s &agrave; la configuration g&eacute;n&eacute;rale du profil avant de cliquer sur le lien pour g&eacute;rer les champs.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<hr>
+<a name="general"></a>
+<h3>Configuration g&eacute;n&eacute;rale du profil</h3>
+<h4>Nom</h4>
+<p>Chaque profil doit avoir un nom unique. Le nom doit &ecirc;tre assez descriptif afin qu'une personne souhaitant ex&eacute;cuter un rapport sache quel profil choisir. Les noms peuvent comporter jusqu'&agrave; 100 caract&egrave;res maximum, mais il est fortement recommand&eacute; de limiter la longueur des noms &agrave; moins de 50 caract&egrave;res.</p>
+<h4>Renseignement sur les feuilles de style / CSS</h4>
+<p>Pour profiter pleinement des capacit&eacute;s des outils d'impression, vous devriez pr&eacute;ciser une feuille de style en cascade (CSS) &agrave; utiliser avec le profil. Deux &eacute;chantillons de feuilles de style sont fournies avec le logiciel, que vous pouvez utiliser telles quelles, ou copier et modifier en fonction de vos besoins. L'emplacement des &eacute;chantillons est :</p>
+<p>mabasededonnees.cioc.ca/styles/printSampleA.css <br>mabasededonnees.cioc.ca/styles/printSampleB.css</p>
+<p>... o&ugrave; mabasededonnees.cioc.ca est l'URL de votre base de donn&eacute;es CIOC.</p>
+<p>Dans votre feuille de style, vous pouvez cr&eacute;er des &eacute;l&eacute;ments de <em>CLASSE</em> pour pr&eacute;ciser le format des diff&eacute;rents &eacute;l&eacute;ments dans le rapport. Depuis la configuration g&eacute;n&eacute;rale, vous pouvez pr&eacute;ciser le nom de la <em>CLASSE</em> &agrave; utiliser pour la <em>TABLE</em> HTML qui contiendra vos donn&eacute;es pour tous les champs secondaires (consultez l'aide sur la page de configuration des champs pour plus d'information).</p>
+<h4>S&eacute;parateur de dossier</h4>
+<p>Vous pouvez ajouter du HTML &agrave; ins&eacute;rer entre les dossiers pour les s&eacute;parer. Par exemple, cela peut &ecirc;tre une ligne horizontale &lt;HR&gt;, ou un saut de ligne &lt;BR&gt;. Vous pouvez &eacute;galement pr&eacute;ciser si chaque dossier doit appara&icirc;tre sur sa propre page si vous imprimez depuis un navigateur... mais sachez que cette fonctionnalit&eacute; peut ne pas &ecirc;tre disponible sur tous les navigateurs et, pour le moment, n'est pas transf&eacute;rable lorsque vous ouvrez votre rapport dans un logiciel de traitement de texte comme Microsoft Word.</p>
+<h4>En-t&ecirc;tes et pieds de page</h4>
+<p>Vous pouvez ajouter des en-t&ecirc;tes et pieds de page de rapport personnalis&eacute;s au profil. Les en-t&ecirc;tes et pieds de page doivent &ecirc;tre format&eacute;s en HTML pour s'afficher correctement. &Agrave; noter que les en-t&ecirc;tes et pieds de page s'appliquent au rapport entier : les en-t&ecirc;tes et pieds de page sont affich&eacute;s une fois chacun.</p>
+<h4>Message par d&eacute;faut</h4>
+<p>Vous pouvez ajouter un message personnalisable au rapport. On peut modifier le message au moment d'ex&eacute;cuter le rapport.</p>
+<h4>Emplacement du message</h4>
+<p>Vous pouvez pr&eacute;ciser si le message est imprim&eacute; juste une fois (en haut du rapport) ou chaque fois devant chaque dossier.</p>
+<h4>Renseignements sur les vues</h4>
+<p>S&eacute;lectionnez les vues qui pourront acc&eacute;der &agrave; ce profil d'impression. Le profil sera accessible dans les vues que vous pr&eacute;cisez uniquement et par tout utilisateur connect&eacute; ayant acc&egrave;s &agrave; cette vue. Vous pouvez avoir autant de profils d'impression par vue que vous le souhaitez.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

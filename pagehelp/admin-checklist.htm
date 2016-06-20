@@ -1,0 +1,151 @@
+﻿<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<ul>
+	<li><a href="#intro">General Information about Checklist Editing</a>
+		<ul>
+			<li><a href="#intro">Introduction</a></li>
+			<li><a href="#shared">Working in a Multi-Member Database: Shared and Local Values</a></li>
+		</ul>
+	</li>
+	<li><a href="#modify">Modifying Values</a>
+		<ul>
+			<li><a href="#text_input">Text Input Boxes: Names, Codes and Values</a></li>
+			<li><a href="#languages">Working with Languages</a></li>
+			<li><a href="#order">Changing the Display Order</a></li>
+			<li><a href="#add_update_delete">Add, Update and Delete</a></li>
+			<li><a href="#hide">Hiding Shared Values</a></li>
+		</ul>
+	</li>
+	<li><a href="#searchreport">Searching and Reporting on Checklist Values</a>
+		<ul>
+			<li><a href="#search">Search and Usage</a></li>
+			<li><a href="#reports">Reports</a></li>
+		</ul>
+	</li>
+	<li><a href="#age_groups">Age Groups Editing</a></li>
+</ul>
+<hr>
+
+<a name="intro"></a>
+<h2>General Information about Checklist Editing</h2>
+<p><span class="Alert">It is important to carefully read the information contained on the <em>&quot;Edit Checklist / Drop-Down Values&quot;</em> page you are currently working with</span>.</p>
+<p>Depending upon the specific list or drop-down type you have chosen to edit, you will see different values on this page. Most versions of the <span class="Alert"><em>&quot;Edit Checklist / Drop-Down Values&quot;</em> page</span> have a similar format and similar field names, and this help file covers the major variations you will see. If you are working in a multi-member database, please read the section on working with <a href="#shared">shared and local values</a> to help you understand how to manage your checklists effectively in co-operation with the other CIOC Members in your database.</p>
+<p><strong>Note: Changes made to the values on these pages will usually also update the values in existing records</strong>; exceptions include <em>Street Type</em>, <em>Postal Box Type</em>, <em>Vacancy Service Title</em>, and <em>Contact Honorific</em>. Changes made to lists that are exceptions will do not alter existing records.</p>
+
+<a name="shared"></a>
+<h3>Working in a Multi-Member Database: Shared and Local Values</h3>
+<p>A multi-member database is one where multiple CIOC Members have their own separate licenses, but share some common setup items and have the ability to share records. If you work in a multi-member database, the setup for your Checklist and Drop-down values becomes a more complicated process, because you may share some or all of these values with other members in your database.</p>
+<h4>Fully-Shared Checklists</h4>
+<ul>
+	<li>A <strong><em>Fully-Shared Checklist</em></strong> is one in which the contents cannot be customized for each member – all members in the same database must use the same values. Some of these values are not currently customizable by the user (CIOC-supplied values), and so all members currently use the same values in their separate databases.</li>
+	<li>Values that are editable (not CIOC-supplied) can only be edited by a Global Super User. Local Super Users may view a list of fully-shared checklist values, but not modify them. Local Super Users may use the link provided to send a notice to the Global Super User(s) requesting a change or new value.</li>
+	<li><strong>Includes</strong>: Street Direction, Street Type, Postal Box Type, Activity Status, Billing Address Type, Honorific, Contact Phone Type, Mapping Categories, General Areas of Interest.</li>
+</ul>
+<h4>Partially-Shared Checklists</h4>
+<ul>
+	<li>A <strong><em>Partially-Shared Checklist</em></strong> is one in which each member has some control over the values they wish to use. Some values may be shared by all members, some may be used by only a portion of the members, and some may be local to a single member.</li>
+	<li>Only a Global Super User may create or modify <strong>shared values</strong> that are available to all users of the database. A Local Super User may elect not to use any shared value by <strong>hiding</strong> that value for their membership.</li>
+	<li>Local Super Users may add <strong>local values</strong> that do not already exist. The Local Super user has exclusive control of this local value; it cannot be used or changed by other members. If another member wants to use a local value created by another member, a Global Super User can convert it to be a shared value. Local Super Users must use the link provided to send a notice to the Global Super User(s) to request the value be made shared.</li>
+	<li>Checklist values <em>not in use</em> by the current member will <em>still appear</em> on record details, update forms, etc if the record being accessed already uses those values. The unused values will not be available to that member for adding to records that do not already use the value.</li>
+	<li><strong>Includes</strong>: Accessibility, Accreditation, Areas Served, Bus Routes, Certification, Distribution, Extra Checklist A, Extra Checklist B, Extra Checklist C, Extra Checklist D, Extra Checklist E, Extra Checklist F, Extra Drop-down A, Extra Drop-down B, Extra Drop-down C, Extra Drop-down D, Extra Drop-down E, Extra Drop-down F, Extra Drop-down G, Extra Drop-down H, Fees, Fiscal Year End, Funding, Languages, Map Record, Membership Types, Payment Method, Payment Terms, Preferred Currency, Record Quality, Record Type, Schools, Service Level, Type of Care, Type of Program, Vacancy Service Title, Vacancy Target Population, Vacancy Unit Type, Ward</li>
+</ul>
+<p></p>
+
+<hr>
+<a name="modify"></a>
+<h2>Modifying Values</h2>
+
+<a name="text_input"></a>
+<h3>Text Input Boxes: Names, Codes and Other Values</h3>
+<p>Each type of checklist has one or more components that make up each value. Some values that can be edited contain only one text input box, generally for the name (i.e. Accessibility) whereas other values contain two or more input boxes for each value being edited (i.e. Distribution contains both a short form Distribution Code as well as an associated longer Distribution name). Most inputs have places to enter name translations if working in a multi-lingual database.
+
+<p>Note that in some cases where an input for a <em>Code</em> or <em>Number</em> is given, it is optional and may not even be used for display. The following Checklists require a Code or Number to be entered:</p>
+<ul>
+	<li>Bus Routes</li>
+	<li>Currency</li>
+	<li>Record Quality</li>
+	<li>Record Type</li>
+	<li>Service Level</li>
+	<li>Ward</li>
+</ul>
+
+<a name="languages"></a>
+<h3>Working with Languages</h3>
+<p>For most checklists, you may specify multiple language values per checklist item. For others, you must pick a single language per checklist item.</p>
+<p>For multi-language checklists, the software will normally default to the regular working languages of your database (generally, English and French). If additional languages are available for editing, you will see checkboxes at the top of the form; select the additional language(s) you wish to edit by checking the box next to the language, and they will be added to the form.</p>
+<p>Important note: Most checklists require that you specify a name in each language in order for that value to appear when the record is displayed in that language. Exceptions are as follows:</p>
+<ul>
+	<li>Bus Routes - Route number used</li>
+	<li>Languages - First available name used if not available in the current language</li>
+	<li>Preferred Currency - Code used</li>
+	<li>Record Quality - Code used</li>
+	<li>Record Type - Code used</li>
+	<li>Schools - First available name used if not available in the current language</li>
+	<li>Service Level - Code used</li>
+	<li>Vacancy Unit Type - First available name used if not available in the current language</li>
+	<li>Ward - Number used</li>
+</ul>
+<p>If you need to specify a name in order to use the checklist item in the language, the box will highlight red if it is left blank.</p>
+
+<a name="order"></a>
+<h3>Order</h3>
+<p>For many types of Checklists and Drop-downs there is an &quot;Order&quot; column in the edit values page. The display order will determine the order in which values appear in the select list as well as the record itself. Display order numbers may be duplicated; whenever two entries have the same display order number, they will be sorted in alphabetical order of by the Name or Code provided.</p>
+
+<a name="add_update_delete"></a>
+<h3>Add, Update and Delete</h3>
+<p>The entire Checklist form (all values) are added, updated, or deleted in a single submission. There is one <em>&quot;Update&quot;</em> button that must be used to accept all changes. <span class="Alert">Remember: you must always submit all your changes via the <em>Update</em> button, whether you are adding, updating, or deleting.</span></p>
+<p><strong>Add:</strong> To create a new entry, click the <em>&quot;Add New Item&quot;</em> button to insert a row for entering new data. You may enter multiple rows per submission.</p>
+<p><strong>Delete:</strong> To delete an existing entry, check the box in the &quot;Delete&quot; column. If a checkbox is unavailable, it is because the item is in use and cannot currently be deleted.</p>
+<h4><em>Street Type</em>, <em>Postal Box Type</em>, and <em>Contact Honorific</em> Checklists</h4>
+<p>These checklist items work somewhat differently from other types of Drop-downs, in that they are not language-specific and only act as suggested values for records. It is possible to have records in your database that use values other than those in the list - though you generally can't select a new value that is not part of the list - and changes to the list do not impact existing records. In addition, the values in these lists are available ti be used in any language of record, even when they might imply a particular language; this is because the address or contact may do more to suggest the appropriate value than the language used to describe the record.</p>
+
+<hr>
+
+<a name="searchreport"></a>
+<h2>Searching and Reporting on Checklist Values</h2>
+
+<a name="search"></a>
+<h3>Search and Usage</h3>
+<p>Most checklists have a search icon <img src="../images/zoom.gif" alt="Search Icon" width="17" height="14">. Holding your mouse over this icon will display the current usage of this value in the database, including usage by deleted or expired records. Clicking the icon will initiate a search of records using this value in the current View (including deleted / expired records if they are available in the View). If you see the search icon for some values but not others, it means that the values without the search icon are not being used by any records.</p>
+
+<a name="reports"></a>
+<h3>Reports</h3>
+<p>Most checklists will have a link to a print version, which for most lists will include all values as well as date modified / modified by information and usage counts.</p>
+
+<hr>
+
+<a name="age_groups"></a>
+<h2>Age Groups Editing</h2>
+<p>The <strong><em>Edit Age Groups</em></strong> page is an administrative tool for creating customized named age ranges that can be used from the Basic Search to identify records serving that age range.</p>
+<p>Enabling the end-user to search on age ranges is a three step process:</p>
+<ol>
+	<li><strong>Populate</strong> the Eligibility field of each record in the database with applicable minimum and maximum ages.</li>
+	<li><strong>Create</strong> named age groups through this <em>Edit Age Groups</em> page</li>
+	<li><strong>Activate</strong> the Age Range Search option in the View in which you wish it to appear.</li>
+</ol>
+<p>The table on this page contains the following columns:</p>
+<ul>
+	<li><strong>Age Group Name:</strong> e.g. Infants, Children, Youth, Adults, Seniors</li>
+	<li><strong>Min Age:</strong> The minimum age of this age group. Note that leaving this column blank implies the minimum age is 0. Decimals are allowed.</li>
+	<li><strong>Max Age:</strong> The maximum age for this age group. The age specified here is <strong>included</strong> in the range. Again, if left blank, there is no maximum age for this age group. Decimals are allowed.</li>
+	<li><strong>Chid Care:</strong> indicates whether the age group should be used for the specialized child care search page.</li>
+</ul>
+<p><span class="Alert">Important Note</span>: The age component of the <em>Eligibility</em> field for each record in the database has to be populated with accurate minimum and maximum data, or else search results based on age ranges will be inaccurate.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified:	$Date$</p>

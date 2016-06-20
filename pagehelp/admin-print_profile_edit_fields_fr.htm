@@ -1,0 +1,100 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>The <strong><em>Print Profiles Find and Replace Tool</em></strong> will give you the opportunity to manipulate your data before it is displayed. Find and Replace commands operate on individual fields, so you if you want a command run on multiple fields you will need to set up a command for each one. You can have as many commands as you want, and specify the order in which they are run.</p>
+<h3>What Can Regular Expressions Do?</h3>
+<p>Regular Expressions are an incredibly powerful tool. Two somewhat-complex (and hopefully useful) examples of what can be done are included in the sections that follow. Although you may not feel skilled in writing these commands yourself, you may be able to have someone with the technical knowledge produce the commands for you. Posting on the <a href="http://community.cioc.ca/message-board" target="_blank">CIOC Community Message Board</a> is a good source for help in creating an expression to do a specific task. Documentation on Microsoft's Regular Expression functionality can be found through Microsoft's online libraries.</p>
+<h4>Example 1: Creating a bulleted list</h4>
+<p>This example will transform the following formatting:</p>
+<table class="NoBorder cell-padding-2">
+	<tr valign="top">
+		<td>* a bullet
+			<br>* another bullet
+			<br>* a third bullet
+		</td>
+		<td><ul>
+				<li>a bullet</li>
+				<li>another bullet</li>
+				<li>a third bullet</li>
+			</ul>
+		</td>
+	</tr>
+</table>
+<br>
+<table class="BasicBorder cell-padding-2">
+	<tr>
+		<th>Relative Order</th>
+		<th>Find</th>
+		<th>Replace With</th>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>((\n|^)\* (.*))+</td>
+		<td>&lt;ul&gt;$&amp;&lt;/ul&gt;</td>
+	</tr>
+	<tr>
+		<td>2</td>
+		<td>(\n|^)\* (.*)</td>
+		<td>$1&lt;li&gt;$2&lt;/li&gt;</td>
+	</tr>
+</table>
+<h4>Example 2: Removing/Changing Hyperlinks</h4>
+<p>The following example will <em>remove</em> a hyperlink and replace it with <strong>bold</strong> formatting instead, for example:</p>
+<table class="NoBorder cell-padding-2">
+	<tr>
+		<td><a href="http://www.yahoo.com">Yahoo!</a></td>
+		<td>&nbsp;</td>
+		<td>becomes</td>
+		<td>&nbsp;</td>
+		<td><strong>Yahoo!</strong></td>
+	</tr>
+</table>
+<br>
+<table class="BasicBorder cell-padding-2">
+	<tr>
+		<th>Find</th>
+		<th>Replace With</th>
+	</tr>
+	<tr>
+		<td>&lt;a [^&gt;]+&gt;(.*)&lt;\/a&gt;</td>
+		<td>&lt;b&gt;$1&lt;/b&gt;</td>
+	</tr>
+</table>
+<p>The next example will grab the web site address, strip the http:// if it exists, and place it next to the name in brackets, for example:</p>
+<table class="NoBorder cell-padding-2">
+	<tr>
+		<td><a href="http://www.yahoo.com">Yahoo!</a></td>
+		<td>&nbsp;</td>
+		<td>becomes</td>
+		<td>&nbsp;</td>
+		<td><strong>Yahoo!</strong> (www.yahoo.com)</td>
+	</tr>
+</table>
+<br>
+<table class="BasicBorder cell-padding-2">
+	<tr>
+		<th>Find</th>
+		<th>Replace With</th>
+	</tr>
+	<tr>
+		<td>&lt;a href=&quot;([^&quot;]+)&quot;[^&gt;]*&gt;(.*)&lt;\/a&gt;</td>
+		<td>&lt;b&gt;$2&lt;/b&gt; ($1)</td>
+	</tr>
+</table>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified:	$Date$</p>

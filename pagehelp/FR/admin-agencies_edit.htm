@@ -1,0 +1,47 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>La page <strong><em>Ajouter / Modifier une agence</em></strong> vous permet d'ajouter une nouvelle agence (c'est-&agrave;-dire un <em>propri&eacute;taire de dossiers</em>) &agrave; la base de donn&eacute;es ou de modifier une agence existante. La plupart du temps, les informations affich&eacute;es sont identiques que vous ajoutiez une agence ou modifiez des informations existantes. De l'information suppl&eacute;mentaire est disponible pour modifier une agence existante. Voir plus bas.</p>
+<h3>Ajouter une nouvelle agence</h3>
+<h4>Membre</h4>
+<p>Ce champ existe uniquement dans une base de donn&eacute;es CIOC &agrave; plusieurs membres (une base de donn&eacute;es <em>« multimembre »</em>). Ce champ est accessible aux super-utilisateurs globaux (ceux qui contr&ocirc;lent les &eacute;l&eacute;ments de configuration partag&eacute;s par tous les membres de la base de donn&eacute;es). Une fois &eacute;tablie, la membri&eacute;t&eacute; d'une agence ne peut &ecirc;tre modifi&eacute;e.</p>
+<h4>Code d'agence</h4>
+<p>Ce code est compos&eacute; de trois lettres majuscules. Ce code sera ins&eacute;r&eacute; au d&eacute;but du num&eacute;ro de chaque dossier appartenant &agrave; cette agence. La communaut&eacute; CIOC tente de maintenir des codes de propri&eacute;taire de dossiers uniques parmi ses membres ; il est important de v&eacute;rifier que vous ne cr&eacute;ez pas un nouveau code qui est d&eacute;j&agrave; utilis&eacute; par un autre membre.</p>
+<h4>Informations sur le propri&eacute;taire de dossiers</h4>
+<p>Les informations de cette section sont utilis&eacute;es pour afficher les coordonn&eacute;es sur les formulaires de courriel ou de t&eacute;l&eacute;copie aux personnes qui envoient des r&eacute;troactions sur le dossier ; l'adresse courriel est utilis&eacute;e par le syst&egrave;me pour g&eacute;n&eacute;rer plusieurs types de courriels, y compris les courriels de r&eacute;troaction et les demandes de mise &agrave; jour. Il faut pr&eacute;ciser ces informations dans chaque section de la base de donn&eacute;es o&ugrave; le code de propri&eacute;taire est utilis&eacute; (module Information Communautaire ou B&eacute;n&eacute;volat).</p>
+<dl>
+<dt><strong>Courriel de mise &agrave; jour</strong> :</dt>
+<dd>L'adresse courriel qui sera attach&eacute;e &agrave; toutes les demandes de mise &agrave; jour par courriel sortantes pour les dossiers de cette agence, ainsi qu'&agrave; d'autres courriels g&eacute;n&eacute;r&eacute;s automatiquement (p. ex., envois de r&eacute;troaction). Si cette adresse courriel n'est pas renseign&eacute;e, le courriel du module par d&eacute;faut (comme pr&eacute;cis&eacute; dans les <em>Options g&eacute;n&eacute;rales de configuration</em>) sera utilis&eacute; &agrave; la place. Il est fortement recommand&eacute; de fournir une adresse courriel pour chaque agence.</dd>
+<dt><strong>T&eacute;l&eacute;phone de mise &agrave; jour</strong> :</dt>
+<dd>Le num&eacute;ro de t&eacute;l&eacute;phone qui sera attach&eacute; aux demandes de mise &agrave; jour, aux formulaires de courriel ou de t&eacute;l&eacute;copie et aux formulaires de r&eacute;troaction pour les dossiers de l'agence.</dd>
+<dt><strong>T&eacute;l&eacute;phone du service de renseignements</strong> :</dt>
+<dd>Le num&eacute;ro que le public doit appeler pour des demandes g&eacute;n&eacute;rales (pas utilis&eacute; actuellement dans le logiciel).</dd>
+<dt><strong>N&lt;sup&gt;o&lt;/sup&gt; de dossier de l'agence</strong> :</dt>
+<dd><span class="Alert">OBLIGATOIRE EN TOUT TEMPS !</span> Chaque agence doit &ecirc;tre associ&eacute;e &agrave; un dossier de la base de donn&eacute;es pouvant fournir un nom et des coordonn&eacute;es. Le N&lt;sup&gt;o&lt;/sup&gt; de dossier correspond au num&eacute;ro du dossier simplifi&eacute; (propri&eacute;taire du dossier + 4 chiffres). Utilisez le lien <em>« Localisateur d'organisme »</em> pour identifier le n&lt;sup&gt;o&lt;/sup&gt; du dossier de l'agence. Saisissez le nom de l'organisme que vous cherchez dans la fen&ecirc;tre contextuelle du <em>« Localisateur d'organisme »</em>, puis copiez le num&eacute;ro de dossier appropri&eacute; depuis l'ensemble des r&eacute;sultats retourn&eacute;s. Le dossier s&eacute;lectionn&eacute; peut &ecirc;tre un dossier interne.</dd>
+</dl>
+<h4>Appliquer les champs obligatoires</h4>
+<p>Si s&eacute;lectionn&eacute;, un utilisateur sera forc&eacute; &agrave; remplir tous les champs marqu&eacute;s comme requis sur le formulaire de mise &agrave; jour d'organisme / programme, afin que la mise &agrave; jour soit accept&eacute;e.</p>
+<h4>Mises &agrave; jour des comptes utilisateurs</h4>
+<p>S&eacute;lectionnez le comportement par d&eacute;faut des autorisations de mise &agrave; jour personnelle sur les nouveaux comptes de cette agence. S'il existe dans la base de donn&eacute;es des comptes pour cette agence o&ugrave; l'utilisateur n'est pas autoris&eacute; &agrave; mettre &agrave; jour ses propres renseignements personnels ou son mot de passe, v&eacute;rifiez que le champ Courriel est bien rempli afin que l'utilisateur puisse demander des changements &agrave; son compte.</p>
+<h3>Modifier une agence existante</h3>
+<p>Le formulaire pour modifier un code d'agence existant contient tous les champs list&eacute;s plus haut dans « Ajout d'une nouvelle agence », ainsi qu'une section Statut et un lien de recherche pour consulter les dossiers associ&eacute;s &agrave; l'agence en question. &Agrave; noter que la recherche ne retournera que les dossiers visibles dans la <em>vue</em>sur laquelle vous travaillez actuellement.</p>
+<h4>Statut</h4>
+<p>La section <strong>Statut</strong> indique le niveau d'utilisation du code d'agence dans la base de donn&eacute;es, par des utilisateurs et des dossiers.</p>
+<p>Si l'agence n'est propri&eacute;taire d'aucun dossier, un bouton Supprimer sera disponible. Si vous voulez supprimer cette agence, mais que le bouton de suppression n'est pas disponible, vous devrez d'abord retirer le code d'agence (propri&eacute;taire de dossiers) de tous les dossiers ou utilisateurs auxquels il est associ&eacute;, puis revenir sur cette page.</p>
+<p align="center" style="text-decoration:none">[ <a href="#top">Haut</a> ]</p>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

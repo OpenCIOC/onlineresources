@@ -1,0 +1,43 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+
+CREATE PROCEDURE [dbo].[sp_VOL_UCheck_VNUM]
+	@OPID int,
+	@VNUM varchar(10) OUTPUT,
+	@AgencyCode char(3)
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.6
+	Checked by: CL
+	Checked on: 27-Sep-2014
+	Action: TESTING REQUIRED
+*/
+
+IF @VNUM IS NULL AND @AgencyCode IS NOT NULL BEGIN
+	SELECT @VNUM = dbo.fn_VOL_LowestUnusedVNUM(@AgencyCode)
+END
+
+IF @OPID IS NULL BEGIN
+	IF EXISTS(SELECT * FROM VOL_Opportunity WHERE VNUM=@VNUM)
+		RETURN 1
+	ELSE
+		RETURN 0
+END ELSE BEGIN
+	IF EXISTS(SELECT * FROM VOL_Opportunity WHERE VNUM=@VNUM AND OP_ID<>@OPID)
+		RETURN 1
+	ELSE
+		RETURN 0
+END
+
+SET NOCOUNT OFF
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_VOL_UCheck_VNUM] TO [cioc_login_role]
+GO

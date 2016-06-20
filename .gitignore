@@ -1,0 +1,176 @@
+
+# /
+*.pyc
+/*.suo
+/*.user
+/dimtags
+/tags
+/bin
+/obj
+/aspnet_client
+/.komodotools
+/_UpgradeReport_Files
+/UpgradeLog.XML
+/UpgradeLog2.XML
+pythonport.config
+*.config
+*.zip
+
+# /docs/
+/docs/build
+
+# /docs/source/
+
+# /docs/source/_static/
+
+# /docs/source/_templates/
+
+# /images/
+/images/Thumbs.db
+
+# /images/mapping/
+/images/mapping/Thumbs.db
+
+# /import/
+/import/build
+/import/convert2old
+/import/convert2old.zip
+/import/*.xsx
+
+# /python/
+/python/.cov
+/python/.coverage
+
+# /python/cioc/
+/python/cioc/*.mak.py
+
+# /python/cioc/core/
+/python/cioc/core/*.mak.py
+
+# /python/cioc/core/compiled_templates/
+/python/cioc/core/compiled_templates/*
+
+# /python/cioc/core/templates/
+/python/cioc/core/templates/*.mak.py
+
+# /python/cioc/core/templates/jqueryui/
+/python/cioc/core/templates/jqueryui/*.mak.py
+
+# /python/cioc/core/templates/jqueryui/images/
+/python/cioc/core/templates/jqueryui/images/*.mak.py
+
+# /python/cioc/core/templates/jqueryui/textures/
+
+# /python/cioc/core/templates/layouts/
+
+# /python/cioc/core/tests/
+/python/cioc/core/tests/*.mak.py
+
+# /python/cioc/locale/
+/python/cioc/locale/*.mak.py
+
+# /python/cioc/locale/fr_CA/
+/python/cioc/locale/fr_CA/*.mak.py
+/python/cioc/locale/fr_CA/fr_to_translate
+/python/cioc/locale/fr_CA/translate_archive
+/python/cioc/locale/fr_CA/fr_from_translate
+
+# /python/cioc/locale/fr_CA/LC_MESSAGES/
+/python/cioc/locale/fr_CA/LC_MESSAGES/*.mak.py
+/python/cioc/locale/fr_CA/LC_MESSAGES/*.po
+
+# /python/cioc/web/
+/python/cioc/web/*.mak.py
+
+# /python/cioc/web/admin/
+/python/cioc/web/admin/*.mak.py
+
+# /python/cioc/web/admin/templates/
+/python/cioc/web/admin/templates/*.mak.py
+
+# /python/cioc/web/admin/templates/community/
+/python/cioc/web/admin/templates/community/*.mak.py
+
+# /python/cioc/web/admin/templates/excelprofile/
+/python/cioc/web/admin/templates/excelprofile/*.mak.py
+
+# /python/cioc/web/admin/templates/fieldhelp/
+/python/cioc/web/admin/templates/fieldhelp/*.mak.py
+
+# /python/cioc/web/admin/templates/interests/
+/python/cioc/web/admin/templates/interests/*.mak.py
+
+# /python/cioc/web/admin/templates/layout/
+/python/cioc/web/admin/templates/layout/*.mak.py
+
+# /python/cioc/web/admin/templates/mappingsystem/
+/python/cioc/web/admin/templates/mappingsystem/*.mak.py
+
+# /python/cioc/web/admin/templates/naics/
+/python/cioc/web/admin/templates/naics/*.mak.py
+
+# /python/cioc/web/admin/templates/pagetitle/
+/python/cioc/web/admin/templates/pagetitle/*.mak.py
+
+# /python/cioc/web/admin/templates/template/
+/python/cioc/web/admin/templates/template/*.mak.py
+
+# /python/cioc/web/admin/templates/thesaurus/
+/python/cioc/web/admin/templates/thesaurus/*.mak.py
+
+# /python/cioc/web/admin/templates/views/
+/python/cioc/web/admin/templates/views/*.mak.py
+
+# /python/cioc/web/cic/
+/python/cioc/web/cic/*.mak.py
+
+# /python/cioc/web/cic/templates/
+/python/cioc/web/cic/templates/*.mak.py
+
+# /python/cioc/web/cic/templates/generalheading/
+/python/cioc/web/cic/templates/generalheading/*.mak.py
+
+# /python/cioc/web/cic/templates/publication/
+/python/cioc/web/cic/templates/publication/*.mak.py
+
+# /python/cioc/web/cic/templates/updatepubs/
+/python/cioc/web/cic/templates/updatepubs/*.mak.py
+
+# /python/cioc/web/import_/
+/python/cioc/web/import_/*.mak.py
+
+# /python/cioc/web/import_/templates/
+/python/cioc/web/import_/templates/*.mak.py
+
+# /python/cioc/web/special/
+/python/cioc/web/special/*.mak.py
+
+# /python/cioc/web/templates/
+/python/cioc/web/templates/*.mak.py
+# /python/cioc/web/vol/
+/python/cioc/web/vol/*.mak.py
+
+# /python/cioc/web/vol/templates/
+/python/cioc/web/vol/templates/*.mak.py
+
+# /python/cioc/web/vol/views/
+/python/cioc/web/vol/views/*.mak.py
+
+# /python/session_lock/
+
+# /scripts/
+/scripts/*.map
+
+# /special/
+/special/*
+
+# /test/
+/test/*
+
+*.csv
+*.xls
+
+/python/cioc/locale/fr_CA/LC_MESSAGES/fr_to_translate
+aspprofiler.asp
+
+/cioc_dev.komodoproject

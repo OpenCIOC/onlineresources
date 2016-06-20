@@ -1,0 +1,202 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<a name="top"></a>
+<p>The <strong><em>Advanced Search</em></strong> page allows for a number of ways of customizing and refining your search of the database that are not available from the main search page or step-by-step search. Note that the options on this page can be used in combination with one another to build your search. Depending on your account permissions and the setup of your database, one or more of the options on this page may not be available to you. The search options available on this page are determined by your <em>User Type</em> as well as the settings for the current <em>View</em>.</p>
+<p>Use the quick links below to jump to the heading of interest on the advanced search page.</p>
+<table class="NoBorder cell-padding-2">
+	<tr valign="TOP">
+		<td><ul>
+				<li><a href="#terms">Search Terms</a></li>
+				<li><a href="#communities">Communities</a></li>
+				<li><a href="#ages">Ages</a></li>
+				<li><a href="#dates">Dates and Times</a></li>
+				<li><a href="#ossd">OSSD Component</a></li>
+				<li><a href="#owner">Record Owner</a></li>
+				<li><a href="#email_update">Last Email Requesting Update</a></li>
+				<li><a href="#date">&quot;Custom&quot; Date Fields</a></li>
+			</ul></td>
+		<td><ul>
+				<li><a href="#custom_drops">&quot;Custom&quot; Text Fields</a></li>
+				<li><a href="#email">Email</a></li>
+				<li><a href="#display">Display Until</a></li>
+				<li><a href="#public">Public Status</a></li>
+				<li><a href="#language">Language</a></li>
+				<li><a href="#deleted">Deleted Status</a></li>
+				<li><a href="#addsql">SQL</a></li>
+				<li><a href="#checklist">Checklist Searches</a></li>
+			</ul></td>
+	</tr>
+</table>
+
+<hr>
+
+<a name="terms"></a>
+<h3>Search Terms</h3>
+
+<p>The main search mechanism in the software is the keyword search. Two potential keyword search fields are available. These include:</p>
+<ul>
+	<li><strong>Organization Name(s)</strong> - All levels of the organization hierarchy, as well as alternate and former names</li>
+	<li><strong>Keywords</strong> - All of the above, as well as Contact name, Location, Duties, Benefits, Clients, Additional Requirements, Skill notes, and Interests.</li>
+</ul>
+
+<p>Unlike the basic search page which always searches for <em>all</em> the terms and phrases you enter, the <em>Advanced Search</em> allows you to specify whether you will match <em>All the Terms</em> (e.g. the search string <strong>cat dog horse</strong> would search <strong>cat AND dog AND horse</strong>) or <em>Any of the Terms</em> (e.g. the search string <strong>cat dog horse</strong> would search <strong>cat OR dog OR horse</strong>).</p>
+<p>The third option, <em>Boolean</em>, is not available in all Views and requires that you have knowledge of Boolean searching; it allows you to include the keywords <em>AND</em>, <em>OR</em> and <em>NOT</em> in your search to construct your own, custom search string. The software will not correct errors in your search, so you must have a correctly structured search string to perform this kind of search. All terms and phrases must be separated by <em>AND</em>, <em>OR</em>, <em>AND NOT</em>, or <em>OR NOT</em>. You may also use brackets to group different parts of your search. For example: <strong>(cats AND dogs) OR (pigs AND cows) OR &quot;orange monkeys</strong>&quot;, or <strong>cross AND NOT red</strong>.</p>
+<p>Advanced users may also make use of the special SQL Server <em>FORMSOF</em> function from within a Boolean search which allows you to search word forms. For example, FORMSOF(INFLECTIONAL, run) would match all the different tenses of the word &quot;run&quot;: &quot;run&quot;, &quot;runs&quot;, &quot;running&quot;, and &quot;ran&quot;. Alternatively, FORMSOF(THESAURUS, happy) ** would match alternate meanings of the word &quot;happy&quot;, like: &quot;happy&quot;, &quot;cheerful&quot;, &quot;glad&quot;, etc.</p>
+<p><span class="Alert">** Note</span>: the use of THESAURUS is dependent on creating a Thesaurus file for each language in SQL Server. Because CIOC has not currently created Thesaurus files for any language on its servers, this feature cannot be used effectively at this time.</p>
+
+<h4>General Information About Keyword Matching</h4>
+<p>The software automatically searches many different word forms for the current language. For instance, typing in <em>library</em> or <em>libraries</em> produces the same result, so either can be used. You can explicitly prevent the searching of word forms by using quotation marks (see below).</p>
+
+<h4>Use of Wildcard Asterisks</h4>
+<p>You can use an asterisk at the <strong>end</strong> of any search word, for example:</p>
+<ul>
+	<li><strong>child*</strong> will find <em>child; children; child's; childlike; childish</em></li>
+	<li><strong>abus*</strong> will find <em>abuse; abuser; abused; abusing</em></li>
+	<li><strong>child* abus*</strong> will find any of the combinations outlined above</li>
+</ul>
+<p>In many cases, allowing the software to use its built-in ability to search word forms is more effective than using the asterisk for simple variations of the same word (child and children, help and helping). This is because it reduces the number of unwanted extra matches, such as <em>scan*</em> matching <em>scant</em> and <em>scandal</em> when what was intended was just matching <em>scan</em>, <em>scans</em>, and <em>scanning</em>.</p>
+
+<h4>Use of Quotation Marks</h4>
+<p>You can search with terms enclosed in quotation marks ... thus:
+<strong><em>&quot;child abuse&quot;</em></strong> will result in any records that have <strong>both</strong> of those exact words adjacent to each other in that order and in the <strong>same</strong> field.
+<br><strong><em>&quot;child* abus*&quot;</em></strong> will result in records that have <em>&quot;child abuse&quot;</em> <strong>or</strong> <em>&quot;child abuser&quot;</em> <strong>or</strong> <em>&quot;childish abuser&quot;</em> in a single field, in that order, adjacent to each other.</p>
+<p>Note that using quotation marks turns off the software's ability to search word forms (as mentioned above). Thus, searching <em>&quot;library&quot;</em> will not match <em>libraries</em>.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="communities"></a>
+<h3>Communities</h3>
+<p>Allows you to search based on the values entered into the Areas of Need (formerly &quot;Number of Positions) field. Communities searches use the CIOC Communities hierarchy for searching, so searching for larger areas will automatically bring up records listed for the smaller communities they contain, and vice versa.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="ages"></a>
+<h3>Ages</h3>
+<p>Enter the age of the potential volunteer to match with positions appropriate for a volunteer that age. Note: a record that has no minimum or maximum age specified is assumed to be appropriate for any age.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="dates"></a>
+<h3>Dates and Times</h3>
+<p>Select all the days and times the volunteer is available for. The search will match opportunities that have matched at least one of these time slots. Note that just because one time slot matches it does not mean that the schedule for the opportunity is appropriate; some opportunities will require a commitment during more than one time period, some of which may not match the available times chosen.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="ossd"></a>
+<h3>OSSD Component</h3>
+<p>The Ontario Secondary School Diploma (OSSD) volunteer component requires that high school students complete a minimum number of volunteer hours before graduation. Selecting this box identifies records that have been marked as suitable for fulfilling this requirement.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="email_update"></a>
+<h3>Last Email Update Request</h3>
+<p>Search for records where the opportunity contact was sent an Email Update Request through the database in the past (X) days. The date the email was last sent is set automatically by the software.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="date"></a>
+<h3>&quot;Custom&quot; Date Fields Search</h3>
+<p>You may select up to two date fields to search in. Your search may confine the date to a pre-defined range from a drop-down list, for example <em>&quot;Past</em>&quot;, <em>&quot;Future&quot;</em>, &quot;<em>Last 7 Days&quot;</em>, etc and well as <em>&quot;Is Null&quot;</em> (the selected field(s) must be empty) and <em>&quot;Is Not Null</em>&quot; (the selected field(s) must <strong>not</strong> be empty). You may also select an upper and/or lower bound for the date by providing specific date(s). There are two entries available for creating a custom date search; if you create a search for both entries, both must match.</p>
+<p>The list of dates is created from available date types in the software. If you have renamed your date fields from the standard name that ships with the software, <em>your names may differ from the list below</em>:</p>
+<ul>
+	<li><strong>Application Deadline</strong> - Date by which a potential volunteer must apply for the position (User set)</li>
+	<li><strong>Date Created</strong>: Date the record was created (System set)</li>
+	<li><strong>Date Deleted</strong>: Date the record was deleted, or date of pending deletion (User set)</li>
+	<li><strong>Date Modified</strong>: Date the record was modified (System set)</li>
+	<li><strong>Date of Request</strong>: Date the organization requested the opportunity be posted (User set)</li>
+	<li><strong>Date Updated</strong>: Date the record was fully updated (User set)</li>
+	<li><strong>Display Until</strong>: Date after which the record should be hidden from regular searches (User set)</li>
+	<li><strong>End Date</strong>: Date the position will end (User set)</li>
+	<li><strong>Last Email Request</strong>: Date the system last sent an email request to update the record (System set)</li>
+	<li><strong>Update Schedule</strong>: Date for the next full record update (User set)</li>
+</ul>
+<p><span class="Alert">Important Note</span>: although you can search by <em>Display Until</em> date from the Date Search, if you do not include <em>&quot;expired&quot;</em> records from the <em>Display Until</em> search, they will be excluded. Note that in many cases, system-set dates will include a time-stamp even though this is not displayed to the end user; the above searches accommodate for the time stamp if it is present.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="custom_drops"></a>
+<h3>&quot;Custom&quot; Text Fields Search</h3>
+<p>You may perform up to two custom text field searches. The list of fields available for you to search will be determined by which text fields are available on the <em>Record Details</em> page of the current <em>View</em>. You can use either one or both of these custom search menus at the same time; if you use both, then the records must match both searches.</p>
+<p>There are two drop down menus which allow you to choose fields that are in the database base table and return results based on the fields you have chosen. The centre drop down menus contain 4 choices:</p>
+<ul>
+	<li><strong>Contains:</strong> Records must contain the exact search string you enter anywhere in the selected fields(s)</li>
+	<li><strong>Does Not Contain:</strong> Records cannot contain the exact search string you enter anywhere in the selected fields(s)</li>
+	<li><strong>Is Null:</strong> The selected field(s) must be NULL (empty)</li>
+	<li><strong>Is Not Null</strong> The selected field(s) must <strong>not</strong> be NULL (not empty)</li>
+</ul>
+<p>Within each text search, you may select / unselect multiple fields by holding down the <em>CTRL</em> key while clicking on fields from the list. If you perform a search where you have selected multiple fields from the single list, the default option is that any one of the fields can match your criteria. If you want <strong>all</strong> the fields to match your criteria, you must select the checkbox <em>&quot;All the selected fields must match&quot;</em>.</p>
+<p>You may choose to include the field(s) you are searching as a temporary addition to your search results table by choosing the <em>&quot;Include selected field(s) in results display table&quot;</em> checkbox. This will not change your <em>Change Display Options</em> settings, and the extra field(s) will only be displayed in the results table for this one search.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="owner"></a>
+<h3>Record Owner Agency</h3>
+<p>Allows you to return only results where the record owner Agency matches any one of the Agencies you select from the drop down list (This option is only useful if you have multiple record owner Agencies in your database). The list of Agencies available here is determined by which Agencies are marked as owning records in the current module (Community Information or Volunteer) in the <em>Agency Setup</em> area.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="email"></a>
+<h3>Email</h3>
+<p>Search for records based on the status of the <em>Contact Email</em> and <em>Update Email</em> fields.</p>
+<ul>
+	<li><strong>All Records</strong> - Return all records, regardless of whether they have an email address.</li>
+	<li><strong>Only With Email</strong> - Records that have either a <em>Contact Email</em> or <em>Update Email</em>.</li>
+	<li><strong>Only Without Email</strong> - Records that have <strong>no</strong> <em>Contact Email</em> or <em>Update Email</em>.</li>
+	<li><strong>Can Send Update Requests</strong> - Records that have either an <em>Contact Email</em> or <em>Update Email</em>, and <strong>do not</strong> have the <em>Block Update Email</em> field set.</li>
+	<li><strong>Cannot Send Update Requests</strong> - Records that have no <em>Contact Email</em> or <em>Update Email</em>, or have the <em>Block Update Email</em> field set.</li>
+</ul>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="display"></a>
+<h3>Display Until</h3>
+<p>By default, only <em>&quot;current&quot;</em> records are included in the search - those without a <em>Display Until</em> date, or those with a <em>Display Until</em> date in the future. With this search, you can also choose to see <em>&quot;expired&quot;</em> records (those with a past date), or all records regardless of <em>Display Until</em> date. <span class="Alert">Important Note</span>: although you can search by <em>Display Until</em> date from the Date Search, if you do not include <em>&quot;expired&quot;</em> records from the <em>Display Until</em> search, they will be excluded.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="public"></a>
+<h3>Public Status</h3>
+<p>Allows you to specify whether to return all records, only those marked as public records or only those marked as non-public records. This search is only visible in Views that include non-public records.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="language"></a>
+<h3>Language</h3>
+<p>Allows you to to return records with or without an equivalent in another language. This search does not currently allow you to be specific about which language the record is available in; it only locates records that have an equivalent in a language other than the current one.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="deleted"></a>
+<h3>Deleted Status</h3>
+<p>If you have permissions to see deleted records, you can select this box to have them display in your search results. This applies only to records whose deletion date is in the past. Records with a deletion date in the future (&quot;pending&quot; deletion) are not considered deleted until the date has passed. This search is only visible in Views that include deleted records.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="addsql"></a>
+<h3>SQL</h3>
+<p>An advanced search technique that requires knowledge of the underlying data structure and naming conventions used in the database. Refer to the link in this field &quot;SQL Search Help&quot; for some ideas on possible search strings.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<a name="checklist"></a>
+<h3>Checklists</h3>
+<p>This tool allows you to select from a list of available checklists to perform searches that require or exclude particular values. To search a specific checklists, pick it from the drop-down list and click <em>&quot;Add&quot;</em> to display a search for for that checklist. You search one or many different checklists. Note that the checklists available to search are determined in the setup for the current View.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified: $Date$</p>

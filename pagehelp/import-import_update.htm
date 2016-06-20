@@ -1,0 +1,25 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>The <em>Add / Update Records</em> page is used to select options for import. You have the opportunity to view the actual record data being imported prior to running the import. Once you have selected the desired settings, use the <em>Import Record Data</em> button to being the import process.</p>
+<p>The <strong>Select Record Owner(s)</strong> option, available when the import file contains multiple record owners, allows you to select only specific Record Owners from the file to import. If you do not select any, data from all Record Owners in the file will be imported. <span class="Alert">Important Note</span>: the <em>Record Owner</em> may be different than what is implied from the <em>Record Number</em>.</p>
+<p>The <strong>In case of an ownership conflict</strong> setting allows you to manage a situation where the Record Owner of an existing record in the database does not match the Record Owner indicated in the export file. You can either keep your existing ownership information, update ownership to match the owner in the file, or not import the record(s) in question.</p>
+<p>If the records being imported have private information (are associated with a <em>Privacy Profile</em>) the <strong>Privacy Profile Map</strong> allows you to associate the privacy profiles of an incoming recordset with existing privacy profiles in your database. The system will attempt to make these matches automatically. If you are unable to make a match, you must specify whether the private data should be skipped or imported anyway - <span class="Alert">when in doubt, it is best <em>not</em> to import private information unless you can ensure that the information will remain private</span>. If the existing record has a different privacy profile than the incoming record, you must specify how to resolve the conflict (keep the old profile, take the new profile, or do not import the record).</p>
+<p>The <strong>Number of Records to Import</strong> setting allows you to import records in smaller batches, which is recommended if you have a very large number of records to import, to help prevent any very long delays to others using the server.</p>
+<p><strong>Import Source Database Information</strong>, if selected, populates the SOURCE_DB field in the database with the value provided in the export file. This can help you to properly credit your partners who share data with you, as well as remind you where the record originated. You can select where, or if, to display the SOURCE_DB (Source Database) field in your Views by adding or removing it from the Record Details fields chosen in your View setup.</p>
+<p class="SmallNote">Last Modified: $Date$</p>

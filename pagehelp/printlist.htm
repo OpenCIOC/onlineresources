@@ -1,0 +1,91 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>When accessed from the main menu, the <em>&quot;Print Record List&quot;</em> page allows you to:</p>
+<ul>
+	<li><a href="#list">Generate a list of records</a> formatted for printing</li>
+	<li><a href="#nameindex">Generate a <em>Name / Phone Index</em></a> for a Publication</li>
+	<li><a href="#subjectindex">Generate a <em>Subject Index</em></a> for a Publication</li>
+</ul>
+<p>When accessed from your search results, the <em>&quot;Print Record List&quot;</em> page allows you to:</p>
+<ul>
+	<li><a href="#custommessage">Customize the Message</a> for Printing Your List of Records</li>
+</ul>
+<hr>
+<a name="list"></a>
+<h2>Printing a List of Records</h2>
+<p>Print Profiles are associated with particular Views; a Super User can create or edit Print Profiles and assign them to Views by going to <em>Setup &gt; Print Profiles</em>. If you do not have any Print Profiles available in your View, you will not be able to use this function.</p>
+<h4>Step 1: Selecting your Records and Profile</h4>
+<p>If you access this page through the <em>&quot;Select Checkbox&quot;</em> action on a group of records from search results, you will have already selected the name of the Print Profile you wish to use and the records you wish to include. If you are preparing a list of records for printing from the <em>Print Records</em> link on the Main Menu, you should select one or more Publication codes to print a list of records that are associated with the selected code(s). <strong>Note</strong>: if you are not working from a selection of records and you do not select at least one Publication code, the software will attempt to print <strong>all</strong> the records in your View - not recommended!</p>
+<p>After you have chosen your Profile and selected a Publication (if applicable) Click <em>&quot;Next&quot;</em> to proceed to the next step, customizing your message.</p>
+
+<a name="custommessage"></a>
+<h4>Step 2: Customizing your Message</h4>
+<p>After selecting the records you want to print and a Print Profile, you will have the opportunity to edit, add to or remove the default report message for the selected Print Profile. Depending on the Profile settings, this message might appear once at the top of the report, or before each record in the report.</p>
+
+<h4>Step 3: Viewing your Report</h4>
+<p>After you have customized your message, clicking <em>&quot;Next&quot;</em> will open your report in a new window. After printing or saving your report, you can close the window with the report and return to your previous window to continue working in the database.</p>
+
+<hr>
+
+<a name="nameindex"></a>
+<h2>Generating a Name / Phone Index</h2>
+<p class="SmallNote">This feature is not available when working with a selection of records from your search results.</p>
+<p>The second form on the print records page allows you to configure a Name Index which will provide a quick summary of the records in a particular Publication. The numbers provided in the Index correspond to the Publication Number that is automatically assigned to the record when a print list is created. Publication Numbers are distinct from the usual record number for a record; every print list that is run starts numbering its records beginning from 1; these numbers are assigned at the time the list is run, so adding, removing or renaming a record will alter the Publication Number. For that reason, it is important to co-ordinate running your print list and index so that the numbers correspond correctly. Information about how to include the Publication Number in your print report is available in the help section for Print Profiles. Besides the record number, you have the option of including several other types of information including various Phone and Email fields and Cross Reference Names.</p>
+<p><span class="Alert">Important Note</span>: All Indexes are organized based on the hierarchical name structure of naming Levels 1-5. Inconsistent naming patterns may cause odd behaviour in the Index. In order to have effectively organized indexes, begin filling in names starting with Level 1 and <em>d</em><em>o not</em> leave blank entries between names (i.e., do not have an entry in ORG_LEVEL_1 and then nothing until ORG_LEVEL_3). In addition, take care in not publishing the same Cross-Reference name in multiple records; this will cause multiple entries in the Index, each associated with a different Publication Number.</p>
+
+<h3>Cross-Reference Names</h3>
+<p>If you include the Cross Reference Names option, any names selected to be published as a Cross-Reference will have their own listing. Cross-Reference instances always have the proper ORG_LEVEL_1 name listed in brackets beside the published Cross-Reference name. Fields available for Cross-Reference include Organization Names Level 2-5, Legal Name, and Alternate and Former Names. A <em>Publish</em> checkbox appears next to each name in these fields on the update form of the record.</p>
+
+<h3>Phone and Email Fields</h3>
+<p>You can choose to include one or more Phone or Email listings along with the basic Name Index. To select a field for inclusion, select the checkbox next to the field. You can include a lead-in Label for the field, but this is not required and you can set the Label setting to be blank if you just want to print the field's contents. If you select to apply <strong>bold</strong> formatting, the contents of the fields you selected will be printed in bold.</p>
+<p>If you want to create a special contact list such as a Toll-Free Phone or Email Index, you can choose to only include listings for records that have entries in at least one of the fields you have selected. Note that even though only some records are included in this type of restricted Index, this will not affect the Publication Numbers; these numbers are still assigned based on the listing the Publication as a whole.</p>
+<p>If you include at least one of these fields, a new column will be created to hold this information; one of the options on this form is the width of this column in pixels. If you find this column is too large or too small, you can adjust the width larger or smaller; however, Microsoft Word does not obey the sizing request so this option is only useful for online printing or viewing. You can manually adjust column sizes in Word to an appropriate width after opening the file.</p>
+
+<h3>Additional Options</h3>
+
+<h4>Fonts</h4>
+<p>You can select from either a serif or sans-serif set of Font families, and Font sizes from 8pt-14pt. If you do not like either set of fonts given, you can save the file and change the font in Word or by opening the HTML file in an appropriate source-editing program and changing the style information at the top of the file.</p>
+
+<h4>Dot Leaders</h4>
+<p>You can optionally include <em>dot leaders</em> in your Index, which will draw a line of dots connecting a name to its Publication Number. If you are including additional fields, the dot leader will only go as far as the column containing the additional fields.</p>
+
+<h4>Format Output For...</h4>
+<p>In order to get reasonable results from some features of the Index, including indenting and dot leaders, you must specify whether you intend to use the resulting report for printing online or use in Microsoft Word. A report intended for Microsoft Word will look strange when viewed online, and vice versa.</p>
+
+<hr>
+
+<a name="subjectindex"></a>
+<h2>Generating a Subject Index</h2>
+<p class="SmallNote">This feature is not available when working with a selection of records from your search results.</p>
+<p>The third form on the Print Records page allows you to generate a <em>Subject Index</em> for a particular Publication. The Index is based on the General Heading information associated with the Publication, so this option will only be available for Publications that have General Headings. The Index will print all <em>Used</em> Headings that are associated with at least one record, as well as any <em>Unused</em> Headings that have a reference to at least one <em>Used</em> Heading. More information on creating and managing General Headings is available from the help files in that section.</p>
+<p><span class="Alert">Important Note</span>: All Indexes are organized based on the hierarchical name structure of naming Levels 1-5. Inconsistent naming patterns may cause odd behaviour in the Index. In order to have effectively organized indexes, begin filling in names starting with Level 1 and <em>d</em><em>o not</em> leave blank entries between names (i.e., do not have an entry in ORG_LEVEL_1 and then nothing until ORG_LEVEL_3).</p>
+
+<h3>Additional Options</h3>
+
+<h4>Fonts</h4>
+<p>You can select from either a serif or sans-serif set of Font families, and Font sizes from 8pt-14pt. If you do not like either set of fonts given, you can save the file and change the font in Word or by opening the HTML file in an appropriate source-editing program and changing the style information at the top of the file.</p>
+
+<h4>Dot Leaders</h4>
+<p>You can optionally include <em>dot leaders</em> in your Index, which will draw a line of dots connecting a name to its Publication Number. If you are including additional fields, the dot leader will only go as far as the column containing the additional fields.</p>
+
+<h4>Format Output For...</h4>
+<p>In order to get reasonable results from some features of the Index, including indenting and dot leaders, you must specify whether you intend to use the resulting report for printing online or use in Microsoft Word. A report intended for Microsoft Word will look strange when viewed online, and vice versa.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified: $Date$</p>

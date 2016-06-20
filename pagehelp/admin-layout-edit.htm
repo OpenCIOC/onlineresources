@@ -1,0 +1,315 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>Template Layouts are, at a basic level, just snippets of HTML that will form parts of the pages that are rendered by the software. The parts of the page that can be changed by a Template Layout are:</p>
+<ul>
+	<li><strong>Header</strong> - the part of the page that comes <em>before</em> any CIOC-generated content. This generally contains the top and/or side menu information.</li>
+	<li><strong>Footer</strong> - the part of the page that comes <em>after</em> any CIOC-generated content. This generally includes footer menus, copyright notices, etc.</li>
+	<li><strong>Search</strong> - the body of the main page of each module of the software. This generally contains what would usually be called the &quot;Main Menu&quot; or the &quot;Basic Search&quot;.</li>
+</ul>
+
+<p>Template Layouts can include special elements that are controlled by CIOC's built-in setup and security. You can use special tags within the HTML for your layout to determine where these elements appear and how they are formatted. It is strongly recommend that you make use of these special tags, especially within logged-in Views. A listing of the available special tags and statements are documented below. This list may grow over time as new features are added to the software, but it is intended that existing tags and statements will have long-term support.</p>
+
+<p>The best way to get started with a Template Layout is to modify an existing System Layout. System Layouts use all or most of the available tags, statements, and style elements.</p>
+
+<p><span>Note that hard-coding internal CIOC software links (such as to menu items) will not grant access to pages the user is not allowed to see. However, this approach should never be taken since doing so will present users with confusing links that they cannot follow, and is likely to break overtime or miss new features.</span></p>
+<p class="Alert">Some Elements created for backwards compatibility are deprecated and purposely not explained in this help document. If you encounter undocumented elements in a Layout and need information, please ask on the <a href="http://community.cioc.ca/message-board/" target="_blank">CIOC Message Board.</a></p>
+
+<hr>
+<ul>
+	<li><a href="#htmlsection">HTML Section: Layout Elements and Statements Overview</a></li>
+	<li><a href="#headertags">Header Elements and Statements</a></li>
+	<li><a href="#footertags">Footer Elements and Statements</a></li>
+	<li><a href="#search">Search Elements and Statements</a></li>
+	<li><a href="#csssection">CSS Section: Style Elements Overview</a></li>
+</ul>
+<hr>
+
+<a name="htmlsection"></a>
+<h2>HTML Section: Layout Elements and Statements Overview</h2>
+<p>For the remainder of this document,<em> Elements</em> will refer to a single tag with no closure, that outputs data in its place when the Template is rendered. <em>Statements</em> will refer to a set of tags (opening and closing) that perform some action over a block of text or HTML. The tags used to insert <em>Elements</em> and <em>Statements</em> are enclosed in square brackets like so: <strong>[TAG]</strong>. Statements also include a special part of the tag used to open and close the statement: <strong>[IF:TAG]</strong>, <strong>[ENDIF:TAG]</strong>, <strong>[FOR:TAG]</strong>, <strong>[ENDFOR:TAG]</strong>.</p>
+
+<h3>If Statements</h3>
+<p><em>If Statements</em> are wrapped around a section of HTML that will only render only if a particular condition is true. For example:</p>
+
+<pre>
+<strong>[IF:NOT_LOGGED_IN]</strong>
+&lt;p&gt;Welcome, Public User!&lt;/p&gt;
+<strong>[ENDIF:NOT_LOGGED_IN]</strong>
+</pre>
+
+<p>The Layout system provides some statements specifically for this purpose, but all <em>Content Elements</em> and <em>Looping Statements</em> can also be used as an <em>If Statement</em>. Here is an example using a <em>Looping Statement</em> tag that does not display the menu section if there are no menu items:</p>
+
+<pre>
+<strong>[IF:CUSTOM_MENU_ITEMS]</strong>
+&lt;ul&gt;
+	[FOR:CUSTOM_MENU_ITEMS]
+	&lt;li class="menu"&gt;&lt;a href=&quot;[LINK]&quot;&gt;[DISPLAY]&lt;/a&gt;&lt;/li&gt;
+	[ENDFOR:CUSTOM_MENU_ITEMS]
+&lt;/ul&gt;
+<strong>[ENDIF:CUSTOM_MENU_ITEMS]</strong>
+</pre>
+
+<p>Here is an example using a <em>Content Element</em> tag that does not display a section with the "Change Views" drop-down if there are no Views to switch to:</p>
+
+<pre>
+<strong>[IF:CHANGE_VIEW]</strong>
+&lt;hr&gt;
+[CHANGE_VIEW]
+<strong>[ENDIF:CHANGE_VIEW]</strong>
+</pre>
+
+<h3>Content Elements</h3>
+<p><em>Content Elements</em> print out some pre-defined information sourced from the database, which may already include some HTML formatting. Unlike <em>Looping Statements</em> that iterate over a number of values, each <em>Content Element</em> tag will render one value (or no value if none is defined).</p>
+
+<p>A reminder that all <em>Content Elements</em> can also be used with an <em>If Statement</em> as noted above. The condition will be false if the content is a false-type value such as NULL (empty) or 0.</p>
+
+<h3>Looping Statements</h3>
+<p><em>Looping Statements</em> allow you to iterate through a list of values and render text or HTML for each item in the list. Each item will have <em>Content Elements</em> that can be rendered in the page (such as <strong>[DISPLAY]</strong> or <strong>[LINK]</strong>). Below is an example of a <em>Looping Statement</em> that creates a list of all the custom Header menu items (menu items are added via the Design Template):</p>
+
+<pre>
+&lt;ul&gt;
+	<strong>[FOR:CUSTOM_MENU_ITEMS]</strong>
+	&lt;li class="menu"&gt;&lt;a href=&quot;<strong>[LINK]</strong>&quot;&gt;<strong>[DISPLAY]</strong>&lt;/a&gt;&lt;/li&gt;
+	<strong>[ENDFOR:CUSTOM_MENU_ITEMS]</strong>
+&lt;/ul&gt;
+</pre>
+
+<p>There is a special <em>If Statement</em> available in a <em>Looping Statement</em> called <strong>COUNT</strong>. It allows you to have special text or HTML only for the second and subsequent items in a list. This is useful for creating dividers between items. For example, the following would put a new line tag only on the second and subsequent menu items:</p>
+
+<pre>
+[FOR:CUSTOM_MENU_ITEMS]
+<strong>[IF:COUNT]</strong>&lt;br&gt;<strong>[ENDIF:COUNT]</strong>&lt;a href=&quot;[LINK]&quot;&gt;[DISPLAY]&lt;/a&gt;
+[ENDFOR:CUSTOM_MENU_ITEMS]
+</pre>
+
+<p>A reminder that all <em>Looping Statements</em> tags can also be used as an <em>If Statements</em> as noted above. The condition will be false if there are no items in the list.</p>
+
+<a name="headertags"></a>
+<h2>Header Tags and Statements</h2>
+<h3>If Statements</h3>
+<p>A reminder that all Content Elements and Looping Statements can also be used with an <em>IF</em> Statement (see <a href="#htmlsection">Overview of Tags and Statements</a>)</p>
+<ul>
+	<li><strong>LOGGED_IN</strong> - Indicates the current user <em>is</em> logged in.</li>
+	<li><strong>NOT_LOGGED_IN</strong> - Indicates the current user is <em>not</em> logged in.</li>
+	<li><strong>NOT_PRINT_MODE</strong> - Indicates the page currently is <em>not</em> in print mode.</li>
+	<li><strong>PRINT_MODE</strong> - Indicates the page currently <em>is</em> in print mode.</li>
+	<li><strong>QUICK_BAR</strong> - Indicates the Quick Bar should be displayed.</li>
+</ul>
+
+<h3>Content Elements</h3>
+<ul>
+	<li><strong>HELP_LINK</strong> - The URL for a link to the page help for the current page.</li>
+	<li><strong>LOGO</strong> - The site logo from the Template</li>
+	<li><strong>LOGOLINK</strong> - The site logo link from the Template</li>
+	<li><strong>MY_LIST</strong> - The HTML to show the My List feature.</li>
+	<li><strong>NEW_SEARCH</strong> - The URL to link to a new search in the current language.</li>
+	<li><strong>PAGE_HELP_TITLE</strong> - Provides the text "Page Help" in the current page language.</li>
+	<li><strong>PAGE_NAME</strong> - The Name of the current page in the current language.</li>
+	<li><strong>QUICK_LINKS_TITLE</strong> - The text "Quick Links: " in the current language.</li>
+	<li><strong>SITE_BAR_MENU</strong> - SITE_BAR_ITEMS as an HTML unordered list.</li>
+	<li><strong>SUGGEST_LINK</strong> -  The URL to link to a suggest a new record in the current language.</li>
+	<li><strong>VIEW_NAME</strong> - The name of the current view.</li>
+	<li><strong>VIEW_TITLE</strong> - The "Title" field from the current view.</li>
+</ul>
+
+<h3>Looping Statements</h3>
+<ul>
+	<li><strong>SITE_MENU</strong> - The items for the menu shown to public and logged in users users on every page (usually at the top).</li>
+	<li><strong>SITE_BAR_ITEMS</strong> - The items for the menu shown to logged in users on every page (usually at the top) that includes their login name.</li>
+</ul>
+
+<a name="footertags"></a>
+<h2>Footer Tags and Statements</h2>
+<h3>If Statements</h3>
+<p>A reminder that all Content Elements and Looping Statements can also be used with an <em>IF</em> Statement (see <a href="#htmlsection">Overview of Tags and Statements</a>)</p>
+<ul>
+	<li><strong>LOGGED_IN</strong> - Indicates the current user <em>is</em> logged in.</li>
+	<li><strong>NOT_LOGGED_IN</strong> - Indicates the current user is <em>not</em> logged in.</li>
+	<li><strong>NOT_PRINT_MODE</strong> - Indicates the page currently is <em>not</em> in print mode.</li>
+	<li><strong>PRINT_MODE</strong> - Indicates the page currently <em>is</em> in print mode.</li>
+</ul>
+
+<h3>Content Elements</h3>
+<ul>
+	<li><strong>NEW_SEARCH</strong> - The URL to link to a new search in the current language.</li>
+	<li><strong>SUGGEST_LINK</strong> -  The URL to link to a suggest a new record in the current language.</li>
+</ul>
+
+<h3>Looping Statements</h3>
+<ul>
+	<li><strong>FOOTER_MENU</strong> - The items for the menu shown to logged in users at the bottom of the page. All content for this menu comes from the Template.</li>
+</ul>
+
+<a name="search"></a>
+<h2>Search Tags and Statements</h2>
+<h3>If Statements</h3>
+<p>A reminder that all Content Elements and Looping Statements can also be used with an <em>IF</em> Statement (see <a href="#htmlsection">Overview of Tags and Statements</a>)</p>
+<ul>
+	<li><strong>LOGGED_IN</strong> - Indicates the current user <em>is</em> logged in.</li>
+	<li><strong>NOT_LOGGED_IN</strong> - Indicates the current user is <em>not</em> logged in.</li>
+	<li><strong>NOT_PRINT_MODE</strong> - Indicates the page currently is <em>not</em> in print mode.</li>
+	<li><strong>PRINT_MODE</strong> - Indicates the page currently <em>is</em> in print mode.</li>
+	<li><strong>SEARCH_MENU</strong> - Indicates the Search Menu (normally on the left of screen) should be displayed.</li>
+</ul>
+<h3>Content Elements</h3>
+<ul>
+	<li><strong>BASIC_SEARCH</strong> - The full HTML for the Basic Search form.</li>
+	<li><strong>BROWSE</strong> - The default formatting of all the browse sections for the current module.</li>
+	<li><strong>CHANGE_VIEW</strong> - User interface for changing the View.</li>
+	<li><strong>CUSTOM_MENU_ITEMS</strong> - Menu items configured for Basic Search in the Template.</li>
+	<li><strong>MENU_MESSAGE</strong> - "Menu Message" value from the current View.</li>
+	<li><strong>MENU_TITLE</strong> - The text "Main Menu" in the current language.</li>
+	<li><strong>SEARCH_ALERT</strong> - "Basic Search Alert Message" from the current View.</li>
+	<li><strong>SEARCH_RIGHT_CONTENT</strong> - "Basic Search Right Message" from the current View.</li>
+	<li><strong>SEARCH_LEFT_CONTENT</strong> - "Basic Search Left Message" from the current View.</li>
+</ul>
+<h4>CIC-only Content Elements</h4>
+<ul>
+	<li><strong>BROWSE_BY_INDUSTRY_URL</strong> - URL to link to the browse by industry page (can be used in a jQueryUI tab to bring the page contents in-line on the search page). Only has content when NAICS is enable in current view.</li>
+	<li><strong>CHILDCARE_SEARCH_TEXT</strong> - "Child Care Search Description" from the current View.</li>
+	<li><strong>CHILDCARE_SEARCH_URL</strong> - URL to link to to the browse by industry page (can be used in a jQueryUI tab to bring the page contents in-line on the search page). Only has content when "Link to Child Care Resource Advanced Search form".</li>
+	<li><strong>SERVICE_CATEGORY</strong> - Default user interface for accessing taxonomy searches. Only has content when "Taxonomy menu items and searches are available in this View" is enabled in the view.</li>
+	<li><strong>SERVICE_CATEGORY_URL</strong> - URL to link to to the browse by taxonomy page (can be used in a jQueryUI tab to bring the page contents in-line on the search page). Only has content when "Taxonomy menu items and searches are available in this View" is enabled in the view and the user is not logged in.</li>
+	<li><strong>VOL_LINK</strong> - URL to link to the volunteer basic search page.</li>
+	<li><strong>VOL_LINK_TEXT</strong> - The text "Volunteer Menu" in the current language.</li>
+</ul>
+<h4>Volunteer-only Content Elements</h4>
+<ul>
+	<li><strong>CIC_LINK</strong> - URL to link to the community resources module basic search page.</li>
+	<li><strong>CIC_LINK_TEXT</strong> - The text "CIC Menu" in the current language.</li>
+	<li><strong>SEARCH_PROMPT</strong> - The text "Looking for Volunteer Opportunities?" in the current language. If a community set is configured for the view, then the text will be "Looking for Volunteer Opportunities in Community?" where community is the Areas Served value of the Community Set configured in the current View.</li>
+	<li><strong>VOL_SEARCH_MENU</strong> - The menu of options for the volunteer search page including link to step by step search.</li>
+</ul>
+<h3>Looping Statements</h3>
+<ul>
+	<li><strong>OTHER_LANGS</strong> - A list of languages available in the current View <em>other than the current language</em>. Items include elements for <em>DISPLAY</em> (the name of the language) and <em>LINK</em> (a link to switch to the main page in that language).</li>
+	<li><strong>SEARCH_MENU_ITEMS</strong> - Menu items for Search Menu (normally on the left of screen) not including the custom menu items.</li>
+</ul>
+<h4>CIC-only Looping Statements</h4>
+<ul>
+	<li><strong>BROWSE_ORG_ITEMS</strong> - Menu items for Browse by Organization.</li>
+	<li><strong>BROWSE_SUBJ_ITEMS</strong> - Menu items for Browse by Subject.</li>
+</ul>
+
+<h4>Volunteer-only Looping Statements</h4>
+<ul>
+	<li><strong>BROWSE_BY_OP_ITEMS</strong> - Menu items for Browse by Opportunity.</li>
+	<li><strong>BROWSE_BY_ORG_ITEMS</strong> - Menu items for Browse by Organization.</li>
+</ul>
+<a name="csssection"></a>
+<h2>CSS Section: Style Elements Overview</h2>
+<p></p>
+<h3>Supported CIOC-specific Elements</h3>
+<ul>
+	<li>AlertColour</li>
+	<li>ALinkColour</li>
+	<li>BackgroundColour</li>
+	<li>BodyTagExtras</li>
+	<li>FieldLabelColour</li>
+	<li>FontColour</li>
+	<li>FontFamily</li>
+	<li>LinkColour</li>
+	<li>MenuBgColour</li>
+	<li>MenuFontColour</li>
+	<li>ShortCutIcon</li>
+	<li>StyleSheetUrl</li>
+	<li>TitleBgColour</li>
+	<li>TitleFontColour</li>
+	<li>VLinkColour</li>
+</ul>
+<h3>Supported jQueryUI-based Elements</h3>
+<ul>
+	<li>bgActiveRepeat</li>
+	<li>bgActiveXPos</li>
+	<li>bgActiveYPos</li>
+	<li>bgColorActive</li>
+	<li>bgColorContent</li>
+	<li>bgColorDefault</li>
+	<li>bgColorError</li>
+	<li>bgColorHeader</li>
+	<li>bgColorHighlight</li>
+	<li>bgColorHover</li>
+	<li>bgContentRepeat</li>
+	<li>bgContentXPos</li>
+	<li>bgContentYPos</li>
+	<li>bgDefaultRepeat</li>
+	<li>bgDefaultXPos</li>
+	<li>bgDefaultYPos</li>
+	<li>bgErrorRepeat</li>
+	<li>bgErrorXPos</li>
+	<li>bgErrorYPos</li>
+	<li>bgHeaderRepeat</li>
+	<li>bgHeaderXPos</li>
+	<li>bgHeaderYPos</li>
+	<li>bgHighlightRepeat</li>
+	<li>bgHighlightXPos</li>
+	<li>bgHighlightYPos</li>
+	<li>bgHoverRepeat</li>
+	<li>bgHoverXPos</li>
+	<li>bgHoverYPos</li>
+	<li>bgImgUrlActive</li>
+	<li>bgImgUrlContent</li>
+	<li>bgImgUrlDefault</li>
+	<li>bgImgUrlError</li>
+	<li>bgImgUrlHeader</li>
+	<li>bgImgUrlHighlight</li>
+	<li>bgImgUrlHover</li>
+	<li>bgImgUrlOverlay</li>
+	<li>bgImgUrlShadow</li>
+	<li>bgOverlayRepeat</li>
+	<li>bgOverlayXPos</li>
+	<li>bgOverlayYPos</li>
+	<li>bgShadowRepeat</li>
+	<li>bgShadowXPos</li>
+	<li>bgShadowYPos</li>
+	<li>borderColorActive</li>
+	<li>borderColorContent</li>
+	<li>borderColorDefault</li>
+	<li>borderColorError</li>
+	<li>borderColorHeader</li>
+	<li>borderColorHighlight</li>
+	<li>borderColorHover</li>
+	<li>cornerRadius</li>
+	<li>fcActive</li>
+	<li>fcContent</li>
+	<li>fcDefault</li>
+	<li>fcError</li>
+	<li>fcHeader</li>
+	<li>fcHighlight</li>
+	<li>fcHover</li>
+	<li>ffDefault</li>
+	<li>fsDefault</li>
+	<li>iconColorActive</li>
+	<li>iconColorContent</li>
+	<li>iconColorDefault</li>
+	<li>iconColorError</li>
+	<li>iconColorHeader</li>
+	<li>iconColorHighlight</li>
+	<li>iconColorHover</li>
+	<li>iconsActive</li>
+	<li>iconsContent</li>
+	<li>iconsDefault</li>
+	<li>iconsError</li>
+	<li>iconsHeader</li>
+	<li>iconsHighlight</li>
+	<li>iconsHover</li>
+</ul>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified:	$Date$</p>

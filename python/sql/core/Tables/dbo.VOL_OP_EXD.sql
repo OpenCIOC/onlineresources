@@ -1,0 +1,20 @@
+CREATE TABLE [dbo].[VOL_OP_EXD]
+(
+[OP_EXD_ID] [int] NOT NULL IDENTITY(1, 1),
+[FieldName_Cache] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
+[VNUM] [varchar] (10) COLLATE Latin1_General_100_CI_AI NOT NULL,
+[EXD_ID] [int] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_OP_EXD] ADD CONSTRAINT [PK_VOL_OP_EXD] PRIMARY KEY CLUSTERED  ([OP_EXD_ID]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_OP_EXD] ADD CONSTRAINT [FK_VOL_OP_EXD_VOL_ExtraDropDown] FOREIGN KEY ([EXD_ID], [FieldName_Cache]) REFERENCES [dbo].[VOL_ExtraDropDown] ([EXD_ID], [FieldName]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[VOL_OP_EXD] ADD CONSTRAINT [FK_VOL_OP_EXD_VOL_Opportunity] FOREIGN KEY ([VNUM]) REFERENCES [dbo].[VOL_Opportunity] ([VNUM]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+GRANT SELECT ON  [dbo].[VOL_OP_EXD] TO [cioc_login_role]
+GRANT INSERT ON  [dbo].[VOL_OP_EXD] TO [cioc_login_role]
+GRANT DELETE ON  [dbo].[VOL_OP_EXD] TO [cioc_login_role]
+GRANT UPDATE ON  [dbo].[VOL_OP_EXD] TO [cioc_login_role]
+GRANT SELECT ON  [dbo].[VOL_OP_EXD] TO [cioc_vol_search_role]
+GO

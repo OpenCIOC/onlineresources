@@ -1,0 +1,50 @@
+CREATE TABLE [dbo].[CCR_BT_SCH_Notes]
+(
+[BT_SCH_ID] [int] NOT NULL,
+[LangID] [smallint] NOT NULL,
+[EscortNotes] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[InAreaNotes] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE TRIGGER [dbo].[tr_CCR_BT_SCH_Notes_iu] ON [dbo].[CCR_BT_SCH_Notes]
+FOR INSERT, UPDATE AS
+
+SET NOCOUNT ON
+
+DELETE prn
+FROM CCR_BT_SCH_Notes prn
+INNER JOIN Inserted i
+	ON prn.BT_SCH_ID = i.BT_SCH_ID AND prn.LangID=i.LangID
+WHERE prn.EscortNotes IS NULL AND prn.InAreaNotes IS NULL
+
+UPDATE btd
+		SET SRCH_Anywhere_U = 1
+	FROM GBL_BaseTable_Description btd
+	INNER JOIN CCR_BT_SCH pr
+		ON btd.NUM=pr.NUM
+	WHERE	btd.SRCH_Anywhere_U <> 1
+		AND (EXISTS(SELECT * FROM Inserted i WHERE pr.BT_SCH_ID=i.BT_SCH_ID AND btd.LangID=i.LangID)
+		OR EXISTS(SELECT * FROM Deleted d WHERE pr.BT_SCH_ID=d.BT_SCH_ID AND btd.LangID=d.LangID))
+
+SET NOCOUNT OFF
+GO
+ALTER TABLE [dbo].[CCR_BT_SCH_Notes] ADD CONSTRAINT [PK_CCR_BT_SCH_Notes] PRIMARY KEY CLUSTERED  ([BT_SCH_ID], [LangID]) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_CCR_BT_SCH_EscortNotes] ON [dbo].[CCR_BT_SCH_Notes] ([BT_SCH_ID], [LangID]) INCLUDE ([EscortNotes]) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_CCR_BT_SCH_InAreaNotes] ON [dbo].[CCR_BT_SCH_Notes] ([BT_SCH_ID], [LangID]) INCLUDE ([InAreaNotes]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[CCR_BT_SCH_Notes] ADD CONSTRAINT [FK_CCR_BT_SCH_Notes_CCR_BT_SCH] FOREIGN KEY ([BT_SCH_ID]) REFERENCES [dbo].[CCR_BT_SCH] ([BT_SCH_ID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[CCR_BT_SCH_Notes] ADD CONSTRAINT [FK_CCR_BT_SCH_Notes_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
+GO
+GRANT SELECT ON  [dbo].[CCR_BT_SCH_Notes] TO [cioc_cic_search_role]
+GRANT SELECT ON  [dbo].[CCR_BT_SCH_Notes] TO [cioc_login_role]
+GRANT INSERT ON  [dbo].[CCR_BT_SCH_Notes] TO [cioc_login_role]
+GRANT DELETE ON  [dbo].[CCR_BT_SCH_Notes] TO [cioc_login_role]
+GRANT UPDATE ON  [dbo].[CCR_BT_SCH_Notes] TO [cioc_login_role]
+GO

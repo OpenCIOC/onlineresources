@@ -1,0 +1,15 @@
+CREATE TABLE [dbo].[TAX_Source_Name]
+(
+[TAX_SRC_ID] [int] NOT NULL,
+[LangID] [smallint] NOT NULL,
+[SourceName] [nvarchar] (200) COLLATE Latin1_General_100_CI_AI NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[TAX_Source_Name] ADD CONSTRAINT [PK_TAX_Source_Name] PRIMARY KEY CLUSTERED  ([TAX_SRC_ID], [LangID]) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_TAX_Source_Name_1] ON [dbo].[TAX_Source_Name] ([LangID], [SourceName]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[TAX_Source_Name] ADD CONSTRAINT [FK_TAX_Source_Name_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
+GO
+ALTER TABLE [dbo].[TAX_Source_Name] ADD CONSTRAINT [FK_TAX_Source_Name_TAX_Source] FOREIGN KEY ([TAX_SRC_ID]) REFERENCES [dbo].[TAX_Source] ([TAX_SRC_ID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO

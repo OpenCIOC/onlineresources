@@ -1,0 +1,44 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+
+CREATE PROCEDURE [dbo].[sp_GBL_NUMSetOLSIDs_u]
+	@NUM varchar(8),
+	@IdList varchar(max)
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.5
+	Checked by: KL
+	Checked on: 20-Jan-2012
+	Action: IN PROGRESS
+*/
+
+DECLARE @tmpOLS_IDs TABLE(
+	OLS_ID varchar(20) NOT NULL PRIMARY KEY
+)
+
+INSERT INTO @tmpOLS_IDs SELECT DISTINCT tm.*
+	FROM dbo.fn_GBL_ParseIntIDList(@IdList,',') tm
+	INNER JOIN GBL_OrgLocationService ols
+		ON tm.ItemID=ols.OLS_ID
+
+DELETE pr
+	FROM GBL_BT_OLS pr
+	LEFT JOIN @tmpOLS_IDs tm
+		ON pr.OLS_ID = tm.OLS_ID
+WHERE tm.OLS_ID IS NULL AND NUM=@NUM
+
+INSERT INTO GBL_BT_OLS (NUM, OLS_ID) SELECT NUM=@NUM, tm.OLS_ID
+	FROM @tmpOLS_IDs tm
+WHERE NOT EXISTS(SELECT * FROM GBL_BT_OLS pr WHERE NUM=@NUM AND pr.OLS_ID=tm.OLS_ID)
+
+SET NOCOUNT OFF
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_GBL_NUMSetOLSIDs_u] TO [cioc_login_role]
+GO

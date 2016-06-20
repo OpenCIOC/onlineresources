@@ -1,0 +1,60 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE FUNCTION [dbo].[fn_GBL_XML_Contact](
+	@ContactType varchar(100),
+	@NUM varchar(8),
+	@HasEnglish bit,
+	@HasFrench bit
+)
+RETURNS [xml] WITH EXECUTE AS CALLER
+AS 
+BEGIN
+DECLARE @xmlReturn [xml]
+
+/*
+	Checked for Release: 3.1
+	Checked by: KL
+	Checked on: 04-Jan-2012
+	Action: NO ACTION REQUIRED
+*/
+
+SET @xmlReturn = (SELECT
+				CASE WHEN LangID=0 THEN 'E' WHEN LangID=2 THEN 'F' ELSE '?' END AS "@LANG",
+				NAME_HONORIFIC AS "@NMH",
+				NAME_FIRST AS "@NMFIRST",
+				NAME_LAST AS "@NMLAST",
+				NAME_SUFFIX AS "@NMS",
+				TITLE AS "@TTL",
+				ORG AS "@ORG",
+				EMAIL AS "@EML",
+				FAX_NOTE AS "@FAXN",
+				FAX_NO AS "@FAXNO",
+				FAX_EXT AS "@FAXEXT",
+				CASE WHEN FAX_CALLFIRST=1 THEN 1 ELSE NULL END AS "@FAXCALL",
+				PHONE_1_TYPE AS "@PH1TYPE",	
+				PHONE_1_NOTE AS "@PH1N",
+				PHONE_1_NO AS "@PH1NO",
+				PHONE_1_EXT AS "@PH1EXT",
+				PHONE_1_OPTION AS "@PH1OPT",
+				PHONE_2_TYPE AS "@PH2TYPE",	
+				PHONE_2_NOTE AS "@PH2N",
+				PHONE_2_NO AS "@PH2NO",
+				PHONE_2_EXT AS "@PH2EXT",
+				PHONE_2_OPTION AS "@PH2OPT",
+				PHONE_3_TYPE AS "@PH3TYPE",	
+				PHONE_3_NOTE AS "@PH3N",
+				PHONE_3_NO AS "@PH3NO",
+				PHONE_3_EXT AS "@PH3EXT",
+				PHONE_3_OPTION AS "@PH3OPT"
+			FROM GBL_Contact
+			WHERE GblContactType=@ContactType
+				AND GblNUM=@NUM
+				AND ((@HasEnglish=1 AND LangID=0) OR (@HasFrench=1 AND LangID=2))
+			FOR XML PATH('CONTACT'), TYPE)
+
+RETURN @xmlReturn
+
+END
+GO

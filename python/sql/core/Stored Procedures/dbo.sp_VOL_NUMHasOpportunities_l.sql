@@ -1,0 +1,71 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_VOL_NUMHasOpportunities_l]
+	@IdList [varchar](max),
+	@UseNUM bit
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.6
+	Checked by: CL
+	Checked on: 27-Sep-2014
+	Action: TESTING REQUIRED
+*/
+
+DECLARE @tmpNUMs	TABLE(NUM varchar(8))
+
+IF @UseNUM = 1 BEGIN
+	INSERT @tmpNUMs SELECT DISTINCT bt.NUM
+		FROM dbo.fn_GBL_ParseVarCharIDList(@IdList,',') tm
+		INNER JOIN GBL_BaseTable bt
+			ON tm.ItemID = bt.NUM COLLATE Latin1_General_100_CI_AI
+END ELSE BEGIN
+	INSERT INTO @tmpNUMs SELECT DISTINCT btd.NUM
+		FROM dbo.fn_GBL_ParseIntIDList(@IdList,',') tm
+		INNER JOIN GBL_BaseTable_Description btd
+			ON tm.ItemID = btd.BTD_ID
+END
+
+SELECT vo.RECORD_OWNER, bt.NUM,
+		dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL,
+		CURRENT_PUBLIC = (SELECT COUNT(DISTINCT vo2.VNUM)
+			FROM VOL_Opportunity vo2
+			INNER JOIN VOL_Opportunity_Description vod
+				ON vo2.VNUM=vod.VNUM AND vod.LangID=(SELECT TOP 1 LangID FROM VOL_Opportunity_Description WHERE VNUM=vod.VNUM ORDER BY NON_PUBLIC, CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
+			WHERE vo2.NUM=btd.NUM
+				AND vo2.RECORD_OWNER=vo.RECORD_OWNER
+				AND (vo2.DISPLAY_UNTIL IS NULL OR vo2.DISPLAY_UNTIL >= GETDATE())
+				AND vod.NON_PUBLIC=0 
+				AND (vod.DELETION_DATE IS NULL OR vod.DELETION_DATE > GETDATE())
+			),
+		TOTAL_COUNT = COUNT(*)
+	FROM @tmpNUMs tm
+	INNER JOIN GBL_BaseTable bt
+		ON tm.NUM=bt.NUM COLLATE Latin1_General_100_CI_AI
+	LEFT JOIN GBL_BaseTable_Description btd
+		ON bt.NUM=btd.NUM AND btd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=bt.NUM ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
+	INNER JOIN VOL_Opportunity vo
+		ON bt.NUM=vo.NUM
+GROUP BY vo.RECORD_OWNER, bt.NUM,
+		btd.SORT_AS, btd.NUM, btd.ORG_LEVEL_1, btd.ORG_LEVEL_2, btd.ORG_LEVEL_3, btd.ORG_LEVEL_4, btd.ORG_LEVEL_5, btd.LOCATION_NAME, btd.SERVICE_NAME_LEVEL_1, btd.SERVICE_NAME_LEVEL_2, bt.DISPLAY_LOCATION_NAME, bt.DISPLAY_ORG_NAME
+ORDER BY vo.RECORD_OWNER, ISNULL(btd.SORT_AS,btd.ORG_LEVEL_1), btd.ORG_LEVEL_2, btd.ORG_LEVEL_3, btd.ORG_LEVEL_4, btd.ORG_LEVEL_5,
+		STUFF(
+			CASE WHEN EXISTS(SELECT * FROM GBL_BT_OLS pr INNER JOIN GBL_OrgLocationService ols ON pr.OLS_ID=ols.OLS_ID AND ols.Code IN ('AGENCY') WHERE pr.NUM=btd.NUM)
+				THEN NULL
+				ELSE COALESCE(', ' + btd.LOCATION_NAME,'') +
+					COALESCE(', ' + btd.SERVICE_NAME_LEVEL_1,'') +
+					COALESCE(', ' + btd.SERVICE_NAME_LEVEL_2,'')
+				 END,
+			1, 2, ''
+		)
+
+SET NOCOUNT OFF
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_VOL_NUMHasOpportunities_l] TO [cioc_login_role]
+GO

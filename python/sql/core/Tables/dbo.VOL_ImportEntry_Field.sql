@@ -1,0 +1,13 @@
+CREATE TABLE [dbo].[VOL_ImportEntry_Field]
+(
+[EFLD_ID] [int] NOT NULL IDENTITY(1, 1),
+[EF_ID] [int] NOT NULL,
+[FieldID] [int] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_ImportEntry_Field] ADD CONSTRAINT [PK_VOL_ImportEntry_Field] PRIMARY KEY CLUSTERED  ([EFLD_ID]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_ImportEntry_Field] ADD CONSTRAINT [FK_VOL_ImportEntry_Field_VOL_ImportEntry] FOREIGN KEY ([EF_ID]) REFERENCES [dbo].[VOL_ImportEntry] ([EF_ID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[VOL_ImportEntry_Field] ADD CONSTRAINT [FK_VOL_ImportEntry_Field_VOL_FieldOption] FOREIGN KEY ([FieldID]) REFERENCES [dbo].[VOL_FieldOption] ([FieldID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO

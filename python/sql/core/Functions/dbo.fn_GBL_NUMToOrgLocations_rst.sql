@@ -1,0 +1,75 @@
+
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE FUNCTION [dbo].[fn_GBL_NUMToOrgLocations_rst](
+	@NUM varchar(8),
+	@ViewType int,
+	@ShowNotInView bit
+)
+RETURNS @OrgList TABLE (
+	[NUM] varchar(8) NOT NULL,
+	[LangID] smallint NOT NULL,
+	[InView] bit,
+	[Deleted] bit,
+	[ORG_NAME] nvarchar(1000)
+) WITH EXECUTE AS CALLER
+AS 
+BEGIN
+
+/*
+	Checked for Release: 3.5.3
+	Checked by: KL
+	Checked on: 11-Jun-2015
+	Action: NO ACTION REQUIRED
+*/
+
+INSERT INTO @OrgList
+SELECT	lbtd.NUM, lbtd.LangID,
+		dbo.fn_CIC_RecordInView(lbtd.NUM, @ViewType, @@LANGID, 0, GETDATE()),
+		CASE WHEN lbtd.DELETION_DATE < GETDATE() THEN 1 ELSE 0 END,
+		ISNULL(lbtd.LOCATION_NAME,
+			CASE WHEN (
+					ISNULL(CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 THEN NULL ELSE lbtd.ORG_LEVEL_1 END,'')
+				+ ISNULL(CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 THEN '' ELSE ', ' END + CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 AND lbtd.ORG_LEVEL_2=btd.ORG_LEVEL_2 THEN NULL ELSE lbtd.ORG_LEVEL_2 END,'')
+				+ ISNULL(CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 AND lbtd.ORG_LEVEL_2=btd.ORG_LEVEL_2 THEN '' ELSE ', ' END + CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 AND lbtd.ORG_LEVEL_2=btd.ORG_LEVEL_2 AND lbtd.ORG_LEVEL_3=btd.ORG_LEVEL_3 THEN NULL ELSE lbtd.ORG_LEVEL_3 END,'')
+				+ ISNULL(CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 AND lbtd.ORG_LEVEL_2=btd.ORG_LEVEL_2 AND lbtd.ORG_LEVEL_3=btd.ORG_LEVEL_3 THEN '' ELSE ', ' END + CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 AND lbtd.ORG_LEVEL_2=btd.ORG_LEVEL_2 AND lbtd.ORG_LEVEL_3=btd.ORG_LEVEL_3 AND lbtd.ORG_LEVEL_4=btd.ORG_LEVEL_4 THEN NULL ELSE lbtd.ORG_LEVEL_4 END,'')
+				+ ISNULL(CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 AND lbtd.ORG_LEVEL_2=btd.ORG_LEVEL_2 AND lbtd.ORG_LEVEL_3=btd.ORG_LEVEL_3 AND lbtd.ORG_LEVEL_4=btd.ORG_LEVEL_4 THEN '' ELSE ', ' END + lbtd.ORG_LEVEL_5,'')
+				=''
+				)
+			THEN CASE WHEN ISNULL(lbtd.ORG_LEVEL_1,'') + ISNULL(', ' + lbtd.ORG_LEVEL_2,'') + ISNULL(', ' + lbtd.ORG_LEVEL_3,'') + ISNULL(', ' + lbtd.ORG_LEVEL_4,'') + ISNULL(', ' + lbtd.ORG_LEVEL_5,'')=''
+				THEN cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Unknown',lbtd.LangID)
+				ELSE ISNULL(lbtd.ORG_LEVEL_1,'') + ISNULL(', ' + lbtd.ORG_LEVEL_2,'') + ISNULL(', ' + lbtd.ORG_LEVEL_3,'') + ISNULL(', ' + lbtd.ORG_LEVEL_4,'') + ISNULL(', ' + lbtd.ORG_LEVEL_5,'')
+				END
+			ELSE ISNULL(CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 THEN NULL ELSE lbtd.ORG_LEVEL_1 END,'')
+				+ ISNULL(CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 THEN '' ELSE ', ' END + CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 AND lbtd.ORG_LEVEL_2=btd.ORG_LEVEL_2 THEN NULL ELSE lbtd.ORG_LEVEL_2 END,'')
+				+ ISNULL(CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 AND lbtd.ORG_LEVEL_2=btd.ORG_LEVEL_2 THEN '' ELSE ', ' END + CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 AND lbtd.ORG_LEVEL_2=btd.ORG_LEVEL_2 AND lbtd.ORG_LEVEL_3=btd.ORG_LEVEL_3 THEN NULL ELSE lbtd.ORG_LEVEL_3 END,'')
+				+ ISNULL(CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 AND lbtd.ORG_LEVEL_2=btd.ORG_LEVEL_2 AND lbtd.ORG_LEVEL_3=btd.ORG_LEVEL_3 THEN '' ELSE ', ' END + CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 AND lbtd.ORG_LEVEL_2=btd.ORG_LEVEL_2 AND lbtd.ORG_LEVEL_3=btd.ORG_LEVEL_3 AND lbtd.ORG_LEVEL_4=btd.ORG_LEVEL_4 THEN NULL ELSE lbtd.ORG_LEVEL_4 END,'')
+				+ ISNULL(CASE WHEN lbtd.ORG_LEVEL_1=btd.ORG_LEVEL_1 AND lbtd.ORG_LEVEL_2=btd.ORG_LEVEL_2 AND lbtd.ORG_LEVEL_3=btd.ORG_LEVEL_3 AND lbtd.ORG_LEVEL_4=btd.ORG_LEVEL_4 THEN '' ELSE ', ' END + lbtd.ORG_LEVEL_5,'')
+			END
+		) AS ORG_NAME
+	FROM GBL_BaseTable lbt
+	INNER JOIN GBL_BaseTable_Description lbtd
+		ON lbt.NUM=lbtd.NUM AND lbtd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=lbtd.NUM ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
+	INNER JOIN GBL_BaseTable_Description btd
+		ON btd.NUM=@NUM
+			AND btd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=btd.NUM ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
+			AND lbt.ORG_NUM=btd.NUM
+WHERE EXISTS(SELECT * FROM GBL_BT_OLS opr INNER JOIN GBL_OrgLocationService ols ON opr.OLS_ID=ols.OLS_ID WHERE opr.NUM=lbt.NUM AND ols.Code='SITE')
+	AND (
+		@ShowNotInView=1
+		OR dbo.fn_CIC_RecordInView(lbtd.NUM, @ViewType, @@LANGID, 1, GETDATE())=1
+	)
+
+RETURN
+
+END
+
+
+
+GO
+
+GRANT SELECT ON  [dbo].[fn_GBL_NUMToOrgLocations_rst] TO [cioc_cic_search_role]
+GO

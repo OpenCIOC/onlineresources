@@ -1,0 +1,113 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>Note that some of the search options described below may not be available to you, depending on how your current search form has been configured in your View setup.</p>
+<p class="Alert">The search components of the basic search form are added together. Your results will be based on records that match every type of criteria you enter on this search form.</p>
+<ul>
+	<li><a href="#keyword">Keyword Search</a></li>
+	<li><a href="#community">Community Search</a></li>
+	<li><a href="#volunteer">Organizations with Volunteer Opportunities</a></li>
+	<li><a href="#age">Age Group Search</a></li>
+	<li><a href="#quicklist">Quick List Search</a></li>
+	<li><a href="#more">More Search Options</a></li>
+	<li><a href="#other">Links to Other Types of Searches</a></li>
+</ul>
+
+<hr>
+
+<a name="keyword"></a>
+<h3>Keyword Search</h3>
+<p>The main search mechanism in the software is the keyword search. Four potential keyword search fields are available, depending on what has been made available on your current search form. These include:</p>
+<ul>
+	<li><strong>Organization Name(s)</strong> - All levels of the organization hierarchy, as well as alternate and former names</li>
+	<li><strong>Subjects</strong> - All local and authorized Subjects, as well as "Used For" Terms associated with those Subjects and any Broader Terms for those Subjects.</li>
+	<li><strong>Service Categories</strong> - All AIRS / InfoLine Taxonomy Terms indexed to the record, as well as Use References for those Terms and broader level terms excluding Level 1.</li>
+	<li><strong>Keywords</strong> - All of the above, as well as Areas Served, Site Location, Intersection, Site Building, Contact and Executive names, Eligibility, Accessibility, Transportation, Fees, Funding, Languages, Description, Supplemental Description, NAICS, Type of Program, Type of Care, Schools in Area, and any &quot;Extra&quot; fields that are configured to be part of the keyword search.</li>
+</ul>
+
+<h4>General Information About Keyword Matching</h4>
+<p>The keyword search form on the main search page always matches <strong><em>all</em></strong> keywords provided (an &quot;AND&quot; search). If you need to do a more complex search (such as finding either &quot;cat&quot; or &quot;kitten&quot;), then use the Advanced Search form instead.</p>
+<p>The software automatically searches many different word forms for the current language. For instance, typing in <em>library</em> or <em>libraries</em> produces the same result, so either can be used. You can explicitly prevent the searching of word forms by using quotation marks (see below).</p>
+<p class="Alert">Important note: if a record has a Privacy Profile, fields marked as private are always excluded from keyword searches, even if you have permission to access private data.</p>
+
+<h4>Use of Wildcard Asterisks</h4>
+<p>You can use an asterisk at the <strong>end</strong> of any search word, for example:</p>
+<ul>
+	<li><strong>child*</strong> will find <em>child; children; child's; childlike; childish</em></li>
+	<li><strong>abus*</strong> will find <em>abuse; abuser; abused; abusing</em></li>
+	<li><strong>child* abus*</strong> will find any of the combinations outlined above</li>
+</ul>
+<p>In many cases, allowing the software to use its built-in ability to search word forms is more effective than using the asterisk for simple variations of the same word (child and children, help and helping). This is because it reduces the number of unwanted extra matches, such as <em>scan*</em> matching <em>scant</em> and <em>scandal</em> when what was intended was just matching <em>scan</em>, <em>scans</em>, and <em>scanning</em>.</p>
+
+<h4>Use of Quotation Marks</h4>
+<p>You can search with terms enclosed in quotation marks ... thus:
+<strong><em>&quot;child abuse&quot;</em></strong> will result in any records that have <strong>both</strong> of those exact words adjacent to each other in that order and in the <strong>same</strong> field.
+<br><strong><em>&quot;child* abus*&quot;</em></strong> will result in records that have <em>&quot;child abuse&quot;</em> <strong>or</strong> <em>&quot;child abuser&quot;</em> <strong>or</strong> <em>&quot;childish abuser&quot;</em> in a single field, in that order, adjacent to each other.</p>
+<p>Note that using quotation marks turns off the software's ability to search word forms (as mentioned above). Thus, searching <em>&quot;library&quot;</em> will not match <em>libraries</em>.</p>
+
+<a name="community"></a>
+<h3>Community Search</h3>
+<p>This function enables you to restrict the results by geography; either by where the service/program is physically located or by the geographic service area specified in the record. It is a good idea, if you are searching for a specific service in a known area, to use these limiting features to narrow your results.</p>
+
+<a name="volunteer"></a>
+<h3>Organizations with Volunteer Opportunities</h3>
+<p>This option will only be available in those communities that are using both the Volunteer and the Community Information databases and limits the results to records with Volunteer opportunities attached. This search matches only Volunteer opportunities available to you in your current View of the Volunteer software, and automatically excludes deleted opportunities.</p>
+
+<a name="age"></a>
+<h3>Search by Age Group</h3>
+<p>Search by age group allows you to locate records designated as serving a particular age range. Note that the matching record only has to serve any portion of the age range: thus when searching an age range for Youth that includes ages 12-18, it would match a record that served ages 6-12 because they match on age 12. Partial years, if specified in the record or age group setup, are used for matching purposes (e.g. 3.8 years). Age groups can be configured in the setup area of the software, so your particular values may vary. Age groups may overlap with each other.</p>
+
+<p class="Alert">Note that if no specific ages are entered for a record, it is assumed that the record serves all ages.</p>
+
+<a name="quicklist"></a>
+<h3>Quick List Search</h3>
+<p>This search tool allows you to limit the range of the records that are searched to a pre-defined set of records, often grouped by subject and/or geographical location. Depending on how your search form is configured, you may have a drop-down (allowing one choice) or a set of checkboxes (allowing multiple selections). In most cases, your search will have to match <em>all</em> your selections, but it possible to set up the search form in a way that matches any one of your Quick List choices. It may not be obvious from the search form which is the case, but your search results will indicate whether <strong>all</strong> or <strong>any</strong> of your selections were searched.</p>
+
+<a name="more"></a>
+<h3>More Search Options</h3>
+
+<h4>Organizations with WWW Sites</h4>
+<p>Search results can be limited to only those records that have a website address recorded in the WWW field</p>
+
+<h4>Record Number</h4>
+<p>You can return <strong>one specific</strong> record in the search results according to its Record Number, that is, the three alpha, four numeric unique identifier assigned to each record: e.g. HAM2233; OAK4489; SIM3212 and so on. If you are searching by record number, do not include other search criteria because this search, by definition, can have only <strong>one</strong> record in the result; other criteria is not applicable. This is only useful if you know the record number for the organization you are searching for.</p>
+<h4>Vacancy Search</h4>
+<p>If you use the specialized vacancy fields in the software, this search will allow you to search based on vacancy or wait list availability and target populations (the type of user who can access the service).</p>
+
+<h4>Browsing for Records by Name or Topic</h4>
+<p>Browsing is looking through a pre-defined list of values based on an alphabetical listing.</p>
+<ul>
+	<li><strong>Browse by Organization</strong> - allows you to review a list of services based on an alphabetical listing of the <strong>top level</strong> organization name defined in the record.</li>
+	<li><strong>Browse by Subject</strong> - allows you to view an alphabetical list of Subject Terms from the Thesaurus; a count of records using each Term is included, and clicking the link will perform a search for matching records.</li>
+</ul>
+
+<a name="other"></a>
+<h3>Links to Other Types of Searches</h3>
+
+<h4>NAICS (North American Industry Classification) Search</h4>
+<p>If this classification system in use, a link may be provided to browse through the categories and sub-categories. NAICS is primarily used for business directories, but may be used to classify many different types of organizations.</p>
+<h4>Child Care Search</h4>
+<p>If Child Care features are enabled in your current View, the Child Care search allows searching by some or all of: keyword, community, type of care, type of program, age(s) of children, date care is required, schools in area, school escort, subsidy availability, space availability, nearby bus route(s), and geographic proximity.</p>
+<h4>Searching using Service Categories / AIRS/InfoLine Taxonomy</h4>
+<p>Some or all of the features for searching Service Categories may be available to you:</p>
+<ul>
+	<li><strong>Browse by Service Category</strong> - browse through categories and sub-categories of the Taxonomy, including related terms. Depending on how this search has been configured, detailed descriptions of each Term may be included at some or all levels of the Taxonomy hierarchy.</li>
+	<li><strong>Basic Taxonomy Search</strong> - includes more sophisticated ways for locating Taxonomy Terms, such as through a drill-down of the Taxonomy hierarchy, keyword search, search by Code, and other options.</li>
+	<li><strong>Advanced Taxonomy Search</strong> - includes all search options from the Basic Taxonomy Search, as well as the ability to search terms together in various ways.</li>
+</ul>
+<p class="SmallNote">Last Modified: $Date$</p>

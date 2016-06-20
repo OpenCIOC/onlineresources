@@ -1,0 +1,120 @@
+CREATE TABLE [dbo].[CIC_BT_PB]
+(
+[BT_PB_ID] [int] NOT NULL IDENTITY(1, 1),
+[CREATED_DATE] [smalldatetime] NULL,
+[CREATED_BY] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
+[MODIFIED_DATE] [smalldatetime] NULL CONSTRAINT [DF_CIC_BT_PB_MODIFIED_DATE] DEFAULT (getdate()),
+[MODIFIED_BY] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
+[NUM] [varchar] (8) COLLATE Latin1_General_100_CI_AI NOT NULL,
+[PB_ID] [int] NOT NULL,
+[GHTaxCache_u] [uniqueidentifier] NULL
+) ON [PRIMARY]
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE TRIGGER [dbo].[tr_CIC_BT_PB_iu] ON [dbo].[CIC_BT_PB]
+FOR INSERT, UPDATE AS
+
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.7.4
+	Checked by: KL
+	Checked on: 10-May-2016
+	Action: NO ACTION REQUIRED
+*/
+
+IF UPDATE (NUM) OR UPDATE (PB_ID) BEGIN
+	DECLARE @SQL nvarchar(max),
+			@GHIDs nvarchar(max),
+			@UpdateGUID uniqueidentifier
+	
+	SET @UpdateGUID = NEWID()
+	
+	IF UPDATE(NUM) BEGIN
+		UPDATE pr
+			SET NUM_Cache = i.NUM
+		FROM CIC_BT_PB_GH pr
+		INNER JOIN inserted i
+			ON i.BT_PB_ID=pr.BT_PB_ID AND i.NUM<>pr.NUM_Cache
+	END
+	
+	UPDATE pr
+		SET GHTaxCache_u = @UpdateGUID
+	FROM CIC_BT_PB pr
+	INNER JOIN inserted i
+		ON pr.BT_PB_ID=i.BT_PB_ID
+	WHERE EXISTS(SELECT * FROM CIC_GeneralHeading gh WHERE pr.PB_ID=gh.PB_ID AND gh.Used IS NULL)
+		AND EXISTS(SELECT * FROM CIC_BT_TAX prt WHERE prt.NUM=pr.NUM)
+
+	SELECT @GHIDs = COALESCE(@GHIDs + ',','') + CAST(gh.GH_ID AS varchar)
+		FROM CIC_GeneralHeading gh
+		WHERE EXISTS(SELECT * FROM CIC_BT_PB pb WHERE gh.PB_ID=pb.PB_ID AND pb.GHTaxCache_u=@UpdateGUID)
+			AND gh.Used IS NULL AND gh.TaxonomyWhereClause IS NOT NULL
+
+	SELECT @SQL = STUFF((SELECT N' INSERT INTO @TmpGHID (GH_ID, BT_PB_ID, NUM_Cache) SELECT ' + CAST(gh.GH_ID AS varchar) + ' AS GH_ID, pb.BT_PB_ID, pb.NUM AS NUM_Cache FROM GBL_BaseTable bt INNER JOIN CIC_BT_PB pb ON bt.NUM=pb.NUM AND pb.PB_ID=' + CAST(gh.PB_ID AS varchar) + ' WHERE pb.GHTaxCache_u=@UpdateGUID AND (' + gh.TaxonomyWhereClause + ')'
+		FROM CIC_GeneralHeading gh
+		WHERE EXISTS(SELECT * FROM CIC_BT_PB pb WHERE gh.PB_ID=pb.PB_ID AND pb.GHTaxCache_u=@UpdateGUID)
+			AND gh.Used IS NULL
+		FOR XML PATH(N'')), 1, 1, N'')
+
+	IF @SQL IS NOT NULL AND @SQL <> '' BEGIN
+		SET @SQL = '
+		
+		DECLARE @TmpGHID TABLE (
+			GH_ID int NOT NULL,
+			BT_PB_ID int NOT NULL,
+			NUM_Cache varchar(8) NOT NULL
+		)
+
+		' + @SQL + '
+		
+		MERGE INTO CIC_BT_PB_GH dst
+			USING @TmpGHID src
+				ON dst.BT_PB_ID=src.BT_PB_ID AND dst.GH_ID=src.GH_ID
+			WHEN NOT MATCHED BY TARGET THEN
+				INSERT (BT_PB_ID, GH_ID, NUM_Cache)
+					VALUES (src.BT_PB_ID, src.GH_ID, src.NUM_Cache)
+			WHEN NOT MATCHED BY SOURCE AND dst.GH_ID IN (' + @GHIDs + ')
+					AND EXISTS(SELECT * FROM CIC_BT_PB pb WHERE GHTaxCache_u=@UpdateGUID AND pb.BT_PB_ID=dst.BT_PB_ID) THEN
+				DELETE
+				;
+		'
+		
+		EXEC sp_executesql @SQL, N'@UpdateGUID uniqueidentifier', @UpdateGUID=@UpdateGUID
+		
+	END
+END
+
+SET NOCOUNT OFF
+
+GO
+
+ALTER TABLE [dbo].[CIC_BT_PB] ADD CONSTRAINT [PK_BT_PB] PRIMARY KEY CLUSTERED  ([BT_PB_ID]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_CIC_BT_PB_BTPBIDNUM] ON [dbo].[CIC_BT_PB] ([BT_PB_ID], [NUM]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_CIC_BT_PB_NUM] ON [dbo].[CIC_BT_PB] ([NUM]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_CIC_BT_PB_NUMBTPBID] ON [dbo].[CIC_BT_PB] ([NUM], [BT_PB_ID]) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_CIC_BT_PB_NUMPBID] ON [dbo].[CIC_BT_PB] ([NUM], [PB_ID]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_CIC_BT_PB_PBIDincNUM] ON [dbo].[CIC_BT_PB] ([PB_ID]) INCLUDE ([NUM]) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_CIC_BT_PB_UniquePair] ON [dbo].[CIC_BT_PB] ([PB_ID], [NUM]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[CIC_BT_PB] ADD CONSTRAINT [FK_CIC_BT_PB_CIC_BaseTable] FOREIGN KEY ([NUM]) REFERENCES [dbo].[CIC_BaseTable] ([NUM]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[CIC_BT_PB] ADD CONSTRAINT [FK_CIC_BT_PB_CIC_Publication] FOREIGN KEY ([PB_ID]) REFERENCES [dbo].[CIC_Publication] ([PB_ID])
+GO
+GRANT SELECT ON  [dbo].[CIC_BT_PB] TO [cioc_cic_search_role]
+GRANT SELECT ON  [dbo].[CIC_BT_PB] TO [cioc_login_role]
+GRANT INSERT ON  [dbo].[CIC_BT_PB] TO [cioc_login_role]
+GRANT DELETE ON  [dbo].[CIC_BT_PB] TO [cioc_login_role]
+GRANT UPDATE ON  [dbo].[CIC_BT_PB] TO [cioc_login_role]
+GO

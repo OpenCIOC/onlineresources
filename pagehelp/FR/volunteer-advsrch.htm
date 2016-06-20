@@ -1,0 +1,200 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<a name="top"></a>
+<p>La page <strong><em>Recherche avanc&eacute;e</em></strong> permet de personnaliser et d'affiner votre recherche sur la base de donn&eacute;es de diff&eacute;rentes mani&egrave;res qui ne sont pas accessibles dans le menu de recherche simple. &Agrave; noter que les options sur cette page peuvent &ecirc;tre combin&eacute;es entre elles pour formuler votre requ&ecirc;te. En fonction des autorisations de votre compte et de la configuration de la base de donn&eacute;es, vous pourriez ne pas avoir acc&egrave;s plusieurs options sur cette page. Les options de recherche sur cette page sont &eacute;tablies par votre <em>type d'utilisateur</em> ainsi que les param&egrave;tres de votre <em>vue</em> actuelle.</p>
+<p>Utilisez les liens rapides ci-dessous pour passer vers un chapitre d'int&eacute;r&ecirc;t sur la page de recherche avanc&eacute;e.</p>
+<table class="NoBorder cell-padding-2">
+	<tr valign="TOP">
+		<td><ul>
+				<li><a href="#terms">Mots de recherche</a></li>
+				<li><a href="#communities">Communaut&eacute;s</a></li>
+				<li><a href="#ages">&Acirc;ges</a></li>
+				<li><a href="#dates">Dates et heures</a></li>
+				<li><a href="#ossd">Volet DESO</a></li>
+				<li><a href="#owner">Propri&eacute;taire du dossier</a></li>
+				<li><a href="#email_update">Dernier courriel demandant la mise &agrave; jour</a></li>
+				<li><a href="#date">Champs Date « personnalis&eacute;s »</a></li>
+			</ul></td>
+		<td><ul>
+				<li><a href="#custom_drops">Champs Texte « personnalis&eacute;s »</a></li>
+				<li><a href="#email">Courriel</a></li>
+				<li><a href="#display">Afficher jusqu'&agrave;</a></li>
+				<li><a href="#public">Statut public</a></li>
+				<li><a href="#language">Langue</a></li>
+				<li><a href="#deleted">Statut supprim&eacute;</a></li>
+				<li><a href="#addsql">SQL</a></li>
+				<li><a href="#checklist">Recherche sur les Listes de contr&ocirc;le</a></li>
+			</ul></td>
+	</tr>
+</table>
+
+<hr>
+
+<a name="terms"></a>
+<h3>Mots de recherche</h3>
+
+<p>Le moyen de recherche principal dans le logiciel est la recherche par mots-cl&eacute;s. Deux champs possibles de recherche par mots-cl&eacute;s sont disponibles. Ils comprennent :</p>
+<ul>
+	<li><strong>Nom(s) d'organisme</strong> - Tous les niveaux hi&eacute;rarchiques de l'organisme, ainsi que les noms alternatifs et ant&eacute;rieurs.</li>
+	<li><strong>Mots-cl&eacute;s</strong> - Toutes les options ci-dessus, les noms des personnes contact, le lieu, les fonctions, les prestations, les clients, les exigences compl&eacute;mentaires, les notes sur les comp&eacute;tences et les int&eacute;r&ecirc;ts.</li>
+</ul>
+
+<p>Contrairement &agrave; la page de recherche simple, qui cherche toujours <em>tous</em> les mots et phrases saisies, la <em>recherche avanc&eacute;e</em> vous permet de pr&eacute;ciser si vous cherchez <em>Tous les mots</em> (p. ex., la cha&icirc;ne de recherche <strong>chat chien cheval</strong> cherchera <strong>chat ET chien ET cheval</strong>) ou <em>N'importe quels mots</em> (p. ex., la cha&icirc;ne de recherche <strong>chat chien cheval</strong> cherchera <strong>chat OU chien OU cheval</strong>).</p>
+<p>La troisi&egrave;me option, <em>Bool&eacute;en</em>, n'est pas accessible dans toutes les vues et exige une certaine connaissance de la recherche bool&eacute;enne ; elle permet d'inclure les mots-cl&eacute;s <em>AND</em>, <em>OR</em> et <em>NOT</em> dans votre recherche pour formuler votre propre cha&icirc;ne de recherche personnalis&eacute;e. Le logiciel ne corrigera pas les erreurs de votre recherche ; vous devez donc structurer votre cha&icirc;ne de recherche correctement pour effectuer ce type de recherche. Tous les mots et phrases doivent &ecirc;tre s&eacute;par&eacute;es par <em>AND</em>, <em>OR</em>, <em>AND NOT</em>, ou <em>OR NOT</em>. Vous pouvez &eacute;galement utiliser des parenth&egrave;ses pour regrouper diff&eacute;rentes sections de votre recherche. Par exemple : <strong>(chats AND chiens) OR (cochons AND vaches) OR &quot;singes rouges&quot;</strong> ou <strong>croix AND NOT rouge</strong>.</p>
+<p>Les utilisateurs avanc&eacute;s peuvent &eacute;galement utiliser la fonction SQL Server sp&eacute;ciale <em>FORMSOF</em> &agrave; l'int&eacute;rieur d'une recherche bool&eacute;enne qui permet de chercher les versions d'un mot. Par exemple, FORMSOF(INFLECTIONAL, garde) retournera les diff&eacute;rentes versions du mot « garde » : « garderie », « gardien », et « gardiennage ». De la m&ecirc;me mani&egrave;re, FORMSOF(THESAURUS, docteur) ** retournera les autres synonymes du mot « docteur », comme : « m&eacute;decin ».</p>
+<p><span class="Alert">** Remarque :</span> l'utilisation du TH&Eacute;SAURUS d&eacute;pend de la cr&eacute;ation d'un fichier de th&eacute;saurus pour chaque langue dans SQL Server. Comme CIOC n'a pas encore cr&eacute;&eacute; de fichier de th&eacute;saurus pour aucune langue sur ses serveurs, cette fonctionnalit&eacute; ne peut &ecirc;tre utilis&eacute;e efficacement pour le moment.</p>
+
+<h4>Information g&eacute;n&eacute;rale sur la correspondance des mots-cl&eacute;s</h4>
+<p>Le logiciel cherche automatiquement les diff&eacute;rentes formes d'un mot dans la langue utilis&eacute;e. Par exemple, <em>animal</em> ou <em>animaux</em> produit le m&ecirc;me r&eacute;sultat ; on peut donc utiliser l'un ou l'autre. Vous pouvez emp&ecirc;cher la recherche sur les formes d'un mot en utilisant les guillemets anglais (voir plus bas).</p>
+
+<h4>Utilisation des ast&eacute;risques m&eacute;tacaract&egrave;res</h4>
+<p>Vous pouvez utiliser un ast&eacute;risque &agrave; la <strong>fin</strong> de tout mot de recherche, par exemple :</p>
+<ul>
+	<li><strong>enfan*</strong> trouvera <em>enfant ; enfants ; enfance ; enfantin</em></li>
+	<li><strong>aggr*</strong> trouvera <em>agression ; agress&eacute; ; agresseur</em></li>
+	<li><strong>enfan* aggr*</strong> trouvera n'importe quelle des combinaisons mentionn&eacute;es ci-dessus</li>
+</ul>
+<p>Dans de nombreux cas, il est plus efficace de laisser la fonction int&eacute;gr&eacute;e du logiciel rechercher les formes d'un mot, que d'utiliser l'ast&eacute;risque pour les variantes simples du m&ecirc;me mot (enfant et enfants, aide et aider). Cela r&eacute;duit le nombre de correspondances non d&eacute;sir&eacute;es, comme <em>hand*</em> retrouvant <em>handball</em>, alors qu'on souhaite seulement retrouver les correspondances &agrave; <em>handicap</em>, <em>handicap&eacute;s</em> et <em>handisport</em>.</p>
+
+<h4>Utilisation des guillemets anglais</h4>
+<p>Vous pouvez chercher des mots entre guillemets anglais... ainsi : <strong><em>&quot;clinique m&eacute;dicale&quot;</em></strong> retournera tous les dossiers qui ont exactement des <strong>deux</strong> mots de mani&egrave;re adjacente, dans le m&ecirc;me ordre et dans le <strong>m&ecirc;me</strong> champ. <br><strong><em>&quot;acti* soci*&quot;</em></strong> retournera les dossiers comportant <em>&quot;action sociale&quot;</em> <strong>ou</strong> <em>&quot;activit&eacute;s socialisantes&quot;</em> <strong>or</strong> <em>&quot;actionnariat soci&eacute;taire&quot;</em> dans un champ unique, de mani&egrave;re adjacente et dans le m&ecirc;me ordre.</p>
+<p>&Agrave; noter que l'utilisation des guillemets anglaises d&eacute;sactive la capacit&eacute; du logiciel &agrave; recherche les formes d'un mot (comme mentionn&eacute; plus haut). Ainsi, une recherche sur <em>&quot;animal&quot;</em> ne trouvera pas <em>&quot;animaux&quot;</em>.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="communities"></a>
+<h3>Communaut&eacute;s</h3>
+<p>Vous permet de rechercher en fonction des valeurs saisies dans le champ Centres d'int&eacute;r&ecirc;t (anciennement « Nombre de postes »). Les recherches par communaut&eacute;s utilisent la hi&eacute;rarchie des communaut&eacute;s CIOC ; ainsi, le fait de rechercher de grandes communaut&eacute;s retournera automatiquement les dossiers r&eacute;f&eacute;renc&eacute;s pour les plus petites communaut&eacute;s qu'elles contiennent, et vice-versa.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="ages"></a>
+<h3>&Acirc;ges</h3>
+<p>Saisissez l'&acirc;ge du b&eacute;n&eacute;vole potentiel pour faire correspondre aux postes appropri&eacute;s &agrave; un b&eacute;n&eacute;vole du m&ecirc;me &acirc;ge. Remarque : un dossier dont l'&acirc;ge minimal ou maximal n'est pas pr&eacute;cis&eacute; est consid&eacute;r&eacute; appropri&eacute; pour tous les &acirc;ges.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="dates"></a>
+<h3>Dates et heures</h3>
+<p>S&eacute;lectionnez tous les jours et heures pour lesquelles le b&eacute;n&eacute;vole est disponible. La recherche retournera les occasions qui correspondent &agrave; au moins un de ces cr&eacute;neaux. &Agrave; noter que m&ecirc;me si un cr&eacute;neau correspond, cela ne signifie pas que l'horaire de l'occasion est adapt&eacute; ; certaines occasions exigent un engagement pour plus d'une p&eacute;riode de temps, dont certaines peuvent ne pas correspondre aux horaires disponibles s&eacute;lectionn&eacute;s.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="ossd"></a>
+<h3>Volet DESO</h4>
+<p>Le volet b&eacute;n&eacute;volat du Dipl&ocirc;me d'&eacute;tudes secondaires de l'Ontario (DESO) exige que les &eacute;tudiants d'&eacute;cole secondaire effectuent un nombre minimal d'heures de b&eacute;n&eacute;volat avant de recevoir le dipl&ocirc;me. Le fait de cocher cette case identifie les dossiers qui ont &eacute;t&eacute; marqu&eacute;s comme adapt&eacute;s pour remplir cette exigence.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="email_update"></a>
+<h3>Derni&egrave;re demande de mise &agrave; jour par courriel</h3>
+<p>Recherche des dossiers o&ugrave; l'on a envoy&eacute; une demande de mise &agrave; jour par courriel &agrave; la personne contact de l'occasion. par l'entremise de la base de donn&eacute;es, dans les (x) derniers jours. La date &agrave; laquelle le dernier courriel a &eacute;t&eacute; envoy&eacute; est &eacute;tablie automatiquement par le logiciel.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="date"></a>
+<h3>Recherche sur les champs Date « personnalis&eacute;s »</h3>
+<p>Vous pouvez s&eacute;lectionner jusqu'&agrave; deux champs de date pour la recherche. Votre recherche peut limiter la date &agrave; une classe pr&eacute;d&eacute;finie dans la liste d&eacute;roulante, par exemple <em>« dans le pass&eacute; »</em>, <em>« dans le futur »</em>, <em>« dans les 7 derniers jours »</em>, etc., ainsi que <em>« Est nul »</em> (les champs s&eacute;lectionn&eacute;s doivent &ecirc;tre vides) et <em>« N'est pas nul »</em> (les champs s&eacute;lectionn&eacute;s <strong>ne doivent pas</strong> &ecirc;tre vides). Vous pouvez &eacute;galement s&eacute;lectionner des limites de date sup&eacute;rieure et inf&eacute;rieure en indiquant des dates sp&eacute;cifiques. Ceux sont deux entr&eacute;es disponibles pour cr&eacute;er une recherche personnalis&eacute;e sur les dates ; si vous cr&eacute;ez une recherche pour les deux entr&eacute;es, les deux doivent correspondre.</p>
+<p>La liste des dates est cr&eacute;&eacute;e &agrave; partir des types de dates disponibles dans le logiciel. Si vous avez renomm&eacute; vos champs de date diff&eacute;remment des noms normalis&eacute;s livr&eacute;s avec le logiciel, <em>vos noms peuvent &ecirc;tre diff&eacute;rents de la liste ci-dessous</em> :</p>
+<ul>
+	<li><strong>Date limite pour la demande</strong> : date avant laquelle un b&eacute;n&eacute;vole potentiel doit se porter candidat pour le poste (&eacute;tablie par l'utilisateur)</li>
+	<li><strong>Date de cr&eacute;ation</strong> : date &agrave; laquelle le dossier a &eacute;t&eacute; cr&eacute;&eacute; (&eacute;tablie par le syst&egrave;me)</li>
+	<li><strong>Date de suppression</strong> : date &agrave; laquelle le dossier a &eacute;t&eacute; supprim&eacute; ou date de suppression pr&eacute;vue (&eacute;tablie par l'utilisateur)</li>
+	<li><strong>Date de modification</strong> : date &agrave; laquelle le dossier a &eacute;t&eacute; modifi&eacute; (&eacute;tablie par le syst&egrave;me)</li>
+	<li><strong>Date de demande</strong> : date &agrave; laquelle l'organisme a demand&eacute; de faire publier l'occasion (&eacute;tablie par l'utilisateur)</li>
+	<li><strong>Date de mise &agrave; jour</strong> : date &agrave; laquelle le dossier a &eacute;t&eacute; enti&egrave;rement mis &agrave; jour (&eacute;tablie par l'utilisateur)</li>
+	<li><strong>Afficher jusqu'&agrave;</strong> : date apr&egrave;s laquelle le dossier doit &ecirc;tre masqu&eacute; dans les recherches ordinaires (&eacute;tablie par l'utilisateur)</li>
+	<li><strong>Date de fin</strong> : date &agrave; laquelle le poste prend fin (&eacute;tablie par l'utilisateur)</li>
+	<li><strong>Derni&egrave;re demande - Courriel</strong> : date &agrave; laquelle le syst&egrave;me a envoy&eacute; une demande de mise &agrave; jour du dossier par courriel pour la derni&egrave;re fois (&eacute;tablie par le syst&egrave;me)</li>
+	<li><strong>Calendrier des mises &agrave; jour</strong> : date pr&eacute;vue de la prochaine mise &agrave; jour compl&egrave;te (&eacute;tablie par l'utilisateur)</li>
+</ul>
+<p><span class="Alert">Remarque importante :</span> m&ecirc;me si vous pouvez rechercher par date <em>Afficher jusqu'&agrave;</em> dans la recherche par date, si vous n'incluez pas les dossiers <em>« expir&eacute;s »</em> de la recherche <em>Afficher jusqu'&agrave;</em>, ils seront exclus. &Agrave; noter que dans de nombreux cas, les dates &eacute;tablies par le syst&egrave;me sont horodat&eacute;es, m&ecirc;me si ce n'est pas visible par l'utilisateur final ; les recherches ci-dessus prennent en compte l'horodatation si elle existe.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="custom_drops"></a>
+<h3>Recherche sur les champs Texte « personnalis&eacute;s »</h3>
+<p>Vous pouvez effectuer jusqu'&agrave; deux recherches personnalis&eacute;es sur les champs de texte. La liste des champs disponibles pour la recherche est &eacute;tablie en fonction des champs de texte disponibles sur la page <em>Renseignements sur le dossier</em> de la <em>vue</em> actuelle. Vous pouvez utilisez seulement l'un des deux menus de recherche personnalis&eacute;e ou les deux &agrave; la fois ; si vous utilisez les deux, alors le dossier doit correspondre aux deux recherches en m&ecirc;me temps.</p>
+<p>Il existe deux menus d&eacute;roulants qui vous permettent de s&eacute;lectionner les champs dans la table de la base de donn&eacute;es et de retourner des r&eacute;sultats bas&eacute;s sur les champs s&eacute;lectionn&eacute;s. Les menus d&eacute;roulants au centre offrent 4 choix :</p>
+<ul>
+	<li><strong>Contient</strong> : les champs s&eacute;lectionn&eacute;s des dossiers doivent contenir la cha&icirc;ne de recherche exacte saisie</li>
+	<li><strong>Ne contient pas</strong> : les champs s&eacute;lectionn&eacute;s des dossiers doivent ne pas contenir la cha&icirc;ne de recherche exacte saisie</li>
+	<li><strong>Est nul</strong> : les champs s&eacute;lectionn&eacute;s doivent &ecirc;tre vides</li>
+	<li><strong>Est nul</strong> : les champs s&eacute;lectionn&eacute;s <strong>ne doivent pas</strong> &ecirc;tre vides</li>
+</ul>
+<p>Pour chaque recherche de texte, vous pouvez s&eacute;lectionner / d&eacute;s&eacute;lectionner plusieurs champs en maintenant la touche <em>CTRL</em> enfonc&eacute;e lorsque vous cliquez sur des champs de la liste. Si vous effectuez une recherche o&ugrave; plusieurs champs sont s&eacute;lectionn&eacute;s dans une m&ecirc;me liste, l'option par d&eacute;faut est que n'importe quel champ peut correspondre au crit&egrave;re. Si vous souhaitez que <strong>tous</strong> les champs correspondent au crit&egrave;re, vous devez cocher la case <em>« Il doit y avoir concordance de tous les champs s&eacute;lectionn&eacute;s »</em>.</p>
+<p>Vous pouvez choisir d'ajouter temporairement les champs recherch&eacute;s au tableau des r&eacute;sultats de recherche en cochant la case <em>« Inclure le(s) champ(s) s&eacute;lectionn&eacute;(s) dans le tableau d'affichage des r&eacute;sultats »</em>. Cela ne modifiera pas vos param&egrave;tres <em>Changer les options d'affichage</em> et les champs suppl&eacute;mentaires ne seront affich&eacute;s que pour le tableau des r&eacute;sultats de cette recherche particuli&egrave;re.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="owner"></a>
+<h3>Agence propri&eacute;taire de dossiers</h3>
+<p>Vous permet de retourner seulement les r&eacute;sultats o&ugrave; l'agence propri&eacute;taire des dossiers correspond &agrave; n'importe quelle agence que vous avez s&eacute;lectionn&eacute;e dans le menu d&eacute;roulant (cette option ne s'av&egrave;re utile que si vous avez plusieurs agences propri&eacute;taires de dossiers dans votre base de donn&eacute;es). La liste des agences disponibles ici est &eacute;tablie en fonction des agences marqu&eacute;es comme d&eacute;tenant des dossiers dans le module actuel (Information communautaire ou B&eacute;n&eacute;volat), dans la section <em>Agences</em> de la configuration.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="email"></a>
+<h3>Courriel</h3>
+<p>Recherche les dossiers en fonction du statut des champs <em>Courriel</em> et <em>Courriel de mise &agrave; jour</em>.</p>
+<ul>
+	<li><strong>Tous les dossiers</strong> - retourne tous les dossiers, qu'ils aient une adresse courriel ou non.</li>
+	<li><strong>Seulement avec un courriel</strong> - retourne les dossiers qui ont soit un <em>Courriel</em>, soit un <em>Courriel de mise &agrave; jour</em>.</li>
+	<li><strong>Seulement sans courriel</strong> - retourne les dossiers qui <strong>n'ont pas</strong> de <em>Courriel</em> ou de <em>Courriel de mise &agrave; jour</em>.</li>
+	<li><strong>Peut envoyer des demandes de mise &agrave; jour</strong> - retourne les dossiers qui ont soit un <em>Courriel</em>, soit un <em>Courriel de mise &agrave; jour</em>, et dont le champ <em>Bloquer demandes par courriel</em> <strong>n'est pas</strong> activ&eacute;.</li>
+	<li><strong>Ne peut pas envoyer de demandes de mise &agrave; jour</strong> - retourne les dossiers qui n'ont pas de <em>Courriel de contact</em> ou de <em>Courriel de mise &agrave; jour</em> ou dont le champ <em>Bloquer demandes par courriel</em> est activ&eacute;.</li>
+</ul>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="display"></a>
+<h3>Afficher jusqu'&agrave;</h3>
+<p>Par d&eacute;faut, seuls les dossiers <em>« actuels »</em> sont inclus dans la recherche - ceux sans date <em>Afficher jusqu'&agrave;</em> ou ceux dont la date <em>Afficher jusqu'&agrave;</em> est dans le futur. Avec cette recherche, vous pouvez &eacute;galement choisir de voir les dossiers <em>« expir&eacute;s »</em> (ceux dont la date est pass&eacute;e) ou tous les dossiers quelque soit la date <em>Afficher jusqu'&agrave;</em>. <span class="Alert">Remarque importante :</span> m&ecirc;me si vous pouvez rechercher par date <em>Afficher jusqu'&agrave;</em> dans la recherche par date, si vous n'incluez pas les dossiers <em>« expir&eacute;s »</em> de la recherche <em>Afficher jusqu'&agrave;</em>, ils seront exclus.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="public"></a>
+<h3>Statut public</h3>
+<p>Vous permet de pr&eacute;ciser s'il faut retourner tous les dossiers, seulement ceux marqu&eacute;s comme publics ou seulement ceux marqu&eacute;s comme internes. Cette recherche est uniquement visible dans les vues qui incluent les dossiers internes.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="language"></a>
+<h3>Langue</h3>
+<p>Vous permet de retourner les dossiers qui ont ou n'ont pas d'&eacute;quivalent dans une autre langue. Cette recherche ne permet pas de pr&eacute;ciser actuellement dans quelle langue le dossier est accessible ; elle identifie uniquement les dossiers qui ont un &eacute;quivalent dans une autre langue autre que la langue actuelle.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="deleted"></a>
+<h3>Statut supprim&eacute;</h3>
+<p>Si vous avez l'autorisation de consulter les dossiers supprim&eacute;s, vous pouvez cocher cette case afin de les afficher dans vos r&eacute;sultats de recherche. Cela s'applique uniquement aux dossiers dont la date de suppression est dans le pass&eacute;. Les dossiers dont la date de suppression est dans le futur (« en attente » d'&ecirc;tre supprim&eacute;s) ne sont pas consid&eacute;r&eacute;s comme supprim&eacute;s avant la date. Cette recherche est uniquement visible dans les vues qui incluent les dossiers supprim&eacute;s.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="addsql"></a>
+<h3>SQL</h3>
+<p>Une technique de recherche avanc&eacute;e qui exige des connaissances de la structure de donn&eacute;es sous-jacente et des conventions d'appellations utilis&eacute;es dans la base de donn&eacute;es. R&eacute;f&eacute;rez-vous au lien « Aide SQL » dans ce champ pour obtenir des id&eacute;es sur des cha&icirc;nes de recherche possibles.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+
+<a name="checklist"></a>
+<h3>Listes de contr&ocirc;le</h3>
+<p>Cet outil vous permet de s&eacute;lectionner dans une liste des listes de contr&ocirc;le disponibles pour effectuer des recherches qui requi&egrave;rent ou excluent des valeurs particuli&egrave;res. Pour rechercher une liste de contr&ocirc;le sp&eacute;cifique, s&eacute;lectionnez-la dans la liste d&eacute;roulante, puis cliquez sur <em>« Ajouter »</em> pour afficher les choix de recherche de cette liste de contr&ocirc;le. Vous pouvez recherchez dans plusieurs listes de contr&ocirc;le. &Agrave; noter que les listes de contr&ocirc;le disponibles pour la recherche sont &eacute;tablies en fonction de la configuration de la vue actuelle.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

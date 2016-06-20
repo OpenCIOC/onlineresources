@@ -1,0 +1,38 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_CIC_ImportEntry_Dist_i]
+	@Code varchar(20),
+	@EF_ID int
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.1
+	Checked by: KL
+	Checked on: 25-Mar-2012
+	Action: NO ACTION REQUIRED
+	Notes: Could be much more efficient by accepting the xml list of distribution codes
+*/
+
+INSERT INTO CIC_ImportEntry_Dist (
+	EF_ID,
+	DST_ID,
+	Code
+)
+SELECT	EF_ID,
+		DST_ID,
+		DistCode
+	FROM CIC_ImportEntry, CIC_Distribution
+WHERE EF_ID=@EF_ID
+	AND DistCode=@Code
+
+SET NOCOUNT OFF
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_CIC_ImportEntry_Dist_i] TO [cioc_login_role]
+GO

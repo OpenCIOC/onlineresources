@@ -1,0 +1,176 @@
+/* =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ========================================================================================= */
+
+/* search page styles */
+
+@import 'browse_by_item_sizer';
+
+ 
+
+
+#cic-search {
+	#SearchForm {
+		max-width: $container-md;
+	}
+
+	.search-alert-box {
+		margin-bottom: 0.75em;
+	}
+
+	.main-menu-title {
+		margin: 0;
+		padding: 0.5em;
+	}
+
+	.main-menu-message {
+		padding: 0.5em;
+	}
+
+	.search-cioc-menu {
+		margin-bottom: 0.75em;
+		border: 1px solid $borderColorDefault; 
+		-moz-border-radius: $cornerRadius;
+		-webkit-border-radius: $cornerRadius;
+		border-radius: $cornerRadius;
+
+		.main-menu-title {
+			border-bottom: 1px solid $borderColorDefault;
+		}
+	}
+
+	.search-alert-box {
+		.main-menu-title {
+			border-bottom: 1px solid $borderColorError;
+		}
+	}
+
+
+	.main-menu-top {
+		-moz-border-radius-topleft: $cornerRadius;
+		-webkit-border-top-left-radius: $cornerRadius;
+		border-top-left-radius: $cornerRadius;
+		-moz-border-radius-topright: $cornerRadius;
+		-webkit-border-top-right-radius: $cornerRadius;
+		border-top-right-radius: $cornerRadius;
+	}
+
+	.search-left {
+		max-width: 16em;
+		float: left;
+		margin-right: 1em;
+	}
+
+	.search-right {
+		float: right;
+		max-width: 16em;
+		margin-left: 1em;
+		padding: 0.5em;
+		color: #000000/*{fcColorContent}*/; 
+		background-color: #ffffff/*{bgColorContent}*/; 
+		border: 1px solid #c5dbec/*{borderColorContent}*/; 
+		-moz-border-radius: 4px/*{cornerRadius}*/;
+		-webkit-border-radius: 4px/*{cornerRadius}*/;
+		border-radius: 4px/*{cornerRadius}*/;
+	}
+
+}
+
+#service-category-staff {
+	margin-top: 0;
+	margin-left: -1em;
+	margin-right: -1em;
+
+	li > a {
+		padding: 0.2em 1em;
+	}
+}
+
+#cic-search .search-user-content-left {
+	padding: 0.5em;
+}
+
+#cic-search .search-cioc-menu li {
+	display: block;
+	float: none;
+	padding: 0;
+}
+
+#cic-search .search-cioc-menu form {
+	margin: 0;
+}
+
+#cic-search .search-cioc-menu select {
+	width: 12em;
+}
+
+#cic-search .search-cioc-menu {
+	background: #dfeffc/*{bgColorDefault}*/ url(redmond/images/ui-bg_glass_75_e6e6e6_1x400.png)/*{bgImgUrlDefault}*/ 50%/*{bgDefaultXPos}*/ 50%/*{bgDefaultYPos}*/ repeat-x/*{bgDefaultRepeat}*/;
+	font-weight: normal/*{fwDefault}*/;
+	color: #2e6e9e/*{fcDefault}*/; 
+}
+#cic-search .search-cioc-menu form {
+	padding: 0.5em;
+}
+
+#cic-search .search-cioc-menu li a { 
+	display: block;
+	padding: 0.5em;
+	border-bottom: 1px solid #c5dbec/*{borderColorDefault}*/; 
+	background: #dfeffc/*{bgColorDefault}*/ url(redmond/images/ui-bg_glass_75_e6e6e6_1x400.png)/*{bgImgUrlDefault}*/ 50%/*{bgDefaultXPos}*/ 50%/*{bgDefaultYPos}*/ repeat-x/*{bgDefaultRepeat}*/;
+	font-weight: normal/*{fwDefault}*/;
+	color: #2e6e9e/*{fcDefault}*/; 
+}
+
+#cic-search .search-cioc-menu a, #cic-search .search-cioc-menu a:link, #cic-search .search-cioc-menu a:visited {
+	color: #2e6e9e/*{fcDefault}*/;
+	text-decoration: none;
+}
+
+#cic-search .search-cioc-menu li a:hover, #cic-search .search-cioc-menu li a:focus { 
+	border-bottom: 1px solid #c5dbec/*{borderColorHover}*/; 
+	background: #d0e5f5/*{bgColorHover}*/ url(redmond/images/ui-bg_glass_75_dadada_1x400.png)/*{bgImgUrlHover}*/ 50%/*{bgHoverXPos}*/ 50%/*{bgHoverYPos}*/ repeat-x/*{bgHoverRepeat}*/;
+	font-weight: normal/*{fwDefault}*/;
+	color: #1d5987/*{fcHover}*/; 
+}
+
+#cic-search .search-form {
+	overflow: hidden;
+} 
+
+@media (max-width: 815px) {
+	#cic-search .search-right ~ .search-left ~ .search-form .basic-search-row,
+	#cic-search .search-right ~ .search-left ~ .search-form .search-community-row,
+	#cic-search .search-right ~ .search-left ~ .search-form .search-community,
+	#cic-search .search-right ~ .search-left ~ .search-form .search-heading-row,
+	#cic-search .search-right ~ .search-left ~ .search-form .search-heading {
+		display: block;
+	}
+
+	#cic-search .search-right ~ .search-left ~ .search-form .search-community-row, 
+	#cic-search .search-right ~ .search-left ~ .search-form .search-heading-row {
+		margin-left: 1.5em;
+		width: 94%;
+	}
+}
+
+@media (max-width: 650px) {
+	#cic-search .search-left, #cic-search .search-right, #cic-search .search-form {
+		max-width: none;
+		float: none;
+		margin-left: 0;
+		margin-right: 0;
+	}
+}

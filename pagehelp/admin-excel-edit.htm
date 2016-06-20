@@ -1,0 +1,31 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>This page allows you to edit the details of an Excel Profile, including which data elements will be included, and in which View(s) it can be accessed. For general information about Excel Profiles, see the help file for the <a href="pagehelp?Page=stats.asp&Ln=en-CA">Manage Excel Profiles</a> page.</p>
+
+<h4>Profile Name</h4>
+<p>A unique name for the Profile. Used to select the profile during the export process.</p>
+
+<h4>Views</h4>
+<p>To make this Excel Profile available for use, you must enable it in one or more Views. For security reasons, it is recommended that you only activate each profile in the View(s) in which it will be needed.</p>
+
+<h4>Fields</h4>
+<p>Fields may be added to your Excel output, and/or used to sort the records within the file. It is not necessary for a field to have a value in both the <em>&quot;Column Order&quot;</em> and <em>&quot;Sort Order&quot;</em> columns. Placement within the column order or record order is determined by sorting first on the number provided, and then the name of the field. You may use the same number for multiple fields if you wish them to sort alphabetically (for instance, you can put 0 for every field you choose in the&nbsp; <em>Column Order</em> and it will automatically put the columns of the spreadsheet in alphabetical order; you can add fields ORG_LEVEL_1 through ORG_LEVEL_5 to the sort order all with a value of 0 and they would sort first by level 1, then level 2, then level 3, and so on. The maximum value you can specify is 255, and numbers do not have to be sequential; in fact, adding items by increments of 10 leaves you room to add new fields in between at a later date.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified: $Date$</p>

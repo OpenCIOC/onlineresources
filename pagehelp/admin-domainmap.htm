@@ -1,0 +1,61 @@
+﻿<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<ul>
+	<li><a href="#intro">An Introduction to Domain Names in CIOC</a></li>
+	<li><a href="#list">Working With Your Domain Name List</a></li>
+</ul>
+
+<hr>
+<a name="intro"></a>
+<h2>An Introduction to Domain Names in CIOC</h2>
+<p>When a new CIOC-hosted database is created, it is given a <strong><em>yourarea</em>.cioc.ca</strong> domain name for accessing the database. Although you may add new names to your site over time, this cioc.ca name will continue to be important for logging into your database because it offers a secure login page. New URLs can be added to your site as required, either for use in your main public site or for use as a memorable name for special-purpose Views/portals you develop. These new names can be new cioc.ca names, sub-domains based on the URL of another existing site, or a new domain name registered for this purpose. If you would like to add a new domain name to your CIOC database, read the <a href="http://community.cioc.ca/resources/how-to/custom-domain">How to add a new Domain (URL) to your database</a> article on the CIOC Community Site.</p>
+
+<h3>Domain Names and Public vs. Logged-in Sites</h3>
+<p><span class="Alert">Domain names tend to only be useful for public sites</span>, so it is not recommended that new names be added for the sole use of logged-in users. If you do need to create a new domain name for logged-in use, consider a cioc.ca name so that users can use a secure login URL. Be aware that, unlike for the public, the View the user will work with is determined by their security credentials, and not the domain name they use to access the site.</p>
+
+<a name="list"></a>
+<h2>Working With Your Domain Name List</h2>
+<p class="Alert">In most cases, you will never need to modify any of the information on this page. If in doubt about a change you want to make, have your official database contact make a change request directly to the CIOC technical administrators instead. Please do not change any value for your domain name setup that you do not understand.</p>
+
+<h3>Adding a New Domain Name</h3>
+<p>Adding new domain names must always be managed by the CIOC technical administrators, as it involves configuration on the web server. Please read the <a href="http://community.cioc.ca/resources/how-to/custom-domain">How to add a new Domain (URL) to your database</a> article on the CIOC Community Site for more information.</p>
+
+<hr>
+<h3>Changing the Default Language</h3>
+<p>For public sites that offer searching in more than one language, each domain name listing includes an indication of which language should be used if the language is not explicitly specified. For example, <em>mysite.cioc.ca?Ln=fr-CA</em> explicitly requests French if it is available, whereas mysite.cioc.ca would use whatever was configured as the default language). For this option to be useful, the View must be configured to be available in this language. It is recommended that you select the primary language of your target community.</p>
+
+<hr>
+<h3>Changing the View</h3>
+<p></p>
+<h4>-- Database Default View --</h4>
+<p>Selecting this option will automatically send the user to whichever View is currently specified as your default public View. It is strongly recommended that you choose this option rather than explicitly picking the name of your default public View from the list.</p>
+<h4>Specific View Name</h4>
+<p>Be warned that there are non-public Views in this list, marked by *. This may be useful to help you get things set up before you are ready to launch, but public users will be directed to the default public View instead if you select a non-public View. <span class="Alert">Do not intentionally choose a non-public View under any circumstances - remember that logged-in users will get the View specified in the setup for they User Type, and public users can't access private Views, so this is not a useful choice.</span></p>
+
+<hr>
+<h3>Secondary Names</h3>
+<p>If you have multiple domain names that go to the same View, you should select one as the preferred name and mark all others as "Secondary". (e.g. if you had myfirstname.com and mysecondname.com, or variations like www.mysite.com and mysite.com, that all point to the same thing). TThis avoids unnecessary duplication in the domain/view list when sending out update email requests, for example, and also helps the software choose a preferred name when creating links for outgoing emails (e.g. Volunteer Profile emails).</p>
+
+<hr>
+<h3>Google Maps</h3>
+<p>Google Maps API keys or Enterprise ClientID and Channel information is required in order to use the built-in Google Maps tools in CIOC. When you submit a request for a new domain name to be added to your site, you can request that the CIOC technical administrators also set up a free Google Maps key if you qualify (at minimum a non-profit or charity, publicly accessible site). If you wish, you can apply for an API key for your non-cioc.ca name yourself and enter it here. If you do not qualify for a free API key, and you have an Enterprise account with Google, you can also use this area to enter your paid Enterprise Google Maps Client ID and Channel information.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<p class="SmallNote">Last Modified: $Date$</p>

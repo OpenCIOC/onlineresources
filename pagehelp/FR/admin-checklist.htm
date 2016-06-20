@@ -1,0 +1,151 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<ul>
+	<li><a href="#intro">Information g&eacute;n&eacute;rale sur la modification des listes de contr&ocirc;le</a>
+		<ul>
+			<li><a href="#intro">Introduction</a></li>
+			<li><a href="#shared">Travailler dans une base de donn&eacute;es multimembre : valeurs partag&eacute;es et locales</a></li>
+		</ul>
+	</li>
+	<li><a href="#modify">Modifier des valeurs</a>
+		<ul>
+			<li><a href="#text_input">Bo&icirc;tes de saisie : noms, codes et valeurs</a></li>
+			<li><a href="#languages">Travailler avec les langues</a></li>
+			<li><a href="#order">Modifier l'ordre d'affichage</a></li>
+			<li><a href="#add_update_delete">Ajouter, mettre &agrave; jour et supprimer</a></li>
+			<li><a href="#hide">Masquer les valeurs partag&eacute;es</a></li>
+		</ul>
+	</li>
+	<li><a href="#searchreport">Chercher et cr&eacute;er des rapports sur les valeurs des listes de contr&ocirc;le</a>
+		<ul>
+			<li><a href="#search">Recherche et utilisation</a></li>
+			<li><a href="#reports">Rapports</a></li>
+		</ul>
+	</li>
+	<li><a href="#age_groups">Modifier les groupes d'&acirc;ge</a></li>
+</ul>
+<hr>
+
+<a name="intro"></a>
+<h2>Information g&eacute;n&eacute;rale sur la modification des listes de contr&ocirc;le</h2>
+<p><span class="Alert">Il est important de lire attentivement les renseignements contenus dans la page <em>« Modifier les valeurs de la liste de contr&ocirc;le / d&eacute;roulante »</em> sur laquelle vous travaillez actuellement</span>.</p>
+<p>En fonction du type de liste ou de menu d&eacute;roulant sp&eacute;cifique que vous avez choisi de modifier, la page affichera des valeurs diff&eacute;rentes. La majorit&eacute; des versions de la page <span class="Alert"><em>« Modifier les valeurs de la liste de contr&ocirc;le / d&eacute;roulante »</em></span> ont un format et des noms de champs similaires ; ce fichier d'aide aborde les variantes principales que vous pourrez observer. Si vous travaillez dans une base de donn&eacute;es multimembre, veuillez lire la section sur la mani&egrave;re de travailler avec des <a href="#shared">valeurs partag&eacute;es et locales</a> qui vous aidera &agrave; comprendre comment g&eacute;rer vos listes de contr&ocirc;le efficacement, en coop&eacute;ration avec les autres membres CIOC de votre base de donn&eacute;es.</p>
+<p><strong>Remarque : en g&eacute;n&eacute;ral, les changements apport&eacute;s aux valeurs sur ces pages mettront &eacute;galement &agrave; jour les valeurs dans les dossiers existants</strong> ; les exceptions comprennent les <em>types de rue</em>, les <em>types de bo&icirc;te postale</em>, les <em>titres de service (places disponibles)</em>, et les <em>titres honorifiques des contacts</em>. Les changements apport&eacute;s aux listes qui font exception ne modifieront pas les dossiers existants.</p>
+
+<a name="shared"></a>
+<h3>Travailler dans une base de donn&eacute;es multimembre : valeurs partag&eacute;es et locales</h3>
+<p>Une base de donn&eacute;es multimembre est une base de donn&eacute;es dans laquelle plusieurs membres CIOC ont leur propre licence distincte, mais partagent certains &eacute;l&eacute;ments de configuration communs et ont la capacit&eacute; de partager des dossiers. Si vous travaillez dans une base de donn&eacute;es multimembre, la configuration des valeurs de vos listes de contr&ocirc;le et d&eacute;roulantes devient un peu plus compliqu&eacute;e, car vous pourriez partager certaines ou toutes les valeurs avec d'autres membres de la base de donn&eacute;es.</p>
+<h4>Listes de contr&ocirc;le enti&egrave;rement partag&eacute;es</h4>
+<ul>
+	<li>Une <strong><em>liste de contr&ocirc;le enti&egrave;rement partag&eacute;e</em></strong> est une liste dont le contenu ne peut &ecirc;tre personnalis&eacute; pour chaque membre - tous les membres de la base de donn&eacute;es doivent utiliser les m&ecirc;mes valeurs. Certaines de ces valeurs sont pas personnalisables par l'utilisateur pour le moment (valeurs fournies par CIOC), donc tous les utilisateurs utilisent pr&eacute;sentement les m&ecirc;mes valeurs dans leur base de donn&eacute;es distincte.</li>
+	<li>Les valeurs modifiables (non fournies par CIOC) ne peuvent &ecirc;tre modifi&eacute;es que par un super-utilisateur global. Les super-utilisateurs locaux peuvent consulter la liste des valeurs d'une liste de contr&ocirc;le enti&egrave;rement partag&eacute;e, mais ne peuvent pas les modifier. Les super-utilisateurs locaux peuvent utiliser le lien fourni pour envoyer un avis aux super-utilisateurs globaux leur demandant de modifier ou de cr&eacute;er une valeur.</li>
+	<li><strong>Ceci inclut</strong> : Orientation, Type de rue, Type de bo&icirc;te postale, Statut des activit&eacute;s, Type d'adresse de facturation, Titres honorifiques, Types de t&eacute;l&eacute;phone des contacts, Cat&eacute;gories de cartographie, Domaines d'int&eacute;r&ecirc;t g&eacute;n&eacute;ral.</li>
+</ul>
+<h4>Listes de contr&ocirc;le partiellement partag&eacute;es</h4>
+<ul>
+	<li>Une <strong><em>liste de contr&ocirc;le partiellement partag&eacute;e</em></strong> est une liste sur laquelle chaque membre a un certain contr&ocirc;le des valeurs qu'il souhaite utiliser. Certaines valeurs peuvent &ecirc;tre partag&eacute;es par tous les membres, certaines peuvent &ecirc;tre utilis&eacute;es par seulement quelques membres, et d'autres peuvent &ecirc;tre sp&eacute;cifiques &agrave; un seul membre.</li>
+	<li>Seul un super-utilisateur global peut cr&eacute;er ou modifier des <strong>valeurs partag&eacute;es</strong> accessibles &agrave; tous les utilisateurs de la base de donn&eacute;es. Un super-utilisateur local peut choisir de ne pas utiliser de valeurs partag&eacute;es en <strong>masquant</strong> cette valeur aux autres membres.</li>
+	<li>Les super-utilisateurs locaux peuvent ajouter des <strong>valeurs locales</strong> qui n'existent pas d&eacute;j&agrave;. Le super-utilisateur local a le contr&ocirc;le exclusif de cette valeur locale ; elle ne pourra pas &ecirc;tre utilis&eacute;e ou modifi&eacute;e par d'autres membres. Si un membre veut utiliser une valeur locale cr&eacute;&eacute;e par un autre membre, un super-utilisateur global peut la convertir en valeur partag&eacute;e. Les super-utilisateurs locaux peuvent utiliser le lien fourni pour envoyer un avis aux super-utilisateurs globaux leur demandant de modifier ou de cr&eacute;er une valeur.</li>
+	<li>Les valeurs de liste de contr&ocirc;le <em>non utilis&eacute;es</em> par le membre actuel <em>continuera d'appara&icirc;tre</em> dans le contenu des dossiers, les formulaires de mise &agrave; jour, etc., si le dossier en question utilise d&eacute;j&agrave; ces valeurs. Ce membre n'aura pas acc&egrave;s aux valeurs non utilis&eacute;es pour les ajouter aux dossiers qui n'utilisent pas d&eacute;j&agrave; ces valeurs.</li>
+	<li><strong>Ceci inclut</strong> : Accessibilit&eacute;, Accr&eacute;ditation, Secteurs desservis, Lignes de bus, Certification, Distribution, Liste de contr&ocirc;le suppl&eacute;mentaire A, Liste de contr&ocirc;le suppl&eacute;mentaire B, Liste de contr&ocirc;le suppl&eacute;mentaire C, Liste de contr&ocirc;le suppl&eacute;mentaire D, Liste de contr&ocirc;le suppl&eacute;mentaire E, Liste de contr&ocirc;le suppl&eacute;mentaire F, Liste d&eacute;roulante suppl&eacute;mentaire A, Liste d&eacute;roulante suppl&eacute;mentaire B, Liste d&eacute;roulante suppl&eacute;mentaire C, Liste d&eacute;roulante suppl&eacute;mentaire D, Liste d&eacute;roulante suppl&eacute;mentaire E, Liste d&eacute;roulante suppl&eacute;mentaire F, Liste d&eacute;roulante suppl&eacute;mentaire G, Liste d&eacute;roulante suppl&eacute;mentaire H, Honoraires, Fin d'ann&eacute;e financi&egrave;re, Bailleurs de fonds, Langues, Cartographier le dossier, Type de membre, Mode de paiement, Conditions de paiement, Devise pr&eacute;f&eacute;r&eacute;e, Qualit&eacute; du dossier, Type de dossier, &Eacute;coles, Niveau de service, Type de garde, Type de programme, Titre du service (places disponibles), Public cible (places disponibles), Type d'unit&eacute; (places disponibles), Quartier</li>
+</ul>
+<p></p>
+
+<hr>
+<a name="modify"></a>
+<h2>Modifier des valeurs</h2>
+
+<a name="text_input"></a>
+<h3>Bo&icirc;tes de saisie : noms, codes et valeurs</h3>
+<p>Chaque type de liste de contr&ocirc;le poss&egrave;de un ou plusieurs &eacute;l&eacute;ments constituant chaque valeur. Certaines valeurs modifiables ne contiennent qu'une bo&icirc;te de saisie, en g&eacute;n&eacute;ral pour le nom (p. ex., Accessibilit&eacute;), alors que d'autres valeurs contiennent deux ou plusieurs bo&icirc;tes de saisie pour chaque valeur modifi&eacute;e (p. ex., Distribution contient &agrave; la fois une bo&icirc;te pour le code de distribution et une autre pour le nom complet de la distribution). Dans les bases de donn&eacute;es multilingues, la majorit&eacute; des bo&icirc;tes de saisie poss&egrave;dent un espace pour saisir les traductions du nom.
+
+<p>&Agrave; noter que dans les cas o&ugrave; la saisie d'un <em>code</em> ou d'un <em>num&eacute;ro</em> est offerte, cela reste facultatif et peut m&ecirc;me ne pas &ecirc;tre utilis&eacute; &agrave; l'affichage. La saisie d'un code ou d'un num&eacute;ro est obligatoire pour les listes de contr&ocirc;le suivantes :</p>
+<ul>
+	<li>Ligne de bus</li>
+	<li>Devise</li>
+	<li>Qualit&eacute; du dossier</li>
+	<li>Type de dossier</li>
+	<li>Niveau de service</li>
+	<li>Quartier</li>
+</ul>
+
+<a name="languages"></a>
+<h3>Travailler avec les langues</h3>
+<p>Pour la majorit&eacute; des listes de contr&ocirc;le, vous pouvez pr&eacute;ciser les valeurs de chaque &eacute;l&eacute;ment dans plusieurs langues. Pour d'autres, vous devez s&eacute;lectionner une langue unique pour chaque &eacute;l&eacute;ment de liste.</p>
+<p>Pour les listes multilingues, le logiciel utilisera par d&eacute;faut les langues de travail normales de votre base de donn&eacute;es (en g&eacute;n&eacute;ral, anglais et fran&ccedil;ais). Si des langues suppl&eacute;mentaires peuvent &ecirc;tre modifi&eacute;es, vous aurez acc&egrave;s &agrave; des cases &agrave; cocher en haut du formulaire ; s&eacute;lectionnez les langues suppl&eacute;mentaires que vous voulez modifier en cochant la case &agrave; c&ocirc;t&eacute; de la langue pour l'ajouter au formulaire.</p>
+<p>Remarque importante : pour la majorit&eacute; des listes de contr&ocirc;le, vous devez pr&eacute;ciser un nom dans chaque langue pour que cette valeur apparaisse lorsqu'un dossier est affich&eacute; dans cette langue. Les exceptions comprennent :</p>
+<ul>
+	<li>Ligne de bus - utilise le num&eacute;ro d'itin&eacute;raire</li>
+	<li>Langues - utilise le premier nom disponible s'il n'est pas disponible dans la langue de travail</li>
+	<li>Devise pr&eacute;f&eacute;r&eacute;e - utilise un code</li>
+	<li>Qualit&eacute; du dossier - utilise un code</li>
+	<li>Type de dossier - utilise un code</li>
+	<li>&Eacute;coles - utilise le premier nom disponible s'il n'est pas disponible dans la langue de travail</li>
+	<li>Niveau de service - utilise un code</li>
+	<li>Type d'unit&eacute; (places disponibles) - utilise le premier nom disponible s'il n'est pas disponible dans la langue de travail</li>
+	<li>Quartier - utilise un code</li>
+</ul>
+<p>Lorsque vous devez pr&eacute;ciser un nom afin de pouvoir utiliser l'&eacute;l&eacute;ment de liste de contr&ocirc;le dans cette langue, la bo&icirc;te est surlign&eacute;e en rouge si elle est vide.</p>
+
+<a name="order"></a>
+<h3>Ordre</h3>
+<p>Pour de nombreux types de listes de contr&ocirc;le et d&eacute;roulantes, il existe une colonne « Ordre » dans la page de modification des valeurs. L'ordre d'affichage d&eacute;terminera l'ordre dans lequel chaque valeur appara&icirc;tra dans la liste s&eacute;lectionn&eacute;e, ainsi que dans le dossier. Les num&eacute;ros d'ordre d'affichage peuvent &ecirc;tre dupliqu&eacute;s ; lorsque deux entr&eacute;es ont le m&ecirc;me num&eacute;ro d'ordre d'affichage, elles sont class&eacute;es par ordre alphab&eacute;tique du nom ou du code fourni.</p>
+
+<a name="add_update_delete"></a>
+<h3>Ajouter, mettre &agrave; jour et supprimer</h3>
+<p>Toutes les valeurs du formulaire de liste de contr&ocirc;le sont ajout&eacute;es, mises &agrave; jour ou supprim&eacute;es en une seule soumission. Il faut utiliser le bouton <em>« Mettre &agrave; jour »</em> pour accepter tous les changements. <span class="Alert">Souvenez-vous : vous devez toujours soumettre tous les changements par le bouton <em>« Mettre &agrave; jour »</em>, qu'il s'agisse d'un ajout, d'une mise &agrave; jour ou d'une suppression.</span></p>
+<p><strong>Ajouter :</strong> Pour cr&eacute;er une nouvelle entr&eacute;e, cliquez sur le bouton <em>« Ajouter un nouvel &eacute;l&eacute;ment »</em> pour ins&eacute;rer une rang&eacute;e et y saisir de nouvelles donn&eacute;es. Vous pouvez saisir plusieurs rang&eacute;es par soumission.</p>
+<p><strong>Supprimer :</strong> Pour supprimer une entr&eacute;e existante, cochez la case dans la colonne « Supprimer ». S'il n'y a pas de case &agrave; cocher, c'est que l'&eacute;l&eacute;ment est utilis&eacute; et ne peut &ecirc;tre supprim&eacute; pour le moment.</p>
+<h4>Listes de contr&ocirc;le <em>Type de rue</em>, <em>Type de bo&icirc;te postale</em> et <em>Titres honorifiques des contacts</em></h4>
+<p>Ces &eacute;l&eacute;ments de liste de contr&ocirc;le fonctionnent de mani&egrave;re diff&eacute;rente que les autres types de listes d&eacute;roulantes ; ils ne sont pas rattach&eacute;s &agrave; des langues et constituent seulement des valeurs sugg&eacute;r&eacute;es pour les dossiers. Il est possible que votre base de donn&eacute;es contiennent des dossiers utilisant des valeurs diff&eacute;rentes de celles des listes - m&ecirc;me si g&eacute;n&eacute;ralement, il n'est pas possible de s&eacute;lectionner une nouvelle valeur ne faisant pas partie de la liste - et les changements apport&eacute;s &agrave; la liste n'affectent pas les dossiers existants. De plus, les valeurs de ces listes peuvent &ecirc;tre utilis&eacute;es dans n'importe quelle langue d'un dossier, m&ecirc;me si elles sont sp&eacute;cifique &agrave; une langue particuli&egrave;re, car ces valeurs ne sont pas automatiquement d&eacute;termin&eacute;es par la langue.</p>
+
+<hr>
+
+<a name="searchreport"></a>
+<h2>Chercher et cr&eacute;er des rapports sur les valeurs des listes de contr&ocirc;le</h2>
+
+<a name="search"></a>
+<h3>Recherche et utilisation</h3>
+<p>La plupart des listes de contr&ocirc;le ont une ic&ocirc;ne de recherche <img src="../images/zoom.gif" alt="Ic&ocirc;ne de recherche" width="17" height="15">. Le fait de passer la souris au-dessus de l'ic&ocirc;ne affiche l'usage actuel de cette valeur dans la base de donn&eacute;es, y compris l'utilisation dans des dossiers supprim&eacute;s ou expir&eacute;s. Le fait de cliquer sur l'ic&ocirc;ne lancera une recherche sur les dossiers utilisant cette valeur dans la vue actuelle (y compris les dossiers supprim&eacute;s ou expir&eacute;s s'ils sont visibles dans la vue). Si vous voyez l'ic&ocirc;ne de recherche pour certaines valeurs, mais pas pour d'autres, cela signifie que les valeurs sans ic&ocirc;ne ne sont utilis&eacute;es dans aucun dossier.</p>
+
+<a name="reports"></a>
+<h3>Rapports</h3>
+<p>La majorit&eacute; des listes de contr&ocirc;le comportent un lien vers une version imprimable qui, pour la plupart des listes, inclue toutes les valeurs, ainsi que la date de modification, qui a effectu&eacute; la modification et le nombre d'utilisations.</p>
+
+<hr>
+
+<a name="age_groups"></a>
+<h2>Modifier les groupes d'&acirc;ge</h2>
+<p>La page <strong><em>Modifier les groupes d'&acirc;ge</em></strong> est un outil administratif pour cr&eacute;er des classes d'&acirc;ge avec un nom personnalis&eacute; ; on peut les utiliser dans la recherche simple pour identifier les dossiers desservant cette classe d'&acirc;ge.</p>
+<p>Pour permettre &agrave; l'utilisateur final de rechercher sur des groupes d'&acirc;ge, il faut proc&eacute;der en trois &eacute;tapes :</p>
+<ol>
+	<li><strong>Remplir</strong> le champ Admissibilit&eacute; de chaque dossier de la base de donn&eacute;es avec les &acirc;ges minimal et maximal ad&eacute;quats.</li>
+	<li><strong>Cr&eacute;er</strong> des groupes d'&acirc;ge avec un nom par la page <em>Modifier les groupes d'&acirc;ge</em></li>
+	<li><strong>Activer</strong> l'option de recherche par &acirc;ge dans la vue o&ugrave; vous voulez qu'ils apparaissent.</li>
+</ol>
+<p>Le tableau sur cette page contient les colonnes suivantes :</p>
+<ul>
+	<li><strong>Nom du groupe d'&acirc;ge :</strong> p. ex., Nourrissons, Enfants, Jeunes, Adultes, A&icirc;n&eacute;s</li>
+	<li><strong>&Acirc;ge minimal :</strong> L'&acirc;ge minimal de ce groupe d'&acirc;ge. &Agrave; noter que si cette colonne est vide, cela indique que l'&acirc;ge minimal est 0. Les d&eacute;cimales sont autoris&eacute;es.</li>
+	<li><strong>&Acirc;ge maximal :</strong> L'&acirc;ge maximal de ce groupe d'&acirc;ge. L'&acirc;ge pr&eacute;cis&eacute; ici est <strong>inclus</strong> dans la classe . De nouveau, si c'est vide, c'est qu'il n'y pas d'&acirc;ge maximal pour ce groupe d'&acirc;ge. Les d&eacute;cimales sont autoris&eacute;es.</li>
+	<li><strong>Garderie :</strong> indique si le groupe d'&acirc;ge doit &ecirc;tre utilis&eacute; pour la page de recherche sp&eacute;ciale aux garderies.</li>
+</ul>
+<p><span class="Alert">Remarque importante :</span> la composante d'&acirc;ge du champ <em>Admissibilit&eacute;</em> dans chaque dossier de la base de donn&eacute;es doit &ecirc;tre renseign&eacute; correctement avec des donn&eacute;es minimales et maximales ; autrement, les r&eacute;sultats des recherches bas&eacute;es sur l'&acirc;ge seront inexacts.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

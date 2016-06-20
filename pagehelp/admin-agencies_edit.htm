@@ -1,0 +1,47 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>The <strong><em>Add / Edit Agency</em></strong> page is used to either add a new Agency (AKA <em>Record Owner</em>) to the database, or to edit information for an existing Agency. For the most part, the information displayed will be identical whether you are adding a new Agency or editing existing information. Some additional information is available when editing an existing Agency. This will be outlined below.</p>
+<h3>Adding A New Agency</h3>
+<h4>Member</h4>
+<p>This field only applies in a database with multiple CIOC Members (a <em>&quot;Multi-Member&quot;</em> database). This field will be available for Global Super Users (those who control setup items shared across all memberships in the database). Once set, the Membership of each Agency cannot be changed.</p>
+<h4>Agency Code</h4>
+<p>This code consists of three capitalized letters. This code will be added to the beginning of every record number that is owned by this Agency. Because the CIOC community attempts to keep record owner codes unique among its members, it is important to ensure that you do not create a new code that is already in use by another member.</p>
+<h4>Record Owner Information</h4>
+<p>Information from this section is used to display contact information on mail/fax forms, to people providing feedback on the record; the email address is used to generate various emails from the system including feedback emails and update requests. This information must be filled out for each area of the database the owner code is used (Community Information and/or Volunteer).</p>
+<dl>
+<dt><strong>Update Email</strong>:</dt>
+<dd>The email address that will be attached to all outgoing email update requests for this agencies records as well as other automatically generated emails (i.e. feedback submissions). If this email is not supplied, the default module email (as specified in the <em>General Setup</em>) will be used instead. It is strongly recommended that an email be supplied for every Agency.</dd>
+<dt><strong>Update Phone</strong>:</dt>
+<dd>The phone number that will be attached to update requests, mail/fax forms, and feedback forms for the Agency's records.</dd>
+<dt><strong>Inquiry Phone</strong>:</dt>
+<dd>The number that the public should call for general inquiries (Not currently used in the software).</dd>
+<dt><strong>Agency Record #</strong>:</dt>
+<dd><span class="Alert">ALWAYS REQUIRED!</span> Each Agency should be associated with a record in the database that can provide name and address information. The Record # is the &quot;friendly&quot; record number (record owner + 4 digits). Use the <em>&quot;Org Finder&quot;</em> link to locate the Record # of the record for the Agency. Enter the organization name you are looking for in the <em>&quot;Org Finder&quot;</em> pop-up window and copy the appropriate Record number from the result set returned. The record chosen can be a non-public record.</dd>
+</dl>
+<h4>Enforce Required Fields</h4>
+<p>If selected, a user will be forced to complete all fields marked as required on the Organization / Program update form before the update will be accepted.</p>
+<h4>User Account Updates</h4>
+<p>Select the default behaviour for self-updating permissions on new accounts for this Agency. If there are accounts in the database for this Agency where the user is not permitted to update their own personal details or password, ensure that the email field is filled in so that the user can request changes to their account.</p>
+<h3>Editing An Existing Agency</h3>
+<p>The form to edit an existing Agency code provides all the fields listed in &quot;Add New&quot; above, as well as a status section and a search link to review the records associated with the given Agency. Note that the search will only retrieve records in the current <em>View</em> you are working in.</p>
+<h4>Status</h4>
+<p>The <strong>Status</strong> section indicates how the Agency Code is being used throughout the database, by users and records.</p>
+<p>If the Agency is not assigned as a record owner for any records, a delete button will be available. If you wish to delete this Agency and there is no delete button available, you will first need to remove the Agency code (Record Owner) from any records or users it is associated with and then return to this page.</p>
+<p align="center" style="text-decoration:none">[ <a href="#top">Top</a> ]</p>
+<p class="SmallNote">Last Modified: $Date$</p>

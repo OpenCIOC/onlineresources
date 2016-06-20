@@ -1,0 +1,42 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_VOL_VNUMSetSBIDs_u]
+	@VNUM varchar(10),
+	@IdList varchar(max)
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.6
+	Checked by: CL
+	Checked on: 27-Sep-2014
+	Action: TESTING REQUIRED
+*/
+
+DECLARE @tmpSBIDs TABLE(SB_ID int)
+
+INSERT INTO @tmpSBIDs SELECT DISTINCT tm.*
+	FROM dbo.fn_GBL_ParseIntIDList(@IdList,',') tm
+	INNER JOIN VOL_Suitability SB
+		ON tm.ItemID=SB.SB_ID
+
+DELETE pr
+	FROM VOL_OP_SB pr
+	LEFT JOIN @tmpSBIDs tm
+		ON pr.SB_ID = tm.SB_ID
+WHERE tm.SB_ID IS NULL AND VNUM=@VNUM
+
+INSERT INTO VOL_OP_SB (VNUM, SB_ID) SELECT VNUM=@VNUM, tm.SB_ID
+	FROM @tmpSBIDs tm
+WHERE NOT EXISTS(SELECT * FROM VOL_OP_SB pr WHERE VNUM=@VNUM AND pr.SB_ID=tm.SB_ID)
+
+SET NOCOUNT OFF
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_VOL_VNUMSetSBIDs_u] TO [cioc_login_role]
+GO

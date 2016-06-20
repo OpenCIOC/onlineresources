@@ -1,0 +1,35 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_CIC_ImportEntry_CCR_Check_i]
+	@NUM varchar(8) OUTPUT
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.1
+	Checked by: KL
+	Checked on: 27-Mar-2012
+	Action: NO ACTION REQUIRED
+*/
+
+INSERT INTO CCR_BaseTable (NUM,CREATED_BY)
+SELECT NUM, '(Import)'
+	FROM GBL_BaseTable bt
+WHERE NUM=@NUM
+	AND NOT EXISTS(SELECT * FROM CCR_BaseTable WHERE NUM=bt.NUM)
+
+IF NOT EXISTS(SELECT * FROM CCR_BaseTable WHERE NUM=@NUM) BEGIN
+	SET @NUM = NULL
+END
+
+SET NOCOUNT OFF
+
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_CIC_ImportEntry_CCR_Check_i] TO [cioc_login_role]
+GO

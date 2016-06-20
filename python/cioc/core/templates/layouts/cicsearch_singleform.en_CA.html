@@ -1,0 +1,240 @@
+<div id="cic-search-area" class="row [IFNOTALL:HAS_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]max-width-lg[ENDIFNOTALL:HAS_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]">
+
+	[IF:HAS_LEFT_CONTENT]
+	<div class="search-left col-xs-12 col-sm-4 col-lg-3">
+		[IF:SEARCH_ALERT]
+		<div class="panel panel-danger search-alert-box">
+			[IF:SEARCH_ALERT_TITLE]
+			<div class="panel-heading">
+				<h2>
+					[IF:SEARCH_ALERT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_ALERT_GLYPH]" aria-hidden="true"></span>[ENDIF:SEARCH_ALERT_GLYPH]
+					[SEARCH_ALERT_TITLE]
+				</h2>
+			</div>
+			[ENDIF:SEARCH_ALERT_TITLE]
+			<div class="panel-body panel-body-nofooter">
+				[SEARCH_ALERT]
+			</div>
+		</div>
+		[ENDIF:SEARCH_ALERT]
+
+		[IF:SEARCH_MENU]
+		<nav class="navmenu navmenu-default navmenu-fluid search-menu-msg" role="navigation" id="search-navmenu">
+			[IF:MENU_TITLE]
+			<div class="navmenu-heading">
+				<button type="button" class="navmenu-toggle collapsed" data-toggle="collapse" data-target="#search-navmenu .navmenu-collapse" aria-expanded="false">
+					<span class="sr-only">[TOGGLE_NAV_TITLE]</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<h2 class="navmenu-brand">
+					[IF:MENU_GLYPH]<span class="glyphicon glyphicon-[MENU_GLYPH]" aria-hidden="true"></span>[ENDIF:MENU_GLYPH]
+					[MENU_TITLE]
+				</h2>
+			</div>
+			[ENDIF:MENU_TITLE]
+			[IF:MENU_MESSAGE]
+			<div class="navmenu-text">
+				[MENU_MESSAGE]
+			</div>
+			[ENDIF:MENU_MESSAGE]
+			<div id="search-cioc-menu" class="navmenu-collapse collapse">
+				<ul class="nav navmenu-nav">
+					[FOR:OTHER_LANGS]
+					<li><a href="[LINK]">[DISPLAY]</a></li>
+					[ENDFOR:OTHER_LANGS]
+					[IF:VOL_LINK]
+					<li><a href="[VOL_LINK]">[VOL_LINK_TEXT]</a></li>
+					[ENDIF:VOL_LINK]
+					[FOR:CUSTOM_MENU_ITEMS]
+					<li><a href="[LINK]">[DISPLAY]</a></li>
+					[ENDFOR:CUSTOM_MENU_ITEMS]
+					[FOR:SEARCH_MENU_ITEMS]
+					<li><a href="[LINK]">[DISPLAY]</a></li>
+					[ENDFOR:SEARCH_MENU_ITEMS]
+					[IF:CHANGE_VIEW]
+					<li>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">[CHANGE_VIEW_TITLE]<span class="caret"></span></a>
+						<ul class="dropdown-menu navmenu-nav" role="menu">
+							[FOR:VIEWS_LIST]
+							<li><a href="[FN:MAKE_LINK]/?UseCICVw=[VIEWTYPE][ENDFN:MAKE_LINK]">[ViewName]</a></li>
+							[ENDFOR:VIEWS_LIST]
+						</ul>
+					</li>
+					[ENDIF:CHANGE_VIEW]
+				</ul>
+			</div>
+		</nav>
+		[ENDIF:SEARCH_MENU]
+
+		[IF:SEARCH_LEFT_CONTENT]
+		<div class="panel panel-info">
+			[IF:SEARCH_LEFT_TITLE]
+			<div class="panel-heading"><h2>[IF:SEARCH_LEFT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_LEFT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_LEFT_GLYPH][SEARCH_LEFT_TITLE]</h2></div>
+			[ENDIF:SEARCH_LEFT_TITLE]
+			<div class="panel-body panel-body-nofooter">
+				[SEARCH_LEFT_CONTENT]
+			</div>
+		</div>
+		[ENDIF:SEARCH_LEFT_CONTENT]
+
+	</div>
+	[ENDIF:HAS_LEFT_CONTENT]
+
+	[IFANY:HAS_CENTRE_SECTION,SERVICE_CATEGORY]
+	<div class="col-xs-12
+		 [IFANY:HAS_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
+			col-sm-8
+			[IFNOT:HAS_LEFT_CONTENT]
+				col-md-8 col-lg-9
+			[ENDIFNOT:HAS_LEFT_CONTENT]
+			[IFNOT:SEARCH_RIGHT_CONTENT]
+				col-md-8 col-lg-9
+			[ENDIFNOT:SEARCH_RIGHT_CONTENT]
+			[IFALL:HAS_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
+				col-md-6 col-lg-6
+			[ENDIFALL:HAS_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
+		 [ENDIFANY:HAS_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
+		 ">
+
+		[IF:BASIC_SEARCH_SECTION]
+		<div class="panel panel-default search-form">
+			<div class="panel-heading">
+				<h2>
+					<span class="glyphicon glyphicon-[SEARCH_KEYWORD_GLYPH]" aria-hidden="true"></span> [SEARCH_KEYWORD_TITLE]
+				</h2>
+			</div>
+			<div class="panel-body panel-body-nofooter">
+				<div id="basic-search">
+					[BASIC_SEARCH]
+				</div>
+			</div>
+		</div>
+		[ENDIF:BASIC_SEARCH_SECTION]
+
+		[FOR:TOPIC_SEARCHES]
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2>[TITLE]</h2>
+			</div>
+			<div class="panel-body panel-body-nofooter">
+				<div id="topic-search-[ID]">
+					[DESC]
+					<br><a href="[LINK]">[SEARCH_LEAD] <em>[TITLE]</em></a>
+				</div>
+			</div>
+		</div>
+		[ENDFOR:TOPIC_SEARCHES]
+
+		[IF:QUICK_SEARCHES]
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2>[IF:QUICK_SEARCH_GLYPH]<span class="glyphicon glyphicon-[QUICK_SEARCH_GLYPH]" aria-hidden="true"></span> [ENDIF:QUICK_SEARCH_GLYPH] [QUICK_SEARCH_TITLE]</h2>
+			</div>
+			<div class="panel-body panel-body-nofooter">
+				<div id="quick-search">
+					[FOR:QUICK_SEARCHES]
+					[IF:COUNT]<br>[ENDIF:COUNT]<a href="[URL]">[NAME]</a>
+					[ENDFOR:QUICK_SEARCHES]
+				</div>
+			</div>
+		</div>
+		[ENDIF:QUICK_SEARCHES]
+
+		[IF:CHILDCARE_SEARCH_URL]
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2><i class="fa fa-child" aria-hidden="true"></i> [CHILDCARE_SEARCH_TITLE]</h2>
+			</div>
+			<div class="panel-body panel-body-nofooter">
+				<div id="child-care">
+					[IF:CHILDCARE_SEARCH_TEXT][CHILDCARE_SEARCH_TEXT]<br>[ENDIF:CHILDCARE_SEARCH_TEXT]
+					<a href="[CHILDCARE_SEARCH_URL]">[CHILDCARE_LINK_TEXT]</a>
+				</div>
+			</div>
+		</div>
+		[ENDIF:CHILDCARE_SEARCH_URL]
+
+		[IF:BROWSE_BY_INDUSTRY_URL]
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2><i class="fa fa-industry" aria-hidden="true"></i> [NAICS_TITLE]</h2>
+			</div>
+			<div class="panel-body panel-body-nofooter">
+				<div id="industry">
+					[NAICS_INTRO] <br><a href="[BROWSE_BY_INDUSTRY_URL]">[NAICS_LINK_TEXT]</a>
+				</div>
+			</div>
+		</div>
+		[ENDIF:BROWSE_BY_INDUSTRY_URL]
+
+		[IF:BROWSE_ORG_ITEMS]
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2><span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span> [BROWSE_ORG_TITLE]</h2>
+			</div>
+			<div class="panel-body panel-body-nofooter">
+				<div id="browse-by-org">
+					[FOR:BROWSE_ORG_ITEMS]
+					<a href="[LINK]"><div class="browse-by-item">[DISPLAY]</div></a>
+					[ENDFOR:BROWSE_ORG_ITEMS]
+				</div>
+			</div>
+		</div>
+		[ENDIF:BROWSE_ORG_ITEMS]
+
+		[IF:BROWSE_SUBJ_ITEMS]
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2><span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span> [BROWSE_SUBJ_TITLE]</h2>
+			</div>
+			<div class="panel-body panel-body-nofooter">
+				<div id="browse-by-subject">
+					[FOR:BROWSE_SUBJ_ITEMS]
+					<a href="[LINK]"><div class="browse-by-item">[DISPLAY]</div></a>
+					[ENDFOR:BROWSE_SUBJ_ITEMS]
+				</div>
+			</div>
+		</div>
+		[ENDIF:BROWSE_SUBJ_ITEMS]
+
+		[IF:SEARCH_CENTRE_CONTENT]
+		<div class="panel panel-default">
+			[IF:SEARCH_CENTRE_TITLE]
+			<div class="panel-heading">
+				<h2>[IF:SEARCH_CENTRE_GLYPH]<span class="glyphicon glyphicon-[SEARCH_CENTRE_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_CENTRE_GLYPH][SEARCH_CENTRE_TITLE]</h2>
+			</div>
+			[ENDIF:SEARCH_CENTRE_TITLE]
+			<div class="panel-body panel-body-nofooter">
+				[SEARCH_CENTRE_CONTENT]
+			</div>
+		</div>
+		[ENDIF:SEARCH_CENTRE_CONTENT]
+
+		[IF:SERVICE_CATEGORY]
+		<div id="service-category-panel" class="panel panel-default">
+			<div class="panel-body panel-body-nofooter">
+				<div id="service-category" class="service-category-no-stack">
+					[SERVICE_CATEGORY_LIST]
+				</div>
+			</div>
+		</div>
+		[ENDIF:SERVICE_CATEGORY]
+	</div>
+	[ENDIFANY:HAS_CENTRE_SECTION,SERVICE_CATEGORY]
+
+	[IF:SEARCH_RIGHT_CONTENT]
+	<div class="col-xs-12 col-sm-12 [IF:HAS_LEFT_CONTENT] col-md-3[ENDIF:HAS_LEFT_CONTENT][IFNOT:HAS_LEFT_CONTENT] col-md-4[ENDIFNOT:HAS_LEFT_CONTENT] col-lg-3">	
+		<div class="panel panel-info">
+			[IF:SEARCH_RIGHT_TITLE]
+			<div class="panel-heading"><h2>[IF:SEARCH_RIGHT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_RIGHT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_RIGHT_GLYPH][SEARCH_RIGHT_TITLE]</h2></div>
+			[ENDIF:SEARCH_RIGHT_TITLE]
+			<div class="panel-body panel-body-nofooter">
+				[SEARCH_RIGHT_CONTENT]
+			</div>
+		</div>
+	</div>
+	[ENDIF:SEARCH_RIGHT_CONTENT]
+</div>
+

@@ -1,0 +1,298 @@
+/* =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ========================================================================================= */
+
+@import 'browse_by_item_sizer';
+
+#service-category-list {
+
+	& > li {
+		vertical-align: top;
+		width: 1/6 * 100%;
+		display: inline-block;
+		text-align: center;
+		margin-top: .2em;
+		a {
+			padding: 0.5em;
+			min-height: 100px;
+		}
+
+		.fa {
+			margin: auto;
+			font-size: 325%;
+			display: block;
+		}
+	}
+}
+
+#service-category-staff {
+	& > li {
+		vertical-align: top;
+		width: 1/3 * 100%;
+		display: inline-block;
+		text-align: center;
+		margin-top: .2em;
+		font-size: 125%;
+	}
+}
+
+.community-dropdown-search-parent {
+	margin-top: 0.75em;
+}
+
+@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+	#service-category-list > li {
+		width: 1/4 * 100%;
+	}
+}
+
+@media (max-width: $screen-xs-max) {
+	#service-category-list > li {
+		width: 1/2 * 100%;
+	}
+
+	#service-category-staff {
+		& > li {
+			width: 100%;
+		}
+	}
+}
+
+#org-opps-panel {
+	.fa {
+		padding-top: 0.1em;
+		padding-right: 0.1em;
+		font-size: 220%;
+	}
+	.browse-by-item {
+		padding: 0.1em 0.3em;
+	}
+}
+
+@media (max-width: $screen-sm-max) {
+	#org-opps-panel {
+		.fa {
+			padding-top: 0.1em;
+			padding-right: 0.15em;
+			padding-left: 0.15em;
+			font-size: larger;
+		}
+	}
+}
+
+.search-button-wrapper {
+	padding-left: 0.5em;
+}
+
+#cic-search-area {
+	.main-search-box {
+		min-height: 67px;
+	}
+
+	#CIOC_cicsearch {
+		padding: 8px;
+		background-color: $bgColorActive;
+		background-image: linear-gradient(to top, $borderColorActive 0px, $bgColorActive 100%);
+
+		h2 {
+			font-weight: normal;
+			margin-top: 5px;
+		}
+	}
+
+	.CIOC_search_button {
+		background-color: $BackgroundColour;
+		background-image: linear-gradient(to bottom, $BackgroundColour 0px, darken($BackgroundColour,10%) 100%);
+		border-color: darken($BackgroundColour,15%)
+	}
+
+	#STerms, #QuickList {
+		margin-bottom: 0;
+	}
+
+	.form-control {
+		box-shadow: 0 3px 3px rgba(0, 0, 0, 0.075) inset;
+	}
+
+	.search-table {
+		width: 100%;
+	}
+
+	.search-menu-toggle {
+		position: fixed;
+		left: 0;
+		top: 32px;
+		z-index: 10000;
+		display: none;
+	}
+
+	.search-panels  {
+		.panel-default, .panel-danger  {
+			min-height: 104px;
+		}
+	}
+
+	.MenuMessageBox {
+		padding: 10px ($grid-gutter-width/2);
+	}
+
+	.large-icon {
+		display: block;
+		font-size: 32px;
+		padding-bottom: 0.1em;
+	}
+
+	@media (min-width: $screen-sm-min) {
+		.search-menu-toggle {
+			display:block;
+			top: 65px;
+		}
+
+		#CIOC_cicsearch {
+			padding: 8px 23px;
+		}
+	}
+
+	@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
+		.search-menu-toggle {
+			top: 32px;
+		}
+	}
+
+	@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+		.large-icon {
+			font-size: 28px;
+		}
+	}
+
+	.custom_menu_block .menu-item {
+		float: left;
+		min-height: 1px;
+		padding-left: 5px;
+		padding-right: 5px;
+		position: relative;
+	}
+
+	.menu-items-9 {
+		width: 1/9 * 100%;
+	}
+
+	.menu-items-8 {
+		width: 1/8 * 100%;
+	}
+
+	.menu-items-7 {
+		width: 1/7 * 100%;
+	}
+
+	.menu-items-6 {
+		width: 1/6 * 100%;
+	}
+
+	.menu-items-5 {
+		width: 1/5 * 100%;
+	}
+
+	.menu-items-4 {
+		width: 25%;
+	}
+
+	.menu-items-3 {
+		width: 1/3 * 100%;
+	}
+
+	.menu-items-2 {
+		width: 50%;
+	}
+
+	.menu-items-1 {
+		width: 100%;
+	}
+
+	.thumbnail-banner {
+		@extend .panel-shading;
+		font-family: inherit;
+		font-size: 150%;
+		font-weight: 500;
+		line-height: 1.3;
+		margin-bottom: 10px;
+		text-align: center;
+		text-decoration: none;
+		height: 100px;
+		position: relative;
+
+		.vertical-center {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 96%;
+		}
+
+		background-color: $bgColorContent;
+
+		.glyphicon, .fa {
+			color: $iconColorContent;
+		}
+	}
+
+	a.thumbnail-banner:hover, a.thumbnail-banner:focus a.thumbnail-banner:visited:hover, a.thumbnail-banner:visited:focus {
+		text-decoration: none;
+	}
+
+	@media (max-width: $screen-sm-max) {
+		.main-search-box {
+			min-height: 34px;
+			margin-bottom: $form-group-margin-bottom;
+		}
+		.search-panels  {
+			.panel-default, .panel-danger  {
+				min-height: 34px;
+			}
+		}
+	}
+
+	@media (max-width: $screen-xs-max) {
+		.thumbnail-banner {
+			font-size: 125%;
+		}
+		.large-icon {
+			font-size: 28px;
+		}
+	}
+
+	@media (min-width: 457px) and (max-width: $screen-sm-max) {
+		.menu-items-3, .menu-items-4, .menu-items-5, .menu-items-6, .menu-items-7, .menu-items-8 {
+			width: 1/3 * 100%;
+		}
+	}
+
+	@media (max-width: 456px) {
+		.menu-items-3, .menu-items-4, .menu-items-5, .menu-items-6, .menu-items-7, .menu-items-8 {
+			width: 50%;
+		}
+	}
+
+	@media (min-width: $screen-sm-min) and (max-width: $screen-md-max) {
+		.thumbnail-banner {
+			font-size: 120%;
+		}
+	}
+
+	@media (min-width: $screen-md-min) {
+		.thumbnail-banner {
+			height: 110px;
+		}
+	}
+}

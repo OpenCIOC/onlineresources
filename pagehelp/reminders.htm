@@ -1,0 +1,67 @@
+﻿<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<ul>
+	<li><a href="#intro">An Introduction to Reminders</a></li>
+	<li><a href="#reminderlist">Working With Your Reminder List</a></li>
+	<li><a href="#configure">Configuring Your Reminder</a></li>
+</ul>
+
+<hr>
+<a name="intro"></a>
+<h2>An Introduction to Reminders</h2>
+<p>The Reminders system is intended to assist users in creating task lists for themselves and other users, as well as provide a means of communicating information to other CIOC users. Reminders can be for general tasks or communications, or they may be tied to one or more records. You can work with reminders by clicking the Reminders link in your site bar, or (in the case of Reminders tied to specific records), through the Record Details page. You can also create a reminder for a group of records through your search results.</p>
+<p>Reminders have several possible states:</p>
+<ul>
+	<li>A <strong>Current</strong> reminder is an active task that is not overdue. This means that it has no specific start date, or the start date has already passed. It does not have a due date, or its due date is some time in the future. If you have a current reminder and no past-due reminders, you will see a reminder icon <img alt="Reminder Icon" src="../images/remind.gif" width="17" height="17"> next to the Reminders link in your site bar and also in any record(s) the reminder applies to.</li>
+	<li>A <strong>Past Due</strong> reminder has a due date that has passed. If you have a past due reminder, you will see an alert icon
+		<img alt="Alert Icon" src="../images/reminder_alert.gif" width="15" height="14"> next to the Reminders link in your site bar and also in any record(s) the reminder applies to.</li>
+	<li>A <strong>Pending</strong> reminder has not yet reached its start date.</li>
+	<li>A <strong>Dismissed</strong> reminder has been removed from the list, usually because the task is complete or the communication has been read. Reminders that have been dismissed for all assigned users are periodically cleared from the database if at least one week has passed since the last dismissal.</li>
+</ul>
+
+<a name="reminderlist"></a>
+<h2>Working With Your Reminder List</h2>
+<p>The list of reminders works the same whether you are working from the Record Details page or the main Reminders page. When working in the main Reminders page, some users may also have access to an <strong>Admin Notices</strong> section. This is the area for Global Super users to receive setup change requests in a multi-member database. The new Reminders page has replaced the old <em>Notices</em> page and site bar link.</p>
+<p>When you first view your reminders list, you will see any <strong><em>Current</em></strong> and <strong><em>Past Due</em></strong> reminders. Past due reminders will include the due date of the reminder in the alert colour. Each list will be subdivided into reminders that were <em><strong>Created for Me</strong></em> (assigned to you by yourself or another user) or <strong><em>Created for Others</em></strong> (created by me, but assigned to another user). If you have reminders that have not yet reached their start date, you can click the <em><strong>Pending Reminders</strong></em> link to view the list of future reminders; click it again to hide the list.</p>
+<p>By default, dismissed reminders are not part of your list. If you have a dismissed reminder that has not been deleted, you can click the <strong>Show Dismissed</strong> button to include them in your list. Clicking the button again will hide the dismissed reminders.</p>
+<p>The following actions and/or info are available from your Reminder List:</p>
+<ul>
+	<li><img alt="Reminder Quick Info Icon" src="../images/reminder_info.gif">&nbsp;<strong>Quick Info</strong> - Click the page icon to quickly see who created a reminder (if not you), who the reminder is assigned to, when the reminder becomes active (for Pending reminders).</li>
+	<li><img alt="Reminder Edit Icon" src="../images/reminder_edit.gif">&nbsp;<strong>Edit</strong> - If you have permission to edit the reminder, click the folder icon to open the reminder to view all details or edit the reminder.</li>
+	<li><img alt="Reminder Search Icon" src="../images/reminder_search.gif">&nbsp;<strong>Search</strong> - If the reminder is associated with records, hold your mouse over the magnifying glass icon to view a count of how many Community Information and/or Volunteer Opportunity records are associated with the reminder. If the reminder has a mix of records from both modules, you will see two icons. Click the icon to bring up a search containing those records; note that you can only retrieve records that are part of your current View.</li>
+	<li><img alt="Reminder Dismiss Icon" src="../images/reminder_dismiss.gif">&nbsp;<strong>Dismiss</strong> - If you have completed the task or read the communication, you may dismiss the reminder from your list using the X icon. You may have the option to dismiss the reminder for everyone; if so, please only do so if you have fully completed the task and it is no longer necessary for other users to see the reminder.</li>
+	<li><img alt="Reminder Restore Icon" src="../images/reminder_restore.gif">&nbsp;<strong>Restore</strong> - You may restore a dismissed reminder to your regular list using the refresh icon. Note that dismissed reminders are periodically deleted after at least one week has passed since all assigned users have dismissed the reminder.</li>
+	<li><img alt="High Priority Icon" src="../images/alert.gif">&nbsp;<strong>High Priority</strong> - If you have assigned a high-priority note type to the record, you will see the high priority icon next to your reminder in the list.</li>
+</ul>
+
+<a name="configure"></a>
+<h2>Configuring Your Reminder</h2>
+<p>Whether you configure your reminder from the Record Details page, the Reminders page, or through your search results, the form for editing the reminder is exactly the same.</p>
+<p>If you wish to tie your reminder to one or more records, you can do so in the <strong>Records</strong> section by entering the record numbers. You can enter any combination of Community Information and/or Volunteer Opportunity records. You may hover your mouse over previously added records to see the full record name (this does not apply to newly added record numbers until the form has been submitted). Click the search icon <img alt="Reminder Search Icon" src="../images/reminder_search.gif"> if available to bring up a search results screen with the records associated with the reminder.</p>
+<p>You may optionally specify that your reminder applies only to a specific <strong>Language</strong> of record. If you choose only French for example, the reminder will only display when you are viewing the French version of the record.</p>
+<p>If you do not explicitly specify who your reminder is <strong>For</strong>, it will be assumed the reminder is just for you. You may specify that the reminder is for you and/or other users in your database. Super Users may assign reminders on a per-Agency basis. <span class="Alert">Please do not spam other users in your database with reminders</span>; only assign reminders to the users that need to see or act on them.</p>
+<p>Some reminders are require each user to see or act on them, while others require any one person to do so. Use the <strong>Dismissal</strong> section to indicate whether a user can dismiss the reminder just for themselves, or for all users (i.e. because they completed the task, and no other user needs to act on it).</p>
+<p>A <strong>Start</strong> date is useful for a task you know does not need to be completed for some time. By putting a future date in the <em>Start</em> field of your reminder, you can choose to keep this reminder out of your active tasks until it makes sense for you to actually begin work on the task. The start date should generally be well enough in advance of the due date to allow you to complete the task before it is due. This is an optional field.</p>
+<p>If your task must be completed by a specific date, you can enter a <strong>Due</strong> date. If the task is not dismissed before the due date passes, it will become a past-due reminder and an alert will appear in your site bar and also the record(s) it applies to.</p>
+<p>As with the Internal Memo field, you can choose a note <strong>Type</strong> for your reminder. These note types are shared with the Internal Memo field, and you may have many types or none in your database. More types can be configured through the Note Type setup in the shared general checklists. If the note type is flagged as a high-priority type, it will cause an exclamation icon to appear next to your reminder indicating that it is a high-priority item.</p>
+<p>The only required information for you to fill out about a reminder is the <strong>Details</strong> section. This is the area where you will enter the specific details of your task or communication.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<p class="SmallNote">Last Modified: $Date$</p>

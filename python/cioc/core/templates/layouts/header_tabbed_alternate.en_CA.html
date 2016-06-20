@@ -1,0 +1,62 @@
+<div class="container[IF:CONTAINER_FLUID]-fluid[ENDIF:CONTAINER_FLUID] [IFNOT:CONTAINER_CONTRAST]container-nocontrast[ENDIFNOT:CONTAINER_CONTRAST][IF:CONTAINER_CONTRAST]container-contrast[ENDIF:CONTAINER_CONTRAST]">
+	[IF:NOT_PRINT_MODE]
+	<header class="site-header">
+		[IF:SITE_BAR_MENU]
+		<nav class="site-bar">
+			[SITE_BAR_MENU]
+		</nav>
+		[ENDIF:SITE_BAR_MENU]
+		<div class="title-area[IF:NO_LOGO] no-logo[ENDIF:NO_LOGO]">
+			[IF:HAS_LOGO]
+			<div class="cioc-grid-row">
+				<div class="cioc-col-sm-4">
+					[IF:LOGO]
+					[IF:LOGOMOBILE]<span class="hidden-xs">
+						[ENDIF:LOGOMOBILE]
+						[IF:LOGOLINK]<a href="[LOGOLINK]">
+							[ENDIF:LOGOLINK]
+							<img class="site-logo img-responsive" src="[LOGO]" [IF:LOGO_ALT_TEXT]alt="[LOGO_ALT_TEXT]" [ENDIF:LOGO_ALT_TEXT]>
+							[IF:LOGOLINK]
+						</a>[ENDIF:LOGOLINK]
+						[IF:LOGOMOBILE]
+					</span>[ENDIF:LOGOMOBILE]
+					[ENDIF:LOGO]
+					[IF:LOGOMOBILE]
+					[IF:LOGO]<span class="visible-xs-inline">
+						[ENDIF:LOGO]
+						[IF:LOGOLINK]<a href="[LOGOLINK]">
+							[ENDIF:LOGOLINK]
+							<img class="site-logo img-responsive" src="[LOGOMOBILE]" [IF:LOGO_ALT_TEXT]alt="[LOGO_ALT_TEXT]" [ENDIF:LOGO_ALT_TEXT]>
+							[IF:LOGOLINK]
+						</a>[ENDIF:LOGOLINK]
+						[IF:LOGO]
+					</span>[ENDIF:LOGO]
+					[ENDIF:LOGOMOBILE]
+				</div>
+				<div class="cioc-col-sm-8">
+					[ENDIF:HAS_LOGO]
+					<div class="txt-titles">
+						[IF:VIEW_TITLE]
+						<div class="site-name">[VIEW_TITLE]</div>
+						[ENDIF:VIEW_TITLE]
+						<div class="page-name">[PAGE_NAME]</div>
+						[IF:HEADER_NOTICE]
+						<div id="CIOC_header_text">[HEADER_NOTICE]</div>
+						[ENDIF:HEADER_NOTICE]
+					</div>
+					[IF:HAS_LOGO]
+				</div>
+			</div>
+			[ENDIF:HAS_LOGO]
+		</div>
+		[IF:VIEW_TAG_LINE]
+		<div class="site-tag-line-bar">
+			<h2 class="site-tag-line h3">[VIEW_TAG_LINE]</h2>
+		</div>
+		[ENDIF:VIEW_TAG_LINE]
+		<nav class="site-menu">
+			<ul>[FOR:SITE_MENU]<li><a href="[LINK]">[DISPLAY]</a></li>[ENDFOR:SITE_MENU]<li style="display:none;">[MY_LIST]</li></ul>
+		</nav>
+	</header>
+	[ENDIF:NOT_PRINT_MODE]
+

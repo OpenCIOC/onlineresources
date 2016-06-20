@@ -1,0 +1,315 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>Les mises en page de mod&egrave;les sont, de mani&egrave;re simple, des fragments de HTML qui formeront des sections des pages rendues par le logiciel. Les sections d'une page pouvant &ecirc;tre modifi&eacute;es par une mise en page de mod&egrave;le sont :</p>
+<ul>
+	<li><strong>En-t&ecirc;te</strong> - la section de page venant <em>avant</em> le contenu g&eacute;n&eacute;r&eacute; par CIOC. Cela contient g&eacute;n&eacute;ralement les renseignements du menu du haut ou lat&eacute;ral.</li>
+	<li><strong>Pied de page</strong> - la section de page venant <em>apr&egrave;s</em> le contenu g&eacute;n&eacute;r&eacute; par CIOC. Cela contient g&eacute;n&eacute;ralement les menus de pieds de page, les avis de droits d'auteur, etc.</li>
+	<li><strong>Recherche</strong> - le corps de la page principale pour chaque module du logiciel. Cela contient g&eacute;n&eacute;ralement ce qui s'appelle habituellement la « page principale » ou la « recherche simple ».</li>
+</ul>
+
+<p>Les mises en page de mod&egrave;les peuvent comprendre des &eacute;l&eacute;ments sp&eacute;ciaux qui sont contr&ocirc;l&eacute;s par les param&egrave;tres de configuration et de s&eacute;curit&eacute; int&eacute;gr&eacute;s &agrave; CIOC. Vous pouvez utiliser des balises sp&eacute;ciales dans le HTML de votre mise en page pour d&eacute;terminer o&ugrave; appara&icirc;tront ces &eacute;l&eacute;ments et comment ils seront format&eacute;s. Il est fortement recommand&eacute; d'utiliser ces balises sp&eacute;ciales, surtout dans les vues en mode connexion. Les balises sp&eacute;ciales et instructions disponibles sont document&eacute;es dans une liste plus bas. La liste peut s'agrandir au fur et &agrave; mesure que de nouvelles fonctionnalit&eacute;s sont ajout&eacute;es au logiciel, mais les balises et instructions existantes disposeront d'un soutien &agrave; long terme.</p>
+
+<p>Le meilleur moyen de d&eacute;buter une mise en page de mod&egrave;le est de modifier une mise en page de syst&egrave;me existante. Les mises en page du syst&egrave;me utilisent toutes ou la plupart des balises, instructions et &eacute;l&eacute;ments de style disponibles.</p>
+
+<p><span>&Agrave; noter que les liens internes du logiciel CIOC programm&eacute;s en dur (comme les &eacute;l&eacute;ments du menu) ne donneront pas acc&egrave;s aux pages que l'utilisateur n'est pas autoris&eacute; &agrave; consulter. Cependant, on ne devrait jamais employer cette m&eacute;thode, car les utilisateurs pourraient &ecirc;tre perturb&eacute;s par l'invalidit&eacute; des liens. De plus, le syst&egrave;me pourrait faillir avec le temps ou manquer de nouvelles fonctionnalit&eacute;s.</span></p>
+<p class="Alert">Certains &eacute;l&eacute;ments cr&eacute;&eacute;s pour la r&eacute;trocompatibilit&eacute; sont obsol&egrave;tes et ne sont pas expliqu&eacute;s dans ce document d'aide volontairement. Si vous trouvez des &eacute;l&eacute;ments non document&eacute;s dans une mise en page et avez besoin d'information, veuillez poser votre question sur le <a href="http://community.cioc.ca/message-board/" target="_blank">babillard CIOC</a>.</p>
+
+<hr>
+<ul>
+	<li><a href="#htmlsection">Section HTML : aper&ccedil;u des &eacute;l&eacute;ments de mise en page et des instructions</a></li>
+	<li><a href="#headertags">&Eacute;l&eacute;ments et instructions d'en-t&ecirc;te</a></li>
+	<li><a href="#footertags">&Eacute;l&eacute;ments et instructions de pied de page</a></li>
+	<li><a href="#search">&Eacute;l&eacute;ments et instructions de la recherche</a></li>
+	<li><a href="#csssection">Section CSS : aper&ccedil;u des &eacute;l&eacute;ments de style</a></li>
+</ul>
+<hr>
+
+<a name="htmlsection"></a>
+<h2>Section HTML : aper&ccedil;u des &eacute;l&eacute;ments de mise en page et des instructions</h2>
+<p>Dans le reste du document, <em>&eacute;l&eacute;ments</em> se rapporte &agrave; une balise unique sans marque de fin, qui affiche les donn&eacute;es &agrave; sa place lorsque le mod&egrave;le est rendu. Les <em>instructions</em> se rapportent &agrave; un ensemble de balises (avec marques de d&eacute;but et de fin) qui effectuent certains op&eacute;rations sur un bloc de texte ou en HTML. Les balises utilis&eacute;es pour ins&eacute;rer les <em>&eacute;l&eacute;ments</em> et les <em>instructions</em> sont incluses entre crochets de cette mani&egrave;re : <strong>[TAG]</strong>. Les instructions comprennent &eacute;galement la partie sp&eacute;ciale de la balise utilis&eacute;e pour ouvrir et fermer l'instruction: <strong>[IF:TAG]</strong>, <strong>[ENDIF:TAG]</strong>, <strong>[FOR:TAG]</strong>, <strong>[ENDFOR:TAG]</strong>.</p>
+
+<h3>Instructions Si</h3>
+<p>Les <em>instructions « SI »</em> enserrent une section de HTML qui sera rendue uniquement si une condition particuli&egrave;re est vraie. Par exemple :</p>
+
+<pre>
+<strong>[IF:NOT_LOGGED_IN]</strong>
+&lt;p&gt;Bienvenue, Utilisateur public !&lt;/p&gt;
+<strong>[ENDIF:NOT_LOGGED_IN]</strong>
+</pre>
+
+<p>Le syst&egrave;me de mise en page fournit certaines instructions pour cette fin sp&eacute;cifiquement, mais tous les <em>&eacute;l&eacute;ments de contenu</em> et <em>instructions en boucle</em> peuvent &eacute;galement &ecirc;tre utilis&eacute;s comme <em>instruction SI</em>. Voici un exemple d'<em>instruction en boucle</em> qui n'affiche pas la section du menu s'il n'y a pas d'&eacute;l&eacute;ment du menu :</p>
+
+<pre>
+<strong>[IF:CUSTOM_MENU_ITEMS]</strong>
+&lt;ul&gt;
+	[FOR:CUSTOM_MENU_ITEMS]
+	&lt;li class=&quot;menu&quot;&gt;&lt;a href=&quot;[LINK]&quot;&gt;[DISPLAY]&lt;/a&gt;&lt;/li&gt;
+	[ENDFOR:CUSTOM_MENU_ITEMS]
+&lt;/ul&gt;
+<strong>[ENDIF:CUSTOM_MENU_ITEMS]</strong>
+</pre>
+
+<p>Voici un exemple de balise d'<em>&eacute;l&eacute;ment de contenu</em> qui n'affiche pas de section avec le menu d&eacute;roulant « Changer la vue » s'il n'y a pas de vue vers laquelle basculer :</p>
+
+<pre>
+<strong>[IF:CHANGE_VIEW]</strong>
+&lt;hr&gt;
+[CHANGE_VIEW]
+<strong>[ENDIF:CHANGE_VIEW]</strong>
+</pre>
+
+<h3>&Eacute;l&eacute;ments de contenu</h3>
+<p>Les <em>&eacute;l&eacute;ments de contenu</em> impriment certains renseignements pr&eacute;d&eacute;finis provenant de la base de donn&eacute;es, qui peuvent d&eacute;j&agrave; inclure certains formatage HTML. Contrairement aux <em>instructions en boucle</em> qui r&eacute;p&egrave;tent un nombre de valeurs, chaque balise d'<em>&eacute;l&eacute;ment de contenu</em> rendra une valeur (ou aucune si aucune n'est d&eacute;finie).</p>
+
+<p>Pour rappel, tous les <em>&eacute;l&eacute;ments de contenu</em> peuvent &eacute;galement &ecirc;tre utilis&eacute;s avec une <em>instruction SI</em> comme mentionn&eacute; plus haut. La condition sera fausse si le contenu est une valeur de type faux, comme NULL (vide) ou 0.</p>
+
+<h3>Instructions en boucle</h3>
+<p>Les <em>instructions en boucle</em> vous permettent de r&eacute;p&eacute;ter l'instruction sur une liste de valeurs et de rendre le texte ou le HTML pour chaque &eacute;l&eacute;ment de la liste. Chaque &eacute;l&eacute;ment aura des <em>&eacute;l&eacute;ments de contenu</em> pouvant &ecirc;tre rendus sur la page (comme <strong>[DISPLAY]</strong> ou <strong>[LINK]</strong>). Ci-dessous est un exemple d'une <em>instruction en boucle</em> cr&eacute;ant une liste de tous les &eacute;l&eacute;ments du menu des en-t&ecirc;tes (les &eacute;l&eacute;ments du menu sont ajout&eacute;s par le mod&egrave;le de conception) :</p>
+
+<pre>
+&lt;ul&gt;
+	<strong>[FOR:CUSTOM_MENU_ITEMS]</strong>
+	&lt;li class=&quot;menu&quot;&gt;&lt;a href=&quot;<strong>[LINK]</strong>&quot;&gt;<strong>[DISPLAY]</strong>&lt;/a&gt;&lt;/li&gt;
+	<strong>[ENDFOR:CUSTOM_MENU_ITEMS]</strong>
+&lt;/ul&gt;
+</pre>
+
+<p>Il existe une <em>instruction SI</em> sp&eacute;ciale disponible dans une <em>instruction en boucle</em> appel&eacute;e <strong>COUNT</strong>. Elle vous permet d'ins&eacute;rer du texte ou HTML sp&eacute;cial seulement &agrave; partir du deuxi&egrave;me &eacute;l&eacute;ment d'une liste. Cela s'av&egrave;re utile pour cr&eacute;er des divisions entre &eacute;l&eacute;ments. Par exemple, l'instruction suivante ins&eacute;rera une balise de nouvelle ligne, uniquement &agrave; partir du deuxi&egrave;me &eacute;l&eacute;ment du menu :</p>
+
+<pre>
+[FOR:CUSTOM_MENU_ITEMS]
+<strong>[IF:COUNT]</strong>&lt;br&gt;<strong>[ENDIF:COUNT]</strong>&lt;a href=&quot;[LINK]&quot;&gt;[DISPLAY]&lt;/a&gt;
+[ENDFOR:CUSTOM_MENU_ITEMS]
+</pre>
+
+<p>Pour rappel, toutes les <em>instructions en boucle</em> peuvent &eacute;galement &ecirc;tre utilis&eacute;s comme <em>instruction SI</em> comme mentionn&eacute; plus haut. La condition sera fausse s'il n'y a pas d'&eacute;l&eacute;ment dans la liste.</p>
+
+<a name="headertags"></a>
+<h2>Balises et instructions d'en-t&ecirc;te</h2>
+<h3>Instructions Si</h3>
+<p>Pour rappel, toutes les &eacute;l&eacute;ments de contenu et instructions en boucle peuvent &eacute;galement &ecirc;tre utilis&eacute;s comme instruction <em>SI</em> comme mentionn&eacute; plus haut (voir <a href="#htmlsection">aper&ccedil;u des balises et instructions</a>)</p>
+<ul>
+	<li><strong>LOGGED_IN</strong> - Indique que l'utilisateur actuel <em>est</em> connect&eacute;.</li>
+	<li><strong>NOT_LOGGED_IN</strong> - Indique que l'utilisateur actuel <em>n'est pas</em> connect&eacute;.</li>
+	<li><strong>NOT_PRINT_MODE</strong> - Indique que la page <em>n'est pas</em> en mode impression actuellement.</li>
+	<li><strong>PRINT_MODE</strong> - Indique que la page <em>est</em> actuellement en mode impression.</li>
+	<li><strong>QUICK_BAR</strong> - Indique que la barre rapide doit &ecirc;tre affich&eacute;e.</li>
+</ul>
+
+<h3>&Eacute;l&eacute;ments de contenu</h3>
+<ul>
+	<li><strong>HELP_LINK</strong> - L'URL d'un lien vers la page d'aide sur la page actuelle.</li>
+	<li><strong>LOGO</strong> - Le logo du site provenant du mod&egrave;le</li>
+	<li><strong>LOGOLINK</strong> - Le lien vers le logo du site provenant du mod&egrave;le</li>
+	<li><strong>MY_LIST</strong> - Le HTML pour afficher les fonctionnalit&eacute;s de Ma liste.</li>
+	<li><strong>NEW_SEARCH</strong> - L'URL d'un lien vers une nouvelle recherche dans la langue actuelle.</li>
+	<li><strong>PAGE_HELP_TITLE</strong> - Fournit le texte « Aide sur la page » dans la langue actuelle de la page.</li>
+	<li><strong>PAGE_NAME</strong> - Le nom de la page actuelle dans la langue actuelle.</li>
+	<li><strong>QUICK_LINKS_TITLE</strong> - Le texte « Liens rapides » dans la langue actuelle.</li>
+	<li><strong>SITE_BAR_MENU</strong> - SITE_BAR_ITEMS comme liste HTML non ordonn&eacute;e.</li>
+	<li><strong>SUGGEST_LINK</strong> - L'URL d'un lien pour proposer un nouveau dossier dans la langue actuelle.</li>
+	<li><strong>VIEW_NAME</strong> - Le nom de la vue actuelle.</li>
+	<li><strong>VIEW_TITLE</strong> - Le champ « Titre » de la vue actuelle.</li>
+</ul>
+
+<h3>Instructions en boucle</h3>
+<ul>
+	<li><strong>SITE_MENU</strong> - Les &eacute;l&eacute;ments du menu montr&eacute;s au public et aux utilisateurs connect&eacute;s sur chaque page (habituellement en haut).</li>
+	<li><strong>SITE_BAR_ITEMS</strong> - Les &eacute;l&eacute;ments du menu montr&eacute;s aux utilisateurs connect&eacute;s sur chaque page (habituellement en haut), y compris leur nom d'utlisateur.</li>
+</ul>
+
+<a name="footertags"></a>
+<h2>Balises et instructions de pied de page</h2>
+<h3>Instructions Si</h3>
+<p>Pour rappel, toutes les &eacute;l&eacute;ments de contenu et instructions en boucle peuvent &eacute;galement &ecirc;tre utilis&eacute;s comme instruction <em>SI</em> comme mentionn&eacute; plus haut (voir <a href="#htmlsection">aper&ccedil;u des balises et instructions</a>)</p>
+<ul>
+	<li><strong>LOGGED_IN</strong> - Indique que l'utilisateur actuel <em>est</em> connect&eacute;.</li>
+	<li><strong>NOT_LOGGED_IN</strong> - Indique que l'utilisateur actuel <em>n'est pas</em> connect&eacute;.</li>
+	<li><strong>NOT_PRINT_MODE</strong> - Indique que la page <em>n'est pas</em> en mode impression actuellement.</li>
+	<li><strong>PRINT_MODE</strong> - Indique que la page <em>est</em> actuellement en mode impression.</li>
+</ul>
+
+<h3>&Eacute;l&eacute;ments de contenu</h3>
+<ul>
+	<li><strong>NEW_SEARCH</strong> - L'URL d'un lien vers une nouvelle recherche dans la langue actuelle.</li>
+	<li><strong>SUGGEST_LINK</strong> - L'URL d'un lien pour proposer un nouveau dossier dans la langue actuelle.</li>
+</ul>
+
+<h3>Instructions en boucle</h3>
+<ul>
+	<li><strong>FOOTER_MENU</strong> - Les &eacute;l&eacute;ments du menu montr&eacute;s aux utilisateurs connect&eacute;s en bas de la page. Tout le contenu de ce menu provient du mod&egrave;le.</li>
+</ul>
+
+<a name="search"></a>
+<h2>Balises et instructions de recherche</h2>
+<h3>Instructions Si</h3>
+<p>Pour rappel, toutes les &eacute;l&eacute;ments de contenu et instructions en boucle peuvent &eacute;galement &ecirc;tre utilis&eacute;s comme instruction <em>SI</em> comme mentionn&eacute; plus haut (voir <a href="#htmlsection">aper&ccedil;u des balises et instructions</a>)</p>
+<ul>
+	<li><strong>LOGGED_IN</strong> - Indique que l'utilisateur actuel <em>est</em> connect&eacute;.</li>
+	<li><strong>NOT_LOGGED_IN</strong> - Indique que l'utilisateur actuel <em>n'est pas</em> connect&eacute;.</li>
+	<li><strong>NOT_PRINT_MODE</strong> - Indique que la page <em>n'est pas</em> en mode impression actuellement.</li>
+	<li><strong>PRINT_MODE</strong> - Indique que la page <em>est</em> actuellement en mode impression.</li>
+	<li><strong>SEARCH_MENU</strong> - Indique le menu de recherche (habituellement &agrave; la gauche de l'&eacute;cran) &agrave; afficher.</li>
+</ul>
+<h3>&Eacute;l&eacute;ments de contenu</h3>
+<ul>
+	<li><strong>BASIC_SEARCH</strong> - Le HTML complet du formulaire de recherche simple.</li>
+	<li><strong>BROWSE</strong> - Le formatage par d&eacute;faut de toutes les sections « Parcourir » du module actuel.</li>
+	<li><strong>CHANGE_VIEW</strong> - Interface de l'utilisateur pour le changement de vue.</li>
+	<li><strong>CUSTOM_MENU_ITEMS</strong> - &Eacute;l&eacute;ments du menu configur&eacute;s pour la recherche simple dans le mod&egrave;le.</li>
+	<li><strong>MENU_MESSAGE</strong> - Valeur du « message du menu » dans la vue actuelle.</li>
+	<li><strong>MENU_TITLE</strong> - Le texte « Menu principal » dans la langue actuelle.</li>
+	<li><strong>SEARCH_ALERT</strong> - « Message d'alerte de la recherche simple » dans la vue actuelle.</li>
+	<li><strong>SEARCH_RIGHT_CONTENT</strong> - « Message de droite de la recherche simple » dans la vue actuelle.</li>
+	<li><strong>SEARCH_LEFT_CONTENT</strong> - « Message de gauche de la recherche simple » dans la vue actuelle.</li>
+</ul>
+<h4>&Eacute;l&eacute;ments de contenu CIC uniquement</h4>
+<ul>
+	<li><strong>BROWSE_BY_INDUSTRY_URL</strong> - L'URL du lien vers la page Parcourir par industrie (peut &ecirc;tre utilis&eacute;e dans un onglet jQuery UI pour aligner le contenu de la page avec la page de recherche). Du contenu est disponible uniquement si le SCIAN est activ&eacute;.</li>
+	<li><strong>CHILDCARE_SEARCH_TEXT</strong> - « Description de la recherche sur les gardes d'enfants » dans la vue actuelle.</li>
+	<li><strong>CHILDCARE_SEARCH_URL</strong> - L'URL du lien vers la page Parcourir par industrie (peut &ecirc;tre utilis&eacute;e dans un onglet jQuery UI pour aligner le contenu de la page avec la page de recherche). Du contenu est disponible uniquement si le lien vers le formulaire de recherche avanc&eacute;e sur les ressources de garderie est activ&eacute;.</li>
+	<li><strong>SERVICE_CATEGORY</strong> - Interface utilisateur par d&eacute;faut pour acc&eacute;der aux recherches par la Taxonomie. Du contenu est disponible uniquement si l'option « Les &eacute;l&eacute;ments du menu et la recherche dans la Taxonomie sont disponibles dans cette vue » est activ&eacute;e dans cette vue.</li>
+	<li><strong>SERVICE_CATEGORY_URL</strong> - L'URL du lien vers la page Parcourir par Taxonomie (peut &ecirc;tre utilis&eacute;e dans un onglet jQuery UI pour aligner le contenu de la page avec la page de recherche). Du contenu est disponible uniquement si l'option « Les &eacute;l&eacute;ments du menu et la recherche dans la Taxonomie sont disponibles dans cette vue » est activ&eacute;e dans cette vue et que l'utilisateur n'est pas connect&eacute;.</li>
+	<li><strong>VOL_LINK</strong> - L'URL du lien vers la page de recherche simple du module B&eacute;n&eacute;volat.</li>
+	<li><strong>VOL_LINK_TEXT</strong> - Le texte « menu B&eacute;n&eacute;volat » dans la langue actuelle.</li>
+</ul>
+<h4>&Eacute;l&eacute;ments de contenu B&eacute;n&eacute;volat uniquement</h4>
+<ul>
+	<li><strong>CIC_LINK</strong> - L'URL du lien vers la page de recherche simple du module Information communautaire.</li>
+	<li><strong>CIC_LINK_TEXT</strong> - Le texte « Menu CIC » dans la langue actuelle.</li>
+	<li><strong>SEARCH_PROMPT</strong> - Le texte « Cherchez-vous des possibilit&eacute;s de b&eacute;n&eacute;volat ? » dans la langue actuelle. Si un ensemble de communaut&eacute;s est configur&eacute; pour la vue, alors le texte sera « Cherchez-vous des possibilit&eacute;s de b&eacute;n&eacute;volat dans la communaut&eacute; ? », o&ugrave; la communaut&eacute; est la valeur R&eacute;gions desservies de l'ensemble de communaut&eacute;s configur&eacute; dans la vue actuelle.</li>
+	<li><strong>VOL_SEARCH_MENU</strong> - Le menu des options de la page de recherche du module B&eacute;n&eacute;volat, y compris le lien vers la recherche par &eacute;tape.</li>
+</ul>
+<h3>Instructions en boucle</h3>
+<ul>
+	<li><strong>OTHER_LANGS</strong> - Une liste des langues disponibles dans la vue actuelle <em>autres que la langue actuelle</em>. Les &eacute;l&eacute;ments incluent ceux pour <em>DISPLAY</em> (le nom de la langue) et <em>LINK</em> (un lien pour basculer vers la page principale dans cette langue).</li>
+	<li><strong>SEARCH_MENU_ITEMS</strong> - Articles du menu pour le menu de recherche (normalement &agrave; gauche de l'&eacute;cran), sauf les &eacute;l&eacute;ments de menu personnalisables.</li>
+</ul>
+<h4>Instructions en boucle CIC uniquement</h4>
+<ul>
+	<li><strong>BROWSE_ORG_ITEMS</strong> - &Eacute;l&eacute;ments du menu Parcourir par organisme.</li>
+	<li><strong>BROWSE_SUBJ_ITEMS</strong> - &Eacute;l&eacute;ments du menu Parcourir par sujet.</li>
+</ul>
+
+<h4>Instructions en boucle B&eacute;n&eacute;volat uniquement</h4>
+<ul>
+	<li><strong>BROWSE_BY_OP_ITEMS</strong> - &Eacute;l&eacute;ments du menu Parcourir par occasion.</li>
+	<li><strong>BROWSE_BY_ORG_ITEMS</strong> - &Eacute;l&eacute;ments du menu Parcourir par organisme.</li>
+</ul>
+<a name="csssection"></a>
+<h2>Section CSS : aper&ccedil;u des &eacute;l&eacute;ments de style</h2>
+<p></p>
+<h3>&Eacute;l&eacute;ments sp&eacute;cifiques support&eacute;s par CIOC</h3>
+<ul>
+	<li>AlertColour</li>
+	<li>ALinkColour</li>
+	<li>BackgroundColour</li>
+	<li>BodyTagExtras</li>
+	<li>FieldLabelColour</li>
+	<li>FontColour</li>
+	<li>FontFamily</li>
+	<li>LinkColour</li>
+	<li>MenuBgColour</li>
+	<li>MenuFontColour</li>
+	<li>ShortCutIcon</li>
+	<li>StyleSheetUrl</li>
+	<li>TitleBgColour</li>
+	<li>TitleFontColour</li>
+	<li>VLinkColour</li>
+</ul>
+<h3>&Eacute;l&eacute;ments support&eacute;s par jQueryUI</h3>
+<ul>
+	<li>bgActiveRepeat</li>
+	<li>bgActiveXPos</li>
+	<li>bgActiveYPos</li>
+	<li>bgColorActive</li>
+	<li>bgColorContent</li>
+	<li>bgColorDefault</li>
+	<li>bgColorError</li>
+	<li>bgColorHeader</li>
+	<li>bgColorHighlight</li>
+	<li>bgColorHover</li>
+	<li>bgContentRepeat</li>
+	<li>bgContentXPos</li>
+	<li>bgContentYPos</li>
+	<li>bgDefaultRepeat</li>
+	<li>bgDefaultXPos</li>
+	<li>bgDefaultYPos</li>
+	<li>bgErrorRepeat</li>
+	<li>bgErrorXPos</li>
+	<li>bgErrorYPos</li>
+	<li>bgHeaderRepeat</li>
+	<li>bgHeaderXPos</li>
+	<li>bgHeaderYPos</li>
+	<li>bgHighlightRepeat</li>
+	<li>bgHighlightXPos</li>
+	<li>bgHighlightYPos</li>
+	<li>bgHoverRepeat</li>
+	<li>bgHoverXPos</li>
+	<li>bgHoverYPos</li>
+	<li>bgImgUrlActive</li>
+	<li>bgImgUrlContent</li>
+	<li>bgImgUrlDefault</li>
+	<li>bgImgUrlError</li>
+	<li>bgImgUrlHeader</li>
+	<li>bgImgUrlHighlight</li>
+	<li>bgImgUrlHover</li>
+	<li>bgImgUrlOverlay</li>
+	<li>bgImgUrlShadow</li>
+	<li>bgOverlayRepeat</li>
+	<li>bgOverlayXPos</li>
+	<li>bgOverlayYPos</li>
+	<li>bgShadowRepeat</li>
+	<li>bgShadowXPos</li>
+	<li>bgShadowYPos</li>
+	<li>borderColorActive</li>
+	<li>borderColorContent</li>
+	<li>borderColorDefault</li>
+	<li>borderColorError</li>
+	<li>borderColorHeader</li>
+	<li>borderColorHighlight</li>
+	<li>borderColorHover</li>
+	<li>cornerRadius</li>
+	<li>fcActive</li>
+	<li>fcContent</li>
+	<li>fcDefault</li>
+	<li>fcError</li>
+	<li>fcHeader</li>
+	<li>fcHighlight</li>
+	<li>fcHover</li>
+	<li>ffDefault</li>
+	<li>fsDefault</li>
+	<li>iconColorActive</li>
+	<li>iconColorContent</li>
+	<li>iconColorDefault</li>
+	<li>iconColorError</li>
+	<li>iconColorHeader</li>
+	<li>iconColorHighlight</li>
+	<li>iconColorHover</li>
+	<li>iconsActive</li>
+	<li>iconsContent</li>
+	<li>iconsDefault</li>
+	<li>iconsError</li>
+	<li>iconsHeader</li>
+	<li>iconsHighlight</li>
+	<li>iconsHover</li>
+</ul>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

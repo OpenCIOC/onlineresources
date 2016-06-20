@@ -1,0 +1,70 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p><strong><em>Print Profiles</em></strong> allow you to create custom templates for printing lists of records.</p>
+<ul>
+	<li><a href="#basics">Print Profiles: the Basics</a></li>
+	<li><a href="#edit">Editing your Print Profile</a></li>
+	<li><a href="#general">General Profile Settings</a></li>
+</ul>
+<p class="Alert">Note: Fields for this profile are managed on a <a href="pagehelp?Page=admin%2Fprint_profile_edit_fields.asp&Ln=en-CA">separate page</a>. A link to the field management page is provided at the bottom of the form; please <em>submit your changes</em> before you click the link to manage fields.</p>
+<hr>
+<a name="basics"></a>
+<h3>Print Profiles: the Basics</h3>
+<p>Creating a print profile will allow you to generate a list of records formatted nicely for printing, with no extraneous menu information, and with whatever fields you choose. Unlike the search results, where the layout is a horizontal table of fields, the Print Tool outputs records in a custom vertical format; fields each appear on their own line (although there is some capability for combining data from multiple fields into one). Print Profiles are associated with particular Views.</p>
+<p>The Print Tool is HTML-based. This means that:</p>
+<ul>
+	<li>HTML and CSS (Cascading Style Sheet) knowledge is very helpful in using the more advanced features of the tool. If you do not know HTML, you will still be able to make some use of the tool. You may benefit from other members' assistance in providing sample style sheets (CSS) and setup options.</li>
+	<li>In most cases, record data will appear as it does on the Record Details page. Any fields that accept HTML input for display on the Record Details page will also accept HTML in the Print Tool, and the same formatting rules apply. Any extra HTML that is inserted into the Record Details pages automatically by the software (such as web site linking) will be suppressed when using the Print Tool.</li>
+	<li>There is limited concept of a &quot;page&quot; in HTML, because the display occurs on a screen which can vary between users. Therefore there is limited ability to add page-specific items like page headers and footers, page numbering, etc. <strong>Many Web Browsers offer customizable print setup options</strong> which may allow you to add some header/footer information, page numbering, and so on.</li>
+	<li>Your Print Tool generated report should be usable in most major <strong>Word Processing programs</strong> including Microsoft Word. Newer word processing software will better interpret the HTML and styles than will older versions. You can use word processing software to do things like customize page break locations, add page headers and footers, create columns, and add page numbering.</li>
+</ul>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<a name="edit"></a>
+<hr>
+<h3>Editing your Print Profile</h3>
+<p>You print profile is managed in two parts:</p>
+<ol>
+	<li>Your <strong>general settings for the profile</strong> (including style sheets (CSS), headers and footers, and so on).</li>
+	<li>The <strong>field setup</strong> for the profile, where you select your fields and specify how they are displayed.</li>
+</ol>
+<p>This page deals specifically with your general profile settings; help on setting up your fields can be found in the page help on the field setup page. The link to the manage field data can be found at the bottom of the general settings page; you should always submit your changes to the general profile settings prior to clicking the link to manage fields.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<hr>
+<a name="general"></a>
+<h3>General Profile Settings</h3>
+<h4>Name</h4>
+<p>Each profile must have a unique name. The name should be descriptive enough that the person who wishes to run the report will know which profile to choose. Names can be a maximum of 100 characters long, but it is strongly recommended that names be kept under 50 characters.</p>
+<h4>CSS / Style sheet Information</h4>
+<p>To take full advantage of the Print Tools capabilities, you should specify a Cascading Style sheet (CSS) to use with the profile. Two sample style sheets are provided with software, which you can use &quot;as-is&quot;, or copy and change to suit your needs. The location of the samples are:</p>
+<p>mydatabase.cioc.ca/styles/printSampleA.css
+<br>mydatabase.cioc.ca/styles/printSampleB.css</p>
+<p>...where mydatabase.cioc.ca is the URL of your CIOC database.</p>
+<p>Within your style sheet, you can create <em>CLASS</em> items to specify the format of various elements in the report. From within the general setup, you can specify the <em>CLASS</em> name to use for the HTML <em>TABLE</em> that will contain your data for all non-heading fields (see field setup page help for more information).</p>
+<h4>Record Separator</h4>
+<p>You can add HTML to appear in between records to separate them. An example might be a horizontal rule (line) &lt;HR&gt;, or a line break &lt;BR&gt;. You may also specify whether each record should appear on its own page when printing from a browser...but note that this feature may not be available in all web browsers, and does not currently transfer over when opening your report in Word Processing software like Microsoft Word.</p>
+<h4>Headers and Footers</h4>
+<p>You can add custom report headers and footers to the profile. Headers and Footers must be HTML formatted to display properly. Note that headers and footers apply to the entire report: the header and footer are each displayed only once.</p>
+<h4>Default Message</h4>
+<p>You can add a customizable message to the report. The message can be edited at the time the report is run.</p>
+<h4>Message Location</h4>
+<p>You may specify whether the message is printed just once (at the top of the report) or once before each record.</p>
+<h4>View Information</h4>
+<p>Select which View(s) will have access to this print profile. The profile will only be available in the Views you specify, and will be available to any logged-in user with access to that View. You can have as many print profiles per View as you wish.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified:	$Date$</p>

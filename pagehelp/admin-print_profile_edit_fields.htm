@@ -1,0 +1,57 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>Do you need general information about Print Profiles? Review the main help page for <a href="pagehelp?Page=admin%2Fprint_profile_edit.asp">editing Print Profiles</a>.</p>
+<hr>
+<h3>Adding a New Field</h3>
+<p>At the bottom of the page is a drop-down from which you can select from all available report fields. You must select a <a href="#fieldtypes"><em>Field Type</em></a> for the field before adding it; you cannot modify this type later. <strong>Note:</strong> It <em>is</em> possible to add the same field to the report twice.</p>
+<h3>Editing an Existing Field</h3>
+<p>Once a field has been added, you can configure the style and formatting of the field as well as the order it appears in. You can update or delete the field, but you <strong>cannot change</strong> its <a href="#fieldtypes"><em>Field Type</em></a>. If you need to change a field to a different type, you will have to remove it and add it again. Information on the settings for fields is available below in the section <a href="#fieldsettings"><em>Field Settings</em></a></p>
+<h3>Adding Sequence Numbers</h3>
+<p>You can add sequence numbers for the records being printed (starting at 1) by placing the symbols ## within the Prefix or Suffix setup of any field. For instance adding &quot;##. &quot; (note the space) in the ORG_LEVEL_1 Prefix would result in an output like: <em>&quot;123. My Level 1 Name&quot;</em>. &quot;(##) &quot; would give an output like <em>&quot;(123) My Level 1 Name&quot;</em>. By making use of HTML tags and style sheets within the prefix or suffix, more creative layouts for sequence numbers are also possible.</p>
+<a name="fieldtypes"></a>
+<h3>Types of Fields</h3>
+<h4>Heading</h4>
+<p>A <em>Heading</em> field type creates the field as an HTML Heading (H1-H6). A heading field does not appear within a table and does not have a field label.</p>
+<h4>Basic</h4>
+<p>A <em>Basic</em> field type creates the field as a row in a two-column table. The first column of the table will contain the <em>Label</em> for the field (if you specified one), and the second column will contain the contents of the field.</p>
+<h4>Full-Width</h4>
+<p>A <em>Full-Width</em> field type creates the field as a row in a table where the contents span both columns. This type of field will be most useful for long memo-type fields like descriptions. If you specify a field label, it will be printed above the contents of the field rather than beside.</p>
+<h4>Continuation</h4>
+<p>A <em>Continuation</em> field type <strong>must</strong> be used <strong>after</strong> a field of another type. A continuation field allows you join data from multiple fields together.</p>
+<a name="fieldsettings"></a>
+<h3>Field Settings</h3>
+<h4>Heading Level</h4>
+<p>Applies to Heading type fields only. Acceptable values are 1-6; the tool will default to a level 1 Heading. Note: unless otherwise specified in your style sheet, a larger heading number indicates a <em>smaller</em> heading.</p>
+<h4>Label</h4>
+<p>The field's friendly name. Field labels are always optional. You cannot add a label to a <em>Continuation</em> or <em>Heading</em> type field. To prevent a field name from breaking to a new line at a space, use a an HTML non-breaking space (&amp;nbsp;)</p>
+<h4>Label Style</h4>
+<p>If you are using a style sheet, the CSS class to apply to the label.</p>
+<h4>Separator</h4>
+<p>Applies only to the <em>Continuation</em> field type. When you create a <em>Continuation</em> field, you need to specify a separator to appear between the contents of the previous fields data and the contents of the continuation field (this may be a space, a semi-colon, comma, asterisk, etc). Separator data should be HTML-encoded where appropriate. A separator will only be printed if there is data in both the continuation field <strong>and</strong> a field on which it is continuing (Note: if you have multiple fields continuing one after the other, any one previous field with data will cause the separator to be printed, even if the field immediately before the continuation field did not have data).</p>
+<h4>Content CSS Class</h4>
+<p>If you are using a style sheet, the CSS class to apply to the field's contents.</p>
+<h4>Content If Empty</h4>
+<p>You may specify some default data to print in the case that the field is empty. If you do not specify a value, the an empty field will be omitted when producing the report. Default data should be HTML-encoded where appropriate. If you wish to force an empty field to print, enter an HTML non-breaking space (&amp;nbsp;) in the <em>Content If Empty</em> field.</p>
+<p>In addition to default data, you can also instruct the tool to source the data from another field if the field is empty. This may be particularly useful in the case of supplementary, publication, or category descriptions where you would like to use the main description instead. To insert another field's data, enter the name of the field in prefixed with @@, e.g. @@DESCRIPTION or @@ALT_ORG. You must use the standard, non-editable field name (the standard name normally appears in CAPS).</p>
+<h4>Prefix and Suffix</h4>
+<p>Prefix and Suffix information allows you to add information before or after the field data. Prefix and Suffix data only print if the field is not empty. Prefix and Suffix data should be HTML-encoded where appropriate. <span class="Alert">Note</span>: you can add the Publication/Category number (the record's sequence number in the print-out) to any prefix or suffix by typing ## anywhere in the field.</p>
+<h4>Display Order</h4>
+<p>The order may be any number from 0-255. Fields are order by display order, and then by their non-editable field name. The same display order number may be used multiple times. It is strongly recommended that you leave generous gaps between numbers to allow you to insert new fields later.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified:	$Date$</p>

@@ -1,0 +1,51 @@
+CREATE TABLE [dbo].[GBL_BT_AC]
+(
+[BT_AC_ID] [int] NOT NULL IDENTITY(1, 1),
+[NUM] [varchar] (8) COLLATE Latin1_General_100_CI_AI NOT NULL,
+[AC_ID] [int] NOT NULL
+) ON [PRIMARY]
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE TRIGGER [dbo].[tr_GBL_BT_AC_iud] ON [dbo].[GBL_BT_AC]
+FOR INSERT, UPDATE, DELETE AS
+
+SET NOCOUNT ON
+
+
+/*
+	Checked for Release: 3.5
+	Checked by: KL
+	Checked on: 02-Sep-2012
+	Action: NO ACTION REQUIRED
+*/
+
+UPDATE btd
+	SET	CMP_Accessibility = dbo.fn_GBL_NUMToAccessibility(btd.NUM,btd.ACCESSIBILITY_NOTES,btd.LangID)
+	FROM GBL_BaseTable_Description btd
+	WHERE EXISTS(SELECT * FROM Inserted i WHERE i.NUM=btd.NUM)
+		OR EXISTS(SELECT * FROM Deleted d WHERE d.NUM=btd.NUM)
+
+SET NOCOUNT OFF
+GO
+ALTER TABLE [dbo].[GBL_BT_AC] ADD CONSTRAINT [PK_GBL_BT_AC] PRIMARY KEY CLUSTERED  ([BT_AC_ID]) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_GBL_BT_AC_UniquePair] ON [dbo].[GBL_BT_AC] ([NUM], [AC_ID]) ON [PRIMARY]
+GO
+CREATE STATISTICS [_dta_stat_93243387_1_2] ON [dbo].[GBL_BT_AC] ([BT_AC_ID], [NUM])
+GO
+CREATE STATISTICS [_dta_stat_93243387_2_3_1] ON [dbo].[GBL_BT_AC] ([NUM], [AC_ID], [BT_AC_ID])
+GO
+ALTER TABLE [dbo].[GBL_BT_AC] ADD CONSTRAINT [FK_GBL_BT_AC_GBL_Accessibility] FOREIGN KEY ([AC_ID]) REFERENCES [dbo].[GBL_Accessibility] ([AC_ID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[GBL_BT_AC] ADD CONSTRAINT [FK_GBL_BT_AC_GBL_BaseTable] FOREIGN KEY ([NUM]) REFERENCES [dbo].[GBL_BaseTable] ([NUM]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+GRANT SELECT ON  [dbo].[GBL_BT_AC] TO [cioc_cic_search_role]
+GRANT SELECT ON  [dbo].[GBL_BT_AC] TO [cioc_login_role]
+GRANT INSERT ON  [dbo].[GBL_BT_AC] TO [cioc_login_role]
+GRANT DELETE ON  [dbo].[GBL_BT_AC] TO [cioc_login_role]
+GRANT UPDATE ON  [dbo].[GBL_BT_AC] TO [cioc_login_role]
+GRANT SELECT ON  [dbo].[GBL_BT_AC] TO [cioc_vol_search_role]
+GO

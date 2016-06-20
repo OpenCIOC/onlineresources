@@ -1,0 +1,100 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>La page <strong><em>Modifier le compte</em></strong> vous permet de modifier les d&eacute;tails des comptes d'utilisateurs autres que vous-m&ecirc;me. En fonction de vos autorisations, vous ne pourrez pas modifier tous les param&egrave;tres disponibles.</p>
+
+<ul>
+	<li><a href="#lastlogin">Derni&egrave;re connexion</a></li>
+	<li><a href="#lockedaccount">Compte verrouill&eacute;</a></li>
+	<li><a href="#status">Statut</a></li>
+	<li><a href="#agency">Agence</a></li>
+	<li><a href="#usertype">Type d'utilisateur</a></li>
+	<li><a href="#startpage">Page de d&eacute;marrage</a></li>
+	<li><a href="#username">Nom d'utilisateur</a></li>
+	<li><a href="#name">Nom</a></li>
+	<li><a href="#email">Courriel</a></li>
+	<li><a href="#savedsearch">Recherche sauvegard&eacute;e</a></li>
+	<li><a href="#singlelogin">Compte unique</a></li>
+	<li><a href="#accountupdates">Mises &agrave; jour des comptes</a></li>
+	<li><a href="#changepassword">Changer le mot de passe</a></li>
+	<li><a href="#submit">Soumettre les mises &agrave; jour / Effacer le formulaire</a></li>
+</ul>
+
+<hr>
+
+<a name="lastlogin"></a>
+<h3>Derni&egrave;re connexion</h3>
+<p>Cette section montre la derni&egrave;re date &agrave; laquelle ce compte &agrave; &eacute;t&eacute; utilis&eacute; avec succ&egrave;s (le cas &eacute;ch&eacute;ant) et l'adresse IP utilis&eacute;e pour acc&eacute;der au compte.</p>
+
+<a name="lockedaccount"></a>
+<h3>Compte verrouill&eacute;</h3>
+<p>Si ce compte est verrouill&eacute;, une section nomm&eacute;e <em>Compte verrouill&eacute;</em> sera accessible. Elle montrera la derni&egrave;re tentative de connexion effectu&eacute;e sur ce compte et l'adresse IP utilis&eacute;e lors de la tentative. Un utilisateur ayant des privil&egrave;ges de gestion de compte peut d&eacute;verrouiller le compte en cochant la case « D&eacute;verrouiller ce compte » et en soumettant le formulaire.</p>
+
+<a name="status"></a>
+<h3>Statut</h3>
+<p>Le fait de cocher la case <em>L'utilisateur est inactif</em> rendra le statut du compte inactif et l'utilisateur ne sera plus autoris&eacute; &agrave; se connecter &agrave; la base de donn&eacute;es. Si l'utilisateur est connect&eacute; en m&ecirc;me temps, il sera d&eacute;connect&eacute; la prochaine fois qu'il effectue une action dans la base de donn&eacute;es. Comme le syst&egrave;me ne vous permet pas de supprimer des comptes d'utilisateurs, il faut utiliser cette m&eacute;thode pour bloquer un compte qui n'est plus utilis&eacute;.</p>
+
+<a name="agency"></a>
+<h3>Agence</h3>
+<p>Chaque compte d'utilisateur doit &ecirc;tre associ&eacute; &agrave; une <em>Agence</em> ayant &eacute;t&eacute; configur&eacute;e dans la base de donn&eacute;es. Un super-utilisateur peut ajouter ou modifier la liste de agences en allant sur le lien <em>Agences</em> dans le menu principal de la configuration.</p>
+
+<a name="usertype"></a>
+<h3>Type d'utilisateur</h3>
+<p>Les <em>Types d'utilisateurs</em> repr&eacute;sentent le niveau de s&eacute;curit&eacute; avec lequel l'utilisateur peut acc&eacute;der &agrave; un module particulier. La s&eacute;lection d'un type d'utilisateur &eacute;tablira quelle vue l'utilisateur utilisera lors de la connexion et quelles autorisations il aura pour consulter et modifier des donn&eacute;es. Les types d'utilisateurs sont &eacute;tablis individuellement pour chaque module de la base de donn&eacute;es (Information communautaire et B&eacute;n&eacute;volat). En fonction de vos autorisations, il est possible que vous nous puissiez pas modifier les param&egrave;tres de tous les modules de la base de donn&eacute;es.</p>
+<p>Si vous ne renseignez pas le type d'utilisateur pour un module, le logiciel donnera &agrave; l'utilisateur les m&ecirc;mes autorisations qu'un utilisateur non-connect&eacute; chaque fois qu'il travaille dans ce module.</p>
+<p>Vous ne pouvez pas modifier le type d'utilisateur d'un utilisateur existant pour lui donner plus d'autorisations que votre propre type d'utilisateur. Par exemple, si vous n'&ecirc;tes pas un super-utilisateur, vous n'&ecirc;tes pas autoris&eacute; &agrave; donner des privil&egrave;ges de super-utilisateur dans la base de donn&eacute;es. Cependant, le type d'utilisateur de l'utilisateur actuel sera <strong>toujours</strong> accessible dans la liste et s&eacute;lectionn&eacute; par d&eacute;faut, m&ecirc;me s'ils ont plus d'autorisations que vous.</p>
+<p>Un super-utilisateur peut modifier les types d'utilisateurs en allant dans <em>Installation</em> depuis le menu principal, puis en s&eacute;lectionnant <em>Types d'utilisateurs</em>.</p>
+
+<a name="startpage"></a>
+<h3>Page de d&eacute;marrage</h3>
+<p>La configuration de la <em>Page de d&eacute;marrage</em> vous permet de pr&eacute;ciser vers quel module de la base de donn&eacute;es (Information communautaire ou B&eacute;n&eacute;volat) sera dirig&eacute; l'utilisateur, et dans quelle langue, lorsqu'il se connectera &agrave; la base de donn&eacute;es pour la premi&egrave;re fois. Si vous n'utilisez pas plusieurs langues ou plusieurs modules de base de donn&eacute;es, vous ne verrez peut-&ecirc;tre pas ce param&egrave;tre.</p>
+
+<a name="username"></a>
+<h3>Nom d'utilisateur</h3>
+<p>Donnez un nom d'utilisateur unique &agrave; ce compte. L'utilisateur l'utilisera avec son mot de passe pour se connecter &agrave; la base de donn&eacute;es.</p>
+
+<a name="name"></a>
+<h3>Nom</h3>
+<p>Pr&eacute;nom et nom de l'utilisateur, ainsi que les initiales. En fonction de la configuration de la base de donn&eacute;es, les initiales peuvent &ecirc;tre utilis&eacute;es dans diff&eacute;rentes sections du logiciel, pour indiquer qui a effectu&eacute; des modifications et mises &agrave; jour ; ainsi, <strong>toutes les initiales doivent &ecirc;tre uniques dans la base de donn&eacute;es</strong>. Si vous avez plus d'un utilisateur ayant les m&ecirc;mes initiales, utilisez le deuxi&egrave;me pr&eacute;nom ou ajouter une d&eacute;signation sp&eacute;ciale pour les distinguer, comme le code d'agence.</p>
+
+<a name="email"></a>
+<h3>Courriel</h3>
+<p>Le courriel de l'utilisateur est utilis&eacute; pour l'avertir en cas de compte verrouill&eacute; et, dans le futur, pourra &ecirc;tre utilis&eacute; pour r&eacute;initialiser le mot de passe ou dans d'autres cas relatifs &agrave; la s&eacute;curit&eacute; du compte. Ce champ n'&eacute;tait pas obligatoire dans le pass&eacute; ; il donc est possible que des comptes existants plus anciens ne soient pas associ&eacute;s &agrave; une adresse courriel. Dans ce cas, vous ne pourrez pas modifier le compte avant d'avoir ajout&eacute; une adresse courriel.</p>
+
+<a name="savedsearch"></a>
+<h3>Recherche sauvegard&eacute;e</h3>
+<p>Pr&eacute;cisez le nombre de recherches sauvegard&eacute;es que l'utilisateur peut conserver en m&ecirc;me temps ; ce nombre ne comprend pas les recherches partag&eacute;es avec cet utilisateur par d'autres utilisateurs.</p>
+
+<a name="accountupdates"></a>
+<h3>Mises &agrave; jour des comptes</h3>
+<p>Vous pouvez pr&eacute;ciser si l'utilisateur est autoris&eacute; &agrave; mettre &agrave; jour les informations de base de son propre compte ou s'il doit soumettre une demande de modification &agrave; son compte. En g&eacute;n&eacute;ral, il s'av&egrave;re utile de laisser les utilisateurs maintenir les d&eacute;tails de base de leur propre compte, sauf dans des circonstances sp&eacute;ciales, comme le compte d'un tiers (p. ex., un compte pr&ecirc;t&eacute;) ou un compte partag&eacute;. <span class="Alert">Si vous interdisez qu'un utilisateur mette &agrave; jour son propre compte, veuillez vous assurer que les param&egrave;tres pour l'agence de cet utilisateur comprend un courriel pour l'envoi de demandes de mise &agrave; jour du compte.</span></p>
+
+<a name="singlelogin"></a>
+<h3>Compte unique</h3>
+<p>Les utilisateurs ayant un compte de type <em>« Compte unique »</em> ne peuvent pas se connecter depuis plusieurs endroits ou avec plusieurs navigateurs en m&ecirc;me temps. Si une nouvelle connexion survient, la session connect&eacute;e pr&eacute;c&eacute;dente sera interrompue. Habituellement, ce param&egrave;tre n'est pas recommand&eacute; pour les gestionnaires de base de donn&eacute;es ou autres utilisateurs r&eacute;guliers de la base de donn&eacute;es, mais il peut s'av&eacute;rer utile lorsqu'on fournit un compte &agrave; un tiers qui ne doit pas &ecirc;tre partag&eacute; avec d'autres utilisateurs, ou d&egrave;s que des mesures de s&eacute;curit&eacute; suppl&eacute;mentaires sont n&eacute;cessaires.</p>
+
+<a name="changepassword"></a>
+<h3>Changer le mot de passe</h3>
+<p><em>Modifier le mot de passe</em> permet &agrave; la personne param&eacute;trant le compte de changer le mot de passe d'un utilisateur. <span class="Alert">Remarque :</span> veuillez suivre attentivement les instructions relatives &agrave; la s&eacute;curit&eacute; du mot de passe. Les mots de passe cr&eacute;&eacute;s pour autoriser de nouveaux utilisateurs &agrave; se connecter &agrave; la base de donn&eacute;es pour la premi&egrave;re fois devraient &ecirc;tre chang&eacute;s d&egrave;s que l'utilisateur en a la possibilit&eacute;.</p>
+
+<a name="submit"></a>
+<h3>Soumettre les mises &agrave; jour / Effacer le formulaire</h3>
+<p>Quand vous avez termin&eacute; la saisie / modification des informations, cliquez sur <em>« Soumettre »</em> pour sauvegarder l'information. Le fait de cliquer sur <em>« Effacer »</em> retournera la page vers les param&egrave;tres initiaux qui &eacute;taient affich&eacute;s quand la page a &eacute;t&eacute; charg&eacute;e.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

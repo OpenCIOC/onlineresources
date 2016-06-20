@@ -1,0 +1,314 @@
+
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+
+
+CREATE VIEW [dbo].[VOL_SHARE_VIEW_EN]
+AS
+
+/*
+	Checked for Release: 3.6.2
+	Checked by: KL
+	Checked on: 19-Oct-2014
+	Action: NO ACTION REQUIRED
+*/
+
+SELECT vo.VNUM,
+		vo.RECORD_OWNER,
+		voe.NON_PUBLIC AS XNP,
+		voe.DELETION_DATE  AS XDEL,
+		voe.UPDATE_DATE AS XUPD,
+		1 AS HAS_ENGLISH, 
+		0 AS HAS_FRENCH,
+ACCESSIBILITY = (
+	SELECT
+		voe.ACCESSIBILITY_NOTES "@N",
+		(SELECT
+				ac.Code "@CD",
+				acne.Name "@V",
+				prne.Notes "@N"
+			FROM VOL_OP_AC pr
+			LEFT JOIN VOL_OP_AC_Notes prne
+				ON pr.OP_AC_ID=prne.OP_AC_ID AND prne.LangID=voe.LangID
+			INNER JOIN GBL_Accessibility ac
+				ON pr.AC_ID=ac.AC_ID
+			INNER JOIN GBL_Accessibility_Name acne
+				ON ac.AC_ID=acne.AC_ID AND acne.LangID=(SELECT TOP 1 LangID FROM GBL_Accessibility_Name WHERE AC_ID=acne.AC_ID ORDER BY CASE WHEN LangID=voe.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE pr.VNUM=vo.VNUM
+			FOR XML PATH('CHK'), TYPE)
+	FOR XML PATH('ACCESSIBILITY'), TYPE
+	),
+ADDITIONAL_REQUIREMENTS = (SELECT voe.ADDITIONAL_REQUIREMENTS "@V" FOR XML PATH('ADDITIONAL_REQUIREMENTS'), TYPE),
+AGES = (SELECT vo.MIN_AGE "@MIN_AGE", vo.MAX_AGE "@MAX_AGE" FOR XML PATH('AGES'), TYPE),
+APPLICATION_DEADLINE = (SELECT vo.APPLICATION_DEADLINE "@V" FOR XML PATH('APPLICATION_DEADLINE'), TYPE),
+BENEFITS = (SELECT voe.BENEFITS "@V" FOR XML PATH('BENEFITS'), TYPE),
+CLIENTS = (SELECT voe.CLIENTS "@V" FOR XML PATH('CLIENTS'), TYPE),
+COMMITMENT_LENGTH = (
+	SELECT
+		voe.COMMITMENT_LENGTH_NOTES "@N",
+		(SELECT
+				cl.Code "@CD",
+				clne.Name "@V",
+				prne.Notes "@N"
+			FROM VOL_OP_CL pr
+			LEFT JOIN VOL_OP_CL_Notes prne
+				ON pr.OP_CL_ID=prne.OP_CL_ID AND prne.LangID=voe.LangID
+			INNER JOIN VOL_CommitmentLength cl
+				ON pr.CL_ID=cl.CL_ID
+			INNER JOIN VOL_CommitmentLength_Name clne
+				ON cl.CL_ID=clne.CL_ID AND clne.LangID=(SELECT TOP 1 LangID FROM VOL_CommitmentLength_Name WHERE CL_ID=clne.CL_ID ORDER BY CASE WHEN LangID=voe.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE pr.VNUM=vo.VNUM
+			FOR XML PATH('CHK'), TYPE)
+	FOR XML PATH('COMMITMENT_LENGTH'), TYPE
+	),
+COMMUNITY_SETS = (
+	SELECT
+		(SELECT
+				vcsn.SetName AS "@V"
+			FROM dbo.VOL_OP_CommunitySet vcs
+			INNER JOIN dbo.VOL_CommunitySet_Name vcsn
+				ON vcsn.CommunitySetID = vcs.CommunitySetID AND vcsn.LangID=(SELECT TOP 1 LangID FROM dbo.VOL_CommunitySet_Name WHERE CommunitySetID=vcs.CommunitySetID ORDER BY CASE WHEN LangID=voe.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE vcs.VNUM=vo.VNUM
+			FOR XML PATH ('CHK'), TYPE)
+	FOR XML PATH('COMMUNITY_SETS'), TYPE
+	),
+CONTACT = (SELECT	dbo.fn_VOL_XML_Contact(
+			'CONTACT',vo.VNUM,
+			1,
+			0) AS [node()] FOR XML PATH('CONTACT'),TYPE),
+COST = (SELECT voe.COST "@V" FOR XML PATH('COST'), TYPE),
+CREATED_BY = (SELECT voe.CREATED_BY "@V" FOR XML PATH('CREATED_BY'), TYPE),
+CREATED_DATE = (SELECT voe.CREATED_DATE "@V" FOR XML PATH('CREATED_DATE'), TYPE),
+DELETED_BY = (SELECT voe.DELETED_BY "@V" FOR XML PATH('DELETED_BY'), TYPE),
+DELETION_DATE = (SELECT voe.DELETION_DATE "@V" FOR XML PATH('DELETION_DATE'), TYPE),
+DISPLAY_UNTIL = (SELECT vo.DISPLAY_UNTIL "@V" FOR XML PATH('DISPLAY_UNTIL'), TYPE),
+DUTIES = (SELECT voe.DUTIES "@V" FOR XML PATH('DUTIES'), TYPE),
+EMAIL_UPDATE_DATE = (SELECT vo.EMAIL_UPDATE_DATE "@V" FOR XML PATH('EMAIL_UPDATE_DATE'), TYPE),
+END_DATE = (SELECT vo.END_DATE "@V" FOR XML PATH('END_DATE'), TYPE),
+INTERACTION_LEVEL = (
+	SELECT
+		voe.INTERACTION_LEVEL_NOTES "@N",
+		(SELECT
+				il.Code "@CD",
+				ilne.Name "@V",
+				prne.Notes "@N"
+			FROM VOL_OP_IL pr
+			LEFT JOIN VOL_OP_IL_Notes prne
+				ON pr.OP_IL_ID=prne.OP_IL_ID AND prne.LangID=voe.LangID
+			INNER JOIN dbo.VOL_InteractionLevel il
+				ON pr.IL_ID=il.IL_ID
+			INNER JOIN dbo.VOL_InteractionLevel_Name ilne
+				ON il.IL_ID=ilne.IL_ID AND ilne.LangID=(SELECT TOP 1 LangID FROM dbo.VOL_InteractionLevel_Name WHERE IL_ID=ilne.IL_ID ORDER BY CASE WHEN LangID=voe.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE pr.VNUM=vo.VNUM
+			FOR XML PATH('CHK'), TYPE)
+	FOR XML PATH('INTERACTION_LEVEL'), TYPE
+	),
+INTERESTS = (
+	SELECT
+		(SELECT
+				ain.Name AS "@V"
+			FROM dbo.VOL_OP_AI ai
+			INNER JOIN dbo.VOL_Interest_Name ain
+				ON ain.AI_ID = ai.AI_ID AND ain.LangID=(SELECT TOP 1 LangID FROM dbo.VOL_Interest_Name WHERE AI_ID=ai.AI_ID ORDER BY CASE WHEN LangID=voe.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE ai.VNUM=vo.VNUM
+			FOR XML PATH ('CHK'), TYPE)
+	FOR XML PATH('INTERESTS'), TYPE
+	),
+INTERNAL_MEMO = (SELECT	dbo.fn_GBL_XML_RecordNote(
+			'INTERNAL_MEMO',vo.NUM,
+			1,
+			0) AS [node()] FOR XML PATH('INTERNAL_MEMO'),TYPE),
+LIABILITY_INSURANCE = (SELECT vo.LIABILITY_INSURANCE "@V" FOR XML PATH('LIABILITY_INSURANCE'), TYPE),
+LOCATION = (SELECT voe.LOCATION "@V" FOR XML PATH('LOCATION'), TYPE),
+MINIMUM_HOURS = (SELECT MINIMUM_HOURS "@V", MINIMUM_HOURS_PER "@PER" FOR XML PATH('MINIMUM_HOURS'), TYPE),
+MODIFIED_BY = (SELECT voe.MODIFIED_BY "@V" FOR XML PATH('MODIFIED_BY'), TYPE),
+MODIFIED_DATE = (SELECT voe.MODIFIED_DATE "@V" FOR XML PATH('MODIFIED_DATE'), TYPE),
+MORE_INFO_URL = (SELECT voe.MORE_INFO_URL "@V" FOR XML PATH('MORE_INFO_URL'), TYPE),
+NO_UPDATE_EMAIL = (SELECT vo.NO_UPDATE_EMAIL "@V" FOR XML PATH('NO_UPDATE_EMAIL'), TYPE),
+NON_PUBLIC = (SELECT voe.NON_PUBLIC "@V" FOR XML PATH('NON_PUBLIC'), TYPE),
+NUM = (SELECT vo.NUM "@V" FOR XML PATH('NUM'), TYPE), 
+NUM_NEEDED = (
+	SELECT
+		voe.NUM_NEEDED_NOTES "@N",
+		(SELECT
+				cm.Code "@CD",
+				cmne.Name "@V",
+				dbo.fn_GBL_Community_AuthParent(cm.CM_ID,cm.CM_ID,5,voe.LangID) "@AP",
+				pst.NameOrCode AS "@PRV",
+				pst.Country AS "@CTRY",
+				pr.NUM_NEEDED "@NO_NEEDED"
+			FROM VOL_OP_CM pr
+			INNER JOIN GBL_Community cm
+				ON pr.CM_ID=cm.CM_ID
+			INNER JOIN GBL_Community_Name cmne
+				ON cm.CM_ID=cmne.CM_ID AND cmne.LangID=(SELECT TOP 1 LangID FROM GBL_Community_Name WHERE CM_ID=cmne.CM_ID ORDER BY CASE WHEN LangID=voe.LangID THEN 0 ELSE 1 END, LangID)
+			LEFT JOIN GBL_ProvinceState pst
+				ON cm.ProvinceState=pst.ProvID
+			WHERE pr.VNUM=vo.VNUM
+			FOR XML PATH('CM'),TYPE)
+	FOR XML PATH('NUM_NEEDED'),TYPE
+	),
+OSSD = (SELECT OSSD "@V" FOR XML PATH('OSSD'), TYPE),
+POLICE_CHECK = (SELECT POLICE_CHECK "@V" FOR XML PATH('POLICE_CHECK'), TYPE),
+POSITION_TITLE = (SELECT POSITION_TITLE "@V" FOR XML PATH('POSITION_TITLE'), TYPE),
+PUBLIC_COMMENTS = (SELECT voe.PUBLIC_COMMENTS "@V" FOR XML PATH('PUBLIC_COMMENTS'), TYPE),
+REQUEST_DATE = (SELECT vo.REQUEST_DATE "@V" FOR XML PATH('REQUEST_DATE'), TYPE),
+SCHEDULE = (
+	SELECT
+		SCH_M_Morning "@SCH_M_MORN",
+        SCH_M_Afternoon "@SCH_M_AFT",
+        SCH_M_Evening "@SCH_M_EVE",
+        SCH_M_Time "@SCH_M_TIME",
+        SCH_TU_Morning "@SCH_TU_MORN",
+        SCH_TU_Afternoon "@SCH_TU_AFT",
+        SCH_TU_Evening "@SCH_TU_EVE",
+        SCH_TU_Time "@SCH_TU_TIME",
+        SCH_W_Morning "@SCH_W_MORN",
+        SCH_W_Afternoon "@SCH_W_AFT",
+        SCH_W_Time "@SCH_W_TIME",
+        SCH_W_Evening "@SCH_W_EVE",
+        SCH_TH_Morning "@SCH_TH_MORN",
+        SCH_TH_Afternoon "@SCH_TH_AFT",
+        SCH_TH_Evening "@SCH_TH_EVE",
+        SCH_TH_Time "@SCH_TH_TIME",
+        SCH_F_Morning "@SCH_F_MORN",
+        SCH_F_Afternoon "@SCH_F_AFT",
+        SCH_F_Evening "@SCH_F_EVE",
+        SCH_F_Time "@SCH_F_TIME",
+        SCH_ST_Morning "@SCH_ST_MORN",
+        SCH_ST_Afternoon "@SCH_ST_AFT",
+        SCH_ST_Evening "@SCH_ST_EVE",
+        SCH_ST_Time "@SCH_ST_TIME",
+        SCH_SN_Morning "@SCH_SN_MORN",
+        SCH_SN_Afternoon "@SCH_SN_AFT",
+        SCH_SN_Evening "@SCH_SN_EVE",
+        SCH_SN_Time "@SCH_SN_TIME",
+		voe.SCHEDULE_NOTES "@N"
+	FOR XML PATH('SCHEDULE'), TYPE
+	),
+SEASONS = (
+	SELECT
+		voe.SEASONS_NOTES "@N",
+		(SELECT
+				ssn.Code "@CD",
+				ssnne.Name "@V",
+				prne.Notes "@N"
+			FROM VOL_OP_SSN pr
+			LEFT JOIN VOL_OP_SSN_Notes prne
+				ON pr.OP_SSN_ID=prne.OP_SSN_ID AND prne.LangID=voe.LangID
+			INNER JOIN dbo.VOL_Seasons ssn
+				ON pr.SSN_ID=ssn.SSN_ID
+			INNER JOIN dbo.VOL_Seasons_Name ssnne
+				ON ssn.SSN_ID=ssnne.SSN_ID AND ssnne.LangID=(SELECT TOP 1 LangID FROM dbo.VOL_Seasons_Name WHERE SSN_ID=ssnne.SSN_ID ORDER BY CASE WHEN LangID=voe.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE pr.VNUM=vo.VNUM
+			FOR XML PATH('CHK'), TYPE)
+	FOR XML PATH('SEASONS'), TYPE
+	),
+SKILLS = (
+	SELECT
+		voe.SKILL_NOTES "@N",
+		(SELECT
+				sk.Code "@CD",
+				skne.Name "@V"
+			FROM VOL_OP_SK pr
+			INNER JOIN dbo.VOL_Skill sk
+				ON pr.SK_ID=sk.SK_ID
+			INNER JOIN dbo.VOL_Skill_Name skne
+				ON sk.SK_ID=skne.SK_ID AND skne.LangID=(SELECT TOP 1 LangID FROM dbo.VOL_Skill_Name WHERE SK_ID=skne.SK_ID ORDER BY CASE WHEN LangID=voe.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE pr.VNUM=vo.VNUM
+			FOR XML PATH('CHK'), TYPE)
+	FOR XML PATH('SKILLS'), TYPE
+	),
+SOCIAL_MEDIA = (
+	SELECT
+		(SELECT
+				sm.DefaultName "@NM",
+				CASE WHEN pr.Protocol <> 'http://' THEN Protocol ELSE NULL END "@PROTOCOL",
+				pr.URL "@URL",
+				CASE WHEN pr.LangID=0 THEN 'E' WHEN LangID=2 THEN 'F' ELSE '?' END "@LANG"
+			FROM VOL_OP_SM pr
+			INNER JOIN GBL_SocialMedia sm
+				ON pr.SM_ID=sm.SM_ID
+			WHERE pr.VNUM=vo.VNUM AND pr.LangID=voe.LangID
+			FOR XML PATH('TYPE'), TYPE)
+	FOR XML PATH('SOCIAL_MEDIA'), TYPE
+	),
+[SOURCE] = (
+	SELECT 
+		voe.SOURCE_NAME "@NM",
+		voe.SOURCE_TITLE "@TTL",
+		voe.SOURCE_ORG "@ORG",
+		voe.SOURCE_PHONE "@PHN",
+		voe.SOURCE_FAX "@FAX",
+		voe.SOURCE_EMAIL "@EML",
+		voe.SOURCE_PUBLICATION "@PUB",
+		voe.SOURCE_PUBLICATION_DATE "@PUB_DATE"
+	FOR XML PATH('SOURCE'), TYPE
+	),
+[START_DATE] = (SELECT START_DATE_FIRST AS "@FIRST", START_DATE_LAST "@LAST" FOR XML PATH('START_DATE'), TYPE),
+SUITABILITY = (
+	SELECT
+		(SELECT
+				sbn.Name AS "@V"
+			FROM dbo.VOL_OP_SB sb
+			INNER JOIN dbo.VOL_Suitability_Name sbn
+				ON sbn.SB_ID = sb.SB_ID AND sbn.LangID=(SELECT TOP 1 LangID FROM dbo.VOL_Suitability_Name WHERE SB_ID=sb.SB_ID ORDER BY CASE WHEN LangID=voe.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE sb.VNUM=vo.VNUM
+			FOR XML PATH ('CHK'), TYPE)
+	FOR XML PATH('SUITABILITY'), TYPE
+	),
+TRAINING = (
+	SELECT
+		voe.TRAINING_NOTES "@N",
+		(SELECT
+				trn.Code "@CD",
+				trnne.Name "@V",
+				prne.Notes "@N"
+			FROM VOL_OP_TRN pr
+			LEFT JOIN VOL_OP_TRN_Notes prne
+				ON pr.OP_TRN_ID=prne.OP_TRN_ID AND prne.LangID=voe.LangID
+			INNER JOIN dbo.VOL_Training trn
+				ON pr.TRN_ID=trn.TRN_ID
+			INNER JOIN dbo.VOL_Training_Name trnne
+				ON trn.TRN_ID=trnne.TRN_ID AND trnne.LangID=(SELECT TOP 1 LangID FROM dbo.VOL_Training_Name WHERE TRN_ID=trnne.TRN_ID ORDER BY CASE WHEN LangID=voe.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE pr.VNUM=vo.VNUM
+			FOR XML PATH('CHK'), TYPE)
+	FOR XML PATH('TRAINING'), TYPE
+	),
+TRANSPORTATION = (
+	SELECT
+		voe.TRANSPORTATION_NOTES "@N",
+		(SELECT
+				trp.Code "@CD",
+				trpne.Name "@V",
+				prne.Notes "@N"
+			FROM VOL_OP_TRP pr
+			LEFT JOIN VOL_OP_TRP_Notes prne
+				ON pr.OP_TRP_ID=prne.OP_TRP_ID AND prne.LangID=voe.LangID
+			INNER JOIN dbo.VOL_Transportation trp
+				ON pr.TRP_ID=trp.TRP_ID
+			INNER JOIN dbo.VOL_Transportation_Name trpne
+				ON trp.TRP_ID=trpne.TRP_ID AND trpne.LangID=(SELECT TOP 1 LangID FROM dbo.VOL_Transportation_Name WHERE TRP_ID=trpne.TRP_ID ORDER BY CASE WHEN LangID=voe.LangID THEN 0 ELSE 1 END, LangID)
+			WHERE pr.VNUM=vo.VNUM
+			FOR XML PATH('CHK'), TYPE)
+	FOR XML PATH('TRANSPORTATION'), TYPE
+	),
+UPDATE_DATE = (SELECT voe.UPDATE_DATE "@V" FOR XML PATH('UPDATE_DATE'), TYPE),
+UPDATE_EMAIL = (SELECT vo.UPDATE_EMAIL "@V" FOR XML PATH('UPDATE_EMAIL'), TYPE),
+UPDATE_HISTORY = (SELECT voe.UPDATE_HISTORY "@V" FOR XML PATH('UPDATE_HISTORY'), TYPE),
+UPDATE_SCHEDULE = (SELECT voe.UPDATE_SCHEDULE "@V" FOR XML PATH('UPDATE_SCHEDULE'), TYPE),
+UPDATED_BY = (SELECT voe.UPDATED_BY "@V" FOR XML PATH('UPDATED_BY'), TYPE)
+FROM dbo.VOL_Opportunity vo
+	INNER JOIN dbo.VOL_Opportunity_Description voe
+		ON vo.VNUM=voe.VNUM AND voe.LangID=0
+
+
+
+GO
+
+
+GRANT SELECT ON  [dbo].[VOL_SHARE_VIEW_EN] TO [cioc_login_role]
+GO

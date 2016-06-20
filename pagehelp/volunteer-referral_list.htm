@@ -1,0 +1,73 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<ul>
+	<li><a href="#results">Your Search Results</a></li>
+	<li><a href="#sort">Changing the Sort Order</a></li>
+	<li><a href="#other">Additional Actions</a></li>
+</ul>
+<hr>
+<a name="results"></a>
+<h3>Your Search Results</h3>
+<p>Depending on which version of the Referral list page you are working with, this page contains one of:</p>
+<ul>
+	<li>Referrals that were created or modified in the Past X number of days, listed in reverse order of the date they were <em>Last Modified</em></li>
+	<li><em>OR</em> Referrals for the given Opportunity, listed in reverse order of their original Referral Date</li>
+	<li><em>OR</em> Referrals that are <em>Flagged for Follow-Up</em>, listed in reverse order of the date they were <em>Last Modified</em></li>
+	<li><em>OR</em> Referrals that match the criteria provided on the <em>Custom Referral Search</em> form on the <em>Volunteer Referrals</em> page, listed in reverse order of the date they were <em>Last Modified</em></li>
+</ul>
+<p>If you are a Super User, you will see all Referrals; all other users see only Referrals from Opportunities owned by their own Agency. If you want to make modifications to the Referral or see the full details, click the <em><strong>Update</strong></em> link on the right.</p>
+<table class="BasicBorder cell-padding-2" align="center">
+	<tr>
+		<th colspan="2" class="RevTitleBox">Icons Used in the list of Referrals</th>
+	</tr>
+	<tr>
+		<td><img src="../images/redflag.gif" width="15" height="15"></td>
+		<td>Referral is <em>Flagged for Follow-Up</em></td>
+	</tr>
+	<tr>
+		<td><img src="../images/greencheck.gif" width="15" height="15"></td>
+		<td>There was a <em>Successful Placement</em> from this Referral</td>
+	</tr>
+	<tr>
+		<td><img src="../images/redx.gif" width="15" height="15"></td>
+		<td>This referral did not <strong><em>not</em></strong> result in a <em>Successful Placement</em></td>
+	</tr>
+	<tr>
+		<td><img src="../images/up.gif" width="15" height="15"></td>
+		<td>This column is sorted in ascending order</td>
+	</tr>
+	<tr>
+		<td><img src="../images/down.gif" width="15" height="15"></td>
+		<td>This column is sorted in descending order</td>
+	</tr>
+</table>
+<hr>
+<a name="sort"></a>
+<h3>Changing the Sort Order</h3>
+<p>If you have JavaScript enabled in your browser, you will be able to change the sort order of your search results. The current current sort column and direction are indicated by arrows next to the column name. To change the sort column, click the header of the column you would like to sort on. To change the direction of the sort, click the column again. You can sort on any column except the <em>Action</em> column; even though there isn't a column name on the follow-up or placement columns, you can sort on those columns.</p>
+<hr>
+<a name="other"></a>
+<h3>Additional Actions</h3>
+<p>If you have JavaScript enable in your browser, you will be able to change your display options to include extra tools. The list of tools available to you is next to the word <em>Show</em> above your results.</p>
+<h4>Follow-up Flag Editing</h4>
+<p>Enabling <em>Follow-Up Flag Editing</em> will display check boxes in the Follow Up Flag column (far left) and a set of buttons below the table: <em>Check All</em>, <em>Un-Check All</em>, <em>Add Follow-Up Flag</em> and <em>Remove Follow-Up Flag</em>. The <em>Add Follow-Up Flag</em> and <em>Remove Follow-Up Flag</em> buttons cause the currently checked records to have their follow-up flag set as indicated. <span class="Alert">Note</span>: after adding or removing a follow-up flag from a set of records, your search is refreshed. If you are viewing a search which had follow-up flag as a criteria, you may have fewer records in your results after submitting your changes.</p>
+<h4>Email Follow-Up</h4>
+<p>You can send a follow-up email request about the selected referral requests to either the posting organization/agency or the potential volunteer using this tool.  Select the referral request(s) you wish to send an email about using the provided checkboxes, or select them all using the <em>&quot;Check All&quot;</em> button at the bottom of the page. After submitting, you will have a chance to review the list of selected referrals and compose the message being sent. For more information, view the page help for the <a href="pagehelp?Page=volunteer%2Freferral_email_prep.asp&Ln=en-CA">Customize Referral Follow-Up Email</a> page.</p>
+<p>Note that the ability to send a follow-up email is dependent on the volunteer or posting organization/agency providing a contact email address.</p>
+<p class="SmallNote">Last Modified: $Date$</p>

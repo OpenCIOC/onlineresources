@@ -1,0 +1,29 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_THS_Source_l]
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.1
+	Checked by: KL
+	Checked on: 29-Dec-2011
+	Action: NO ACTION REQUIRED
+*/
+
+SELECT s.SRC_ID, sn.SourceName
+	FROM THS_Source s
+	INNER JOIN THS_Source_Name sn
+		ON s.SRC_ID=sn.SRC_ID AND LangID=(SELECT TOP 1 LangID FROM THS_Source_Name WHERE sn.SRC_ID=SRC_ID ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END)
+ORDER BY SourceName
+
+SET NOCOUNT OFF
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_THS_Source_l] TO [cioc_login_role]
+GO

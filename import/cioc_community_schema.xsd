@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<xsd:schema
+		attributeFormDefault="unqualified"
+		elementFormDefault="unqualified"
+		version="1.0"
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		>
+
+	<xsd:simpleType name="s-ProvCodeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-Z]{2}"/>
+			<xsd:minLength value="2"/>
+			<xsd:maxLength value="2"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="s-CultureType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="en-CA">
+				<xsd:annotation>
+					<xsd:documentation>English</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="fr-CA">
+				<xsd:annotation>
+					<xsd:documentation>French</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="s-GUID">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="s-IntIDType">
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="0"/>
+			<xsd:maxInclusive value="2147483647"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="s-Text100Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="100"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="s-Text200Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="preserve"/>
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="100"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:element name="community_information">
+		<xsd:complexType>
+			<xsd:sequence>
+
+				<xsd:element name="province_states" minOccurs="1" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element minOccurs="0" maxOccurs="unbounded" name="province_state">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="names" minOccurs="0" maxOccurs="1">
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="name" minOccurs="1" maxOccurs="unbounded">
+														<xsd:complexType>
+															<xsd:attribute name="value" type="s-Text100Type" use="required" />
+															<xsd:attribute name="culture" type="s-CultureType" use="required" />
+														</xsd:complexType>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+									<xsd:attribute name="id" type="s-IntIDType" use="required" />
+									<xsd:attribute name="name_or_code" type="s-ProvCodeType" use="optional" />
+									<xsd:attribute name="country" type="s-Text100Type" use="required" />
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+
+				<xsd:element name="communities" minOccurs="1" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element minOccurs="1" maxOccurs="unbounded" name="community">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="names" minOccurs="1" maxOccurs="1">
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element minOccurs="1" maxOccurs="unbounded" name="name">
+														<xsd:complexType>
+															<xsd:attribute name="value" type="s-Text200Type" use="required" />
+															<xsd:attribute name="culture" type="s-CultureType" use="required" />
+														</xsd:complexType>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+										<xsd:element minOccurs="0" maxOccurs="1" name="alt_names">
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element minOccurs="1" maxOccurs="unbounded" name="name">
+														<xsd:complexType>
+															<xsd:attribute name="value" type="s-Text200Type" use="required" />
+															<xsd:attribute name="culture" type="s-CultureType" use ="required" />
+														</xsd:complexType>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+									<xsd:attribute name="id" type="s-IntIDType" use="required" />
+									<xsd:attribute name="created_date" type="xsd:dateTime" use="optional" />
+									<xsd:attribute name="modified_date" type="xsd:dateTime" use="optional" />
+									<xsd:attribute name="parent_id" type="s-IntIDType" use="optional" />
+									<xsd:attribute name="guid" type="s-GUID" use="optional" />
+									<xsd:attribute name="prov_state" type="s-IntIDType" use="optional" />
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+
+				<xsd:element name="alt_search_areas" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element minOccurs="1" maxOccurs="unbounded" name="alt_search_area">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="names" minOccurs="1" maxOccurs="1">
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element minOccurs="1" maxOccurs="unbounded" name="name">
+														<xsd:complexType>
+															<xsd:attribute name="value" type="s-Text200Type" use="required" />
+															<xsd:attribute name="culture" type="s-CultureType" use="required" />
+														</xsd:complexType>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+										<xsd:element minOccurs="0" maxOccurs="1" name="alt_names">
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element minOccurs="1" maxOccurs="unbounded" name="name">
+														<xsd:complexType>
+															<xsd:attribute name="value" type="s-Text200Type" use="required" />
+															<xsd:attribute name="culture" type="s-CultureType" use ="required" />
+														</xsd:complexType>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+										<xsd:element minOccurs="1" maxOccurs="1" name="search_areas">
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element minOccurs="1" maxOccurs="unbounded" name="cm_id">
+														<xsd:complexType>
+															<xsd:attribute name="value" type="s-IntIDType" use="required" />
+														</xsd:complexType>
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+									<xsd:attribute name="id" type="s-IntIDType" use="required" />
+									<xsd:attribute name="created_date" type="xsd:dateTime" use="optional" />
+									<xsd:attribute name="modified_date" type="xsd:dateTime" use="optional" />
+									<xsd:attribute name="parent_id" type="s-IntIDType" use="optional" />
+									<xsd:attribute name="guid" type="s-GUID" use="optional" />
+									<xsd:attribute name="prov_state" type="s-IntIDType" use="optional" />
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+
+			</xsd:sequence>
+			<xsd:attribute name="source" type="s-Text200Type" use="required" />
+		</xsd:complexType>
+		
+		<xsd:unique name="unique_prov_id">
+			<xsd:selector xpath="province_state"/>
+			<xsd:field xpath="@id"/>
+		</xsd:unique>
+
+		<xsd:key name="prov_id">
+			<xsd:selector xpath="province_state"/>
+			<xsd:field xpath="@id"/>
+		</xsd:key>
+
+		<xsd:unique name="unique_cm_id">
+			<xsd:selector xpath="community"/>
+			<xsd:field xpath="@id"/>
+		</xsd:unique>
+
+		<xsd:key name="cm_id">
+			<xsd:selector xpath="community"/>
+			<xsd:field xpath="@id"/>
+		</xsd:key>
+
+		<xsd:unique name="unique_cm_guid">
+			<xsd:selector xpath="community"/>
+			<xsd:field xpath="@guid"/>
+		</xsd:unique>
+
+		<xsd:key name="cm_guid">
+			<xsd:selector xpath="community"/>
+			<xsd:field xpath="@guid"/>
+		</xsd:key>
+
+		<xsd:keyref name="prov_constraint" refer="prov_id">
+			<xsd:selector xpath="community"/>
+			<xsd:field xpath="@prov_state"/>
+		</xsd:keyref>
+
+		<xsd:keyref name="parent_cm_constraint" refer="cm_id">
+			<xsd:selector xpath="community"/>
+			<xsd:field xpath="@parent_id"/>
+		</xsd:keyref>
+	</xsd:element>
+</xsd:schema>

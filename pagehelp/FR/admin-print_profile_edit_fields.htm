@@ -1,0 +1,57 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>Souhaitez-vous obtenir de l'information g&eacute;n&eacute;rale sur les profils d'impression ? Consultez le page d'aide principale sur la <a href="pagehelp?Page=admin%2Fprint_profile_edit.asp">modification des profils d'impression</a>.</p>
+<hr>
+<h3>Ajouter un nouveau champ</h3>
+<p>En bas de la page se trouve un menu d&eacute;roulant dans lequel vous pouvez s&eacute;lectionner parmi tous les champs de rapport disponibles. Vous devez s&eacute;lectionner un <a href="#fieldtypes"><em>Type de champ</em></a> pour le champ avant de l'ajouter ; vous ne pourrez pas modifier ce type plus tard. <strong>Remarque :</strong> il <em>est</em> possible d'ajouter deux fois le m&ecirc;me champ au rapport.</p>
+<h3>Modifier un champ existant</h3>
+<p>Une fois qu'un champ a &eacute;t&eacute; ajout&eacute;, vous pouvez configurer le style et le formatage du champ, ainsi que l'ordre dans lequel il appara&icirc;t. Vous pouvez modifier ou supprimer le champ, mais vous <strong>ne pouvez pas modifier</strong> son <a href="#fieldtypes"><em>Type de champ</em></a>. Si vous devez modifier un champ en un type diff&eacute;rent, vous devrez le supprimer puis l'ajouter de nouveau. Des renseignements sur la configuration des champs est disponible plus bas dans la section <a href="#fieldsettings"><em>Configuration des champs</em></a>.</p>
+<h3>Ajouter des num&eacute;ros d'ordre</h3>
+<p>Vous pouvez ajouter des num&eacute;ros d'ordre aux champs &agrave; imprimer (en partant de 1) en ins&eacute;rant les symboles ## dans les choix de pr&eacute;fixe ou de suffixe de tout champ. Par exemple, le fait d'ajouter &quot;##. &quot; (notez l'espace) dans le pr&eacute;fixe du champ ORG_LEVEL_1 produira cet affichage : <em>&quot;123. Mon nom d'organisme 1&quot;</em>. &quot;(##) &quot; produira <em>&quot;(123) Mon nom d'organisme 1&quot;</em>. En utilisant des balises HTML et des feuilles de style dans les pr&eacute;fixes et suffixes, il est possibles de cr&eacute;er des mises en pages pour les num&eacute;ros d'ordre encore plus inventives.</p>
+<a name="fieldtypes"></a>
+<h3>Types de champs</h3>
+<h4>Heading</h4>
+<p>Un type de champ <em>Titre</em> cr&eacute;&eacute; le champ comme en-t&ecirc;te HTML (H1-H6). Un champ titre n'appara&icirc;t pas dans un tableau et n'a pas d'&eacute;tiquette de champ.</p>
+<h4>Normal</h4>
+<p>Un type de champ <em>Normal</em> cr&eacute;&eacute; le champ en tant que rang&eacute;e dans un tableau &agrave; deux colonnes. La premi&egrave;re colonne du tableau contiendra l'<em>&eacute;tiquette</em> du champ (si vous en pr&eacute;cisez une), et la deuxi&egrave;me colonne contiendra le contenu du champ.</p>
+<h4>De grande largeur</h4>
+<p>Un type de champ <em>De grande largeur</em> cr&eacute;&eacute; le champ en tant que rang&eacute;e dans un tableau o&ugrave; le contenu chevauche les deux colonnes. Ce type de champ s'av&egrave;re surtout utile pour les longs champs de type m&eacute;mo, comme les descriptions. Si vous pr&eacute;cisez une &eacute;tiquette de champ, celle-ci sera imprim&eacute;e au-dessus du contenu du champ, plut&ocirc;t qu'&agrave; c&ocirc;t&eacute;.</p>
+<h4>Suite</h4>
+<p>Un champ de type <em>Suite</em> <strong>doit</strong> &ecirc;tre utilis&eacute; <strong>apr&egrave;s</strong> un champ d'un autre type. Un champ Suite vous permet de regrouper des donn&eacute;es de plusieurs champs.</p>
+<a name="fieldsettings"></a>
+<h3>Configuration des champs</h3>
+<h4>Niveau du titre</h4>
+<p>S'applique aux champs de type Titre uniquement. Accepte les valeurs de 1 &agrave; 6 : l'outil &eacute;tablira la valeur par d&eacute;faut &agrave; un titre de niveau 1. Remarque : &agrave; moins de le sp&eacute;cifier autrement dans votre feuille de style, un grand num&eacute;ro de titre indique un titre <em>plus petit</em>.</p>
+<h4>&Eacute;tiquette</h4>
+<p>Le nom convivial du champ. Les &eacute;tiquettes de champs sont toujours facultatives. Vous ne pouvez pas ajouter d'&eacute;tiquette &agrave; un champ de type <em>Suite</em> ou <em>Titre</em>. Pour emp&ecirc;cher qu'un nom de champ ne se divise sur une nouvelle ligne apr&egrave;s un espace, utilisez un espace ins&eacute;cable HTML (&nbsp;)</p>
+<h4>Style d'&eacute;tiquette</h4>
+<p>Si vous utilisez une feuille de style, la classe CSS qui s'applique au champ.</p>
+<h4>S&eacute;parateur</h4>
+<p>S'applique uniquement au type de champ <em>Suite</em>. Lorsque vous cr&eacute;ez un champ <em>Suite</em>, vous devez pr&eacute;ciser un s&eacute;parateur &agrave; afficher entre les contenus des champs de donn&eacute;es pr&eacute;c&eacute;dents et le contenu du champ suite (cela peut &ecirc;tre un espace, un point-virgule, une virgule, un ast&eacute;risque, etc.). Les donn&eacute;es du s&eacute;parateur devraient &ecirc;tre encod&eacute;es en HTML si n&eacute;cessaire. Un s&eacute;parateur sera imprim&eacute; uniquement s'il existe des donn&eacute;es &agrave; la fois dans le champ de suite <strong>et</strong> dans le champ auquel il fait suite (remarque : s'il existe plusieurs champs &agrave; la suite, le s&eacute;parateur sera imprim&eacute; d&egrave;s qu'un des champs pr&eacute;c&eacute;dents comporte des donn&eacute;es, m&ecirc;me si le champ plac&eacute; imm&eacute;diatement avant le champ de suite est vide).</p>
+<h4>Classe CSS de contenu</h4>
+<p>Si vous utilisez une feuille de style, la classe CSS qui s'applique au contenu du champ.</p>
+<h4>Contenu si vide</h4>
+<p>Vous pouvez pr&eacute;ciser des donn&eacute;es par d&eacute;faut &agrave; imprimer dans les cas o&ugrave; le champ est vide. Si vous ne pr&eacute;ciser aucune valeur, le champ vide sera omis lors de la production du rapport. Les donn&eacute;es par d&eacute;faut devraient &ecirc;tre encod&eacute;es en HTML si n&eacute;cessaire. Si vous souhaitez forcer l'impression d'un champ vide, saisissez un espace ins&eacute;cable en HTML (&nbsp;) dans le champ <em>Le contenu si le champ est vide</em>.</p>
+<p>En plus des donn&eacute;es par d&eacute;faut, vous pouvez &eacute;galement demander &agrave; l'outil d'utiliser les donn&eacute;es d'un autre champ si le champ est vide. Cela peut s'av&eacute;rer particuli&egrave;rement utile dans les cas des descriptions suppl&eacute;mentaires, de publication ou de cat&eacute;gorie, o&ugrave; vous pouvez utiliser la description principale &agrave; la place. Pour ins&eacute;rer les donn&eacute;es d'un autre champ, saisissez le nom du champ avec le pr&eacute;fixe @@, p. ex., @@DESCRIPTION ou @@ALT_ORG. Vous devez utiliser le nom normalis&eacute; et non-modifiable du champ (le nom normalis&eacute; est habituellement affich&eacute; en majuscules).</p>
+<h4>Pr&eacute;fixe et suffixe</h4>
+<p>Les informations de pr&eacute;fixe et suffixe vous permettent d'ajouter des informations avant et apr&egrave;s les donn&eacute;es du champ. Les donn&eacute;es de pr&eacute;fixe et suffixe sont imprim&eacute;es uniquement si le champ n'est pas vide. Les donn&eacute;es de pr&eacute;fixe et suffixe devraient &ecirc;tre encod&eacute;es en HTML si n&eacute;cessaire. <span class="Alert">Remarque :</span> vous pouvez ajouter le num&eacute;ro de publication/cat&eacute;gorie (le num&eacute;ro d'ordre du dossier dans le document imprim&eacute;) &agrave; n'importe quel pr&eacute;fixe ou suffixe, en saisissant ## partout dans le champ.</p>
+<h4>Ordre d'affichage</h4>
+<p>L'ordre peut &ecirc;tre n'importe quel chiffre entre 0 et 255. Les champs sont ordonn&eacute;s par ordre d'affichage, puis par leur nom de champ non-modifiable. Le m&ecirc;me num&eacute;ro d'ordre d'affichage peut &ecirc;tre utilis&eacute; plusieurs fois. Il est fortement recommand&eacute; d'espacer les num&eacute;ros g&eacute;n&eacute;reusement, pour vous permettre d'ins&eacute;rer de nouveaux champs plus tard.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

@@ -1,0 +1,42 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_VOL_VNUMSetAIIDs_u]
+	@VNUM varchar(10),
+	@IdList varchar(max)
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.6
+	Checked by: CL
+	Checked on: 27-Sep-2014
+	Action: TESTING REQUIRED
+*/
+
+DECLARE @tmpAIIDs TABLE(AI_ID int)
+
+INSERT INTO @tmpAIIDs SELECT DISTINCT tm.*
+	FROM dbo.fn_GBL_ParseIntIDList(@IdList,',') tm
+	INNER JOIN VOL_Interest ai
+		ON tm.ItemID=ai.AI_ID
+
+DELETE pr
+	FROM VOL_OP_AI pr
+	LEFT JOIN @tmpAIIDs tm
+		ON pr.AI_ID = tm.AI_ID
+WHERE tm.AI_ID IS NULL AND VNUM=@VNUM
+
+INSERT INTO VOL_OP_AI (VNUM, AI_ID) SELECT VNUM=@VNUM, tm.AI_ID
+	FROM @tmpAIIDs tm
+WHERE NOT EXISTS(SELECT * FROM VOL_OP_AI pr WHERE VNUM=@VNUM AND pr.AI_ID=tm.AI_ID)
+
+SET NOCOUNT OFF
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_VOL_VNUMSetAIIDs_u] TO [cioc_login_role]
+GO

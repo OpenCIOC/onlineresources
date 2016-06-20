@@ -1,0 +1,81 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>The <em>&quot;Add / Edit General Heading&quot;</em> page allows you to either edit an existing General Heading or add a new General Heading to the database.</p>
+<ul>
+	<li><a href="#intro">Introduction to General Headings</a>
+		<ul>
+			<li><a href="#whatareheadings">What are General Headings?</a></li>
+			<li><a href="#taxvsregular">Taxonomy Headings vs. Regular Headings</a></li>
+		</ul>
+	</li>
+	<li><a href="#dataelements">General Heading Data Elements</a></li>
+</ul>
+<hr>
+<a name="intro"></a>
+<h2>Introduction to General Headings</h2>
+
+<a name="whatareheadings"></a>
+<h3>What are General Headings?</h3>
+<p>General Headings allow you to classify records within a Publication. In Publication-based Views, Headings may be used to create the "Quick List" search on the basic search form. Headings are also searchable from the Advanced Search form in any View that has access to that Publication. Records must be first assigned to a Publication before they can be indexed to that Publication's General Headings.</p>
+<p>It is possible to create custom display fields using the Headings for any given Publication. Like other classifications such as the Thesaurus or Taxonomy, these Heading display fields will be linked to allow users to perform searches for other records that use the given Heading Terms. It is not necessary for the View to be based on the Publication in order to display the Headings field for that Publication.</p>
+<p>When using CIOC's print tools, Headings can be used to generate a topical (subject-based) record index. Some features of General Headings are solely for use in the subject index of Print Tools, including the ability to create an "Unused Term" (that points to one or more preferred Headings to be used instead), or a list of Related Terms ("See Also ...").</p>
+
+<a name="taxvsregular"></a>
+<h3>Taxonomy Headings vs. Regular Headings</h3>
+<p>"Regular" or traditional General Headings are manually assigned to records. It is up to the data manager to ensure that the indexing of Headings to records is maintained as records are added or changed. There are tools available to assist data managers in keeping this indexing up-to-date, including the ability to synchronize Heading indexing from one Publication to another.</p>
+<p>For those that use the AIRS / INFO LINE Taxonomy in their database, a more automated indexing option is available. Taxonomy Headings include a component describing a Taxonomy Search; any record assigned to the Publication that matches the search criteria will automatically be indexed to the Heading. Indexing is automatically updated every time a record is added or removed from the Publication or has its Taxonomy indexing changed. All records in the Publication are re-evaluated for indexing to the Heading whenever the its Taxonomy search criteria is updated. <span class="Alert">Note</span>: Taxonomy-based Headings cannot be manually assigned to records; they must match the given Taxonomy search criteria to be indexed.</p>
+<p><strong>Each Publication's Headings can be made up of a mix of Taxonomy and regular Headings.</strong></p>
+
+<hr>
+<a name="dataelements"></a>
+<h2>General Heading Data Elements</h2>
+<p>The only required element for a regular General Heading is the <em>Name</em> in at least one language. The only requirement for a Taxonomy-based General Heading is at least one Taxonomy Term; a name must also be specified if the Heading is not set to use the Taxonomy Term Names.</p>
+<h4>Status</h4>
+<p>If you have chosen to edit an existing General Heading, this section will display information about that General Heading. If you are adding a new General Heading, this section will not appear. Inside the <em>Status</em> section is information about whether the General Heading is currently in use by any records. The record count given is for the number of records associated with this General Heading <strong>in the entire database</strong> (not just the current View).</p>
+<p>If the General Heading is being used in records, you will see a <em>&quot;Search&quot;</em> link which will allow you to bring up a results set which shows you the records <strong>in your current View</strong> that belong to this General Heading. If the General Heading is being used you cannot delete it. You cannot delete regular (non-Taxonomy) Headings that are in use by records. If the Heading is unused or Taxonomy-based, you will have the option of deleting the General Heading using the <em>&quot;Delete&quot;</em> button that will appear at the bottom of the form.</p>
+
+<h4>Created / Modified Information</h4>
+<p>Created and Modified dates / names are set automatically by the software as records are added and updated.</p>
+
+<h4>Name</h4>
+<p>General Heading Names must be unique within each Publication, although you can have the same General Heading Name in multiple Publications. If you are working with a Taxonomy-based Heading, you will have the option of setting the <strong>Use Taxonomy Term Name</strong> option under some conditions (this is not allowed when you are using multiple "Match Any" Terms, or have a mix of "Must Match" and "Match Any" Terms). If you choose the <em>Use Taxonomy Term Name</em> option, there will be no place on the form to enter a different name; the name will always be generated based on the current name(s) of the selected Taxonomy Codes.</p>
+<p class="Alert">Note</span>: It is important to make this a <strong>very brief but clear</strong> description as it will impact on the width of the drop down menu that appears for the <em>&quot;Quick List&quot;</em>.</p>
+
+<h4>Used</h4>
+<p>This does not apply to Taxonomy-based Headings. Only <em>Used</em> General Headings may be manually added to records. If a General Heading is being used by records, it must have a status of <em>Used</em> (this cannot be changed as long as there are records attached).</p>
+<p><span class="Alert">Note</span>: Unused Headings are only intended for use in the <em>Subject Index</em> of the print tool; please ensure that you specify at least one <em>Related Heading</em> in order for it to appear in the index. The result will be displayed as &quot;[Heading] See [Related Heading]&quot; in the index.</p>
+
+<h4>Taxonomy Search</h4>
+<p>This area displays any existing criteria for a Taxonomy-based Heading. Click the Add or Remove Terms button to modify your search criteria using a search form that functions similarly to the Advanced Taxonomy Search form. Taxonomy-based Terms must have at least one Taxonomy Term listed in this area. Because this search works so similarly to the Advanced Taxonomy Search, the <a href="pagehelp?Page=taxsrch.asp&Ln=en-CA">Page Help</a> for that search may be useful for those not familiar with its functionality.</p>
+
+<h4>Non-Public</h4>
+<p>If a Heading is non-public, it will not be available to search in Views which exclude non-public Publications/Headings from the search form. <span class="Alert">Note:</span> to fully exclude non-public Headings from a View, you must also use the display version of this Headings field which does not include non-public Headings; the version that <em>does</em> include non-public Headings has a field name ending in <strong>&quot;_NP&quot;</strong>.</p>
+
+<h4>Display Order</h4>
+<p>To create sort order of Headings <em>other than alphabetical</em>, you may group them together by display order number. Headings will sort first by their display order number, and then by name.</p>
+
+<h4>Heading Group</h4>
+<p>Headings Groups allow you to cluster a number of different Headings under a broader category. Headings can be assigned to more than one Group. These Groups can optionally be made searchable through the Quick List setup for Publication-based Views; searches for a Heading Group will match records indexed to any of its Headings.</p>
+<p>If you use Heading Groups for this Publication, you may assign this Heading to <em>one</em> Heading Group. This will affect how Headings are sorted, displayed and searched, depending on View setup.</p>
+
+<h4>Related General Headings</h4>
+<p>If you are planning to produce a printed directory using the online print tools, you can specify <em>Related General Headings</em> to include when your <em>Subject Index</em> is produced. Unused or Used General Headings that reference Related General Headings will display <em>SEE</em> or <em>SEE ALSO</em> references respectively.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified: $Date$</p>

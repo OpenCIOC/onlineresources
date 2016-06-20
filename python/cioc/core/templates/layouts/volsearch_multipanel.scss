@@ -1,0 +1,124 @@
+/* =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ========================================================================================= */
+
+.record-details {
+	@extend .panel-shading;
+}
+
+#vol-search-area {
+	#CIOC_volsearch {
+		padding: 8px;
+		background-color: $bgColorActive;
+		background-image: linear-gradient(to top, $borderColorActive 0px, $bgColorActive 100%);
+
+		h2 {
+			font-weight: normal;
+			margin-top: 5px;
+		}
+	}
+
+	#CIOC_volsearch_keyword {
+		margin-bottom: 10px;
+	}
+
+	.CIOC_search_button {
+		background-color: $BackgroundColour;
+		background-image: linear-gradient(to bottom, $BackgroundColour 0px, darken($BackgroundColour,10%) 100%);
+		border-color: darken($BackgroundColour,15%)
+	}
+
+	.form-control {
+		box-shadow: 0 3px 3px rgba(0, 0, 0, 0.075) inset;
+	}
+
+	.CIOC_form_wrapper_sm {
+		position: relative;
+		height: 40px;
+	}
+
+	.CIOC_form_left_sm {
+		position: absolute;
+		left: 0;
+		top: 0;
+		right: 105px;
+	}
+
+	.CIOC_form_right_sm {
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 90px;
+	}
+
+	.search-menu-toggle {
+		position: fixed;
+		left: 0;
+		top: 32px;
+		z-index: 10000;
+		display: none;
+	}
+
+	.MenuMessageBox {
+		padding: 10px 15px;
+	}
+
+	@media (min-width: $screen-sm-min) {
+		.search-menu-toggle {
+			display:block;
+			top: 65px;
+		}
+		.CIOC_form_wrapper {
+			height: 40px;
+			position: relative;
+		}
+		.CIOC_form_left {
+			left: 0;
+			position: absolute;
+			right: 115px;
+			top: 0;
+		}
+		.CIOC_form_right {
+			position: absolute;
+			right: 0;
+			top: 0;
+			width: 90px;
+		}
+
+		#CIOC_volsearch {
+			padding: 8px 23px;
+		}
+
+		.search-panels  {
+			.panel-default, .panel-danger  {
+				> .panel-body {
+					height: 230px;
+					overflow: auto;
+				}
+				> .panel-body-nofooter {
+					height: 284px;
+				}
+				> .panel-footer {
+					height: 54px;
+				}
+			}
+		}
+	}
+	@media ( min-width: $screen-md-min) {
+		.search-menu-toggle {
+			top: 32px;
+		}
+	}
+}

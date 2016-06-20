@@ -1,0 +1,13 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE FUNCTION [RedGate].[MigrationHistory] ()
+RETURNS @Tbl TABLE (PropertyKey VARCHAR(30) UNIQUE, PropertyValue NVARCHAR(MAX))
+AS 
+BEGIN
+    
+INSERT  @Tbl  VALUES  ('MigrationHistory' , N'[]')
+    RETURN
+END
+GO

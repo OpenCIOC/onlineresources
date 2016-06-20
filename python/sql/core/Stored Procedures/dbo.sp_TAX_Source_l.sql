@@ -1,0 +1,29 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_TAX_Source_l]
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.1
+	Checked by: KL
+	Checked on: 17-Jan-2012
+	Action: NO ACTION REQUIRED
+*/
+
+SELECT ts.*, SourceName
+	FROM TAX_Source ts
+	INNER JOIN TAX_Source_Name tsn
+		ON ts.TAX_SRC_ID=tsn.TAX_SRC_ID AND LangID=(SELECT TOP 1 LangID FROM TAX_Source_Name WHERE ts.TAX_SRC_ID=TAX_SRC_ID ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
+ORDER BY SourceName
+
+SET NOCOUNT OFF
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_TAX_Source_l] TO [cioc_login_role]
+GO

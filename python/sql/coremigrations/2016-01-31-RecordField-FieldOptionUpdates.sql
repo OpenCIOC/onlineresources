@@ -1,0 +1,21 @@
+UPDATE GBL_FieldOption SET 
+	DisplayFM='ISNULL(CASE WHEN WWW_ADDRESS_PROTOCOL = ''https://'' THEN btd.WWW_ADDRESS_PROTOCOL ELSE '''' END, '''') + WWW_ADDRESS',
+	DisplayFMWeb='cioc_shared.dbo.fn_SHR_GBL_Link_WebsiteWithProtocol(btd.WWW_ADDRESS,0,btd.WWW_ADDRESS_PROTOCOL)',
+	UpdateFieldList='WWW_ADDRESS,WWW_ADDRESS_PROTOCOL'
+WHERE FieldName='WWW_ADDRESS'
+
+UPDATE GBL_FieldOption SET
+	DisplayFM='cioc_shared.dbo.fn_SHR_CIC_LogoTextWithProtocol(cbtd.LOGO_ADDRESS, cbtd.LOGO_ADDRESS_LINK, cbtd.LOGO_ADDRESS_PROTOCOL, cbtd.LOGO_ADDRESS_LINK_PROTOCOL)',
+	DisplayFMWeb='cioc_shared.dbo.fn_SHR_GBL_Link_ImageWithProtocol(cbtd.LOGO_ADDRESS, cbtd.LOGO_ADDRESS_LINK,''recordLogo'', cbtd.LOGO_ADDRESS_PROTOCOL, cbtd.LOGO_ADDRESS_LINK_PROTOCOL)',
+	UpdateFieldList='LOGO_ADDRESS,LOGO_ADDRESS_LINK,LOGO_ADDRESS_PROTOCOL,LOGO_ADDRESS_LINK_PROTOCOL'
+WHERE FieldName='LOGO_ADDRESS'
+
+UPDATE VOL_FieldOption SET
+	DisplayFM='ISNULL(CASE WHEN MORE_INFO_URL_PROTOCOL = ''https://'' THEN MORE_INFO_URL_PROTOCOL ELSE '''' END, '''') + MORE_INFO_URL',
+	DisplayFMWeb='cioc_shared.dbo.fn_SHR_GBL_Link_WebsiteWithProtocol(MORE_INFO_URL,0,MORE_INFO_URL_PROTOCOL)',
+	UpdateFieldList='MORE_INFO_URL,MORE_INFO_URL_PROTOCOL'
+WHERE FieldName='MORE_INFO_URL'
+
+
+EXEC sp_STP_RegenerateUserFields 1
+EXEC sp_STP_RegenerateUserFields 2

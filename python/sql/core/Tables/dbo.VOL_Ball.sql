@@ -1,0 +1,11 @@
+CREATE TABLE [dbo].[VOL_Ball]
+(
+[BallID] [int] NOT NULL IDENTITY(1, 1),
+[BallFileName] [varchar] (20) COLLATE Latin1_General_100_CI_AI NOT NULL,
+[Colour] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_Ball] ADD CONSTRAINT [PK_VOL_Ball] PRIMARY KEY CLUSTERED  ([BallID]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_Ball] ADD CONSTRAINT [IX_VOL_Ball] UNIQUE NONCLUSTERED  ([BallFileName]) ON [PRIMARY]
+GO

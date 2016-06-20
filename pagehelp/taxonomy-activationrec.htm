@@ -1,0 +1,53 @@
+﻿<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<h2>Activation Recommendation Report</h2>
+<p>Unlike the Multi-level Activation Report, this tool can assist you in making activation changes directly. When the tool is loaded, you will be presented with a form showing the options available for the tool and the results of the tool as run with the current (default) options.</p>
+<p>Also unlike the Multi-level Activation Report, this report only makes recommendations on the obvious changes that can be made without the editorial support of a trained data manager. That means it does not include items such as a branch where records are indexed at multiple levels, since a decision must first be made by an appropriate editor about which level will be preferred for future indexing.</p>
+<p>What types of recommendations does the tool make?</p>
+<ul>
+	<li>The tool will recommend deactivation when there is an Active Term with no records indexed to that Term, and there is another Active Term on the same branch that <em>does</em> have records indexed to it.</li>
+	<li>The tool will recommend activation when there is an Inactive Term with records indexed to it (this will be a non-optional change if you submit the form).</li>
+	<li>The tool will recommend activation when you have an Inactive Term whose Parent Term and one or more Child Terms are Active (this will also be a non-optional change if you submit the form). Although it is not advised to activate at multiple levels, if you choose to have multi-level activations you must do so in a contiguous block.</li>
+	<li>If the Recommend Activations option is chosen, the tool will also recommend activating Terms from branches on which no other Term is active. If applicable, the tool will recommend using the level on which other sibling Terms are already activated.</li>
+</ul>
+
+<h3>Setting Report Options</h3>
+<p>Before submitting your desired changes, you may adjust the recommendation options and regenerate the report.</p>
+<ul>
+	<li><strong>Show global activations</strong> - this option applies to a multi-member database, to distinguish between Global Activations that apply to all members in the database, and Local Activations that apply only to your membership.</li>
+	<li><strong>Inactivate unused Terms with used terms on the same branch</strong> - if this option is not selected, no deactivations will be recommended.</li>
+	<li><strong>Include Shared Records</strong> - in a multi-member database, use this option to make recommendations take into account records that have been shared with you by other members.</li>
+	<li><strong>Rollup Low Level Terms</strong> - when a term recommended for deactivation has an Active Parent that is being used, roll up the Term as a use reference for the Parent Term rather than deactivate it.</li>
+	<li><strong>Exclude Y Branch</strong> - because multi-level activations are permitted in the Y (Target Populations) branch, this option ignores deactivation recommendations for this branch.</li>
+	<li><strong>Recommend Activations</strong> - this option recommends new activations for branches on which there are no Active Terms. It is particularly useful after a Taxonomy version update, to highlight new Terms.</li>
+</ul>
+
+<h3>Reviewing the Report</h3>
+<p>The report is divided into two sections:</p>
+<ul>
+	<li>the first section lists deactivation recommendations and mandatory activations (if any)</li>
+	<li>the second section lists activation recommendations</li>
+</ul>
+<p>Next to the Code and Term name, the action describes whether the Term's activation status will set to <em>Active</em>, <em>Inactive</em>, or <em>Roll-up</em>.</p>
+
+<h3>Submitting Changes</h3>
+<p>You may choose to accept some or all of the recommendations provided. By default, all recommendations are checked - but you can check or uncheck items to select only the ones you want. You may use the &quot;Uncheck All&quot; button to start from a blank selection. Recommendations without a checkbox break basic software rules (such as having an Inactive Term that is indexed to records) and are therefore mandatory. These mandatory changes will be applied automatically if you submit the form. Once you submit the form by clicking &quot;Perform All Selected and Mandatory Changes&quot;, your activation changes will be applied immediately.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified:	$Date$</p>

@@ -1,0 +1,340 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_CIC_ImportEntry_Contact_i]
+	@NUM varchar(8),
+	@HAS_ENGLISH bit,
+	@HAS_FRENCH bit,
+	@ContactType varchar(100),
+	@Contacts [xml]
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.1
+	Checked by: KL
+	Checked on: 27-Mar-2012
+	Action: NO ACTION REQUIRED
+*/
+
+DECLARE @ContactTable TABLE (
+	[ContactID] int IDENTITY(1,1) NOT NULL,
+	[LangID] smallint NULL,
+	[NAME_HONORIFIC] nvarchar(20) NULL,
+	[NAME_FIRST] nvarchar(60) NULL,
+	[NAME_LAST] nvarchar(100) NULL,
+	[NAME_SUFFIX] nvarchar(30) NULL,
+	[TITLE] nvarchar(100) NULL,
+	[ORG] nvarchar(100) NULL,
+	[EMAIL] varchar(60) NULL,
+	[FAX_NOTE] nvarchar(100) NULL,
+	[FAX_NO] nvarchar(20) NULL,
+	[FAX_EXT] nvarchar(10) NULL,
+	[FAX_CALLFIRST] bit NOT NULL,
+	[PHONE_1_TYPE] nvarchar(20) NULL,
+	[PHONE_1_NOTE] nvarchar(100) NULL,
+	[PHONE_1_NO] nvarchar(20) NULL,
+	[PHONE_1_EXT] nvarchar(10) NULL,
+	[PHONE_1_OPTION] nvarchar(10) NULL,
+	[PHONE_2_TYPE] nvarchar(20) NULL,
+	[PHONE_2_NOTE] nvarchar(100) NULL,
+	[PHONE_2_NO] nvarchar(20) NULL,
+	[PHONE_2_EXT] nvarchar(10) NULL,
+	[PHONE_2_OPTION] nvarchar(10) NULL,
+	[PHONE_3_TYPE] nvarchar(20) NULL,
+	[PHONE_3_NOTE] nvarchar(100) NULL,
+	[PHONE_3_NO] nvarchar(20) NULL,
+	[PHONE_3_EXT] nvarchar(10) NULL,
+	[PHONE_3_OPTION] nvarchar(10) NULL,
+	[CMP_Name] nvarchar(210) NULL,
+	[CMP_Fax] nvarchar(130) NULL,
+	[CMP_Phone1] nvarchar(160) NULL,
+	[CMP_Phone2] nvarchar(160) NULL,
+	[CMP_Phone3] nvarchar(160) NULL,
+	[CMP_PhoneFull] nvarchar(500) NULL
+)
+
+INSERT INTO @ContactTable (
+	LangID,
+	NAME_HONORIFIC,
+	NAME_FIRST,
+	NAME_LAST,
+	NAME_SUFFIX, 
+	TITLE,
+	ORG,
+	EMAIL,
+	FAX_NOTE,
+	FAX_NO,
+	FAX_EXT,
+	FAX_CALLFIRST,
+	PHONE_1_TYPE,
+	PHONE_1_NOTE,
+	PHONE_1_NO,
+	PHONE_1_EXT,
+	PHONE_1_OPTION,
+	PHONE_2_TYPE,
+	PHONE_2_NOTE,
+	PHONE_2_NO,
+	PHONE_2_EXT,
+	PHONE_2_OPTION,
+	PHONE_3_TYPE,
+	PHONE_3_NOTE,
+	PHONE_3_NO,
+	PHONE_3_EXT,
+	PHONE_3_OPTION
+)
+SELECT
+	CASE WHEN N.value('@LANG', 'char(1)') = 'F' THEN 2 ELSE 0 END AS LangID,
+	N.value('@NMH', 'nvarchar(60)') AS NAME_HONORIFIC,
+	N.value('@NMFIRST', 'nvarchar(60)') AS NAME_FIRST,
+	N.value('@NMLAST', 'nvarchar(100)') AS NAME_LAST,
+	N.value('@NMS', 'nvarchar(30)') AS NAME_SUFFIX, 
+	N.value('@TTL', 'nvarchar(100)') AS TITLE,
+	N.value('@ORG', 'nvarchar(100)') AS ORG,
+	N.value('@EML', 'varchar(100)') AS EMAIL,
+	N.value('@FAXN', 'nvarchar(100)') AS FAX_NOTE,
+	N.value('@FAXNO', 'nvarchar(100)') AS FAX_NO,
+	N.value('@FAXEX', 'nvarchar(100)') AS FAX_EXT,
+	ISNULL(N.value('@FAXCALL', 'nvarchar(100)'),0) AS FAX_CALLFIRST,
+	N.value('@PH1TYPE', 'nvarchar(100)') AS PHONE_1_TYPE,
+	N.value('@PH1N', 'nvarchar(100)') AS PHONE_1_NOTE,
+	N.value('@PH1NO', 'nvarchar(100)') AS PHONE_1_NO,
+	N.value('@PH1EXT', 'nvarchar(100)') AS PHONE_1_EXT,
+	N.value('@PH1OPT', 'nvarchar(100)') AS PHONE_1_OPTION,
+	N.value('@PH2TYPE', 'nvarchar(100)') AS PHONE_2_TYPE,
+	N.value('@PH2N', 'nvarchar(100)') AS PHONE_2_NOTE,
+	N.value('@PH2NO', 'nvarchar(100)') AS PHONE_2_NO,
+	N.value('@PH2EXT', 'nvarchar(100)') AS PHONE_2_EXT,
+	N.value('@PH2OPT', 'nvarchar(100)') AS PHONE_2_OPTION,
+	N.value('@PH3TYPE', 'nvarchar(100)') AS PHONE_3_TYPE,
+	N.value('@PH3N', 'nvarchar(100)') AS PHONE_3_NOTE,
+	N.value('@PH3NO', 'nvarchar(100)') AS PHONE_3_NO,
+	N.value('@PH3EXT', 'nvarchar(100)') AS PHONE_3_EXT,
+	N.value('@PH3OPT', 'nvarchar(100)') AS PHONE_3_OPTION
+FROM @Contacts.nodes('//CONTACT') as T(N)
+
+IF @HAS_ENGLISH=1 BEGIN
+	IF (SELECT TOP 1 COALESCE(NAME_FIRST,NAME_LAST,NAME_SUFFIX, 
+				TITLE,ORG,EMAIL,
+				FAX_NOTE,FAX_NO,FAX_EXT,
+				PHONE_1_TYPE,PHONE_1_NOTE,PHONE_1_NO,PHONE_1_EXT,PHONE_1_OPTION,
+				PHONE_2_TYPE,PHONE_2_NOTE,PHONE_2_NO,PHONE_2_EXT,PHONE_2_OPTION,
+				PHONE_3_TYPE,PHONE_3_NOTE,PHONE_3_NO,PHONE_3_EXT,PHONE_3_OPTION)
+			FROM @ContactTable WHERE LangID=0) IS NULL BEGIN
+		DELETE FROM GBL_Contact WHERE GblContactType=@ContactType AND GblNUM=@NUM AND LangID=0
+	END ELSE IF NOT EXISTS(SELECT * FROM GBL_Contact WHERE GblContactType=@ContactType AND GblNUM=@NUM AND LangID=0) BEGIN
+		INSERT INTO GBL_Contact (
+			GblContactType,
+			GblNUM,
+			LangID,
+			NAME_HONORIFIC,
+			NAME_FIRST,
+			NAME_LAST,
+			NAME_SUFFIX, 
+			TITLE,
+			ORG,
+			EMAIL,
+			FAX_NOTE,
+			FAX_NO,
+			FAX_EXT,
+			FAX_CALLFIRST,
+			PHONE_1_TYPE,
+			PHONE_1_NOTE,
+			PHONE_1_NO,
+			PHONE_1_EXT,
+			PHONE_1_OPTION,
+			PHONE_2_TYPE,
+			PHONE_2_NOTE,
+			PHONE_2_NO,
+			PHONE_2_EXT,
+			PHONE_2_OPTION,
+			PHONE_3_TYPE,
+			PHONE_3_NOTE,
+			PHONE_3_NO,
+			PHONE_3_EXT,
+			PHONE_3_OPTION
+		)
+		SELECT TOP 1
+			@ContactType AS GblContactType,
+			@NUM AS GblNUM,
+			0 AS LangID,
+			NAME_HONORIFIC,
+			NAME_FIRST,
+			NAME_LAST,
+			NAME_SUFFIX, 
+			TITLE,
+			ORG,
+			EMAIL,
+			FAX_NOTE,
+			FAX_NO,
+			FAX_EXT,
+			FAX_CALLFIRST,
+			PHONE_1_TYPE,
+			PHONE_1_NOTE,
+			PHONE_1_NO,
+			PHONE_1_EXT,
+			PHONE_1_OPTION,
+			PHONE_2_TYPE,
+			PHONE_2_NOTE,
+			PHONE_2_NO,
+			PHONE_2_EXT,
+			PHONE_2_OPTION,
+			PHONE_3_TYPE,
+			PHONE_3_NOTE,
+			PHONE_3_NO,
+			PHONE_3_EXT,
+			PHONE_3_OPTION
+		FROM @ContactTable
+		WHERE LangID=0
+	END ELSE BEGIN
+		UPDATE GBL_Contact SET
+ 			NAME_HONORIFIC = i.NAME_HONORIFIC,
+			NAME_FIRST = i.NAME_FIRST,
+			NAME_LAST = i.NAME_LAST,
+			NAME_SUFFIX = i.NAME_SUFFIX, 
+			TITLE = i.TITLE,
+			ORG = i.ORG,
+			EMAIL = i.EMAIL,
+			FAX_NOTE = i.FAX_NOTE,
+			FAX_NO = i.FAX_NO,
+			FAX_EXT = i.FAX_EXT,
+			FAX_CALLFIRST = i.FAX_CALLFIRST,
+			PHONE_1_TYPE = i.PHONE_1_TYPE,
+			PHONE_1_NOTE = i.PHONE_1_NOTE,
+			PHONE_1_NO = i.PHONE_1_NO,
+			PHONE_1_EXT = i.PHONE_1_EXT,
+			PHONE_1_OPTION = i.PHONE_1_OPTION,
+			PHONE_2_TYPE = i.PHONE_2_TYPE,
+			PHONE_2_NOTE = i.PHONE_2_NOTE,
+			PHONE_2_NO = i.PHONE_2_NO,
+			PHONE_2_EXT = i.PHONE_2_EXT,
+			PHONE_2_OPTION = i.PHONE_2_OPTION,
+			PHONE_3_TYPE = i.PHONE_3_TYPE,
+			PHONE_3_NOTE = i.PHONE_3_NOTE,
+			PHONE_3_NO = i.PHONE_3_NO,
+			PHONE_3_EXT = i.PHONE_3_EXT,
+			PHONE_3_OPTION = i.PHONE_3_OPTION
+		FROM @ContactTable i
+		INNER JOIN GBL_Contact c
+			ON c.GblContactType=@ContactType AND c.GblNUM=@NUM AND c.LangID=i.LangID
+		WHERE i.LangID=0
+	END
+END
+
+IF @HAS_FRENCH=1 BEGIN
+	IF (SELECT TOP 1 COALESCE(NAME_FIRST,NAME_LAST,NAME_SUFFIX, 
+				TITLE,ORG,EMAIL,
+				FAX_NOTE,FAX_NO,FAX_EXT,
+				PHONE_1_TYPE,PHONE_1_NOTE,PHONE_1_NO,PHONE_1_EXT,PHONE_1_OPTION,
+				PHONE_2_TYPE,PHONE_2_NOTE,PHONE_2_NO,PHONE_2_EXT,PHONE_2_OPTION,
+				PHONE_3_TYPE,PHONE_3_NOTE,PHONE_3_NO,PHONE_3_EXT,PHONE_3_OPTION)
+			FROM @ContactTable WHERE LangID=2) IS NULL BEGIN
+		DELETE FROM GBL_Contact WHERE GblContactType=@ContactType AND GblNUM=@NUM AND LangID=2
+	END ELSE IF NOT EXISTS(SELECT * FROM GBL_Contact WHERE GblContactType=@ContactType AND GblNUM=@NUM AND LangID=2) BEGIN
+		INSERT INTO GBL_Contact (
+			GblContactType,
+			GblNUM,
+			LangID,
+			NAME_HONORIFIC,
+			NAME_FIRST,
+			NAME_LAST,
+			NAME_SUFFIX, 
+			TITLE,
+			ORG,
+			EMAIL,
+			FAX_NOTE,
+			FAX_NO,
+			FAX_EXT,
+			FAX_CALLFIRST,
+			PHONE_1_TYPE,
+			PHONE_1_NOTE,
+			PHONE_1_NO,
+			PHONE_1_EXT,
+			PHONE_1_OPTION,
+			PHONE_2_TYPE,
+			PHONE_2_NOTE,
+			PHONE_2_NO,
+			PHONE_2_EXT,
+			PHONE_2_OPTION,
+			PHONE_3_TYPE,
+			PHONE_3_NOTE,
+			PHONE_3_NO,
+			PHONE_3_EXT,
+			PHONE_3_OPTION
+		)
+		SELECT TOP 1
+			@ContactType AS GblContactType,
+			@NUM AS GblNUM,
+			2 AS LangID,
+			NAME_HONORIFIC,
+			NAME_FIRST,
+			NAME_LAST,
+			NAME_SUFFIX, 
+			TITLE,
+			ORG,
+			EMAIL,
+			FAX_NOTE,
+			FAX_NO,
+			FAX_EXT,
+			FAX_CALLFIRST,
+			PHONE_1_TYPE,
+			PHONE_1_NOTE,
+			PHONE_1_NO,
+			PHONE_1_EXT,
+			PHONE_1_OPTION,
+			PHONE_2_TYPE,
+			PHONE_2_NOTE,
+			PHONE_2_NO,
+			PHONE_2_EXT,
+			PHONE_2_OPTION,
+			PHONE_3_TYPE,
+			PHONE_3_NOTE,
+			PHONE_3_NO,
+			PHONE_3_EXT,
+			PHONE_3_OPTION
+		FROM @ContactTable
+		WHERE LangID=2
+	END ELSE BEGIN
+		UPDATE GBL_Contact SET
+ 			NAME_HONORIFIC = i.NAME_HONORIFIC,
+			NAME_FIRST = i.NAME_FIRST,
+			NAME_LAST = i.NAME_LAST,
+			NAME_SUFFIX = i.NAME_SUFFIX, 
+			TITLE = i.TITLE,
+			ORG = i.ORG,
+			EMAIL = i.EMAIL,
+			FAX_NOTE = i.FAX_NOTE,
+			FAX_NO = i.FAX_NO,
+			FAX_EXT = i.FAX_EXT,
+			FAX_CALLFIRST = i.FAX_CALLFIRST,
+			PHONE_1_TYPE = i.PHONE_1_TYPE,
+			PHONE_1_NOTE = i.PHONE_1_NOTE,
+			PHONE_1_NO = i.PHONE_1_NO,
+			PHONE_1_EXT = i.PHONE_1_EXT,
+			PHONE_1_OPTION = i.PHONE_1_OPTION,
+			PHONE_2_TYPE = i.PHONE_2_TYPE,
+			PHONE_2_NOTE = i.PHONE_2_NOTE,
+			PHONE_2_NO = i.PHONE_2_NO,
+			PHONE_2_EXT = i.PHONE_2_EXT,
+			PHONE_2_OPTION = i.PHONE_2_OPTION,
+			PHONE_3_TYPE = i.PHONE_3_TYPE,
+			PHONE_3_NOTE = i.PHONE_3_NOTE,
+			PHONE_3_NO = i.PHONE_3_NO,
+			PHONE_3_EXT = i.PHONE_3_EXT,
+			PHONE_3_OPTION = i.PHONE_3_OPTION
+		FROM @ContactTable i
+		INNER JOIN GBL_Contact c
+			ON c.GblContactType=@ContactType AND c.GblNUM=@NUM AND c.LangID=i.LangID
+		WHERE i.LangID=2
+	END
+END
+
+SET NOCOUNT OFF
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_CIC_ImportEntry_Contact_i] TO [cioc_login_role]
+GO

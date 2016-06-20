@@ -1,0 +1,204 @@
+<div id="vol-search-area">
+	[IF:SEARCH_MENU]
+	<div class="search-menu-toggle">
+		<button type="button" class="btn btn-default" data-toggle="offcanvas" data-target="#search-cioc-menu" data-canvas="body" title="Menu">
+			<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+		</button>
+	</div>
+	<nav id="search-cioc-menu" class="search-cioc-menu navmenu navmenu-default navmenu-fixed-left offcanvas" role="navigation">
+		[IF:MENU_MESSAGE]
+		<div class="MenuMessageBox[IF:NOT_LOGGED_IN] no-main-menu[ENDIF:NOT_LOGGED_IN]">
+			[MENU_MESSAGE]
+		</div>
+		[ENDIF:MENU_MESSAGE]
+		[IF:MENU_TITLE]
+		<div class="navmenu-brand main-menu-title">[MENU_TITLE]</div>
+		[ENDIF:MENU_TITLE]
+		<ul class="nav navmenu-nav">
+			[FOR:OTHER_LANGS]
+			<li class="menu"><a href="[LINK]">[DISPLAY]</a></li>
+			[ENDFOR:OTHER_LANGS]
+			[IF:CIC_LINK]
+			<li class="menu">
+				<a href="[CIC_LINK]">[CIC_LINK_TEXT]</a>
+				[ENDIF:CIC_LINK]
+				[FOR:CUSTOM_MENU_ITEMS]
+			<li class="menu"><a href="[LINK]">[DISPLAY]</a></li>
+			[ENDFOR:CUSTOM_MENU_ITEMS]
+			[FOR:SEARCH_MENU_ITEMS]
+			<li class="menu"><a href="[LINK]">[DISPLAY]</a></li>
+			[ENDFOR:SEARCH_MENU_ITEMS]
+			[IF:CHANGE_VIEW]
+			<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">[CHANGE_VIEW_TITLE]<span class="caret"></span></a>
+				<ul class="dropdown-menu navmenu-nav" role="menu"">
+					[FOR:VIEWS_LIST]
+					<li><a href="[FN:MAKE_LINK]/volunteer/?UseVOLVw=[VIEWTYPE][ENDFN:MAKE_LINK]">[ViewName]</a></li>
+					[ENDFOR:VIEWS_LIST]
+				</ul>
+			</li>
+			[ENDIF:CHANGE_VIEW]
+		</ul>
+	</nav>
+	[ENDIF:SEARCH_MENU]
+	<div class="well" id="CIOC_volsearch">
+		<h2>[SEARCH_PROMPT]</h2>
+		[IFANY:DURATION_OPTIONS,SUITABILITY_OPTIONS]
+		[SEARCH_FORM_START]
+		<div class="CIOC_form_wrapper">
+			<div class="CIOC_form_left">
+				<div class="row">
+					<div class="form-group">
+						[IF:DURATION_OPTIONS]
+						<div class="[IFALL:DURATION_OPTIONS,SUITABILITY_OPTIONS,COMMUNITY_OPTIONS]col-sm-4[ENDIFALL:DURATION_OPTIONS,SUITABILITY_OPTIONS,COMMUNITY_OPTIONS][IFNOTALL:DURATION_OPTIONS,SUITABILITY_OPTIONS,COMMUNITY_OPTIONS]col-sm-6[ENDIFNOTALL:DURATION_OPTIONS,SUITABILITY_OPTIONS,COMMUNITY_OPTIONS]">
+							<select class="form-control" id="CIOC_volsearch_duration" name="CLID">
+								<option selected="selected" value="">Duration ...</option>
+								[DURATION_OPTIONS]
+							</select>
+						</div>
+						[ENDIF:DURATION_OPTIONS]
+						[IF:SUITABILITY_OPTIONS]
+						<div class="[IFALL:DURATION_OPTIONS,SUITABILITY_OPTIONS,COMMUNITY_OPTIONS]col-sm-4[ENDIFALL:DURATION_OPTIONS,SUITABILITY_OPTIONS,COMMUNITY_OPTIONS][IFNOTALL:DURATION_OPTIONS,SUITABILITY_OPTIONS,COMMUNITY_OPTIONS]col-sm-6[ENDIFNOTALL:DURATION_OPTIONS,SUITABILITY_OPTIONS,COMMUNITY_OPTIONS]">
+							<select class="form-control" id="CIOC_volsearch_suitablefor" name="SBID">
+								<option selected="selected" value="">Suitable For ...</option>
+								[SUITABILITY_OPTIONS]
+							</select>
+						</div>
+						[ENDIF:SUITABILITY_OPTIONS]
+						[IF:COMMUNITY_OPTIONS]
+						<div class="[IFALL:DURATION_OPTIONS,SUITABILITY_OPTIONS,COMMUNITY_OPTIONS]col-sm-4[ENDIFALL:DURATION_OPTIONS,SUITABILITY_OPTIONS,COMMUNITY_OPTIONS][IFNOTALL:DURATION_OPTIONS,SUITABILITY_OPTIONS,COMMUNITY_OPTIONS]col-sm-6[ENDIFNOTALL:DURATION_OPTIONS,SUITABILITY_OPTIONS,COMMUNITY_OPTIONS]">
+							<select class="form-control" id="CIOC_volsearch_community" name="CMID">
+								<option selected>In the Community ...</option>
+								[COMMUNITY_OPTIONS]
+							</select>
+						</div>
+						[ENDIF:COMMUNITY_OPTIONS]
+					</div>
+				</div>
+			</div>
+			<div class="CIOC_form_right">
+				<button class="btn btn-default CIOC_search_button" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</button>
+			</div>
+		</div>
+		</form>
+		[ENDIFANY:DURATION_OPTIONS,SUITABILITY_OPTIONS]
+	</div>
+
+	[IF:SEARCH_ALERT]
+	<div class="panel panel-danger">
+		<div class="panel-heading"><h2><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Important Notice</h2></div>
+		<div class="panel-body panel-body-nofooter">
+			[SEARCH_ALERT]
+		</div>
+	</div>
+	[ENDIF:SEARCH_ALERT]
+
+	<div class="row search-panels">
+		[IF:SEARCH_LEFT_CONTENT]
+		<div class="col-md-4 col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading"><h2>[IF:SEARCH_LEFT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_LEFT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_LEFT_GLYPH][SEARCH_LEFT_TITLE]</h2></div>
+				<div class="panel-body panel-body-nofooter">
+					[SEARCH_LEFT_CONTENT]
+				</div>
+			</div>
+		</div>
+		[ENDIF:SEARCH_LEFT_CONTENT]
+		[IF:WHATS_NEW_FEED]
+		<div class="col-md-4 col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading"><h2><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> What's New?</h2></div>
+				<div class="panel-body panel-body-scroll">
+					<div class="panel-body-scroll-bottommargin">
+						<dl>
+							[WHATS_NEW_FEED]
+						</dl>
+					</div>
+				</div>
+				<div class="panel-footer"><a class="btn btn-default" href="[WHATS_NEW_URL]" role="button">More Opportunities &raquo;</a></div>
+			</div>
+		</div>
+		[ENDIF:WHATS_NEW_FEED]
+		[IF:POPULAR_INTEREST_FEED]
+		<div class="col-md-4 col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading"><h2><span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span> Popular Categories</h2></div>
+				<div class="panel-body panel-body-scroll">
+					<div class="panel-body-scroll-bottommargin">
+						<ul class="simple-list">
+							[POPULAR_INTEREST_FEED]
+						</ul>
+					</div>
+				</div>
+				<div class="panel-footer"><a class="btn btn-default" href="[BROWSE_OP_URL]" role="button">Explore Categories &raquo;</a></div>
+			</div>
+		</div>
+		[ENDIF:POPULAR_INTEREST_FEED]
+		[IF:POPULAR_ORG_FEED]
+		<div class="col-md-4 col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading"><h2><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Organizations</h2></div>
+				<div class="panel-body panel-body-scroll">
+					<div class="panel-body-scroll-bottommargin">
+						<ul class="simple-list">
+							[POPULAR_ORG_FEED]
+						</ul>
+					</div>
+				</div>
+				<div class="panel-footer"><a class="btn btn-default" href="[BROWSE_ORG_URL]" role="button">More Organizations &raquo;</a></div>
+			</div>
+		</div>
+		[ENDIF:POPULAR_ORG_FEED]
+		<div class="col-md-4 col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading"><h2><span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span> [SEARCH_KEYWORD_TITLE]</h2></div>
+				<div class="panel-body panel-body-nofooter panel-body-scroll">
+					<div class="panel-body-scroll-bottommargin">
+						<div class="form-group" id="CIOC_volsearch_keyword">
+							[SEARCH_FORM_START]
+							<div class="CIOC_form_wrapper_sm">
+								<div class="CIOC_form_left_sm">
+									[KEYWORD_SEARCH_BOX]
+								</div>
+								<div class="CIOC_form_right_sm">
+									<button class="btn btn-default CIOC_search_button" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</button>
+								</div>
+							</div>
+							[KEYWORD_SEARCH_IN]
+							</form>
+						</div>
+						<p>A <strong><em>Volunteer Profile</em></strong> makes it easier to apply for positions, and can notify you of new positions that meet your criteria. [PROFILE_LINKS]
+						<p>Other Searching Resources:</p>
+						<ul>
+							<li><a href="[FN:MAKE_LINK]/volunteer/search1.asp[ENDFN:MAKE_LINK]" style="font-weight:bold;">Step-by-Step Search</a>
+							<li><a href="[FN:MAKE_LINK]/volunteer/student.asp[ENDFN:MAKE_LINK]" style="font-weight:bold;">Student Step-by-Step Search</a></li>
+							<li><a href="[FN:MAKE_LINK]/volunteer/search_help.asp[ENDFN:MAKE_LINK]" style="font-weight:bold;">Search Tips</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		[IF:SPOTLIGHT_FEED]
+		<div class="col-md-4 col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading"><h2><span class="glyphicon glyphicon-star" aria-hidden="true"></span> In the Spotlight...</h2></div>
+				<div class="panel-body panel-body-scroll" id="CIOC_opp_spotlight">
+					<div class="panel-body-scroll-bottommargin">
+						[SPOTLIGHT_FEED]
+					</div>
+				</div>
+				<div class="panel-footer"><a class="btn btn-default" href="[SPOTLIGHT_LINK]" role="button">More Information &raquo;</a></div>
+			</div>
+		</div>
+		[ENDIF:SPOTLIGHT_FEED]
+		[IF:SEARCH_RIGHT_CONTENT]
+		<div class="col-md-4 col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading"><h2>[IF:SEARCH_RIGHT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_RIGHT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_RIGHT_GLYPH][SEARCH_RIGHT_TITLE]</h2></div>
+				<div class="panel-body panel-body-nofooter">
+					[SEARCH_RIGHT_CONTENT]
+				</div>
+			</div>
+		</div>
+		[ENDIF:SEARCH_RIGHT_CONTENT]
+	</div>
+</div>

@@ -1,0 +1,47 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_CIC_ImportEntry_NAICS_i]
+	@NUM varchar(8),
+	@Code varchar(6),
+	@BT_NAICS_ID int OUTPUT
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.1
+	Checked by: KL
+	Checked on: 27-Mar-2012
+	Action: NO ACTION REQUIRED
+*/
+
+IF EXISTS(SELECT * FROM NAICS WHERE Code=@Code) BEGIN
+	SELECT @BT_NAICS_ID = BT_NAICS_ID FROM CIC_BT_NC WHERE Code=@Code AND NUM=@NUM
+	
+	IF @BT_NAICS_ID IS NULL BEGIN
+		EXEC dbo.sp_CIC_ImportEntry_CIC_Check_i @NUM
+
+		INSERT INTO CIC_BT_NC (
+			NUM,
+			Code
+		)
+		SELECT	NUM,
+				@Code
+			FROM GBL_BaseTable
+		WHERE NUM=@NUM
+
+		SET @BT_NAICS_ID = SCOPE_IDENTITY()
+	END
+END ELSE BEGIN
+	SET @BT_NAICS_ID = NULL
+END
+
+SET NOCOUNT OFF
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_CIC_ImportEntry_NAICS_i] TO [cioc_login_role]
+GO

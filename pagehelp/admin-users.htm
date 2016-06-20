@@ -1,0 +1,39 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>The <strong><em>Manage Users</em></strong> page is available to users with security levels that allow them to manage users.</p>
+<h4 class="Alert">IMPORTANT NOTES</h4>
+<ul>
+	<li>Only users designated as Super Users can edit account settings for another Super User.</li>
+	<li>You can only edit the User Type information for the module(s) in which you have user management privileges.</li>
+	<li>Users who have user management privileges but are not Super Users can edit accounts for those with equivalent and lower security levels. They can not edit the accounts of Super Users.</li>
+	<li>No User <em>including</em> a Super User can edit the permissions and security level of their own account. This 
+		reduces the possibility of a single Super User for a database inadvertently &quot;locking themselves out&quot; of database administration. If only a single Super User exists for a database, a new Super User account must first be created before the first Super User account can be edited.</li>
+	<li><strong>Note that it is not possible to delete existing users, only inactivate them</strong>.</li>
+</ul>
+<p>Using this <em>Manage Users</em> page, you can:</p>
+<h4>Create a New User</h4>
+<p>To create a new user, click the <em>&quot;Create New User&quot;</em> link.</p>
+<h4>Edit An Existing User Account</h4>
+<p>Locate existing user accounts using the provided search form. To retrieve a list of all users, select whether you would like active/inactive users or both, and 	submit the search form with no other criteria. If you have permission to update the user, you will see an <em>&quot;Update&quot;</em> link next to the account in the search results.</p>
+<h4>Manage Your Own Account</h4>
+<p>As noted in the &quot;Important Notes&quot; section above, you can not edit your own account security level and database permissions. Only another user with the equivalent or higher security level can edit your account. However, using the &quot;My Account&quot; link on this page, you can change your name, initials, email address and password.</p>
+<h4>View Account Change History</h4>
+<p>The Account Change History tool allows you to review past changes to user accounts.</p>
+<p align="center" style="text-decoration:none">[ <a href="#top">Top</a> ]</p>
+<p class="SmallNote">Last Modified: $Date$</p>

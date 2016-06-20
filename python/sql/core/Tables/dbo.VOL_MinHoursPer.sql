@@ -1,0 +1,12 @@
+CREATE TABLE [dbo].[VOL_MinHoursPer]
+(
+[HPER_ID] [int] NOT NULL IDENTITY(1, 1),
+[CREATED_DATE] [smalldatetime] NULL CONSTRAINT [DF_VOL_MinHoursPer_CREATED_DATE] DEFAULT (getdate()),
+[CREATED_BY] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL CONSTRAINT [DF_VOL_MinHoursPer_CREATED_BY] DEFAULT (getdate()),
+[MODIFIED_DATE] [smalldatetime] NULL,
+[MODIFIED_BY] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL CONSTRAINT [DF_VOL_MinHoursPer_MODIFIED_BY] DEFAULT (getdate()),
+[DisplayOrder] [tinyint] NOT NULL CONSTRAINT [DF_VOL_MinHoursPer_DisplayOrder] DEFAULT ((0))
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_MinHoursPer] ADD CONSTRAINT [PK_VOL_MinHoursPer] PRIMARY KEY CLUSTERED  ([HPER_ID]) ON [PRIMARY]
+GO

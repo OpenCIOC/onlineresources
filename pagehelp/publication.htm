@@ -1,0 +1,78 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>This page permits the user to create a new code for a <em>Publication</em> (a grouping of records) or edit an existing Publication code. This page is <strong>not</strong> used to edit information about the records that are included in a Publication - only information about the Publication itself.</p>
+<p>A Publication is useful for:</p>
+<ul>
+	<li>marking sets of records that you frequently need to print as a group</li>
+	<li>creating a set of related records for use in the <em>&quot;Quick List&quot;</em> dropdown menu on the basic search page.</li>
+	<li>creating a View of the database that contains only a subset of your records (known as a <em>&quot;Publication View&quot;)</em>.</li>
+	<li>creating a custom classification that applies to only a subset of records (done through the General Headings system that is part of Publications)</li>
+	<li>creating a custom text field that applies to only some records (done through the use of a Publication Description field)</li>
+</ul>
+<p>For very simple groupings of records (data export, leases, internal use, etc.) <em>Distribution Codes</em> may be a more appropriate choice, as they are simpler to manage.</p>
+
+<h3>List of Publications</h3>
+<p>Publications on this page are broken down into one or three sections:</p>
+<ul>
+	<li>Main listing of <strong>Publications owned/managed by you (your membership)</strong>. In a single-member database, this is the only list available.</li>
+	<li><strong>Shared Publications</strong>. In a multi-member database, this represents Publications that can be used by any member in the database. Shared Publications can be created and managed by Global Super Users only, but any member may add these Publications to their records. If you do not wish to use a 
+		shared Publication, you can <em>&quot;Hide&quot;</em> it by checking the box next to the appropriate Publication and 
+		clicking the <em>&quot;Update&quot;</em> button at the bottom of the form.</li>
+	<li><strong>Publications owned by other members</strong>. In a multi-member 
+		database, a link is provided to see a list of codes in use exclusively by other 
+		CIOC Members in the same database. Global Super Users can convert these into s<em>hared</em> 
+		publications, which will make them available to other members.</li>
+</ul>
+<p>The columns in the table listing of Publications include some or all of:</p>
+<ul>
+	<li><strong>Code</strong> - The unique alpha-numeric code identifying this Publication</li>
+	<li><strong>Name</strong> - This is the &quot;friendly name(s)&quot; associated with this Publication. If nothing appears beside a Publication in this column, a friendly name has not been created for this code.</li>
+	<li><strong>Non-Public</strong> - If the Publication has been marked as a non-public Publication, an asterisk will appear in this column.</li>
+	<li><strong>Headings</strong> - If General Headings are part of this Publication, a link is provided to view a list of the Headings. In print mode, the number of General Headings associated with the Publication is printed instead.</li>
+	<li><strong>(Local) Records</strong> - The number of your records assigned to this Publication.</li>
+	<li><strong>Other Records</strong> - In a multi-member database, the number of records owned by other CIOC Members in your database that are assigned to this Publication.</li>
+	<li><strong>(Local) Views</strong> - The number of your Views using this Publication to limit the available records (a &quot;Publication View&quot;).</li>
+	<li><strong>Other Views</strong> - In a multi-member database, the number of Views owned by other CIOC Members in your database. Visible only to Global Super Users.</li>
+	<li><strong>(Local) Quick List</strong> - The number of Views in which this Publication is present in the Quick List on the main search page. Visible only when viewing the Print Version of the list of Publications.</li>
+	<li><strong>Other Quick List</strong> - In a multi-member database, the number of Views owned by other CIOC Members in your database in which this Publication is present in the Quick List on the main search page. Visible only to Global Super Users, and only when viewing the Print Version of the list of Publications.</li>
+</ul>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<h3>Edit an Existing Publication</h3>
+<p>To view or edit the settings of an existing Publication, click the <em>&quot;Edit&quot;</em> link next to the Publication.</p>
+<p>In a multi-member database, you may not have access to edit all Publications. The following security restrictions apply:</p>
+<ul>
+	<li>Only Global Super Users can modify shared Publications that are available for use by any member in the database.</li>
+	<li>Only Global Super Users can convert an exclusively owned Publication into a shared Publication.</li>
+	<li>Global Super Users cannot edit Publications that are exclusively owned by another member without first converting them into a shared Publication.</li>
+</ul>
+
+<h3>Create New Publication</h3>
+<p>Click the &quot;Add New Publication&quot; link at the top of the page to create a new Publication code.</p>
+<p>All new Publications start out exclusively owned by the member that created them. In a multi-member database, a Global Super User can later convert these into shared publications that can be used by other members.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+
+<h3>Print a report of your Publications</h3>
+<p>Clicking the link <em>&quot;Print Version (New Window)&quot;</em> will open up a print-friendly list of all the publication codes in the database.</p>
+<p>The <em>&quot;Publications List&quot;</em> page provides a printable list of all current Publications in the database available to your CIOC Membership. In a multi-member database, this report will not include Publications owned exclusively by another member. Includes some information not available from the main table, as mentioned in the previous section describing the parts of the Publication list table.</p>
+<p>This list appears in <em>&quot;Print Mode&quot;</em> - if you have a print template configured for your current View, that template will be used to display the records.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified: $Date$</p>

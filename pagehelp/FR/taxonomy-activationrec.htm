@@ -1,0 +1,53 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<h2>Rapport de recommandation d'activation</h2>
+<p>Contrairement au Rapport d'activation multiniveaux, cet outil peut vous aider &agrave; modifier les activations directement. Au moment o&ugrave; cet outil est charg&eacute;, un formulaire affichant les options disponibles et les r&eacute;sultats obtenus avec les options actuelles (par d&eacute;faut) vous est pr&eacute;sent&eacute;.</p>
+<p>De plus, contrairement au Rapport d'activation multiniveaux, ce rapport ne donne des recommandations que sur les modifications &eacute;videntes que l'on peut effectuer en l'absence du soutien &eacute;ditorial d'un gestionnaire de donn&eacute;es qualifi&eacute;. Cela signifie que des &eacute;l&eacute;ments ne sont pas inclus, comme une branche o&ugrave; des dossiers sont index&eacute;s &agrave; plusieurs niveaux, puisqu'un r&eacute;dacteur appropri&eacute; doit d'abord prendre une d&eacute;cision sur le niveau pr&eacute;f&eacute;r&eacute; pour l'indexation future.</p>
+<p>Quels types de recommandations l'outil offre-t-il ?</p>
+<ul>
+	<li>L'outil recommandera la d&eacute;sactivation lorsqu'il existe un terme actif sans dossier index&eacute; avec ce terme, alors qu'un autre terme actif dans une m&ecirc;me branche <em>est index&eacute;</em> &agrave; des dossiers.</li>
+	<li>L'outil recommandera l'activation lorsqu'il existe un terme inactif index&eacute; &agrave; des dossiers (ce changement sera obligatoire si vous soumettez le formulaire).</li>
+	<li>L'outil recommandera l'activation lorsqu'il existe un terme inactif dont le terme sup&eacute;rieur et un ou plusieurs termes inf&eacute;rieurs sont actifs (ce changement sera &eacute;galement obligatoire si vous soumettez le formulaire). M&ecirc;me s'il n'est pas conseill&eacute; d'activer &agrave; plusieurs niveaux, si vous choisissez de conserver des activations multiniveaux, vous devez le faire de mani&egrave;re compl&egrave;te.</li>
+	<li>Si vous avez s&eacute;lectionn&eacute; l'option « Recommander des activations », l'outil recommandera &eacute;galement l'activation des termes dans les branches o&ugrave; aucun autre terme n'est actif. Le cas &eacute;ch&eacute;ant, l'outil recommandera d'utiliser le niveau auquel d'autres termes de m&ecirc;me niveau sont d&eacute;j&agrave; activ&eacute;s.</li>
+</ul>
+
+<h3>Param&eacute;trer les options du rapport</h3>
+<p>Avant de soumettre les changements d&eacute;sir&eacute;s, vous devez ajuster les options de recommandations et r&eacute;g&eacute;n&eacute;rer le rapport.</p>
+<ul>
+	<li><strong>Afficher les activations globales</strong> - cette option s'adresse aux bases de donn&eacute;es multimembres pour faire la distinction entre les activations globales qui s'appliquent &agrave; tous les membres d'une base de donn&eacute;es et les activations locales qui s'appliquent uniquement &agrave; votre membri&eacute;t&eacute;.</li>
+	<li><strong>D&eacute;sactiver les termes inutilis&eacute;s ayant des termes utilis&eacute;s dans la m&ecirc;me branche</strong> - si cette option n'est pas s&eacute;lectionn&eacute;e, aucun d&eacute;sactivation n'est recommand&eacute;e.</li>
+	<li><strong>Inclure les dossiers partag&eacute;s</strong> - dans une base de donn&eacute;es multimembre, utilisez cette option pour faire des recommandations qui prennent en compte les dossiers partag&eacute;s avec vous par d'autres membres.</li>
+	<li><strong>Faire remonter les termes de niveau inf&eacute;rieur</strong> - lorsqu'il est recommand&eacute; de d&eacute;sactiver un terme dont le terme sup&eacute;rieur est actif et utilis&eacute;, cette option remonte le terme en synonyme du terme sup&eacute;rieur au lieu de le d&eacute;sactiver.</li>
+	<li><strong>Exclure la branche Y</strong> - comme les activations multiniveaux sont autoris&eacute;s dans la branche Y (populations cibles), cette option ignore les recommandations de d&eacute;sactivation de cette branche.</li>
+	<li><strong>Recommander des activations</strong> - cette option recommande de nouvelles activations sur les branches qui n'ont pas de termes actifs. Cela s'av&egrave;re particuli&egrave;rement utile suite &agrave; une mise &agrave; jour de la Taxonomie, pour mettre en valeur les nouveaux termes.</li>
+</ul>
+
+<h3>Consulter le rapport</h3>
+<p>Le rapport est divis&eacute; en deux sections :</p>
+<ul>
+	<li>la premi&egrave;re section liste les recommandations de d&eacute;sactivation et les activations obligatoires (le cas &eacute;ch&eacute;ant)</li>
+	<li>la seconde section liste les recommandations d'activation</li>
+</ul>
+<p>&Agrave; c&ocirc;t&eacute; du code et du nom du terme, l'action indique si le statut d'activation du terme sera chang&eacute; &agrave; <em>Actif</em>, <em>Inactif</em> ou <em>Remonter</em>.</p>
+
+<h3>Soumettre des modifications</h3>
+<p>Vous pouvez choisir d'accepter certaines ou toutes les recommandations propos&eacute;es. Par d&eacute;faut, toutes les recommandations sont coch&eacute;es - mais vous pouvez cocher ou d&eacute;cocher les &eacute;l&eacute;ments pour s&eacute;lectionner uniquement ceux que vous souhaitez. Vous pouvez utiliser le bouton « D&eacute;s&eacute;lectionner tout » pour commencer &agrave; partir d'une s&eacute;lection vide. Les recommandations sans case &agrave; cocher contredisent les r&egrave;gles de base du logiciel (comme utiliser un terme inactif pour activer des dossiers) et sont donc obligatoires. Ces changements obligatoires seront mis en &oelig;uvre automatiquement d&egrave;s la soumission du formulaire. Une fois que vous avez soumis le formulaire en cliquant sur « Appliquer tous les changements s&eacute;lectionn&eacute;s et obligatoires », vos modifications d'activation seront mises en &oelig;uvre imm&eacute;diatement.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Haut</a> ]</p>
+<p class="SmallNote">Derni&egrave;re modification : $Date$</p>

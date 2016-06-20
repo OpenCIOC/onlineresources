@@ -1,0 +1,68 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>There are two types of statistical tools provided with your CIOC database:</p>
+<h4>Record View Statistics</h4>
+<p>These statistics are generated within your database when a record in your database is accessed. It records the date and time, IP Address, View, UserID, Record Number, and Language. <span class="Alert">Record View Statistics are not kept when you change to print mode or temporarily change your View</span>, to avoid inflating statistics when a person is looking at multiple versions of the same record for the same purpose. These statistics are most useful for:</p>
+	<ul>
+		<li>Understanding which records in your database are popular</li>
+		<li>Understanding how each of your different Views are being used</li>
+		<li>Understanding how different record languages are being used</li>
+		<li>Identifying how a particular User or group of Users are using the database</li>
+	</ul>
+<p>Record View statistics are available to Super Users as an offline Microsoft Access database through the download menu, if desired for further analysis.</p>
+<h4>Web Log Statistics</h4>
+<p>These statistics represent the total use of your database, and includes all types of file (including images, CSS , JavaScript, and other files). These statistics are very useful for understanding the overall use of your database and traffic growth over time. Web Log Statistics are kept in a location separate from your database; the official technical contact for your Membership can contact CIOC staff to obtain a login to this tool. For a small fee, separate web statistics tool areas with their own login can be configured for specific domain names used by your database. Contact CIOC technical staff for information.</p>
+<h4></h4>
+<p><span class="Alert">This page contains the main Record View Statistics search and reporting form</span>, and links to several other statistical tools: <em>Total Record Use</em>, <em>Top 50 Records</em>, <em>Use By Agency</em>, <em>Quick Reports</em>, and <em>Delete Old Statistics</em>.</p>
+
+<h4>User's IP address begins with</h4>
+<p>If you know a specific user IP (or the relevant start of a block of IP Addresses) and are trying to determine that IP's use of the database, enter it in this text box. For example, if you know that your local CCAC has IP Addresses that all begin with 199.235.235.XXX where XXX represents different identification numbers for individual machines in that CCAC, enter 199.235.235 in this text box and the results should accurately reflect usage of the database by the local CCAC.</p>
+
+<h4>Users with the User Type</h4>
+<p>You may confine the statistics only to those record views made by users whose account is associated with a particular User Type</p>
+
+<h4>View Search</h4>
+<p>You may confine the statistics only to those record views made from a particular View (this does not take into account whether the user was logged in, or what their User Type is)</p>
+
+<h4>Date Search</h4>
+<p><strong>on or after the date</strong>: Enter the date you wish the statistical report to begin on. This date <em>is</em> included in the results.</p>
+<p><strong>before the date</strong>: Enter the date you wish to be one day after the last date you wish to include in the statistical report. This date is <em>not</em> included in the results. To generate a report for exactly the previous month, click the &quot;First of Last Month&quot; and &quot;First of This Month&quot; buttons.</p>
+
+<h4>Records owned by</h4>
+<p>If there is more than one record owner in the database, you can specify here to return results based on this criteria.</p>
+
+<h4>Record views by</h4>
+<p>Return results based on:</p>
+<ul>
+	<li><em>any</em> uses of the database, or</li>
+	<li>uses by <em>logged in users</em> only, or</li>
+	<li>uses by <em>public</em> (non-logged in) users only.</li>
+</ul>
+
+<h4>Record views in</h4>
+<p>Confine statistics to records viewed in a specific language.</p>
+
+<h4>Search engine record views</h4>
+<p>Include or exclude known search engine traffic, or show traffic by a specific search engine. <span class="Alert">Please be aware that this tool can only approximate search engine traffic based on known addresses; it will not cover all crawlers to your database.</span></p>
+
+<h4>Print Version</h4>
+<p>If you want the report to be published in Print Mode, select <em>Yes</em> for this option. Reports run in Print Mode open in a new window.</p>
+
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified: $Date$</p>

@@ -1,0 +1,8 @@
+INSERT INTO [dbo].[GBL_OrgLocationService_Name] ([OLS_ID], [LangID], [Name]) VALUES (1, 0, N'Agency')
+INSERT INTO [dbo].[GBL_OrgLocationService_Name] ([OLS_ID], [LangID], [Name]) VALUES (1, 2, N'Agence')
+INSERT INTO [dbo].[GBL_OrgLocationService_Name] ([OLS_ID], [LangID], [Name]) VALUES (2, 0, N'Site')
+INSERT INTO [dbo].[GBL_OrgLocationService_Name] ([OLS_ID], [LangID], [Name]) VALUES (2, 2, N'Site')
+INSERT INTO [dbo].[GBL_OrgLocationService_Name] ([OLS_ID], [LangID], [Name]) VALUES (3, 0, N'Service')
+INSERT INTO [dbo].[GBL_OrgLocationService_Name] ([OLS_ID], [LangID], [Name]) VALUES (3, 2, N'Service')
+INSERT INTO [dbo].[GBL_OrgLocationService_Name] ([OLS_ID], [LangID], [Name]) VALUES (4, 0, N'Topic')
+INSERT INTO [dbo].[GBL_OrgLocationService_Name] ([OLS_ID], [LangID], [Name]) VALUES (4, 2, N'Sujet')

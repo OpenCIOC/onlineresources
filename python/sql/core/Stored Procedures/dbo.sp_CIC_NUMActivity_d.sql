@@ -1,0 +1,26 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_CIC_NUMActivity_d]
+	@BT_ACT_ID int
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.1
+	Checked by: KL
+	Checked on: 18-Jan-2012
+	Action: NO ACTION REQUIRED
+*/
+
+DELETE FROM CIC_BT_ACT WHERE BT_ACT_ID = @BT_ACT_ID
+
+SET NOCOUNT OFF
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_CIC_NUMActivity_d] TO [cioc_login_role]
+GO

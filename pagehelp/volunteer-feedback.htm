@@ -1,0 +1,48 @@
+<!--
+=========================================================================================
+ Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+=========================================================================================
+-->
+
+<p>The <em>&quot;Record Feedback&quot;</em> Page serves two purposes; to suggest a new record, or suggest changes to an existing record. The actual form and data entry requirement(s) are the same for both functions. Public (non-logged in) and logged-in users can access both of these functions. If you want the public to have access to the <em>&quot;Suggest a New Record&quot;</em> version of the Feedback Form, you will need to provide a link to a blank feedback page from the menu, header or footer of their View, since this link is not provided automatically by the software.</p>
+<p>Unlike the form for record updates, <em>&quot;Feedback&quot;</em> does not immediately change the record. Changes made through feedback must be reviewed and accepted through the <em>Update Form</em> before changes will take effect.</p>
+<p>A Super User can change which fields are available on the Feedback Form for the current View from the View setup.</p>
+<h3>Record Inclusion Policy</h3>
+<p>If you are suggesting a new record, a link to the Record Inclusion Policy will appear at the top of the form if one is available. If you give the Public a link to suggest a new record, you should ensure that you have an Inclusion Policy available. Your Record Inclusion Policy should clearly state what kinds of records are included in your database and under what conditions. A Super User can add or edit the Policy by going to <em>Setup &gt; Record Inclusion Policies</em>.</p>
+<h3>Field Information</h3>
+<p>If there is help available for a field, a question mark image will appear next to the field <img alt="Help" border="0" src="../images/help.gif" />. Clicking this image will open a pop-up window containing the field help. To customize the field help to your local needs and usage, a Super User can edit the help from the <em>Field Help</em> area of the <em>Setup</em>.</p>
+<p><span class="Alert">*</span> - If a field is designated as &quot;required&quot;, an alert-coloured asterisk will appear beside it. Note that the feedback form does not <em>force</em> you to fill in required data elements for a record, even if you have the "enforce required fields" option turned on in your software - the <span class="Alert">*</span> is for informational purposes only.</p>
+<h3>Before Submitting...</h3>
+<p>At the bottom of the form are a set of required fields that must be filled out before submitting the update. This section of the form has different requirements depending on whether the person submitting feedback is logged in, what their permissions are, and the settings of the current View.</p>
+<ul>
+	<li><strong>About You</strong> - If the user is not logged in, they will be required to enter their name and either their phone number of email address. Other information in this section is optional.</li>
+	<li><strong>Source of This Information</strong> - If the user is logged in, they should specify where the information for these changes is coming from. The previous source of information will already be listed in these fields.</li>
+	<li><strong>Special Instructions</strong> - Optional, if there are any general comments about the suggested changes.</li>
+	<li><strong>About These Changes</strong> - All users must specify whether the suggested changes are a complete or partial update, or if the record should be removed.</li>
+	<li><strong>Notifications</strong> - You will see this section if your security level allows you to suppress email notifications. Notifications will be suppressed by default (see next section for information on email notifications)</li>
+	<li><strong>Security Check</strong> - If the user is not logged in, they must answer a simple question to ensure it is a real person submitting the form and not a spam robot.</li>
+</ul>
+<h3>Email Notifications</h3>
+<p>When feedback is submitted, an entry is created in the database for the feedback that is later used to make the suggested changes available when updating or creating the record. In addition to this database entry, a number of email notifications may be sent out (assuming they are not suppressed - see <em>Notifications</em> in <em>&quot;Before Submitting&quot;</em> above). The email notifications will include a summary of all requested changes to the record; each Agency should have an official policy in place about whether these emails are kept for future reference and for how long.</p>
+<p>Who receives an email?</p>
+<ul>
+	<li>If the submission is being made by a user <em>who is not logged in</em>, and the <strong>submitter</strong> has provided an email address, he/she will receive a confirmation email.</li>
+	<li>If the <strong>contact</strong> for the opportunity being updated has an email address, and it is different from the submitter's address, the contact will receive an email. This email can be suppressed.</li>
+	<li>The email for updates associated with the <strong>Record Owner Agency</strong> will receive a copy of the suggested changes. This email address can be changed from the <em>Agency</em> setup page. This email can be suppressed.</li>
+</ul>
+<h3>After Submitting</h3>
+<p>If all required information from <em>Before Submitting</em> has been filled out appropriately, the user will receive a notification indicating their changes have been accepted. The message the user receives is customizable by the Super User from <em>Setup &gt; General Setup Options</em>. If the Feedback was on an existing record, the user will be redirected back to the <em>Record Details</em> page.</p>
+<p align="center">[ <a href="#top" style="text-decoration:none">Top</a> ]</p>
+<p class="SmallNote">Last Modified: $Date$</p>

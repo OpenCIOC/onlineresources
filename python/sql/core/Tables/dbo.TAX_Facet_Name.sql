@@ -1,0 +1,15 @@
+CREATE TABLE [dbo].[TAX_Facet_Name]
+(
+[FC_ID] [int] NOT NULL,
+[LangID] [smallint] NOT NULL,
+[Facet] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[TAX_Facet_Name] ADD CONSTRAINT [PK_TAX_Facet_Name] PRIMARY KEY CLUSTERED  ([FC_ID], [LangID]) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_TAX_Facet_Name] ON [dbo].[TAX_Facet_Name] ([LangID], [Facet]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[TAX_Facet_Name] ADD CONSTRAINT [FK_TAX_Facet_Name_TAX_Facet] FOREIGN KEY ([FC_ID]) REFERENCES [dbo].[TAX_Facet] ([FC_ID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[TAX_Facet_Name] ADD CONSTRAINT [FK_TAX_Facet_Name_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
+GO
