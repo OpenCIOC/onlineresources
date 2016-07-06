@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -49,7 +48,7 @@ SELECT	fo.FieldName,
 	INNER JOIN VOL_View_UpdateField uf
 		ON fo.FieldID = uf.FieldID
 	LEFT JOIN VOL_FieldOption_HelpByMember foh
-		ON foh.FieldID = fod.FieldID AND foh.LangID = fod.LangID AND MemberID=@MemberID
+		ON foh.FieldID = fod.FieldID AND foh.LangID = fod.LangID AND foh.MemberID=@MemberID
 WHERE (fo.CanUseUpdate = 1)
 	AND (uf.ViewType = @ViewType)
 ORDER BY DisplayOrder, ISNULL(FieldDisplay,FieldName)
