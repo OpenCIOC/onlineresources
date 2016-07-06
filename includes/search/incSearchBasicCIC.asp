@@ -113,10 +113,6 @@ If Not Nl(strOtherCommunity) Then
 	End If
 End If
 
-If Nl(strCMID) Then
-	strQueryString = reReplace(strQueryString,"(&)?CMType=.",vbNullString,False,False,False,False)
-End If
-
 '--------------------------------------------------
 ' 3. Has Website
 '--------------------------------------------------
