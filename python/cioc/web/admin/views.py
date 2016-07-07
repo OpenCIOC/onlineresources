@@ -115,6 +115,7 @@ class ViewBaseCICSchema(ViewBaseSchema):
 	BSrchVacancy = validators.Bool()
 	BSrchVOL = validators.Bool()
 	BSrchWWW = validators.Bool()
+	BSrchNear2 = validators.Bool()
 	BSrchNear5 = validators.Bool()
 	BSrchNear10 = validators.Bool()
 	BSrchNear15 = validators.Bool()

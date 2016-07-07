@@ -922,6 +922,10 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 							${renderer.checkbox("item.BSrchLanguage", label=_('Language of Service'))}
 						</div>
 						<div class="checkbox">
+							${renderer.errorlist("item.BSrchNear2")}
+							${renderer.checkbox("item.BSrchNear2", label=_('Within 2 KM'))}
+						</div>
+						<div class="checkbox">
 							${renderer.errorlist("item.BSrchNear5")}
 							${renderer.checkbox("item.BSrchNear5", label=_('Within 5 KM'))}
 						</div>
