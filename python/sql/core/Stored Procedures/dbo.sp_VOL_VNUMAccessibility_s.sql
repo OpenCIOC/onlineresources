@@ -56,7 +56,9 @@ SET NOCOUNT OFF
 
 
 
-GO
 
+GO
 GRANT EXECUTE ON  [dbo].[sp_VOL_VNUMAccessibility_s] TO [cioc_login_role]
+GO
+GRANT EXECUTE ON  [dbo].[sp_VOL_VNUMAccessibility_s] TO [cioc_vol_search_role]
 GO

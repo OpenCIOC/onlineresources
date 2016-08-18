@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -28,7 +27,7 @@ UPDATE vod
 		+ ISNULL(vod.BENEFITS,'') + ' '
 		+ ISNULL(vod.CLIENTS,'') + ' '
 		+ ISNULL(vod.ADDITIONAL_REQUIREMENTS,'') + ' '
-		+ ISNULL(vod.SKILL_NOTES,'') + ' '
+		+ ISNULL(vod.SKILLS_NOTES,'') + ' '
 		+ ISNULL(vod.CMP_Interests,'')
 		+ ISNULL(dbo.fn_VOL_SRCH_EXTRA_TEXT(vo.VNUM,vod.LangID),'')
 	FROM VOL_Opportunity_Description vod

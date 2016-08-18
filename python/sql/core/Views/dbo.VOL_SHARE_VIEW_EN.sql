@@ -1,8 +1,8 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 
 
 
@@ -209,7 +209,7 @@ SEASONS = (
 	),
 SKILLS = (
 	SELECT
-		voe.SKILL_NOTES "@N",
+		voe.SKILLS_NOTES "@N",
 		(SELECT
 				sk.Code "@CD",
 				skne.Name "@V"
@@ -304,6 +304,7 @@ UPDATED_BY = (SELECT voe.UPDATED_BY "@V" FOR XML PATH('UPDATED_BY'), TYPE)
 FROM dbo.VOL_Opportunity vo
 	INNER JOIN dbo.VOL_Opportunity_Description voe
 		ON vo.VNUM=voe.VNUM AND voe.LangID=0
+
 
 
 

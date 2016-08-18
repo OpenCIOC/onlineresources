@@ -64,6 +64,7 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../includes/update/incAgencyUpdateInfo.asp" -->
 <!--#include file="../includes/update/incEntryFormGeneral.asp" -->
 <!--#include file="../includes/update/incVOLFormFbPrint.asp" -->
+<!--#include file="../includes/update/incVOLFormUpdPrint.asp" -->
 <% 
 'On Error Resume Next
 
@@ -95,13 +96,16 @@ Dim intOPID, _
 	strFBKey, _
 	bVNUMError, _
 	bNUMError, _
-	strError
+	strError, _
+	bHasDynamicAddField
 
 intOPID = Request("OPID")
 strVNUM = Request("VNUM")
 strNUM = Trim(Request("NUM"))
 bVNUMError = False
 bNUMError = False
+bHasDynamicAddField = False
+
 Dim	bSuggest
 
 bSuggest = False
@@ -484,16 +488,22 @@ End If
 			' "Function" field type, a specialized function determines the display
 			Case "f"
 				Select Case strFieldName
+					Case "ACCESSIBILITY"
+						strFieldVal = makeAccessibilityContents(rsOrg, Not bSuggest)
 					Case "AGES"
 						strFieldVal = makeAgesContents(rsOrg, Not bSuggest)
 					Case "CONTACT"
 						strFieldVal = makeContactContents(rsOrg, strFieldName, Not bSuggest)
+					Case "COMMITMENT_LENGTH"
+						strFieldVal = makeCommitmentLengthContents(rsOrg, Not bSuggest)
 					Case "DUTIES"
 						strFieldVal = makeMemoFieldVal(strFieldName, _
 							strFieldContents, _
 							TEXTAREA_ROWS_LONG, _
 							False _
 							)
+					Case "INTERACTION_LEVEL"
+						strFieldVal = makeInteractionLevelContents(rsOrg, Not bSuggest)
 					Case "INTERESTS"
 						strFieldVal = makeAreaOfInterestContents(rsOrg, Not bSuggest)
 					Case "MINIMUM_HOURS"
@@ -506,6 +516,16 @@ End If
 						strFieldVal = makeSocialMediaFieldVal(rsOrg, Not bSuggest)
 					Case "START_DATE"
 						strFieldVal = makeStartDateContents(rsOrg, Not bSuggest)
+					Case "SEASONS"
+						strFieldVal = makeSeasonsContents(rsOrg, Not bSuggest)
+					Case "SKILLS"
+						strFieldVal = makeSkillContents(rsOrg, Not bSuggest)
+					Case "SUITABILITY"
+						strFieldVal = makeSuitabilityContents(rsOrg, Not bSuggest)
+					Case "TRAINING"
+						strFieldVal = makeTrainingContents(rsOrg, Not bSuggest)
+					Case "TRANSPORTATION"
+						strFieldVal = makeTransportationContents(rsOrg, Not bSuggest)
 					Case Else
 						Select Case Ns(rsFields.Fields("ExtraFieldType"))
 							Case "l"

@@ -757,7 +757,7 @@ If Not bOPIDError Then
 			Case "SEASONS"
 				Call getStdCheckListSQL("SSN", True, Null, Null, fldName.Value)
 			Case "SKILLS"
-				Call getStdCheckListSQL("SK", True, Null, Null, "SKILL")
+				Call getStdCheckListSQL("SK", True, Null, Null, fldName.Value)
 			Case "SOURCE"
 				Call getSourceFields()
 			Case "SOCIAL_MEDIA"

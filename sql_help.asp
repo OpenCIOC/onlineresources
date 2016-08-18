@@ -1531,7 +1531,7 @@ End If
 			<td>text</td>
 		</tr>
 		<tr valign="top">
-			<td>SKILL_NOTES</td>
+			<td>SKILLS_NOTES</td>
 			<td>text</td>
 		</tr>
 		<tr valign="top">

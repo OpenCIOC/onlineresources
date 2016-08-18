@@ -1,0 +1,6 @@
+UPDATE VOL_FieldOption SET 
+	DisplayFM=REPLACE(DisplayFM, 'SKILL_NOTES', 'SKILLS_NOTES'),
+	DisplayFMWeb=REPLACE(DisplayFMWeb, 'SKILL_NOTES', 'SKILLS_NOTES'),
+	UpdateFieldList=REPLACE(UpdateFieldList, 'SKILL_NOTES', 'SKILLS_NOTES')
+
+WHERE FieldName = 'SKILLS'

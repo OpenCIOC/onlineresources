@@ -54,8 +54,9 @@ RETURN @Error
 SET NOCOUNT OFF
 
 
+
 GO
-
-
 GRANT EXECUTE ON  [dbo].[sp_VOL_VNUMSeasons_s] TO [cioc_login_role]
+GO
+GRANT EXECUTE ON  [dbo].[sp_VOL_VNUMSeasons_s] TO [cioc_vol_search_role]
 GO

@@ -232,6 +232,122 @@ Sub getAgeFields(strFieldDisplay)
 		Call addEmailField(TXT_MAX_AGE,strFieldVal)
 	End If
 End Sub
+Sub getAccessibilityFields(strFieldDisplay)
+	Dim strSP
+
+	If ps_intDbArea = DM_CIC Then
+		strSP = "dbo.sp_GBL_NUMAccessibility_s"
+		Call getChecklistFeedback(strFieldDisplay, strSP, "AC", "ACCESSIBILITY", "AccessibilityType", strInsertIntoFB, strInsertValueFB, True)
+	Else
+		strSP = "dbo.sp_VOL_VNUMAccessibility_s"
+		Call getChecklistFeedback(strFieldDisplay, strSP, "AC", "ACCESSIBILITY", "AccessibilityType", strInsertInto, strInsertValue, True)
+	End If
+
+End Sub
+
+Sub getChecklistFeedback(strFieldDisplay, strSP, strPrefix, strFieldName, strNameField, ByRef strInsertInto, ByRef strInsertValue, bNotes)
+	Dim strKey, strNotes, strKeyName, intKeyLength
+
+	If ps_intDbArea = DM_CIC Then
+		strKeyName = "NUM"
+		intKeyLength = 8
+	Else
+		strKeyName = "VNUM"
+		intKeyLength = 10
+	End If
+
+	If Not bSuggest Then
+		strKey = rsOrg(strKeyName)
+		If bNotes Then
+			strNotes = rsOrg(strFieldName & "_NOTES")
+		End If
+	Else
+		strKey = vbNullString
+		strNotes = vbNullString
+	End If
+
+	Dim strIDList
+	strIDList = Replace(Trim(Request(strPrefix & "_ID")), " ", vbNullString)
+
+	Dim cmdChecklist, rsChecklist
+	Set cmdChecklist = Server.CreateObject("ADODB.Command")
+	With cmdChecklist
+		.ActiveConnection = getCurrentBasicCnn()
+		.CommandText = strSP
+		.CommandType = adCmdStoredProc
+		.CommandTimeout = 0
+		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
+		.Parameters.Append .CreateParameter("@" & strKeyName, adVarChar, adParamInput, intKeyLength, strKey)
+	End With
+	Set rsChecklist = cmdChecklist.Execute
+	
+	Dim strXML, strEmailText, strEmailCon, bChanged, indID, bChecked, strNote
+	bChanged = False
+	strEmailCon = vbNullString
+	strEmailText = vbNullString
+	strXML = vbNullString
+
+	If Nl(strIDList) Or Not IsIDList(strIDList) Then
+		strIDList = vbNullString
+	Else
+		strIDList = "<" & Replace(strIDList, ",", "><") & ">"
+	End If
+
+	With rsChecklist
+		While Not .EOF
+			bChecked = InStr(strIDList, "<" & .Fields(strPrefix & "_ID") & ">") > 0 
+			If bChecked Then
+				strEmailText = strEmailText & strEmailCon & .Fields(strNameField)
+				If bNotes Then
+					strNote = Trim(Request(strPrefix & "_NOTES_" & .Fields(strPrefix & "_ID")))
+					If Not Nl(strNote) Then
+						strEmailText = strEmailText & TXT_COLON & strNote
+					End If
+					If Ns(strNote) <> Ns(.Fields("Notes")) Then
+						bChanged = True
+					End If
+				End If
+				strEmailCon = " ; "
+				strXML = strXML & "<" & strPrefix & " ID=" & XMLQs(.Fields(strPrefix & "_ID")) & StringIf(Not Nl(strNote), " NOTE=" & XMLQs(strNote)) & "/>"
+					
+			End If
+			If .Fields("IS_SELECTED") <> IIf(bChecked, 1, 0) Then
+				bChanged = True
+				If Not bChecked Then
+					strEmailText = strEmailText & strEmailCon & .Fields(strNameField) & TXT_COLON & TXT_CONTENT_DELETED
+					strEmailCon = " ; "
+				End If
+			End If
+			.MoveNext
+		Wend
+		.Close
+	End With
+
+	If Not Nl(strXML) Then
+		strXML = "<" & strPrefix & "S>" & strXML & "</" & strPrefix & "S>"
+	End If
+	If bNotes Then
+		strNote = Trim(Request(strFieldName & "_NOTES"))
+		If Not Nl(strNote) Then
+			strXML = strXML & "<NOTE>" & XMLEncode(strNote) & "</NOTE>"
+			strEmailText = strEmailText & strEmailCon & strNote
+		End If
+		If Ns(strNote) <> Ns(strNotes) Then
+			bChanged = True
+			If Nl(strNote) Then
+				strEmailText = strEmailText & strEmailCon & TXT_NOTES & TXT_COLON & TXT_CONTENT_DELETED
+			End If
+		End If
+	End If
+	strXML = "<" & strFieldName & ">" & strXML & "</" & strFieldName & ">"
+
+	If bChanged Then
+		Call addInsertField(strFieldName, QsNl(strXML), strInsertInto,strInsertValue)
+	End If
+	If Not Nl(strEmailText) Then
+		Call addEmailField(strFieldDisplay, strEmailText)
+	End If
+End Sub
 
 Dim strVNUM, _
 	bVNUMError, _
@@ -594,10 +710,16 @@ Dim strFieldName, _
 While Not rsFields.EOF
 	strFieldName = rsFields.Fields("FieldName")
 	Select Case strFieldName
+		Case "ACCESSIBILITY"
+			Call getAccessibilityFields(rsFields.Fields("FieldDisplay"))
 		Case "AGES"
 			Call getAgeFields(rsFields.Fields("FieldDisplay"))
 		Case "CONTACT"
 			Call getContactFields(strFieldName, rsFields.Fields("FieldDisplay"),strInsertInto,strInsertValue)
+		Case "COMMITMENT_LENGTH"
+			Call getChecklistFeedback(strFieldName, "dbo.sp_VOL_VNUMCommitmentLength_s", "CL", "COMMITMENT_LENGTH", "CommitmentLength", strInsertInto, strInsertValue, True)
+		Case "INTERACTION_LEVEL"
+			Call getChecklistFeedback(strFieldName, "dbo.sp_VOL_VNUMInteractionLevel_s", "IL", "INTERACTION_LEVEL", "InteractionLevel", strInsertInto, strInsertValue, True)
 		Case "MINIMUM_HOURS"
 			strFieldVal = getStrSetValue("MINIMUM_HOURS")
 			If addInsertField("MINIMUM_HOURS",QsNNl(strFieldVal),strInsertInto,strInsertValue) Then
@@ -627,6 +749,16 @@ While Not rsFields.EOF
 			If addInsertField("START_DATE_LAST",QsNNl(strFieldVal),strInsertInto,strInsertValue) Then
 				Call addEmailField(rsFields.Fields("FieldDisplay") & " " & TXT_VOL_ON_OR_BEFORE,strFieldVal)
 			End If
+		Case "SEASONS"
+			Call getChecklistFeedback(strFieldVal, "dbo.sp_VOL_VNUMSeasons_s", "SSN", "SEASONS", "Season", strInsertInto, strInsertValue, True)
+		Case "SKILLS"
+			Call getChecklistFeedback(strFieldVal, "dbo.sp_VOL_VNUMSkill_s", "SK", "SKILLS", "Skill", strInsertInto, strInsertValue, True)
+		Case "SUITABILITY"
+			Call getChecklistFeedback(strFieldVal, "dbo.sp_VOL_VNUMSuitability_s", "SB", "SUITABILITY", "SuitableFor", strInsertInto, strInsertValue, False)
+		Case "TRAINING"
+			Call getChecklistFeedback(strFieldVal, "dbo.sp_VOL_VNUMTraining_s", "TRN", "TRAINING", "TrainingType", strInsertInto, strInsertValue, True)
+		Case "TRANSPORTATION"
+			Call getChecklistFeedback(strFieldVal, "dbo.sp_VOL_VNUMTransportation_s", "TRP", "TRANSPORTATION", "TransportationType", strInsertInto, strInsertValue, True)
 		Case Else
 			If rsFields.Fields("ExtraFieldType") = "l" Then
 				strFieldVal = getBasicListSetValue(strFieldName,"#","#")

@@ -624,7 +624,7 @@ Function makeSkillContents(rst,bUseContent)
 	Dim strVNUM, strNotes, intNotesLen
 	If bUseContent Then
 		strVNUM = rst("VNUM")
-		strNotes = rst("SKILL_NOTES")
+		strNotes = rst("SKILLS_NOTES")
 	Else
 		strVNUM = Null
 	End If
@@ -665,8 +665,8 @@ Function makeSkillContents(rst,bUseContent)
 		intNotesLen = Len(strNotes)
 		strNotes = Server.HTMLEncode(strNotes)
 	End If
-	strReturn = strReturn & "<h4><label for=""SKILL_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
-			"<textarea id=""SKILL_NOTES"" name=""SKILL_NOTES""" & _
+	strReturn = strReturn & "<h4><label for=""SKILLS_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
+			"<textarea id=""SKILLS_NOTES"" name=""SKILLS_NOTES""" & _
 			" cols=""" & TEXTAREA_COLS & """" & _
 			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
 			">" & strNotes & "</textarea>"
