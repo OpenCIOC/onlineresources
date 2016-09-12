@@ -49,6 +49,9 @@ Disallow: /
 User-agent: VegeBot
 Disallow: /
 
+User-agent: Uptimebot
+Disallow: /
+
 User-agent: *
 Crawl-delay: 5
 Disallow: /admin/
