@@ -30,7 +30,7 @@ from cioc.core.datesearch import add_months, add_years
 
 <%def name="childsearchform()">
 <div id="csrch_top">
-<form action="cresults.asp" method="get" id="EntryForm" name="EntryForm" ${' onSubmit="formNewWindow(this);"' if request.user else ''} class="form-horizontal">
+<form action="cresults.asp" method="get" id="EntryForm" name="EntryForm" ${' onSubmit="formNewWindow(this);"' if request.user else ''|n} class="form-horizontal">
 <div style="display:none">
 ${request.passvars.cached_form_vals}
 </div>
