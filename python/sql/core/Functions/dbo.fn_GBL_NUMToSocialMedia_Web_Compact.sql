@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -6,17 +7,16 @@ GO
 
 
 CREATE FUNCTION [dbo].[fn_GBL_NUMToSocialMedia_Web_Compact](
-	@NUM varchar(8),
-	@PathToStart varchar(50)
+	@NUM varchar(8)
 )
 RETURNS nvarchar(max) WITH EXECUTE AS CALLER
 AS 
 BEGIN
 
 /*
-	Checked for Release: 3.5
+	Checked for Release: 3.8
 	Checked by: KL
-	Checked on: 02-Nov-2012
+	Checked on: 16-Sep-2016
 	Action: NO ACTION REQUIRED
 */
 
@@ -41,6 +41,7 @@ END
 
 
 GO
+
 
 
 GRANT EXECUTE ON  [dbo].[fn_GBL_NUMToSocialMedia_Web_Compact] TO [cioc_cic_search_role]
