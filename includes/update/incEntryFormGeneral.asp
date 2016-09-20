@@ -227,6 +227,8 @@ def prepStdChecklistFeedback(rsFb, general_notes, field_name):
 		try:
 			xml = ET.fromstring(row[field_name].encode('utf-8'))
 		except Exception as e:
+			values['language_name'] = row['LanguageName']
+			values['NOTE'] = row[field_name]
 			continue
 
 		values['language_name'] = row['LanguageName']
