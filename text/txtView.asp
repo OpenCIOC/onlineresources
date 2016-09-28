@@ -97,10 +97,6 @@ Sub setTxtView()
 			TXT_FIELD = "Champ"
 			TXT_FIELD_LIST_NOT_UPDATED = "La liste des champs n'a pas été mise à jour." & TXT_COLON
 			TXT_FIELD_LIST_UPDATED = "La liste des champs a été mise à jour avec succès."
-			TXT_INST_ADD_VIEW = "Les valeurs initiales de la nouvelle vue seront basées sur la vue que vous définirez ci dessous." & _
-				"<br>Si vous ne préciasez pas de vue, la vue par défaut sera utilisée." & _
-				"<br>Lors de la soumission, vous accéderez à un formulaire pour modifier la nouvelle vue." & _
-				"<br>Le nom de la vue doit être unique."
 			TXT_INST_COMMS = "Utilisez la boîte ci-dessous pour ajouter une nouvelle communauté." & _
 				"<br>Vous pouvez utiliser le <a href=""javascript:openWin('" & makeLinkB(ps_strPathToStart & "comfind.asp") & "','cFind')"">Localisateur de communautés</a> pour rechercher une valeur appropriée."
 			TXT_INST_DETAIL_FIELDS = "Ajouter un champ en sélectionnant un groupe de champs. Retirer un champ en supprimant le contenu du groupe de champs."
