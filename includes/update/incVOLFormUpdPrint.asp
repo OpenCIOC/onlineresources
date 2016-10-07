@@ -39,66 +39,7 @@ Function getNewVNum()
 End Function
 
 Function makeAccessibilityContents(rst,bUseContent)
-	Dim strReturn
-	Dim strVNUM, strNotes, intNotesLen
-	If bUseContent Then
-		strVNUM = rst("VNUM")
-		strNotes = rst("ACCESSIBILITY_NOTES")
-	Else
-		strVNUM = Null
-	End If
-	
-	Dim cnnAccessibility, cmdAccessibility, rsAccessibility
-	Call makeNewAdminConnection(cnnAccessibility)
-	Set cmdAccessibility = Server.CreateObject("ADODB.Command")
-	With cmdAccessibility
-		.ActiveConnection = cnnAccessibility
-		.CommandText = "dbo.sp_VOL_VNUMAccessibility_s"
-		.CommandType = adCmdStoredProc
-		.CommandTimeout = 0
-		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
-		.Parameters.Append .CreateParameter("@VNUM", adVarChar, adParamInput, 10, strVNUM)
-	End With
-	Set rsAccessibility = cmdAccessibility.Execute
-	
-	With rsAccessibility
-		strReturn = "<table class=""NoBorder cell-padding-2"">"
-		While Not .EOF
-			strReturn = strReturn & "<tr><td><label for=""AC_ID_" & .Fields("AC_ID") & """><input name=""AC_ID"" id=""AC_ID_" & .Fields("AC_ID") & """ type=""checkbox"" value=""" & .Fields("AC_ID") & """"
-			If .Fields("IS_SELECTED") Then
-				strReturn = strReturn & " checked"
-			End If
-			strReturn = strReturn & ">&nbsp;" & .Fields("AccessibilityType") & "</label></td><td>" & _
-				"<input type=""text"" title=" & AttrQs(.Fields("AccessibilityType") & TXT_COLON & TXT_NOTES) & " name=""AC_NOTES_" & .Fields("AC_ID") & """ " & _
-				"value=""" & .Fields("Notes") & """ " & _
-				"size=""" & TEXT_SIZE - 20 & """ maxlength=""" & MAX_LENGTH_CHECKLIST_NOTES & """>" & _
-				"</td></tr>"
-			.MoveNext
-		Wend
-		strReturn = strReturn & "</table>"
-	End With
-	
-	If Nl(strNotes) Then
-		intNotesLen = 0
-	Else
-		intNotesLen = Len(strNotes)
-		strNotes = Server.HTMLEncode(strNotes)
-	End If
-	strReturn = strReturn & "<div class=""FieldLabelLeftClr""><label for=""ACCESSIBILITY_NOTES"">" & TXT_OTHER_NOTES & "</label></div>" & _
-			"<textarea name=""ACCESSIBILITY_NOTES""" & _
-			" id=""ACCESSIBILITY_NOTES""" & _
-			" cols=""" & TEXTAREA_COLS & """" & _
-			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
-			">" & strNotes & "</textarea>"
-
-	rsAccessibility.Close
-	Set rsAccessibility = Nothing
-	Set cmdAccessibility = Nothing
-
-	If bFeedback Then
-		strReturn = strReturn & getFeedback("ACCESSIBILITY",False)
-	End If
-	makeAccessibilityContents = strReturn
+	makeAccessibilityContents = makeStdChecklistContents(rst, bUseContent, "dbo.sp_VOL_VNUMAccessibility_s", "AC", "ACCESSIBILITY", "AccessibilityType", True, True)
 End Function
 
 Function makeAgesContents(rst, bUseContent)
@@ -136,127 +77,11 @@ Function makeAgesContents(rst, bUseContent)
 End Function
 
 Function makeCommitmentLengthContents(rst,bUseContent)
-	Dim strReturn
-	Dim strVNUM, strNotes, intNotesLen
-	If bUseContent Then
-		strVNUM = rst("VNUM")
-		strNotes = rst("COMMITMENT_LENGTH_NOTES")
-	Else
-		strVNUM = Null
-	End If
-	
-	Dim cnnCommitmentLength, cmdCommitmentLength, rsCommitmentLength
-	Call makeNewAdminConnection(cnnCommitmentLength)
-	Set cmdCommitmentLength = Server.CreateObject("ADODB.Command")
-	With cmdCommitmentLength
-		.ActiveConnection = cnnCommitmentLength
-		.CommandText = "dbo.sp_VOL_VNUMCommitmentLength_s"
-		.CommandType = adCmdStoredProc
-		.CommandTimeout = 0
-		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
-		.Parameters.Append .CreateParameter("@VNUM", adVarChar, adParamInput, 10, strVNUM)
-	End With
-	Set rsCommitmentLength = cmdCommitmentLength.Execute
-	
-	With rsCommitmentLength
-		strReturn = "<table class=""NoBorder cell-padding-2"">"
-		While Not .EOF
-			strReturn = strReturn & "<tr><td><label for=""CL_ID_" & .Fields("CL_ID") & """><input name=""CL_ID"" id=""CL_ID_" & .Fields("CL_ID") & """ type=""checkbox"" value=""" & .Fields("CL_ID") & """"
-			If .Fields("IS_SELECTED") Then
-				strReturn = strReturn & " checked"
-			End If
-			strReturn = strReturn & ">&nbsp;" & .Fields("CommitmentLength") & "</label></td><td>" & _
-				"<input type=""text"" title=" & AttrQs(.Fields("CommitmentLength") & TXT_COLON & TXT_NOTES) & " name=""CL_NOTES_" & .Fields("CL_ID") & """ " & _
-				"value=""" & .Fields("Notes") & """ " & _
-				"size=""" & TEXT_SIZE - 20 & """ maxlength=""" & MAX_LENGTH_CHECKLIST_NOTES & """>" & _
-				"</td></tr>"
-			.MoveNext
-		Wend
-		strReturn = strReturn & "</table>"
-	End With
-	
-	If Nl(strNotes) Then
-		intNotesLen = 0
-	Else
-		intNotesLen = Len(strNotes)
-		strNotes = Server.HTMLEncode(strNotes)
-	End If
-	strReturn = strReturn & "<div class=""FieldLabelLeftClr""><label for=""COMMITMENT_LENGTH_NOTES"">" & TXT_OTHER_NOTES & "</label></div>" & _
-			"<textarea id=""COMMITMENT_LENGTH_NOTES"" name=""COMMITMENT_LENGTH_NOTES""" & _
-			" cols=""" & TEXTAREA_COLS & """" & _
-			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
-			">" & strNotes & "</textarea>"
-
-	rsCommitmentLength.Close
-	Set rsCommitmentLength = Nothing
-	Set cmdCommitmentLength = Nothing
-
-	If bFeedback Then
-		strReturn = strReturn & getFeedback("COMMITMENT_LENGTH",False)
-	End If
-	makeCommitmentLengthContents = strReturn
+	makeCommitmentLengthContents = makeStdChecklistContents(rst, bUseContent, "dbo.sp_VOL_VNUMCommitmentLength_s", "CL", "COMMITMENT_LENGTH", "CommitmentLength", True, True)
 End Function
 
 Function makeInteractionLevelContents(rst,bUseContent)
-	Dim strReturn
-	Dim strVNUM, strNotes, intNotesLen
-	If bUseContent Then
-		strVNUM = rst("VNUM")
-		strNotes = rst("INTERACTION_LEVEL_NOTES")
-	Else
-		strVNUM = Null
-	End If
-	
-	Dim cnnInteractionLevel, cmdInteractionLevel, rsInteractionLevel
-	Call makeNewAdminConnection(cnnInteractionLevel)
-	Set cmdInteractionLevel = Server.CreateObject("ADODB.Command")
-	With cmdInteractionLevel
-		.ActiveConnection = cnnInteractionLevel
-		.CommandText = "dbo.sp_VOL_VNUMInteractionLevel_s"
-		.CommandType = adCmdStoredProc
-		.CommandTimeout = 0
-		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
-		.Parameters.Append .CreateParameter("@VNUM", adVarChar, adParamInput, 10, strVNUM)
-	End With
-	Set rsInteractionLevel = cmdInteractionLevel.Execute
-	
-	With rsInteractionLevel
-		strReturn = "<table class=""NoBorder cell-padding-2"">"
-		While Not .EOF
-			strReturn = strReturn & "<tr><td><label for=""IL_ID_" & .Fields("IL_ID") & """><input name=""IL_ID"" id=""IL_ID_" & .Fields("IL_ID") & """ type=""checkbox"" value=""" & .Fields("IL_ID") & """"
-			If .Fields("IS_SELECTED") Then
-				strReturn = strReturn & " checked"
-			End If
-			strReturn = strReturn & ">&nbsp;" & .Fields("InteractionLevel") & "</label></td><td>" & _
-				"<input type=""text"" title=" & AttrQs(.Fields("InteractionLevel") & TXT_COLON & TXT_NOTES) & " name=""IL_NOTES_" & .Fields("IL_ID") & """ " & _
-				"value=""" & .Fields("Notes") & """ " & _
-				"size=""" & TEXT_SIZE - 20 & """ maxlength=""" & MAX_LENGTH_CHECKLIST_NOTES & """>" & _
-				"</td></tr>"
-			.MoveNext
-		Wend
-		strReturn = strReturn & "</table>"
-	End With
-	
-	If Nl(strNotes) Then
-		intNotesLen = 0
-	Else
-		intNotesLen = Len(strNotes)
-		strNotes = Server.HTMLEncode(strNotes)
-	End If
-	strReturn = strReturn & "<div class=""FieldLabelLeftClr""><label for=""INTERACTION_LEVEL_NOTES"">" & TXT_OTHER_NOTES & "</label></div>" & _
-			"<textarea id=""INTERACTION_LEVEL_NOTES"" name=""INTERACTION_LEVEL_NOTES""" & _
-			" cols=""" & TEXTAREA_COLS & """" & _
-			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
-			">" & strNotes & "</textarea>"
-
-	rsInteractionLevel.Close
-	Set rsInteractionLevel = Nothing
-	Set cmdInteractionLevel = Nothing
-
-	If bFeedback Then
-		strReturn = strReturn & getFeedback("INTERACTION_LEVEL",False)
-	End If
-	makeInteractionLevelContents = strReturn
+	makeInteractionLevelContents = makeStdChecklistContents(rst, bUseContent, "dbo.sp_VOL_VNUMInteractionLevel_s", "IL", "INTERACTION_LEVEL", "InteractionLevel", True, True)
 End Function
 
 Dim bInterests
@@ -558,127 +383,11 @@ Function makeScheduleContents(rst,bUseContent)
 End Function
 
 Function makeSeasonsContents(rst,bUseContent)
-	Dim strReturn
-	Dim strVNUM, strNotes, intNotesLen
-	If bUseContent Then
-		strVNUM = rst("VNUM")
-		strNotes = rst("SEASONS_NOTES")
-	Else
-		strVNUM = Null
-	End If
-	
-	Dim cnnSeasons, cmdSeasons, rsSeasons
-	Call makeNewAdminConnection(cnnSeasons)
-	Set cmdSeasons = Server.CreateObject("ADODB.Command")
-	With cmdSeasons
-		.ActiveConnection = cnnSeasons
-		.CommandText = "dbo.sp_VOL_VNUMSeasons_s"
-		.CommandType = adCmdStoredProc
-		.CommandTimeout = 0
-		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
-		.Parameters.Append .CreateParameter("@VNUM", adVarChar, adParamInput, 10, strVNUM)
-	End With
-	Set rsSeasons = cmdSeasons.Execute
-	
-	With rsSeasons
-		strReturn = "<table class=""NoBorder cell-padding-2"">"
-		While Not .EOF
-			strReturn = strReturn & "<tr><td><label for=""SSN_ID_" & .Fields("SSN_ID") & """><input name=""SSN_ID"" id=""SSN_ID_" & .Fields("SSN_ID") & """ type=""checkbox"" value=""" & .Fields("SSN_ID") & """"
-			If .Fields("IS_SELECTED") Then
-				strReturn = strReturn & " checked"
-			End If
-			strReturn = strReturn & ">&nbsp;" & .Fields("Season") & "</label></td><td>" & _
-				"<input type=""text"" title=" & AttrQs(.Fields("Season") & TXT_COLON & TXT_NOTES) & " name=""SSN_NOTES_" & .Fields("SSN_ID") & """ " & _
-				"value=""" & .Fields("Notes") & """ " & _
-				"size=""" & TEXT_SIZE - 20 & """ maxlength=""" & MAX_LENGTH_CHECKLIST_NOTES & """>" & _
-				"</td></tr>"
-			.MoveNext
-		Wend
-		strReturn = strReturn & "</table>"
-	End With
-	
-	If Nl(strNotes) Then
-		intNotesLen = 0
-	Else
-		intNotesLen = Len(strNotes)
-		strNotes = Server.HTMLEncode(strNotes)
-	End If
-	strReturn = strReturn & "<h4><label for=""SEASONS_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
-			"<textarea id=""SEASONS_NOTES"" name=""SEASONS_NOTES""" & _
-			" cols=""" & TEXTAREA_COLS & """" & _
-			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
-			">" & strNotes & "</textarea>"
-
-	rsSeasons.Close
-	Set rsSeasons = Nothing
-	Set cmdSeasons = Nothing
-
-	If bFeedback Then
-		strReturn = strReturn & getFeedback("SEASONS",False)
-	End If
-	makeSeasonsContents = strReturn
+	makeSeasonsContents = makeStdChecklistContents(rst, bUseContent, "dbo.sp_VOL_VNUMSeasons_s", "SSN", "SEASONS", "Season", True, True)
 End Function
 
 Function makeSkillContents(rst,bUseContent)
-	Dim strReturn
-	Dim strVNUM, strNotes, intNotesLen
-	If bUseContent Then
-		strVNUM = rst("VNUM")
-		strNotes = rst("SKILL_NOTES")
-	Else
-		strVNUM = Null
-	End If
-	
-	Dim cnnSkill, cmdSkill, rsSkill
-	Call makeNewAdminConnection(cnnSkill)
-	Set cmdSkill = Server.CreateObject("ADODB.Command")
-	With cmdSkill
-		.ActiveConnection = cnnSkill
-		.CommandText = "dbo.sp_VOL_VNUMSkill_s"
-		.CommandType = adCmdStoredProc
-		.CommandTimeout = 0
-		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
-		.Parameters.Append .CreateParameter("@VNUM", adVarChar, adParamInput, 10, strVNUM)
-	End With
-	Set rsSkill = cmdSkill.Execute
-	
-	With rsSkill
-		strReturn = "<table class=""NoBorder cell-padding-2"">"
-		While Not .EOF
-			strReturn = strReturn & "<tr><td><label for=""SK_ID_" & .Fields("SK_ID") & """><input name=""SK_ID"" id=""SK_ID_" & .Fields("SK_ID") & """ type=""checkbox"" value=""" & .Fields("SK_ID") & """"
-			If .Fields("IS_SELECTED") Then
-				strReturn = strReturn & " checked"
-			End If
-			strReturn = strReturn & ">&nbsp;" & Server.HTMLEncode(.Fields("Skill")) & "</label></td><td>" & _
-				"<input type=""text"" title=" & AttrQs(.Fields("Skill") & TXT_COLON & TXT_NOTES) & " name=""SK_NOTES_" & .Fields("SK_ID") & """ " & _
-				"value=""" & .Fields("Notes") & """ " & _
-				"size=""" & TEXT_SIZE - 20 & """ maxlength=""" & MAX_LENGTH_CHECKLIST_NOTES & """>" & _
-				"</td></tr>"
-			.MoveNext
-		Wend
-		strReturn = strReturn & "</table>"
-	End With
-	
-	If Nl(strNotes) Then
-		intNotesLen = 0
-	Else
-		intNotesLen = Len(strNotes)
-		strNotes = Server.HTMLEncode(strNotes)
-	End If
-	strReturn = strReturn & "<h4><label for=""SKILL_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
-			"<textarea id=""SKILL_NOTES"" name=""SKILL_NOTES""" & _
-			" cols=""" & TEXTAREA_COLS & """" & _
-			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
-			">" & strNotes & "</textarea>"
-
-	rsSkill.Close
-	Set rsSkill = Nothing
-	Set cmdSkill = Nothing
-
-	If bFeedback Then
-		strReturn = strReturn & getFeedback("SKILLS",False)
-	End If
-	makeSkillContents = strReturn
+	makeSkillContents = makeStdChecklistContents(rst, bUseContent, "dbo.sp_VOL_VNUMSkill_s", "SK", "SKILLS", "Skill", True, True)
 End Function
 
 Function makeSourceContents(rst,bUseContent)
@@ -810,172 +519,95 @@ Function makeStartDateContents(rst,bUseContent)
 	makeStartDateContents = strReturn
 End Function
 
-Function makeSuitabilityContents(rst,bUseContent)
+Function makeStdChecklistContents(rst,bUseContent, strSP, strPrefix, strFieldName, strNameField, bItemNotes, bGeneralNotes)
 	Dim strReturn
-	Dim strVNUM
+	Dim strVNUM, strNotes, intNotesLen, strItemNote, strJunk
 	If bUseContent Then
 		strVNUM = rst("VNUM")
+		If bGeneralNotes Then
+			strNotes = rst(strFieldName & "_NOTES")
+		End If
 	Else
 		strVNUM = Null
 	End If
+
+	If bFeedback Then
+		bFieldHasFeedback = prepStdChecklistFeedback(rsFb, bGeneralNotes, strFieldName)
+	End If
+
+
 	
-	Dim cnnSuitability, cmdSuitability, rsSuitability
-	Call makeNewAdminConnection(cnnSuitability)
-	Set cmdSuitability = Server.CreateObject("ADODB.Command")
-	With cmdSuitability
-		.ActiveConnection = cnnSuitability
-		.CommandText = "dbo.sp_VOL_VNUMSuitability_s"
+	Dim cnnChecklist, cmdChecklist, rsChecklist
+	Call makeNewAdminConnection(cnnChecklist)
+	Set cmdChecklist = Server.CreateObject("ADODB.Command")
+	With cmdChecklist
+		.ActiveConnection = cnnChecklist
+		.CommandText = strSP
 		.CommandType = adCmdStoredProc
 		.CommandTimeout = 0
 		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
 		.Parameters.Append .CreateParameter("@VNUM", adVarChar, adParamInput, 10, strVNUM)
 	End With
-	Set rsSuitability = cmdSuitability.Execute
+	Set rsChecklist = cmdChecklist.Execute
 	
-	With rsSuitability
+	With rsChecklist
 		strReturn = "<table class=""NoBorder cell-padding-2"">"
 		While Not .EOF
-			strReturn = strReturn & "<tr><td><label for=""SB_ID_" & .Fields("SB_ID") & """><input name=""SB_ID"" id=""SB_ID_" & .Fields("SB_ID") & """ type=""checkbox"" value=""" & .Fields("SB_ID") & """"
+			strReturn = strReturn & "<tr><td><label for=""" & strPrefix & "_ID_" & .Fields(strPrefix & "_ID") & """><input name=""" & strPrefix & "_ID"" id=""" & strPrefix & "_ID_" & .Fields(strPrefix & "_ID") & """ type=""checkbox"" value=""" & .Fields(strPrefix & "_ID") & """"
 			If .Fields("IS_SELECTED") Then
 				strReturn = strReturn & " checked"
 			End If
-			strReturn = strReturn & ">&nbsp;" & .Fields("SuitableFor") & "</label></td></tr>"
+			strReturn = strReturn & ">&nbsp;" & .Fields(strNameField) & "</label></td>"
+			If bItemNotes Then
+				strItemNote = .Fields("Notes")
+				strReturn = strReturn & "<td><input type=""text"" title=" & AttrQs(.Fields(strNameField) & TXT_COLON & TXT_NOTES) & " name=""" & strPrefix & "_NOTES_" & .Fields(strPrefix & "_ID") & """ " & _
+				"ID=""" & strPrefix & "_NOTES_" & .Fields(strPrefix & "_ID") & """ " & _
+				"value=""" & strItemNote & """ " & _
+				"size=""" & TEXT_SIZE - 20 & """ maxlength=""" & MAX_LENGTH_CHECKLIST_NOTES & """></td>"
+
+			End If
+			strReturn = strReturn & "</tr>"
+			If bFeedback Then
+				strReturn = strReturn & getStdChecklistFeedback(strPrefix, strFieldName, bItemNotes, .Fields(strPrefix & "_ID"), .Fields("IS_SELECTED"), strItemNote, .Fields(strNameField), TXT_FEEDBACK_NUM, TXT_COLON, TXT_UPDATE, TXT_CONTENT_DELETED)
+			End If
 			.MoveNext
 		Wend
 		strReturn = strReturn & "</table>"
 	End With
 	
-	rsSuitability.Close
-	Set rsSuitability = Nothing
-	Set cmdSuitability = Nothing
-
-	If bFeedback Then
-		strReturn = strReturn & getFeedback("Suitability",False)
+	If bGeneralNotes Then
+		If Nl(strNotes) Then
+			intNotesLen = 0
+		Else
+			intNotesLen = Len(strNotes)
+			strNotes = Server.HTMLEncode(strNotes)
+		End If
+		strReturn = strReturn & "<h4><label for=""" & strFieldName & "_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
+				"<textarea id=""" & strFieldName & "_NOTES"" name=""" & strFieldName & "_NOTES""" & _
+				" cols=""" & TEXTAREA_COLS & """" & _
+				" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
+				">" & strNotes & "</textarea>"
+		If bFeedback Then
+			strReturn = strReturn & getStdChecklistNotesFeedback(strFieldName, strNotes, TXT_FEEDBACK_NUM, TXT_COLON, TXT_UPDATE, TXT_CONTENT_DELETED)
+		End If
 	End If
-	makeSuitabilityContents = strReturn
+
+	rsChecklist.Close
+	Set rsChecklist = Nothing
+	Set cmdChecklist = Nothing
+
+	makeStdChecklistContents = strReturn
+
+End Function
+Function makeSuitabilityContents(rst,bUseContent)
+	makeSuitabilityContents = makeStdChecklistContents(rst, bUseContent, "dbo.sp_VOL_VNUMSuitability_s", "SB", "SUITABILITY", "SuitableFor", False, False)
 End Function
 
 Function makeTrainingContents(rst,bUseContent)
-	Dim strReturn
-	Dim strVNUM, strNotes, intNotesLen
-	If bUseContent Then
-		strVNUM = rst("VNUM")
-		strNotes = rst("TRAINING_NOTES")
-	Else
-		strVNUM = Null
-	End If
-	
-	Dim cnnTraining, cmdTraining, rsTraining
-	Call makeNewAdminConnection(cnnTraining)
-	Set cmdTraining = Server.CreateObject("ADODB.Command")
-	With cmdTraining
-		.ActiveConnection = cnnTraining
-		.CommandText = "dbo.sp_VOL_VNUMTraining_s"
-		.CommandType = adCmdStoredProc
-		.CommandTimeout = 0
-		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
-		.Parameters.Append .CreateParameter("@VNUM", adVarChar, adParamInput, 10, strVNUM)
-	End With
-	Set rsTraining = cmdTraining.Execute
-	
-	With rsTraining
-		strReturn = "<table class=""NoBorder cell-padding-2"">"
-		While Not .EOF
-			strReturn = strReturn & "<tr><td><label for=""TRN_ID_" & .Fields("TRN_ID") & """><input name=""TRN_ID"" id=""TRN_ID_" & .Fields("TRN_ID") & """ type=""checkbox"" value=""" & .Fields("TRN_ID") & """"
-			If .Fields("IS_SELECTED") Then
-				strReturn = strReturn & " checked"
-			End If
-			strReturn = strReturn & ">&nbsp;" & .Fields("TrainingType") & "</label></td><td>" & _
-				"<input type=""text"" title=" & AttrQs(.Fields("TrainingType") & TXT_COLON & TXT_NOTES) & " name=""TRN_NOTES_" & .Fields("TRN_ID") & """ " & _
-				"value=""" & .Fields("Notes") & """ " & _
-				"size=""" & TEXT_SIZE - 20 & """ maxlength=""" & MAX_LENGTH_CHECKLIST_NOTES & """>" & _
-				"</td></tr>"
-			.MoveNext
-		Wend
-		strReturn = strReturn & "</table>"
-	End With
-	
-	If Nl(strNotes) Then
-		intNotesLen = 0
-	Else
-		intNotesLen = Len(strNotes)
-		strNotes = Server.HTMLEncode(strNotes)
-	End If
-	strReturn = strReturn & "<h4><label for=""TRAINING_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
-			"<textarea id=""TRAINING_NOTES"" name=""TRAINING_NOTES""" & _
-			" cols=""" & TEXTAREA_COLS & """" & _
-			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
-			">" & strNotes & "</textarea>"
-
-	rsTraining.Close
-	Set rsTraining = Nothing
-	Set cmdTraining = Nothing
-
-	If bFeedback Then
-		strReturn = strReturn & getFeedback("TRAINING",False)
-	End If
-	makeTrainingContents = strReturn
+	makeTrainingContents = makeStdChecklistContents(rst, bUseContent, "dbo.sp_VOL_VNUMTraining_s", "TRN", "TRAINING", "TrainingType", True, True)
 End Function
 
 Function makeTransportationContents(rst,bUseContent)
-	Dim strReturn
-	Dim strVNUM, strNotes, intNotesLen
-	If bUseContent Then
-		strVNUM = rst("VNUM")
-		strNotes = rst("TRANSPORTATION_NOTES")
-	Else
-		strVNUM = Null
-	End If
-	
-	Dim cnnTransportation, cmdTransportation, rsTransportation
-	Call makeNewAdminConnection(cnnTransportation)
-	Set cmdTransportation = Server.CreateObject("ADODB.Command")
-	With cmdTransportation
-		.ActiveConnection = cnnTransportation
-		.CommandText = "dbo.sp_VOL_VNUMTransportation_s"
-		.CommandType = adCmdStoredProc
-		.CommandTimeout = 0
-		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
-		.Parameters.Append .CreateParameter("@VNUM", adVarChar, adParamInput, 10, strVNUM)
-	End With
-	Set rsTransportation = cmdTransportation.Execute
-	
-	With rsTransportation
-		strReturn = "<table class=""NoBorder cell-padding-2"">"
-		While Not .EOF
-			strReturn = strReturn & "<tr><td><label for=""TRP_ID_" & .Fields("TRP_ID") & """><input name=""TRP_ID"" id=""TRP_ID_" & .Fields("TRP_ID") & """ type=""checkbox"" value=""" & .Fields("TRP_ID") & """"
-			If .Fields("IS_SELECTED") Then
-				strReturn = strReturn & " checked"
-			End If
-			strReturn = strReturn & ">&nbsp;" & .Fields("TransportationType") & "</label></td><td>" & _
-				"<input type=""text"" title=" & AttrQs(.Fields("TransportationType") & TXT_COLON & TXT_NOTES) & " name=""TRP_NOTES_" & .Fields("TRP_ID") & """ " & _
-				"value=""" & .Fields("Notes") & """ " & _
-				"size=""" & TEXT_SIZE - 20 & """ maxlength=""" & MAX_LENGTH_CHECKLIST_NOTES & """>" & _
-				"</td></tr>"
-			.MoveNext
-		Wend
-		strReturn = strReturn & "</table>"
-	End With
-	
-	If Nl(strNotes) Then
-		intNotesLen = 0
-	Else
-		intNotesLen = Len(strNotes)
-		strNotes = Server.HTMLEncode(strNotes)
-	End If
-	strReturn = strReturn & "<h4><label for=""TRANSPORTATION_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
-			"<textarea id=""TRANSPORTATION_NOTES"" name=""TRANSPORTATION_NOTES""" & _
-			" cols=""" & TEXTAREA_COLS & """" & _
-			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
-			">" & strNotes & "</textarea>"
-
-	rsTransportation.Close
-	Set rsTransportation = Nothing
-	Set cmdTransportation = Nothing
-
-	If bFeedback Then
-		strReturn = strReturn & getFeedback("TRANSPORTATION",False)
-	End If
-	makeTransportationContents = strReturn
+	makeTransportationContents = makeStdChecklistContents(rst, bUseContent, "dbo.sp_VOL_VNUMTransportation_s", "TRP", "TRANSPORTATION", "TransportationType", True, True)
 End Function
 %>

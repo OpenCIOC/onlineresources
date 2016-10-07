@@ -54,6 +54,66 @@ Sub makeDropDownValue(strName, strValue, strFunction, bLangID, strFieldName)
 	Response.Write("</td>")
 End Sub
 
+Sub makeChecklistValue(strName, strValue, strPrefix, strTable)
+	Response.Write("<td class=""FieldLabelLeftClr"">" & strName & "</td>")
+	Response.Write("<td>")
+	If Not Nl(strValue) Then
+		Dim strSQL
+		strSQL = _
+		"DECLARE @conStr nvarchar(3), @returnStr nvarchar(max), @Notes nvarchar(MAX), @data xml = " & QsN(strValue) & vbCrLf & _
+		"SET @conStr = cioc_shared.dbo.fn_SHR_STP_ObjectName(' ; ')" & vbCrLf & _
+		"SET @Notes = @data.value('*[1]/NOTE[1]', 'nvarchar(max)')" & vbCrLf & _
+		"SELECT @returnStr =  COALESCE(@returnStr + @conStr,'') " & vbCrLf & _
+		"	+ chkn.Name" & vbCrLf & _
+		"	+ CASE WHEN prn.Notes IS NULL THEN '' ELSE cioc_shared.dbo.fn_SHR_STP_ObjectName(' - ') + prn.Notes END" & vbCrLf & _
+		"FROM (" & vbCrLf & _
+		"SELECT N.value('@ID', 'int') AS pk, N.value('@NOTE', 'nvarchar(255)') AS Notes FROM @data.nodes('*/*/*') AS T(N)" & vbCrLf & _
+		") AS prn" & vbCrLf & _
+		"" & vbCrLf & _
+		"	INNER JOIN " & strTable & " chk" & vbCrLf & _
+		"		ON prn.pk=chk." & strPrefix & "_ID" & vbCrLf & _
+		"	INNER JOIN " & strTable & "_Name chkn" & vbCrLf & _
+		"		ON chk." & strPrefix & "_ID=chkn." & strPrefix & "_ID AND chkn.LangID=@@LANGID" & vbCrLf & _
+		"ORDER BY chk.DisplayOrder, chkn.Name" & vbCrLf & _
+		"" & vbCrLf & _
+		"IF @returnStr IS NULL SET @returnStr = ''" & vbCrLf & _
+		"IF @returnStr = '' SET @conStr = ''" & vbCrLf & _
+		"" & vbCrLf & _
+		"IF @Notes IS NOT NULL BEGIN" & vbCrLf & _
+		"	SET @returnStr = @returnStr + @conStr + @Notes" & vbCrLf & _
+		"END" & vbCrLf & _
+		"" & vbCrLf & _
+		"IF @returnStr = '' SET @returnStr = NULL" & vbCrLf & _
+		"SELECT @returnStr as CheckList"
+
+		Dim cmdDropDown, rsDropDown
+		Set cmdDropDown = Server.CreateObject("ADODB.Command")
+		With cmdDropDown
+			.ActiveConnection = getCurrentAdminCnn()
+			.CommandText = strSQL
+			.CommandType = adCmdText
+			.CommandTimeout = 0
+		End With
+		Set rsDropDown = Server.CreateObject("ADODB.Recordset")
+		With rsDropDown
+			.CursorLocation = adUseClient
+			.CursorType = adOpenStatic
+			.Open cmdDropDown
+			If Not .EOF Then
+				Response.Write(.Fields("CheckList"))
+			End If
+			.Close
+		End With
+		Set rsDropDown = Nothing
+		Set cmdDropDown = Nothing
+
+	Else
+		Response.Write(strValue)
+	End If
+	Response.Write("</td>")
+
+End Sub
+
 Sub printFeedbackInfo(intFBID,intDbAreaID,intFBType)
 	Dim intError
 	intError = 0
@@ -281,6 +341,13 @@ Sub printFeedbackInfo(intFBID,intDbAreaID,intFBType)
 							Case "SUBMIT_DATE"
 								Response.Write("<td class=""FieldLabelLeftClr"">" & TXT_DATE_SUBMITTED & "</td>")
 								Response.Write("<td>" & DateString(fld.Value,True) & "</td>")
+							Case "ACCESSIBILITY"
+								If ps_intDbArea = DM_VOL Then
+									Call makeChecklistValue(Nz(dicFieldNames(fld.Name), fld.Name), fld.Value, "AC", "GBL_Accessibility")
+								ElseIf Not bHidePrivateData Then
+									Response.Write("<td class=""FieldLabelLeftClr"">" & Nz(dicFieldNames(fld.Name),fld.Name) & "</td>")
+									Response.Write("<td>" & Server.HTMLEncode(fld.Value) & "</td>")
+								End If
 							Case "ACCREDITED"
 								If Not bHidePrivateData Then
 									Call makeDropDownValue(Nz(dicFieldNames(fld.Name),fld.Name),fld.Value,"dbo.fn_CIC_DisplayAccreditation",True,Null)
@@ -289,6 +356,10 @@ Sub printFeedbackInfo(intFBID,intDbAreaID,intFBType)
 								If Not bHidePrivateData Then
 									Call makeDropDownValue(Nz(dicFieldNames(fld.Name),fld.Name),fld.Value,"dbo.fn_CIC_DisplayCertification",True,Null)
 								End If
+							Case "COMMITMENT_LENGTH"
+								Call makeChecklistValue(Nz(dicFieldNames(fld.Name), fld.Name), fld.Value, "CL", "VOL_CommitmentLength")
+							Case "INTERACTION_LEVEL"
+								Call makeChecklistValue(Nz(dicFieldNames(fld.Name), fld.Name), fld.Value, "IL", "VOL_InteractionLevel")
 							Case "EMPLOYEES_RANGE"
 								If Not bHidePrivateData Then
 									Response.Write("<td class=""FieldLabelLeftClr"">" & Nz(dicFieldNames(fld.Name),fld.Name) & "</td>")
@@ -368,10 +439,20 @@ Sub printFeedbackInfo(intFBID,intDbAreaID,intFBType)
 								If Not bHidePrivateData Then
 									Call makeDropDownValue(Nz(dicFieldNames(fld.Name),fld.Name),fld.Value,"dbo.fn_CIC_FullRecordType",False,Null)
 								End If
+							Case "SEASONS"
+								Call makeChecklistValue(Nz(dicFieldNames(fld.Name), fld.Name), fld.Value, "SSN", "VOL_Seasons")
+							Case "SKILLS"
+								Call makeChecklistValue(Nz(dicFieldNames(fld.Name), fld.Name), fld.Value, "SK", "VOL_Skill")
 							Case "SOCIAL_MEDIA"
 								If Not bHidePrivateData Then
 									Call makeSocialMediaValue(Nz(dicFieldNames(fld.Name),fld.Name),fld.Value)
 								End If
+							Case "SUITABILITY"
+								Call makeChecklistValue(Nz(dicFieldNames(fld.Name), fld.Name), fld.Value, "SB", "VOL_Suitability")
+							Case "TRAINING"
+								Call makeChecklistValue(Nz(dicFieldNames(fld.Name), fld.Name), fld.Value, "TRN", "VOL_Training")
+							Case "TRANSPORTATION"
+								Call makeChecklistValue(Nz(dicFieldNames(fld.Name), fld.Name), fld.Value, "TRP", "VOL_Transportation")
 							Case "TYPE_OF_PROGRAM"
 								If Not bHidePrivateData Then
 									Call makeDropDownValue(Nz(dicFieldNames(fld.Name),fld.Name),fld.Value,"dbo.fn_CCR_DisplayTypeOfProgram",True,Null)

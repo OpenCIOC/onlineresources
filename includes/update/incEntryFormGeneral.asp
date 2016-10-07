@@ -66,7 +66,7 @@ def prepSocialMediaFeedback(rsFb):
 
 				
 def getSocialMediaFeedback(sm_id, txt_feeback_num, txt_colon,txt_update, txt_content_deleted):
-	template = u'<br><span class="Info">{}%d{}{}</span> <span class="Alert">%s</span> <input type="button" value="{}" onClick="document.EntryForm.SOCIAL_MEDIA_%s.value=%s;">'.format(txt_feeback_num, " (%s)" if pyrequest.multilingual else '', txt_colon, txt_update)
+	template = u'<br><span class="Info">{}%d{}{}</span> <span class="Alert">%s</span> <input type="button" value="{}" onClick="document.EntryForm.SOCIAL_MEDIA_%s.value=%s;">'.format(txt_feeback_num, " (%s)" if pyrequest.multilingual else '%s', txt_colon, txt_update)
 	escape = cgi.escape
 	dumps = json.dumps
 
@@ -150,7 +150,7 @@ def getLanguageNotesFeedback(note, txt_feedback_num, txt_colon, txt_update, txt_
 	dumps = json.dumps
 
 	output = []
-	for i, values in enumerate(ln_feedback_values):
+	for i, values in enumerate(ln_feedback_values, 1):
 		if not values:
 			continue
 
@@ -165,7 +165,7 @@ def getLanguageNotesFeedback(note, txt_feedback_num, txt_colon, txt_update, txt_
 		else:
 			update_value = value = fb['note']
 			
-		output.append(template % {'no': i+1, 'language_name': values['LanguageName'], 'update_value': escape(dumps(unicode(update_value)), True), 'value': escape(value)})
+		output.append(template % {'no': i, 'language_name': values['LanguageName'], 'update_value': escape(dumps(unicode(update_value)), True), 'value': escape(value)})
 
 	return u''.join(output)
 
@@ -212,6 +212,118 @@ def getLanguageDetailValue(lndid, key):
 		return language_detail_map[lndid][key]
 	except KeyError:
 		return None
+
+def prepStdChecklistFeedback(rsFb, general_notes, field_name):
+	global std_checklist_feedback
+	std_checklist_feedback = []
+
+	rsFb.MoveFirst()
+	for row in rs_iter(rsFb):
+		values = {}
+		std_checklist_feedback.append(values)
+		if not row[field_name]:
+			continue
+
+		try:
+			xml = ET.fromstring(row[field_name].encode('utf-8'))
+		except Exception as e:
+			values['language_name'] = row['LanguageName']
+			values['NOTE'] = row[field_name]
+			continue
+
+		values['language_name'] = row['LanguageName']
+		if general_notes:
+			for el in xml.findall('./NOTE'):
+				values['NOTE'] = {'note': el.text}
+
+		for el in xml.findall('*/*'):
+			id = el.get('ID')
+			values[id] = {'id': id, 'note': el.get('NOTE')}
+
+	return bool(any(std_checklist_feedback))
+
+
+def getStdChecklistFeedback(prefix, field_name, item_notes, item_id, checked, note, item_name, txt_feeback_num, txt_colon, txt_update, txt_content_deleted):
+	notes_update = u''
+	if item_notes:
+		notes_update = u'$(\'#{prefix}_NOTES_%(id)s\').val(%(note)s);'.format(prefix=prefix)
+
+	template = u'<br><span class="Info">{fbnum}%(no)d{lang}{colon}</span> <span class="Alert">%(value)s</span> <input type="button" value="{update}" onClick="$(\'#{prefix}_ID_%(id)s\').prop(\'checked\', %(chked)s);{notes_update}">'.format(fbnum=txt_feeback_num, lang=" (%(language_name)s)" if pyrequest.multilingual else '', colon=txt_colon, update=txt_update, prefix=prefix, notes_update=notes_update)
+	escape = cgi.escape
+	dumps = json.dumps
+
+	output = []
+	for i, values in enumerate(std_checklist_feedback, 1):
+		if not values:
+			# no feedback
+			continue
+
+		ns = {'no': i, 'language_name': values['language_name'], 'id': item_id}
+		fb = values.get(str(item_id), {})
+		if not fb:
+			if not int(checked):
+				# no change
+				continue
+
+			ns['value'] = unicode(txt_content_deleted)
+			ns['chked'] = 'false'
+			ns['note'] = ''
+
+		else:
+			if int(checked):
+				if not item_notes:
+					# no change
+					continue
+				elif unicode(note) == fb['note']:
+					#no change
+					continue
+				
+			value = unicode(item_name)
+			if item_notes and fb['note']:
+				value += u' - ' + escape(fb['note'])
+
+			ns['value'] = value
+			ns['chked'] = 'true'
+			ns['note'] = escape(dumps(fb['note']), True)
+
+		output.append(template % ns)
+
+
+	output = u''.join(output)
+	ns = {'fb': output[4:], 'colspan': ''}
+	if item_notes:
+		ns['colspan'] = 'colspan=2'
+
+	return u'<tr><td %(colspan)s>%(fb)s</td></tr>' % ns
+
+
+def getStdChecklistNotesFeedback(field_name, note, txt_feedback_num, txt_colon, txt_update, txt_content_deleted):
+	template = u'<br><span class="Info">{txt_feedback_num}%(no)d{txt_multi_lingual}{txt_colon}</span> <span class="Alert">%(value)s</span> <input type="button" value="{txt_update}" onClick="document.EntryForm.{field}_NOTES.value=%(update_value)s;">'.format(txt_feedback_num=txt_feedback_num, txt_multi_lingual=" (%(language_name)s)" if pyrequest.multilingual else '', txt_colon=txt_colon, txt_update=txt_update, field=field_name)
+
+	escape = cgi.escape
+	dumps = json.dumps
+
+	output = []
+	for i, values in enumerate(std_checklist_feedback, 1):
+		if not values:
+			continue
+
+		fb = values.get('NOTE', {})
+		if not fb or not fb.get('note'):
+			if not note:
+				continue
+			
+			value = unicode(txt_content_deleted)
+			update_value = u''
+
+		else:
+			update_value = value = fb['note']
+			
+		output.append(template % {'no': i, 'language_name': values['language_name'], 'update_value': escape(dumps(unicode(update_value)), True), 'value': escape(value)})
+
+	return u''.join(output)
+	
+
 </script>
 
 <%
