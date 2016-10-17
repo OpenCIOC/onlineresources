@@ -1378,7 +1378,7 @@ INSERT INTO dbo.GBL_Display
           OrderByDesc ,
           GLinkMail ,
           GLinkPub ,
-          VShowTable ,
+          ShowTable ,
           VShowPosition ,
           VShowDuties
         )
@@ -1403,7 +1403,7 @@ SELECT
 		N.value('OrderByDesc[1]', 'bit'),
 		N.value('GLinkMail[1]', 'bit'),
 		N.value('GLinkPub[1]', 'bit'),
-		N.value('VShowTable[1]', 'bit'),
+		N.value('ShowTable[1]', 'bit'),
 		N.value('VShowPosition[1]', 'bit'),
         N.value('VShowDuties[1]', 'bit')
 FROM @xmlData.nodes('//Display') as T(N)

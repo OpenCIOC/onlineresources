@@ -70,7 +70,7 @@ CREATE PROCEDURE [dbo].[sp_VOL_View_u]
 	@OrderByDesc bit,
 	@GLinkMail bit,
 	@GLinkPub bit,
-	@VShowTable bit,
+	@ShowTable bit,
 	@VShowPosition bit,
 	@VShowDuties bit,
 	@GoogleTranslateWidget bit,
@@ -508,7 +508,7 @@ IF @Error = 0 BEGIN
 	END
 	
 	IF @Error=0 BEGIN
-		EXEC @Error = dbo.sp_GBL_Display_u NULL, @ViewType, 2, @ShowID, @ShowOwner, @ShowAlert, @ShowOrg, @ShowCommunity, @ShowUpdateSchedule, @LinkUpdate, @LinkEmail, @LinkSelect, @LinkWeb, @LinkListAdd, @OrderBy, @OrderByCustom, @OrderByDesc, @GlinkMail, @GLinkPub, @VShowTable, @VShowPosition, @VShowDuties, @DisplayOptFields, @ErrMsg OUTPUT
+		EXEC @Error = dbo.sp_GBL_Display_u NULL, @ViewType, 2, @ShowID, @ShowOwner, @ShowAlert, @ShowOrg, @ShowCommunity, @ShowUpdateSchedule, @LinkUpdate, @LinkEmail, @LinkSelect, @LinkWeb, @LinkListAdd, @OrderBy, @OrderByCustom, @OrderByDesc, @GlinkMail, @GLinkPub, @ShowTable, @VShowPosition, @VShowDuties, @DisplayOptFields, @ErrMsg OUTPUT
 	END
 END
 

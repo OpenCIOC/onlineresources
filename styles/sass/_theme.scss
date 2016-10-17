@@ -477,7 +477,7 @@ table.cell-border-top > tbody > tr > td,
 	}
 }
 
-@media screen and (max-width: 1023px)  {
+@mixin compact-results {
 	/* Force table to not be like tables anymore */
 	table.ResponsiveResults, .ResponsiveResults > thead, .ResponsiveResults > tbody, .ResponsiveResults > thead > tr > th, .ResponsiveResults > tbody > tr > td, .ResponsiveResults > tbody > tr {
 		display: block;
@@ -547,6 +547,12 @@ table.cell-border-top > tbody > tr > td,
 		-webkit-border-radius: $cornerRadius;
 		border-radius: $cornerRadius;
 	}
+}
+@media screen and (max-width: 1023px)  {
+	@include compact-results;
+}
+.CompactResults {
+	@include compact-results;
 }
 
 @media screen and (max-width: $screen-sm) {

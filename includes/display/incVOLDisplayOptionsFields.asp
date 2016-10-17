@@ -32,7 +32,7 @@ Dim opt_fld_bVNUM, _
 	opt_intOrderByVOL, _
 	opt_fld_intCustOrderVOL, _
 	opt_bOrderByDescVOL, _
-	opt_bDispTable, _
+	opt_bDispTableVOL, _
 	opt_fld_bPosition, _
 	opt_fld_bDuties, _
 	opt_fld_aCustVOL	
@@ -109,7 +109,7 @@ If Not bAlreadyLoaded Or bForView Then
 			opt_intOrderByVOL = Nz(.Fields("OrderBy"),OB_REQUEST)
 			opt_fld_intCustOrderVOL = .Fields("OrderByCustom")
 			opt_bOrderByDescVOL = .Fields("OrderByDesc")
-			opt_bDispTable = .Fields("VShowTable")
+			opt_bDispTableVOL = .Fields("ShowTable")
 			opt_fld_bPosition = .Fields("VShowPosition")
 			opt_fld_bDuties = .Fields("VShowDuties")
 			opt_fld_aCustVOL = Null
@@ -148,7 +148,7 @@ If Not bAlreadyLoaded Or bForView Then
 		Call setSessionValue("opt_intOrderByVOL", opt_intOrderByVOL)
 		Call setSessionValue("opt_fld_intCustOrderVOL", opt_fld_intCustOrderVOL)
 		Call setSessionValue("opt_bOrderByDescVOL", opt_bOrderByDescVOL)
-		Call setSessionValue("opt_bDispTable", opt_bDispTable)
+		Call setSessionValue("opt_bDispTableVOL", opt_bDispTableVOL)
 		Call setSessionValue("opt_fld_bPosition", opt_fld_bPosition)
 		Call setSessionValue("opt_fld_bDuties", opt_fld_bDuties)
 		If IsArray(opt_fld_aCustVOL) Then
@@ -176,7 +176,7 @@ Else
 	End If
 	opt_fld_intCustOrderVOL = Nz(getSessionValue("opt_fld_intCustOrderVOL"),opt_fld_intCustOrderVOL)
 	opt_bOrderByDescVOL = Nz(getSessionValue("opt_bOrderByDescVOL"),opt_bOrderByDescVOL)
-	opt_bDispTable = Nz(getSessionValue("opt_bDispTable"),opt_bDispTable)
+	opt_bDispTableVOL = Nz(getSessionValue("opt_bDispTableVOL"),opt_bDispTableVOL)
 	opt_fld_bPosition = Nz(getSessionValue("opt_fld_bPosition"),opt_fld_bPosition)
 	opt_fld_bDuties = Nz(getSessionValue("opt_fld_bDuties"),opt_fld_bDuties)
 	If Not Nl(getSessionValue("opt_fld_aCustVOL")) Then
@@ -212,7 +212,7 @@ End If
 <tr>
 	<td><table class="NoBorder cell-padding-2" width="100%">
 	<tr>
-		<td><label for="opt_bDispTable"><input name="opt_bDispTable" id="opt_bDispTable" type="checkbox"<%=Checked(opt_bDispTable)%>>&nbsp;<%=TXT_USE_TABLE_FORMAT%></label></td>
+		<td><label for="opt_bDispTable"><input name="opt_bDispTable" id="opt_bDispTable" type="checkbox"<%=Checked(opt_bDispTableVOL)%>>&nbsp;<%=TXT_USE_TABLE_FORMAT%></label></td>
 		<td><label for="opt_bWebVOL"><input name="opt_bWebVOL" id="opt_bWebVOL" type="checkbox"<%=Checked(opt_bWebVOL)%>>&nbsp;<%=TXT_WEB_ENABLE%></label></td>
 	</tr>
 <%If Not bForView Then%>
@@ -340,7 +340,7 @@ Else
 	opt_fld_intCustOrderVOL = Null
 End If
 opt_bOrderByDescVOL = Request.Form("opt_bOrderByDescVOL") = "on"
-opt_bDispTable = Request.Form("opt_bDispTable") = "on"
+opt_bDispTableVOL = Request.Form("opt_bDispTableVOL") = "on"
 opt_fld_bPosition = Request.Form("opt_fld_bPosition") = "on"
 opt_fld_bDuties = Request.Form("opt_fld_bDuties") = "on"
 aTmpFldList = Split(Request.Form("opt_fld_aCustVOL"),",")
@@ -380,7 +380,7 @@ If getSessionValue("session_test") = "ok" Then
 		Call setSessionValue("opt_fld_intCustOrderVOL", Null)
 	End If
 	Call setSessionValue("opt_bOrderByDescVOL", Request.Form("opt_bOrderByDescVOL") = "on")
-	Call setSessionValue("opt_bDispTable", Request.Form("opt_bDispTable") = "on")
+	Call setSessionValue("opt_bDispTableVOL", Request.Form("opt_bDispTableVOL") = "on")
 	Call setSessionValue("opt_fld_bPosition", Request.Form("opt_fld_bPosition") = "on")
 	Call setSessionValue("opt_fld_bDuties", Request.Form("opt_fld_bDuties") = "on")
 	aTmpFldList = Split(Request.Form("opt_fld_aCustVOL"),",")
@@ -420,7 +420,7 @@ Sub saveDisplayOptionsVOL( _
 	intOrderBy, _
 	intOrderByCustom, _
 	bOrderByDesc, _
-	bVShowTable, _
+	bShowTable, _
 	bVShowPosition, _
 	bVShowDuties, _
 	strFieldList _
@@ -463,7 +463,7 @@ Sub saveDisplayOptionsVOL( _
 		.Parameters.Append .CreateParameter("@OrderByDesc", adBoolean, adParamInput, 1, IIf(bOrderByDesc,SQL_TRUE,SQL_FALSE))
 		.Parameters.Append .CreateParameter("@GLinkMail", adBoolean, adParamInput, 1, SQL_FALSE)
 		.Parameters.Append .CreateParameter("@GLinkPub", adBoolean, adParamInput, 1, SQL_FALSE)
-		.Parameters.Append .CreateParameter("@VShowTable", adBoolean, adParamInput, 1, bVShowTable)
+		.Parameters.Append .CreateParameter("@ShowTable", adBoolean, adParamInput, 1, bShowTable)
 		.Parameters.Append .CreateParameter("@VShowPosition", adBoolean, adParamInput, 1, bVShowPosition)
 		.Parameters.Append .CreateParameter("@VShowDuties", adBoolean, adParamInput, 1, bVShowDuties)
 		.Parameters.Append .CreateParameter("@FieldList", adLongVarChar, adParamInput, -1, strFieldList)
