@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -177,7 +176,7 @@ SELECT
 		UNION SELECT
 				fo.FORMER_ORG AS Name,
 				'false' AS Confidential,
-				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LangID) + fo.DATE_OF_CHANGE,'') AS Description
+				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LabelLangOverride) + fo.DATE_OF_CHANGE,'') AS Description
 			FROM GBL_BT_FORMERORG fo
 			WHERE fo.NUM=bt.NUM AND fo.LangID=btd.LangID
 		UNION SELECT
@@ -465,7 +464,7 @@ SELECT
 			UNION SELECT
 					fo.FORMER_ORG AS Name,
 					'false' AS Confidential,
-					cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LangID) + fo.DATE_OF_CHANGE,'') AS Description
+					cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LabelLangOverride) + fo.DATE_OF_CHANGE,'') AS Description
 				FROM GBL_BT_FORMERORG fo
 				WHERE fo.NUM=slbtd.NUM AND fo.LangID=slbtd.LangID
 					AND NOT EXISTS(SELECT * FROM GBL_BT_FORMERORG ofo WHERE ofo.NUM=slbt.ORG_NUM AND ofo.LangID=fo.LangID AND ofo.FORMER_ORG=fo.FORMER_ORG)
@@ -788,7 +787,7 @@ SELECT
 		UNION SELECT
 				fo.FORMER_ORG AS Name,
 				'false' AS Confidential,
-				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LangID) + fo.DATE_OF_CHANGE,'') AS Description
+				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LabelLangOverride) + fo.DATE_OF_CHANGE,'') AS Description
 			FROM GBL_BT_FORMERORG fo
 			WHERE fo.NUM=svbt.NUM AND fo.LangID=svbtd.LangID
 		UNION SELECT
@@ -1162,7 +1161,7 @@ SELECT
 		UNION SELECT
 				fo.FORMER_ORG AS Name,
 				'false' AS Confidential,
-				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LangID) + fo.DATE_OF_CHANGE,'') AS Description
+				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LabelLangOverride) + fo.DATE_OF_CHANGE,'') AS Description
 			FROM GBL_BT_FORMERORG fo
 			WHERE fo.NUM=svbt.NUM AND fo.LangID=svbtd.LangID
 		UNION SELECT
