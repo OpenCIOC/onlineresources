@@ -48,7 +48,7 @@ SELECT	vw.ViewType,
 			AND vwd.LangID = (SELECT TOP 1 LangID FROM VOL_View_Description WHERE ViewType=vwd.ViewType ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
 	LEFT JOIN GBL_View_DomainMap mp
 		ON vw.ViewType = mp.VOLViewType AND mp.MemberID=@MemberID
-WHERE vw.MemberID=@MemberID AND
+WHERE vw.MemberID=@MemberID AND mp.SecondaryName=0 AND
 	(
 		EXISTS(SELECT * FROM VOL_View_Recurse vr WHERE vr.ViewType=@DefaultView AND vr.CanSee=vw.ViewType)
 		OR vw.ViewType=@DefaultView
