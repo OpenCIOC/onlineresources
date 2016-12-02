@@ -58,18 +58,15 @@ class IconlistView(ViewBase):
 		request = self.request
 		user = request.user
 
-		if user.SuperUser:
-			with request.connmgr.get_connection('admin') as conn:
-				sql = '''
-				EXEC sp_STP_Icon_ls NULL, NULL
-				'''
-				cursor = conn.execute(sql)
+		with request.connmgr.get_connection('admin') as conn:
+			sql = '''
+			EXEC sp_STP_Icon_ls NULL, NULL
+			'''
+			cursor = conn.execute(sql)
 
-				icons = cursor.fetchall()
+			icons = cursor.fetchall()
 
-				cursor.close()
-		else:
-			icons = None
+			cursor.close()
 
 		title = _('Browse Icons', request)
 		return self._create_response_namespace(title, title, {'icons': icons, 'make_icon_html': make_icon_html}, no_index=True)
