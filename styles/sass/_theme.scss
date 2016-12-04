@@ -555,7 +555,7 @@ table.cell-border-top > tbody > tr > td,
 	@include compact-results;
 }
 
-@media screen and (max-width: $screen-sm) {
+@mixin phone-results {
 	table.ResponsiveResults > tbody > tr > td {
 		/* Behave  like a "row" */
 		border: none;
@@ -597,6 +597,12 @@ table.cell-border-top > tbody > tr > td,
 
 	#ActionList {
 		max-width: 100%;
+	}
+}
+@media screen and (max-width: $screen-sm) {
+	@include phone-results;
+	.CompactResults {
+		@include phone-results;
 	}
 }
 
