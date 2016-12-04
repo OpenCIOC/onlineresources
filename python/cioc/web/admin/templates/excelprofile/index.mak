@@ -20,48 +20,46 @@
 <%inherit file="cioc.web:templates/master.mak" />
 
 <%def name="makeExcelProfileList(name, add_empty=False, id=None)">
-<select name="${name}" id="${id or name}">
+<select name="${name}" id="${id or name}" class="form-control">
 	%if add_empty:
 	<option value=""> -- </option>
 	%endif
 	%for profile in profiles:
-		<option value="${profile.ProfileID}">${profile.ProfileName}</option>
+		<option value="${profile.ProfileID}">#${profile.ProfileID} - ${profile.ProfileName}</option>
 	%endfor
 </select>
 </%def>
+
 <p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> ]</p>
 %if profiles:
-<form action="${request.route_path('admin_excelprofile', action='edit')}" method="get">
+<form action="${request.route_path('admin_excelprofile', action='edit')}" method="get" class="form-inline">
+<div style="display: none;">
 ${request.passvars.cached_form_vals|n}
-<table class="BasicBorder cell-padding-3">
-<tr>
-	<th class="RevTitleBox">${renderer.label('ProfileID', _('Edit Excel Profile'))}</th>
-</tr>
-<tr>
-<td>
+</div>
+<h2><label for="ProfileID">${_('Edit Excel Profile')}</label></h2>
 ${makeExcelProfileList('ProfileID')}
-<input type="submit" value="${_('View/Edit Excel Profile')}"></td>
-</tr>
-</table>
+<input type="submit" value="${_('View/Edit Excel Profile')}" class="btn btn-default">
 </form>
 <br>
 %else:
 <p><em>${_('There are no existing profiles.')}</em></p>
 %endif
-<form action="${request.route_path('admin_excelprofile', action='add')}" method="get">
+
+<form action="${request.route_path('admin_excelprofile', action='add')}" method="get" class="form-horizontal">
+<div style="display: none;">
 ${request.passvars.cached_form_vals|n}
-<table class="BasicBorder cell-padding-3">
-<tr>
-	<th class="RevTitleBox" colspan="2">${_('Create New Excel Profile')}</th>
-</tr>
+</div>
+<h2>${_('Create New Excel Profile')}</h2>
 %if profiles:
-<tr>
-	<td class="FieldLabelLeft">${renderer.label('NewProfileID', _('Copy Existing Excel Profile'))}</td>
-	<td>${makeExcelProfileList('ProfileID', add_empty=True, id='NewProfileID')}</td>
-</tr>
+<div class="max-width-sm">
+	<div class="form-group row">
+		${renderer.label('NewProfileID', _('Copy Existing Excel Profile'), class_='control-label col-sm-4')}
+		<div class="col-sm-8">
+			${makeExcelProfileList('ProfileID', add_empty=True, id='NewProfileID')}
+		</div>
+	</div>
+</div>
 %endif
-<tr>
-	<td colspan="2" align="center"><input type="submit" value="${_('Add Excel Profile')}"></td>
-</tr>
-</table>
+<input type="submit" value="${_('Add Excel Profile')}" class="btn btn-default">
+
 </form>
