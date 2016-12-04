@@ -483,6 +483,8 @@
 				<xs:documentation>optional value linking this SiteService to a ServiceGroup (Program)</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<xs:attribute name="ExcludeFromWebsite" type="xs:boolean"/>
+		<xs:attribute name="ExcludeFromDirectory" type="xs:boolean"/>
 	</xs:complexType>
 	<xs:complexType name="tSpatialLocation">
 		<xs:annotation>
