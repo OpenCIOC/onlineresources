@@ -114,7 +114,7 @@ class ViewData(object):
 						''',
 					request.dboptions.MemberID,
 					request.user.User_ID, request.pageinfo.ThisPageFull,
-					use_view_cic, use_view_vol, request.host, get_remote_ip(request), not bool(passvars.RequestLn))
+					use_view_cic, use_view_vol, request.host, not bool(passvars.RequestLn), get_remote_ip(request))
 
 			culture = cursor.fetchone()
 			if culture:
