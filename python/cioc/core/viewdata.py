@@ -21,6 +21,7 @@ from pyramid.decorator import reify
 
 import cioc.core.constants as const
 from cioc.core.basetypes import IsIDType
+from cioc.core.security import get_remote_ip
 
 log = logging.getLogger(__name__)
 
@@ -109,7 +110,7 @@ class ViewData(object):
 		with request.connmgr.get_connection() as conn:
 			cursor = conn.execute('''
 						DECLARE @RC int, @ErrMsg nvarchar(500)
-						EXEC @RC = dbo.sp_GBL_Users_s_View ?,?,?,?,?,?,?, @ErrMsg OUTPUT
+						EXEC @RC = dbo.sp_GBL_Users_s_View ?,?,?,?,?,?,?, @ErrMsg=@ErrMsg OUTPUT
 						''',
 					request.dboptions.MemberID,
 					request.user.User_ID, request.pageinfo.ThisPageFull,
