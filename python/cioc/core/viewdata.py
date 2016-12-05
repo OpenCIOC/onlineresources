@@ -110,11 +110,11 @@ class ViewData(object):
 		with request.connmgr.get_connection() as conn:
 			cursor = conn.execute('''
 						DECLARE @RC int, @ErrMsg nvarchar(500)
-						EXEC @RC = dbo.sp_GBL_Users_s_View ?,?,?,?,?,?,?, @ErrMsg=@ErrMsg OUTPUT
+						EXEC @RC = dbo.sp_GBL_Users_s_View ?,?,?,?,?,?,?,?, @ErrMsg=@ErrMsg OUTPUT
 						''',
 					request.dboptions.MemberID,
 					request.user.User_ID, request.pageinfo.ThisPageFull,
-					use_view_cic, use_view_vol, request.host, not bool(passvars.RequestLn))
+					use_view_cic, use_view_vol, request.host, get_remote_ip(request), not bool(passvars.RequestLn))
 
 			culture = cursor.fetchone()
 			if culture:
