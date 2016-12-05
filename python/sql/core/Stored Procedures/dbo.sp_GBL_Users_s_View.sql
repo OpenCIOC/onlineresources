@@ -12,6 +12,7 @@ CREATE PROCEDURE [dbo].[sp_GBL_Users_s_View]
 	@UseViewVOL [int],
 	@ServerName [varchar](255),
 	@IsDefaultCulture [bit],
+	@IPAddress varchar(20) = NULL,
 	@ErrMsg [nvarchar](255) OUTPUT
 WITH EXECUTE AS CALLER
 AS
@@ -316,6 +317,7 @@ SET NOCOUNT OFF
 
 
 GO
+
 
 
 
