@@ -12,7 +12,8 @@ CREATE PROCEDURE [dbo].[sp_CIC_PrintProfile_u]
 	@PageBreak [bit],
 	@Separator [varchar](255),
 	@MsgBeforeRecord [bit],
-	@InViews [varchar](max),
+	@Public [bit],
+	@InViews [varchar](MAX),
 	@Descriptions [xml],
 	@ErrMsg nvarchar(500) OUTPUT
 WITH EXECUTE AS CALLER
@@ -147,7 +148,8 @@ IF @Error = 0 BEGIN
 		TableClass		= @TableClass,
 		PageBreak		= @PageBreak,
 		Separator		= @Separator,
-		MsgBeforeRecord	= @MsgBeforeRecord
+		MsgBeforeRecord	= @MsgBeforeRecord,
+		[Public]		= @Public
 	WHERE ProfileID = @ProfileID
 	EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @ProfileObjectName, @ErrMsg
 	

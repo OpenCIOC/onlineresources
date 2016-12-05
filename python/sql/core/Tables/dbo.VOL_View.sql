@@ -50,8 +50,11 @@ CREATE TABLE [dbo].[VOL_View]
 [AssignSuggestionsTo] [char] (3) COLLATE Latin1_General_100_CI_AI NULL,
 [AllowPDF] [bit] NOT NULL CONSTRAINT [DF_VOL_View_AllowPDF] DEFAULT ((0)),
 [GoogleTranslateWidget] [bit] NOT NULL CONSTRAINT [DF_VOL_View_GoogleTranslateWidget] DEFAULT ((0)),
-[DataUseAuthPhone] [bit] NOT NULL CONSTRAINT [DF_VOL_View_DataUseAuthPhone] DEFAULT ((1))
+[DataUseAuthPhone] [bit] NOT NULL CONSTRAINT [DF_VOL_View_DataUseAuthPhone] DEFAULT ((1)),
+[DefaultPrintProfile] [int] NULL
 ) ON [PRIMARY]
+ALTER TABLE [dbo].[VOL_View] ADD
+CONSTRAINT [FK_VOL_View_GBL_PrintProfile] FOREIGN KEY ([DefaultPrintProfile]) REFERENCES [dbo].[GBL_PrintProfile] ([ProfileID])
 ALTER TABLE [dbo].[VOL_View] ADD 
 CONSTRAINT [PK_VOL_View] PRIMARY KEY CLUSTERED  ([ViewType]) ON [PRIMARY]
 CREATE UNIQUE NONCLUSTERED INDEX [IX_VOL_View_ViewTypeInclViewCriteria] ON [dbo].[VOL_View] ([ViewType]) INCLUDE ([CanSeeDeleted], [CanSeeExpired], [CanSeeNonPublic], [HidePastDueBy], [MemberID]) ON [PRIMARY]

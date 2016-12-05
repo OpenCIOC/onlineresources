@@ -102,6 +102,7 @@ Dim	strStyleSheet, _
 	bMsgBeforeRecord, _
 	strSeparator, _
 	bPageBreak, _
+	bPublic, _
 	strInViews, _
 	strDescriptions, _
 	strDesc, _
@@ -116,6 +117,7 @@ strSeparator = Request("Separator")
 
 bMsgBeforeRecord = IIf(Request("MsgBeforeRecord") = "on",SQL_TRUE,SQL_FALSE)
 bPageBreak = IIf(Request("PageBreak") = "on",SQL_TRUE,SQL_FALSE)
+bPublic = IIf(Request("Public") = "on",SQL_TRUE,SQL_FALSE)
 
 strDescriptions = vbNullString
 bGotName = False
@@ -180,6 +182,7 @@ If Not bError Then
 		.Parameters.Append .CreateParameter("@PageBreak", adBoolean, adParamInput, 1, bPageBreak)
 		.Parameters.Append .CreateParameter("@Separator", adVarChar, adParamInput, 255, strSeparator)
 		.Parameters.Append .CreateParameter("@MsgBeforeRecord", adBoolean, adParamInput, 1, bMsgBeforeRecord)
+		.Parameters.Append .CreateParameter("@Public", adBoolean, adParamInput, 1, bPublic)
 		.Parameters.Append .CreateParameter("@InViews", adLongVarChar, adParamInput, -1, strInViews)
 		.Parameters.Append .CreateParameter("@Descriptions", adVarWChar, adParamInput, -1, strDescriptions)
 		Set objErrMsg = .CreateParameter("@ErrMsg", adVarWChar, adParamOutput, 500)

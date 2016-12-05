@@ -88,6 +88,7 @@ class ViewBaseSchema(Schema):
 	AssignSuggestionsTo = ciocvalidators.AgencyCodeValidator()
 	AllowPDF = validators.Bool()
 	GoogleTranslateWidget = validators.Bool()
+	DefaultPrintProfile = ciocvalidators.IDValidator()
 
 	Owner = ciocvalidators.AgencyCodeValidator()
 
@@ -561,6 +562,7 @@ class View(viewbase.AdminViewBase):
 		inclusion_policies = []
 		search_tips = []
 		disp_opt_field_descs = []
+		print_profiles = []
 
 		publication_descs = []
 
@@ -607,6 +609,10 @@ class View(viewbase.AdminViewBase):
 			cursor.nextset()
 
 			disp_opt_field_descs = cursor.fetchall()
+
+			cursor.nextset()
+
+			print_profiles = cursor.fetchall()
 
 			if domain.id == const.DM_CIC:
 				cursor.nextset()
@@ -659,7 +665,8 @@ class View(viewbase.AdminViewBase):
 				inclusion_policies=inclusion_policies, domain=domain,
 				search_tips=search_tips, chk_field_descs=chk_field_descs,
 				view_descs=view_descs, ErrMsg=ErrMsg,
-				disp_opt_field_descs=[tuple(x) for x in disp_opt_field_descs]),
+				disp_opt_field_descs=[tuple(x) for x in disp_opt_field_descs],
+				print_profiles=[tuple(x) for x in print_profiles]),
 			no_index=True)
 
 	@view_config(match_param='action=edit', renderer=templateprefix + 'edit.mak')
@@ -703,6 +710,7 @@ class View(viewbase.AdminViewBase):
 		chk_fields = []
 		disp_opt = None
 		disp_opt_fields = []
+		print_profiles = []
 
 		usage = None
 		security_levels = []
@@ -743,6 +751,10 @@ class View(viewbase.AdminViewBase):
 				cursor.nextset()
 
 				disp_opt_fields = set(x[0] for x in cursor.fetchall())
+
+				cursor.nextset()
+
+				print_profiles = cursor.fetchall()
 
 				if domain.id == const.DM_CIC:
 					cursor.nextset()
@@ -851,6 +863,7 @@ class View(viewbase.AdminViewBase):
 				pubs_with_headings=format_pub_list(pubs_with_headings, True),
 				inclusion_policies=inclusion_policies, domain=domain,
 				search_tips=search_tips, disp_opt_field_descs=[tuple(x) for x in disp_opt_field_descs],
+				print_profiles=[tuple(x) for x in print_profiles],
 				chk_field_descs=chk_field_descs, view_descs=view_descs),
 			no_index=True)
 

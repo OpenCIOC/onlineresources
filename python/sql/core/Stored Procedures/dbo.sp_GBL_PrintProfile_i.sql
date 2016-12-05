@@ -73,6 +73,7 @@ END ELSE BEGIN
 			StyleSheet,
 			TableClass,
 			MsgBeforeRecord,
+			[Public],
 			Separator,
 			PageBreak
 		) SELECT 
@@ -85,6 +86,7 @@ END ELSE BEGIN
 			StyleSheet,
 			TableClass,
 			MsgBeforeRecord,
+			[Public],
 			Separator,
 			PageBreak
 		FROM GBL_PrintProfile

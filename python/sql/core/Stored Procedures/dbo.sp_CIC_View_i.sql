@@ -220,7 +220,8 @@ END ELSE BEGIN
 			ResultsPageSize,
 			AllowPDF,
 			ShowRecordDetailsSidebar,
-			GoogleTranslateWidget
+			GoogleTranslateWidget,
+			DefaultPrintProfile
 		)
 		SELECT
 			GETDATE(),
@@ -312,7 +313,8 @@ END ELSE BEGIN
 			ResultsPageSize,
 			AllowPDF,
 			ShowRecordDetailsSidebar,
-			GoogleTranslateWidget
+			GoogleTranslateWidget,
+			DefaultPrintProfile
 		FROM CIC_View
 		WHERE ViewType = @DefaultView
 
@@ -449,6 +451,7 @@ END ELSE BEGIN
 				ShowUpdateSchedule,
 				LinkWeb,
 				LinkListAdd,
+				ShowTable,
 				OrderBy,
 				OrderByCustom,
 				OrderByDesc
@@ -463,6 +466,7 @@ END ELSE BEGIN
 				ShowUpdateSchedule,
 				LinkWeb,
 				LinkListAdd,
+				ShowTable,
 				OrderBy,
 				OrderByCustom,
 				OrderByDesc
