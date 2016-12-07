@@ -1,11 +1,8 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
-
-
-
 
 CREATE PROCEDURE [dbo].[sp_GBL_AIRS_Export_3_0] (
 	@ViewType [int],
@@ -15,7 +12,8 @@ CREATE PROCEDURE [dbo].[sp_GBL_AIRS_Export_3_0] (
 	@PartialDate [datetime],
 	@IncludeDeleted [bit],
 	@AutoIncludeSiteAgency [bit],
-	@AgencyNUM [varchar](8) = NULL
+	@AgencyNUM [varchar](8) = NULL,
+	@LabelLangOverride smallint = 0
 )
 WITH EXECUTE AS CALLER
 AS
@@ -175,13 +173,13 @@ SELECT
 		UNION SELECT
 				fo.FORMER_ORG AS Name,
 				'false' AS Confidential,
-				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LangID) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LangID) + fo.DATE_OF_CHANGE,'') AS Description
+				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LabelLangOverride) + fo.DATE_OF_CHANGE,'') AS Description
 			FROM GBL_BT_FORMERORG fo
 			WHERE fo.NUM=bt.NUM AND fo.LangID=btd.LangID
 		UNION SELECT
 				btd.LEGAL_ORG COLLATE Latin1_General_100_CS_AS AS Name,
 				'false' AS Confidential,
-				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Legal Name',@LangID) AS Description
+				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Legal Name',@LabelLangOverride) AS Description
 			WHERE btd.LEGAL_ORG IS NOT NULL
 		) aka
 	FOR XML PATH('AKA'), TYPE),
@@ -343,7 +341,7 @@ SELECT
 		(SELECT ISNULL(FieldDisplay,FieldName)
 			FROM GBL_FieldOption fo
 			LEFT JOIN GBL_FieldOption_Description fod
-				ON fo.FieldID=fod.FieldID AND fod.LangID=btd.LangID
+				ON fo.FieldID=fod.FieldID AND fod.LangID=@LabelLangOverride
 			WHERE fo.FieldName=c.GblContactType) AS "@Type",
 	
 	-- CONTACT > TITLE
@@ -463,14 +461,14 @@ SELECT
 			UNION SELECT
 					fo.FORMER_ORG AS Name,
 					'false' AS Confidential,
-					cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LangID) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LangID) + fo.DATE_OF_CHANGE,'') AS Description
+					cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LabelLangOverride) + fo.DATE_OF_CHANGE,'') AS Description
 				FROM GBL_BT_FORMERORG fo
 				WHERE fo.NUM=slbtd.NUM AND fo.LangID=slbtd.LangID
 					AND NOT EXISTS(SELECT * FROM GBL_BT_FORMERORG ofo WHERE ofo.NUM=slbt.ORG_NUM AND ofo.LangID=fo.LangID AND ofo.FORMER_ORG=fo.FORMER_ORG)
 			UNION SELECT
 					slbtd.LEGAL_ORG COLLATE Latin1_General_100_CS_AS AS Name,
 					'false' AS Confidential,
-					cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Legal Name',@LangID) AS Description
+					cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Legal Name',@LabelLangOverride) AS Description
 				WHERE slbtd.LEGAL_ORG IS NOT NULL
 			UNION SELECT
 						slbtd.ORG_LEVEL_1
@@ -616,7 +614,7 @@ SELECT
 			(SELECT ISNULL(FieldDisplay,FieldName)
 				FROM GBL_FieldOption fo
 				LEFT JOIN GBL_FieldOption_Description fod
-					ON fo.FieldID=fod.FieldID AND fod.LangID=slbtd.LangID
+					ON fo.FieldID=fod.FieldID AND fod.LangID=@LabelLangOverride
 				WHERE fo.FieldName=c.GblContactType) AS "@Type",
 
 	-- SITE > CONTACT > TITLE
@@ -743,6 +741,10 @@ SELECT
 	-- SITE > SERVICE
 		(SELECT
 
+	-- EXCLUDE FROM WEB / DIRECTORY
+		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 THEN 'true' ELSE 'false' END AS "@ExcludeFromWebsite",
+		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 THEN 'true' ELSE 'false' END AS "@ExcludeFromDirectory",
+
 	-- SITE > SERVICE > NAME
 		/*
 		ISNULL(svbtd.ORG_LEVEL_1,'') + ISNULL(', ' + svbtd.ORG_LEVEL_2,'') + ISNULL(', ' + svbtd.ORG_LEVEL_3,'') + ISNULL(', ' + svbtd.ORG_LEVEL_4,'') + ISNULL(', ' + svbtd.ORG_LEVEL_5,'') AS Name,
@@ -782,13 +784,13 @@ SELECT
 		UNION SELECT
 				fo.FORMER_ORG AS Name,
 				'false' AS Confidential,
-				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LangID) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LangID) + fo.DATE_OF_CHANGE,'') AS Description
+				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LabelLangOverride) + fo.DATE_OF_CHANGE,'') AS Description
 			FROM GBL_BT_FORMERORG fo
 			WHERE fo.NUM=svbt.NUM AND fo.LangID=svbtd.LangID
 		UNION SELECT
 				svbtd.LEGAL_ORG COLLATE Latin1_General_100_CS_AS AS Name,
 				'false' AS Confidential,
-				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Legal Name',@LangID) AS Description
+				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Legal Name',@LabelLangOverride) AS Description
 			WHERE svbtd.LEGAL_ORG IS NOT NULL
 		UNION SELECT
 					svbtd.ORG_LEVEL_1
@@ -874,7 +876,7 @@ SELECT
 			(SELECT ISNULL(FieldDisplay,FieldName)
 				FROM GBL_FieldOption fo
 				LEFT JOIN GBL_FieldOption_Description fod
-					ON fo.FieldID=fod.FieldID AND fod.LangID=svbtd.LangID
+					ON fo.FieldID=fod.FieldID AND fod.LangID=@LabelLangOverride	 
 				WHERE fo.FieldName=c.GblContactType) AS "@Type",
 
 	-- SITE > SERVICE > CONTACT > TITLE
@@ -1113,6 +1115,10 @@ SELECT
 	-- SITE > SERVICE
 		(SELECT
 
+	-- EXCLUDE FROM WEB / DIRECTORY
+		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 THEN 'true' ELSE 'false' END AS "@ExcludeFromWebsite",
+		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 THEN 'true' ELSE 'false' END AS "@ExcludeFromDirectory",
+
 	-- SITE > SERVICE > NAME
 		/*
 		ISNULL(svbtd.ORG_LEVEL_1,'') + ISNULL(', ' + svbtd.ORG_LEVEL_2,'') + ISNULL(', ' + svbtd.ORG_LEVEL_3,'') + ISNULL(', ' + svbtd.ORG_LEVEL_4,'') + ISNULL(', ' + svbtd.ORG_LEVEL_5,'') AS Name,
@@ -1152,13 +1158,13 @@ SELECT
 		UNION SELECT
 				fo.FORMER_ORG AS Name,
 				'false' AS Confidential,
-				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LangID) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LangID) + fo.DATE_OF_CHANGE,'') AS Description
+				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LabelLangOverride) + fo.DATE_OF_CHANGE,'') AS Description
 			FROM GBL_BT_FORMERORG fo
 			WHERE fo.NUM=svbt.NUM AND fo.LangID=svbtd.LangID
 		UNION SELECT
 				svbtd.LEGAL_ORG COLLATE Latin1_General_100_CS_AS AS Name,
 				'false' AS Confidential,
-				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Legal Name',@LangID) AS Description
+				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Legal Name',@LabelLangOverride) AS Description
 			WHERE svbtd.LEGAL_ORG IS NOT NULL
 		UNION SELECT
 					svbtd.ORG_LEVEL_1
@@ -1244,7 +1250,7 @@ SELECT
 			(SELECT ISNULL(FieldDisplay,FieldName)
 				FROM GBL_FieldOption fo
 				LEFT JOIN GBL_FieldOption_Description fod
-					ON fo.FieldID=fod.FieldID AND fod.LangID=svbtd.LangID
+					ON fo.FieldID=fod.FieldID AND fod.LangID=@LabelLangOverride
 				WHERE fo.FieldName=c.GblContactType) AS "@Type",
 
 	-- SITE > SERVICE > CONTACT > TITLE
@@ -1671,7 +1677,9 @@ SET NOCOUNT OFF
 
 
 
+
 GO
+
 
 
 

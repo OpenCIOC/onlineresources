@@ -93,11 +93,11 @@ With rsListAgency
 		<td><%=.Fields("AgencyCode")%></td>
 		<td><%=.Fields("ORG_NAME_FULL")%></td>
 		<td><%=.Fields("UserCount")%></td>
-		<td><%=.Fields("CICRecordCount")%></td>
+		<td><%=.Fields("CICRecordCount")%> <%If .Fields("CICRecordCountDel")>0 Then%> <em>(+ <%=.Fields("CICRecordCountDel") & " " & TXT_DELETED%>)</em><%End If%></td>
 <%
 			If g_bUseVOL Then
 %>
-		<td><%=.Fields("VOLRecordCount")%></td>
+		<td><%=.Fields("VOLRecordCount")%> <%If .Fields("VOLRecordCountDel")>0 Then%> <em>(+ <%=.Fields("VOLRecordCountDel") & " " & TXT_DELETED%>)</em><%End If%></td>
 <%
 			End If
 %>
