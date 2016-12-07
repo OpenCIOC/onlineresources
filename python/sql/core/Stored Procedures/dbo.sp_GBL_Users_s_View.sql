@@ -126,6 +126,10 @@ IF @UseViewCIC IS NOT NULL BEGIN
 			ON vw.ViewType = vr.CanSee
 		WHERE MemberID=@MemberID
 			AND vr.ViewType = @DefaultViewCIC AND vw.ViewType = @UseViewCIC
+			AND (
+				NOT EXISTS(SELECT * FROM dbo.CIC_View_Whitelist wl WHERE wl.ViewType=vw.ViewType)
+				OR EXISTS(SELECT * FROM dbo.CIC_View_Whitelist wl WHERE wl.ViewType=vw.ViewType AND	wl.IPAddress=@IPAddress)
+				)
 END
 
 IF @CurrentIDCIC IS NULL BEGIN
@@ -317,6 +321,7 @@ SET NOCOUNT OFF
 
 
 GO
+
 
 
 
