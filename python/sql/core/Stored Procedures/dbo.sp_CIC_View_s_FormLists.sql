@@ -121,7 +121,7 @@ SELECT pp.ProfileID, ppd.ProfileName
 FROM GBL_PrintProfile pp
 INNER JOIN GBL_PrintProfile_Description ppd
 	ON pp.ProfileID=ppd.ProfileID AND ppd.LangID=(SELECT TOP 1 LangID FROM GBL_PrintProfile_Description WHERE ProfileID=pp.ProfileID ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
-WHERE pp.Domain=2 AND (pp.[Public]=1 OR EXISTS(SELECT * FROM VOL_View_PrintProfile WHERE ViewType=@ViewType AND ProfileID=pp.ProfileID))
+WHERE pp.Domain=1 AND (pp.[Public]=1 OR EXISTS(SELECT * FROM CIC_View_PrintProfile WHERE ViewType=@ViewType AND ProfileID=pp.ProfileID))
 
 EXEC dbo.sp_CIC_Publication_l_SharedLocal @MemberID
 

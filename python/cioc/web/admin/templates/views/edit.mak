@@ -1320,6 +1320,17 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 			</td>
 		</tr>
 
+		%if print_profiles:
+		<tr>
+			${self.fieldLabelCell('item.DefaultPrintProfile',_('Default Print Profile'),None,False)}
+			<td class="field-data-cell">
+				<div class="form-group">
+					${renderer.errorlist("item.DefaultPrintProfile")}
+					${renderer.select("item.DefaultPrintProfile", [('','')] + print_profiles, class_="form-control")}
+				</div>
+			</td>
+		</tr>
+		%endif
 		<tr>
 			${self.fieldLabelCell(None,_('Tag Line'),
 				_('A slogan or tag line that can be added to some Header Layouts.'),False)}

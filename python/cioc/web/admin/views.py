@@ -752,10 +752,6 @@ class View(viewbase.AdminViewBase):
 
 				disp_opt_fields = set(x[0] for x in cursor.fetchall())
 
-				cursor.nextset()
-
-				print_profiles = cursor.fetchall()
-
 				if domain.id == const.DM_CIC:
 					cursor.nextset()
 
@@ -810,6 +806,10 @@ class View(viewbase.AdminViewBase):
 			cursor.nextset()
 
 			disp_opt_field_descs = cursor.fetchall()
+
+			cursor.nextset()
+
+			print_profiles = cursor.fetchall()
 
 			if domain.id == const.DM_CIC:
 				cursor.nextset()
