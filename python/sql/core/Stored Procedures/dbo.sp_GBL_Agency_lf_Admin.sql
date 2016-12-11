@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -10,9 +11,9 @@ AS
 SET NOCOUNT ON
 
 /*
-	Checked for Release: 3.5.2
+	Checked for Release: 3.7
 	Checked by: KL
-	Checked on: 02-Oct-2013
+	Checked on: 02-Dec-2016
 	Action: NO ACTION REQUIRED
 */
 
@@ -30,8 +31,10 @@ END
 SELECT	a.AgencyID, a.AgencyCode,
 		dbo.fn_GBL_DisplayFullOrgName_Agency_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2) AS ORG_NAME_FULL,
 		(SELECT COUNT(*) FROM GBL_Users WHERE Agency=AgencyCode) AS UserCount,
-		(SELECT COUNT(*) FROM GBL_BaseTable WHERE RECORD_OWNER=AgencyCode) AS CICRecordCount,
-		(SELECT COUNT(*) FROM VOL_Opportunity WHERE RECORD_OWNER=AgencyCode) AS VOLRecordCount
+		(SELECT COUNT(*) FROM GBL_BaseTable btx WHERE RECORD_OWNER=AgencyCode AND EXISTS(SELECT * FROM dbo.GBL_BaseTable_Description btdx WHERE btdx.NUM=btx.NUM AND (btdx.DELETION_DATE IS NULL OR btdx.DELETION_DATE >= GETDATE()))) AS CICRecordCount,
+		(SELECT COUNT(*) FROM GBL_BaseTable btx WHERE RECORD_OWNER=AgencyCode AND NOT EXISTS(SELECT * FROM dbo.GBL_BaseTable_Description btdx WHERE btdx.NUM=btx.NUM AND (btdx.DELETION_DATE IS NULL OR btdx.DELETION_DATE >= GETDATE()))) AS CICRecordCountDel,
+		(SELECT COUNT(*) FROM VOL_Opportunity vox WHERE RECORD_OWNER=AgencyCode AND EXISTS(SELECT * FROM dbo.VOL_Opportunity_Description vodx WHERE vodx.VNUM=vox.VNUM AND (vodx.DELETION_DATE IS NULL OR vodx.DELETION_DATE >= GETDATE()))) AS VOLRecordCount,
+		(SELECT COUNT(*) FROM VOL_Opportunity vox WHERE RECORD_OWNER=AgencyCode AND NOT EXISTS(SELECT * FROM dbo.VOL_Opportunity_Description vodx WHERE vodx.VNUM=vox.VNUM AND (vodx.DELETION_DATE IS NULL OR vodx.DELETION_DATE >= GETDATE()))) AS VOLRecordCountDel
 	FROM GBL_Agency a
 	LEFT JOIN GBL_BaseTable bt
 		ON ISNULL(a.AgencyNUMCIC,a.AgencyNUMVOL)=bt.NUM
@@ -67,5 +70,6 @@ SET NOCOUNT OFF
 
 
 GO
+
 GRANT EXECUTE ON  [dbo].[sp_GBL_Agency_lf_Admin] TO [cioc_login_role]
 GO

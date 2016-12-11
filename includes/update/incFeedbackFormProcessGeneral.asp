@@ -228,7 +228,7 @@ Sub sendNotifyEmails(intID, strRecName, strOldEmail, strNewEmail, bInView, strAc
 			Nz(strAccessURL,IIf(get_db_option("FullSSLCompatibleBaseURL" & IIf(ps_intDbArea = DM_CIC, "CIC", "VOL")), "https://", "http://") & IIf(ps_intDbArea = DM_CIC,g_strBaseURLCIC,g_strBaseURLVOL)) & _
 			"/" & IIf(Nl(strRecordRoot), _
 				ps_strDbAreaDefaultPath & "details.asp?" & IIf(ps_intDbArea=DM_VOL,"VNUM=" & intID,"NUM=" & intID) & "&", _
-				strRecordRoot & intID & "?") & _
+				StringIf(ps_intDbArea=DM_VOL, "volunteer/") & strRecordRoot & intID & "?") & _
 			StringIf(Not Nl(intViewType),IIf(ps_intDbArea=DM_VOL,"UseVOLVw=","UseCICVw=") & intViewType & "&") & _
 			"Ln=" & g_objCurrentLang.Culture
 	Else

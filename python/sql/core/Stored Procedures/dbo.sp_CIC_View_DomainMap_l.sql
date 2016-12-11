@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -48,7 +47,7 @@ SELECT	vw.ViewType,
 		ON vw.ViewType=vwd.ViewType
 			AND vwd.LangID = (SELECT TOP 1 LangID FROM CIC_View_Description WHERE ViewType=vwd.ViewType ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
 	LEFT JOIN GBL_View_DomainMap mp
-		ON vw.ViewType = mp.CICViewType AND mp.MemberID=@MemberID
+		ON vw.ViewType = mp.CICViewType AND mp.MemberID=@MemberID AND mp.SecondaryName=0
 WHERE vw.MemberID=@MemberID AND
 	(
 		EXISTS(SELECT * FROM CIC_View_Recurse vr WHERE vr.ViewType=@DefaultView AND vr.CanSee=vw.ViewType)
