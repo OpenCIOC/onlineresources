@@ -51,7 +51,7 @@ opt_bListAddRecordVOL = False
 opt_intOrderByVOL = OB_REQUEST
 opt_fld_intCustOrderVOL = Null
 opt_bOrderByDescVOL = False
-opt_bDispTable = False
+opt_bDispTableVOL = False
 opt_fld_bPosition = True
 opt_fld_bDuties = True
 opt_fld_aCustVOL = Null
@@ -212,7 +212,7 @@ End If
 <tr>
 	<td><table class="NoBorder cell-padding-2" width="100%">
 	<tr>
-		<td><label for="opt_bDispTable"><input name="opt_bDispTable" id="opt_bDispTable" type="checkbox"<%=Checked(opt_bDispTableVOL)%>>&nbsp;<%=TXT_USE_TABLE_FORMAT%></label></td>
+		<td><label for="opt_bDispTableVOL"><input name="opt_bDispTableVOL" id="opt_bDispTableVOL" type="checkbox"<%=Checked(opt_bDispTableVOL)%>>&nbsp;<%=TXT_USE_TABLE_FORMAT%></label></td>
 		<td><label for="opt_bWebVOL"><input name="opt_bWebVOL" id="opt_bWebVOL" type="checkbox"<%=Checked(opt_bWebVOL)%>>&nbsp;<%=TXT_WEB_ENABLE%></label></td>
 	</tr>
 <%If Not bForView Then%>
