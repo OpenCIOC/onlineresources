@@ -272,7 +272,7 @@ End If
 <input type="hidden" name="opt_bEmailCIC" value="">
 <%End If%>
 	<tr>
-		<td><label for="opt_bDispTableCIC"><input name="opt_bDispTableCIC" id="opt_bDispTableCIC" type="checkbox"<%=Checked(opt_bDispTableCIC)%>>&nbsp;<%=TXT_USE_COMPACT_FORMAT%></label></td>
+		<td><label for="opt_bDispTableCIC"><input name="opt_bDispTableCIC" id="opt_bDispTableCIC" type="checkbox"<%=Checked(opt_bDispTableCIC)%>>&nbsp;<%=TXT_USE_TABLE_FORMAT%></label></td>
 <% 
 Dim intColCount 
 intColCount = 1

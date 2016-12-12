@@ -156,7 +156,7 @@ ${request.passvars.cached_form_vals |n}
 	%endif
 	<% has_pub = False %>
 	<tr>
-		<td>${renderer.checkbox(prefix + 'ShowTable', label=_('Use Compact Format'))}</td>
+		<td>${renderer.checkbox(prefix + 'ShowTable', label=_('Use Table Format'))}</td>
 	%if not for_view and user_cic.CanUpdatePubs != const.UPDATE_NONE and not user_cic.LimitedView:
 	<% has_pub = True %>
 		<td>${renderer.checkbox(prefix + 'GLinkPub', label=_('Update Publications'))}</td>
