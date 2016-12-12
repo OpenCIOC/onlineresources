@@ -21,7 +21,7 @@ CREATE TABLE [dbo].[GBL_Display]
 [OrderByDesc] [bit] NOT NULL CONSTRAINT [DF_GBL_Display_OrderByDesc] DEFAULT ((0)),
 [GLinkMail] [bit] NOT NULL CONSTRAINT [DF_GBL_Users_Display_GLinkMail] DEFAULT ((0)),
 [GLinkPub] [bit] NOT NULL CONSTRAINT [DF_GBL_Users_Display_CLinkPub] DEFAULT ((0)),
-[VShowTable] [bit] NOT NULL CONSTRAINT [DF_GBL_Users_Display_VShowTable] DEFAULT ((0)),
+[ShowTable] [bit] NOT NULL CONSTRAINT [DF_GBL_Users_Display_ShowTable] DEFAULT ((0)),
 [VShowPosition] [bit] NOT NULL CONSTRAINT [DF_GBL_Users_Display_VShowPosition] DEFAULT ((1)),
 [VShowDuties] [bit] NOT NULL CONSTRAINT [DF_GBL_Users_Display_VShowDuties] DEFAULT ((1))
 ) ON [PRIMARY]

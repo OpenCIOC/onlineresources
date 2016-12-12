@@ -449,6 +449,7 @@ END ELSE BEGIN
 				ShowUpdateSchedule,
 				LinkWeb,
 				LinkListAdd,
+				ShowTable,
 				OrderBy,
 				OrderByCustom,
 				OrderByDesc
@@ -463,6 +464,7 @@ END ELSE BEGIN
 				ShowUpdateSchedule,
 				LinkWeb,
 				LinkListAdd,
+				ShowTable,
 				OrderBy,
 				OrderByCustom,
 				OrderByDesc

@@ -23,7 +23,7 @@ CREATE PROCEDURE [dbo].[sp_GBL_Display_u]
 	@OrderByDesc bit,
 	@GLinkMail bit,
 	@GLinkPub bit,
-	@VShowTable bit,
+	@ShowTable bit,
 	@VShowPosition bit,
 	@VShowDuties bit,
 	@FieldList varchar(max),
@@ -135,7 +135,7 @@ END ELSE BEGIN
 			OrderByDesc		= @OrderByDesc,
 			GLinkMail		= @GLinkMail,
 			GLinkPub		= @GLinkPub,
-			VShowTable		= @VShowTable,
+			ShowTable		= @ShowTable,
 			VShowPosition	= @VShowPosition,
 			VShowDuties		= @VShowDuties
 		WHERE DD_ID=@DD_ID

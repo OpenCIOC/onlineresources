@@ -342,7 +342,7 @@ END ELSE BEGIN
 				LinkListAdd,
 				OrderBy,
 				OrderByCustom,
-				VShowTable,
+				ShowTable,
 				VShowPosition,
 				VShowDuties
 			)
@@ -357,7 +357,7 @@ END ELSE BEGIN
 				LinkListAdd,
 				OrderBy,
 				OrderByCustom,
-				VShowTable,
+				ShowTable,
 				VShowPosition,
 				VShowDuties
 			FROM GBL_Display

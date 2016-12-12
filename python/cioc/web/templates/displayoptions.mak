@@ -66,7 +66,7 @@ ${request.passvars.cached_form_vals |n}
 	## My List?
 	<table class="NoBorder cell-padding-2" width="100%">
 	<tr>
-		<td>${renderer.checkbox(prefix + 'VShowTable', label=_('Use Table Format'))}</td>
+		<td>${renderer.checkbox(prefix + 'ShowTable', label=_('Use Table Format'))}</td>
 		<td>${renderer.checkbox(prefix + 'LinkWeb', label=_('Web-enable Custom Fields'))}</td>
 	</tr>
 	%if not for_view:
@@ -154,18 +154,21 @@ ${request.passvars.cached_form_vals |n}
 	</tr>
 	%endif
 	%endif
-	<% need_new_row = False %>
+	<% has_pub = False %>
 	<tr>
+		<td>${renderer.checkbox(prefix + 'ShowTable', label=_('Use Compact Format'))}</td>
 	%if not for_view and user_cic.CanUpdatePubs != const.UPDATE_NONE and not user_cic.LimitedView:
-	<% need_new_row = True %>
+	<% has_pub = True %>
 		<td>${renderer.checkbox(prefix + 'GLinkPub', label=_('Update Publications'))}</td>
-	%endif
-		<td>${renderer.checkbox(prefix + 'LinkWeb', label=_('Web-enable Custom Fields'))}</td>
-	%if need_new_row:
 	</tr>
 	<tr>
 	%endif
-		<td ${'colspan="2"' if need_new_row else '' |n}>${renderer.checkbox(prefix + 'LinkListAdd', label=_('List/Client Tracker'))}</td>
+		<td>${renderer.checkbox(prefix + 'LinkWeb', label=_('Web-enable Custom Fields'))}</td>
+	%if not has_pub:
+	</tr>
+	<tr>
+	%endif
+		<td ${'colspan="2"' if not has_pub else '' |n}>${renderer.checkbox(prefix + 'LinkListAdd', label=_('List/Client Tracker'))}</td>
 	</tr>
 	</table></td>
 </tr>
