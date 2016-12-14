@@ -71,7 +71,7 @@ Call saveDisplayOptionsVOL( _
 	NlNl(getSessionValue("opt_intOrderByVOL")), _
 	NlNl(getSessionValue("opt_fld_intCustOrderVOL")), _
 	Nz(getSessionValue("opt_bOrderByDescVOL"),False), _
-	Nz(getSessionValue("opt_bDispTable"),False), _
+	Nz(getSessionValue("opt_bDispTableVOL"),Nz(getSessionValue("opt_bDispTable"),False)), _
 	Nz(getSessionValue("opt_fld_bPosition"),False), _
 	Nz(getSessionValue("opt_fld_bDuties"),False), _
 	NlNl(strCustFld) _

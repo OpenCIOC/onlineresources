@@ -71,6 +71,7 @@ Call saveDisplayOptionsCIC( _
 	NlNl(getSessionValue("opt_intOrderByCIC")), _
 	NlNl(getSessionValue("opt_fld_intCustOrderCIC")), _
 	Nz(getSessionValue("opt_bOrderByDescCIC"),False), _
+	Nz(getSessionValue("opt_bDispTableCIC"),False), _
 	Nz(getSessionValue("opt_bMail"),False), _
 	Nz(getSessionValue("opt_bPub"),False), _
 	NlNl(strCustFld) _

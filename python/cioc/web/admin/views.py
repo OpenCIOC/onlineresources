@@ -306,7 +306,7 @@ class DisplayOptionSchema(Schema):
 	OrderByDesc = validators.StringBool(if_empy=False, if_missing=False)
 	GLinkMail = validators.Bool()
 	GLinkPub = validators.Bool()
-	VShowTable = validators.Bool()
+	ShowTable = validators.Bool()
 	VShowPosition = validators.Bool()
 	VShowDuties = validators.Bool()
 

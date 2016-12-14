@@ -91,10 +91,10 @@ End Function
 Private Function getFields()
 	Dim strFieldList
 	strFieldList = "vo.OP_ID, vo.VNUM,vo.RECORD_OWNER"
-	If opt_fld_bPosition Or Not opt_bDispTable Then
+	If opt_fld_bPosition Or Not opt_bDispTableVOL Then
 		strFieldList = strFieldList & ",vod.POSITION_TITLE"
 	End If
-	If Not opt_bDispTable Then
+	If Not opt_bDispTableVOL Then
 		strFieldList = strFieldList & ",vo.REQUEST_DATE"
 	End If
 	If opt_fld_bAlertVOL or user_bLoggedIn Then
@@ -115,14 +115,14 @@ Private Function getFields()
 	If opt_fld_bOrgVOL Then
 		strFieldList = strFieldList & ",dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL"
 	End If
-	If opt_fld_bComm Or Not opt_bDispTable Then
+	If opt_fld_bComm Or Not opt_bDispTableVOL Then
 		strFieldList = strFieldList & _
 			",dbo.fn_VOL_VNUMToCommBalls(vo.MemberID,vo.VNUM," & g_intCommunitySetID & ") AS COMM_BALLS"
 	End If
-	If opt_fld_bDuties Or Not opt_bDispTable Then
+	If opt_fld_bDuties Or Not opt_bDispTableVOL Then
 		strFieldList = strFieldList & ",vod.DUTIES"
 	End If
-	If Not opt_bDispTable Then
+	If Not opt_bDispTableVOL Then
 		strFieldList = strFieldList & ",vod.LOCATION"
 	End If
 	If opt_fld_bUpdateScheduleVOL Or opt_bUpdateVOL Then
@@ -379,7 +379,7 @@ Else
 <p><%=TXT_THERE_ARE%> <strong><%=.RecordCount%></strong> <%=TXT_RECORDS_MATCH%>
 <%
 		End If
-		If opt_bDispTable Then
+		If opt_bDispTableVOL Then
 %>
 <br><%=TXT_CLICK_ON%> <%If opt_fld_bPosition Then%><%=TXT_POSITION_TITLE%><%Else%>Opportunity ID<%End If%> <%=TXT_VIEW_FULL%></p>
 <%
@@ -437,7 +437,7 @@ Else
 ]</p>
 <%
 		End If
-		If user_bVOL And opt_bDispTable And opt_bSelectVOL Then
+		If user_bVOL And opt_bDispTableVOL And opt_bSelectVOL Then
 %>
 <form name="RecordList" action="<%=ps_strPathToStart%>volunteer/processRecordList.asp" method="post">
 <%=g_strCacheFormVals%>
@@ -487,7 +487,7 @@ Else
 		End If 'Select Checkbox
 	End If 'Print Mode
 	
-	If opt_bDispTable Then
+	If opt_bDispTableVOL Then
 		If Not g_bPrintMode Then
 %>
 <style type="text/css">
@@ -627,7 +627,7 @@ End If%>
 	Dim strRecordListUI
 	strRecordListUI = vbNullString
 	If Not g_bPrintMode And (opt_bListAddRecordVOL Or bEnableListViewMode) Then 
-		If opt_bDispTable Then
+		If opt_bDispTableVOL Then
 			strRecordListUI = myListResultsAddRecord("[IDID]", bEnableListViewMode, "<td class=""ListUI"">", "</td>") 
 		Else
 			strRecordListUI = myListResultsAddRecord("[IDID]", bEnableListViewMode, "<span class=""ListUI"">", "</span>")
@@ -636,7 +636,7 @@ End If%>
 
 	Dim bCanEmail, bShowAlert
 	bCanEmail = opt_bEmailVOL And user_bCanRequestUpdateDOM And Not g_bNoEmail 
-	bShowAlert = opt_fld_bAlertVOL Or (Not opt_bDispTable And g_bAlertColumnVOL)
+	bShowAlert = opt_fld_bAlertVOL Or (Not opt_bDispTableVOL And g_bAlertColumnVOL)
 
 	Dim strDetailLinkTemplate
 	strDetailLinkTemplate = "<a href=""" & _
@@ -697,7 +697,7 @@ End If%>
 			ElseIf .Fields("TO_BE_DELETED") Then
 				strAlertColumn = strAlertColumn & "P"
 			End If
-			If Not opt_bDispTable And .Fields("NON_PUBLIC") Then
+			If Not opt_bDispTableVOL And .Fields("NON_PUBLIC") Then
 				strAlertColumn = "N"
 			End If
 			If .Fields("IS_EXPIRED") Then
@@ -709,7 +709,7 @@ End If%>
 			If .Fields("HAS_FEEDBACK") And user_bFeedbackAlertVOL Then
 				strAlertColumn = strAlertColumn & "F"
 			End If
-			If opt_bDispTable Then
+			If opt_bDispTableVOL Then
 				If Nl(strAlertColumn) Then
 					strAlertColumn = "&nbsp;"
 				Else
@@ -720,7 +720,7 @@ End If%>
 			End If
 		End If ' Show Alert
 
-		If opt_bDispTable Then
+		If opt_bDispTableVOL Then
 %>
 <tr valign="top">
 <% If Not g_bPrintMode Then %>
@@ -799,7 +799,7 @@ End If%>
 		End If
 	End If
 
-	If opt_bDispTable Then
+	If opt_bDispTableVOL Then
 %>
 </table>
 <%
@@ -951,7 +951,7 @@ While Not .EOF
 		ElseIf .Fields("TO_BE_DELETED") Then
 			strAlertColumn = strAlertColumn & "P"
 		End If
-		If Not opt_bDispTable And .Fields("NON_PUBLIC") Then
+		If Not opt_bDispTableVOL And .Fields("NON_PUBLIC") Then
 			strAlertColumn = "N"
 		End If
 		If .Fields("IS_EXPIRED") Then
@@ -1112,7 +1112,7 @@ While Not .EOF
 		ElseIf .Fields("TO_BE_DELETED") Then
 			strAlertColumn = strAlertColumn & "P"
 		End If
-		If Not opt_bDispTable And .Fields("NON_PUBLIC") Then
+		If Not opt_bDispTableVOL And .Fields("NON_PUBLIC") Then
 			strAlertColumn = "N"
 		End If
 		If .Fields("IS_EXPIRED") Then

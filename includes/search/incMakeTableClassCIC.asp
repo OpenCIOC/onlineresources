@@ -798,7 +798,9 @@ Else
 	i = 2
 %>
 <style type="text/css">
+<% If opt_bDispTableCIC Then %>
 	@media screen and (max-width: 1023px)  {
+<% End If %>
 
 <%
 	If g_bMapSearchResults And Not g_bPrintMode Then
@@ -860,10 +862,13 @@ Else
 		<% i= i + 1
 	End If
 %>
+<% If opt_bDispTableCIC Then %>
 }
+<% End If %>
 </style>
 <% End If %>
-<table class="BasicBorder cell-padding-3 HideListUI HideMapColumn <% If Not g_bPrintMode Then %>ResponsiveResults<% End If %>" id="results_table">
+<% If Not g_bPrintMode Then %><%If Not opt_bDispTableCIC Then %><div class="CompactResults"><%End If %><% End If %>
+<table class="BasicBorder cell-padding-3 HideListUI HideMapColumn <% If Not g_bPrintMode Then %>ResponsiveResults <%If Not opt_bDispTableCIC Then %>CompactResults<%End If %><% End If %>" id="results_table">
 <thead>
 <tr class="RevTitleBox">
 <% If not g_bPrintMode Then %><th class="MobileShowField"></th><% End If %>
@@ -1088,6 +1093,7 @@ End If
 %>
 </tbody>
 </table>
+<% If Not g_bPrintMode Then %><%If Not opt_bDispTableCIC Then %></div><%End If %><% End If %>
 <%
 If opt_bSelectCIC Then
 %>

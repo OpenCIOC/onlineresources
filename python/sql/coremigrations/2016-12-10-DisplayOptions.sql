@@ -1,0 +1,1 @@
+UPDATE GBL_Display SET ShowTable=1 WHERE Domain=1

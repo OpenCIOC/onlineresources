@@ -32,6 +32,7 @@ Dim opt_fld_bNUM, _
 	opt_intOrderByCIC, _
 	opt_fld_intCustOrderCIC, _
 	opt_bOrderByDescCIC, _
+	opt_bDispTableCIC, _
 	opt_bMail, _
 	opt_bPub, _
 	opt_fld_aCustCIC	
@@ -50,6 +51,7 @@ opt_bListAddRecordCIC = False
 opt_intOrderByCIC = OB_NAME
 opt_fld_intCustOrderCIC = Null
 opt_bOrderByDescCIC = False
+opt_bDispTableCIC = True
 opt_bMail = False
 opt_bPub = False
 opt_fld_aCustCIC = Null
@@ -108,6 +110,7 @@ If Not bAlreadyLoaded Or bForView Then
 			opt_intOrderByCIC = Nz(.Fields("OrderBy"),OB_NAME)
 			opt_fld_intCustOrderCIC = .Fields("OrderByCustom")
 			opt_bOrderByDescCIC = .Fields("OrderByDesc")
+			opt_bDispTableCIC = .Fields("ShowTable")
 			opt_bMail = .Fields("GLinkMail")
 			opt_bPub = .Fields("GLinkPub")
 			opt_fld_aCustCIC = Null
@@ -146,6 +149,7 @@ If Not bAlreadyLoaded Or bForView Then
 		Call setSessionValue("opt_intOrderByCIC", opt_intOrderByCIC)
 		Call setSessionValue("opt_fld_intCustOrderCIC", opt_fld_intCustOrderCIC)
 		Call setSessionValue("opt_bOrderByDescCIC", opt_bOrderByDescCIC)
+		Call setSessionValue("opt_bDispTableCIC", opt_bDispTableCIC)
 		Call setSessionValue("opt_bMail", opt_bMail)
 		Call setSessionValue("opt_bPub", opt_bPub)
 		If IsArray(opt_fld_aCustCIC) Then
@@ -173,6 +177,7 @@ Else
 	End If
 	opt_fld_intCustOrderCIC = Nz(getSessionValue("opt_fld_intCustOrderCIC"),opt_fld_intCustOrderCIC)
 	opt_bOrderByDescCIC = Nz(getSessionValue("opt_bOrderByDescCIC"),opt_bOrderByDescCIC)
+	opt_bDispTableCIC = Nz(getSessionValue("opt_bDispTableCIC"),opt_bDispTableCIC)
 	opt_bMail = Nz(getSessionValue("opt_bMail"),opt_bMail) And user_bLoggedIn
 	opt_bPub = Nz(getSessionValue("opt_bPub"),opt_bPub) And user_bLoggedIn
 	If Not Nl(getSessionValue("opt_fld_aCustCIC")) Then
@@ -267,22 +272,33 @@ End If
 <input type="hidden" name="opt_bEmailCIC" value="">
 <%End If%>
 	<tr>
+		<td><label for="opt_bDispTableCIC"><input name="opt_bDispTableCIC" id="opt_bDispTableCIC" type="checkbox"<%=Checked(opt_bDispTableCIC)%>>&nbsp;<%=TXT_USE_TABLE_FORMAT%></label></td>
 <% 
-Dim bNeedNewRow 
-bNeedNewRow = True
-If user_intCanUpdatePubs <> UPDATE_NONE And Not user_bLimitedViewCIC And Not bForView Then%>
+Dim intColCount 
+intColCount = 1
+If user_intCanUpdatePubs <> UPDATE_NONE And Not user_bLimitedViewCIC And Not bForView Then
+	intColCount = intColCount + 1
+%>
 		<td><label for="opt_bPub"><input<%If opt_bPub Then%> checked<%End If%> name="opt_bPub" id="opt_bPub" type="checkbox">&nbsp;<%=TXT_UPDATE_PUBS%></label></td>
-<%Else
-bNeedNewRow = False
-End If%>
+<%
+End If
+If intColCount Mod 2 = 0 Then
+%></tr><tr><%
+End If
+%>
+
 		<td><label for="opt_bWebCIC"><input<%If opt_bWebCIC Then%> checked<%End If%> name="opt_bWebCIC" id="opt_bWebCIC" type="checkbox">&nbsp;<%=TXT_WEB_ENABLE%></label></td>
-<%If bNeedNewRow and (g_bMyListCIC Or Not Nl(g_strClientTrackerIP)) Then%> 
-	</tr>
-	<tr>
-<%End If%>
-<%If (g_bMyListCIC Or Not Nl(g_strClientTrackerIP)) Then%>
-		<td<%If bNeedNewRow Then%> colspan="2"<%End If%>><label for="opt_bListAddRecordCIC"><input<%If opt_bListAddRecordCIC Then%> checked<%End If%> name="opt_bListAddRecordCIC" id="opt_bListAddRecordCIC" type="checkbox">&nbsp;<%=TXT_LIST_CLIENT_TRACKER%></label></td>
-<%ElseIf Not bNeedNewRow Then%>
+<%
+intColCount = intColCount + 1
+If intColCount Mod 2 = 0 And (g_bMyListCIC Or Not Nl(g_strClientTrackerIP)) Then
+%></tr><tr><%
+End If
+%>
+<%If (g_bMyListCIC Or Not Nl(g_strClientTrackerIP)) Then
+intColCount = intColCount + 1
+%>
+		<td<%If intColCount Mod 2 = 1 Then%> colspan="2"<%End If%>><label for="opt_bListAddRecordCIC"><input<%If opt_bListAddRecordCIC Then%> checked<%End If%> name="opt_bListAddRecordCIC" id="opt_bListAddRecordCIC" type="checkbox">&nbsp;<%=TXT_LIST_CLIENT_TRACKER%></label></td>
+<%ElseIf intColCount Mod 2 = 1 Then%>
 		<td>&nbsp;</td>
 <%End If%>
 	</tr>
@@ -338,6 +354,7 @@ Else
 	opt_fld_intCustOrderCIC = Null
 End If
 opt_bOrderByDescCIC = Request.Form("opt_bOrderByDescCIC") = "on"
+opt_bDispTableCIC = Request.Form("opt_bDispTableCIC") = "on"
 aTmpFldList = Split(Request.Form("opt_fld_aCustCIC"),",")
 For i = 0 to UBound(aTmpFldList)
 	aTmpFldList(i) = Trim(aTmpFldList(i))
@@ -376,6 +393,7 @@ If getSessionValue("session_test") = "ok" Then
 		Call setSessionValue("opt_fld_intCustOrderCIC", Null)
 	End If
 	Call setSessionValue("opt_bOrderByDescCIC", Request.Form("opt_bOrderByDescCIC") = "on")
+	Call setSessionValue("opt_bDispTableCIC", Request.Form("opt_bDispTableCIC") = "on")
 	Call setSessionValue("opt_bMail", Request.Form("opt_bMail") = "on" And user_bCanRequestUpdateCIC)
 	Call setSessionValue("opt_bPub", Request.Form("opt_bPub") = "on" And ps_intDbArea=DM_CIC And user_intCanUpdatePubs <> UPDATE_NONE And Not user_bLimitedViewCIC)
 	aTmpFldList = Split(Request.Form("opt_fld_aCustCIC"),",")
@@ -415,6 +433,7 @@ Sub saveDisplayOptionsCIC( _
 	intOrderBy, _
 	intOrderByCustom, _
 	bOrderByDesc, _
+	bShowTable, _
 	bGLinkMail, _
 	bGLinkPub, _
 	strFieldList _
@@ -457,7 +476,7 @@ Sub saveDisplayOptionsCIC( _
 		.Parameters.Append .CreateParameter("@OrderByDesc", adBoolean, adParamInput, 1, IIf(bOrderByDesc,SQL_TRUE,SQL_FALSE))
 		.Parameters.Append .CreateParameter("@GLinkMail", adBoolean, adParamInput, 1, IIf(bGLinkMail And Not Nl(intUserID),SQL_TRUE,SQL_FALSE))
 		.Parameters.Append .CreateParameter("@GLinkPub", adBoolean, adParamInput, 1, IIf(bGLinkPub And Not Nl(intUserID),SQL_TRUE,SQL_FALSE))
-		.Parameters.Append .CreateParameter("@VShowTable", adBoolean, adParamInput, 1, SQL_FALSE)
+		.Parameters.Append .CreateParameter("@ShowTable", adBoolean, adParamInput, 1, bShowTable)
 		.Parameters.Append .CreateParameter("@VShowPosition", adBoolean, adParamInput, 1, SQL_FALSE)
 		.Parameters.Append .CreateParameter("@VShowDuties", adBoolean, adParamInput, 1, SQL_FALSE)
 		.Parameters.Append .CreateParameter("@FieldList", adLongVarChar, adParamInput, -1, strFieldList)

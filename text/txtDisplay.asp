@@ -38,6 +38,7 @@ Dim TXT_ALERT_BOX, _
 	TXT_SHOW_OPTIONS, _
 	TXT_SORT, _
 	TXT_UPDATE_DISPLAY, _
+	TXT_USE_COMPACT_FORMAT, _
 	TXT_USE_TABLE_FORMAT, _
 	TXT_WEB_ENABLE
 
@@ -72,6 +73,7 @@ Sub setTxtDisplay()
 			TXT_SHOW_OPTIONS = "Show Options"
 			TXT_SORT = "Sort"
 			TXT_UPDATE_DISPLAY = "Update Display"
+			TXT_USE_COMPACT_FORMAT = "Use Compact Format"
 			TXT_USE_TABLE_FORMAT = "Use Table Format"
 			TXT_WEB_ENABLE = "Web-enable Custom Fields"
 		Case CULTURE_FRENCH_CANADIAN
@@ -103,6 +105,7 @@ Sub setTxtDisplay()
 			TXT_SHOW_OPTIONS = "Afficher les options"
 			TXT_SORT = "Tri"
 			TXT_UPDATE_DISPLAY = "Mettre à jour l'affichage"
+			TXT_USE_COMPACT_FORMAT = "TRANSLATE_FR -- Use compact format"
 			TXT_USE_TABLE_FORMAT = "Utiliser le format tableau"
 			TXT_WEB_ENABLE = "Adapter les champs personnalisés au Web"
 	End Select
