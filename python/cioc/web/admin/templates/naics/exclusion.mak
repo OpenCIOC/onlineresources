@@ -78,7 +78,7 @@ ${make_row('exclusion-[COUNT].', "NEW")}
 <script type="text/javascript">
 (function() {
 var $ = jQuery,
-naics_re = /^\d{2,63}$/,
+naics_re = /^\d{2,6}$/,
 add_code = function(evt) {
 	var chkitem = null, self = $(this), parent = self.parent(), input = parent.find('.ADD_Code_Source'),
 		target = parent.find('.ADD_Code_Target'), val = $.trim(input[0].value), intval = parseInt(val, 10),
