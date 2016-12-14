@@ -195,7 +195,7 @@
 				<xs:element name="Address" minOccurs="0">
 					<xs:simpleType>
 						<xs:restriction base="xs:string">
-							<xs:pattern value="[^@\s]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}"/>
+							<xs:pattern value="[^@\s]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,63}"/>
 						</xs:restriction>
 					</xs:simpleType>
 				</xs:element>

@@ -87,7 +87,7 @@ Sub checkPostalCode(strFldName, ByRef strFldVal)
 End Sub
 
 'Const strOneEmailAddressRegex = "([A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+(\.[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+)*@[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+(\.[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+)*)"
-Const strOneEmailAddressRegex = "[^@\s,]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}"
+Const strOneEmailAddressRegex = "[^@\s,]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,63}"
 Sub checkOneEmail(strFldName,strFldVal)
 	If Not Nl(strFldVal) Then
 		If Not reEquals(strFldVal,strOneEmailAddressRegex,True,False,True,False) Then

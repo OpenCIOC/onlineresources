@@ -171,7 +171,7 @@
 	<xsd:simpleType name="s-EmailType">
 		<xsd:restriction base="xsd:string">
 			<!-- <xsd:pattern value="(([A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+(\.[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+)*@[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+(\.[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+)*)(\s*,*\s*))*"/> -->
-			<xsd:pattern value="(([^@\s,]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6})(\s*,*\s*))*"/>
+			<xsd:pattern value="(([^@\s,]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,63})(\s*,*\s*))*"/>
 			<xsd:minLength value="1"/>
 			<xsd:maxLength value="60"/>
 		</xsd:restriction>
