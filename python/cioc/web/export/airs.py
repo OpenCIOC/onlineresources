@@ -107,7 +107,7 @@ class AIRSExport(viewbase.CicViewBase):
 
 
 def _zip_stream(request, model_state):
-	sql = '''EXEC sp_GBL_AIRS_Export_%s ?, @@LANGID, ?, ?, ?, ?, ?, ?, ? '''
+	sql = '''EXEC sp_GBL_AIRS_Export_%s ?, @@LANGID, ?, ?, ?, ?, ?, @LabelLangOverride=?, @AnyLanguageChange=? '''
 
 	values = [
 		request.viewdata.cic.ViewType,
