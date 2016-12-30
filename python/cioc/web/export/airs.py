@@ -67,6 +67,8 @@ class AIRSExportOptionsSchema(validators.RootSchema):
 	PartialDate = validators.ISODateConverter()
 	PubCodeSync = validators.Bool()
 	FileSuffix = validators.String(max=100)
+	LabelLangOverride = validators.Int(min=0, max=validators.MAX_TINY_INT)
+	AnyLanguageChange = validators.Bool()
 
 
 @view_config(route_name='export_airs')
@@ -105,7 +107,7 @@ class AIRSExport(viewbase.CicViewBase):
 
 
 def _zip_stream(request, model_state):
-	sql = '''EXEC sp_GBL_AIRS_Export_%s ?, @@LANGID, ?, ?, ?, ?, ?, @LabelLangOverride=0, @AnyLanguageChange=0'''
+	sql = '''EXEC sp_GBL_AIRS_Export_%s ?, @@LANGID, ?, ?, ?, ?, ?, ?, ? '''
 
 	values = [
 		request.viewdata.cic.ViewType,
@@ -113,7 +115,9 @@ def _zip_stream(request, model_state):
 		model_state.value('PubCodeSync'),
 		model_state.value('PartialDate'),
 		model_state.value('IncludeDeleted'),
-		model_state.value('IncludeSiteAgency')
+		model_state.value('IncludeSiteAgency'),
+		model_state.value('LabelLangOverride'),
+		model_state.value('AnyLanguageChange')
 	]
 	log.debug('query values: %s', values)
 

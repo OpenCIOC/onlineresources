@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -1656,7 +1655,7 @@ WHERE (@PB_ID IS NULL OR EXISTS(SELECT * FROM CIC_BT_PB WHERE NUM=bt.NUM AND PB_
 		SELECT *
 			FROM GBL_BaseTable btx
 			INNER JOIN dbo.CIC_BaseTable cbtx ON cbtx.NUM = btx.NUM
-			INNER JOIN dbo.GBL_BaseTable_Description btdx ON btdx.NUM = btx.NUM AND (btdx.LangID=@LangID OR @AnyLanguageChange=0)
+			INNER JOIN dbo.GBL_BaseTable_Description btdx ON btdx.NUM = btx.NUM AND (btdx.LangID=@LangID OR @AnyLanguageChange=1)
 			LEFT JOIN dbo.CIC_BT_DST dst ON dst.NUM=btx.NUM AND dst.DST_ID=@DST_ID
 			LEFT JOIN dbo.GBL_BT_SharingProfile shp ON shp.NUM=btx.NUM AND shp.ShareMemberID_Cache=@MemberID
 			WHERE (btx.NUM=bt.NUM OR btx.ORG_NUM=bt.NUM)

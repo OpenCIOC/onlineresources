@@ -261,6 +261,8 @@ def download_kwargs(lang, args):
 			'IncludeDeleted': 'on',
 			'PubCodeSync': get_config_item(args, 'airs_export_pub_code_sync', 'on'),
 			'FileSuffix': '-' + os.path.basename(args.dest_file)[:-4],
+			'AnyLanguageChange': 'on',
+			'LabelLangOverride': 0,
 			'Ln': lang.culture
 		}
 	}
