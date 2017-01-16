@@ -51,7 +51,7 @@ END ELSE IF NOT EXISTS(SELECT * FROM GBL_PrintProfile WHERE ProfileID=@ProfileID
 	SET @Error = 8 -- Security Failure
 	SET @ProfileID = NULL
 -- Profile ID available in the View ?
-END ELSE IF NOT EXISTS(SELECT * FROM CIC_View_PrintProfile vp WHERE vp.ProfileID=@ProfileID AND vp.ViewType=@ViewType) BEGIN
+END ELSE IF NOT EXISTS(SELECT * FROM CIC_View_PrintProfile vp WHERE vp.ProfileID=@ProfileID AND vp.ViewType=@ViewType) AND NOT EXISTS(SELECT * FROM CIC_View WHERE DefaultPrintProfile=@ProfileID) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ProfileID = NULL
 END
@@ -108,6 +108,8 @@ RETURN @Error
 SET NOCOUNT OFF
 
 
+GO
+GRANT EXECUTE ON  [dbo].[sp_CIC_PrintProfile_sf] TO [cioc_cic_search_role]
 GO
 GRANT EXECUTE ON  [dbo].[sp_CIC_PrintProfile_sf] TO [cioc_login_role]
 GO

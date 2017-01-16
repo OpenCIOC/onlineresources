@@ -117,7 +117,7 @@ EXEC dbo.sp_CIC_SearchTips_l @MemberID
 
 EXEC dbo.sp_CIC_View_CustomField_l @ViewType, 0, 0
 
-SELECT pp.ProfileID, ppd.ProfileName
+SELECT pp.ProfileID, ppd.ProfileName + CASE WHEN pp.[Public] = 1 THEN ' *' ELSE '' END
 FROM GBL_PrintProfile pp
 INNER JOIN GBL_PrintProfile_Description ppd
 	ON pp.ProfileID=ppd.ProfileID AND ppd.LangID=(SELECT TOP 1 LangID FROM GBL_PrintProfile_Description WHERE ProfileID=pp.ProfileID ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)

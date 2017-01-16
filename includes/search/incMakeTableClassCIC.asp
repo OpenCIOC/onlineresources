@@ -48,7 +48,6 @@ def results_page_link():
 def clean_html_for_label(data):
 	tree = lxml.html.document_fromstring(unicode(data))
 	return tree.text_content()
-
 </script>
 
 <%
@@ -651,6 +650,18 @@ Else
 			End If 'Print Version link type test
 		End If 'Print Version Link test
 			
+		If bEnableListViewMode Then
+			Dim strRecordListIDs, intDefaultPrintProfile
+			strRecordListIDs = getSessionValue(ps_strDbArea & "RecordList")
+			intDefaultPrintProfile = get_default_print_profile()
+			If Not Nl(strRecordListIDs) And Not Nl(intDefaultPrintProfile) Then
+
+		%>
+<%=strResultsMenuStart%><a class="NoLineLink" href="<%= makeLink("printlist2.asp", "IDList=" & strRecordListIDs & "&ProfileID=" & intDefaultPrintProfile, vbNullString) %>" target="_BLANK"><img border="0" src="images/printer.gif">&nbsp;<%=TXT_PRINT_RECORD_DETAILS %></a>
+		<%
+			strResultsMenuStart = " | "
+			End If
+		End If
 		If g_bUseCIC And g_bMapSearchResults Then
 %>
 <span id="map_my_results_ui" style="display: none;"><%=strResultsMenuStart%><a class="NoLineLink" href="#/SHOWMAP" id="map_my_results"><img border="0" area-hidden="true" src="images/globe.gif"> <%=TXT_MAP_RESULTS%></a><%If strResultsMenuStart <> " | " Then%> ]</p><%End If%></span>

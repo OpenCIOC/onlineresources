@@ -1327,6 +1327,7 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 				<div class="form-group">
 					${renderer.errorlist("item.DefaultPrintProfile")}
 					${renderer.select("item.DefaultPrintProfile", [('','')] + print_profiles, class_="form-control")}
+					<div class="SmallNote">${_('Public Print Profiles denoted by *.')}</div>
 				</div>
 			</td>
 		</tr>

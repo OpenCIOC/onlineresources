@@ -488,6 +488,13 @@ def setWhereClauses():
 #***************************************
 # End Sub setWhereClauses
 #***************************************
+
+def get_default_print_profile():
+	view = pyrequest.viewdata.dom
+	if pyrequest.user or view.DefaultPrintProfilePublic:
+		return view.DefaultPrintProfile
+	return None
+
 </script>
 
 <%

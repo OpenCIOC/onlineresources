@@ -49,6 +49,12 @@ Const FTYPE_CONTINUE = 4
 Server.ScriptTimeOut = 900
 
 intProfile = Request("ProfileID")
+If Not user_bLoggedIn Then
+	intProfile = get_default_print_profile()
+	If Nl(intProfile) Then
+		Call securityFailure()
+	End If
+End If
 If Nl(intProfile) Then
 		Call makePageHeader(TXT_PRINT_RECORD_LIST, TXT_PRINT_RECORD_LIST, False, False, True, False)
 		Call handleError(TXT_NO_PROFILE_CHOSEN & " <a href=""javascript:parent.close()"">" & TXT_CLOSE_WINDOW & "</a>", _
