@@ -36,7 +36,7 @@ non_bool_view_values = {
 	'ViewProgramsAndServices', 'ClickToViewDetails', 'OrgProgramNames',
 	'Organization', 'MultipleOrgWithSimilarMap', 'NoResultsMsg',
 	'OrgLevel1Name', 'OrgLevel2Name', 'OrgLevel3Name', 'ResultsPageSize',
-	'PDFBottomMessage', 'PDFBottomMargin', 'GoogleTranslateDisclaimer', 'TagLine',
+	'PDFBottomMessage', 'PDFBottomMargin', 'GoogleTranslateDisclaimer', 'TagLine', 'DefaultPrintProfile'
 }
 
 

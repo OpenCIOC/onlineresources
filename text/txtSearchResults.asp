@@ -46,6 +46,7 @@ Dim TXT_ACTION_ON_SELECTED, _
 	TXT_NO_TERMS, _
 	TXT_NO_PREVIOUS, _
 	TXT_OWNER, _
+	TXT_PRINT_RECORD_DETAILS, _
 	TXT_RECORDS_MATCH, _
 	TXT_REQUEST_UPDATE, _
 	TXT_SAVE_THIS_SEARCH, _
@@ -124,6 +125,7 @@ Sub setTxtSearchResults
 			TXT_NO_PREVIOUS = "Votre précédente recherche n'a pu être retrouvée. Soit vous n'avez pas autorisé les cookies, soit votre session a expiré." & _
 				"<br>Veuillez revenir en arrière et recommencer une <a href=""" & makeLinkB("~/" & StringIf(ps_intDbArea = DM_VOL, "volunteer/")) & """>" & TXT_NEW_SEARCH & "</a>."
 			TXT_OWNER = "Propriétaire"
+			TXT_PRINT_RECORD_DETAILS = "TRANSLATE_FR -- Print Record Details"
 			TXT_RECORDS_MATCH = " dossier(s) correspondant à vos critères."
 			TXT_REQUEST_UPDATE = "Demander une mise à jour"
 			TXT_SAVE_THIS_SEARCH = "Sauvegarder cette recherche"
@@ -201,6 +203,7 @@ Sub setTxtSearchResults
 			TXT_NO_PREVIOUS = "We were unable to retrieve your previous search. Either you do not have cookies enabled, or your session has expired." & _
 				"<br>Please go back or start a <a href=""" & makeLinkB("~/" & StringIf(ps_intDbArea = DM_VOL, "volunteer/")) & """>" & TXT_NEW_SEARCH & "</a>."
 			TXT_OWNER = "Owner"
+			TXT_PRINT_RECORD_DETAILS = "Print Record Details"
 			TXT_RECORDS_MATCH = " record(s) that match your criteria."
 			TXT_REQUEST_UPDATE = "Request Update"
 			TXT_SAVE_THIS_SEARCH = "Save This Search"

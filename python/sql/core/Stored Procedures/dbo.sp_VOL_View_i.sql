@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -185,7 +184,8 @@ END ELSE BEGIN
 			AllowFeedbackNotInView,
 			AssignSuggestionsTo,
 			AllowPDF,
-			GoogleTranslateWidget
+			GoogleTranslateWidget,
+			DefaultPrintProfile
 		)
 		SELECT
 			GETDATE(),
@@ -236,7 +236,8 @@ END ELSE BEGIN
 			AllowFeedbackNotInView,
 			AssignSuggestionsTo,
 			AllowPDF,
-			GoogleTranslateWidget
+			GoogleTranslateWidget,
+			DefaultPrintProfile
 		FROM VOL_View
 		WHERE ViewType = @DefaultView
 

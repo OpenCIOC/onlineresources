@@ -103,6 +103,7 @@ Dim	strCreatedDate, _
 	bMsgBeforeRecord, _
 	strSeparator, _
 	bPageBreak, _
+	bPublic, _
 	strValue, _
 	strCulture, _
 	intFieldCount, _
@@ -139,6 +140,7 @@ With rsProfile
 		bMsgBeforeRecord = .Fields("MsgBeforeRecord")
 		strSeparator = .Fields("Separator")
 		bPageBreak = .Fields("PageBreak")
+		bPublic = .Fields("Public")
 		strProfileName = .Fields("ProfileName")
 		intFieldCount = .Fields("FieldCount")
 			
@@ -227,6 +229,10 @@ For Each strCulture In active_cultures()
 <%
 Next
 %>
+<tr>
+	<td class="FieldLabelLeft"><%=TXT_PUBLIC%></td>
+	<td><label for="Public"><input type="checkbox" id="Public" name="Public"<%If bPublic Then%> checked<%End If%>> <%=TXT_INST_PUBLIC%></label>
+</tr>
 <tr>
 	<td class="FieldLabelLeft"><label for="StyleSheet"><%=TXT_STYLE_SHEET%></label></td>
 	<td><input type="text" name="StyleSheet" id="StyleSheet" value=<%=AttrQs(strStyleSheet)%> size="<%=TEXT_SIZE%>" maxlength="150">

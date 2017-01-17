@@ -92,8 +92,11 @@ CREATE TABLE [dbo].[CIC_View]
 [BSrchNear15] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSearchNear15] DEFAULT ((0)),
 [BSrchNear25] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSearchNear25] DEFAULT ((0)),
 [BSrchNear50] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSearchNear50] DEFAULT ((0)),
-[BSrchNear2] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSrchNear2] DEFAULT ((0))
+[BSrchNear2] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSrchNear2] DEFAULT ((0)),
+[DefaultPrintProfile] [int] NULL
 ) ON [PRIMARY]
+ALTER TABLE [dbo].[CIC_View] ADD
+CONSTRAINT [FK_CIC_View_GBL_PrintProfile] FOREIGN KEY ([DefaultPrintProfile]) REFERENCES [dbo].[GBL_PrintProfile] ([ProfileID])
 ALTER TABLE [dbo].[CIC_View] ADD 
 CONSTRAINT [PK_CIC_View] PRIMARY KEY CLUSTERED  ([ViewType]) ON [PRIMARY]
 CREATE UNIQUE NONCLUSTERED INDEX [IX_CIC_View_ViewTypeInclViewCriteria] ON [dbo].[CIC_View] ([ViewType]) INCLUDE ([CanSeeDeleted], [CanSeeNonPublic], [HidePastDueBy], [MemberID], [PB_ID]) ON [PRIMARY]

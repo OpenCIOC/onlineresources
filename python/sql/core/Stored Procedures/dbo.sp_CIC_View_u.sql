@@ -113,6 +113,7 @@ CREATE PROCEDURE [dbo].[sp_CIC_View_u]
 	@VShowDuties bit,
 	@ShowRecordDetailsSidebar bit,
 	@GoogleTranslateWidget bit,
+	@DefaultPrintProfile int,
 	@Descriptions xml,
 	@Views xml,
 	@AdvSrchCheckLists xml,
@@ -140,7 +141,8 @@ DECLARE	@MemberObjectName nvarchar(100),
 		@TemplateObjectName nvarchar(100),
 		@NameObjectName nvarchar(100),
 		@LanguageObjectName nvarchar(100),
-		@PublicationObjectName nvarchar(100)
+		@PublicationObjectName nvarchar(100),
+		@PrintProfileObjectName nvarchar(100)
 
 SET @MemberObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('CIOC Membership')
 SET @ViewObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('View')
@@ -149,6 +151,7 @@ SET @TemplateObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Design Template
 SET @NameObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Name')
 SET @LanguageObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Language')
 SET @PublicationObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Publication')
+SET @PrintProfileObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Print Profile')
 
 DECLARE @DescTable table (
 	Culture varchar(5) NOT NULL,
@@ -423,7 +426,7 @@ END ELSE IF @AgencyCode IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_View WHERE 
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @ViewObjectName, NULL)
 -- Template given ?
-END ELSE IF @Template IS NULL BEGIN
+
 	SET @Error = 10 -- Required field
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @TemplateObjectName, @ViewObjectName)
 -- Template exists ?
@@ -472,6 +475,14 @@ END ELSE IF @QuickListPubHeadings IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_P
 END ELSE IF @QuickListPubHeadings IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_Publication pb WHERE pb.PB_ID=@QuickListPubHeadings AND pb.MemberID=@MemberID OR pb.MemberID IS NULL) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @PublicationObjectName, NULL)
+-- Print Profile Exists ?
+END ELSE IF @DefaultPrintProfile IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_PrintProfile pp WHERE pp.ProfileID=@DefaultPrintProfile AND pp.Domain=1) BEGIN
+	SET @Error = 3 -- No Such Record
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@DefaultPrintProfile AS varchar), @PrintProfileObjectName)
+-- Print Profile belongs to Member ?
+END ELSE IF @DefaultPrintProfile IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_PrintProfile pp WHERE pp.ProfileID=@DefaultPrintProfile AND pp.Domain=1 AND pp.[Public]=1 AND pp.MemberID=@MemberID OR pp.MemberID IS NULL) BEGIN
+	SET @Error = 8 -- Security Failure
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @PrintProfileObjectName, NULL)
 -- At least one language used ?
 END ELSE IF NOT EXISTS(SELECT * FROM @DescTable) BEGIN
 	SET @Error = 10 -- Required field
@@ -526,6 +537,7 @@ IF @Error = 0 BEGIN
 		AssignSuggestionsTo		= @AssignSuggestionsTo,
 		AllowPDF				= ISNULL(@AllowPDF, AllowPDF),
 		GoogleTranslateWidget	= ISNULL(@GoogleTranslateWidget,GoogleTranslateWidget),
+		DefaultPrintProfile		= @DefaultPrintProfile,
 
 		-- CIC-only fields
 		CommSrchDropDown		= ISNULL(@CommSrchDropDown,0),

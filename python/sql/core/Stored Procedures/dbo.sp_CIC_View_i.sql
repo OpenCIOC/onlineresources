@@ -220,7 +220,8 @@ END ELSE BEGIN
 			ResultsPageSize,
 			AllowPDF,
 			ShowRecordDetailsSidebar,
-			GoogleTranslateWidget
+			GoogleTranslateWidget,
+			DefaultPrintProfile
 		)
 		SELECT
 			GETDATE(),
@@ -312,7 +313,8 @@ END ELSE BEGIN
 			ResultsPageSize,
 			AllowPDF,
 			ShowRecordDetailsSidebar,
-			GoogleTranslateWidget
+			GoogleTranslateWidget,
+			DefaultPrintProfile
 		FROM CIC_View
 		WHERE ViewType = @DefaultView
 

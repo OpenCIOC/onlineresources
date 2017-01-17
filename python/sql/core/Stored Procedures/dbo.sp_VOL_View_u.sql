@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -74,6 +73,7 @@ CREATE PROCEDURE [dbo].[sp_VOL_View_u]
 	@VShowPosition bit,
 	@VShowDuties bit,
 	@GoogleTranslateWidget bit,
+	@DefaultPrintProfile int,
 	@Descriptions xml,
 	@Views xml,
 	@AdvSrchCheckLists xml,
@@ -100,7 +100,8 @@ DECLARE	@MemberObjectName nvarchar(100),
 		@TemplateObjectName nvarchar(100),
 		@NameObjectName nvarchar(100),
 		@LanguageObjectName nvarchar(100),
-		@CommunitySetObjectName nvarchar(100)
+		@CommunitySetObjectName nvarchar(100),
+		@PrintProfileObjectName nvarchar(100)
 
 SET @MemberObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('CIOC Membership')
 SET @ViewObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('View')
@@ -109,6 +110,7 @@ SET @TemplateObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Design Template
 SET @NameObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Name')
 SET @LanguageObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Language')
 SET @CommunitySetObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Community Set')
+SET @PrintProfileObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Print Profile')
 
 DECLARE @DescTable table (
 	Culture varchar(5) NOT NULL,
@@ -349,6 +351,14 @@ END ELSE IF NOT EXISTS(SELECT * FROM VOL_CommunitySet vcs WHERE vcs.CommunitySet
 END ELSE IF NOT EXISTS(SELECT * FROM VOL_CommunitySet vcs WHERE vcs.CommunitySetID=@CommunitySetID AND vcs.MemberID=@MemberID) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @CommunitySetObjectName, NULL)
+-- Print Profile Exists ?
+END ELSE IF @DefaultPrintProfile IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_PrintProfile pp WHERE pp.ProfileID=@DefaultPrintProfile AND pp.Domain=2) BEGIN
+	SET @Error = 3 -- No Such Record
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@DefaultPrintProfile AS varchar), @PrintProfileObjectName)
+-- Print Profile belongs to Member ?
+END ELSE IF @DefaultPrintProfile IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_PrintProfile pp WHERE pp.ProfileID=@DefaultPrintProfile AND pp.Domain=2 AND pp.[Public]=1 AND pp.MemberID=@MemberID OR pp.MemberID IS NULL) BEGIN
+	SET @Error = 8 -- Security Failure
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @PrintProfileObjectName, NULL)
 -- At least one language used ?
 END ELSE IF NOT EXISTS(SELECT * FROM @DescTable) BEGIN
 	SET @Error = 10 -- Required field
@@ -412,6 +422,7 @@ IF @Error = 0 BEGIN
 		AssignSuggestionsTo		= @AssignSuggestionsTo,
 		AllowPDF				= ISNULL(@AllowPDF, AllowPDF),
 		GoogleTranslateWidget	= ISNULL(@GoogleTranslateWidget,GoogleTranslateWidget),
+		DefaultPrintProfile		= @DefaultPrintProfile,
 		
 		-- VOL-only fields
 		CommunitySetID			= @CommunitySetID,

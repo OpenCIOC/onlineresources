@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -21,7 +20,7 @@ SET NOCOUNT ON
 /*
 	Checked for Release: 3.7.4
 	Checked by: KL
-	Checked on: 12-May-2016
+	Checked on: 6-Dec-2016
 	Action: NO ACTION REQUIRED
 */
 
@@ -128,7 +127,9 @@ IF @UseViewCIC IS NOT NULL BEGIN
 			AND vr.ViewType = @DefaultViewCIC AND vw.ViewType = @UseViewCIC
 			AND (
 				NOT EXISTS(SELECT * FROM dbo.CIC_View_Whitelist wl WHERE wl.ViewType=vw.ViewType)
-				OR EXISTS(SELECT * FROM dbo.CIC_View_Whitelist wl WHERE wl.ViewType=vw.ViewType AND	wl.IPAddress=@IPAddress)
+				OR EXISTS(SELECT * FROM dbo.CIC_View_Whitelist wl WHERE wl.ViewType=vw.ViewType
+					AND wl.IPAddress=@IPAddress)
+				OR @User_ID IS NOT NULL
 				)
 END
 
@@ -219,7 +220,9 @@ SELECT	vw.ViewType,
 		GoogleTranslateWidget,
 		GoogleTranslateDisclaimer,
 		NoResultsMsg,
-		TagLine
+		TagLine,
+		DefaultPrintProfile,
+		(SELECT pp.[Public] FROM GBL_PrintProfile pp WHERE ProfileID=DefaultPrintProfile AND Domain=1) AS DefaultPrintProfilePublic
 	FROM CIC_View vw
 	LEFT JOIN CIC_View_Description vwd
 		ON vw.ViewType = vwd.ViewType
@@ -269,7 +272,9 @@ SELECT 	vcsn.AreaServed,
 		GoogleTranslateWidget,
 		GoogleTranslateDisclaimer,
 		NoResultsMsg,
-		TagLine
+		TagLine,
+		DefaultPrintProfile,
+		(SELECT pp.[Public] FROM GBL_PrintProfile pp WHERE ProfileID=DefaultPrintProfile AND Domain=2) AS DefaultPrintProfilePublic
 	FROM VOL_View vw
 	INNER JOIN VOL_View_Description vwd
 		ON vw.ViewType = vwd.ViewType
@@ -305,19 +310,6 @@ WHERE @PageName LIKE pg.PageName
 RETURN @Error
 	
 SET NOCOUNT OFF
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 GO
