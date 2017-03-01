@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -42,7 +41,7 @@ END ELSE IF NOT EXISTS(SELECT * FROM GBL_Template WHERE (MemberID=@MemberID Or M
 END
 
 SELECT	tp.Template_ID, StyleSheetUrl, JavaScriptBottomUrl, JavaScriptTopUrl, ShortCutIcon, AppleTouchIcon, BodyTagExtras, tp.SmallTitle,
-		tp.HeaderSearchLink, tp.HeaderSearchIcon, tp.HeaderSuggestLink, tp.HeaderSuggestIcon, tp.ContainerContrast, tp.ContainerFluid,
+		tp.HeaderSearchLink, tp.HeaderSearchIcon, tp.HeaderSuggestLink, tp.HeaderSuggestIcon, tp.ContainerContrast, tp.ContainerFluid, tp.ExtraJavascript,
 		tpd.*, 
 		TemplateCSSVersionDate AS VersionDate,
 		tp.TemplateCSSLayoutURLs, tp.AlmostStandardsMode, tp.UseFullCIOCBootstrap_Cache AS UseFullCIOCBootstrap, tp.UseFontAwesome_Cache AS UseFontAwesome,
