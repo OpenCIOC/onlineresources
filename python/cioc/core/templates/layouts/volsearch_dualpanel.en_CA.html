@@ -80,7 +80,14 @@
 
 	[IF:SEARCH_ALERT]
 	<div class="panel panel-danger search-alert-box">
-		<div class="panel-heading"><h2><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Important Notice</h2></div>
+		[IF:SEARCH_ALERT_TITLE]
+		<div class="panel-heading">
+			<h2>
+				[IF:SEARCH_ALERT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_ALERT_GLYPH]" aria-hidden="true"></span>[ENDIF:SEARCH_ALERT_GLYPH]
+				[SEARCH_ALERT_TITLE]
+			</h2>
+		</div>
+		[ENDIF:SEARCH_ALERT_TITLE]
 		<div class="panel-body panel-body-nofooter">
 			[SEARCH_ALERT]
 		</div>
