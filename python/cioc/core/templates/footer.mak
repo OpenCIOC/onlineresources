@@ -212,6 +212,7 @@ from cioc.core import gtranslate
 	</script>
 	%endif
 	${gtranslate.render_script(request)}
+	${request.template_values.get('ExtraJavascript') or '' |n}
 </body>
 </html>
 %endif

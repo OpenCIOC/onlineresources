@@ -104,7 +104,8 @@ CREATE TABLE [dbo].[GBL_Template]
 [MenuBgColour] [varchar] (7) COLLATE Latin1_General_100_CI_AI NULL CONSTRAINT [DF_GBL_Template_MenuBgColour] DEFAULT ('#CFCFCF'),
 [TitleFontColour] [varchar] (7) COLLATE Latin1_General_100_CI_AI NULL CONSTRAINT [DF_GBL_Template_TitleFontColour] DEFAULT ('#F0F0F0'),
 [TitleBgColour] [varchar] (7) COLLATE Latin1_General_100_CI_AI NULL CONSTRAINT [DF_GBL_Template_TitleBgColour] DEFAULT ('#333333'),
-[PreviewTemplate] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_PreviewTemplate] DEFAULT ((0))
+[PreviewTemplate] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_PreviewTemplate] DEFAULT ((0)),
+[ExtraJavascript] [varchar] (max) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON
