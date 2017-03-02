@@ -51,7 +51,7 @@ Call setPageInfo(True, DM_GLOBAL, DM_GLOBAL, "../", "admin/", vbNullString)
 <!--#include file="../includes/update/incAgencyUpdateInfo.asp" -->
 <!--#include file="../includes/core/incSendMail.asp" -->
 <%
-Server.ScriptTimeOut = 600
+Server.ScriptTimeOut = 1200
 
 If g_bNoEmail Then
 	Call securityFailure()
@@ -284,7 +284,7 @@ If Not Nl(strIDList) and Nl(strErrorList) Then
 		.CommandTimeout = 0
 	End With
 	With rsUpdateEmail
-		.LockType = adLockOptimistic
+		.LockType = adLockReadOnly
 		.CursorLocation = adUseClient
 		.CursorType = adOpenStatic
 		.Open cmdUpdateEmail
@@ -292,6 +292,15 @@ If Not Nl(strIDList) and Nl(strErrorList) Then
 	If rsUpdateEmail.EOF Then
 		bIDError = True
 	End If
+
+	Dim cmdEmailDate
+	Set cmdEmailDate = Server.CreateObject("ADODB.Command")
+
+	With cmdEmailDate
+		.ActiveConnection = getCurrentAdminCnn()
+		.CommandType = adCmdText
+		.CommandTimeout = 0
+	End With
 Else
 	bIDError = True
 End If
@@ -413,8 +422,8 @@ Else
 				Response.Write("<br>" & TXT_UNABLE_TO_SEND_EMAIL_TO & strNUMDesc & " (" & TXT_NO_AGENCY_EMAIL_FOR & .Fields("RECORD_OWNER") & ")")
 			Else
 				If Not (intDomain = DM_VOL And bMultiRecord) Then
-					.Fields("EMAIL_UPDATE_DATE") = Now()
-					.Update
+					cmdEmailDate.CommandText = "UPDATE GBL_BaseTable SET EMAIL_UPDATE_DATE=GETDATE() WHERE NUM=" & QsNl(.Fields("ID"))
+					cmdEmailDate.Execute
 				End If
 				Call sendEmail(False, strROUpdateEmail & " <" & strROUpdateEmail & ">",strRecipient,vbNullString,strMsgSubjDisp,strMsgTxtDisp)
 				Response.Write("<br>" & TXT_EMAIL_SENT_TO & "<strong>" & strRecipient & "</strong> (" & strNUMDesc & ")")
@@ -446,6 +455,7 @@ End If
 
 Set rsUpdateEmail = Nothing
 Set cmdUpdateEmail = Nothing
+Set cmdEmailDate = Nothing
 
 End If
 
