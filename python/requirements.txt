@@ -42,7 +42,6 @@ lxml==3.3.5
 pycrypto==2.6.1
 pyramid_debugtoolbar==2.2
 adodbapi==2.6.0.7
-https://github.com/lambacck/airs2icarol/zipball/v0.6.0#egg=airs2icarol==0.6.0
 pdfkit==0.5.0
 libsass==0.8.3
 

@@ -71,12 +71,12 @@ _fname_formats = {
 	'part': 'IncrementalFrom{previous}To{now}{file_suffix}.zip',
 }
 SchemaError = namedtuple('SchemaError', 'line column message')
-LangSetting = namedtuple('LangSetting', 'culture file_suffix language_name airs2icarol')
+LangSetting = namedtuple('LangSetting', 'culture file_suffix language_name')
 
 
 _lang_settings = {
-	'en-CA': LangSetting('en-CA', '', 'English', False),
-	'fr-CA': LangSetting('fr-CA', '_frCA', 'French', True)
+	'en-CA': LangSetting('en-CA', '', 'English'),
+	'fr-CA': LangSetting('fr-CA', '_frCA', 'French')
 }
 
 
@@ -188,6 +188,7 @@ def calculate_deletion_list(lang, url, args, **kwargs):
 	r = requests.get(url + '/list', stream=True, **kwargs)
 	r.raise_for_status()
 	dest_file = args.dest_file[:-4] + '_full_list.zip'
+	update_environ('ALLEXPORTFILES', dest_file)
 	with open(dest_file, 'wb') as fd:
 		for chunk in r.iter_content(chunk_size=8192):
 			fd.write(chunk)
@@ -228,6 +229,8 @@ def calculate_deletion_list(lang, url, args, **kwargs):
 		to_delete_percent = 100 * to_delete_count / previous_count
 
 		dest_file = args.dest_file[:-4] + '_delete.zip'
+		update_environ('ALLEXPORTFILES', dest_file)
+		update_environ('SYNCEXPORTFILES', dest_file)
 		with open(dest_file, 'wb') as fd:
 			with bufferedzip.BufferedZipFile(fd, 'w', zipfile.ZIP_DEFLATED) as zip:
 				write_csv_to_zip(zip, itertools.chain([header], to_delete), os.path.basename(dest_file)[:-4] + '.csv')
@@ -240,6 +243,8 @@ def calculate_deletion_list(lang, url, args, **kwargs):
 		csv_file.close()
 
 		dest_file = args.dest_file[:-4] + '_delete.zip'
+		update_environ('ALLEXPORTFILES', dest_file)
+		update_environ('SYNCEXPORTFILES', dest_file)
 		with open(dest_file, 'wb') as fd:
 			with bufferedzip.BufferedZipFile(fd, 'w', zipfile.ZIP_DEFLATED) as zip:
 				write_csv_to_zip(zip, [header], os.path.basename(dest_file)[:-4] + '.csv')
@@ -437,6 +442,11 @@ def generate_report(args, counts):
 	)
 
 
+def update_environ(target, extra):
+	files = os.environ.get(target, '').split()
+	os.environ[target] = ' '.join(files + [extra])
+
+
 def process_language(args, lang):
 	error_log = None
 	url = None
@@ -462,6 +472,8 @@ def process_language(args, lang):
 		else:
 			args.dest_file = args.file
 
+		update_environ('ALLEXPORTFILES', args.dest_file)
+		update_environ('SYNCEXPORTFILES', args.dest_file)
 		error_log = validate_download(args, counts)
 		if error_log:
 			output_error_log(args, error_log)
@@ -500,9 +512,6 @@ def process_language(args, lang):
 			sys.stderr.write(u'Unable to upload NUM counts: %s%s\n' % (e, body))
 
 	report = generate_report(args, counts)
-
-	if lang.airs2icarol:
-		subprocess.call([sys.executable, '-m', 'airs2icarol', args.dest_file, args.dest_file[:-4] + '_i18n.zip', lang.culture.split('-')[0]], shell=False)
 
 	return report, error_log
 
