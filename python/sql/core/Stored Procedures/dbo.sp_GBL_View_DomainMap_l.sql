@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -31,7 +30,10 @@ SELECT	@DefaultViewCIC=DefaultViewCIC,
 WHERE MemberID=@MemberID
 END
 
-SELECT * FROM GBL_View_DomainMap WHERE MemberID=@MemberID ORDER BY DomainName
+SELECT *, l.Culture AS DefaultCulture FROM GBL_View_DomainMap m
+INNER JOIN STP_Language l
+	ON m.DefaultLangID=l.LangID
+WHERE MemberID=@MemberID ORDER BY DomainName
 
 IF @AgencyCode IS NOT NULL BEGIN
 SELECT vw.ViewType,
