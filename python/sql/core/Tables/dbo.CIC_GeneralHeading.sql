@@ -13,7 +13,8 @@ CREATE TABLE [dbo].[CIC_GeneralHeading]
 [TaxonomyWhereClause] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [NonPublic] [bit] NOT NULL CONSTRAINT [DF_CIC_GeneralHeading_NonPublic] DEFAULT ((0)),
 [DisplayOrder] [tinyint] NOT NULL CONSTRAINT [DF_CIC_GeneralHeading_DisplayOrder] DEFAULT ((0)),
-[IconNameFull] [varchar] (65) COLLATE Latin1_General_100_CI_AI NULL
+[IconNameFull] [varchar] (65) COLLATE Latin1_General_100_CI_AI NULL,
+[Code] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 CREATE NONCLUSTERED INDEX [IX_CIC_GeneralHeading_PBIDUsedInclGHIDTaxonomyWhereClause] ON [dbo].[CIC_GeneralHeading] ([PB_ID], [Used]) INCLUDE ([GH_ID], [TaxonomyWhereClause]) ON [PRIMARY]
 
