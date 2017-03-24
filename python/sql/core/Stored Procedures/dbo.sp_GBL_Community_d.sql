@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -12,9 +13,9 @@ AS
 SET NOCOUNT ON
 
 /*
-	Checked for Release: 3.1
+	Checked for Release: 3.7.4
 	Checked by: KL
-	Checked on: 16-Jan-2012
+	Checked on: 02-Feb-2017
 	Action: NO ACTION REQUIRED
 */
 
@@ -63,6 +64,7 @@ END ELSE IF EXISTS(SELECT * FROM VOL_CommunityGroup_CM WHERE CM_ID=@CM_ID) BEGIN
 	SET @Error = 7 -- Can't delete value in use
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @CommunityObjectName, cioc_shared.dbo.fn_SHR_STP_ObjectName('Community Group'))
 END ELSE BEGIN
+	DELETE FROM dbo.GBL_Community_ParentList WHERE Parent_CM_ID=@CM_ID
 	DELETE GBL_Community
 	WHERE (CM_ID = @CM_ID)
 	EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @CommunityObjectName, @ErrMsg
@@ -73,6 +75,8 @@ RETURN @Error
 SET NOCOUNT OFF
 
 
+
 GO
+
 GRANT EXECUTE ON  [dbo].[sp_GBL_Community_d] TO [cioc_login_role]
 GO
