@@ -1622,8 +1622,9 @@ FROM GBL_BaseTable bt
 				btd.LangID=@LangID 
 				OR (
 					@AutoIncludeSiteAgency=1
-					AND btd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=btd.NUM ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID))
+					AND btd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=btd.NUM ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID)
 					AND EXISTS(SELECT * FROM dbo.GBL_BaseTable btl INNER JOIN dbo.GBL_BaseTable_Description btdl ON btdl.NUM = btl.NUM AND btdl.LangID=@LangID WHERE btl.ORG_NUM=bt.NUM)
+					)
 				)
 			AND (@CanSeeNonPublic=1 OR btd.NON_PUBLIC=0)
 			AND (
@@ -1694,6 +1695,7 @@ SET NOCOUNT OFF
 
 
 GO
+
 
 
 
