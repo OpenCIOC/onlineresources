@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -140,8 +141,8 @@ SELECT
 	dbo.fn_CIC_NUMToServiceLevel(bt.NUM,btd.LangID) AS "@LegalStatus",
 	
 	-- EXCLUDE FROM WEB / DIRECTORY
-	CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) OR btd.NON_PUBLIC=1 THEN 'true' ELSE 'false' END AS "@ExcludeFromWebsite",
-	CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) OR btd.NON_PUBLIC=1 THEN 'true' ELSE 'false' END AS "@ExcludeFromDirectory",
+	CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) OR btd.NON_PUBLIC=1 OR btd.LangID<>@LangID THEN 'true' ELSE 'false' END AS "@ExcludeFromWebsite",
+	CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) OR btd.NON_PUBLIC=1 OR btd.LangID<>@LangID THEN 'true' ELSE 'false' END AS "@ExcludeFromDirectory",
 	
 	-- KEY
 	btd.NUM AS [Key],
@@ -188,8 +189,8 @@ SELECT
 	(SELECT
 		
 	-- AGENCY LOCATION > EXCLUDE FROM WEB / DIRECTORY
-		CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) OR btd.NON_PUBLIC=1 THEN 'true' ELSE 'false' END AS "@ExcludeFromWebsite",
-		CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) OR btd.NON_PUBLIC=1 THEN 'true' ELSE 'false' END AS "@ExcludeFromDirectory",
+		CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) OR btd.NON_PUBLIC=1 OR btd.LangID<>@LangID THEN 'true' ELSE 'false' END AS "@ExcludeFromWebsite",
+		CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) OR btd.NON_PUBLIC=1 OR btd.LangID<>@LangID THEN 'true' ELSE 'false' END AS "@ExcludeFromDirectory",
 	
 	-- AGENCY LOCATION > KEY
 		btd.NUM AS [Key],
@@ -425,8 +426,8 @@ SELECT
 	(SELECT
 
 	-- SITE > EXCLUDE FROM WEB / DIRECTORY
-		CASE WHEN (slbtd.DELETION_DATE IS NOT NULL AND slbtd.DELETION_DATE <= GETDATE()) OR slbtd.NON_PUBLIC=1 THEN 'true' ELSE 'false' END AS "@ExcludeFromWebsite",
-		CASE WHEN (slbtd.DELETION_DATE IS NOT NULL AND slbtd.DELETION_DATE <= GETDATE()) OR slbtd.NON_PUBLIC=1 THEN 'true' ELSE 'false' END AS "@ExcludeFromDirectory",
+		CASE WHEN (slbtd.DELETION_DATE IS NOT NULL AND slbtd.DELETION_DATE <= GETDATE()) OR slbtd.NON_PUBLIC=1 OR slbtd.LangID<>@LangID THEN 'true' ELSE 'false' END AS "@ExcludeFromWebsite",
+		CASE WHEN (slbtd.DELETION_DATE IS NOT NULL AND slbtd.DELETION_DATE <= GETDATE()) OR slbtd.NON_PUBLIC=1 OR slbtd.LangID<>@LangID THEN 'true' ELSE 'false' END AS "@ExcludeFromDirectory",
 
 	-- SITE > KEY
 		CASE WHEN bt.NUM='ZZZ00001' THEN slbtd.NUM ELSE slbt.NUM END AS [Key],
@@ -742,8 +743,8 @@ SELECT
 		(SELECT
 
 	-- EXCLUDE FROM WEB / DIRECTORY
-		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 THEN 'true' ELSE 'false' END AS "@ExcludeFromWebsite",
-		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 THEN 'true' ELSE 'false' END AS "@ExcludeFromDirectory",
+		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 OR svbtd.LangID<>@LangID THEN 'true' ELSE 'false' END AS "@ExcludeFromWebsite",
+		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 OR svbtd.LangID<>@LangID THEN 'true' ELSE 'false' END AS "@ExcludeFromDirectory",
 
 	-- SITE > SERVICE > NAME
 		/*
@@ -1026,7 +1027,7 @@ SELECT
 	
 	-- SITE > SERVICE > RESOURCE INFO
 			(SELECT 
-					CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 THEN 'false' ELSE 'true' END AS "@AvailableForDirectory",
+					CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 OR svbtd.LangID<>@LangID THEN 'false' ELSE 'true' END AS "@AvailableForDirectory",
 					CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) THEN 'false' ELSE 'true' END AS "@AvailableForReferral",
 					CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) THEN 'false' ELSE 'true' END AS "@AvailableForResearch",
 					CAST(svbtd.CREATED_DATE AS date) AS "@DateAdded",
@@ -1116,8 +1117,8 @@ SELECT
 		(SELECT
 
 	-- EXCLUDE FROM WEB / DIRECTORY
-		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 THEN 'true' ELSE 'false' END AS "@ExcludeFromWebsite",
-		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 THEN 'true' ELSE 'false' END AS "@ExcludeFromDirectory",
+		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 OR svbtd.LangID<>@LangID THEN 'true' ELSE 'false' END AS "@ExcludeFromWebsite",
+		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 OR svbtd.LangID<>@LangID THEN 'true' ELSE 'false' END AS "@ExcludeFromDirectory",
 
 	-- SITE > SERVICE > NAME
 		/*
@@ -1400,7 +1401,7 @@ SELECT
 	
 	-- SITE > SERVICE > RESOURCE INFO
 			(SELECT 
-					CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 THEN 'false' ELSE 'true' END AS "@AvailableForDirectory",
+					CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 OR svbtd.LangID<>@LangID THEN 'false' ELSE 'true' END AS "@AvailableForDirectory",
 					CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) THEN 'false' ELSE 'true' END AS "@AvailableForReferral",
 					CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) THEN 'false' ELSE 'true' END AS "@AvailableForResearch",
 					CAST(svbtd.CREATED_DATE AS date) AS "@DateAdded",
@@ -1518,7 +1519,14 @@ SELECT
 
 		FROM GBL_BaseTable slbt
 		LEFT JOIN GBL_BaseTable_Description slbtd
-			ON slbtd.LangID=@LangID
+			ON (
+				slbtd.LangID=@LangID
+				OR (
+					@AutoIncludeSiteAgency=1
+					AND slbtd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=slbtd.NUM ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID)
+					AND EXISTS(SELECT * FROM dbo.GBL_BT_LOCATION_SERVICE btl INNER JOIN dbo.GBL_BaseTable_Description btdl ON btdl.NUM = btl.SERVICE_NUM AND btdl.LangID=@LangID WHERE btl.LOCATION_NUM=slbtd.NUM)
+					)
+				)
 				AND slbtd.NUM = CASE WHEN EXISTS(SELECT * FROM GBL_BT_OLS lpr INNER JOIN GBL_OrgLocationService lols ON lpr.OLS_ID=lols.OLS_ID AND lols.Code='SITE' WHERE lpr.NUM=slbt.NUM) THEN slbt.NUM ELSE 'ZZZ00002' END
 				AND (
 						(
@@ -1566,7 +1574,7 @@ SELECT
 
 	-- RESOURCE INFO
 	(SELECT 
-			CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) OR btd.NON_PUBLIC=1 THEN 'false' ELSE 'true' END AS "@AvailableForDirectory",
+			CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) OR btd.NON_PUBLIC=1 OR btd.LangID<>@LangID THEN 'false' ELSE 'true' END AS "@AvailableForDirectory",
 			CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) THEN 'false' ELSE 'true' END AS "@AvailableForReferral",
 			CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) THEN 'false' ELSE 'true' END AS "@AvailableForResearch",
 			CAST(btd.CREATED_DATE AS date) AS "@DateAdded",
@@ -1609,7 +1617,14 @@ SELECT
 				
 FROM GBL_BaseTable bt
 	INNER JOIN GBL_BaseTable_Description btd
-		ON bt.NUM=btd.NUM AND btd.LangID=@LangID
+		ON bt.NUM=btd.NUM
+			AND (
+				btd.LangID=@LangID 
+				OR (
+					@AutoIncludeSiteAgency=1
+					AND btd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=btd.NUM ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID))
+					AND EXISTS(SELECT * FROM dbo.GBL_BaseTable btl INNER JOIN dbo.GBL_BaseTable_Description btdl ON btdl.NUM = btl.NUM AND btdl.LangID=@LangID WHERE btl.ORG_NUM=bt.NUM)
+				)
 			AND (@CanSeeNonPublic=1 OR btd.NON_PUBLIC=0)
 			AND (
 				btd.DELETION_DATE IS NULL
@@ -1679,6 +1694,7 @@ SET NOCOUNT OFF
 
 
 GO
+
 
 
 
