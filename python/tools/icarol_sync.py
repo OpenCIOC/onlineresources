@@ -444,7 +444,7 @@ def generate_report(args, counts):
 
 def update_environ(target, extra):
 	files = os.environ.get(target, '').split()
-	os.environ[target] = ' '.join(files + [extra])
+	os.environ[target] = ' '.join(files + [os.path.basename(extra)])
 
 
 def process_language(args, lang):
