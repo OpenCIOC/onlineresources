@@ -542,7 +542,8 @@ def main(argv):
 	after_cmd = get_config_item(args, 'airs_export_run_after_cmd', None)
 
 	if before_cmd:
-		subprocess.call(before_cmd, shell=True)
+		p = subprocess.Popen(before_cmd, shell=True, cwd=args.dest)
+		p.wait()
 
 	results = []
 	error_logs = []
@@ -573,7 +574,8 @@ def main(argv):
 		print "".join(results)
 
 	if after_cmd:
-		subprocess.call(after_cmd, shell=True)
+		p = subprocess.Popen(after_cmd, shell=True, cwd=args.dest)
+		p.wait()
 
 	if sys.stderr.is_dirty():
 		retval = 1
