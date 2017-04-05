@@ -43,6 +43,7 @@ from webhelpers.html import tags
 ${request.passvars.cached_form_vals|n}
 %for name, value in hidden_fields:
 ${tags.hidden(name, value)}
+<input type="hidden" name="TopicSearch" value="${topicsearch_tag}">
 %endfor
 </div>
 %for f in formitems:
