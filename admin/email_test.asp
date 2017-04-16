@@ -52,7 +52,7 @@ If Not user_bSuperUser Then
 End If
 
 'Call sendEmail(bIgnoreBlock,strFrom,strTo,strReplyTo,strSubject,strMessage)
-If sendEmail(True,"chris@kclsoftware.com","chris@kclsoftware.com",vbNullString,"CIOC Email test","This is a test email message") Then
+If sendEmail(True,"chris@cioc.ca","chris@kclsoftware.com",vbNullString,"CIOC Email test","This is a test email message") Then
 Response.Write("Success")
 Else
 Response.Write("Failure")
