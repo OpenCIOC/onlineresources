@@ -356,7 +356,7 @@ END ELSE IF @DefaultPrintProfile IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_Pr
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@DefaultPrintProfile AS varchar), @PrintProfileObjectName)
 -- Print Profile belongs to Member ?
-END ELSE IF @DefaultPrintProfile IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_PrintProfile pp WHERE pp.ProfileID=@DefaultPrintProfile AND pp.Domain=2 AND pp.[Public]=1 AND pp.MemberID=@MemberID OR pp.MemberID IS NULL) BEGIN
+END ELSE IF @DefaultPrintProfile IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_PrintProfile pp WHERE pp.ProfileID=@DefaultPrintProfile AND pp.Domain=2 AND pp.MemberID=@MemberID OR pp.MemberID IS NULL) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @PrintProfileObjectName, NULL)
 -- At least one language used ?
