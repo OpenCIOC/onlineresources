@@ -577,7 +577,7 @@ Sub setTxtEntryForm()
 			TXT_STREET_NUMBER = "Street Number"
 			TXT_STREET_TYPE = "Street Type"
 			TXT_SUFFIX = "Suffix"
-			TXT_SUFFIX_DESC = "(e.g. Unit 12, Ste 201, 2nd Flr, RR 2)"
+			TXT_SUFFIX_DESC = "(e.g. Unit 12, Suite 201, 2nd Flr, RR 2)"
 			TXT_TO_THE_THESAURUS = "to the Thesaurus"
 			TXT_TODDLER = "Toddlers"
 			TXT_TOTAL_EMPLOYEES = "Total Employees"
