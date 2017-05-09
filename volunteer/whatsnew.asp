@@ -79,6 +79,9 @@ intNumDays = Trim(Request("numDays"))
 If Nl(intNumDays) Then
 	intNumDays = DEFAULT_DAYS
 ElseIf IsNumeric(intNumDays) Then
+	If Len(intNumDays) > 5 Then
+		intNumDays = DEFAULT_DAYS
+	End If
 	intNumDays = CInt(intNumDays)
 	If intNumDays < 0 Then
 		intNumDays = Abs(intNumDays)
@@ -91,6 +94,8 @@ Else
 End If
 intMinRecords = Trim(Request("numRecords"))
 If Nl(intMinRecords) Then
+	intMinRecords = Null
+ElseIf Len(intMinRecords) > 5 Then
 	intMinRecords = Null
 ElseIf IsNumeric(intMinRecords) Then
 	If 0+intMinRecords < MAX_TINY_INT Then

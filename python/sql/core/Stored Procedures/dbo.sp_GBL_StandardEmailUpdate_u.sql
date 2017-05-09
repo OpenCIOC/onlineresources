@@ -79,15 +79,15 @@ SELECT
 	N.value('Culture[1]', 'varchar(5)') AS Culture,
 	(SELECT LangID FROM STP_Language sl WHERE sl.Culture = N.value('Culture[1]', 'varchar(5)') AND Active=1) AS LangID,
 	N.value('Name[1]', 'nvarchar(200)') AS Name,
-	N.value('StdSubject[1]', 'nvarchar(100)') AS Name,
-	N.value('StdGreetingStart[1]', 'nvarchar(100)') AS Name,
-	N.value('StdGreetingEnd[1]', 'nvarchar(100)') AS Name,
-	N.value('StdMessageBody[1]', 'nvarchar(1500)') AS Name,
-	N.value('StdDetailDesc[1]', 'nvarchar(100)') AS Name,
-	N.value('StdFeedbackDesc[1]', 'nvarchar(100)') AS Name,
-	N.value('StdSuggestOppDesc[1]', 'nvarchar(150)') AS Name,
-	N.value('StdOrgOppsDesc[1]', 'nvarchar(150)') AS Name,
-	N.value('StdContact[1]', 'nvarchar(255)') AS Name
+	N.value('StdSubject[1]', 'nvarchar(100)') AS StdSubject,
+	N.value('StdGreetingStart[1]', 'nvarchar(100)') AS StdGreetingStart,
+	N.value('StdGreetingEnd[1]', 'nvarchar(100)') AS StdGreetingEnd,
+	N.value('StdMessageBody[1]', 'nvarchar(1500)') AS StdMessageBody,
+	N.value('StdDetailDesc[1]', 'nvarchar(100)') AS StdDetailDesc,
+	N.value('StdFeedbackDesc[1]', 'nvarchar(100)') AS StdFeedbackDesc,
+	N.value('StdSuggestOppDesc[1]', 'nvarchar(150)') AS StdSuggestOppDesc,
+	N.value('StdOrgOppsDesc[1]', 'nvarchar(150)') AS StdOrgOppsDesc,
+	N.value('StdContact[1]', 'nvarchar(255)') AS StdContact
 FROM @Descriptions.nodes('//DESC') as T(N)
 EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @EmailUpdateTextObjectName, @ErrMsg
 
@@ -95,7 +95,7 @@ DECLARE @UsedNamesDesc nvarchar(max), @BadCulturesDesc nvarchar(max)
 
 SELECT @UsedNamesDesc = COALESCE(@UsedNamesDesc + cioc_shared.dbo.fn_SHR_STP_ObjectName(' ; '),'') + Name
 FROM @DescTable nt
-WHERE EXISTS(SELECT * FROM GBL_StandardEmailUpdate se INNER JOIN GBL_StandardEmailUpdate_Description sed ON se.EmailID=sed.EmailID WHERE Name=nt.Name AND LangID=nt.LangID AND MemberID=@MemberID AND se.EmailID<>@EmailID)
+WHERE EXISTS(SELECT * FROM GBL_StandardEmailUpdate se INNER JOIN GBL_StandardEmailUpdate_Description sed ON se.EmailID=sed.EmailID WHERE Name=nt.Name AND LangID=nt.LangID AND MemberID=@MemberID AND (@EmailID IS NULL OR se.EmailID<>@EmailID))
 
 SELECT @BadCulturesDesc = COALESCE(@BadCulturesDesc + cioc_shared.dbo.fn_SHR_STP_ObjectName(' ; '),'') + ISNULL(Culture,cioc_shared.dbo.fn_SHR_STP_ObjectName('Unknown'))
 FROM @DescTable nt
