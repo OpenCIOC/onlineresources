@@ -60,10 +60,10 @@ class PageInfo(object):
 		if self.ThisPageFull == 'volunteer/':
 			self.ThisPageFull = 'volunteer/start'
 
-		# details page with search engine optimized urls
-		if self.ThisPageFull == 'details.asp' and request.passvars.record_root and request.params.get('InlineResults') != 'on':
-			self.PathToStart = '../'
+		if self.ThisPageFull.startswith('record/'):
+			self.ThisPageFull = 'details.asp'
 
+		# vol details page with search engine optimized urls
 		if self.ThisPageFull == 'volunteer/details.asp' and request.passvars.record_root:
 			self.PathToStart = '../../'
 

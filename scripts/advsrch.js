@@ -3262,7 +3262,6 @@ Globalize.culture = function( cultureSelector ) {
 	var geocoder = null;
 	var current_overlay = null;
 	var was_blank_map = true;
-	var draggable = false;
 	var last_geocode_address = null;
 
 	// different
@@ -3300,18 +3299,18 @@ Globalize.culture = function( cultureSelector ) {
 		var marker = new google.maps.Marker({
 			position: point,
 			map: map,
-			clickable:false
+			clickable:false,
+			draggable: draggable
 		});
 		
 		clear_overlay();
 
 		current_overlay = marker;
 
-		//different
-		//if (draggable) {
-		//	var evt = google.maps.event.addListener(marker, "dragend", marker_drag_end);
-		//	current_overlay_drag_evt = evt;
-		//}
+		if (draggable) {
+			var evt = google.maps.event.addListener(marker, "dragend", marker_drag_end);
+			current_overlay_drag_evt = evt;
+		}
 	};
 	var marker_drag_end = function() {
 		$('#GEOCODE_TYPE_SITE_REFRESH, #GEOCODE_TYPE_INTERSECTION_REFRESH').addClass('NotVisible');
