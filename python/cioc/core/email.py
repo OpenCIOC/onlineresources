@@ -18,6 +18,7 @@
 # stdlib
 import os
 import textwrap
+from threading import Thread
 
 # 3rd party
 from markupsafe import Markup, escape_silent
@@ -30,10 +31,27 @@ DeliveryException
 from cioc.core.i18n import gettext as _
 
 _mailer = None
+_last_change = None
 
 
-def _get_mailer():
-	global _mailer
+def stop_mailer(mailer):
+	""" stopping mailer can take a long time. Don't block request thread
+	"""
+	def do_stop():
+		mailer.stop()
+
+	t = Thread(target=do_stop)
+	t.start()
+
+
+def _get_mailer(request):
+	global _mailer, _last_change
+
+	if _mailer:
+		if _last_change != request.config['_last_change']:
+			mailer = _mailer
+			_mailer = None
+			stop_mailer(mailer)
 
 	if not _mailer:
 		transport = {
@@ -48,7 +66,7 @@ def _get_mailer():
 		transport = {k: v for k, v in transport.iteritems() if v}
 		_mailer = Mailer({
 			'transport': transport,
-			'manager': {'use': 'immediate'}
+			'manager': {'use': request.config.get('mailer.manager', 'immediate')}
 		})
 		_mailer.start()
 
@@ -84,7 +102,7 @@ def send_email(request, author, to, subject, message, reply=None, ignore_block=F
 		request.email_notice(_('This database has been configured to block all outgoing Email.', request))
 
 	if (not TrainingMode or ignore_block) and (not NoEmail or ignore_block) and to and author:
-		mailer = _get_mailer()
+		mailer = _get_mailer(request)
 		args = dict(author=[unicode(author)], to=to, subject=subject, plain=message)
 		if reply:
 			args['reply'] = [unicode(reply)]
