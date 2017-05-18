@@ -49,8 +49,9 @@ def _get_mailer(request):
 
 	if _mailer:
 		if _last_change != request.config['_last_change']:
-			stop_mailer(_mailer)
+			mailer = _mailer
 			_mailer = None
+			stop_mailer(mailer)
 
 	if not _mailer:
 		transport = {
