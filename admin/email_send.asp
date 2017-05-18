@@ -428,6 +428,7 @@ Else
 				Call sendEmail(False, strROUpdateEmail & " <" & strROUpdateEmail & ">",strRecipient,vbNullString,strMsgSubjDisp,strMsgTxtDisp)
 				Response.Write("<br>" & TXT_EMAIL_SENT_TO & "<strong>" & strRecipient & "</strong> (" & strNUMDesc & ")")
 			End If
+			Response.Flush()
 			.MoveNext
 		Wend
 		If .RecordCount = 1 Then
