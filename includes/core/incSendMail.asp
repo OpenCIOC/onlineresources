@@ -23,8 +23,7 @@ def l_send_email(author, to, subject, message, reply, ignore_block):
 	print 'send_email'
 	try:
 		send_email(pyrequest, author, to, subject, message, reply, ignore_block)
-	except Exception as e:
-		Response.Write(unicode(e))
+	except Exception:
 		return False
 
 	return True
