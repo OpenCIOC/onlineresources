@@ -418,6 +418,9 @@ def validate_download(args, counts):
 
 
 class fakerequest(object):
+	def __init__(self, config):
+		self.config = config
+
 	class dboptions(object):
 		TrainingMode = False
 		NoEmail = False
@@ -432,7 +435,7 @@ def output_error_log(args, error_log):
 def email_log(args, outputstream, report, validation_errors, is_error):
 	author = get_config_item(args, 'airs_export_notify_from', 'admin@cioc.ca')
 	to = [x.strip() for x in get_config_item(args, 'airs_export_notify_emails', 'admin@cioc.ca').split(',')]
-	email.send_email(fakerequest, author, to, 'AIRS Export to iCarol%s' % (' -- Review Required!' if validation_errors else (' -- ERRORS!' if is_error else '')), '\n\n'.join((report, outputstream.getvalue())))
+	email.send_email(fakerequest(args.config), author, to, 'AIRS Export to iCarol%s' % (' -- Review Required!' if validation_errors else (' -- ERRORS!' if is_error else '')), '\n\n'.join((report, outputstream.getvalue())))
 
 
 def generate_report(args, counts):
