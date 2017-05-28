@@ -48,8 +48,8 @@ from cioc.core.i18n import gettext, ngettext, format_date
 
 log = logging.getLogger(__name__)
 
-_template_dir = os.path.join(os.path.dirname(__file__), 'templates')
-_system_layout_dir = os.path.join(_template_dir, 'layouts')
+_template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
+_system_layout_dir = os.path.abspath(os.path.join(_template_dir, 'layouts'))
 _template_lookup = None
 _css_template_lookup = None
 
