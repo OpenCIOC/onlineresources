@@ -17,7 +17,7 @@
 from functools import partial
 
 from cioc.core import constants as const, validators
-from cioc.core.rootfactories import AllowSSLRootFactory
+from cioc.core.rootfactories import AllowSSLRootFactory, RequireSSLRootFactory
 
 
 def includeme(config):
@@ -28,7 +28,7 @@ def includeme(config):
 	config.add_route('rpc_orgdetails', urlprefix + 'record/{num:[A-Za-z]{3}\d{4,5}}',
 		factory=cicfactory)
 
-	volfactory = partial(AllowSSLRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
+	volfactory = partial(AllowSSLRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL, allow_api_login=True)
 	config.add_route('rpc_oppdetails', urlprefix + 'opportunity/{vnum:V-[A-Za-z]{3}\d{4,5}}',
 		factory=volfactory)
 
@@ -38,13 +38,14 @@ def includeme(config):
 	config.add_route('rpc_browseoppbyorg', urlprefix + 'browseoppbyorg',
 		factory=volfactory)
 
-	config.add_route('rpc_whoami', urlprefix + 'whoami', 'cioc.core.rootfactories.RequireSSLRootFactory')
+	ssl_factory = partial(RequireSSLRootFactory, allow_api_login=True)
+	config.add_route('rpc_whoami', urlprefix + 'whoami', ssl_factory)
 
-	config.add_route('rpc_countall', urlprefix + 'countall/{domain:(cic|vol)}', 'cioc.core.rootfactories.AllowSSLRootFactory')
+	config.add_route('rpc_countall', urlprefix + 'countall/{domain:(cic|vol)}', ssl_factory)
 
-	config.add_route('rpc_agegrouplist', urlprefix + 'agegrouplist', 'cioc.core.rootfactories.RequireSSLRootFactory')
+	config.add_route('rpc_agegrouplist', urlprefix + 'agegrouplist', ssl_factory)
 
 	heading_list_path = urlprefix + 'quicklist/{pubcode:' + validators.code_validator_re[1:-1] + '}'
-	config.add_route('rpc_headinglist', heading_list_path, 'cioc.core.rootfactories.RequireSSLRootFactory')
+	config.add_route('rpc_headinglist', heading_list_path, ssl_factory)
 
-	config.add_route('rpc_quicklist', urlprefix + 'quicklist', 'cioc.core.rootfactories.RequireSSLRootFactory')
+	config.add_route('rpc_quicklist', urlprefix + 'quicklist', ssl_factory)
