@@ -39,13 +39,13 @@ def includeme(config):
 		factory=volfactory)
 
 	ssl_factory = partial(RequireSSLRootFactory, allow_api_login=True)
-	config.add_route('rpc_whoami', urlprefix + 'whoami', ssl_factory)
+	config.add_route('rpc_whoami', urlprefix + 'whoami', factory=ssl_factory)
 
 	config.add_route('rpc_countall', urlprefix + 'countall/{domain:(cic|vol)}', ssl_factory)
 
-	config.add_route('rpc_agegrouplist', urlprefix + 'agegrouplist', ssl_factory)
+	config.add_route('rpc_agegrouplist', urlprefix + 'agegrouplist', factory=ssl_factory)
 
 	heading_list_path = urlprefix + 'quicklist/{pubcode:' + validators.code_validator_re[1:-1] + '}'
-	config.add_route('rpc_headinglist', heading_list_path, ssl_factory)
+	config.add_route('rpc_headinglist', heading_list_path, factory=ssl_factory)
 
-	config.add_route('rpc_quicklist', urlprefix + 'quicklist', ssl_factory)
+	config.add_route('rpc_quicklist', urlprefix + 'quicklist', factory=ssl_factory)
