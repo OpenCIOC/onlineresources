@@ -41,7 +41,7 @@ def includeme(config):
 	ssl_factory = partial(RequireSSLRootFactory, allow_api_login=True)
 	config.add_route('rpc_whoami', urlprefix + 'whoami', factory=ssl_factory)
 
-	config.add_route('rpc_countall', urlprefix + 'countall/{domain:(cic|vol)}', ssl_factory)
+	config.add_route('rpc_countall', urlprefix + 'countall/{domain:(cic|vol)}', factory=ssl_factory)
 
 	config.add_route('rpc_agegrouplist', urlprefix + 'agegrouplist', factory=ssl_factory)
 
