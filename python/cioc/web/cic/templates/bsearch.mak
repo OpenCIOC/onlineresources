@@ -148,13 +148,16 @@ ${tags.select("AgeGroup", None, [('', _('Select an age group'))] + [(x[0], x[1])
 				<br>
 			%endif
 			<div class="search-group">
-			%if grpid is not None:
-			<% kwargs = {} if not search_groups else {'class_': 'fix-group-multi', 'data-group': grpid} %>
-			<label class="search-group-header checkbox-inline" for="QuickList_${grpid}">${grpname}</label><br>
-			%else:
+			<% extra_class = '' %>
 			<% kwargs = {} %>
+			%if grpid is not None:
+				%if search_groups:
+					<% kwargs = {'data-group': grpid} %>
+					<% extra_class = ' fix-group-multi' %>
+				%endif
+			<label class="search-group-header checkbox-inline" for="QuickList_${grpid}">${grpname}</label><br>
 			%endif
-			${tags.select(field_name,None,[('',_('Select a category'))] + map(tuple, items), id="QuickList_" + str(grpid), class_="form-control checkbox-inline check-placeholder", **kwargs)}
+			${tags.select(field_name,None,[('',_('Select a category'))] + map(tuple, items), id="QuickList_" + str(grpid), class_="form-control checkbox-inline check-placeholder" + extra_class, **kwargs)}
 			</div>
 		%endfor
 	%else:

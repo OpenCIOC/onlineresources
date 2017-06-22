@@ -33,7 +33,12 @@ td.checkbox-list-item label {
 .search-group-header {
 	padding-top: .5em;
 	font-weight: bold;
+
+	&.checkbox-inline {
+		padding-left: 0;
+	}
 }
+
 
 .search-info-list {
 	font-weight: bold;
