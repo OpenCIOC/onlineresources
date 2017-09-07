@@ -236,40 +236,40 @@ Private Function getOrderBy()
 	strOrderByDefault = "vod.POSITION_TITLE"
 	strDesc = StringIf(opt_bOrderByDescVOL, " DESC")
 
-	Select Case opt_intOrderByVOL
-		Case OB_POS
-			getOrderBy = strOrderByDefault & strDesc
-		Case OB_UPDATE
-			getOrderBy = "CAST(vod.UPDATE_SCHEDULE AS smalldatetime)" & strDesc & "," & strOrderByDefault
-		Case OB_NAME
-			getOrderBy = "ISNULL(btd.SORT_AS,btd.ORG_LEVEL_1)" & strDesc & _
-				",btd.ORG_LEVEL_2" & strDesc & _
-				",btd.ORG_LEVEL_3" & strDesc & _
-				",btd.ORG_LEVEL_4" & strDesc & _
-				",btd.ORG_LEVEL_5" & strDesc & "," & vbCrLf & _
-				"	STUFF(" & vbCrLf & _
-				"		CASE WHEN EXISTS(SELECT * FROM GBL_BT_OLS pr INNER JOIN GBL_OrgLocationService ols ON pr.OLS_ID=ols.OLS_ID AND ols.Code IN ('AGENCY') WHERE pr.NUM=btd.NUM)" & vbCrLf & _
-				"			THEN NULL" & vbCrLf & _
-				"			ELSE COALESCE(', ' + btd.LOCATION_NAME,'') +" & vbCrLf & _
-				"				COALESCE(', ' + btd.SERVICE_NAME_LEVEL_1,'') +" & vbCrLf & _
-				"				COALESCE(', ' + btd.SERVICE_NAME_LEVEL_2,'')" & vbCrLf & _
-				"			 END," & vbCrLf & _
-				"		1, 2, ''" & vbCrLf & _
-				"	) " & strDesc & _
-				"," & strOrderByDefault
-		Case OB_CUSTOM
-			If Not Nl(strCustOrderSelect) Then
-				getOrderBy = strCustOrderSelect & strDesc & "," & strOrderByDefault
-			Else
+	If Not Nl(strOBSpecial) Then
+		getOrderBy = strOBSpecial & "," & strOrderByDefault
+	Else
+		Select Case opt_intOrderByVOL
+			Case OB_POS
 				getOrderBy = strOrderByDefault & strDesc
-			End If
-		Case Else
-			If Not Nl(strOBSpecial) Then
-				getOrderBy = strOBSpecial & "," & strOrderByDefault
-			Else
+			Case OB_UPDATE
+				getOrderBy = "CAST(vod.UPDATE_SCHEDULE AS smalldatetime)" & strDesc & "," & strOrderByDefault
+			Case OB_NAME
+				getOrderBy = "ISNULL(btd.SORT_AS,btd.ORG_LEVEL_1)" & strDesc & _
+					",btd.ORG_LEVEL_2" & strDesc & _
+					",btd.ORG_LEVEL_3" & strDesc & _
+					",btd.ORG_LEVEL_4" & strDesc & _
+					",btd.ORG_LEVEL_5" & strDesc & "," & vbCrLf & _
+					"	STUFF(" & vbCrLf & _
+					"		CASE WHEN EXISTS(SELECT * FROM GBL_BT_OLS pr INNER JOIN GBL_OrgLocationService ols ON pr.OLS_ID=ols.OLS_ID AND ols.Code IN ('AGENCY') WHERE pr.NUM=btd.NUM)" & vbCrLf & _
+					"			THEN NULL" & vbCrLf & _
+					"			ELSE COALESCE(', ' + btd.LOCATION_NAME,'') +" & vbCrLf & _
+					"				COALESCE(', ' + btd.SERVICE_NAME_LEVEL_1,'') +" & vbCrLf & _
+					"				COALESCE(', ' + btd.SERVICE_NAME_LEVEL_2,'')" & vbCrLf & _
+					"			 END," & vbCrLf & _
+					"		1, 2, ''" & vbCrLf & _
+					"	) " & strDesc & _
+					"," & strOrderByDefault
+			Case OB_CUSTOM
+				If Not Nl(strCustOrderSelect) Then
+					getOrderBy = strCustOrderSelect & strDesc & "," & strOrderByDefault
+				Else
+					getOrderBy = strOrderByDefault & strDesc
+				End If
+			Case Else
 				getOrderBy = "vo.REQUEST_DATE" & StringIf(Not opt_bOrderByDescVOL, " DESC") & "," & strOrderByDefault
-			End If
-	End Select
+		End Select
+	End If
 End Function
 
 Public Sub makeTable()
