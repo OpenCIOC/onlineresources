@@ -508,6 +508,74 @@ class Publication(CicViewBase):
 
 		self._go_to_route('cic_publication', action='edit', _query=[('ErrMsg', _('Unable to delete Publication: ') + result.ErrMsg), ('PB_ID', PB_ID)])
 
+	@view_config(match_param='action=clearrecords', renderer='cioc.web.cic:templates/publication/clearrecords.mak')
+	def clearrecords(self):
+		request = self.request
+		user = request.user
+
+		if not user.cic.SuperUser:
+			self._security_failure()
+
+		model_state = request.model_state
+		model_state.method = None
+		model_state.validators = {
+			'PB_ID': validators.IDValidator(not_empty=True)
+		}
+
+		if not model_state.validate():
+			self._error_page(_('Invalid Publication ID', request))
+
+		PB_ID = model_state.form.data['PB_ID']
+		edit_values = self._get_edit_info(False, PB_ID)
+
+		request.override_renderer = 'cioc.web.cic:templates/publication/clearrecords.mak'
+
+		title = _('Manage Publication from Records', request)
+		return self._create_response_namespace(title, title, dict(id_name='PB_ID', id_value=PB_ID, route='cic_publication', action='clearrecords', publication=edit_values.publication), no_index=True)
+
+	@view_config(match_param='action=clearrecords', request_method="POST")
+	def clearrecords_confirm(self):
+		request = self.request
+		user = request.user
+
+		if not user.cic.SuperUser:
+			self._security_failure()
+
+		model_state = request.model_state
+
+		model_state.validators = {
+			'PB_ID': validators.IDValidator(not_empty=True)
+		}
+		model_state.method = None
+
+		if not model_state.validate():
+			self._error_page(_('Invalid Publication ID', request))
+
+		PB_ID = model_state.form.data['PB_ID']
+
+		with request.connmgr.get_connection('admin') as conn:
+			sql = '''
+			DECLARE @ErrMsg as nvarchar(500),
+			@RC as int
+
+			EXECUTE @RC = dbo.sp_CIC_Publication_ClearRecords_d ?,?,?, @ErrMsg=@ErrMsg OUTPUT
+
+			SELECT @RC as [Return], @ErrMsg AS ErrMsg
+			'''
+
+			cursor = conn.execute(sql, PB_ID, request.dboptions.MemberID, not request.dboptions.OtherMembersActive or user.cic.SuperUserGlobal)
+			result = cursor.fetchone()
+			cursor.close()
+
+		if not result.Return:
+			self._go_to_route('cic_publication', action='edit', _query=[('PB_ID', PB_ID), ('InfoMsg', _('The records were successfuly cleared.', request))])
+
+		if result.Return == 3:
+			# XXX check that this is the only #3
+			self._error_page(_('Unable to clear records:', request) + result.ErrMsg)
+
+		self._go_to_route('cic_publication', action='edit', _query=[('ErrMsg', _('Unable to clear records: ') + result.ErrMsg), ('PB_ID', PB_ID)])
+
 	@view_config(match_param='action=sharedstate', renderer=templateprefix + 'sharedstate.mak')
 	def sharedstate(self):
 		request = self.request

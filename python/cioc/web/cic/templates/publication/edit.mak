@@ -67,6 +67,9 @@ MemberID = request.dboptions.MemberID
 		<br>${_('Because this Publication is not being used, you can delete it using the button at the bottom of the form.')}
 	%else:
 		<br>${_('Because this Publication is being used, you cannot currently delete it.')}
+		%if request.user.cic.SuperUser:
+			<br><a href="${route_path('cic_publication', action='clearrecords', _query=[('PB_ID', PB_ID)])}" target="_blank">${_('Clear publication from all records')}</a>
+		%endif
 	%endif
 	</td>
 </tr>
