@@ -117,7 +117,7 @@ def maybe_run_after_cmd(context, files):
 	after_cmd = context.config.get('record_categories_run_after_cmd')
 	if after_cmd:
 		os.environ['CSVFILES'] = ' '.join(files)
-		p = subprocess.Popen(after_cmd, shell=True)
+		p = subprocess.Popen(after_cmd, shell=True, cwd=context.args.destdir)
 		p.wait()
 
 
