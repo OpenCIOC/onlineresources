@@ -16,9 +16,10 @@
 # =========================================================================================
 
 import argparse
-import os
-import sys
 import csv
+import os
+import subprocess
+import sys
 
 from pyramid.decorator import reify
 
@@ -45,7 +46,8 @@ class Context(request.CiocRequestMixin, ContextBase):
 
 
 def export(args, conn, filename, sql):
-	with open(os.path.join(args.destdir, filename), 'wb') as fd:
+	filename = os.path.join(args.destdir, filename)
+	with open(filename, 'wb') as fd:
 		with conn.execute(sql) as cursor:
 			writer = csv.writer(fd)
 			writer.writerow([d[0] for d in cursor.description])
@@ -56,9 +58,11 @@ def export(args, conn, filename, sql):
 
 				writer.writerows(tuple(x) for x in rows)
 
+	return filename
+
 
 def export_distributions(args, conn):
-	export(
+	return export(
 		args, conn, 'distributions.csv',
 		'''
 		SELECT pr.NUM, dst.DistCode
@@ -70,7 +74,7 @@ def export_distributions(args, conn):
 
 
 def export_headings(args, conn):
-	export(
+	return export(
 		args, conn, 'headings.csv',
 		'''
 		SELECT pbr.NUM, pb.PubCode, CASE WHEN TaxonomyName=1 THEN dbo.fn_CIC_GHIDToTaxTerms(gh.GH_ID, @@LANGID) ELSE ghn.Name END AS HeadingName
@@ -85,7 +89,7 @@ INNER JOIN dbo.CIC_BT_EXTRA_TEXT et ON et.NUM=pbr.NUM AND et.FieldName='EXTRA_IC
 
 
 def export_publications(args, conn):
-	export(
+	return export(
 		args, conn, 'publications.csv',
 		'''
 		SELECT pbr.NUM, pb.PubCode, pbn.Name
@@ -98,10 +102,20 @@ def export_publications(args, conn):
 
 
 def export_all(args, context):
+	files = []
 	with context.connmgr.get_connection('admin') as conn:
-		export_distributions(args, conn)
-		export_headings(args, conn)
-		export_publications(args, conn)
+		files.append(export_distributions(args, conn))
+		files.append(export_headings(args, conn))
+		files.append(export_publications(args, conn))
+
+	return files
+
+def maybe_run_after_cmd(context, files):
+	after_cmd = context.config.get('record_categories_run_after_cmd')
+	if after_cmd:
+		os.environ['CSVFILES'] = files.join(' ')
+		p = subprocess.Popen(after_cmd, shell=True, cwd=args.dest)
+		p.wait()
 
 
 def parse_args(argv):
@@ -118,7 +132,8 @@ def parse_args(argv):
 def main(argv):
 	args = parse_args(argv)
 	context = Context(args)
-	export_all(args, context)
+	files = export_all(args, context)
+	maybe_run_after_cmd(context, files)
 
 
 if __name__ == '__main__':
