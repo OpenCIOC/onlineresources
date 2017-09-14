@@ -112,11 +112,12 @@ def export_all(args, context):
 
 	return files
 
+
 def maybe_run_after_cmd(context, files):
 	after_cmd = context.config.get('record_categories_run_after_cmd')
 	if after_cmd:
-		os.environ['CSVFILES'] = files.join(' ')
-		p = subprocess.Popen(after_cmd, shell=True, cwd=args.dest)
+		os.environ['CSVFILES'] = ' '.join(files)
+		p = subprocess.Popen(after_cmd, shell=True)
 		p.wait()
 
 
