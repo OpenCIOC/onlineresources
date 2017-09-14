@@ -16,6 +16,7 @@
 # =========================================================================================
 
 import argparse
+import codecs
 import csv
 import os
 import subprocess
@@ -49,6 +50,7 @@ def export(args, conn, filename, sql):
 	filename = os.path.join(args.destdir, filename)
 	with open(filename, 'wb') as fd:
 		with conn.execute(sql) as cursor:
+			fd.write(codecs.BOM_UTF8)
 			writer = csv.writer(fd)
 			writer.writerow([d[0] for d in cursor.description])
 			while True:
@@ -56,7 +58,7 @@ def export(args, conn, filename, sql):
 				if not rows:
 					break
 
-				writer.writerows(tuple(x) for x in rows)
+				writer.writerows(tuple(y.encode('utf-8') if isinstance(x, unicode) else y for y in x) for x in rows)
 
 	return filename
 
