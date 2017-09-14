@@ -58,7 +58,7 @@ def export(args, conn, filename, sql):
 				if not rows:
 					break
 
-				writer.writerows(tuple(y.encode('utf-8') if isinstance(x, unicode) else y for y in x) for x in rows)
+				writer.writerows(tuple(y.encode('utf-8') if isinstance(y, unicode) else y for y in x) for x in rows)
 
 	return filename
 
