@@ -37,7 +37,7 @@ ${request.passvars.cached_form_vals|n}
 <input type="hidden" name="${context.get('id_name')}" value="${context.get('id_value')}">
 %endif
 </div>
-<input type="submit" name="Submit" value="${_('Clear')}">
+<input type="submit" name="Submit" value="${_('Clear from all records')}">
 </form>
 </%def>
 
