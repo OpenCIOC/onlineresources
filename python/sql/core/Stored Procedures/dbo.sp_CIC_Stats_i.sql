@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -57,7 +56,7 @@ IF @Error=0 BEGIN
 		@@LANGID,
 		@User_ID,
 		@ViewType,
-		(SELECT RobotID FROM GBL_Robot_IPPattern WHERE @IPAddress LIKE IPPattern),
+		(SELECT TOP 1 RobotID FROM GBL_Robot_IPPattern WHERE @IPAddress LIKE IPPattern),
 		@API,
 		@NUM
 	)
