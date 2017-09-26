@@ -103,12 +103,28 @@ def export_publications(args, conn):
 	)
 
 
+def export_recordowners(args, conn):
+	return export(
+		args, conn, 'recordowners.csv',
+		'''
+		SELECT bt.NUM, sl.Culture, a.AgencyCode, dbo.fn_GBL_DisplayFullOrgName_Agency_2(btda.NUM,btda.ORG_LEVEL_1,btda.ORG_LEVEL_2,btda.ORG_LEVEL_3, btda.ORG_LEVEL_4, btda.ORG_LEVEL_5, btda.LOCATION_NAME, btda.SERVICE_NAME_LEVEL_1, btda.SERVICE_NAME_LEVEL_2) AS AgencyName
+		FROM dbo.GBL_Agency a
+		INNER JOIN dbo.GBL_BaseTable bt ON bt.RECORD_OWNER=a.AgencyCode
+		INNER JOIN dbo.GBL_BaseTable_Description btd ON btd.NUM=bt.NUM
+		INNER JOIN dbo.STP_Language sl ON btd.LangID=sl.LangID
+		INNER JOIN CIC_BT_EXTRA_TEXT et ON bt.NUM=et.NUM AND et.FieldName='EXTRA_ICAROLFILECOUNT'
+		LEFT JOIN dbo.GBL_BaseTable_Description btda ON a.AgencyNUMCIC=btda.NUM AND btda.LangID=(SELECT TOP 1 LangID FROM dbo.GBL_BaseTable_Description btdax WHERE btdax.NUM=btda.NUM ORDER BY CASE WHEN btdax.LangID=btd.LangID THEN 0 ELSE 1 END, btdax.LangID)
+		'''
+	)
+
+
 def export_all(args, context):
 	files = []
 	with context.connmgr.get_connection('admin') as conn:
 		files.append(export_distributions(args, conn))
 		files.append(export_headings(args, conn))
 		files.append(export_publications(args, conn))
+		files.append(export_recordowners(args, conn))
 
 	return files
 
