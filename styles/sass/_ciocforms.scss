@@ -37,6 +37,11 @@ input.input-expand, select.input-expand, textarea.input-expand {
 	box-sizing: border-box;
 }
 
+select.form-control {
+	padding-right: $padding-base-vertical;
+	min-width: 5em;
+}
+
 .form-inline-always {
 	.form-group {
 		display: inline-block;
