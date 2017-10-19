@@ -22,6 +22,23 @@
 		<xs:documentation>AIRS XML Data Transfer Record Format Version 3.0 (Final)</xs:documentation>
 		<xs:documentation>unless set, the default minOccurs="1" maxOccurs="1"</xs:documentation>
 	</xs:annotation>
+	<xs:simpleType name="sRecordOwner">
+		<xs:annotation>
+			<xs:documentation>
+				This is a unique string indicating the organization that created and maintains this Agency record
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9A-Z]{4,8}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="sCodeType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Z0-9\-]+"/>
+			<xs:minLength value="1"/>
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:complexType name="tAddress">
 		<xs:annotation>
 			<xs:documentation>element of tSite</xs:documentation>
@@ -83,6 +100,8 @@
 			<xs:element name="InternalNote" type="xs:string" minOccurs="0"/>
 			<xs:element name="EditorsNote" type="xs:string" minOccurs="0"/>
 			<xs:element name="PublicNote" type="xs:string" minOccurs="0"/>
+			<xs:element name="Publications" type="tPublication" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Distributions" type="tDistribution" minOccurs="0" maxOccurs="1"/>
 			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Agency" type="tAgency" block="#all" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
@@ -92,18 +111,7 @@
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
-		<xs:attribute name="RecordOwner">
-			<xs:annotation>
-				<xs:documentation>
-					This is a unique string indicating the organization that created and maintains this Agency record
-				</xs:documentation>
-			</xs:annotation>
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="[0-9A-Z]{4,8}"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
+		<xs:attribute name="RecordOwner" type="sRecordOwner"/>
 		<xs:attribute name="FEIN" type="xs:string"/>
 		<xs:attribute name="YearInc" type="xs:gYear"/>
 		<xs:attribute name="AnnualBudgetTotal" type="xs:nonNegativeInteger"/>
@@ -311,6 +319,7 @@
 					<xs:documentation>This is a person who created/maintains the data</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="ResourceSpecialistAgency" type="xs:string" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="AvailableForDirectory" type="xs:boolean"/>
 		<xs:attribute name="AvailableForReferral" type="xs:boolean"/>
@@ -401,6 +410,7 @@
 			<xs:element name="BusServiceAccess" type="xs:string" minOccurs="0"/>
 			<xs:element name="SiteService" type="tSiteService" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="SpatialLocation" type="tSpatialLocation" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="ResourceInfo" type="tResourceInfo" block="#all" minOccurs="0"/>
 			<xs:element name="InternalNote" type="xs:string" minOccurs="0"/>
 			<xs:element name="EditorsNote" type="xs:string" minOccurs="0"/>
 			<xs:element name="PublicNote" type="xs:string" minOccurs="0"/>
@@ -413,8 +423,11 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="Publications" type="tPublication" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Distributions" type="tDistribution" minOccurs="0" maxOccurs="1"/>
 			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
+		<xs:attribute name="RecordOwner" type="sRecordOwner"/>
 		<xs:attribute name="PublicAccessToTransportation" type="xs:boolean"/>
 		<xs:attribute name="YearInc" type="xs:gYear"/>
 		<xs:attribute name="AnnualBudgetTotal" type="xs:nonNegativeInteger"/>
@@ -470,8 +483,11 @@
 			<xs:element name="InternalNote" type="xs:string" minOccurs="0"/>
 			<xs:element name="EditorsNote" type="xs:string" minOccurs="0"/>
 			<xs:element name="PublicNote" type="xs:string" minOccurs="0"/>
+			<xs:element name="Publications" type="tPublication" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Distributions" type="tDistribution" minOccurs="0" maxOccurs="1"/>
 			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
+		<xs:attribute name="RecordOwner" type="sRecordOwner"/>
 		<xs:attribute name="AreaFlexibility" type="xs:boolean">
 			<xs:annotation>
 				<xs:documentation>Can this service be offered outside of the physical location? true/false</xs:documentation>
@@ -543,6 +559,27 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="Note" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="tDistribution">
+		<xs:sequence>
+			<xs:element name="Code" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="Value" type="sCodeType" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="tPublication">
+		<xs:sequence>
+			<xs:element name="Code" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Heading" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute name="Value" type="sCodeType" use="required"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:element name="Source">
