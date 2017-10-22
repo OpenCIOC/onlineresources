@@ -1968,6 +1968,8 @@ If Not bRSNError Then
 				End If
 			Case "RECORD_PRIVACY"
 				Call getRecordPrivacyFields()
+			Case "SCHEDULE"
+				Call getScheduleSQL()
 			Case "SCHOOL_ESCORT"
 				Call getSchoolEscortSQL()
 			Case "SCHOOLS_IN_AREA"

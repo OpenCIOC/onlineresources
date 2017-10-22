@@ -760,6 +760,8 @@ While Not rsFields.EOF
 						strFieldVal = makeRecordPrivacyContents(rsOrg, Not bNew)
 					Case "RECORD_TYPE"
 						strFieldVal = makeRecordTypeContents(rsOrg, Not bNew)
+					Case "SCHEDULE"
+						strFieldVal = makeScheduleContents(rsOrg, Not bNew)
 					Case "SCHOOL_ESCORT"
 						strFieldVal = makeSchoolEscortContents(rsOrg, Not bNew)
 					Case "SCHOOLS_IN_AREA"
@@ -958,7 +960,7 @@ jQuery(function($) {
 	init_org_num($);
 	init_locations_services($, <%=JSONQs(TXT_INVALID_RECORD_NUM, True) %>);
 <%
-If bOtherAddressesAdded or bActivityInfoAdded or bBillingAddressesAdded or bContractSignatureAdded or bVacancyAdded Then
+If bOtherAddressesAdded or bActivityInfoAdded or bBillingAddressesAdded or bContractSignatureAdded or bVacancyAdded or bHasSchedule Then
 %> 
 	init_entryform_items($('.EntryFormItemContainer'),'<%= TXT_DELETE %>', '<%= TXT_RESTORE %>'); 
 <%
@@ -1033,6 +1035,13 @@ If bHasVacancyServiceTitles Then
 End If
 %>
 	restore_cached_state();
+<%
+If bHasSchedule Then
+%>
+	init_schedule($)
+<%
+End If
+%>
 
 	update_form_make_required_org_level();
 
