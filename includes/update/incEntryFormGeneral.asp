@@ -333,7 +333,7 @@ def getStdChecklistNotesFeedback(field_name, note, txt_feedback_num, txt_colon, 
 	return u''.join(output)
 	
 
-def makeScheduleEntry(entry, label, prefix):
+def makeEventScheduleEntry(entry, label, prefix):
 	recurs_day_of_week = entry.get('RECURS_DAY_OF_WEEK') or u'0'
 	recurs_day_of_month = entry.get('RECURS_DAY_OF_MONTH')
 	recurs_xth_weekday_of_month = entry.get('RECURS_XTH_WEEKDAY_OF_MONTH')
@@ -478,7 +478,7 @@ def makeScheduleEntry(entry, label, prefix):
 	return output
 
 
-def makeScheduleContents_l(rst, bUseContent):
+def makeEventScheduleContents_l(rst, bUseContent):
 	xml = None
 	if bUseContent:
 		xml = rst.Fields('SCHEDULE').Value
@@ -487,7 +487,7 @@ def makeScheduleContents_l(rst, bUseContent):
 	xml = ET.fromstring(xml.encode('utf-8'))
 
 	output = [Markup(u"""<div id="ScheduleEditArea" class="ScheduleEditArea EntryFormItemContainer" data-add-tmpl="{}">""").format(
-		unicode(makeScheduleEntry({}, Markup(u'%s <span class="EntryFormItemCount">[COUNT]</span> %s') % (_('Schedule #'), _('(new)')), u"Sched_[ID]_")))
+		unicode(makeEventScheduleEntry({}, Markup(u'%s <span class="EntryFormItemCount">[COUNT]</span> %s') % (_('Schedule #'), _('(new)')), u"Sched_[ID]_")))
 	]
 
 	ids = []
@@ -496,7 +496,7 @@ def makeScheduleContents_l(rst, bUseContent):
 		sched_id = attrs['SchedID']
 		ids.append(sched_id)
 		output.append(
-			makeScheduleEntry(
+			makeEventScheduleEntry(
 				attrs, Markup(u'%s <span class="EntryFormItemCount">%s</span>') % (_('Schedule #'), count + 1),
 				u"Sched_%s_" % sched_id
 			)
@@ -1785,11 +1785,11 @@ End Function
 Dim bHasSchedule
 bHasSchedule = False
 
-Function makeScheduleContents(rst,bUseContent)
+Function makeEventScheduleContents(rst,bUseContent)
 	bHasSchedule = True
 	bHasDynamicAddField = True
 
-	makeScheduleContents = makeScheduleContents_l(rst, bUseContent)
+	makeEventScheduleContents = makeEventScheduleContents_l(rst, bUseContent)
 
 End Function
 

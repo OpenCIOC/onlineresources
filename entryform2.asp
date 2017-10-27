@@ -1885,6 +1885,8 @@ If Not bRSNError Then
 				Call getEligibilityFields()
 			Case "EMPLOYEES"
 				Call getEmployeeFields()
+			Case "EVENT_SCHEDULE"
+				Call getEventScheduleSQL()
 			Case "EXEC_1"
 				Call getContactFields(fldName.Value)
 			Case "EXEC_2"
@@ -1968,8 +1970,6 @@ If Not bRSNError Then
 				End If
 			Case "RECORD_PRIVACY"
 				Call getRecordPrivacyFields()
-			Case "SCHEDULE"
-				Call getScheduleSQL()
 			Case "SCHOOL_ESCORT"
 				Call getSchoolEscortSQL()
 			Case "SCHOOLS_IN_AREA"

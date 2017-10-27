@@ -692,6 +692,8 @@ While Not rsFields.EOF
 						strFieldVal = makeEmployeesContents(rsOrg, Not bNew)
 					Case "EMPLOYEES_RANGE"
 						strFieldVal = makeEmployeesRangeContents(rsOrg, Not bNew)
+					Case "EVENT_SCHEDULE"
+						strFieldVal = makeEventScheduleContents(rsOrg, Not bNew)
 					Case "EXEC_1"
 						strFieldVal = makeContactFieldVal(rsOrg, strFieldName, Not bNew)
 					Case "EXEC_2"
@@ -760,8 +762,6 @@ While Not rsFields.EOF
 						strFieldVal = makeRecordPrivacyContents(rsOrg, Not bNew)
 					Case "RECORD_TYPE"
 						strFieldVal = makeRecordTypeContents(rsOrg, Not bNew)
-					Case "SCHEDULE"
-						strFieldVal = makeScheduleContents(rsOrg, Not bNew)
 					Case "SCHOOL_ESCORT"
 						strFieldVal = makeSchoolEscortContents(rsOrg, Not bNew)
 					Case "SCHOOLS_IN_AREA"

@@ -80,7 +80,7 @@ def check_time(label, value, checkAddValidationError=None):
 	return value
 
 
-def getScheduleEntrySQL(sched_no, sched_id, vals, checkDate, checkInteger, checkID, checkLength, checkAddValidationError):
+def getEventScheduleEntrySQL(sched_no, sched_id, vals, checkDate, checkInteger, checkID, checkLength, checkAddValidationError):
 	is_new = sched_id.startswith('NEW')
 	validation_label_prefix = _('Schedule # ') + sched_no + _(' - ')
 	start_date = vals.get('START_DATE')
@@ -251,7 +251,7 @@ def getScheduleEntrySQL(sched_no, sched_id, vals, checkDate, checkInteger, check
 				values=u','.join('%s=%s' % x for x in changes),
 		)
 
-def getScheduleSQL_l(checkDate, checkInteger, checkID, checkLength, checkAddValidationError):
+def getEventScheduleSQL_l(checkDate, checkInteger, checkID, checkLength, checkAddValidationError):
 	fields = ('Label START_DATE END_DATE START_TIME END_TIME RECURS_TYPE RECURS_EVERY RECURS_DAY_OF_WEEK '
 			'RECURS_XTH_WEEKDAY_OF_MONTH RECURS_DAY_OF_MONTH').split()
 	fields.extend('RECURS_WEEKDAY_%d' % i for i in range(1,8))
@@ -268,7 +268,7 @@ def getScheduleSQL_l(checkDate, checkInteger, checkID, checkLength, checkAddVali
 		else:
 			sched_no = unicode(sched_no)
 
-		entry = getScheduleEntrySQL(sched_no, sched, vals, checkDate, checkInteger, checkID, checkLength, checkAddValidationError)
+		entry = getEventScheduleEntrySQL(sched_no, sched, vals, checkDate, checkInteger, checkID, checkLength, checkAddValidationError)
 		if not entry:
 			continue
 
@@ -970,9 +970,9 @@ Function WrapCheckDate(strFldName, ByVal strValue)
 
 	WrapCheckDate = strRetVal
 End Function
-Sub getScheduleSQL()
+Sub getEventScheduleSQL()
 	Dim strSQLToAdd
-	strSQLToAdd = getScheduleSQL_l(GetRef("WrapCheckDate"), GetRef("checkInteger"), GetRef("checkID"), _
+	strSQLToAdd = getEventScheduleSQL_l(GetRef("WrapCheckDate"), GetRef("checkInteger"), GetRef("checkID"), _
 			GetRef("checkLength"), GetRef("checkAddValidationError"))
 
 	If Not Nl(strSQLToAdd) Then
