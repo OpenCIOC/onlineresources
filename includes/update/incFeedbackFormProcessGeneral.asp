@@ -16,8 +16,23 @@
 ' =========================================================================================
 
 %>
+<script language="python" runat="server">
+def getScheduleFields_l(strFieldDisplay, rsOrg, bSuggest,
+		addInsertField, addEmailField, checkDate,
+		checkInteger, checkID, checkLength, checkAddValidationError):
+
+
+</script>
 
 <%
+Sub getScheduleFields(strFieldDisplay):
+	Dim 
+	junk = getScheduleFields_l(strFieldDisplay, rsOrg, bSuggest, _
+			GetRef("addInsertField"), GetRef("addEmailField"), _
+			GetRef("WrapCheckDate"), GetRef("checkInteger"), GetRef("checkID"), _
+			GetRef("checkLength"), GetRef("checkAddValidationError")) 
+End Sub
+
 Dim strEmailContents
 	
 Sub addEmailField(strFldName,strInsert)

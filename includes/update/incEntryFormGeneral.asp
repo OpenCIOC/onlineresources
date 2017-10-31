@@ -144,7 +144,7 @@ def getLanguagesFeedback(ln_id, language_name, checked, note, txt_feedback_num, 
 			}
 			details = [unicode(x['Name']) for x in lnds if str(x['LND_ID']) in fb['lnds']]
 			if fb['note']:
-				details.append(escape(fb['note']))
+				details.append(escape(fb['note'], True))
 			if details:
 				value += u' (%s)' % u', '.join(details)
 		
@@ -481,7 +481,7 @@ def makeEventScheduleEntry(entry, label, prefix):
 def makeEventScheduleContents_l(rst, bUseContent):
 	xml = None
 	if bUseContent:
-		xml = rst.Fields('SCHEDULE').Value
+		xml = rst.Fields('EVENT_SCHEDULE').Value
 
 	xml = xml or u"<SCHEDULES/>"
 	xml = ET.fromstring(xml.encode('utf-8'))

@@ -502,6 +502,8 @@ End If
 							TEXTAREA_ROWS_LONG, _
 							False _
 							)
+					Case "EVENT_SCHEDULE"
+						strFieldVal = makeEventScheduleContents(rsOrg, Not bSuggest)
 					Case "INTERACTION_LEVEL"
 						strFieldVal = makeInteractionLevelContents(rsOrg, Not bSuggest)
 					Case "INTERESTS"

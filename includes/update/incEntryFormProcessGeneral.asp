@@ -14,73 +14,18 @@
 %>
 
 <script language="python" runat="server">
+import cgi
 import re
 import itertools
-from datetime import time
 from functools import partial
 
 from cioc.core.i18n import gettext
 from cioc.core import constants as const
 
 _ = lambda x: gettext(x, pyrequest)
-time_re = re.compile(r'''(?P<hour>\d?\d):(?P<minute>\d\d)(:(?P<second>\d\d))?(\s+(?P<ampm>(pm|am)))?''')
- 
-def check_time(label, value, checkAddValidationError=None):
-	label = label + _(': ')
-	if value is None:
-		return
-	if not value.strip():
-		return
-
-	time_match = time_re.search(value.lower())
-	if time_match is None:
-		checkAddValidationError(label + _('Invalid Time'))
-		return None
-
-	hour = time_match.group('hour')
-	minute = time_match.group('minute')
-	second = time_match.group('second')
-	ampm = time_match.group('ampm')
-	# log.debug('AMPM: %s', ampm)
-	if ampm is None:
-		ampm = ''
-
-	hour = int(hour, 10)
-	minute = int(minute, 10)
-	if second is None:
-		second = '0'
-	second = int(second, 10)
-
-	if hour < 0:
-		checkAddValidationError(label + _('Hour is not valid'))
-		return None
-
-	# includes a time
-	if hour < 12 and ampm.lower() == 'pm':
-		# log.debug("PM bump up 12 hours")
-		hour += 12
-
-	elif hour == 12 and ampm.lower() == 'am':
-		# log.debug("AM and 12, make 0")
-		hour = 0
-
-	if hour > 23:
-		checkAddValidationError(label + _('Hour is not valid'))
-		return None
-
-	if 0 > minute or minute > 59:
-		checkAddValidationError(label + _('Minute is not valid'))
-		return None
-
-	if 0 > second or second > 59:
-		checkAddValidationError(label + _('Second is not valid'))
-		return None
-
-	value = time(hour, minute, second)
-	return value
 
 
-def getEventScheduleEntrySQL(sched_no, sched_id, vals, checkDate, checkInteger, checkID, checkLength, checkAddValidationError):
+def getEventScheduleEntryValues(sched_no, sched_id, vals, checkDate, checkInteger, checkID, checkLength, checkAddValidationError):
 	is_new = sched_id.startswith('NEW')
 	validation_label_prefix = _('Schedule # ') + sched_no + _(' - ')
 	start_date = vals.get('START_DATE')
@@ -96,9 +41,16 @@ def getEventScheduleEntrySQL(sched_no, sched_id, vals, checkDate, checkInteger, 
 		except TypeError:
 			return None
 
+	if pyrequest.pageinfo.DbArea == const.DM_VOL:
+		id_field = 'VolVNUM'
+		record_id = '@VNUM'
+	else:
+		id_field = 'GblNUM'
+		record_id = '@NUM'
+
 	if not start_date:
 		# No Start date means it's a delete because start date is required
-		return "DELETE FROM GBL_Schedule WHERE GblNUM = @NUM AND SchedID = {}".format(sched_id)
+		return ('delete', [(u'SchedID', sched_id)])
 
 	def checkTime(label, value, name=None):
 		if not value:
@@ -180,19 +132,7 @@ def getEventScheduleEntrySQL(sched_no, sched_id, vals, checkDate, checkInteger, 
 		to_check.extend((None, 'RECURS_WEEKDAY_%d' % i, partial(get_bool, name='RECURS_WEEKDAY_%d' % i)) for i in range(1, 8))
 	else:
 		to_check.extend((None, 'RECURS_WEEKDAY_%d' % i, partial(get_false, name='RECURS_WEEKDAY_%d' % i)) for i in range (1, 8)) 
-		
-	def escape_for_sql(value):
-		if value is None:
-			return 'NULL'
-		elif isinstance(value, bool):
-			return unicode(int(value))
-		elif isinstance(value, int):
-			return unicode(value)
-		elif value:
-			return u"'{}'".format(unicode(value).replace(u"'", "''"))
-
-		return 'NULL'
-
+	
 	changes = []
 	for label, field, check in to_check:
 		value = vals.get(field)
@@ -200,58 +140,23 @@ def getEventScheduleEntrySQL(sched_no, sched_id, vals, checkDate, checkInteger, 
 			label = validation_label_prefix + label
 		check(label, value)
 		value = vals.get(field)
-		changes.append((field, escape_for_sql(value)))
+		if value is None:
+			continue
+
+		changes.append((field, value))
 
 	label_val = vals.get('Label') or None
 	if label_val:
 		checkLength(validation_label_prefix + _('Label'), label_val, const.TEXT_SIZE)
+		changes.append(('Label', label_val))
 		
-	label_val = escape_for_sql(label_val)
-
-	if pyrequest.pageinfo.DbArea == const.DM_VOL:
-		id_field = 'VolVNUM'
-		record_id = '@VNUM'
-	else:
-		id_field = 'GblNUM'
-		record_id = '@NUM'
-
+	if not is_new:
+		changes.append(('SchedID', sched_id))
 	
-	
-	changes.append(('MODIFIED_BY', escape_for_sql(pyrequest.user.Mod)))
-	if is_new:
-		changes.append((id_field, record_id))
-		changes.append(('CREATED_BY', escape_for_sql(pyrequest.user.Mod)))
-		return u'''
-			SET @SchedLabel = {label}
-			INSERT INTO GBL_Schedule (CREATED_DATE, MODIFIED_DATE, {fields}) VALUES (GETDATE(), GETDATE(), {values}) 
-			SET @SchedID = SCOPE_IDENTITY()
-			IF @SchedLabel IS NOT NULL BEGIN
-				INSERT INTO GBL_Schedule_Name (SchedID, LangID, Label) VALUES (@SchedID, @@LANGID, @SchedLabel)
-			END
-			'''.format(
-				fields=u','.join(x[0] for x in changes),
-				values=u','.join(x[1] for x in changes),
-				label=label_val)
-	else:
-		return u'''
-			SET @SchedID = {sched_id}
-			SET @SchedLabel = {label}
-			UPDATE GBL_Schedule SET {values} WHERE {id_field}={record_id} AND SchedID=@SchedID
-			IF @SchedLabel IS NULL BEGIN
-				DELETE FROM GBL_Schedule_Name WHERE SchedID=@SchedID AND LangID=@@LANGID
-					AND EXISTS(SELECT * FROM GBL_Schedule WHERE SchedID=@SchedID AND {id_field}={record_id})
-			END ELSE IF EXISTS(SELECT * FROM GBL_Schedule_Name WHERE SchedID=@SchedID AND LangID=@@LANGID) BEGIN
-				UPDATE GBL_Schedule_Name SET Label=@SchedLabel WHERE SchedID=@SchedID AND LangID=@@LANGID
-			END ELSE BEGIN
-				INSERT INTO GBL_Schedule_Name (SchedID, LangID, Label) VALUES (@SchedID, @@LANGID, @SchedLabel)
-			END
-			'''.format(
-				id_field=id_field, record_id=record_id,
-				sched_id=sched_id, label=label_val,
-				values=u','.join('%s=%s' % x for x in changes),
-		)
+	return ('insert' if is_new else 'update', changes)
 
-def getEventScheduleSQL_l(checkDate, checkInteger, checkID, checkLength, checkAddValidationError):
+
+def getEventScheduleValues(checkDate, checkInteger, checkID, checkLength, checkAddValidationError):
 	fields = ('Label START_DATE END_DATE START_TIME END_TIME RECURS_TYPE RECURS_EVERY RECURS_DAY_OF_WEEK '
 			'RECURS_XTH_WEEKDAY_OF_MONTH RECURS_DAY_OF_MONTH').split()
 	fields.extend('RECURS_WEEKDAY_%d' % i for i in range(1,8))
@@ -268,16 +173,59 @@ def getEventScheduleSQL_l(checkDate, checkInteger, checkID, checkLength, checkAd
 		else:
 			sched_no = unicode(sched_no)
 
-		entry = getEventScheduleEntrySQL(sched_no, sched, vals, checkDate, checkInteger, checkID, checkLength, checkAddValidationError)
+		entry = getEventScheduleEntryValues(sched_no, sched, vals, checkDate, checkInteger, checkID, checkLength, checkAddValidationError)
 		if not entry:
 			continue
 
 		output.append(entry)
 
-	if output:
-		output = itertools.chain(['DECLARE @SchedID int, @SchedLabel nvarchar(200)'], output)
+	return output
 
-	return u'\n'.join(output)
+
+def getEventScheduleXML(checkDate, checkInteger, checkID, checkLength, checkAddValidationError):
+	def escape_for_xml(value):
+		if isinstance(value, bool):
+			return unicode(int(value))
+
+		if isinstance(value, int):
+			return unicode(value)
+
+		if isinstance(value, (datetime,time)):
+			return value.isoformat()
+
+		return cgi.escape(unicode(value), True)
+
+	xml_values = []
+	for operation, values in getEventScheduleValues(checkDate, checkInteger, checkID, checkLength, checkAddValidationError):
+		xml_values.append(
+			u'<SCHEDULE {} />'.format(
+				u' '.join('{}="{}"'.format(f, escape_for_xml(v)) for f, v in values)
+			)
+		)
+
+	return u''.join(xml_values)
+
+def getEventScheduleSQL_l(checkDate, checkInteger, checkID, checkLength, checkAddValidationError):
+	xml_value = getEventScheduleXML(checkDate, checkInteger, checkID, checkLength, checkAddValidationError)
+
+	if pyrequest.pageinfo.DbArea == const.DM_VOL:
+		id_field = '@VNUM'
+		record_id = '@VNUM'
+	else:
+		id_field = '@NUM'
+		record_id = '@NUM'
+
+	def escape_string(value):
+		return unicode(value).replace(u"'", "''")
+
+	if xml_value:
+		output = u'''
+			EXECUTE sp_GBL_NUMVNUMSetSchedule_u N'<SCHEDULES>{}</SCHEDULES>', '{}', {}={}
+		'''.format(escape_string(xml_value), escape_string(pyrequest.user.Mod), id_field, record_id)
+	else:
+		output = u''
+
+	return output
 
 </script>
 
@@ -968,7 +916,7 @@ Function WrapCheckDate(strFldName, ByVal strValue)
 	End If
 	Call checkDate(strFldName, strRetval)
 
-	WrapCheckDate = strRetVal
+	WrapCheckDate = ISODateString(strRetVal)
 End Function
 Sub getEventScheduleSQL()
 	Dim strSQLToAdd
