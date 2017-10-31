@@ -17,16 +17,18 @@
 
 %>
 <script language="python" runat="server">
+
 def getScheduleFields_l(strFieldDisplay, rsOrg, bSuggest,
 		addInsertField, addEmailField, checkDate,
 		checkInteger, checkID, checkLength, checkAddValidationError):
 
+	pass
 
 </script>
 
 <%
 Sub getScheduleFields(strFieldDisplay):
-	Dim 
+	Dim jumk
 	junk = getScheduleFields_l(strFieldDisplay, rsOrg, bSuggest, _
 			GetRef("addInsertField"), GetRef("addEmailField"), _
 			GetRef("WrapCheckDate"), GetRef("checkInteger"), GetRef("checkID"), _
