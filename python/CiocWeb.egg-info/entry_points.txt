@@ -1,3 +1,5 @@
 	  [paste.app_factory]
 	  main = cioc.web:main
-	  
+	  [babel.extractors]
+      asp = cioc.core.aspextractor:extract_asp
+      

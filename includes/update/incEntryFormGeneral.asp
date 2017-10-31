@@ -25,6 +25,15 @@ from adodbapi import variantConversions, dateconverter
 from itertools import izip, imap
 import cgi
 import json
+
+from markupsafe import Markup, escape
+from webhelpers.html import tags
+
+from cioc.core import constants as const
+from cioc.core.i18n import gettext
+
+_ = lambda x: gettext(x, pyrequest)
+
 DBNull = type(None)
 
 def convertVariantToPython(variant, adType):
@@ -135,7 +144,7 @@ def getLanguagesFeedback(ln_id, language_name, checked, note, txt_feedback_num, 
 			}
 			details = [unicode(x['Name']) for x in lnds if str(x['LND_ID']) in fb['lnds']]
 			if fb['note']:
-				details.append(escape(fb['note']))
+				details.append(escape(fb['note'], True))
 			if details:
 				value += u' (%s)' % u', '.join(details)
 		
@@ -323,6 +332,184 @@ def getStdChecklistNotesFeedback(field_name, note, txt_feedback_num, txt_colon, 
 
 	return u''.join(output)
 	
+
+def makeEventScheduleEntry(entry, label, prefix):
+	recurs_day_of_week = entry.get('RECURS_DAY_OF_WEEK') or u'0'
+	recurs_day_of_month = entry.get('RECURS_DAY_OF_MONTH')
+	recurs_xth_weekday_of_month = entry.get('RECURS_XTH_WEEKDAY_OF_MONTH')
+
+	hide_display = Markup(u' style="display: None"')
+	ui_select_value = u'0'
+
+	if recurs_xth_weekday_of_month:
+		ui_select_value = u'3'
+	elif recurs_day_of_month:
+		ui_select_value = u'2'
+	elif recurs_day_of_week == u'1':
+		ui_select_value = u'1'
+
+	
+	recurs_display = u''
+	week_text_display = hide_display
+	month_text_display = u''
+	day_of_week_display = u''
+	week_of_month_display = hide_display
+	day_of_month_display = hide_display
+	recurs_every = entry.get('RECURS_EVERY') or '1'
+
+	if ui_select_value == u'0':
+		recurs_display = hide_display
+		day_of_week_display = hide_display
+		recurs_every = '1'
+	elif ui_select_value == u'1':
+		week_text_display = u''
+		month_text_display = hide_display
+	elif ui_select_value == u'2':
+		day_of_week_display = hide_display
+		day_of_month_display = u''
+	elif ui_select_value == u'3':
+		week_of_month_display = u''
+
+	weekdays = [
+		('7', _('Su')),
+		('1', _('Mo')),
+		('2', _('Tu')),
+		('3', _('We')),
+		('4', _('Th')),
+		('5', _('Fr')),
+		('6', _('Su')),
+	]
+
+	weekdays = Markup(u' ').join(
+		tags.checkbox(prefix + 'RECURS_WEEKDAY_' + no, 'on', checked=entry.get('RECURS_WEEKDAY_' + no) == '1', label=l)
+		for no, l in weekdays)
+
+	ns = {
+		'txt_repeats': _('Repeats'),
+		'txt_delete': _('Delete'),
+		'date_text_size': const.DATE_TEXT_SIZE,
+		'time_text_size': const.TIME_TEXT_SIZE,
+		'text_size': const.TEXT_SIZE,
+		'txt_start_date': _('Start Date'),
+		'txt_end_date': _('End Date'),
+		'txt_start_time': _('Start Time'),
+		'txt_end_time': _('End Time'),
+		'START_DATE': entry.get('START_DATE') or u'',
+		'END_DATE': entry.get('END_DATE') or u'',
+		'START_TIME': entry.get('START_TIME') or u'',
+		'END_TIME': entry.get('END_TIME') or u'',
+		'RECURS_TYPE': tags.select(prefix + 'RECURS_TYPE', ui_select_value, [
+				('0', _('Never')), ('1', _('Weekly')), ('2', _('Monthly by Day of Month')), ('3', _('Montly by Week of Month'))],
+				class_='recur-type-selector'),
+		'RECURS_EVERY': recurs_every,
+		'RECURS_DAY_OF_WEEK': recurs_day_of_week,
+		'RECURS_XTH_WEEKDAY_OF_MONTH': recurs_xth_weekday_of_month or u'',
+		'RECURS_DAY_OF_MONTH': recurs_day_of_month or u'',
+		'Label': entry.get('Label') or u'',
+		'weekdays': weekdays,
+		'recurs_display': recurs_display,
+		'txt_repeat_every': _('Repeat Every'),
+		'week_text_display': week_text_display,
+		'month_text_display': month_text_display,
+		'txt_weeks': _('weeks'),
+		'txt_months': _('months'),
+		'day_of_week_display': day_of_week_display,
+		'txt_repeat_on': _('Repeat On'),
+		'week_of_month_display': week_of_month_display,
+		'txt_week_of_month': _('Week of Month'),
+		'day_of_month_display': day_of_month_display,
+		'txt_day_of_month': _('Day of Month'),
+		'txt_label': _('Label'),
+	}
+	output = Markup(u'''
+		<div class="EntryFormItemBox" id="{prefix}container">
+		<div style="float: right;"><button type="button" class="EntryFormItemDelete ui-state-default ui-corner-all" id="{prefix}DELETE">{txt_delete}</button></div>
+		<h4 class="EntryFormItemHeader">{label}</h4>
+		<div id="{prefix}DISPLAY" class="EntryFormItemContent">
+		<table class="NoBorder cell-padding-2">
+		<tr>
+			<td class="FieldLabelLeftClr">{txt_start_date}</td>
+			<td><input type="text" name="{prefix}START_DATE" size="{date_text_size}" maxlength="{date_text_size}" value="{START_DATE}" class="DatePicker"></td>
+		</tr>
+		<tr>
+			<td class="FieldLabelLeftClr">{txt_end_date}</td>
+			<td><input type="text" name="{prefix}END_DATE" size="{date_text_size}" maxlength="{date_text_size}" value="{END_DATE}" class="DatePicker"></td>
+		</tr>
+		<tr>
+			<td class="FieldLabelLeftClr">{txt_start_time}</td>
+			<td><input type="text" name="{prefix}START_TIME" size="{time_text_size}" maxlength="{time_text_size}" value="{START_TIME}"></td>
+		</tr>
+		<tr>
+			<td class="FieldLabelLeftClr">{txt_end_time}</td>
+			<td><input type="text" name="{prefix}END_TIME" size="{time_text_size}" maxlength="{time_text_size}" value="{END_TIME}"></td>
+		</tr>
+		<tr>
+			<td class="FieldLabelLeftClr">{txt_label}</td>
+			<td><input type="text" name="{prefix}Label" size="{text_size}" maxlength="{text_size}" value="{Label}"></td>
+		</tr>
+		<tr>
+			<td class="FieldLabelLeftClr">{txt_repeats}</td>
+			<td>{RECURS_TYPE}</td>
+		</tr>
+		<tr class="recurs-ui repeat-every-ui" {recurs_display}">
+			<td class="FieldLabelLeftClr">{txt_repeat_every}</td>
+			<td>
+			<input type="text" name="{prefix}RECURS_EVERY" value="{RECURS_EVERY}" maxlength="2" size="3" class="posint">
+			<span class="recurs-week-label" {week_text_display}>{txt_weeks}</span>
+			<span class="recurs-month-label" {month_text_display}>{txt_months}</span>
+			</td>
+		</tr>
+		<tr class="recurs-ui repeats-on-ui" {day_of_week_display}>
+			<td class="FieldLabelLeftClr">{txt_repeat_on}</td>
+			<td>{weekdays}</td>
+		</tr>
+		<tr class="recurs-ui repeat-week-of-month-ui" {week_of_month_display}>
+			<td class="FieldLabelLeftClr">{txt_week_of_month}</td>
+			<td><input type="text" name="{prefix}RECURS_XTH_WEEKDAY_OF_MONTH" value="{RECURS_XTH_WEEKDAY_OF_MONTH}" maxlength="2" size="3" class="posint"></td>
+		</tr>
+		<tr class="recurs-ui repeat-day-of-month-ui" {day_of_month_display}>
+			<td class="FieldLabelLeftClr">{txt_day_of_month}</td>
+			<td><input type="text" name="{prefix}RECURS_DAY_OF_MONTH" value="{RECURS_DAY_OF_MONTH}" maxlength="2" size="3" class="posint"></td>
+		</tr>
+
+		</table>
+		</div><div style="clear: both;"></div></div>
+		''').format(prefix=prefix, label=label, **ns).replace(u'\n', u'')
+	return output
+
+
+def makeEventScheduleContents_l(rst, bUseContent):
+	xml = None
+	if bUseContent:
+		xml = rst.Fields('EVENT_SCHEDULE').Value
+
+	xml = xml or u"<SCHEDULES/>"
+	xml = ET.fromstring(xml.encode('utf-8'))
+
+	output = [Markup(u"""<div id="ScheduleEditArea" class="ScheduleEditArea EntryFormItemContainer" data-add-tmpl="{}">""").format(
+		unicode(makeEventScheduleEntry({}, Markup(u'%s <span class="EntryFormItemCount">[COUNT]</span> %s') % (_('Schedule #'), _('(new)')), u"Sched_[ID]_")))
+	]
+
+	ids = []
+	for count, item in enumerate(xml):
+		attrs = item.attrib
+		sched_id = attrs['SchedID']
+		ids.append(sched_id)
+		output.append(
+			makeEventScheduleEntry(
+				attrs, Markup(u'%s <span class="EntryFormItemCount">%s</span>') % (_('Schedule #'), count + 1),
+				u"Sched_%s_" % sched_id
+			)
+		)
+
+	output.append(
+		Markup(u'''
+		<input type="hidden" name="Sched_IDS" class="EntryFormItemContainerIds" id="Sched_IDS" value="{}"></div>
+		<button class="ui-state-default ui-corner-all EntryFormItemAdd" type="button" id="Sched_add_button">{}</button>
+		''').format(u','.join(ids), _('Add'))
+	)
+	
+	return u''.join(output)
 
 </script>
 
@@ -1593,6 +1780,17 @@ Function makeLanguageContents(rst,bUseContent)
 		strReturn = strReturn & getLanguageNotesFeedback(strNotes, TXT_FEEDBACK_NUM, TXT_COLON, TXT_UPDATE, TXT_CONTENT_DELETED)
 	End If
 	makeLanguageContents = strReturn
+End Function
+
+Dim bHasSchedule
+bHasSchedule = False
+
+Function makeEventScheduleContents(rst,bUseContent)
+	bHasSchedule = True
+	bHasDynamicAddField = True
+
+	makeEventScheduleContents = makeEventScheduleContents_l(rst, bUseContent)
+
 End Function
 
 Sub printAutoFields(rst, bUseContent)

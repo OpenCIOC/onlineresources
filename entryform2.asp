@@ -1885,6 +1885,8 @@ If Not bRSNError Then
 				Call getEligibilityFields()
 			Case "EMPLOYEES"
 				Call getEmployeeFields()
+			Case "EVENT_SCHEDULE"
+				Call getEventScheduleSQL()
 			Case "EXEC_1"
 				Call getContactFields(fldName.Value)
 			Case "EXEC_2"

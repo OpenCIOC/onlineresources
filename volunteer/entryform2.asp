@@ -726,6 +726,8 @@ If Not bOPIDError Then
 				Call getStdCheckListSQL("CL", True, Null, Null, fldName.Value)
 			Case "CONTACT"
 				Call getContactFields(fldName.Value)
+			Case "EVENT_SCHEDULE"
+				Call getEventScheduleSQL()
 			Case "INTERACTION_LEVEL"
 				Call getStdCheckListSQL("IL", True, Null, Null, fldName.Value)
 			Case "INTERESTS"
