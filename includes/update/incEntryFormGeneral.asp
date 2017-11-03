@@ -18,7 +18,7 @@
 %>
 
 <script language="python" runat="server">
-import datetime
+from datetime import date, time, datetime
 from collections import defaultdict
 from xml.etree import cElementTree as ET
 from adodbapi import variantConversions, dateconverter
@@ -43,8 +43,8 @@ def convertVariantToPython(variant, adType):
 
 def _tmp_cast(v, t):
 	v = convertVariantToPython(v, t)
-	if isinstance(v, datetime.date) and not isinstance(v, datetime.datetime):
-		v = datetime.datetime(v.year, v.month, v.day)
+	if isinstance(v, date) and not isinstance(v, datetime):
+		v = datetime(v.year, v.month, v.day)
 	return v
 
 def rs_iter(rs):
@@ -371,13 +371,13 @@ def makeEventScheduleEntry(entry, label, prefix):
 		week_of_month_display = u''
 
 	weekdays = [
-		('7', _('Su')),
-		('1', _('Mo')),
-		('2', _('Tu')),
-		('3', _('We')),
-		('4', _('Th')),
-		('5', _('Fr')),
-		('6', _('Su')),
+		('1', _('Su')),
+		('2', _('Mo')),
+		('3', _('Tu')),
+		('4', _('We')),
+		('5', _('Th')),
+		('6', _('Fr')),
+		('7', _('Sa')),
 	]
 
 	weekdays = Markup(u' ').join(

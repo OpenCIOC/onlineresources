@@ -56,6 +56,7 @@ Call setPageInfo(True, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStri
 <!--#include file="includes/core/incSendMail.asp" -->
 <!--#include file="includes/naics/incCheckNAICS.asp" -->
 <!--#include file="includes/update/incAgencyUpdateInfo.asp" -->
+<!--#include file="includes/update/incEventSchedule.asp" -->
 <!--#include file="includes/update/incEntryFormProcessGeneral.asp" -->
 <!--#include file="includes/validation/incFormDataCheck.asp" -->
 <script language="python" runat="server">

@@ -16,6 +16,25 @@
 ' =========================================================================================
 
 %>
+<script language="python" runat="server">
+from xml.etree import cElementTree as ET
+
+def makeEventScheduleValue_l(strName, strValue):
+	strValue = strValue or u'<SCHEDULES />'
+	xml = ET.fromstring(strValue.encode('utf-8'))
+	lines = []
+	for item in xml:
+		attrib = item.attrib
+		if not attrib.get('START_DATE'):
+			continue
+
+		lines.append(format_event_schedule_line(attrib))
+
+	Response.Write(u"<td class=""FieldLabelLeftClr"">" + strName + u"</td>")
+	Response.Write(u"<td>")
+	Response.Write(Markup(u'<br>').join(lines))
+	Response.Write(u"</td>")
+</script>
 
 <%
 
@@ -393,6 +412,10 @@ Sub printFeedbackInfo(intFBID,intDbAreaID,intFBType)
 									End If
 									Response.Write("</td>")		
 								End If
+							Case "EVENT_SCHEDULE"
+								If Not bHidePrivateData Then
+									Call makeEventScheduleValue(Nz(dicFieldNames(fld.Name),fld.Name),fld.Value)
+								End If
 							Case "FBKEY"
 							Case "FISCAL_YEAR_END"
 								If Not bHidePrivateData Then
@@ -694,5 +717,9 @@ Sub makeSocialMediaValue(strName, strValue)
 	End If
 
 	Response.Write("</td>")
+End Sub
+Sub makeEventScheduleValue(strName, strValue):
+	Dim junk
+	junk = makeEventScheduleValue_l(strName, strValue)
 End Sub
 %>

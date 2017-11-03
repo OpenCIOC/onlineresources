@@ -89,6 +89,7 @@ Call setPageInfo(True, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStri
 <!--#include file="includes/mapping/incGoogleMaps.asp" -->
 <!--#include file="includes/search/incNormalizeSearchTerms.asp" -->
 <!--#include file="includes/update/incCICFormUpdPrint.asp" -->
+<!--#include file="includes/update/incEventSchedule.asp" -->
 <!--#include file="includes/update/incEntryFormGeneral.asp" -->
 <!--#include file="includes/update/incFieldHistory.asp" -->
 
