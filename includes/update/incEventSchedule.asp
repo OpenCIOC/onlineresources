@@ -21,11 +21,14 @@ import cgi
 import re
 import itertools
 from datetime import date
-from cioc.core.i18n import gettext
+from functools import partial
+
+import isodate
+
+from cioc.core.i18n import gettext, format_date, format_time
 from cioc.core import constants as const
 
 _ = lambda x: gettext(x, pyrequest)
-from functools import partial
 
 def get_numeric_extension(value):
 	value = int(value)
@@ -60,17 +63,15 @@ def format_event_schedule_line(values):
 
 	if recurs_every:
 		if recurs_day_of_month or recurs_xth_weekday_of_month:
-			unit = _('day') if recurs_day_of_month else _('week')
 			number = recurs_day_of_month or recurs_xth_weekday_of_month
 			line.append(
-				_('On the {}{} {} of the month').format(
+				_('On the {}{} ').format(
 					unicode(number),
 					get_numeric_extension(number),
-					unit
 				)
 			)
-			if recurs_xth_weekday_of_month:
-				line.append(' on ')
+			if recurs_day_of_month:
+				line.append(_('day of the month'))
 		if recurs_day_of_week or recurs_xth_weekday_of_month:
 			days = [
 				(_('Sunday'), '1'),
@@ -89,26 +90,36 @@ def format_event_schedule_line(values):
 				join = u' ' + _('and ')
 
 			line.append(join.join(days))
-
-		line.append(u' ')
-		line.append(_('every '))
-		if recurs_every > 1:
-			line.append(unicode(recurs_every))
-			line.append(get_numeric_extension(recurs_every))
+		if recurs_xth_weekday_of_month:
 			line.append(u' ')
+			line.append(_('of the month'))
 
-		if recurs_day_of_week:
-			line.append(_('week'))
-		else:
-			line.append(_('month'))
+		if not recurs_xth_weekday_of_month and not (not recurs_day_of_month and recurs_every == 1):
+			line.append(u' ')
+			line.append(_('every '))
+			if recurs_every > 1:
+				line.append(unicode(recurs_every))
+				line.append(get_numeric_extension(recurs_every))
+				line.append(u' ')
+
+			if recurs_day_of_week:
+				line.append(_('week'))
+			else:
+				line.append(_('month'))
 
 		line.append(u' ')
 		line.append(_('from'))
 		line.append(u' ')
 
-	line.append(values['START_DATE'])
+	start_date = values['START_DATE']
+	if u'-' in start_date:
+		start_date = format_date(isodate.parse_date(start_date), pyrequest)
+
+	line.append(start_date)
 	end_date = values.get('END_DATE')
 	if end_date:
+		if u'-' in end_date:
+			end_date = format_date(isodate.parse_date(end_date), pyrequest)
 		line.append(u' ')
 		line.append(_('to'))
 		line.append(u' ')
@@ -117,8 +128,13 @@ def format_event_schedule_line(values):
 	start_time = values.get('START_TIME')
 	end_time = values.get('END_TIME')
 	if start_time:
+		if not 'am' in start_time.lower() and not 'pm' in start_time.lower():
+			start_time = format_time(isodate.parse_time(start_time), pyrequest)
+		line.append(u', ')
 		line.append(start_time)
 		if end_time:
+			if not 'am' in end_time.lower() and not 'pm' in end_time.lower():
+				end_time = format_time(isodate.parse_time(end_time), pyrequest)
 			line.append(u' ')
 			line.append(_('to'))
 			line.append(u' ')
