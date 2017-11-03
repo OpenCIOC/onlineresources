@@ -20,7 +20,7 @@
 import cgi
 import re
 import itertools
-from datetime import date, datetime, time
+from datetime import date
 from cioc.core.i18n import gettext
 from cioc.core import constants as const
 
@@ -193,6 +193,9 @@ def getEventScheduleEntryValues(sched_no, sched_id, vals, checkDate, checkIntege
 
 	def get_zero(label, value, name=None):
 		vals[name] = 0
+
+	def get_one(label, value, name=None):
+		vals[name] = 1
 	
 	def get_and_check_int(label, value, name=None):
 		checkInteger(label, value)
@@ -209,7 +212,9 @@ def getEventScheduleEntryValues(sched_no, sched_id, vals, checkDate, checkIntege
 		if not vals[name]:
 			vals[name] = 1
 
-	if recur_type != '0':
+	if recur_type == '3':
+		to_check.append((_('Repeat Every'), 'RECURS_EVERY', partial(get_one, name='RECURS_EVERY')))
+	elif recur_type != '0':
 		to_check.append((_('Repeat Every'), 'RECURS_EVERY', partial(get_and_check_int_min_1, name='RECURS_EVERY')))
 	else:
 		to_check.append((None, 'RECURS_EVERY', partial(get_zero, name='RECURS_EVERY')))

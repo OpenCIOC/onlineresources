@@ -368,6 +368,7 @@ def makeEventScheduleEntry(entry, label, prefix):
 		day_of_week_display = hide_display
 		day_of_month_display = u''
 	elif ui_select_value == u'3':
+		recurs_display = hide_display
 		week_of_month_display = u''
 
 	weekdays = [

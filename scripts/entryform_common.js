@@ -368,8 +368,8 @@ window['init_schedule'] = function($) {
 			container.find('.repeat-every-ui, .repeat-day-of-month-ui, .recurs-month-label').show();
 			container.find('.repeat-week-of-month-ui, .repeats-on-ui, .recurs-week-label').hide();
 		} else {
-			container.find('.repeat-every-ui, .repeat-week-of-month-ui, .repeats-on-ui, .recurs-month-label').show();
-			container.find('.repeat-day-of-month-ui, .recurs-week-label').hide();
+			container.find('.repeat-week-of-month-ui, .repeats-on-ui, .recurs-month-label').show();
+			container.find('.repeat-every-ui, .repeat-day-of-month-ui, .recurs-week-label').hide();
 
 		}
 	};
