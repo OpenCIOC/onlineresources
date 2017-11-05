@@ -144,7 +144,7 @@ window['init_entryform_items'] = function(jqarray, delete_text, undo_text) {
 		var ids = [];
 		if (ids_dom.value) {
 			ids = $.map(ids_dom.value.split(','), function(value) {
-					if (value.indexOf('NEW') === 0) {
+					if (value.indexOf('NEW') === 0 && value.indexOf('NEWFB') !== 0) {
 						return null;
 					}
 					return value;
@@ -373,7 +373,12 @@ window['init_schedule'] = function($) {
 
 		}
 	};
-	$('#ScheduleEditArea').on('change', '.recur-type-selector', on_recur_type_change).find('.recur-type-selector').each(on_recur_type_change);
+	var apply_feedback = function(evt) {
+		var self = $(this), container = self.parents('.EntryFormItemBox'), values=self.data('schedule');
+		restore_form_values(container, values);
+		return false;
+	}
+	$('#ScheduleEditArea').on('change', '.recur-type-selector', on_recur_type_change).on('click', '.schedule-ui-accept-feedback', apply_feedback).find('.recur-type-selector').each(on_recur_type_change);
 };
 
 })();

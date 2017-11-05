@@ -694,7 +694,7 @@ While Not rsFields.EOF
 					Case "EMPLOYEES_RANGE"
 						strFieldVal = makeEmployeesRangeContents(rsOrg, Not bNew)
 					Case "EVENT_SCHEDULE"
-						strFieldVal = makeEventScheduleContents(rsOrg, Not bNew)
+						strFieldVal = makeEventScheduleContentsEntryForm(rsOrg, Not bNew)
 					Case "EXEC_1"
 						strFieldVal = makeContactFieldVal(rsOrg, strFieldName, Not bNew)
 					Case "EXEC_2"

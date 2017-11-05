@@ -331,12 +331,73 @@ def getStdChecklistNotesFeedback(field_name, note, txt_feedback_num, txt_colon, 
 		output.append(template % {'no': i, 'language_name': values['language_name'], 'update_value': escape(dumps(unicode(update_value)), True), 'value': escape(value)})
 
 	return u''.join(output)
-	
 
-def makeEventScheduleEntry(entry, label, prefix):
+
+def prepEventScheduleFeedback(rsFb):
+	rsFb.MoveFirst()
+	entries = []
+	new_count = 0
+	for row in rs_iter(rsFb):
+		values = {}
+		entries.append(values)
+		if not row['EVENT_SCHEDULE']:
+			continue
+
+		xml = row['EVENT_SCHEDULE'] or u'<SCHEDULES />'
+		xml = ET.fromstring(xml.encode('utf-8'))
+		values['_order'] = order = []
+		values['_language'] = row['LanguageName']
+		for entry in xml:
+			attrib = entry.attrib
+			sched_id = attrib.get('SchedID')
+			if not sched_id:
+				new_count += 1
+				sched_id = attrib['SchedID'] = 'NEWFB%s' % new_count
+			order.append(sched_id)
+			values[sched_id] = attrib
+			if not attrib.get('START_DATE'):
+				schedule_line = _('[deleted]')
+			else:
+				schedule_line = format_event_schedule_line(attrib)
+
+			attrib['_line'] = schedule_line
+	
+	return entries
+
+def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 	recurs_day_of_week = entry.get('RECURS_DAY_OF_WEEK') or u'0'
 	recurs_day_of_month = entry.get('RECURS_DAY_OF_MONTH')
 	recurs_xth_weekday_of_month = entry.get('RECURS_XTH_WEEKDAY_OF_MONTH')
+
+	this_entry_feedback = []
+	if feedback:
+
+		sched_id = entry['SchedID']
+		for fb_num, fbe in enumerate(feedback, 1):
+			if not fbe:
+				continue
+
+			language = ''
+			if pyrequest.multilingual:
+				language = ' ({})'.format(fbe['_language'])
+
+			fbe = fbe.get(sched_id)
+			if not fbe:
+				continue
+
+			line = fbe['_line']
+			this_entry_feedback.append(
+				Markup('''<div>
+						<span class="Info">{txt_fbnum}{fb_num}{language}{txt_colon}</span>
+						<span class="Alert">{line} <input type="button" value="{txt_update}" class="schedule-ui-accept-feedback" data-schedule="{values}"></span>
+						</div>
+				''').format(
+					txt_fbnum=_('Feedback #'), txt_colon=_(': '), txt_update=_('Update'), fb_num=fb_num, line=line,
+					language=language, values=json.dumps({prefix + k: [v] for k, v in fbe.items() if k != '_line'})
+				)
+			)
+
+	this_entry_feedback = Markup('').join(this_entry_feedback)
 
 	hide_display = Markup(u' style="display: None"')
 	ui_select_value = u'0'
@@ -421,6 +482,7 @@ def makeEventScheduleEntry(entry, label, prefix):
 		'day_of_month_display': day_of_month_display,
 		'txt_day_of_month': _('Day of Month'),
 		'txt_label': _('Label'),
+		'feedback': this_entry_feedback,
 	}
 	output = Markup(u'''
 		<div class="EntryFormItemBox" id="{prefix}container">
@@ -474,12 +536,13 @@ def makeEventScheduleEntry(entry, label, prefix):
 		</tr>
 
 		</table>
+		{feedback}
 		</div><div style="clear: both;"></div></div>
 		''').format(prefix=prefix, label=label, **ns).replace(u'\n', u'')
 	return output
 
 
-def makeEventScheduleContents_l(rst, bUseContent):
+def makeEventScheduleContents_l(rst, bUseContent, rsFb=None, is_entryform=False):
 	xml = None
 	if bUseContent:
 		xml = rst.Fields('EVENT_SCHEDULE').Value
@@ -491,17 +554,39 @@ def makeEventScheduleContents_l(rst, bUseContent):
 		unicode(makeEventScheduleEntry({}, Markup(u'%s <span class="EntryFormItemCount">[COUNT]</span> %s') % (_('Schedule #'), _('(new)')), u"Sched_[ID]_")))
 	]
 
+	if is_entryform and bUseContent:
+		feedback = prepEventScheduleFeedback(rsFb)
+	else:
+		feedback = None
+
 	ids = []
-	for count, item in enumerate(xml):
+	for count, item in enumerate(xml, 1):
 		attrs = item.attrib
 		sched_id = attrs['SchedID']
 		ids.append(sched_id)
 		output.append(
 			makeEventScheduleEntry(
-				attrs, Markup(u'%s <span class="EntryFormItemCount">%s</span>') % (_('Schedule #'), count + 1),
-				u"Sched_%s_" % sched_id
+				attrs, Markup(u'%s <span class="EntryFormItemCount">%s</span>') % (_('Schedule #'), count),
+				u"Sched_%s_" % sched_id,
+				feedback
 			)
 		)
+	
+	if feedback:
+		for fb_num, fbe in enumerate(feedback):
+			for entry in fbe['_order']:
+				if not entry.startswith('NEW'):
+					continue
+				count += 1
+				fake_entry = {'SchedID': entry}
+				ids.append(entry)
+				output.append(
+					makeEventScheduleEntry(
+						fake_entry, Markup(u'%s <span class="EntryFormItemCount">%s</span> %s') % (_('Schedule #'), count, _('(new from feedback)')),
+						u"Sched_%s_" % entry,
+						[fbe if i == fb_num else {} for i in range(len(feedback))]
+					)
+				)
 
 	output.append(
 		Markup(u'''
@@ -1791,6 +1876,13 @@ Function makeEventScheduleContents(rst,bUseContent)
 	bHasDynamicAddField = True
 
 	makeEventScheduleContents = makeEventScheduleContents_l(rst, bUseContent)
+End Function
+
+Function makeEventScheduleContentsEntryForm(rst,bUseContent)
+	bHasSchedule = True
+	bHasDynamicAddField = True
+
+	makeEventScheduleContentsEntryForm = makeEventScheduleContents_l(rst, bUseContent, rsFb, True)
 
 End Function
 

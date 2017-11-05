@@ -586,7 +586,7 @@ While Not rsFields.EOF
 					Case "CONTACT"
 						strFieldVal = makeContactFieldVal(rsOrg, strFieldName, Not bNew)
 					Case "EVENT_SCHEDULE"
-						strFieldVal = makeEventScheduleContents(rsOrg, Not bNew)
+						strFieldVal = makeEventScheduleContentsEntryForm(rsOrg, Not bNew)
 					Case "INTERACTION_LEVEL"
 						strFieldVal = makeInteractionLevelContents(rsOrg, Not bNew)
 					Case "INTERESTS"
