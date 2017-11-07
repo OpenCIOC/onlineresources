@@ -38,8 +38,8 @@ def getEventScheduleFields_l(
 	changed = False
 	lines = []
 	for sched_id, schedule in existing_value:
-		new_schedule = feedback_map.get(sched_id, schedule)
-		if new_schedule != schedule:
+		new_schedule = [(k,unicode(format_time_if_iso(v) if k.endswith('_TIME') else format_date_if_iso(v) if k.endswith('_DATE') else int(v) if isinstance(v, bool) else v)) for k, v in feedback_map.get(sched_id, schedule)]
+		if new_schedule != sorted(schedule):
 			changed = True
 
 		new_schedule = dict(new_schedule)
