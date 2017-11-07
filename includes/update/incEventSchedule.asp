@@ -43,6 +43,17 @@ def get_numeric_extension(value):
 		return _('rd')
 	return _('th')
 		
+def format_date_if_iso(value):
+	if u'-' in value:
+		value = format_date(isodate.parse_date(value), pyrequest)
+	return value
+
+
+def format_time_if_iso(value):
+	if not 'am' in value.lower() and not 'pm' in value.lower():
+		value = format_time(isodate.parse_time(value), pyrequest).replace(':00 ', '')
+	return value
+
 
 def format_event_schedule_line(values):
 	line = []
@@ -111,15 +122,12 @@ def format_event_schedule_line(values):
 		line.append(_('from'))
 		line.append(u' ')
 
-	start_date = values['START_DATE']
-	if u'-' in start_date:
-		start_date = format_date(isodate.parse_date(start_date), pyrequest)
+	start_date = format_date_if_iso(values['START_DATE'])
 
 	line.append(start_date)
 	end_date = values.get('END_DATE')
 	if end_date:
-		if u'-' in end_date:
-			end_date = format_date(isodate.parse_date(end_date), pyrequest)
+		end_date = format_date_if_iso(end_date)
 		line.append(u' ')
 		line.append(_('to'))
 		line.append(u' ')
@@ -128,13 +136,11 @@ def format_event_schedule_line(values):
 	start_time = values.get('START_TIME')
 	end_time = values.get('END_TIME')
 	if start_time:
-		if not 'am' in start_time.lower() and not 'pm' in start_time.lower():
-			start_time = format_time(isodate.parse_time(start_time), pyrequest)
+		start_time = format_time_if_iso(start_time)
 		line.append(u', ')
 		line.append(start_time)
 		if end_time:
-			if not 'am' in end_time.lower() and not 'pm' in end_time.lower():
-				end_time = format_time(isodate.parse_time(end_time), pyrequest)
+			end_time = format_time_if_iso(end_time)
 			line.append(u' ')
 			line.append(_('to'))
 			line.append(u' ')

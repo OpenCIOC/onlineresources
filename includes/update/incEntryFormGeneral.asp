@@ -348,7 +348,7 @@ def prepEventScheduleFeedback(rsFb):
 		values['_order'] = order = []
 		values['_language'] = row['LanguageName']
 		for entry in xml:
-			attrib = entry.attrib
+			attrib = {k: format_time_if_iso(v) if k.endswith('_TIME') else format_date_if_iso(v) if k.endswith('_DATE') else v for k, v in entry.attrib.items()}
 			sched_id = attrib.get('SchedID')
 			if not sched_id:
 				new_count += 1
@@ -381,11 +381,14 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 			if pyrequest.multilingual:
 				language = ' ({})'.format(fbe['_language'])
 
-			fbe = fbe.get(sched_id)
+			fbe = dict(fbe.get(sched_id))
 			if not fbe:
 				continue
 
-			line = fbe['_line']
+			line = fbe.pop('_line')
+			if all(entry.get(k) == v for k, v in fbe.items()):
+				continue
+
 			this_entry_feedback.append(
 				Markup('''<div>
 						<span class="Info">{txt_fbnum}{fb_num}{language}{txt_colon}</span>
