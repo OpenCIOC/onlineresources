@@ -89,6 +89,7 @@ Call setPageInfo(True, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStri
 <!--#include file="includes/mapping/incGoogleMaps.asp" -->
 <!--#include file="includes/search/incNormalizeSearchTerms.asp" -->
 <!--#include file="includes/update/incCICFormUpdPrint.asp" -->
+<!--#include file="includes/update/incEventSchedule.asp" -->
 <!--#include file="includes/update/incEntryFormGeneral.asp" -->
 <!--#include file="includes/update/incFieldHistory.asp" -->
 
@@ -693,7 +694,7 @@ While Not rsFields.EOF
 					Case "EMPLOYEES_RANGE"
 						strFieldVal = makeEmployeesRangeContents(rsOrg, Not bNew)
 					Case "EVENT_SCHEDULE"
-						strFieldVal = makeEventScheduleContents(rsOrg, Not bNew)
+						strFieldVal = makeEventScheduleContentsEntryForm(rsOrg, Not bNew)
 					Case "EXEC_1"
 						strFieldVal = makeContactFieldVal(rsOrg, strFieldName, Not bNew)
 					Case "EXEC_2"

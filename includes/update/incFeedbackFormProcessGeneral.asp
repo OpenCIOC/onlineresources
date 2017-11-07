@@ -18,22 +18,57 @@
 %>
 <script language="python" runat="server">
 
-def getScheduleFields_l(strFieldDisplay, rsOrg, bSuggest,
-		addInsertField, addEmailField, checkDate,
-		checkInteger, checkID, checkLength, checkAddValidationError):
+from xml.etree import cElementTree as ET
 
-	pass
+def getEventScheduleFields_l(
+		strFieldDisplay, rsOrg, bSuggest,
+		scheduleAddInsertField, addEmailField, checkDate,
+		checkInteger, checkID, checkLength, checkAddValidationError, DateString):
+
+	feedback_schedules = getEventScheduleValues(checkDate, checkInteger, checkID, checkLength, checkAddValidationError)
+	feedback_map = {k: sorted(v) for k, v in feedback_schedules if not unicode(k).startswith('NEW')}
+	existing_value = []
+	if not bSuggest:
+		xml = rsOrg.Fields('EVENT_SCHEDULE').Value or u'<SCHEDULES />'
+		xml = ET.fromstring(xml.encode('utf-8'))
+		for item in xml:
+			attrib = item.attrib
+			existing_value.append((int(attrib['SchedID']), sorted(attrib.items())))
+
+	changed = False
+	lines = []
+	for sched_id, schedule in existing_value:
+		new_schedule = [(k,unicode(format_time_if_iso(v) if k.endswith('_TIME') else format_date_if_iso(v) if k.endswith('_DATE') else int(v) if isinstance(v, bool) else v)) for k, v in feedback_map.get(sched_id, schedule)]
+		if new_schedule != sorted(schedule):
+			changed = True
+
+		new_schedule = dict(new_schedule)
+		if not new_schedule.get('START_DATE'):
+			changed = True
+			lines.append(_('[deleted]') + u' ' + format_event_schedule_line(dict(schedule)))
+			continue
+
+		line = format_event_schedule_line(new_schedule)
+		if line:
+			lines.append(line)
+
+	for sched_id, schedule in feedback_schedules:
+		if not unicode(sched_id).startswith(u'NEW'):
+			continue
+
+		changed = True
+		line = format_event_schedule_line(dict(schedule))
+		lines.append(line)
+	
+	if changed:
+		xml = convertEventScheduleValuesToXML(feedback_schedules)
+		scheduleAddInsertField(u'<SCHEDULES>{}</SCHEDULES>'.format(xml)) 
+	if lines:
+		addEmailField(strFieldDisplay, u'\n'.join(lines))
 
 </script>
 
 <%
-Sub getScheduleFields(strFieldDisplay):
-	Dim jumk
-	junk = getScheduleFields_l(strFieldDisplay, rsOrg, bSuggest, _
-			GetRef("addInsertField"), GetRef("addEmailField"), _
-			GetRef("WrapCheckDate"), GetRef("checkInteger"), GetRef("checkID"), _
-			GetRef("checkLength"), GetRef("checkAddValidationError")) 
-End Sub
 
 Dim strEmailContents
 	
@@ -460,6 +495,22 @@ Sub getSocialMediaField(strFieldDisplay, strInsertInto, strInsertValue)
 	If Not Nl(strEmailText) Then
 		Call addEmailField(strFieldDisplay, strEmailText)
 	End If 
+End Sub
+
+Sub WrapScheduleAddInsertField(strValue)
+	If ps_intDbArea = DM_CIC Then
+		Call addInsertField("EVENT_SCHEDULE", QsNNl(strValue), strInsertIntoFB, strInsertValueFB)
+	Else
+		Call addInsertField("EVENT_SCHEDULE", QsNNl(strValue), strInsertInto, strInsertValue)
+	End If
+End Sub
+
+Sub getEventScheduleFields(strFieldDisplay):
+	Dim junk
+	junk = getEventScheduleFields_l(strFieldDisplay, rsOrg, bSuggest, _
+			GetRef("WrapScheduleAddInsertField"), GetRef("addEmailField"), _
+			GetRef("WrapCheckDate"), GetRef("checkInteger"), GetRef("checkID"), _
+			GetRef("checkLength"), GetRef("checkAddValidationError"), GetRef("DateString")) 
 End Sub
 
 %>

@@ -53,6 +53,7 @@ Call setPageInfo(False, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStr
 <!--#include file="includes/core/incFormat.asp" -->
 <!--#include file="includes/list/incMonthList.asp" -->
 <!--#include file="includes/update/incAgencyUpdateInfo.asp" -->
+<!--#include file="includes/update/incEventSchedule.asp" -->
 <!--#include file="includes/update/incEntryFormGeneral.asp" -->
 <!--#include file="includes/update/incFeedbackFormProcessGeneral.asp" -->
 <!--#include file="includes/validation/incFormDataCheck.asp" -->
@@ -1061,6 +1062,8 @@ While Not rsFields.EOF
 			Call getEligibilityFields(rsFields.Fields("FieldDisplay"))
 		Case "EMPLOYEES"
 			Call getEmployeesFields(rsFields.Fields("FieldDisplay"))
+		Case "EVENT_SCHEDULE"
+			Call getEventScheduleFields(rsFields.Fields("FieldDisplay"))
 		Case "EXEC_1"
 			Call getContactFields(strFieldName, rsFields.Fields("FieldDisplay"),strInsertIntoFB,strInsertValueFB)
 		Case "EXEC_2"

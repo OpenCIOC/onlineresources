@@ -34,6 +34,7 @@ CREATE TABLE [dbo].[VOL_Feedback]
 [DISPLAY_UNTIL] [nvarchar] (25) COLLATE Latin1_General_100_CI_AI NULL,
 [DUTIES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [END_DATE] [nvarchar] (25) COLLATE Latin1_General_100_CI_AI NULL,
+[EVENT_SCHEDULE] [xml] NULL,
 [INTERACTION_LEVEL] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [INTERESTS] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [INTERNAL_MEMO] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -77,6 +78,7 @@ CREATE TABLE [dbo].[VOL_Feedback]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 ALTER TABLE [dbo].[VOL_Feedback] ADD 
 CONSTRAINT [PK_VOL_Feedback] PRIMARY KEY CLUSTERED  ([FB_ID]) ON [PRIMARY]
+
 GO
 
 ALTER TABLE [dbo].[VOL_Feedback] ADD CONSTRAINT [FK_VOL_Feedback_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
