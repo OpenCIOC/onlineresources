@@ -545,7 +545,7 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 	return output
 
 
-def makeEventScheduleContents_l(rst, bUseContent, rsFb=None, is_entryform=False):
+def makeEventScheduleContents_l(rst, bUseContent, has_feedback=False, rsFb=None, is_entryform=False):
 	xml = None
 	if bUseContent:
 		xml = rst.Fields('EVENT_SCHEDULE').Value
@@ -557,12 +557,13 @@ def makeEventScheduleContents_l(rst, bUseContent, rsFb=None, is_entryform=False)
 		unicode(makeEventScheduleEntry({}, Markup(u'%s <span class="EntryFormItemCount">[COUNT]</span> %s') % (_('Schedule #'), _('(new)')), u"Sched_[ID]_")))
 	]
 
-	if is_entryform and bUseContent:
+	if is_entryform and bUseContent and has_feedback:
 		feedback = prepEventScheduleFeedback(rsFb)
 	else:
 		feedback = None
 
 	ids = []
+	count = 0
 	for count, item in enumerate(xml, 1):
 		attrs = item.attrib
 		sched_id = attrs['SchedID']
@@ -577,7 +578,7 @@ def makeEventScheduleContents_l(rst, bUseContent, rsFb=None, is_entryform=False)
 	
 	if feedback:
 		for fb_num, fbe in enumerate(feedback):
-			for entry in fbe['_order']:
+			for entry in fbe.get('_order', []):
 				if not entry.startswith('NEW'):
 					continue
 				count += 1
@@ -1885,7 +1886,7 @@ Function makeEventScheduleContentsEntryForm(rst,bUseContent)
 	bHasSchedule = True
 	bHasDynamicAddField = True
 
-	makeEventScheduleContentsEntryForm = makeEventScheduleContents_l(rst, bUseContent, rsFb, True)
+	makeEventScheduleContentsEntryForm = makeEventScheduleContents_l(rst, bUseContent, bFeedback, rsFb, True)
 
 End Function
 
