@@ -563,6 +563,7 @@ def makeEventScheduleContents_l(rst, bUseContent, has_feedback=False, rsFb=None,
 		feedback = None
 
 	ids = []
+	count = 0
 	for count, item in enumerate(xml, 1):
 		attrs = item.attrib
 		sched_id = attrs['SchedID']
