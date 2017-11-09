@@ -557,7 +557,7 @@ def makeEventScheduleContents_l(rst, bUseContent, has_feedback=False, rsFb=None,
 		unicode(makeEventScheduleEntry({}, Markup(u'%s <span class="EntryFormItemCount">[COUNT]</span> %s') % (_('Schedule #'), _('(new)')), u"Sched_[ID]_")))
 	]
 
-	if is_entryform and bUseContent:
+	if is_entryform and bUseContent and has_feedback:
 		feedback = prepEventScheduleFeedback(rsFb)
 	else:
 		feedback = None
@@ -577,7 +577,7 @@ def makeEventScheduleContents_l(rst, bUseContent, has_feedback=False, rsFb=None,
 	
 	if feedback:
 		for fb_num, fbe in enumerate(feedback):
-			for entry in fbe['_order']:
+			for entry in fbe.get('_order', []):
 				if not entry.startswith('NEW'):
 					continue
 				count += 1
