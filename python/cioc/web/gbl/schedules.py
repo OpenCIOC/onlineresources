@@ -38,8 +38,8 @@ class SchedulesBase(viewbase.ViewBase):
 
 		with request.connmgr.get_connection() as conn:
 			results = conn.execute(
-				'''EXEC sp_%s_Schedule_l_Upcoming ?, ?, ?, ?''' % request.pageinfo.DbAreaS,
-				request.dboptions.MemberID, request.viewdata.dom.ViewType, request.passvars.cached_url_vals or None, request.pageinfo.PathToStart).fetchall()
+				'''EXEC sp_%s_Schedule_l_Upcoming ?, ?, ?''' % request.pageinfo.DbAreaS,
+				request.viewdata.dom.ViewType, request.passvars.cached_url_vals or None, request.pageinfo.PathToStart).fetchall()
 		
 		months = []
 		locale = get_locale(request)
