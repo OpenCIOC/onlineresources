@@ -545,7 +545,7 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 	return output
 
 
-def makeEventScheduleContents_l(rst, bUseContent, rsFb=None, is_entryform=False):
+def makeEventScheduleContents_l(rst, bUseContent, has_feedback=False, rsFb=None, is_entryform=False):
 	xml = None
 	if bUseContent:
 		xml = rst.Fields('EVENT_SCHEDULE').Value
@@ -1885,7 +1885,7 @@ Function makeEventScheduleContentsEntryForm(rst,bUseContent)
 	bHasSchedule = True
 	bHasDynamicAddField = True
 
-	makeEventScheduleContentsEntryForm = makeEventScheduleContents_l(rst, bUseContent, rsFb, True)
+	makeEventScheduleContentsEntryForm = makeEventScheduleContents_l(rst, bUseContent, bFeedback, rsFb, True)
 
 End Function
 
