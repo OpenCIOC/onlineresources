@@ -290,7 +290,13 @@ def getEventScheduleValues(checkDate, checkInteger, checkID, checkLength, checkA
 	fields.extend('RECURS_WEEKDAY_%d' % i for i in range(1,8))
 
 	output = []
-	sched_ids = (pyrequest.POST.get("Sched_IDS") or u'').split(',')
+	sched_ids = pyrequest.POST.get("Sched_IDS")
+	if sched_ids:
+		sched_ids = sched_ids.split(',')
+		sched_ids = [x for x in sched_ids if x.strip()]
+
+	else:
+		sched_ids = []
 	
 	for sched_no, sched in enumerate(sched_ids, 1) :
 		prefix = 'Sched_%s_' % sched
