@@ -50,6 +50,7 @@ Call setPageInfo(True, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStri
 <!--#include file="text/txtRecordPages.asp" -->
 <!--#include file="text/txtReviewFeedback.asp" -->
 <!--#include file="includes/core/incFormat.asp" -->
+<!--#include file="includes/update/incEventSchedule.asp" -->
 <!--#include file="includes/update/incFbInfo.asp" -->
 <%
 
