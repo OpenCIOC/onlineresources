@@ -377,10 +377,12 @@
     <Content Include="python\cioc\web\cic\templates\taxonomy\preferredcompliance.mak" />
     <Content Include="python\cioc\web\gbl\emaillist.py" />
     <Content Include="python\cioc\web\gbl\icons.py" />
+    <Content Include="python\cioc\web\gbl\schedules.py" />
     <Content Include="python\cioc\web\gbl\pages.py" />
     <Content Include="python\cioc\web\gbl\shortcodes.py" />
     <Content Include="python\cioc\web\gbl\templates\emaillist.mak" />
     <Content Include="python\cioc\web\gbl\templates\iconlist.mak" />
+    <Content Include="python\cioc\web\gbl\templates\schedules.mak" />
     <Content Include="python\cioc\web\gbl\templates\pages.mak" />
     <Content Include="python\cioc\web\gbl\templates\shortcodes.mak" />
     <Content Include="python\cioc\web\gbl\__init__.py" />
