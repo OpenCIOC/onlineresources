@@ -143,9 +143,20 @@ def open_zipfile(dest_file):
 
 
 class fakerequest(object):
+
+	def __init__(self, config):
+		self.config = config
+
 	class dboptions(object):
 		TrainingMode = False
 		NoEmail = False
+		DefaultEmailCIC = None
+		DefaultEmailVOL = None
+		DefaultEmailNameCIC = None
+		DefaultEmailNameVOL = None
+
+	class pageinfo(object):
+		DbArea = const.DM_CIC
 
 
 def email_log(args, outputstream, is_error, success_email, error_email):
@@ -158,7 +169,7 @@ def email_log(args, outputstream, is_error, success_email, error_email):
 	name = get_config_item(args, 'csv_export_title', '')
 	if name:
 		name = ' ' + name
-	email.send_email(fakerequest, author, to, 'Automated CSV Export%s%s' % (name, ' -- ERRORS!' if is_error else ''), outputstream.getvalue())
+	email.send_email(fakerequest(args.config), author, to, 'Automated CSV Export%s%s' % (name, ' -- ERRORS!' if is_error else ''), outputstream.getvalue())
 
 
 def main(argv):

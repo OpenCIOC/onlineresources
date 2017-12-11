@@ -424,6 +424,13 @@ class fakerequest(object):
 	class dboptions(object):
 		TrainingMode = False
 		NoEmail = False
+		DefaultEmailCIC = None
+		DefaultEmailVOL = None
+		DefaultEmailNameCIC = None
+		DefaultEmailNameVOL = None
+
+	class pageinfo(object):
+		DbArea = const.DM_CIC
 
 
 def output_error_log(args, error_log):

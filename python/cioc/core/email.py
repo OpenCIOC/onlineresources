@@ -86,10 +86,10 @@ def send_email(request, author, to, subject, message, ignore_block=False):
 	NoEmail = dboptions.NoEmail
 	if request.pageinfo.DbArea == const.DM_VOL:
 		from_email = dboptions.DefaultEmailVOL or dboptions.DefaultEmailCIC
-		from_name = dboptions.DefaultEmailNameVOL or dboptions.DefaultEmailNameCIC
+		from_name = dboptions.DefaultEmailNameVOL or dboptions.DefaultEmailNameCIC or u''
 	else:
 		from_email = dboptions.DefaultEmailCIC or dboptions.DefaultEmailVOL
-		from_name = dboptions.DefaultEmailNameCIC or dboptions.DefaultEmailNameVOL
+		from_name = dboptions.DefaultEmailNameCIC or dboptions.DefaultEmailNameVOL or u''
 
 	if from_email:
 		reply = author
