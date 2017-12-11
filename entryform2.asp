@@ -2290,7 +2290,7 @@ If Not bRSNError Then
 									"SQL state: " & Ns(objErr.SQLState) & vbCrLf
 				Next
 
-				Call sendEmail(True, "qw4afPcItA5KJ18NH4nV@cioc.ca", "qw4afPcItA5KJ18NH4nV@cioc.ca", vbNullString, "Entryform SQL Error", strErrorDetails & strInsSQL)
+				Call sendEmail(True, "qw4afPcItA5KJ18NH4nV@cioc.ca", "qw4afPcItA5KJ18NH4nV@cioc.ca", "Entryform SQL Error", strErrorDetails & strInsSQL)
 			End If
 			On Error GoTo 0
 		End With

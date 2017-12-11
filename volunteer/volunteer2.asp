@@ -292,7 +292,7 @@ If Not bVNUMError Then
 				strMsgText = strMsgText & vbCrLf & vbCrLf & strContactInfo & _
 					vbCrLf & vbCrLf & strDetailLink & _
 					vbCrLf & vbCrLf & TXT_VOL_THANK_YOU
-				If Not sendEmail(False, strSender,strRecipient,vbNullString,strSubject,strMsgText) Then
+				If Not sendEmail(False, strSender,strRecipient,strSubject,strMsgText) Then
 					Call handleErrorSelected(TXT_WARNING & TXT_PROBLEM_EMAIL & " " & strRecipient & ".", vbNullString, vbNullString)
 				End If
 			End If
@@ -306,7 +306,7 @@ If Not bVNUMError Then
 					vbCrLf & strFullVolunteerInfo & _
 					vbCrLf & vbCrLf & strDetailLink
 				strSentTo = strSentTo & "<br><strong>" & Nz(strContactName,strContactEmail) & " " & TXT_FROM & " " & strContactOrg & "</strong> (" & strContactEmail & ")"
-				If Not sendEmail(False, strSender,strRecipient,vbNullString,strSubject,strMsgText) Then
+				If Not sendEmail(False, strSender,strRecipient,strSubject,strMsgText) Then
 					Call handleErrorSelected(TXT_WARNING & TXT_PROBLEM_EMAIL & " " & strRecipient & ".", vbNullString, vbNullString)
 				Else
 					bOrgEmailed = True
@@ -330,7 +330,7 @@ If Not bVNUMError Then
 					strSentTo = strSentTo & "<br>" & TXT_AND_LC
 				End If
 				strSentTo = strSentTo & "<br><strong>" & strROName & "</strong> ("  & strROUpdateEmail & ")"
-				If Not sendEmail(False, strSender,strRecipient,vbNullString,strSubject,strMsgText) Then
+				If Not sendEmail(False, strSender,strRecipient,strSubject,strMsgText) Then
 					Call handleErrorSelected(TXT_WARNING & TXT_PROBLEM_EMAIL & " " & strRecipient & ".", vbNullString, vbNullString)
 				End If
 			End If

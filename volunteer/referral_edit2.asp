@@ -279,7 +279,7 @@ Else
 						vbCrLf & vbCrLf & TXT_THEY_PROVIDED_INFORMATION & _
 						vbCrLf & strFullVolunteerInfo & _
 						vbCrLf & vbCrLf & strDetailLink
-					If Not sendEmail(False, strSender,strRecipient,vbNullString,strSubject,strMsgText) Then
+					If Not sendEmail(False, strSender,strRecipient,strSubject,strMsgText) Then
 						strErrorList = strErrorList & "<li>" & TXT_PROBLEM_EMAIL & " " & strRecipient & ".</li>"
 					Else
 						bOrgEmailed = True
@@ -299,7 +299,7 @@ Else
 					End If
 					strMsgText = strMsgText & _
 						vbCrLf & vbCrLf & strDetailLink
-					If Not sendEmail(False, strSender,strRecipient,vbNullString,strSubject,strMsgText) Then
+					If Not sendEmail(False, strSender,strRecipient,strSubject,strMsgText) Then
 						strErrorList = strErrorList & "<li>" & TXT_PROBLEM_EMAIL & " " & strRecipient & ".</li>"
 					End If
 				End If

@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -21,8 +20,10 @@ CREATE PROCEDURE [dbo].[sp_STP_Member_u]
 	@SiteCodeLength [tinyint],
 	@DaysSinceLastEmail [smallint],
 	@DefaultEmailCIC [varchar](60),
-	@DefaultEmailVOL [varchar](60),
-	@DefaultEmailVOLProfile [varchar](60),
+	@DefaultEmailVOL [VARCHAR](60),
+	@DefaultEmailVOLProfile [VARCHAR](60),
+    @DefaultEmailNameCIC NVARCHAR(100),
+	@DefaultEmailNameVOL NVARCHAR(100),
 	@BaseURLCIC [varchar](100),
 	@BaseURLVOL [varchar](100),
 	@DefaultGCType [tinyint],
@@ -195,6 +196,8 @@ IF @Error = 0 BEGIN
 			DefaultEmailCIC = CASE WHEN @UseCIC=1 THEN @DefaultEmailCIC ELSE DefaultEmailCIC END,
 			DefaultEmailVOL = CASE WHEN @UseVOL=1 THEN @DefaultEmailVOL ELSE DefaultEmailVOL END,
 			DefaultEmailVOLProfile = CASE WHEN @UseVOL=1 THEN @DefaultEmailVOLProfile ELSE DefaultEmailVOLProfile END,
+			DefaultEmailNameCIC = CASE WHEN @UseCIC=1 THEN @DefaultEmailNameCIC ELSE DefaultEmailNameCIC END,
+			DefaultEmailNameVOL = CASE WHEN @UseVOL=1 THEN @DefaultEmailNameVOL ELSE DefaultEmailNameVOL END,
 			BaseURLCIC = CASE WHEN @UseCIC=1 THEN @BaseURLCIC ELSE BaseURLCIC END,
 			BaseURLVOL = CASE WHEN @UseVOL=1 THEN @BaseURLVOL ELSE BaseURLVOL END,
 			DefaultGCType = CASE WHEN @UseCIC=1 THEN @DefaultGCType ELSE DefaultGCType END,

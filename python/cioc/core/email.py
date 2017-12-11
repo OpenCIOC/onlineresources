@@ -13,12 +13,13 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 # =========================================================================================
-
+from __future__ import absolute_import
 
 # stdlib
 import os
 import textwrap
 from threading import Thread
+from email.utils import parseaddr, formataddr
 
 # 3rd party
 from markupsafe import Markup, escape_silent
@@ -29,6 +30,7 @@ DeliveryException
 
 # this app
 from cioc.core.i18n import gettext as _
+from cioc.core import constants as const
 
 _mailer = None
 _last_change = None
@@ -73,14 +75,29 @@ def _get_mailer(request):
 	return _mailer
 
 
-def send_email(request, author, to, subject, message, reply=None, ignore_block=False):
+def send_email(request, author, to, subject, message, ignore_block=False):
 
 	if not isinstance(to, (list, tuple, set)):
 		to = [x.strip() for x in to.split(',')]
 
 	to = [unicode(x) for x in to if x]
-	TrainingMode = request.dboptions.TrainingMode
-	NoEmail = request.dboptions.NoEmail
+	dboptions = request.dboptions
+	TrainingMode = dboptions.TrainingMode
+	NoEmail = dboptions.NoEmail
+	if request.pageinfo.DbArea == const.DM_VOL:
+		from_email = dboptions.DefaultEmailVOL or dboptions.DefaultEmailCIC
+		from_name = dboptions.DefaultEmailNameVOL or dboptions.DefaultEmailNameCIC
+	else:
+		from_email = dboptions.DefaultEmailCIC or dboptions.DefaultEmailVOL
+		from_name = dboptions.DefaultEmailNameCIC or dboptions.DefaultEmailNameVOL
+
+	if from_email:
+		reply = author
+		author = parseaddr(author)
+		author = formataddr((author[0] or from_name, from_email))
+	else:
+		reply = None
+
 	if TrainingMode:
 		# XXX Fill message
 		request.email_notice(

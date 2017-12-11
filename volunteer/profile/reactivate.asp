@@ -140,7 +140,7 @@ Else 'Success
 		IIf(g_bSSL, "https://", "http://") & strAccessURL & makeLink("/volunteer/profile/confirm.asp", "PID=" & Server.URLEncode(strProfileID) & "&CT=" & Server.URLEncode(strConfirmationToken) & "&ref=reactivate",vbNullString) & vbCrLf & vbCrLf & _
 		TXT_LINK_EXPIRE_NOTICE
 				
-	bEmailFailed = sendEmail(False, strFromEmail, strEmail, vbNullString, TXT_EMAIL_REACTIVATE_SUBJECT, strEmailBody)
+	bEmailFailed = sendEmail(False, strFromEmail, strEmail, TXT_EMAIL_REACTIVATE_SUBJECT, strEmailBody)
 
 	Call handleMessage(TXT_SUCCESS_REACTIVATE, vbNullString, vbNullString, False)
 

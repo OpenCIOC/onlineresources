@@ -166,7 +166,7 @@ If bCanUpdateAccount Then
 									TXT_ACCOUNT_IS_LOCKED & vbCrLf & vbCrLf & _
 									TXT_LAST_ATTEMPT & DateTimeString(Now(),True) & " (" & getRemoteIP() & ") http://" & Request.ServerVariables("SERVER_NAME") & vbCrLf & vbCrLf & _
 									TXT_REPEATED_ATTEMPTS_BLOCKS_IP
-								Call sendEmail(True, strFrom, strTo, Null, TXT_LOCKED_ACCOUNT, strEmailMessage)
+								Call sendEmail(True, strFrom, strTo, TXT_LOCKED_ACCOUNT, strEmailMessage)
 							End If
 						End If 
 					End If
@@ -353,7 +353,7 @@ Else
 <p class="Alert"><%=TXT_UNABLE_TO_SEND_REQUEST & " " & TXT_NO_CHANGES%></p>
 <%
 		Else
-			If sendEmail(True, strUpdateAccountEmail, strUpdateAccountEmail, Nz(strEmail,user_strEmail), _
+			If sendEmail(True, strUpdateAccountEmail, Nz(strEmail,user_strEmail), _
 				TXT_REQUEST_ACCOUNT_CHANGE_FOR & IIf(user_bCIC Or Not user_bVOL,Nz(g_strDatabaseNameCIC,g_strDatabaseNameVOL),Nz(g_strDatabaseNameVOL,g_strDatabaseNameCIC)), _
 				strMessage) Then
 %>

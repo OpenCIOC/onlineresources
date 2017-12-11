@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -68,6 +67,7 @@ SELECT	MemberID,
 		DefaultViewCIC,
 		BaseURLCIC,
 		DefaultEmailCIC,
+		DefaultEmailNameCIC,
 		SiteCodeLength,
 		UseTaxonomy,
 		VacancyFundedCapacity,
@@ -84,6 +84,7 @@ SELECT	MemberID,
 		DefaultViewVOL,
 		BaseURLVOL,
 		DefaultEmailVOL,
+		DefaultEmailNameVOL,
 		UseVolunteerProfiles,
 		CanDeleteRecordNoteVOL,
 		CanUpdateRecordNoteVOL,

@@ -341,14 +341,14 @@ Sub sendNotifyEmails(intID, strRecName, strOldEmail, strNewEmail, bInView, strAc
 				strSubject = TXT_REVIEW_UPDATES & get_db_option_current_lang("DatabaseName" & ps_strDbArea)
 			End If
 
-			Call sendEmail(False, strSender, strRecipient, vbNullString, strSubject, strMessageHeader & vbCrLf & vbCrLf & Replace(strMessageFooter,"&Key=[FBKEY]","&Key=" & strMasterFbKey))
+			Call sendEmail(False, strSender, strRecipient, strSubject, strMessageHeader & vbCrLf & vbCrLf & Replace(strMessageFooter,"&Key=[FBKEY]","&Key=" & strMasterFbKey))
 		End If
 		
 		'send Email to org's new Email, if it exists and is different
 		If Not Nl(strNewEmail) And strNewEmail <> TXT_DELETED Then
 			strRecipient = strNewEmail
 			strSubject = TXT_REVIEW_NEW_EMAIL & get_db_option_current_lang("DatabaseName" & ps_strDbArea)
-			Call sendEmail(False, strSender, strRecipient, vbNullString, strSubject, strMessageHeader & vbCrLf & vbCrLf & Replace(strMessageFooter,"&Key=[FBKEY]",StringIf(Not Nl(strFbKey),"&Key=" & strFbKey)))
+			Call sendEmail(False, strSender, strRecipient, strSubject, strMessageHeader & vbCrLf & vbCrLf & Replace(strMessageFooter,"&Key=[FBKEY]",StringIf(Not Nl(strFbKey),"&Key=" & strFbKey)))
 		End If
 	End If
 
@@ -362,7 +362,7 @@ Sub sendNotifyEmails(intID, strRecName, strOldEmail, strNewEmail, bInView, strAc
 		strRecipient = strSourceEmail
 		strSubject = TXT_THANKS_FOR_FEEDBACK
 
-		Call sendEmail(False, strSender, strRecipient, vbNullString, strSubject, strMessageHeader & vbCrLf & vbCrLf & Replace(strMessageFooter,"&Key=[FBKEY]",StringIf(Not Nl(strFbKey),"&Key=" & strFbKey)))
+		Call sendEmail(False, strSender, strRecipient, strSubject, strMessageHeader & vbCrLf & vbCrLf & Replace(strMessageFooter,"&Key=[FBKEY]",StringIf(Not Nl(strFbKey),"&Key=" & strFbKey)))
 	End If
 	
 	'send Email to owner agency, if it exists
@@ -386,7 +386,7 @@ Sub sendNotifyEmails(intID, strRecName, strOldEmail, strNewEmail, bInView, strAc
 
 		strSubject = TXT_FEEDBACK_FOR & strRecName & " (" & TXT_VOL_ID & " " & intID & ")"
 	
-		Call sendEmail(False, strSender, strRecipient, vbNullString, strSubject, strMessageHeader & vbCrLf & vbCrLf & Replace(strMessageFooter,"&Key=[FBKEY]",vbNullString))
+		Call sendEmail(False, strSender, strRecipient, strSubject, strMessageHeader & vbCrLf & vbCrLf & Replace(strMessageFooter,"&Key=[FBKEY]",vbNullString))
 	End If
 
 End Sub
