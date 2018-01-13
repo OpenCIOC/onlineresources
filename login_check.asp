@@ -164,7 +164,7 @@ Else
 								TXT_ACCOUNT_IS_LOCKED & vbCrLf & vbCrLf & _
 								TXT_LAST_ATTEMPT & DateTimeString(Now(),True) & " (" & getRemoteIP() & IIf(g_bSSL,") https://", ") http://") & Request.ServerVariables("SERVER_NAME") & "/login.asp" & vbCrLf & vbCrLf & _
 								TXT_REPEATED_ATTEMPTS_BLOCKS_IP
-							Call sendEmail(True, strFrom, strTo, Null, TXT_LOCKED_ACCOUNT, strMessage)
+							Call sendEmail(True, strFrom, strTo, TXT_LOCKED_ACCOUNT, strMessage)
 						End If
 					End If 
 				End If

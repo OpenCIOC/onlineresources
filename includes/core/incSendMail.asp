@@ -19,10 +19,10 @@
 
 <script language="python" runat="server">
 from cioc.core.email import send_email,DeliveryException
-def l_send_email(author, to, subject, message, reply, ignore_block):
+def l_send_email(author, to, subject, message, ignore_block):
 	print 'send_email'
 	try:
-		send_email(pyrequest, author, to, subject, message, reply, ignore_block)
+		send_email(pyrequest, author, to, subject, message, ignore_block)
 	except Exception:
 		return False
 
@@ -30,7 +30,7 @@ def l_send_email(author, to, subject, message, reply, ignore_block):
 </script>
 
 <%
-Function sendEmail(bIgnoreBlock,strFrom,strTo,strReplyTo,strSubject,strMessage)
-	sendEmail = l_send_email(CStr(strFrom), CStr(strTo), CStr(strSubject), CStr(strMessage), strReplyTo, bIgnoreBlock)
+Function sendEmail(bIgnoreBlock,strFrom,strTo,strSubject,strMessage)
+	sendEmail = l_send_email(CStr(strFrom), CStr(strTo), CStr(strSubject), CStr(strMessage), bIgnoreBlock)
 End Function
 %>

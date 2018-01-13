@@ -334,7 +334,7 @@ ElseIf bEmailNew Or bNew Then
 		IIf(g_bSSL, "https://", "http://") & strAccessURL & makeLink("/volunteer/profile/confirm.asp", "PID=" & Server.URLEncode(strProfileID) & "&CT=" & Server.URLEncode(strConfirmationToken) & strExtraArgs,vbNullString) & vbCrLf & vbCrLf & _
 		TXT_LINK_EXPIRE_NOTICE
 				
-	bEmailFailed = sendEmail(False, strFromEmail, strEmail, vbNullString, TXT_EMAIL_SUBJECT, strEmailBody)
+	bEmailFailed = sendEmail(False, strFromEmail, strEmail, TXT_EMAIL_SUBJECT, strEmailBody)
 
 	Call handleMessage(IIf(bNew, TXT_SUCCESS_CREATE, TXT_SUCCESS_UPDATE), vbNullString, vbNullString, False)
 

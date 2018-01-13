@@ -162,6 +162,8 @@ WHERE vp.MemberID=@MemberID
 	AND EXISTS(SELECT * FROM @Opportunities)
 
 SELECT BaseURLVOL AS BaseURL,
+		DefaultEmailVOL,
+		DefaultEmailNameVOL,
 		DefaultEmailVOLProfile
 FROM STP_Member WHERE MemberID=@MemberID
 

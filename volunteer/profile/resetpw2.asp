@@ -139,7 +139,7 @@ Else
 
 	strExtraArgs = "&page=" & Server.URLEncode(Trim(Ns(Request("page")))) & "&args=" & Server.URLEncode(Trim(Ns(Request("args"))))
 
-	bEmailFailed = sendEmail(False, strFromEmail, strEmail, vbNullString, TXT_VOL_PROFILE_PASSWORD_RESET, _
+	bEmailFailed = sendEmail(False, strFromEmail, strEmail, TXT_VOL_PROFILE_PASSWORD_RESET, _
 		TXT_YOU_REQUESTED_PW_RESET & " " & IIf(g_bSSL, "https://", "http://") & strAccessURL & vbCrLf & vbCrLf & _
 		TXT_YOUR_NEW_PASSWORD_IS & " " & strNewPW)
 
