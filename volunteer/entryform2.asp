@@ -52,6 +52,7 @@ Call setPageInfo(True, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../text/txtRecordPages.asp" -->
 <!--#include file="../includes/core/incFormat.asp" -->
 <!--#include file="../includes/update/incAgencyUpdateInfo.asp" -->
+<!--#include file="../includes/update/incEventSchedule.asp" -->
 <!--#include file="../includes/update/incEntryFormProcessGeneral.asp" -->
 <!--#include file="../includes/validation/incFormDataCheck.asp" -->
 <!--#include file="../includes/core/incSendMail.asp" -->

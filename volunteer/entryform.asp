@@ -62,6 +62,7 @@ Call setPageInfo(True, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../includes/list/incVOLCommunitySetList.asp" -->
 <!--#include file="../includes/search/incNormalizeSearchTerms.asp" -->
 <!--#include file="../includes/update/incEntryFormGeneral.asp" -->
+<!--#include file="../includes/update/incEventSchedule.asp" -->
 <!--#include file="../includes/update/incFieldHistory.asp" -->
 <!--#include file="../includes/update/incVOLFormUpdPrint.asp" -->
 
@@ -716,6 +717,11 @@ jQuery(function($) {
 
 	init_entryform_notes($('.EntryFormNotesContainer'), '<%= TXT_VIEW_CANCELLED %>', '<%= TXT_HIDE_CANCELLED %>');
 <%
+If bHasSchedule Then
+%> 
+	init_entryform_items($('.EntryFormItemContainer'),'<%= TXT_DELETE %>', '<%= TXT_RESTORE %>'); 
+<%
+End If
 If bInterests Then
 %>
 	entryform.interest_complete_url = "<%= makeLinkB(ps_strPathToStart & "jsonfeeds/interest_generator.asp") %>";
@@ -730,7 +736,13 @@ If bNumNeeded Then
 End If
 %>
 	restore_cached_state();
-
+<%
+If bHasSchedule Then
+%>
+	init_schedule($)
+<%
+End If
+%>
 	init_check_for_autochecklist(<%=JSONQs(TXT_UNADDED_CHECKLIST_ALERT,True)%>);
 <%
 If Not bNew Then
