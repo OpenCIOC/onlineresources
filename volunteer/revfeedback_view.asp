@@ -49,6 +49,7 @@ Call setPageInfo(True, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../text/txtRecordPages.asp" -->
 <!--#include file="../text/txtReviewFeedback.asp" -->
 <!--#include file="../includes/core/incFormat.asp" -->
+<!--#include file="../includes/update/incEventSchedule.asp" -->
 <!--#include file="../includes/update/incFbInfo.asp" -->
 <%
 If Not (user_bFeedbackAlertVOL Or user_bSuperUserVOL Or user_bAddVOL Or user_intUpdateVOL <> UPDATE_NONE) Then
