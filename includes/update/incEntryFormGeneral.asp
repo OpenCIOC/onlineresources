@@ -333,6 +333,33 @@ def getStdChecklistNotesFeedback(field_name, note, txt_feedback_num, txt_colon, 
 	return u''.join(output)
 
 
+def convertEventScheduleFeedbackEntry(entry):
+	recurs_day_of_week = entry.get('RECURS_DAY_OF_WEEK') or u'0'
+	recurs_day_of_month = entry.get('RECURS_DAY_OF_MONTH')
+	recurs_xth_weekday_of_month = entry.get('RECURS_XTH_WEEKDAY_OF_MONTH')
+
+	ui_select_value = u'0'
+
+	if recurs_xth_weekday_of_month:
+		ui_select_value = u'3'
+	elif recurs_day_of_month:
+		ui_select_value = u'2'
+	elif recurs_day_of_week == u'1':
+		ui_select_value = u'1'
+
+	result = {'RECURS_TYPE': ui_select_value}
+	for key, value in entry.items():
+		if key.startswith('RECURS_WEEKDAY_'):
+			if value == '1':
+				value = 'on'
+			else:
+				continue
+
+		result[key] = value
+
+	return result
+
+
 def prepEventScheduleFeedback(rsFb):
 	rsFb.MoveFirst()
 	entries = []
@@ -354,13 +381,14 @@ def prepEventScheduleFeedback(rsFb):
 				new_count += 1
 				sched_id = attrib['SchedID'] = 'NEWFB%s' % new_count
 			order.append(sched_id)
-			values[sched_id] = attrib
 			if not attrib.get('START_DATE'):
 				schedule_line = _('[deleted]')
 			else:
 				schedule_line = format_event_schedule_line(attrib)
 
 			attrib['_line'] = schedule_line
+			attrib = convertEventScheduleFeedbackEntry(attrib)
+			values[sched_id] = attrib
 	
 	return entries
 

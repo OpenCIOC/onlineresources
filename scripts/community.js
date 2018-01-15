@@ -2021,8 +2021,9 @@ window['init_schedule'] = function($) {
 		}
 	};
 	var apply_feedback = function(evt) {
-		var self = $(this), container = self.parents('.EntryFormItemBox'), values=self.data('schedule');
+		var self = $(this), container = self.parents('.EntryFormItemBox'), values = self.data('schedule'), recur_type = container.find('.recur-type-selector');
 		restore_form_values(container, values);
+		on_recur_type_change.call(recur_type[0])
 		return false;
 	}
 	$('#ScheduleEditArea').on('change', '.recur-type-selector', on_recur_type_change).on('click', '.schedule-ui-accept-feedback', apply_feedback).find('.recur-type-selector').each(on_recur_type_change);

@@ -756,7 +756,21 @@ jQuery(function($) {
 	configure_entry_form_button();
 
 	init_cached_state();
+<%
+If bHasSchedule Then
+%> 
+	init_entryform_items($('.EntryFormItemContainer'),'<%= TXT_DELETE %>', '<%= TXT_RESTORE %>'); 
+<%
+End If
+%>
 	restore_cached_state();
+<%
+If bHasSchedule Then
+%>
+	init_schedule($)
+<%
+End If
+%>
 });
 </script>
 <%

@@ -55,6 +55,7 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../includes/core/incSendMail.asp" -->
 <!--#include file="../includes/list/incMonthList.asp" -->
 <!--#include file="../includes/update/incAgencyUpdateInfo.asp" -->
+<!--#include file="../includes/update/incEventSchedule.asp" -->
 <!--#include file="../includes/update/incEntryFormGeneral.asp" -->
 <!--#include file="../includes/update/incFeedbackFormProcessGeneral.asp" -->
 <!--#include file="../includes/validation/incFormDataCheck.asp" -->
@@ -718,6 +719,8 @@ While Not rsFields.EOF
 			Call getContactFields(strFieldName, rsFields.Fields("FieldDisplay"),strInsertInto,strInsertValue)
 		Case "COMMITMENT_LENGTH"
 			Call getChecklistFeedback(strFieldName, "dbo.sp_VOL_VNUMCommitmentLength_s", "CL", "COMMITMENT_LENGTH", "CommitmentLength", strInsertInto, strInsertValue, True)
+		Case "EVENT_SCHEDULE"
+			Call getEventScheduleFields(rsFields.Fields("FieldDisplay"))
 		Case "INTERACTION_LEVEL"
 			Call getChecklistFeedback(strFieldName, "dbo.sp_VOL_VNUMInteractionLevel_s", "IL", "INTERACTION_LEVEL", "InteractionLevel", strInsertInto, strInsertValue, True)
 		Case "MINIMUM_HOURS"
