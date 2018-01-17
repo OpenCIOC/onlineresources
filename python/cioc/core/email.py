@@ -75,7 +75,7 @@ def _get_mailer(request):
 	return _mailer
 
 
-def send_email(request, author, to, subject, message, ignore_block=False):
+def send_email(request, author, to, subject, message, ignore_block=False, domain_override=None):
 
 	if not isinstance(to, (list, tuple, set)):
 		to = [x.strip() for x in to.split(',')]
@@ -84,7 +84,8 @@ def send_email(request, author, to, subject, message, ignore_block=False):
 	dboptions = request.dboptions
 	TrainingMode = dboptions.TrainingMode
 	NoEmail = dboptions.NoEmail
-	if request.pageinfo.DbArea == const.DM_VOL:
+	domain = domain_override or request.pageinfo.DbArea
+	if domain == const.DM_VOL:
 		from_email = dboptions.DefaultEmailVOL or dboptions.DefaultEmailCIC
 		from_name = dboptions.DefaultEmailNameVOL or dboptions.DefaultEmailNameCIC or u''
 	else:
