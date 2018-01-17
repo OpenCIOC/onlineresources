@@ -429,7 +429,7 @@ Else
 					cmdEmailDate.CommandText = "UPDATE VOL_Opportunity SET EMAIL_UPDATE_DATE=GETDATE() WHERE VNUM=" & QsNl(.Fields("ID"))
 					cmdEmailDate.Execute
 				End If
-				Call sendEmail(False, strROUpdateEmail & " <" & strROUpdateEmail & ">",strRecipient,strMsgSubjDisp,strMsgTxtDisp)
+				Call sendEmail2(False, strROUpdateEmail & " <" & strROUpdateEmail & ">",strRecipient,strMsgSubjDisp,strMsgTxtDisp, intDomain)
 				Response.Write("<br>" & TXT_EMAIL_SENT_TO & "<strong>" & strRecipient & "</strong> (" & strNUMDesc & ")")
 			End If
 			Response.Flush()
