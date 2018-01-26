@@ -4,7 +4,7 @@ SET ANSI_NULLS ON
 GO
 
 
-CREATE PROCEDURE [dbo].[sp_CIC_Schedule_l_Upcoming]
+CREATE PROCEDURE [dbo].[sp_VOL_Schedule_l_Upcoming]
 	@ViewType INT,
 	@HTTPVals VARCHAR(500),
 	@PathToStart VARCHAR(50)
@@ -14,20 +14,22 @@ SET NOCOUNT ON
 
 /*
 	Checked by: KL
-	Checked on: 02-Nov-2017
+	Checked on: 25-Jan-2018
 	Action: REVIEW REQUIRED; needs efficiency review, code simplification
 */
 
 DECLARE	@MemberID int,
 		@CanSeeNonPublic bit,
+		@CanSeeExpired bit,
 		@HidePastDueBy int,
-		@PB_ID int
+		@CommunitySetID int
 		
 SELECT	@MemberID=MemberID,
 		@CanSeeNonPublic=CanSeeNonPublic,
+		@CanSeeExpired=CanSeeExpired,
 		@HidePastDueBy=HidePastDueBy,
-		@PB_ID=PB_ID
-FROM CIC_View
+		@CommunitySetID=CommunitySetID
+FROM VOL_View
 WHERE ViewType=@ViewType
 
 DECLARE @EOM1 DATE, @EOM2 DATE, @EOM3 DATE
@@ -76,8 +78,7 @@ WHERE START_DATE <= @EOM3
 		OR (s.START_DATE >= GETDATE())
 		)
 	AND s.RECURS_DAY_OF_WEEK=1
-	AND s.GblNUM IS NOT NULL
-
+	AND s.VolVNUM IS NOT NULL
 
 /*
 Likely want to review this code to remove all the union queries
@@ -575,20 +576,40 @@ UNION SELECT s.SchedID,
 		AND DATEADD(DAY,6,sl.M3W2) >= @SOM3
 		AND DATEADD(DAY,6,sl.M3W2) <= @EOM3
 
-SELECT bt.NUM,
-	cioc_shared.dbo.fn_SHR_GBL_Link_Record(bt.NUM,dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM, btd.ORG_LEVEL_1, btd.ORG_LEVEL_2, btd.ORG_LEVEL_3, btd.ORG_LEVEL_4, btd.ORG_LEVEL_5, btd.LOCATION_NAME, btd.SERVICE_NAME_LEVEL_1, btd.SERVICE_NAME_LEVEL_2, bt.DISPLAY_LOCATION_NAME, bt.DISPLAY_ORG_NAME),@HTTPVals,@PathToStart) AS Name,
-	btd.CMP_DescriptionShort + CASE WHEN RIGHT(btd.CMP_DescriptionShort, 4) = ' ...' THEN ' ' + cioc_shared.dbo.fn_SHR_GBL_Link_Record(bt.NUM,'[' + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('More',@@LANGID) + ']',@HTTPVals,@PathToStart) ELSE '' END AS Description,
-	dbo.fn_GBL_NUMVNUMToSchedule(bt.NUM, NULL, 1) AS Schedule,
+SELECT vo.VNUM,
+	cioc_shared.dbo.fn_SHR_VOL_Link_Record(vo.VNUM,vod.POSITION_TITLE,@HTTPVals,@PathToStart) AS Name,
+	dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM, btd.ORG_LEVEL_1, btd.ORG_LEVEL_2, btd.ORG_LEVEL_3, btd.ORG_LEVEL_4, btd.ORG_LEVEL_5, btd.LOCATION_NAME, btd.SERVICE_NAME_LEVEL_1, btd.SERVICE_NAME_LEVEL_2, bt.DISPLAY_LOCATION_NAME, bt.DISPLAY_ORG_NAME) AS OrgName,
+	vod.DUTIES AS Description,
+	dbo.fn_GBL_NUMVNUMToSchedule(NULL, vo.VNUM, 1) AS Schedule,
 	MIN(xd.MONTH1) AS Month1, MIN(xd.MONTH2) AS Month2, MIN(xd.MONTH3) AS Month3
-FROM dbo.GBL_BaseTable bt
-INNER JOIN dbo.GBL_BaseTable_Description btd ON btd.NUM = bt.NUM
-	AND btd.LangID=@@LANGID
-	AND (@CanSeeNonPublic=1 OR btd.NON_PUBLIC=0)
-	AND (btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE())
-	AND (@HidePastDueBy IS NULL OR (btd.UPDATE_SCHEDULE IS NOT NULL AND (DATEDIFF(d,btd.UPDATE_SCHEDULE,GETDATE()) < @HidePastDueBy)))
+	FROM VOL_Opportunity vo
+	INNER JOIN VOL_Opportunity_Description vod
+		ON vo.VNUM=vod.VNUM AND vod.LangID=@@LANGID
+			AND (vo.MemberID=@MemberID
+					OR EXISTS(SELECT *
+						FROM VOL_OP_SharingProfile pr
+						INNER JOIN GBL_SharingProfile shp
+							ON pr.ProfileID=shp.ProfileID
+								AND shp.Active=1
+								AND (
+									shp.CanUseAnyView=1
+									OR EXISTS(SELECT * FROM GBL_SharingProfile_VOL_View WHERE ProfileID=shp.ProfileID AND ViewType=@ViewType)
+								)
+						WHERE VNUM=vo.VNUM AND ShareMemberID_Cache=@MemberID)
+				)
+			AND (@CanSeeNonPublic=1 OR vod.NON_PUBLIC=0)
+			AND (vod.DELETION_DATE IS NULL OR vod.DELETION_DATE > GETDATE())
+			AND (@CanSeeExpired=1 OR vo.DISPLAY_UNTIL IS NULL OR vo.DISPLAY_UNTIL >= GETDATE())
+			AND (@HidePastDueBy IS NULL OR (vod.UPDATE_SCHEDULE IS NOT NULL AND (DATEDIFF(d,vod.UPDATE_SCHEDULE,GETDATE()) < @HidePastDueBy)))
+	INNER JOIN VOL_OP_CommunitySet cs
+		ON vo.VNUM=cs.VNUM AND cs.CommunitySetID=@CommunitySetID
+	INNER JOIN GBL_BaseTable bt
+		ON vo.NUM=bt.NUM
+	INNER JOIN GBL_BaseTable_Description btd
+		ON bt.NUM=btd.NUM AND btd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=vo.NUM ORDER BY CASE WHEN LangID=vod.LangID THEN 0 ELSE 1 END, LangID)
 INNER JOIN
 (SELECT 
-	s.GblNUM,
+	s.VolVNUM,
  	CAST(CASE
 		WHEN s.RECURS_EVERY=0 AND s.START_DATE <= @EOM1 AND ISNULL(s.END_DATE,s.START_DATE) >= @SOM1 THEN CASE WHEN @SOM1 > s.START_DATE THEN @SOM1 ELSE s.START_DATE END
 		WHEN s.RECURS_DAY_OF_WEEK=1 OR s.RECURS_XTH_WEEKDAY_OF_MONTH IS NOT NULL THEN (SELECT MIN(ew.PotentialDay) FROM @ExpandWeekly ew WHERE ew.SchedID=s.SchedID AND ew.SchedMonth=1)
@@ -633,27 +654,17 @@ WHERE START_DATE <= @EOM3
 		OR (END_DATE IS NULL AND s.RECURS_EVERY<>0)
 		OR (s.START_DATE >= GETDATE())
 		)
-) xd ON xd.GblNUM=bt.NUM
-WHERE (@PB_ID IS NULL OR EXISTS(SELECT * FROM CIC_BT_PB WHERE NUM=bt.NUM AND PB_ID=@PB_ID))
-	AND (bt.MemberID=@MemberID
-			OR EXISTS(SELECT *
-				FROM GBL_BT_SharingProfile pr
-				INNER JOIN GBL_SharingProfile shp
-					ON pr.ProfileID=shp.ProfileID
-						AND shp.Active=1
-						AND (
-							shp.CanUseAnyView=1
-							OR EXISTS(SELECT * FROM GBL_SharingProfile_CIC_View WHERE ProfileID=shp.ProfileID AND ViewType=@ViewType)
-						)
-				WHERE NUM=bt.NUM AND ShareMemberID_Cache=@MemberID)
-		)
-GROUP BY bt.NUM,
-	dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM, btd.ORG_LEVEL_1, btd.ORG_LEVEL_2, btd.ORG_LEVEL_3, btd.ORG_LEVEL_4, btd.ORG_LEVEL_5, btd.LOCATION_NAME, btd.SERVICE_NAME_LEVEL_1, btd.SERVICE_NAME_LEVEL_2, bt.DISPLAY_LOCATION_NAME, bt.DISPLAY_ORG_NAME),
-	btd.CMP_DescriptionShort
+) xd ON xd.VolVNUM=vo.VNUM
+GROUP BY vo.VNUM,
+	vod.POSITION_TITLE,
+	vod.DUTIES,
+	dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM, btd.ORG_LEVEL_1, btd.ORG_LEVEL_2, btd.ORG_LEVEL_3, btd.ORG_LEVEL_4, btd.ORG_LEVEL_5, btd.LOCATION_NAME, btd.SERVICE_NAME_LEVEL_1, btd.SERVICE_NAME_LEVEL_2, bt.DISPLAY_LOCATION_NAME, bt.DISPLAY_ORG_NAME)
 
 
 SET NOCOUNT OFF
 
 GO
-GRANT EXECUTE ON  [dbo].[sp_CIC_Schedule_l_Upcoming] TO [cioc_cic_search_role]
+GRANT EXECUTE ON  [dbo].[sp_VOL_Schedule_l_Upcoming] TO [cioc_login_role]
+GO
+GRANT EXECUTE ON  [dbo].[sp_VOL_Schedule_l_Upcoming] TO [cioc_vol_search_role]
 GO
