@@ -19,6 +19,7 @@ var search_handle_geocode = function() {
 		if (! results) {
 			alert(get_response_message(status));
 		} else {
+			//console.log('search_handle_geocode')
 			store_and_map_point(results);
 		}
 	});
@@ -47,6 +48,7 @@ window['searchform_map_loaded'] = function() {
 			var place = autocomplete.getPlace();
 			if (place.geometry && place.geometry.location) {
 				pending_geocode_address = autocomplete_input.val();
+				//console.log('searchform_map_loaded')
 				store_and_map_point(place.geometry.location);
 			}
 		});
