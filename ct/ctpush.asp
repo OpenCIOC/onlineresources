@@ -93,7 +93,7 @@ End If
 Dim strXML
 If Not Nl(strRemove) Then
 	strXML = "<?xml version=""1.0"" encoding=""UTF-8""?>" & vbCrLf & _
-	"<pushResourceRemove xmlns=""http://clienttracker.cioc.ca/schema/"">" & vbCrLf & _
+	"<pushResourceRemove xmlns=""https://clienttracker.cioc.ca/schema/"">" & vbCrLf & _
 	"	<login>" & XMLEncode(getSessionValue("ct_login")) & "</login>" & vbCrLf & _
 	"	<key>" & XMLEncode(getSessionValue("ct_key")) & "</key>" & vbCrLf & _
 	"	<ctid>" & XMLEncode(getSessionValue("ct_id")) & "</ctid>" & vbCrLf & _
@@ -150,7 +150,7 @@ Else
 	End If
 
 	strXML = "<?xml version=""1.0"" encoding=""UTF-8""?>" & vbCrLf & _
-	"<pushResource xmlns=""http://clienttracker.cioc.ca/schema/"">" & vbCrLf & _
+	"<pushResource xmlns=""https://clienttracker.cioc.ca/schema/"">" & vbCrLf & _
 	"	<login>" & XMLEncode(getSessionValue("ct_login")) & "</login>" & vbCrLf & _
 	"	<key>" & XMLEncode(getSessionValue("ct_key")) & "</key>" & vbCrLf & _
 	"	<ctid>" & XMLEncode(getSessionValue("ct_id")) & "</ctid>" & vbCrLf & _
@@ -187,7 +187,7 @@ Dim objXML, objSuccess, objError
 
 Set objXML = Server.CreateObject("MSXML2.DOMDocument.6.0")
 objXML.async = false
-objXML.setProperty "SelectionNamespaces", "xmlns:ct='http://clienttracker.cioc.ca/schema/'"
+objXML.setProperty "SelectionNamespaces", "xmlns:ct='https://clienttracker.cioc.ca/schema/'"
 objXML.setProperty "SelectionLanguage", "XPath"
 
 If Not objXML.loadXML(objCtHttp.responseText) Then

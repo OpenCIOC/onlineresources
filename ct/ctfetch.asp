@@ -63,19 +63,19 @@ Call run_response_callbacks()
 
 If Not ctClientCanMakeRequest() Then
 %>
-<response xmlns="http://clienttracker.cioc.ca/schema/">
+<response xmlns="https://clienttracker.cioc.ca/schema/">
 	<error><%=TXT_CT_ACCESS_DENIED%></error>
 </response>
 <%
 ElseIf Nl(strNUM) Then
 %>
-<response xmlns="http://clienttracker.cioc.ca/schema/">
+<response xmlns="https://clienttracker.cioc.ca/schema/">
 	<error><%=TXT_NO_RECORD_CHOSEN%></error>
 </response>
 <%
 ElseIf Not reEquals(strNUM,"([A-Z]){3}([0-9]){4,5}",False,False,True,False) Then
 %>
-<response xmlns="http://clienttracker.cioc.ca/schema/">
+<response xmlns="https://clienttracker.cioc.ca/schema/">
 	<error><%=TXT_NO_RECORD_EXISTS_ID & Server.HTMLEncode(strNUM)%></error>
 </response>
 <%
@@ -97,7 +97,7 @@ End With
 
 If Not rsOrg.EOF Then
 %>
-<response xmlns="http://clienttracker.cioc.ca/schema/">
+<response xmlns="https://clienttracker.cioc.ca/schema/">
 	<resourceInfo>
 		<id><%=strNUM%></id>
 		<name><%=XMLEncode(rsOrg.Fields("ORG_NAME_FULL"))%></name>
@@ -107,7 +107,7 @@ If Not rsOrg.EOF Then
 <%
 Else
 %>
-<response xmlns="http://clienttracker.cioc.ca/schema/">
+<response xmlns="https://clienttracker.cioc.ca/schema/">
 	<error><%=TXT_NO_RECORD_EXISTS_ID & Server.HTMLEncode(strNUM)%></error>
 </response>
 <%
