@@ -16,6 +16,7 @@
 
 (function() {
 	/*global google:true Globalize:true pageconstants:true */
+	draggable = false;
 	var map_canvas = null;
 	var map = null;
 	var default_center = [59.888937,-101.601562];
@@ -45,12 +46,14 @@
 
 
 	var store_coordinates = function(lat, lng) {
+		//console.log('store_coordintates', lat, lng)
 		document.getElementById('LATITUDE').value = Globalize.format(lat, 'n6');
 		document.getElementById('LONGITUDE').value = Globalize.format(lng, 'n6');
 	};
 
 	var map_lat_lng = function(lat, lng) {
 		var point = new google.maps.LatLng(lat, lng);
+		//console.log('map_lat_lng', lat, lng)
 		if (was_blank_map) {
 			map.setZoom(14);
 		}
@@ -76,12 +79,14 @@
 		$('#GEOCODE_TYPE_SITE_REFRESH, #GEOCODE_TYPE_INTERSECTION_REFRESH').addClass('NotVisible');
 		$('#GEOCODE_TYPE_MANUAL').prop('checked', true);
 		var point = this.getPosition();
+		//console.log('marker_drag_end')
 		store_coordinates(point.lat(), point.lng());
 	};
 
 	var store_and_map_point = function(place) {
 		if (place) {
 			last_geocode_address = pending_geocode_address;
+			//console.log('store_and_map_point')
 			store_coordinates(place.lat(), place.lng());
 			map_lat_lng(place.lat(), place.lng());
 		}
@@ -125,6 +130,7 @@
 		pending_geocode_address = address;
 		if ( !address ) {
 			clear_overlay();
+			//console.log('start_geocode')
 			store_coordinates("", "");
 			return;
 		}
