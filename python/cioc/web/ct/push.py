@@ -35,7 +35,7 @@ class InRequest(viewbase.CicViewBase):
 
 	@view_config(route_name='ct_push', renderer='json')
 	def inrequest(self):
-		CT = '{https://clienttracker.cioc.ca/schema/}'
+		CT = '{http://clienttracker.cioc.ca/schema/}'
 
 		request = self.request
 		if not has_been_launched(request):
@@ -73,7 +73,7 @@ class InRequest(viewbase.CicViewBase):
 			domain = 'VOL'
 
 		if remove:
-			root = ET.Element(u'pushResourceRemove', xmlns=u'https://clienttracker.cioc.ca/schema/')
+			root = ET.Element(u'pushResourceRemove', xmlns=u'http://clienttracker.cioc.ca/schema/')
 			ET.SubElement(root, u'login').text = unicode(login)
 			ET.SubElement(root, u'key').text = unicode(key)
 			ET.SubElement(root, u'ctid').text = unicode(ctid)
@@ -108,7 +108,7 @@ class InRequest(viewbase.CicViewBase):
 			if domain == 'VOL':
 				org_name = '%s (%s)' % (record.POSITION_TITLE, org_name)
 
-			root = ET.Element(u'pushResource', xmlns=u'https://clienttracker.cioc.ca/schema/')
+			root = ET.Element(u'pushResource', xmlns=u'http://clienttracker.cioc.ca/schema/')
 			ET.SubElement(root, u'login').text = unicode(login)
 			ET.SubElement(root, u'key').text = unicode(key)
 			ET.SubElement(root, u'ctid').text = unicode(ctid)

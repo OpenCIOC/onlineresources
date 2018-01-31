@@ -33,7 +33,7 @@ class InRequest(viewbase.CicViewBase):
 
 	@view_config(route_name='ct_inrequest', renderer='json')
 	def inrequest(self):
-		CT = '{https://clienttracker.cioc.ca/schema/}'
+		CT = '{http://clienttracker.cioc.ca/schema/}'
 		request = self.request
 		if not has_been_launched(request):
 			return {'fail': True, 'errinfo': _('Current session not associated with a Client Tracker user.', request)}
@@ -45,7 +45,7 @@ class InRequest(viewbase.CicViewBase):
 		ctid, login, key = vals
 
 
-		root = ET.Element(u'isInRequest', xmlns=u'https://clienttracker.cioc.ca/schema/')
+		root = ET.Element(u'isInRequest', xmlns=u'http://clienttracker.cioc.ca/schema/')
 		ET.SubElement(root, u'login').text = unicode(login)
 		ET.SubElement(root, u'key').text = unicode(key)
 		ET.SubElement(root, u'ctid').text = unicode(ctid)
