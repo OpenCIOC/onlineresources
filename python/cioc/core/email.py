@@ -92,12 +92,9 @@ def send_email(request, author, to, subject, message, ignore_block=False, domain
 		from_email = dboptions.DefaultEmailCIC or dboptions.DefaultEmailVOL
 		from_name = dboptions.DefaultEmailNameCIC or dboptions.DefaultEmailNameVOL or u''
 
-	headers = []
-
 	if from_email:
 		reply = author
 		author = parseaddr(author)
-		headers.append(('Return-Path', author[1]))
 		author = formataddr((author[0] or from_name, from_email))
 	else:
 		reply = None
@@ -125,9 +122,6 @@ def send_email(request, author, to, subject, message, ignore_block=False, domain
 	if (not TrainingMode or ignore_block) and (not NoEmail or ignore_block) and to and author:
 		mailer = _get_mailer(request)
 		args = dict(author=[unicode(author)], to=to, subject=subject, plain=message)
-		if headers:
-			args['headers'] = headers
-
 		if reply:
 			args['reply'] = [unicode(reply)]
 		message = Message(**args)
