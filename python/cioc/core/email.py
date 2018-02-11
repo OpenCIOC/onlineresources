@@ -92,9 +92,12 @@ def send_email(request, author, to, subject, message, ignore_block=False, domain
 		from_email = dboptions.DefaultEmailCIC or dboptions.DefaultEmailVOL
 		from_name = dboptions.DefaultEmailNameCIC or dboptions.DefaultEmailNameVOL or u''
 
+	headers = []
+
 	if from_email:
 		reply = author
 		author = parseaddr(author)
+		headers.append(('Return-Path', author[1]))
 		author = formataddr((author[0] or from_name, from_email))
 	else:
 		reply = None
