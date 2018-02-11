@@ -125,6 +125,9 @@ def send_email(request, author, to, subject, message, ignore_block=False, domain
 	if (not TrainingMode or ignore_block) and (not NoEmail or ignore_block) and to and author:
 		mailer = _get_mailer(request)
 		args = dict(author=[unicode(author)], to=to, subject=subject, plain=message)
+		if headers:
+			args['headers'] = headers
+
 		if reply:
 			args['reply'] = [unicode(reply)]
 		message = Message(**args)
