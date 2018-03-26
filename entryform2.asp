@@ -1150,6 +1150,8 @@ Sub getOtherAddressesSQL()
 		strProvince, _
 		strCountry, _
 		strPostalCode, _
+		decLat, _
+		decLong, _
 		intMapLink
 
 	Call addChangeField(fldName.Value, g_objCurrentLang.LangID)
@@ -1180,8 +1182,33 @@ Sub getOtherAddressesSQL()
 				If Not IsIDType(intMapLink) Then
 					intMapLink = Null
 				End If
+
+				decLat = Trim(Request(strFPRefix & "LATITUDE"))
+				decLong = Trim(Request(strFPrefix & "LONGITUDE"))
+
+				If g_objCurrentLang.LangID = LANG_FRENCH _
+						Or g_objCurrentLang.LangID = LANG_GERMAN _
+						Or g_objCurrentLang.LangID = LANG_POLISH Then
+					decLat = Replace(decLat,".",",")
+					decLong = Replace(decLong,".",",")
+				End If
 				
 				Call checkPostalCode(IIf(Not Nl(strTitle),strTitle & " - ",StringIf(Not Nl(strCode),strCode & " - ")) & TXT_POSTAL_CODE,strPostalCode)
+
+				If Nl(strErrorList) Then
+					If Nl(decLat) Or Nl(decLong) Then
+						decLat = Null
+						decLong = Null
+					ElseIf Not (IsNumeric(decLat) And IsNumeric(decLong)) Then
+						strErrorList = strErrorList & "<li>" & IIf(Not Nl(strTitle),strTitle & " - ",StringIf(Not Nl(strCode),strCode & " - ")) & TXT_INVALID_MISSING_LAT_LONG_DATA & "</li>"
+					Else
+						decLat = CDbl(decLat)
+						decLong = CDbl(decLong)
+						If Not (decLat >= -180 And decLat =< 180 And decLong >= -180 And decLong =< 180) Then
+							strErrorList = strErrorList & "<li>" & IIf(Not Nl(strTitle),strTitle & " - ",StringIf(Not Nl(strCode),strCode & " - ")) & TXT_INVALID_MISSING_LAT_LONG_DATA & "</li>"
+						End If
+					End If
+				End If
 							
 				aStreetType = Split(Trim(Request(strFPrefix & "STREET_TYPE")),"|")
 			
@@ -1206,7 +1233,8 @@ Sub getOtherAddressesSQL()
 				
 				If Nl(strCO) And Nl(strBoxType) And Nl(strPO) And Nl(strBuilding) _
 						And Nl(strNum) And Nl(strStreet) And Nl(strSuffix) _
-						And Nl(strCity) And Nl(strProvince) And Nl(strPostalCode) Then
+						And Nl(strCity) And Nl(strProvince) And Nl(strPostalCode) _
+						And Nl(decLat) And Nl(decLong) Then
 					bEmpty = True
 				End If
 
@@ -1229,6 +1257,8 @@ Sub getOtherAddressesSQL()
 							QsNl(strProvince) & "," & _
 							QsNl(strCountry) & "," & _
 							QsNl(strPostalCode) & "," & _
+							Nz(decLat, "NULL") & "," & _
+							Nz(decLong, "NULL") & "," & _
 							Nz(intMapLink,"NULL")
 				ElseIf IsIDType(indID) Then
 					strExtraSQL = strExtraSQL & vbCrLf & _
