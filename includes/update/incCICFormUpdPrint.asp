@@ -2142,6 +2142,8 @@ Function otherAddressEntry(rst, strHeading, strFPrefix, bUseContent)
 		strProv, _
 		strCountry, _
 		strPC, _
+		decLat, _
+		decLong, _
 		intMapLink
 
 	If bUseContent Then
@@ -2161,6 +2163,8 @@ Function otherAddressEntry(rst, strHeading, strFPrefix, bUseContent)
 		strProv = rst("PROVINCE")
 		strCountry = rst("COUNTRY")
 		strPC = rst("POSTAL_CODE")
+		decLat = rst.Fields("LATITUDE")
+		decLong = rst.Fields("LONGITUDE")
 		intMapLink = rst("MAP_LINK")
 	Else
 		strCountry = strDefaultCountry
@@ -2192,6 +2196,8 @@ Function otherAddressEntry(rst, strHeading, strFPrefix, bUseContent)
 		"<br>" & oaFieldAttrs(TXT_PROVINCE, strFPrefix & "PROVINCE", strProv, 2,2, " class=""Province""") & _
 		"<br>" & oaField(TXT_COUNTRY, strFPrefix & "COUNTRY", strCountry, 40,40) & _
 		"<br>" & oaFieldAttrs(TXT_POSTAL_CODE, strFPrefix & "POSTAL_CODE", strPC, 10,10, "class=""postal""") & _
+		"<br>" & oaField(TXT_LATITUDE, strFPrefix & "LATITUDE", CStr(decLat), 12, 12) & _
+		"<br>" & oaField(TXT_LONGITUDE, strFPrefix & "LONGITUDE", CStr(decLong), 12, 12) & _
 		"<br>" & oaLabel(TXT_MAP_LINK, strFPrefix & "MAP_LINK") & makeMappingSystemList(intMapLink, strFPrefix & "MAP_LINK", True, False, vbNullString) & _
 		"</div><div id=""" & strFPRefix & "DELETED_TITLE""></div><div style=""clear: both;""></div></div>"
 
