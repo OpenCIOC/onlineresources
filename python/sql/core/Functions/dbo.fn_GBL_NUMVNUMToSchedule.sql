@@ -13,9 +13,8 @@ AS
 BEGIN
 
 /*
-	Checked for Release: 3.1
 	Checked by: KL
-	Checked on: 04-Jan-2012
+	Checked on: 26-Jan-2018
 	Action: NO ACTION REQUIRED
 */
 
@@ -41,7 +40,14 @@ SELECT @returnStr = STUFF(
 	 FROM GBL_Schedule s
 	 LEFT JOIN GBL_Schedule_Name sn
 		 ON sn.SchedID = s.SchedID AND LangID=@@LANGID
-     WHERE (@NUM IS NOT NULL AND GblNUM=@NUM) OR (@VNUM IS NOT NULL AND VolVNUM=@VNUM)
+     WHERE (
+			(@NUM IS NOT NULL AND GblNUM=@NUM)
+			OR (@VNUM IS NOT NULL AND VolVNUM=@VNUM)
+		)
+		AND (
+			ISNULL(s.END_DATE,s.START_DATE) >= GETDATE()
+			OR (s.END_DATE IS NULL AND s.RECURS_EVERY > 0)
+			)
 	 ORDER BY START_DATE, START_TIME
 	 FOR XML PATH(''), TYPE).value('.', 'nvarchar(max)')
 	 ,1, @seplen, '')
@@ -51,7 +57,6 @@ IF @returnStr = '' SET @returnStr = NULL
 RETURN @returnStr
 
 END
-
 
 
 GO

@@ -90,7 +90,7 @@ IF @Error = 0 BEGIN
 		FROM VOL_FieldOption fo
 		INNER JOIN @FieldTable nf
 			ON fo.FieldID=nf.FieldID
-		WHERE @SuperUserGlobal=0 OR fo.MemberID=@MemberID
+		WHERE @SuperUserGlobal=1 OR fo.MemberID=@MemberID
 
 	EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @FieldObjectName, @ErrMsg
 	

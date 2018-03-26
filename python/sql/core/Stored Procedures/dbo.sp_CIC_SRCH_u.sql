@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -45,16 +44,16 @@ UPDATE cbtd
 /* Update SRCH_Org */
 UPDATE btd
 	SET	SRCH_Org_U = 0,
-		SRCH_Org = ISNULL(btd.ORG_LEVEL_1,'') + ' '
-			+ ISNULL(btd.ORG_LEVEL_2,'') + ' '
-			+ ISNULL(btd.ORG_LEVEL_3,'') + ' '
-			+ ISNULL(btd.ORG_LEVEL_4,'') + ' '
-			+ ISNULL(btd.ORG_LEVEL_5,'') + ' '
-			+ ISNULL(btd.LEGAL_ORG,ISNULL((SELECT obtd.LEGAL_ORG FROM GBL_BaseTable_Description obtd WHERE obtd.NUM=bt.ORG_NUM AND obtd.LangID=btd.LangID), '')) + ' '
-			+ ISNULL(btd.LOCATION_NAME,'') + ' '
-			+ ISNULL(btd.SERVICE_NAME_LEVEL_1,'') + ' '
-			+ ISNULL(btd.SERVICE_NAME_LEVEL_2,'') + ' '
-			+ ISNULL(btd.CMP_AltOrg,'') + ' '
+		SRCH_Org = ISNULL(btd.ORG_LEVEL_1 + ' ; ','')
+			+ ISNULL(btd.ORG_LEVEL_2 + ' ; ','')
+			+ ISNULL(btd.ORG_LEVEL_3 + ' ; ','')
+			+ ISNULL(btd.ORG_LEVEL_4 + ' ; ','')
+			+ ISNULL(btd.ORG_LEVEL_5 + ' ; ','')
+			+ ISNULL(btd.LEGAL_ORG + ' ; ',ISNULL((SELECT obtd.LEGAL_ORG FROM GBL_BaseTable_Description obtd WHERE obtd.NUM=bt.ORG_NUM AND obtd.LangID=btd.LangID) + ' ; ', ''))
+			+ ISNULL(btd.LOCATION_NAME + ' ; ','')
+			+ ISNULL(btd.SERVICE_NAME_LEVEL_1 + ' ; ','')
+			+ ISNULL(btd.SERVICE_NAME_LEVEL_2 + ' ; ','')
+			+ ISNULL(btd.CMP_AltOrg + ' ; ','')
 			+ ISNULL(btd.CMP_FormerOrg,'')
 	FROM GBL_BaseTable_Description btd
 	INNER JOIN GBL_BaseTable bt
