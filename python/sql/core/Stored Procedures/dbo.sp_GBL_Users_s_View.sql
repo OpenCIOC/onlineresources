@@ -276,12 +276,12 @@ SELECT 	vcsn.AreaServed,
 		DefaultPrintProfile,
 		(SELECT pp.[Public] FROM GBL_PrintProfile pp WHERE ProfileID=DefaultPrintProfile AND Domain=2) AS DefaultPrintProfilePublic
 	FROM VOL_View vw
-	INNER JOIN VOL_View_Description vwd
+	LEFT JOIN VOL_View_Description vwd
 		ON vw.ViewType = vwd.ViewType
 			AND vwd.LangID = (SELECT TOP 1 LangID FROM VOL_View_Description WHERE ViewType=vwd.ViewType ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID)
-	INNER JOIN VOL_CommunitySet vcs
+	LEFT JOIN VOL_CommunitySet vcs
 		ON vw.CommunitySetID=vcs.CommunitySetID
-	INNER JOIN VOL_CommunitySet_Name vcsn
+	LEFT JOIN VOL_CommunitySet_Name vcsn
 		ON vcs.CommunitySetID=vcsn.CommunitySetID AND vcsn.LangID=(SELECT TOP 1 LangID FROM VOL_CommunitySet_Name WHERE CommunitySetID=vcsn.CommunitySetID ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID)
 WHERE vw.ViewType=@CurrentIDVOL
 
