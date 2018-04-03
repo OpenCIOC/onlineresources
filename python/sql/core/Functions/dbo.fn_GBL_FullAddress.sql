@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -30,9 +29,8 @@ AS
 BEGIN
 
 /*
-	Checked for Release: 3.6.3
-	Checked by: CL
-	Checked on: 12-May-2015
+	Checked by: KL
+	Checked on: 26-Mar-2018
 	Action: NO ACTION REQUIRED
 */
 
@@ -153,6 +151,11 @@ END
 IF @returnStr <> '' AND (@City IS NOT NULL OR @Province IS NOT NULL OR @Country IS NOT NULL) SET @conStr = '     '
 IF @PostalCode IS NOT NULL BEGIN
 	SET @returnStr = @returnStr + @conStr + @PostalCode
+END
+
+IF @returnStr = '' AND (@Latitude IS NOT NULL AND @Longitude IS NOT NULL) BEGIN
+	SET @returnStr = cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Coordinates',@LangID) + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LangID)
+		+ CAST(@Latitude AS VARCHAR(20)) + ', ' + CAST(@Longitude AS VARCHAR(20))
 END
 
 IF @returnStr <> '' AND @returnStr IS NOT NULL AND @WebEnable=1 BEGIN
