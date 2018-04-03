@@ -189,7 +189,18 @@ With rsProfileSummary
 </form>
 <%
 End With
-
+%>
+<hr />
+<form action="profiles_details.asp" method="post">
+<%=g_strCacheFormVals%>
+<table class="BasicBorder cell-padding-3">
+	<tr>
+		<td class="FieldLabelLeft"><%= TXT_EMAIL %></td>
+		<td><input type="text" name="Email" size="50"/> <input type="submit" value="<%=TXT_SEARCH%>"></td>
+	</tr>
+</table>
+</form>
+<%
 Set rsProfileSummary = rsProfileSummary.NextRecordset
 
 With rsProfileSummary
