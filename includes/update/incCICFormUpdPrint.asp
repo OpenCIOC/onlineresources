@@ -2119,7 +2119,7 @@ Function oaFieldAttrs(strLabelText, strName, strValue, strSize, strMaxLength, st
 	Dim strQName
 	strQName = AttrQs(strName)
 	oaFieldAttrs = oaLabel(strLabelText, strName) &"<input type=""text"" id=" & strQName & _
-				" name=" & strQName & " size=""" & strSize & """ maxlength=""" & _
+				"class=""form-control"" name=" & strQName & " size=""" & strSize & """ maxlength=""" & _
 				strMaxLength & """ value=" & AttrQs(strValue) & strExtraAttrs & ">"
 End Function
 
@@ -2196,8 +2196,8 @@ Function otherAddressEntry(rst, strHeading, strFPrefix, bUseContent)
 		"<br>" & oaFieldAttrs(TXT_PROVINCE, strFPrefix & "PROVINCE", strProv, 2,2, " class=""Province""") & _
 		"<br>" & oaField(TXT_COUNTRY, strFPrefix & "COUNTRY", strCountry, 40,40) & _
 		"<br>" & oaFieldAttrs(TXT_POSTAL_CODE, strFPrefix & "POSTAL_CODE", strPC, 10,10, "class=""postal""") & _
-		"<br>" & oaField(TXT_LATITUDE, strFPrefix & "LATITUDE", CStr(decLat), 12, 12) & _
-		"<br>" & oaField(TXT_LONGITUDE, strFPrefix & "LONGITUDE", CStr(decLong), 12, 12) & _
+		"<br>" & oaField(TXT_LATITUDE, strFPrefix & "LATITUDE", CStr(Nz(decLat,vbNullString)), 12, 12) & _
+		"<br>" & oaField(TXT_LONGITUDE, strFPrefix & "LONGITUDE", CStr(Nz(decLong,vbNullString)), 12, 12) & _
 		"<br>" & oaLabel(TXT_MAP_LINK, strFPrefix & "MAP_LINK") & makeMappingSystemList(intMapLink, strFPrefix & "MAP_LINK", True, False, vbNullString) & _
 		"</div><div id=""" & strFPRefix & "DELETED_TITLE""></div><div style=""clear: both;""></div></div>"
 
