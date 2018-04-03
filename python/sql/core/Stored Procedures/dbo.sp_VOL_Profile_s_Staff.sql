@@ -13,9 +13,8 @@ AS
 SET NOCOUNT ON
 
 /*
-	Checked for Release: 3.1
 	Checked by: KL
-	Checked on: 17-May-2012
+	Checked on: 02-Apr-2018
 	Action: NO ACTION REQUIRED
 */
 
@@ -41,7 +40,7 @@ END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS varchar), @MemberObjectName)
 -- Profile ID given ?
-END ELSE IF @ProfileID IS NULL BEGIN
+END ELSE IF @ProfileID IS NULL AND @Email IS NULL BEGIN
 	SET @Error = 2 -- No ID Given
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @VolunteerProfileObjectName, NULL)
 -- Profile ID exists ?

@@ -10,9 +10,8 @@ AS
 SET NOCOUNT ON
 
 /*
-	Checked for Release: 3.1
-	Checked by: CL
-	Checked on: 21-Apr-2012
+	Checked by: KL
+	Checked on: 02-Apr-2018
 	Action:	CHECK THAT THIS ALLOWS SHARED RECORDS
 */
 
@@ -21,9 +20,11 @@ DECLARE @LastVolProfileEmailDate smalldatetime
 DECLARE @TodayAtMidnight smalldatetime
 SET @TodayAtMidnight = CONVERT(DATETIME, FLOOR(CONVERT(FLOAT, GETDATE())))
 
-UPDATE STP_Member SET LastVolProfileEmailDate=@TodayAtMidnight WHERE LastVolProfileEmailDate IS NULL AND MemberID=@MemberID
+DECLARE @MinLastDate date
+SET @MinLastDate = DATEADD(d,-14,GETDATE())
 
-SELECT @LastVolProfileEmailDate=LastVolProfileEmailDate FROM STP_Member
+SELECT @LastVolProfileEmailDate=ISNULL(LastVolProfileEmailDate,@MinLastDate) FROM STP_Member WHERE MemberID=@MemberID
+IF (@LastVolProfileEmailDate < @MinLastDate OR @LastVolProfileEmailDate IS NULL) SET @LastVolProfileEmailDate = @MinLastDate
 
 DECLARE @Opportunities TABLE (
 	VNUM varchar(10),
