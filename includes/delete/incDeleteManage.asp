@@ -114,6 +114,7 @@ With rsMarkDeleted
 <%
 	End If
 %>
+	<th class="RevTitleBox"><%=TXT_ID%></th>
 	<th class="RevTitleBox"><%=TXT_RECORD_OWNER%></th>
 	<th class="RevTitleBox"><%=TXT_LANGUAGE%></th>
 <%	
@@ -165,6 +166,7 @@ With rsMarkDeleted
 <%
 		End If
 %>
+	<td class="NoWrap"><%= fldLinkID.Value %></td>
 	<td><%=.Fields("RECORD_OWNER")%></td>
 	<td><%=.Fields("LanguageName")%></td>
 <%	
@@ -188,12 +190,17 @@ With rsMarkDeleted
 %>
 	<td><%If fldCanSee.Value Then%><a href="<%=makeVOLDetailsLink(fldLinkID.Value,strLnLink,strLnOverride)%>"><%End If%><%=.Fields("POSITION_TITLE") & " (" & .Fields("ORG_NAME_FULL") & ")"%><%If fldCanSee.Value Then%></a><%End If%></td>
 	<td><%=fldRefCount%></td>
-	<td style="white-space:nowrap; text-align:right"><%=Nz(fldLastRef,"&nbsp;")%></td>
+	<td class="NoWrap text-right"><%=Nz(fldLastRef,"&nbsp;")%></td>
 <%
 	End Select
 %>
-	<td style="white-space:nowrap; text-align:right"><%=.Fields("DELETION_DATE")%></td>
-	<td>[<%If bCanDeleteRecord Then%>&nbsp;<a href="<%=makeLink("delete_perm.asp","IDList=" & fldDID.Value,vbNullString)%>"><%=TXT_PERMANENT_DELETE%></a> |<%End If%><%If fldCanSee.Value Then%> <a href="<%=makeLink("delete_mark.asp","IDList=" & fldDID.Value & "&Unmark=on",vbNullString)%>"><%=TXT_RESTORE%></a> |<% End If %> <a href="<%=makeLink("delete_mark.asp","IDList=" & fldDID.Value & "&DELETION_DATE=" & Server.URLEncode(.Fields("DELETION_DATE")),vbNullString)%>"><%=TXT_CHANGE_DATE%></a>&nbsp;]</td>
+	<td class="NoWrap text-right"><%=.Fields("DELETION_DATE")%></td>
+	<td><%If bCanDeleteRecord Then%><a href="<%=makeLink("delete_perm.asp","IDList=" & fldDID.Value,vbNullString)%>"><%=TXT_PERMANENT_DELETE%></a><br><%End If%>
+		<%If fldCanSee.Value Then%>
+		<a href="<%=makeLink("delete_mark.asp","IDList=" & fldDID.Value & "&Unmark=on",vbNullString)%>"><%=TXT_RESTORE%></a>
+		<br><a href="<%=makeLink("delete_mark.asp","IDList=" & fldDID.Value & "&DELETION_DATE=" & Server.URLEncode(.Fields("DELETION_DATE")),vbNullString)%>"><%=TXT_CHANGE_DATE%></a>
+		<% End If %>
+	</td>
 </tr>
 <%
 		.MoveNext

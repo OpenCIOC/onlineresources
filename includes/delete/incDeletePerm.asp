@@ -237,7 +237,7 @@ Else
 <%
 	End Select
 %>
-	<td style="white-space:nowrap; text-align:right"><%=.Fields("DELETION_DATE")%></td>
+	<td class="NoWrap text-right"><%=.Fields("DELETION_DATE")%></td>
 </tr>
 <%
 		.MoveNext
