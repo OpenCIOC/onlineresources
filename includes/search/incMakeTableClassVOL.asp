@@ -90,10 +90,7 @@ End Function
 
 Private Function getFields()
 	Dim strFieldList
-	strFieldList = "vo.OP_ID, vo.VNUM,vo.RECORD_OWNER"
-	If opt_fld_bPosition Or Not opt_bDispTableVOL Then
-		strFieldList = strFieldList & ",vod.POSITION_TITLE"
-	End If
+	strFieldList = "vo.OP_ID, vo.VNUM,vo.RECORD_OWNER,vod.POSITION_TITLE"
 	If Not opt_bDispTableVOL Then
 		strFieldList = strFieldList & ",vo.REQUEST_DATE"
 	End If
@@ -621,8 +618,9 @@ End If%>
 	ReDim aIDList(.RecordCount-1)
 	i = 0
 
-	Dim fldVNUM
+	Dim fldVNUM, fldPositionTitle
 	Set fldVNUM = .Fields("VNUM")
+	Set fldPositionTitle = .Fields("POSITION_TITLE")
 
 	Dim strRecordListUI
 	strRecordListUI = vbNullString
@@ -728,7 +726,7 @@ End If%>
 <h3>
 <%If opt_fld_bAlertVOL Then%><%If .Fields("NON_PUBLIC") Or strAlertColumn<>"&nbsp;" Then%><span class="MobileMiniColumnSpan MobileAlertColumnBubble"><%If .Fields("NON_PUBLIC") Then%><span class="Alert">N</span><%End If%><%=Replace(strAlertColumn, "&nbsp;", "")%></span><%End If%><%End If%>
 <%If opt_fld_bPosition Then%>
-	<%If Not g_bPrintMode Then%><%=strDetailLink%><%End If%><%=.Fields("POSITION_TITLE")%><%If Not g_bPrintMode Then%></a><%End If%>	
+	<%If Not g_bPrintMode Then%><%=strDetailLink%><%End If%><%=fldPositionTitle%><%If Not g_bPrintMode Then%></a><%End If%>	
 <%ElseIf opt_fld_bOrgVOL And Not opt_fld_bVNUM Then%>
 	<%If Not g_bPrintMode Then%><%=strDetailLink%><%End If%><%=strOrgName%><%If Not g_bPrintMode Then%></a><%End If%>	
 <%Else%>
@@ -737,10 +735,10 @@ End If%>
 </h3>
 </td>
 <% End If %>
-<%If opt_bSelectVOL Then%><td><input type="checkbox" name="IDList" title=<%=AttrQs(TXT_SELECT & TXT_COLON & .Fields("POSITION_TITLE"))%> value="<%=fldVNUM.Value%>" id="IDList_<%=fldVNUM.Value%>"></td><%End If%>
+<%If opt_bSelectVOL Then%><td><input type="checkbox" name="IDList" title=<%=AttrQs(TXT_SELECT & TXT_COLON & fldPositionTitle)%> value="<%=fldVNUM.Value%>" id="IDList_<%=fldVNUM.Value%>"></td><%End If%>
 <%If opt_fld_bAlertVOL Then%><td class="MobileHideField<%If .Fields("NON_PUBLIC") Then%> AlertBox<%End If%>"><%=strAlertColumn%></td><%End If%>
 <%If opt_fld_bVNUM Or Not (opt_fld_bPosition Or opt_fld_bOrgVOL) Then%><td class="NoWrap<%If Not opt_fld_bPosition And Not g_bPrintMode Then%> MobileHideField<%End If%>"><%If Not opt_fld_bPosition And Not g_bPrintMode Then%><%=strDetailLink%><%End If%><%=fldVNUM.Value%><%If Not opt_fld_bPosition And Not g_bPrintMode Then%></a><%End If%></td><%End If%>
-<%If opt_fld_bPosition Then%><td class="MobileHideField"><%If Not g_bPrintMode Then%><%=strDetailLink%><%End If%><%=.Fields("POSITION_TITLE")%><%If Not g_bPrintMode Then%></a><%End If%></td><%End If%>
+<%If opt_fld_bPosition Then%><td class="MobileHideField"><%If Not g_bPrintMode Then%><%=strDetailLink%><%End If%><%=fldPositionTitle%><%If Not g_bPrintMode Then%></a><%End If%></td><%End If%>
 <%If opt_fld_bOrgVOL Then%><td <%If Not opt_fld_bPosition And Not opt_fld_bVNUM Then %>class="MobileHideField"<%End If%>><%If Not opt_fld_bPosition And Not opt_fld_bVNUM And Not g_bPrintMode Then%><%=strDetailLink%><%End If%><%=strOrgName%><%If Not opt_fld_bPosition And Not opt_fld_bVNUM And Not g_bPrintMode Then%></a><%End If%></td><%End If%>
 <%If opt_fld_bComm Then%><td <%If Nl(.Fields("COMM_BALLS"))Then %>class="MobileHideField"<%End If%>><%=IIf(Nl(.Fields("COMM_BALLS")),"&nbsp;",.Fields("COMM_BALLS"))%></td><%End If%>
 <%If opt_fld_bDuties Then%><td <%If Nl(.Fields("DUTIES")) Then%>class="MobileHideField"<%End If%>><%=IIf(Nl(.Fields("DUTIES")),"&nbsp;",textToHTML(.Fields("DUTIES")))%></td><%End If%>
@@ -760,7 +758,7 @@ End If%>
 %>
 	<div class="dlist-result">
 	<div class="vol-results-position-title">
-		<%If Not g_bPrintMode Then%><%=strDetailLink%><%=.Fields("POSITION_TITLE")%></a><%Else%><%=.Fields("POSITION_TITLE")%><%End If%>
+		<%If Not g_bPrintMode Then%><%=strDetailLink%><%=fldPositionTitle%></a><%Else%><%=fldPositionTitle%><%End If%>
 		<%
 			If user_bLoggedIn Then
 				If Not Nl(.Fields("REQUEST_DATE")) Then
@@ -974,7 +972,7 @@ While Not .EOF
 ,"ALERT": <%= JSONQs(strAlertColumn, True) %>
 <%End If%>
 <%If opt_fld_bPosition Then%>
-,"POSITION_TITLE": <%= JSONQs(.Fields("POSITION_TITLE"), True) %>
+,"POSITION_TITLE": <%= JSONQs(fldPositionTitle, True) %>
 <%End If%>
 <%If opt_fld_bOrgVOL Then%>
 ,"ORG_NAME": <%= JSONQs(strOrgName, True) %>
@@ -1133,7 +1131,7 @@ While Not .EOF
 <field name="ALERT"><%= XMLEncode(strAlertColumn) %></field>
 <%End If%>
 <%If opt_fld_bPosition Then%>
-<field name="POSITION_TITLE"><%= XMLEncode(.Fields("POSITION_TITLE")) %></field>
+<field name="POSITION_TITLE"><%= XMLEncode(fldPositionTitle) %></field>
 <%End If%>
 <%If opt_fld_bOrgVOL Then%>
 <field name="ORG_NAME"><%= XMLEncode(strOrgName) %></field>
