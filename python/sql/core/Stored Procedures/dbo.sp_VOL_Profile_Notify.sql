@@ -11,7 +11,7 @@ SET NOCOUNT ON
 
 /*
 	Checked by: KL
-	Checked on: 02-Apr-2018
+	Checked on: 02-May-2018
 	Action:	CHECK THAT THIS ALLOWS SHARED RECORDS
 */
 
@@ -20,8 +20,9 @@ DECLARE @LastVolProfileEmailDate smalldatetime
 DECLARE @TodayAtMidnight smalldatetime
 SET @TodayAtMidnight = CONVERT(DATETIME, FLOOR(CONVERT(FLOAT, GETDATE())))
 
-DECLARE @MinLastDate date
+DECLARE @MinLastDate DATE, @MinExpDate DATE
 SET @MinLastDate = DATEADD(d,-14,GETDATE())
+SET @MinExpDate = DATEADD(d,5,GETDATE())
 
 SELECT @LastVolProfileEmailDate=ISNULL(LastVolProfileEmailDate,@MinLastDate) FROM STP_Member WHERE MemberID=@MemberID
 IF (@LastVolProfileEmailDate < @MinLastDate OR @LastVolProfileEmailDate IS NULL) SET @LastVolProfileEmailDate = @MinLastDate
@@ -119,7 +120,10 @@ SELECT 	vo.VNUM,
 		ON vo.NUM=bt.NUM
 	INNER JOIN STP_Member mem
 		ON vo.MemberID=mem.MemberID
-WHERE vo.MemberID=@MemberID AND dbo.fn_VOL_VNUMToCommSrchList(vo.VNUM) IS NOT NULL
+WHERE vo.MemberID=@MemberID
+	AND (vo.DISPLAY_UNTIL IS NULL OR vo.DISPLAY_UNTIL >= @MinExpDate)
+	AND EXISTS(SELECT * FROM dbo.VOL_Opportunity_Description vod WHERE vod.VNUM=vo.VNUM AND (vod.DELETION_DATE IS NULL OR vod.DELETION_DATE >= @MinExpDate))
+	AND dbo.fn_VOL_VNUMToCommSrchList(vo.VNUM) IS NOT NULL
 	AND EXISTS(SELECT * FROM VOL_Opportunity_Description vod WHERE vod.VNUM=vo.VNUM AND (
 			(
 			CONVERT(DATETIME, FLOOR(CONVERT(FLOAT, vod.CREATED_DATE))) >= @LastVolProfileEmailDate
