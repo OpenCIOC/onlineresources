@@ -713,7 +713,6 @@ var show_map_popup = function(num, scroll, keep, redisplay) {
 		if (cluster && cluster.getSize() > 1) {
 			if ( ! map.getBounds().contains(cluster.getCenter()) ) {
 				map.setCenter(cluster.getCenter());
-				return;
 			}
 			open_info_window(html, cluster.getCenter(), info_window_cluster_offset);
 		} else {
@@ -797,12 +796,16 @@ var search_page_loaded = function() {
 
 		set_body_size();
 		fix_map_marker_icons();
+		
+		setTimeout(function() {
+			set_body_size();
 
-		if (last_num) {
-			show_map_popup(last_num, true, true, true);
-		} else {
-			_fake_body.scrollTop(0);
-		}
+			if (last_num) {
+				show_map_popup(last_num, true, true, true);
+			} else {
+				_fake_body.scrollTop(0);
+			}
+		}, 10);
 		
 	}
 	return false;
@@ -884,10 +887,14 @@ var details_page_loaded = function(num, responseText) {
 
 	set_body_size();
 	$(_fake_body).scrollTop(0);
-
-	show_map_popup(num, false, true);
-
 	add_details_last_visible_class();
+
+	setTimeout(function(num) {
+		set_body_size(); 
+
+		show_map_popup(num, false, true, true);
+
+	}, 1, num);
 		
 };
 
