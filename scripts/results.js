@@ -7228,7 +7228,7 @@ var search_page_loaded = function() {
 			} else {
 				_fake_body.scrollTop(0);
 			}
-		}, 100);
+		}, 10);
 		
 	}
 	return false;
