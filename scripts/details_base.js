@@ -44,7 +44,7 @@
 	};
 
 	window['initialize_record_maps'] = function(keyarg, culture) {
-		map_canvas = $('#map_canvas');
+		map_canvas = $('div#map_canvas');
 		if (map_canvas.length) {
 			draw_map_start(keyarg, culture);
 		}
