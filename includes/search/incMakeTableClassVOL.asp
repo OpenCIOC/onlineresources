@@ -910,9 +910,10 @@ End If%>"UPDATE_SCHEDULE": <%=JSONQs(TXT_UPDATE_SCHEDULE, True)%><%End If%>
 <%
 i = 0
 
-Dim fldVNUM, fldOPID
+Dim fldVNUM, fldOPID, fldPositionTitle
 Set fldVNUM = .Fields("VNUM")
 Set fldOPID = .Fields("OP_ID")
+Set fldPositionTitle = .Fields("POSITION_TITLE")
 
 
 Dim strAccessURL
@@ -1071,9 +1072,10 @@ Else
 <%
 i = 0
 
-Dim fldVNUM, fldOPID
+Dim fldVNUM, fldOPID, fldPositionTitle
 Set fldVNUM = .Fields("VNUM")
 Set fldOPID = .Fields("OP_ID")
+Set fldPositionTitle = .Fields("POSITION_TITLE")
 
 
 Dim strAccessURL
