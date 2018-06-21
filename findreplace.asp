@@ -371,7 +371,7 @@ Select Case intReplaceType
 <tr>
 	<td class="FieldLabelLeft"><%=TXT_LOOK_IN_FIELDS%></td>
 	<td><span class="SmallNote"><%=TXT_HOLD_CTRL%></span>
-	<br><%Call printBaseTableTextFieldList("FieldName",False,False,True,False)%></td>
+	<br><%Call printBaseTableTextFieldList("FieldName",False,False,True,True,False)%></td>
 </tr>
 <%
 Call openHasPubDescRst(strIDList)
@@ -432,7 +432,7 @@ Call closeHasPubDescRst()
 </tr>
 <tr>
 	<td class="FieldLabelLeft"><%=TXT_IN_BASETABLE%></td>
-	<td><%Call printBaseTableTextFieldList("FieldName",True,False,False,True)%></td>
+	<td><%Call printBaseTableTextFieldList("FieldName",True,False,False,False,True)%></td>
 </tr>
 <tr>
 	<td class="FieldLabelLeft"><%=TXT_INSERT_TEXT%></td>
@@ -466,7 +466,7 @@ Call closeHasPubDescRst()
 </tr>
 <tr>
 	<td class="FieldLabelLeft"><%=TXT_ERASE_FIELD%></td>
-	<td><%Call printBaseTableTextFieldList("FieldName",True,True,False,True)%></td>
+	<td><%Call printBaseTableTextFieldList("FieldName",True,True,True,False,True)%></td>
 </tr>
 <tr>
 	<td class="FieldLabelLeft"><%=TXT_IM_SURE%></td>
