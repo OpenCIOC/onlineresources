@@ -192,8 +192,8 @@
 			}
 		};
 
-		$('input.cm-select').on('click', change);
-		$('select.cm-select').on('click', change);
+		$('input.cm-select').on('change', change);
+		$('select.cm-select').on('change', change);
 
 		var selectors = $('input.cm-select:checked, select.cm-select');
 		if (window.pageconstants && window.pageconstants.maps_key_arg) {
