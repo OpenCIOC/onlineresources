@@ -285,6 +285,14 @@ if use_vol:
 %endfor
 %if use_cic:
 <tr>
+	${self.fieldLabelCell(None,_('Default Province'),None,False)}
+	<td class="field-data-cell">${renderer.errorlist('settings.DefaultProvince')}
+		<div class="form-inline">
+			${renderer.text('settings.DefaultProvince', maxlength=2, size=4, class_="form-control")}
+		</div>
+	</td>
+</tr>
+<tr>
 	${self.fieldLabelCell(None,_('Default Geocode Type'),None,False)}
 	<td class="field-data-cell">${renderer.errorlist('settings.DefaultGCType')}
 	${renderer.radio('settings.DefaultGCType', 'B', label=_('No value (do not map)'))}

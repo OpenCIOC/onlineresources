@@ -81,6 +81,7 @@ class GeneralBaseSchema(Schema):
 	DefaultEmailNameVOL = ciocvalidators.UnicodeString(max=100)
 	BaseURLCIC = ciocvalidators.Url(max=100)
 	BaseURLVOL = ciocvalidators.Url(max=100)
+	DefaultProvince = ciocvalidators.UnicodeString(max=2)
 	DefaultGCType = validators.DictConverter(DefaultGCTypeSettings, if_empty=0)
 	CanDeleteRecordNoteCIC = validators.DictConverter(RecordNoteSettings)
 	CanUpdateRecordNoteCIC = validators.DictConverter(RecordNoteSettings)
