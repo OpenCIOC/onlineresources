@@ -486,7 +486,7 @@ If Not bVNUMError Then
 <h3 class="Alert"><%=TXT_SECURITY_CHECK%></h3>
 <p><span class="AlertBubble"><%=TXT_INST_SECURITY_CHECK_FAIL%></span></p>
 <p><%=TXT_INST_SECURITY_CHECK_2%></p>
-<form action="feedback2.asp" method="post">
+<form action="feedback2.asp" method="post" class="form-horizontal">
 
 <%
 		For Each indItem In Request.QueryString()
@@ -519,7 +519,11 @@ If Not bVNUMError Then
 		<input id="sCheckYear" name="sCheckYear" type="text" size="5" maxlength="8" class="form-control">
 	</div>
 </div>
-<p><input type="submit" value="<%=TXT_SUBMIT%>" class="btn btn-default"></p>
+<div class="form-group">
+	<div class="col-sm-offset-2 col-xs-offset-4 col-sm-10 col-xs-8 col-md-offset-1 col-md-11">
+		<input type="submit" value="<%=TXT_SUBMIT%>" class="btn btn-default">
+	</div>
+</div>
 </form>
 <%
 		Call makePageFooter(True)
