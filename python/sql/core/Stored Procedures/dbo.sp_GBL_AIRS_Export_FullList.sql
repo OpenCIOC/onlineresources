@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -18,9 +17,8 @@ AS
 SET NOCOUNT ON
 
 /*
-	Checked for Release: 3.5.3
 	Checked by: KL
-	Checked on: 04-Feb-2015
+	Checked on: 25-Jul-2018
 	Action: NO ACTION REQUIRED
 */
 
@@ -48,14 +46,25 @@ IF @DistCode IS NOT NULL BEGIN
 END
 
 IF @PubCodeSynch=1 BEGIN
-	IF LEN(REPLACE((SELECT DistCode FROM CIC_Distribution WHERE DST_ID=@DST_ID),'AIRSEXPORT-','')) > 2 BEGIN
+	DECLARE @CodeMatch nvarchar(20)
+	SET @CodeMatch = REPLACE((SELECT DistCode FROM CIC_Distribution WHERE DST_ID=@DST_ID),'AIRSEXPORT-','')
+
+	IF LEN(@CodeMatch) > 2 BEGIN
 		MERGE INTO CIC_BT_DST dst
 		USING (SELECT DISTINCT NUM
 			FROM CIC_BT_PB pr
 			INNER JOIN CIC_Publication pb
 				ON pr.PB_ID=pb.PB_ID
-			INNER JOIN CIC_Distribution d
-				ON pb.PubCode LIKE REPLACE(d.DistCode,'AIRSEXPORT-','') + '%' AND d.DST_ID=@DST_ID) src
+					AND pb.PubCode LIKE @CodeMatch + '%'
+			WHERE NOT EXISTS(
+				SELECT *
+				FROM CIC_BT_PB pr2
+				INNER JOIN CIC_Publication pb2
+					ON pr2.PB_ID=pb2.PB_ID
+						AND pb2.PubCode LIKE 'EX-' + @CodeMatch + '%'
+				WHERE pr2.NUM=pr.NUM
+			)
+		) src
 			ON dst.NUM=src.NUM AND dst.DST_ID=@DST_ID
 		WHEN NOT MATCHED BY TARGET THEN
 			INSERT (NUM, DST_ID) VALUES (src.NUM, @DST_ID)
