@@ -8,6 +8,7 @@ CREATE PROCEDURE [dbo].[sp_CIC_ImportEntry_LocatedIn_Check]
 	@CommunityFr nvarchar(200),
 	@AuthCommunity nvarchar(200) OUTPUT,
 	@ProvState nvarchar(100),
+	@DefaultProvState nvarchar(2),
 	@Country nvarchar(100),
 	@CM_ID int OUTPUT
 WITH EXECUTE AS CALLER
@@ -31,13 +32,8 @@ ORDER BY CASE
 		WHEN [Name]=@CommunityFr AND LangID=2 THEN 1
 		ELSE 2
 	END,
-	CASE
-		WHEN pst.NameOrCode=@ProvState AND pst.Country=@Country THEN 0
-		WHEN @ProvState IS NULL AND @Country IS NULL AND pst.ProvID IS NULL THEN 1
-		WHEN pst.Country=@Country THEN 2
-		WHEN pst.NameOrCode=@ProvState THEN 3
-		ELSE 4
-	END
+	CASE WHEN pst.NameOrCode=@ProvState THEN 4 WHEN @ProvState IS NULL AND pst.NameOrCode=@DefaultProvState THEN 2 ELSE 0 END +
+	CASE WHEN pst.Country=@Country THEN 1 WHEN pst.Country IS NULL OR @Country IS NULL THEN 0 ELSE -1 END DESC
 
 IF @CM_ID IS NULL AND @AuthCommunity IS NOT NULL BEGIN
 	SELECT TOP 1 @CM_ID=CM_ID

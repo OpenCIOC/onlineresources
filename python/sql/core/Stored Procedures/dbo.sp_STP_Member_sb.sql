@@ -11,9 +11,8 @@ AS
 SET NOCOUNT ON
 
 /*
-	Checked for Release: 3.7.2
 	Checked by: KL
-	Checked on: 19-Jan-2016
+	Checked on: 25-Jul-2018
 	Action: NO ACTION REQUIRED
 */
 
@@ -60,6 +59,7 @@ SELECT	MemberID,
 		ClientTrackerIP,
 		ClientTrackerRpcURL,
 		DefaultGCType,
+		DefaultProvince,
 		DefaultCountry,
 		NoEmail,
 		DownloadUncompressed,

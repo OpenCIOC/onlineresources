@@ -174,6 +174,7 @@ def getDbOptions(handleDBConnetionError):
 		g_intCanDeleteRecordNoteVOL, g_intCanUpdateRecordNoteCIC, \
 		g_intCanUpdateRecordNoteVOL, g_bRecordNoteTypeOptionalCIC, \
 		g_bRecordNoteTypeOptionalVOL, g_intPreventDuplicateOrgNames, \
+		g_strDefaultCountry, g_strDefaultProvState, \
 		g_intMemberID, g_bOtherMembers, g_bOtherMembersActive, g_bSSL, g_intLoginRetryLimit
 
 	try:
@@ -223,6 +224,8 @@ def getDbOptions(handleDBConnetionError):
 	g_bOtherMembers = dboptions.OtherMembers
 	g_bOtherMembersActive = dboptions.OtherMembersActive
 	g_intLoginRetryLimit = dboptions.LoginRetryLimit
+	g_strDefaultCountry = dboptions.DefaultCountry
+	g_strDefaultProvState = dboptions.DefaultProvince
 
 	g_bSSL = not not pyrequest.headers.get('CIOC-USING-SSL')
 

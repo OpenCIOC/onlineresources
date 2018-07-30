@@ -26,6 +26,7 @@ CREATE PROCEDURE [dbo].[sp_STP_Member_u]
 	@DefaultEmailNameVOL NVARCHAR(100),
 	@BaseURLCIC [varchar](100),
 	@BaseURLVOL [varchar](100),
+	@DefaultProvince VARCHAR(2),
 	@DefaultGCType [tinyint],
 	@CanDeleteRecordNoteCIC [tinyint],
 	@CanUpdateRecordNoteCIC [tinyint],
@@ -45,9 +46,8 @@ AS
 SET NOCOUNT ON
 
 /*
-	Checked for Release: 3.5
-	Checked by: CL
-	Checked on: 01-Nov-2012
+	Checked by: KL
+	Checked on: 02-May-2018
 	Action: NO ACTION REQUIRED
 */
 
@@ -200,6 +200,7 @@ IF @Error = 0 BEGIN
 			DefaultEmailNameVOL = CASE WHEN @UseVOL=1 THEN @DefaultEmailNameVOL ELSE DefaultEmailNameVOL END,
 			BaseURLCIC = CASE WHEN @UseCIC=1 THEN @BaseURLCIC ELSE BaseURLCIC END,
 			BaseURLVOL = CASE WHEN @UseVOL=1 THEN @BaseURLVOL ELSE BaseURLVOL END,
+			DefaultProvince = CASE WHEN @UseCIC=1 THEN @DefaultProvince ELSE DefaultProvince END,
 			DefaultGCType = CASE WHEN @UseCIC=1 THEN @DefaultGCType ELSE DefaultGCType END,
 			CanDeleteRecordNoteCIC = CASE WHEN @UseCIC=1 THEN @CanDeleteRecordNoteCIC ELSE CanDeleteRecordNoteCIC END,
 			CanUpdateRecordNoteCIC = CASE WHEN @UseCIC=1 THEN @CanUpdateRecordNoteCIC ELSE CanUpdateRecordNoteCIC END,

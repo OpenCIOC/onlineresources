@@ -675,6 +675,7 @@ Sub processAreasServedA()
 		.Parameters.Append .CreateParameter("@CommunityF", adVarWChar, adParamInput, 200)
 		.Parameters.Append .CreateParameter("@AuthCommunity", adVarWChar, adParamInput, 200)
 		.Parameters.Append .CreateParameter("@ProvState", adVarWChar, adParamInput, 100)
+		.Parameters.Append .CreateParameter("@DefaultProvState", adVarWChar, adParamInput, 2, Nz(g_strDefaultProvState,Null))
 		.Parameters.Append .CreateParameter("@Country", adVarWChar, adParamInput, 100)
 		.Parameters.Append .CreateParameter("@NotesEn", adVarWChar, adParamInput, 255)
 		.Parameters.Append .CreateParameter("@NotesFr", adVarWChar, adParamInput, 255)
@@ -2545,6 +2546,7 @@ Sub processLocatedInA()
 		.Parameters.Append .CreateParameter("@CommunityF", adVarChar, adParamInput, 200)
 		.Parameters.Append .CreateParameter("@AuthCommunity", adVarChar, adParamInputOutput, 200)
 		.Parameters.Append .CreateParameter("@ProvState", adVarWChar, adParamInput, 100)
+		.Parameters.Append .CreateParameter("@DefaultProvState", adVarWChar, adParamInput, 2, Nz(g_strDefaultProvState,Null))
 		.Parameters.Append .CreateParameter("@Country", adVarWChar, adParamInput, 100)
 		.Parameters.Append .CreateParameter("@CM_ID", adInteger, adParamOutput, 4)
 	End With
@@ -2588,6 +2590,7 @@ Sub processLocatedInB()
 		With rsImportLocatedIn
 			Set rsImportLocatedIn = .NextRecordset
 			intCMID = cmdImportLocatedIn.Parameters("@CM_ID")
+		
 			If Nl(intCMID) Then
 				Call dicTableList("GBL").processField("LOCATED_IN_CM",Null,"NULL",True,FTYPE_NUMBER)
 				Call addImportNote( "[" & strImportFld & "] " & TXT_UNKNOWN_VALUE & TXT_COLON & IIf(Nl(strAuthCommunity),Nz(strCommunityE,strCommunityF),Nz(strCommunityE,strCommunityF) & StringIf(Not Nl(strAuthCommunity),"/" & strAuthCommunity)))
