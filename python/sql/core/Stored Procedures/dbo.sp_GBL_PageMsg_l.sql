@@ -10,10 +10,8 @@ AS
 SET NOCOUNT ON
 
 /*
-	Checked for Release: 3.1
 	Checked by: KL
-	Checked on: 28-Jan-2012
-	Action: NO ACTION REQUIRED
+	Checked on: 11-Sep-2018
 */
 
 DECLARE	@Error int
@@ -33,7 +31,7 @@ SELECT pm.PageMsgID, pm.MsgTitle
 		ON pm.LangID=sl.LangID
 WHERE pm.MemberID=@MemberID
 	AND sl.Active=1
-ORDER BY pm.MsgTitle
+ORDER BY pm.DisplayOrder, pm.MsgTitle
 
 RETURN @Error
 

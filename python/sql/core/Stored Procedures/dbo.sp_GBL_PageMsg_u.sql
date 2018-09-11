@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -15,6 +14,7 @@ CREATE PROCEDURE [dbo].[sp_GBL_PageMsg_u]
 	@LangID smallint,
 	@VisiblePrintMode bit,
 	@LoginOnly bit,
+	@DisplayOrder tinyint,
 	@PageMsg nvarchar(max),
 	@CICViewList varchar(max),
 	@VOLViewList varchar(max),
@@ -25,10 +25,8 @@ AS
 SET NOCOUNT ON
 
 /*
-	Checked for Release: 3.7.3
 	Checked by: KL
-	Checked on: 05-Jan-2016
-	Action: NO ACTION REQUIRED
+	Checked on: 11-Sep-2011
 */
 
 DECLARE	@Error	int
@@ -149,6 +147,7 @@ IF @Error = 0 BEGIN
 			LangID				= @LangID,
 			VisiblePrintMode	= ISNULL(@VisiblePrintMode, VisiblePrintMode),
 			LoginOnly			= ISNULL(@LoginOnly, LoginOnly),
+			DisplayOrder		= ISNULL(@DisplayOrder, DisplayOrder),
 			PageMsg				= @PageMsg
 		WHERE (PageMsgID = @PageMsgID)
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @PageMessageObjectName, @ErrMsg
@@ -163,6 +162,7 @@ IF @Error = 0 BEGIN
 			LangID,
 			VisiblePrintMode,
 			LoginOnly,
+			DisplayOrder,
 			PageMsg
 		) 
  		VALUES (
@@ -175,6 +175,7 @@ IF @Error = 0 BEGIN
 			@LangID,
 			ISNULL(@VisiblePrintMode,1),
 			ISNULL(@LoginOnly,0),
+			ISNULL(@DisplayOrder,0),
 			@PageMsg
 		)
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @PageMessageObjectName, @ErrMsg

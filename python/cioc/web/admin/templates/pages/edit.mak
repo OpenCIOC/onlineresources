@@ -105,6 +105,11 @@ ${self.makeMgmtInfo(page)}
 </form>
 
 <%def name="bottomjs()">
+<script type="text/javascript">
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover();
+});
+</script>
 <script src='//cdn.tinymce.com/4/tinymce.min.js'></script>
 <script type="text/javascript">
 tinymce.init({

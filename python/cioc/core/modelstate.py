@@ -139,9 +139,9 @@ class CiocFormRenderer(FormRenderer):
 	def text(self, name, value=None, id=None, **attrs):
 		kw = {'maxlength': 200, 'size': const.TEXT_SIZE}
 		kw.update(attrs)
-		kw['size'] = min((kw['maxlength'], kw['size']))
+		kw['size'] = min((kw['maxlength']+1, kw['size']))
 		return FormRenderer.text(self, name, value, self._fix_id(id or name), **kw)
-
+	
 	def proto_url(self, name, value=None, id=None, **attrs):
 		kw = {
 			'type': 'text', 'maxlength': 150, 'size': const.TEXT_SIZE - 5,

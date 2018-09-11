@@ -42,6 +42,7 @@ Call setPageInfo(True, DM_GLOBAL, DM_GLOBAL, "../", "admin/", vbNullString)
 <!--#include file="../includes/core/incFooter.asp" -->
 <!--#include file="../text/txtMenu.asp" -->
 <% 'End Base includes %>
+<!--#include file="../includes/validation/incDisplayOrder.asp" -->
 <!--#include file="../text/txtPageMsg.asp" -->
 <%
 If Not user_bSuperUser Then
@@ -74,6 +75,8 @@ ElseIf Not IsIDType(intPageMsgID) Then
 Else
 	intPageMsgID = CLng(intPageMsgID)
 End If
+
+Call getDisplayOrder()
 
 If Request("Submit") = TXT_DELETE Then
 	Call goToPage("setup_page_msg_delete.asp","PageMsgID=" & intPageMsgID,vbNullString)
@@ -153,6 +156,7 @@ If Nl(strError) Then
 		.Parameters.Append .CreateParameter("@LangID", adInteger, adParamInput, 4, intLangID)
 		.Parameters.Append .CreateParameter("@VisiblePrintMode", adBoolean, adParamInput, 1, IIf(bVisiblePrintMode, SQL_TRUE, SQL_FALSE))
 		.Parameters.Append .CreateParameter("@LoginOnly", adBoolean, adParamInput, 1, IIf(bLoginOnly, SQL_TRUE, SQL_FALSE))
+		.Parameters.Append .CreateParameter("@DisplayOrder", adInteger, adParamInput, 1, intDisplayOrder)
 		.Parameters.Append .CreateParameter("@PageMsg", adVarWChar, adParamInput, 4000, strPageMsg)
 		.Parameters.Append .CreateParameter("@CICViewList", adLongVarChar, adParamInput, -1, strCICViewList)
 		.Parameters.Append .CreateParameter("@VOLViewList", adLongVarChar, adParamInput, -1, strVOLViewList)
