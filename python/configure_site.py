@@ -3,7 +3,7 @@ import argparse
 import shutil
 import subprocess
 
-site_root = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+site_root = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
 
 def parse_args():
