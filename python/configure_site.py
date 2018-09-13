@@ -42,42 +42,42 @@ def main():
 	appcmd_exe = os.path.join(os.environ['systemroot'], 'system32/inetsrv/appcmd.exe')
 
 	subprocess.call([
-		appcmd_exe, 'add', 'apppool' '/name:"' + args.site_name + '"',
+		appcmd_exe, 'add', 'apppool' '/name:' + args.site_name,
 		'/managedPipelineMode:Integrated',
-		'/commit:"MACHINE/WEBROOT/APPHOST"'
+		'/commit:MACHINE/WEBROOT/APPHOST'
 	])
 	subprocess.call([
 		appcmd_exe,
-		'set', 'apppool', '/apppool.name:"' + args.site_name + '"',
+		'set', 'apppool', '/apppool.name:' + args.site_name,
 		'/enable32BitAppOnWin64:true'
 	])
 	subprocess.call([
 		appcmd_exe,
-		'add', 'site', '/name:"' + args.site_name + '"',
-		'/physicalPath:"' + site_root + '"',
+		'add', 'site', '/name:' + args.site_name,
+		'/physicalPath:' + site_root,
 		'/bindings:http/*:80:' + args.domain
 	])
 	subprocess.call([
 		appcmd_exe,
-		'set', 'site', '"' + args.site_name + '"',
-		'''/[path='/'].applicationPool:"''' + args.site_name + '"'
+		'set', 'site', args.site_name,
+		'''/[path='/'].applicationPool:''' + args.site_name
 	])
 
 	subprocess.call([
-		appcmd_exe, 'set', 'config', '"' + args.site_name + '"',
-		'-section:system.webServer/asp', '/session.allowSessionState:"False"',
-		'/enableParentPaths:"True"', '/codePage:"65001"', '/commit:apphost'
+		appcmd_exe, 'set', 'config', args.site_name,
+		'-section:system.webServer/asp', '/session.allowSessionState:False',
+		'/enableParentPaths:True', '/codePage:65001', '/commit:apphost'
 	])
 	subprocess.call([
-		appcmd_exe, 'set', 'config', '"' + args.site_name + '"',
+		appcmd_exe, 'set', 'config', args.site_name,
 		' -section:system.webServer/security/requestFiltering', '/requestLimits.maxQueryString:8192', '/requestLimits.maxUrl:8192', '/commit:apphost'
 	])
 
 	for header in 'HTTP_CIOC_FRIENDLY_RECORD_URL HTTP_CIOC_FRIENDLY_RECORD_URL_ROOT HTTP_X_FORWARDED_PROTO HTTP_CIOC_USING_SSL HTTP_CIOC_SSL_POSSIBLE RESPONSE_LOCATION HTTP_CIOC_SSL_HSTS'.split():
 		subprocess.call([
-			appcmd_exe, 'set', 'config', '"' + args.site_name + '"',
+			appcmd_exe, 'set', 'config', args.site_name,
 			'-section:system.webServer/rewrite/allowedServerVariables',
-			"/+[name='#{header}']", "/commit:apphost"
+			"/+[name='{}']".format(header), "/commit:apphost"
 		])
 
 if __name__ == '__main__':
