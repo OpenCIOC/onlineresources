@@ -56,12 +56,13 @@ def parse_args():
 
 def populate_config_file(args):
 	config_dir = os.path.abspath(os.path.join(site_root, '..', '..', 'config'))
-	print config_dir
 	if not os.path.exists(config_dir):
+		print 'creating config directory', config_dir
 		os.mkdir(config_dir)
 
-	config_file = os.path.join(config_dir, os.path.dirname(site_root) + '.ini')
+	config_file = os.path.join(config_dir, os.path.basename(site_root) + '.ini')
 	if not os.path.exists(config_file):
+		print 'creating config file', config_file
 		contents = config_tmpl % {
 			'server': args.db_server,
 			'database': args.db_name,
