@@ -17,6 +17,10 @@ def main():
 	]:
 		subprocess.call(['setx', env_var, value])
 
+	features = 'IIS-WebServerRole IIS-WebServer IIS-ISAPIExtensions IIS-ASP IIS-ASPNET45 IIS-HttpCompressionDynamic IIS-Performance IIS-IPSecurity IIS-CGI IIS-ManagementScriptingTools IIS-LegacyScripts IIS-HttpTracing IIS-RequestMonitor'.split()
+	features = ['/FeatureName:' + x for x in features]
+	subprocess.call(['dism', '/Online', '/Enable-Feature'] + features + ['/All'])
+
 	msis = [
 		'https://download.microsoft.com/download/5/7/2/57249A3A-19D6-4901-ACCE-80924ABEB267/ENU/x64/msodbcsql.msi',
 		'http://download.microsoft.com/download/F/E/D/FEDB200F-DE2A-46D8-B661-D019DFE9D470/ENU/x64/sqlncli.msi',
@@ -51,10 +55,6 @@ def main():
 		],
 		cwd=redis_dir
 	)
-
-	features = 'IIS-WebServerRole IIS-WebServer IIS-ISAPIExtensions IIS-ASP IIS-ASPNET45 IIS-HttpCompressionDynamic IIS-Performance IIS-IPSecurity IIS-CGI IIS-ManagementScriptingTools IIS-LegacyScripts IIS-HttpTracing IIS-RequestMonitor'.split()
-	features = ['/FeatureName:' + x for x in features]
-	subprocess.call(['dism', '/Online', '/Enable-Feature'] + features + ['/All'])
 
 	webpi_exe = os.path.join(os.environ['ProgramW6432'], 'Microsoft/Web Platform Installer/WebpiCmd.exe')
 
