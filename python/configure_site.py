@@ -42,7 +42,7 @@ def main():
 	appcmd_exe = os.path.join(os.environ['systemroot'], 'system32/inetsrv/appcmd.exe')
 
 	subprocess.call([
-		appcmd_exe, 'add', 'apppool' '/name:' + args.site_name,
+		appcmd_exe, 'add', 'apppool', '/name:' + args.site_name,
 		'/managedPipelineMode:Integrated',
 		'/commit:MACHINE/WEBROOT/APPHOST'
 	])
