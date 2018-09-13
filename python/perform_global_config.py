@@ -55,11 +55,11 @@ def main():
 
 	features = 'IIS-WebServerRole IIS-WebServer IIS-ISAPIExtensions IIS-ASP IIS-ASPNET45 IIS-HttpCompressionDynamic IIS-Performance Smtpsvc-Service-Update-Name Smtpsvc-Admin-Update-Name IIS-IPSecurity IIS-CGI IIS-ManagementScriptingTools IIS-LegacyScripts IIS-HttpTracing IIS-RequestMonitor'.split()
 	features = ['/FeatureName:' + x for x in features]
-	subprocess.call(['dism', '/Online', '/EnableFeature'] + features + ['/All'])
+	subprocess.call(['dism', '/Online', '/Enable-Feature'] + features + ['/All'])
 
 	webpi_exe = os.path.join(os.environ['ProgramW6432'], 'Microsoft/Web Platform Installer/WebpiCmd.exe')
 
-	subprocess.call([webpi_exe, '/Install', '/products:ARRv3_0', '/supressreboot', '/accepteula'])
+	subprocess.call([webpi_exe, '/Install', '/products:ARRv3_0', '/accepteula'])
 	appcmd_exe = os.path.join(os.environ['systemroot'], 'system32/inetsrv/appcmd.exe')
 	subprocess.call([
 		appcmd_exe, 'set', 'config', '-section:system.webServer/proxy',
