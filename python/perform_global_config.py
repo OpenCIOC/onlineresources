@@ -46,15 +46,15 @@ def main():
 	subprocess.call([sys.executable, '-m', 'ensurepip'])
 	subprocess.call([sys.executable, '-m', 'pip', 'install', 'virtualenv'])
 	subprocess.call([sys.executable, '-m', 'pip', 'install', 'virtualenvwrapper-win'])
-	redis_dir = os.path.join('c:\\program files\\', 'redis')
+	# redis_dir = os.path.join('c:\\program files\\', 'redis')
 
-	subprocess.call(
-		[
-			os.path.join(redis_dir, 'redis-server.exe'),
-		'--service-install', 'redis.windows.conf', '--service-name', 'redis'
-		],
-		cwd=redis_dir
-	)
+	# subprocess.call(
+	# 	[
+	# 		os.path.join(redis_dir, 'redis-server.exe'),
+	# 	'--service-install', 'redis.windows.conf', '--service-name', 'redis'
+	# 	],
+	# 	cwd=redis_dir
+	# )
 
 	webpi_exe = os.path.join(os.environ['ProgramW6432'], 'Microsoft/Web Platform Installer/WebpiCmd.exe')
 
@@ -64,7 +64,7 @@ def main():
 		appcmd_exe, 'set', 'config', '-section:system.webServer/proxy',
 		'/enabled:True', '/includePortInXForwardedFor:False',
 		'/preserveHostHeader:True', '/arrResponseHeader:False',
-		'/reverseRewriteHostInResponseHeaders:False', '/timeout:"01:00:00"',
+		'/reverseRewriteHostInResponseHeaders:False', '/timeout:01:00:00',
 		'/commit:apphost'
 	])
 
