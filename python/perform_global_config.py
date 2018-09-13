@@ -47,7 +47,7 @@ def main():
 
 	subprocess.call(
 		[
-			'"' + os.path.join(redis_dir, 'redis-server.exe') + '"',
+			os.path.join(redis_dir, 'redis-server.exe'),
 		'--service-install', 'redis.windows.conf', '--service-name', 'redis'
 		],
 		cwd=redis_dir
