@@ -9,13 +9,6 @@ def main():
 	# depends on python2.7 x86 and pywin32 being installed first
 	# https://www.python.org/ftp/python/2.7.15/python-2.7.15.msi
 	# https://sourceforge.net/projects/pywin32/files/pywin32/Build%20219/pywin32-219.win32-py2.7.exe/download
-	gencache = [['2A75196C-D9EB-4129-B803-931327F72D5C', '0', '2', '8'], ['00000300-0000-0010-8000-00AA006D2EA4', '0', '2', '8'], ['00000600-0000-0010-8000-00AA006D2EA4', '0', '2', '8'], ['B691E011-1797-432E-907A-4D8C69339129', '0', '6', '1'], ['D97A6DA0-A85C-11CF-83AE-00A0C90C2BD8', '0', '3', '0'], ['D97A6DA0-9C1C-11D0-9C3C-00A0C922E764', '0', '3', '0']]
-	for uuid, rev, maj, min in gencache:
-		subprocess.call([sys.executable, '-c', "from win32com.client import gencache; gencache.EnsureModule('{%(uuid)s}', %(rev)s, %(maj)s, %(min)s)" % {'uuid': uuid, 'rev': rev, 'maj': maj, 'min': min}])
-
-	subprocess.call([sys.executable, '-m', 'ensurepip'])
-	subprocess.call([sys.executable, '-m', 'pip', 'install', 'virtualenv'])
-	subprocess.call([sys.executable, '-m', 'pip', 'install', 'virtualenvwrapper-win'])
 
 	env_root = os.path.join(os.environ['HOMEPATH'], 'Envs')
 	for env_var, value in [
@@ -30,7 +23,8 @@ def main():
 		'http://download.microsoft.com/download/B/6/3/B63CAC7F-44BB-41FA-92A3-CBF71360F022/1033/x64/sqlncli.msi',
 		"https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.2.4/wkhtmltox-0.12.2.4_msvc2013-win32.exe",
 		"http://download.microsoft.com/download/C/F/F/CFF3A0B8-99D4-41A2-AE1A-496C08BEB904/WebPlatformInstaller_amd64_en-US.msi",
-		'https://github.com/MicrosoftArchive/redis/releases/download/win-3.0.504/Redis-x64-3.0.504.msi'
+		'https://github.com/MicrosoftArchive/redis/releases/download/win-3.0.504/Redis-x64-3.0.504.msi',
+		'https://superb-sea2.dl.sourceforge.net/project/pywin32/pywin32/Build%20219/pywin32-219.win32-py2.7.exe'
 	]
 	tempdir = gettempdir
 	for installer in msis:
@@ -41,7 +35,15 @@ def main():
 		else:
 			subprocess.call([filename])
 
+	gencache = [['2A75196C-D9EB-4129-B803-931327F72D5C', '0', '2', '8'], ['00000300-0000-0010-8000-00AA006D2EA4', '0', '2', '8'], ['00000600-0000-0010-8000-00AA006D2EA4', '0', '2', '8'], ['B691E011-1797-432E-907A-4D8C69339129', '0', '6', '1'], ['D97A6DA0-A85C-11CF-83AE-00A0C90C2BD8', '0', '3', '0'], ['D97A6DA0-9C1C-11D0-9C3C-00A0C922E764', '0', '3', '0']]
+	for uuid, rev, maj, min in gencache:
+		subprocess.call([sys.executable, '-c', "from win32com.client import gencache; gencache.EnsureModule('{%(uuid)s}', %(rev)s, %(maj)s, %(min)s)" % {'uuid': uuid, 'rev': rev, 'maj': maj, 'min': min}])
+
+	subprocess.call([sys.executable, '-m', 'ensurepip'])
+	subprocess.call([sys.executable, '-m', 'pip', 'install', 'virtualenv'])
+	subprocess.call([sys.executable, '-m', 'pip', 'install', 'virtualenvwrapper-win'])
 	redis_dir = os.path.join(os.environ['ProgramFiles'], 'redis')
+
 	subprocess.call(
 		[
 			os.path.join(redis_dir, 'redis-server.exe'),
