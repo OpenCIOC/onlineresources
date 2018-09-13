@@ -56,6 +56,7 @@ def parse_args():
 
 def populate_config_file(args):
 	config_dir = os.path.join(site_root, '..', '..', 'config')
+	print config_dir
 	if not os.path.exists(config_dir):
 		os.mkdir(config_dir)
 
