@@ -26,7 +26,7 @@ def main():
 		'https://github.com/MicrosoftArchive/redis/releases/download/win-3.0.504/Redis-x64-3.0.504.msi',
 		'https://superb-sea2.dl.sourceforge.net/project/pywin32/pywin32/Build%20219/pywin32-219.win32-py2.7.exe'
 	]
-	tempdir = gettempdir
+	tempdir = gettempdir()
 	for installer in msis:
 		filename = os.path.join(tempdir, os.path.basename(installer))
 		urlretrieve(installer, filename)
