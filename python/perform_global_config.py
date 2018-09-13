@@ -42,7 +42,7 @@ def main():
 	#subprocess.call([sys.executable, '-m', 'ensurepip'])
 	#subprocess.call([sys.executable, '-m', 'pip', 'install', 'virtualenv'])
 	#subprocess.call([sys.executable, '-m', 'pip', 'install', 'virtualenvwrapper-win'])
-	redis_dir = os.path.join(os.environ['ProgramFiles'], 'redis')
+	redis_dir = os.path.join('c:\\program files\\', 'redis')
 	print "redis_dir", redis_dir
 
 	subprocess.call(
