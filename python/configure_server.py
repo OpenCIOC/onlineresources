@@ -3,7 +3,7 @@ import sys
 import subprocess
 import argparse
 
-site_root = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+site_root = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
 config_tmpl = '''
 [global]
