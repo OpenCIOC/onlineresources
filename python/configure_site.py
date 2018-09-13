@@ -7,7 +7,7 @@ site_root = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file_
 
 
 def parse_args():
-	default_site_name = os.path.dirname(site_root)
+	default_site_name = os.path.basename(site_root)
 	parser = argparse.ArgumentParser(description='Configure IIS Site for CIO')
 	parser.add_argument('domain', default='localhost',
 						help='domain to serve traffic from')
