@@ -34,7 +34,7 @@ def main():
 	]
 	tempdir = gettempdir
 	for installer in msis:
-		filename = os.path.join(tempdir, os.path.filename(installer))
+		filename = os.path.join(tempdir, os.path.basename(installer))
 		urlretrieve(installer, filename)
 		if filename.endswith('.msi'):
 			subprocess.call(['msiexec', '/i', filename])
