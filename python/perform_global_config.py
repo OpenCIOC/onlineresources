@@ -11,7 +11,7 @@ def main():
 	# https://sourceforge.net/projects/pywin32/files/pywin32/Build%20219/pywin32-219.win32-py2.7.exe/download
 	gencache = [['2A75196C-D9EB-4129-B803-931327F72D5C', '0', '2', '8'], ['00000300-0000-0010-8000-00AA006D2EA4', '0', '2', '8'], ['00000600-0000-0010-8000-00AA006D2EA4', '0', '2', '8'], ['B691E011-1797-432E-907A-4D8C69339129', '0', '6', '1'], ['D97A6DA0-A85C-11CF-83AE-00A0C90C2BD8', '0', '3', '0'], ['D97A6DA0-9C1C-11D0-9C3C-00A0C922E764', '0', '3', '0']]
 	for uuid, rev, maj, min in gencache:
-		subprocess.call([sys.executable, '-c', "from win32com.client import gencache; gencache.EnsureModule('{%(uuid)s}', %(rev)s, %(maj)s, %(min)s)"])
+		subprocess.call([sys.executable, '-c', "from win32com.client import gencache; gencache.EnsureModule('{%(uuid)s}', %(rev)s, %(maj)s, %(min)s)" % {'uuid': uuid, 'rev': rev, 'maj': maj, 'min': min}])
 
 	subprocess.call([sys.executable, '-m', 'ensurepip'])
 	subprocess.call([sys.executable, '-m', 'pip', 'install', 'virtualenv'])
@@ -22,7 +22,7 @@ def main():
 		('CIOC_ENV_ROOT', env_root), ('CIOC_MAIL_HOST', 'localhost'),
 		('CIOC_MAIL_PORT', '1025')
 	]:
-		subprocess.call('setx', env_var, value)
+		subprocess.call(['setx', env_var, value])
 
 	msis = [
 		'https://download.microsoft.com/download/5/7/2/57249A3A-19D6-4901-ACCE-80924ABEB267/ENU/x64/msodbcsql.msi',
