@@ -112,7 +112,7 @@ def export_recordowners(args, conn):
 		INNER JOIN dbo.GBL_BaseTable bt ON bt.RECORD_OWNER=a.AgencyCode
 		INNER JOIN dbo.GBL_BaseTable_Description btd ON btd.NUM=bt.NUM
 		INNER JOIN dbo.STP_Language sl ON btd.LangID=sl.LangID
-		INNER JOIN CIC_BT_EXTRA_TEXT et ON bt.NUM=et.NUM AND et.FieldName='EXTRA_ICAROLFILECOUNT'
+		INNER JOIN CIC_BT_EXTRA_TEXT et ON bt.NUM=et.NUM AND et.FieldName='EXTRA_ICAROLFILECOUNT' AND et.LangID = btd.LangID
 		LEFT JOIN dbo.GBL_BaseTable_Description btda ON a.AgencyNUMCIC=btda.NUM AND btda.LangID=(SELECT TOP 1 LangID FROM dbo.GBL_BaseTable_Description btdax WHERE btdax.NUM=btda.NUM ORDER BY CASE WHEN btdax.LangID=btd.LangID THEN 0 ELSE 1 END, btdax.LangID)
 		'''
 	)
