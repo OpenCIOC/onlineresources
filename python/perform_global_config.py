@@ -10,7 +10,7 @@ def main():
 	# https://www.python.org/ftp/python/2.7.15/python-2.7.15.msi
 	# https://sourceforge.net/projects/pywin32/files/pywin32/Build%20219/pywin32-219.win32-py2.7.exe/download
 
-	env_root = os.path.join(os.environ['HOMEPATH'], 'Envs')
+	env_root = os.path.abspath(os.path.join(os.environ['HOMEPATH'], 'Envs'))
 	for env_var, value in [
 		('CIOC_ENV_ROOT', env_root), ('CIOC_MAIL_HOST', 'localhost'),
 		('CIOC_MAIL_PORT', '1025')
