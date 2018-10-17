@@ -135,7 +135,7 @@ ${request.passvars.cached_form_vals|n}
 				<td class="field-label-cell">${renderer.label("layout.LayoutType", _('Layout Type'))}</td>
 				<td class="field-data-cell">
 					${renderer.errorlist("layout.LayoutType")}
-					${renderer.select('layout.LayoutType', layout_types)}
+					${renderer.select('layout.LayoutType', layout_types, class_="form-control")}
 				</td>
 			</tr>
 			%endif
