@@ -806,7 +806,9 @@ While Not rsFields.EOF
 							Case Else
 								intPubID = rsFields.Fields("PB_ID")
 								If Not Nl(intPubID) Then
-									strFieldVal = makeGeneralHeadingFieldVal(rsOrg, Not bNew, intPubID)
+									If Not bNew Then
+										strFieldVal = makeGeneralHeadingFieldVal(rsOrg, Not bNew, intPubID)
+									End If
 								Else
 									If Not bNew Then
 										strFieldContents = rsOrg(strFieldName)
