@@ -641,12 +641,18 @@ If Not bSuggest Then
 	Select Case Request("FType")
 		Case "F"
 			Call addInsertField("FULL_UPDATE",SQL_TRUE,strInsertInto,strInsertValue)
+			strFieldVal = Replace(Replace(TXT_COMPLETE_UPDATE, "<strong>", ""), "</strong>", "")
 		Case "N"
 			Call addInsertField("FULL_UPDATE",SQL_TRUE,strInsertInto,strInsertValue)
 			Call addInsertField("NO_CHANGES",SQL_TRUE,strInsertInto,strInsertValue)
+			strFieldVal = Replace(Replace(TXT_COMPLETE_NO_CHANGES_REQUIRED, "<strong>", ""), "</strong>", "")
 		Case "D"
 			Call addInsertField("REMOVE_RECORD",SQL_TRUE,strInsertInto,strInsertValue)
+			strFieldVal = Replace(Replace(TXT_REMOVE_RECORD, "<strong>", ""), "</strong>", "")
+		Case "P"
+			strFieldVal = Replace(Replace(TXT_NOT_COMPLETE_UPDATE, "<strong>", ""), "</strong>", "")
 	End Select
+	Call addEmailField(TXT_ABOUT_CHANGES, strFieldVal)
 	Call getROInfo(rsOrg("RECORD_OWNER"),DM_VOL)
 End If
 
