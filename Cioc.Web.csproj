@@ -419,6 +419,7 @@
     <Content Include="python\tools\icarol_delete.py" />
     <Content Include="python\tools\icarol_sync.py" />
     <Content Include="python\tools\pagemessage.py" />
+    <Content Include="python\tools\record_categories_export.py" />
     <Content Include="python\tools\test_ciocapi.py" />
     <Content Include="robots.txt" />
     <Content Include="scripts\advsrch.js" />
