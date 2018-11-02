@@ -206,7 +206,7 @@ IF @Error = 0 BEGIN
 				WHERE (
 					PageMsgID = @PageMsgID
 					AND NOT EXISTS(SELECT * FROM @ViewIDs tm WHERE tm.Domain=2 AND tm.ViewType=VOL_View_PageMsg.ViewType)
-					AND NOT EXISTS(SELECT * FROM CIC_View vw WHERE vw.ViewType=VOL_View_PageMsg.ViewType AND (ISNULL(vw.Owner,@AgencyCode)<>@AgencyCode))
+					AND NOT EXISTS(SELECT * FROM VOL_View vw WHERE vw.ViewType=VOL_View_PageMsg.ViewType AND (ISNULL(vw.Owner,@AgencyCode)<>@AgencyCode))
 				)
 			EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @PageMessageObjectName, @ErrMsg
 			
