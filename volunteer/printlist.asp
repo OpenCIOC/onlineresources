@@ -44,6 +44,7 @@ Call setPageInfo(True, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../text/txtGeneralForm.asp" -->
 <!--#include file="../text/txtMgmtFields.asp" -->
 <!--#include file="../text/txtPrintList.asp" -->
+<!--#include file="../text/txtSearchAdvanced.asp" -->
 <!--#include file="../text/txtSetup.asp" -->
 <!--#include file="../includes/core/incFormat.asp" -->
 <!--#include file="../includes/print/incPrintProfileList.asp" -->
