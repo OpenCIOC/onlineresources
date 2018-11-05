@@ -282,7 +282,7 @@ Sub getChecklistFeedback(strFieldDisplay, strSP, strPrefix, strFieldName, strNam
 	End With
 	Set rsChecklist = cmdChecklist.Execute
 	
-	Dim strXML, strEmailText, strEmailCon, bChanged, indID, bChecked, strNote
+	Dim strXML, strEmailText, strEmailCon, bChanged, indID, bChecked, strNote, bThisChanged
 	bChanged = False
 	strEmailCon = vbNullString
 	strEmailText = vbNullString
@@ -296,22 +296,32 @@ Sub getChecklistFeedback(strFieldDisplay, strSP, strPrefix, strFieldName, strNam
 
 	With rsChecklist
 		While Not .EOF
+			bThisChanged = False
 			bChecked = InStr(strIDList, "<" & .Fields(strPrefix & "_ID") & ">") > 0 
 			If bChecked Then
-				strEmailText = strEmailText & strEmailCon & .Fields(strNameField)
+				If .Fields("IS_SELECTED") <> 1 Then
+					bChanged = True
+					bThisChanged = True
+				End If
 				If bNotes Then
 					strNote = Trim(Request(strPrefix & "_NOTES_" & .Fields(strPrefix & "_ID")))
-					If Not Nl(strNote) Then
-						strEmailText = strEmailText & TXT_COLON & strNote
-					End If
 					If Ns(strNote) <> Ns(.Fields("Notes")) Then
 						bChanged = True
+						bThisChanged = True
 					End If
 				End If
-				strEmailCon = " ; "
+				If bThisChanged Then
+					strEmailText = strEmailText & strEmailCon & .Fields(strNameField)
+					If bNotes Then
+						If Not Nl(strNote) Then
+							strEmailText = strEmailText & TXT_COLON & strNote
+						End If
+					End If
+					strEmailCon = " ; "
+				End If
 				strXML = strXML & "<" & strPrefix & " ID=" & XMLQs(.Fields(strPrefix & "_ID")) & StringIf(Not Nl(strNote), " NOTE=" & XMLQs(strNote)) & "/>"
-					
 			End If
+					
 			If .Fields("IS_SELECTED") <> IIf(bChecked, 1, 0) Then
 				bChanged = True
 				If Not bChecked Then
@@ -641,12 +651,18 @@ If Not bSuggest Then
 	Select Case Request("FType")
 		Case "F"
 			Call addInsertField("FULL_UPDATE",SQL_TRUE,strInsertInto,strInsertValue)
+			strFieldVal = Replace(Replace(TXT_COMPLETE_UPDATE, "<strong>", ""), "</strong>", "")
 		Case "N"
 			Call addInsertField("FULL_UPDATE",SQL_TRUE,strInsertInto,strInsertValue)
 			Call addInsertField("NO_CHANGES",SQL_TRUE,strInsertInto,strInsertValue)
+			strFieldVal = Replace(Replace(TXT_COMPLETE_NO_CHANGES_REQUIRED, "<strong>", ""), "</strong>", "")
 		Case "D"
 			Call addInsertField("REMOVE_RECORD",SQL_TRUE,strInsertInto,strInsertValue)
+			strFieldVal = Replace(Replace(TXT_REMOVE_RECORD, "<strong>", ""), "</strong>", "")
+		Case "P"
+			strFieldVal = Replace(Replace(TXT_NOT_COMPLETE_UPDATE, "<strong>", ""), "</strong>", "")
 	End Select
+	Call addEmailField(TXT_ABOUT_CHANGES, strFieldVal)
 	Call getROInfo(rsOrg("RECORD_OWNER"),DM_VOL)
 End If
 
