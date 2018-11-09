@@ -325,6 +325,7 @@ class LayoutSearch(object):
 			'BROWSE_ORGS_ENABLED': search_info.BSrchBrowseByOrg,
 			'HAS_SEARCH_AREA': search_info.BSrchKeywords or vol_search_menu or browse,
 			'SEARCH_FORM_START': kwargs['searchform_start'],
+			'HAS_KEYWORD_SEARCH': not not search_info.BSrchKeywords,
 			'KEYWORD_SEARCH_BOX': kwargs['searchform_keyword'],
 			'KEYWORD_SEARCH_IN': kwargs['searchform_in_values'],
 			'PROFILE_LINKS': kwargs['searchform_profilelinks'],
