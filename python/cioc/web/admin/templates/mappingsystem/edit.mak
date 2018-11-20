@@ -107,7 +107,7 @@ ${self.makeMgmtInfo(mapping)}
 	<td class="FieldLabelLeft NoWrap"><label for="mapping.DefaultProvince">${_('Default Province')}</label></td>
 	<td>
 		${renderer.errorlist('mapping.DefaultProvince')}
-		${renderer.text('mapping.DefaultProvince', maxlength="2", size="3")}
+		${renderer.text('mapping.DefaultProvince', maxlength=2, size=3)}
 		<br>${_('Default value for the state / province that is sent to the Mapping System when there is no value in the record being mapped.')}
 	</td>
 </tr>
@@ -115,7 +115,7 @@ ${self.makeMgmtInfo(mapping)}
 	<td class="FieldLabelLeft NoWrap"><label for="mapping.DefaultCountry">${_('Default Country')}</label></td>
 	<td>
 		${renderer.errorlist('mapping.DefaultCountry')}
-		${renderer.text('mapping.DefaultCountry', maxlength="50")}
+		${renderer.text('mapping.DefaultCountry', maxlength=50)}
 		<br>${_('Default value for the country that is sent to the Mapping System when there is no value in the record being mapped.')}
 	</td>
 </tr>
