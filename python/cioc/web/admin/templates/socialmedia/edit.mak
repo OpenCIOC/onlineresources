@@ -55,7 +55,7 @@ ${self.makeMgmtInfo(socialmedia)}
 	<td class="FieldLabelLeft NoWrap"><label for="socialmedia.DefaultName">${_('Default Name')}</label> <span class="Alert">*</span></td>
 	<td>
 		${renderer.errorlist('socialmedia.DefaultName')}
-		${renderer.text('socialmedia.DefaultName', maxlength="100")}
+		${renderer.text('socialmedia.DefaultName', maxlength=100)}
 		<br>${_('Default name for this Social Media type. May be overriden with a language-specific value.')}
 	</td>
 </tr>
@@ -80,7 +80,7 @@ ${self.makeMgmtInfo(socialmedia)}
 	<td class="FieldLabelLeft NoWrap"><label for="socialmedia.GeneralURL">${_('Info URL')}</label></td>
 	<td>
 		${renderer.errorlist('socialmedia.GeneralURL')}
-		http:// ${renderer.text('socialmedia.GeneralURL', maxlength="200")}
+		http:// ${renderer.text('socialmedia.GeneralURL', maxlength=200)}
 		<br>${_('Main URL of the Social Media site (if applicable).')}
 	</td>
 </tr>
@@ -89,9 +89,9 @@ ${self.makeMgmtInfo(socialmedia)}
 	<td>
 		${renderer.errorlist('socialmedia.IconURL16')}
 		%if not is_add:
-		<img src="${socialmedia.IconURL16}" width=16 height=16>
+		<img src="${socialmedia.IconURL16}" width="16" height="16">
 		%endif
-		${renderer.proto_url('socialmedia.IconURL16', maxlength="200")}
+		${renderer.proto_url('socialmedia.IconURL16', maxlength=200)}
 		<br>${_('URL of social media icon file. Icon must be 16px by 16px.')}
 	</td>
 </tr>
@@ -100,9 +100,9 @@ ${self.makeMgmtInfo(socialmedia)}
 	<td>
 		${renderer.errorlist('socialmedia.IconURL24')}
 		%if not is_add:
-		<img src="${socialmedia.IconURL24}" width=24 height=24>
+		<img src="${socialmedia.IconURL24}" width="24" height="24">
 		%endif
-		${renderer.proto_url('socialmedia.IconURL24', maxlength="200")}
+		${renderer.proto_url('socialmedia.IconURL24', maxlength=200)}
 		<br>${_('URL of social media icon file. Icon must be 24px by 24px.')}
 	</td>
 </tr>
