@@ -42,8 +42,9 @@ Call setPageInfo(True, DM_GLOBAL, DM_GLOBAL, "../", "admin/", vbNullString)
 <!--#include file="../includes/core/incFooter.asp" -->
 <!--#include file="../text/txtMenu.asp" -->
 <% 'End Base includes %>
-<!--#include file="../includes/validation/incDisplayOrder.asp" -->
+<!--#include file="../text/txtDisplayOrder.asp" -->
 <!--#include file="../text/txtPageMsg.asp" -->
+<!--#include file="../includes/validation/incDisplayOrder.asp" -->
 <%
 If Not user_bSuperUser Then
 	Call securityFailure()
