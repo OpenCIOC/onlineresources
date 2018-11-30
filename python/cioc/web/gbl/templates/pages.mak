@@ -17,6 +17,13 @@
 </%doc>
 
 <%inherit file="cioc.web:templates/master.mak" />
+<%!
+from cioc.core import gtranslate
+%>
+
+%if not request.viewdata.PrintMode:
+${gtranslate.render_ui(request)}
+%endif
 
 %if page:
 ${page.PageContent |n}
