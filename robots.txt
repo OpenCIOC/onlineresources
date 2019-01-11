@@ -52,6 +52,25 @@ Disallow: /
 User-agent: Uptimebot
 Disallow: /
 
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: Dotbot
+Disallow: /
+
+User-agent: Blexbot
+Disallow: /
+
+User-agent: GrapeshotCrawler
+Disallow: /
+
+User-agent: DomainCrawler
+Disallow: /
+
+User-agent: rogerbot
+Disallow: /
+
+
 User-agent: *
 Crawl-delay: 5
 Disallow: /admin/
