@@ -16,31 +16,33 @@
 
 import argparse
 import pprint
-import time
-from collections import namedtuple, defaultdict, Counter
-import copy
-from cStringIO import StringIO
-import datetime
-import itertools
 import json
+import time
+import string
+from collections import namedtuple
+from cStringIO import StringIO
 import os
-import subprocess
 import sys
 import traceback
-from urlparse import urljoin
+import urllib
+from collections import OrderedDict
+
+import isodate
 
 CREATE_NO_WINDOW = 0x08000000
 creationflags = 0
 
 import requests
-from lxml import etree
+from lxml import etree as ET
 
 try:
 	import cioc  # NOQA
 except ImportError:
 	sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-from cioc.core import constants as const, config, email
+from tools.toolslib import Context
+
+from cioc.core import constants as const, email
 
 
 const.update_cache_values()
@@ -111,10 +113,17 @@ def parse_args(argv):
 	parser.add_argument('--test', dest='test', action='store_const', const=True, default=False)
 	parser.add_argument('--email', dest='email', action='store_const', const=True, default=False)
 	parser.add_argument('--config-prefix', dest='config_prefix', action='store', default='')
+	parser.add_argument('--modified-since', dest='modified_since', action='store', default=None)
 
 	args = parser.parse_args(argv)
 	if args.config_prefix and not args.config_prefix.endswith('.'):
 		args.config_prefix += '.'
+
+	if args.modified_since:
+		try:
+			args.modified_since = isodate.parse_datetime(args.modified_since)
+		except:
+			parser.error('invalid date format must be like 2018-10-10T15:45:00')
 
 	return args
 
@@ -155,9 +164,11 @@ def icarol_takeall(args, modifiedSince=None):
 	params = {'term': '*', 'takeAll': True}
 	if modifiedSince:
 		params['modifiedSince'] = modifiedSince.isoformat()
+	if args.test:
+		print url + '?' + urllib.urlencode(params)
 	response = args.session.get(url, json=params)
 	response.raise_for_status()
-	return response.json()
+	return response.json(object_pairs_hook=OrderedDict)
 
 
 def icarol_get_records(args, id):
@@ -173,7 +184,7 @@ def icarol_get_records(args, id):
 	if args.test:
 		print 'requested {} records in {}s'.format(len(id), duration)
 	response.raise_for_status()
-	result = response.json()
+	result = response.json(object_pairs_hook=OrderedDict)
 	return result
 
 
@@ -183,23 +194,67 @@ def fetch_records(args, record_ids):
 			yield record
 
 
-def fetch_from_icarol(args):
-	records = icarol_takeall(args)
-	records.sort(key=lambda x: x['modified'])
-	if args.test:
-		records = records[-60:]
-		# pprint.pprint(records)
-		# return
+def _to_xml(obj, parent=None):
+	if parent is None:
+		parent = ET.Element('root')
 
-	for record in fetch_records(args, [x['id'] for x in records]):
-		pprint.pprint(record)
+	if isinstance(obj, dict):
+		for key, value in obj.items():
+			if not isinstance(key, basestring):
+				key = unicode(key)
+
+			if key[0] not in string.ascii_letters:
+				key = 'k' + key
+
+			sub = ET.SubElement(parent, key)
+			_to_xml(value, sub)
+
+		return parent
+
+	if isinstance(obj, (list, tuple)):
+		for value in obj:
+			sub = ET.SubElement(parent, 'item')
+			_to_xml(value, sub)
+
+		return parent
+
+	if obj is None:
+		return parent
+
+	parent.text = unicode(obj)
+	return parent
+
+
+def to_xml(obj):
+	return ET.tostring(_to_xml(obj))
+
+
+def fetch_from_icarol(context):
+	records = icarol_takeall(context.args, context.args.modified_since)
+	records.sort(key=lambda x: x['modified'])
+	if context.args.test:
+		records = records[-60:]
+		pprint.pprint(records)
+		return
+
+	sql = u'''
+	INSERT INTO CIC_iCarolImport (TakeAllJson, TakeAllXML, RecordJson, RecordXML)
+	VALUES (?, ?, ?, ?)
+	'''
+
+	with context.connmgr.get_connection('admin') as conn:
+		for record in zip(records, fetch_records(context.args, [x['id'] for x in records])):
+			xml_0 = to_xml(record[0])
+			xml_1 = to_xml(record[1])
+			conn.execute(sql, json.dumps(record[0]), xml_0, json.dumps(record[1]), xml_1)
 
 
 def main(argv):
 	args = parse_args(argv)
+	context = Context(args)
 	retval = 0
 	try:
-		args.config = config.get_config(args.configfile, const._app_name)
+		args.config = context.config
 	except Exception:
 		sys.stderr.write('ERROR: Could not process config file:\n')
 		sys.stderr.write(traceback.format_exc())
@@ -217,7 +272,7 @@ def main(argv):
 
 	prepare_session(args)
 
-	fetch_from_icarol(args)
+	fetch_from_icarol(context)
 
 	if sys.stderr.is_dirty():
 		retval = 1
