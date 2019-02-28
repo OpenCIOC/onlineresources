@@ -10,7 +10,13 @@ Disallow: /
 User-agent: googlebot-image
 Disallow: /
 
+User-agent: Seekport Crawler
+Disallow: /
+
 User-agent: SemrushBot
+Disallow: /
+
+User-agent: SemrushBot-SA
 Disallow: /
 
 User-agent: SeznamBot
@@ -56,9 +62,6 @@ User-agent: MJ12bot
 Disallow: /
 
 User-agent: Dotbot
-Disallow: /
-
-User-agent: Blexbot
 Disallow: /
 
 User-agent: GrapeshotCrawler
