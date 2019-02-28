@@ -213,7 +213,7 @@ End If
 			<span class="glyphicon glyphicon-question-sign SimulateLink"></span>
 			</a>
 		</td>
-		<td class="field-data-cell"><span class="SmallNote"><%=TXT_INST_MAX_4000%>&nbsp;<%=TXT_HTML_ALLOWED%></span>
+		<td class="field-data-cell"><span class="SmallNote"><%=TXT_INST_MAX_8000%>&nbsp;<%=TXT_HTML_ALLOWED%></span>
 		<br><textarea name="PageMsg" id="PageMsg" wrap="soft" rows="<%=getTextAreaRows(intFieldLen,5)%>" cols="<%=TEXTAREA_COLS%>" class="form-control"><%=strPageMsg%></textarea>
 		</td>
 	</tr>

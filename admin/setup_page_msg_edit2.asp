@@ -104,7 +104,7 @@ bVisiblePrintMode = Request("VisiblePrintMode")="on"
 bLoginOnly = Request("LoginOnly")="on"
 
 strPageMsg = Trim(Request("PageMsg"))
-If Len(strPageMsg) > 4000 Then
+If Len(strPageMsg) > 8000 Then
 	strError = TXT_ERR_PAGE_MESSAGE
 End If
 If Nl(strPageMsg) Then
@@ -158,7 +158,7 @@ If Nl(strError) Then
 		.Parameters.Append .CreateParameter("@VisiblePrintMode", adBoolean, adParamInput, 1, IIf(bVisiblePrintMode, SQL_TRUE, SQL_FALSE))
 		.Parameters.Append .CreateParameter("@LoginOnly", adBoolean, adParamInput, 1, IIf(bLoginOnly, SQL_TRUE, SQL_FALSE))
 		.Parameters.Append .CreateParameter("@DisplayOrder", adInteger, adParamInput, 1, intDisplayOrder)
-		.Parameters.Append .CreateParameter("@PageMsg", adVarWChar, adParamInput, 4000, strPageMsg)
+		.Parameters.Append .CreateParameter("@PageMsg", adVarWChar, adParamInput, 8000, strPageMsg)
 		.Parameters.Append .CreateParameter("@CICViewList", adLongVarChar, adParamInput, -1, strCICViewList)
 		.Parameters.Append .CreateParameter("@VOLViewList", adLongVarChar, adParamInput, -1, strVOLViewList)
 		.Parameters.Append .CreateParameter("@PageList", adLongVarChar, adParamInput, -1, strPageList)
