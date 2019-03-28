@@ -320,8 +320,9 @@ intColCount = intColCount + 1
 	<br><label class="NoWrap" for="opt_intOrderByCIC_RE"><input<%If opt_intOrderByCIC = OB_RELEVANCY Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_RE" value="<%=OB_RELEVANCY%>">&nbsp;<%=TXT_RELEVANCY%></label>
 	<label class="NoWrap" for="opt_intOrderByCIC_C"><input<%If opt_intOrderByCIC = OB_CUSTOM Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_C" value="<%=OB_CUSTOM%>">&nbsp;<%=TXT_CUSTOM_SPECIFY%></label>&nbsp;<%=makeCustFieldList(opt_fld_intCustOrderCIC,"opt_fld_intCustOrderCIC",True,False,0)%>
 	<br><%=TXT_SORT & TXT_COLON%><label for="opt_bOrderByDescCIC_A"><input <%=Checked(Not opt_bOrderByDescCIC)%> type="radio" name="opt_bOrderByDescCIC" id="opt_bOrderByDescCIC_A" value="">&nbsp;<%=TXT_ASCENDING%></label>
-	<label for="opt_bOrderByDescCIC_D"><input <%=Checked(opt_bOrderByDescCIC)%> type="radio" name="opt_bOrderByDescCIC" id="opt_bOrderByDescCIC_D" value="on">&nbsp;<%=TXT_DESCENDING%></label></td>
-	<br><label for="opt_bTableSortCIC"><input <%=Checked(opt_bTableSortCIC)%> type="checkbox" name="opt_bTableSortCIC" id="opt_bTableSortCIC" value="on">&nbsp;<%=TXT_DESCENDING%></label></td>
+	<label for="opt_bOrderByDescCIC_D"><input <%=Checked(opt_bOrderByDescCIC)%> type="radio" name="opt_bOrderByDescCIC" id="opt_bOrderByDescCIC_D" value="on">&nbsp;<%=TXT_DESCENDING%></label>
+	<br><label for="opt_bTableSortCIC"><input <%=Checked(opt_bTableSortCIC)%> type="checkbox" name="opt_bTableSortCIC" id="opt_bTableSortCIC" value="on">&nbsp;<%=TXT_USE_TABLE_SORT%></label>
+	</td>
 </tr>
 <%
 	Call closeCustFieldRst()

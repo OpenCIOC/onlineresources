@@ -206,9 +206,9 @@ ${request.passvars.cached_form_vals |n}
 	${renderer.radio(prefix + 'OrderByDesc', 'True', label=_('Descending'))}
 	%if domain.id == const.DM_CIC:
 
+	<br>
 	${renderer.checkbox(prefix + 'TableSort', 'False', label=_('Show sort options on results page'))}
 	%endif
-	<br>
 
 	</td>
 </tr>
