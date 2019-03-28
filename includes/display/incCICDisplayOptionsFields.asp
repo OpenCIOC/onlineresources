@@ -32,6 +32,7 @@ Dim opt_fld_bNUM, _
 	opt_intOrderByCIC, _
 	opt_fld_intCustOrderCIC, _
 	opt_bOrderByDescCIC, _
+	opt_bTableSortCIC, _
 	opt_bDispTableCIC, _
 	opt_bMail, _
 	opt_bPub, _
@@ -51,6 +52,7 @@ opt_bListAddRecordCIC = False
 opt_intOrderByCIC = OB_NAME
 opt_fld_intCustOrderCIC = Null
 opt_bOrderByDescCIC = False
+opt_bTableSortCIC = False
 opt_bDispTableCIC = True
 opt_bMail = False
 opt_bPub = False
@@ -110,6 +112,7 @@ If Not bAlreadyLoaded Or bForView Then
 			opt_intOrderByCIC = Nz(.Fields("OrderBy"),OB_NAME)
 			opt_fld_intCustOrderCIC = .Fields("OrderByCustom")
 			opt_bOrderByDescCIC = .Fields("OrderByDesc")
+			opt_bTableSortCIC = .Fields("TableSort")
 			opt_bDispTableCIC = .Fields("ShowTable")
 			opt_bMail = .Fields("GLinkMail")
 			opt_bPub = .Fields("GLinkPub")
@@ -149,6 +152,7 @@ If Not bAlreadyLoaded Or bForView Then
 		Call setSessionValue("opt_intOrderByCIC", opt_intOrderByCIC)
 		Call setSessionValue("opt_fld_intCustOrderCIC", opt_fld_intCustOrderCIC)
 		Call setSessionValue("opt_bOrderByDescCIC", opt_bOrderByDescCIC)
+		Call setSessionValue("opt_bTableSortCIC", opt_bTableSortCIC)
 		Call setSessionValue("opt_bDispTableCIC", opt_bDispTableCIC)
 		Call setSessionValue("opt_bMail", opt_bMail)
 		Call setSessionValue("opt_bPub", opt_bPub)
@@ -177,6 +181,7 @@ Else
 	End If
 	opt_fld_intCustOrderCIC = Nz(getSessionValue("opt_fld_intCustOrderCIC"),opt_fld_intCustOrderCIC)
 	opt_bOrderByDescCIC = Nz(getSessionValue("opt_bOrderByDescCIC"),opt_bOrderByDescCIC)
+	opt_bTableSortCIC = Nz(getSessionValue("opt_bTableSortCIC"),opt_bTableSortCIC)
 	opt_bDispTableCIC = Nz(getSessionValue("opt_bDispTableCIC"),opt_bDispTableCIC)
 	opt_bMail = Nz(getSessionValue("opt_bMail"),opt_bMail) And user_bLoggedIn
 	opt_bPub = Nz(getSessionValue("opt_bPub"),opt_bPub) And user_bLoggedIn
@@ -316,6 +321,7 @@ intColCount = intColCount + 1
 	<label class="NoWrap" for="opt_intOrderByCIC_C"><input<%If opt_intOrderByCIC = OB_CUSTOM Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_C" value="<%=OB_CUSTOM%>">&nbsp;<%=TXT_CUSTOM_SPECIFY%></label>&nbsp;<%=makeCustFieldList(opt_fld_intCustOrderCIC,"opt_fld_intCustOrderCIC",True,False,0)%>
 	<br><%=TXT_SORT & TXT_COLON%><label for="opt_bOrderByDescCIC_A"><input <%=Checked(Not opt_bOrderByDescCIC)%> type="radio" name="opt_bOrderByDescCIC" id="opt_bOrderByDescCIC_A" value="">&nbsp;<%=TXT_ASCENDING%></label>
 	<label for="opt_bOrderByDescCIC_D"><input <%=Checked(opt_bOrderByDescCIC)%> type="radio" name="opt_bOrderByDescCIC" id="opt_bOrderByDescCIC_D" value="on">&nbsp;<%=TXT_DESCENDING%></label></td>
+	<br><label for="opt_bTableSortCIC"><input <%=Checked(opt_bTableSortCIC)%> type="checkbox" name="opt_bTableSortCIC" id="opt_bTableSortCIC" value="on">&nbsp;<%=TXT_DESCENDING%></label></td>
 </tr>
 <%
 	Call closeCustFieldRst()
@@ -354,6 +360,7 @@ Else
 	opt_fld_intCustOrderCIC = Null
 End If
 opt_bOrderByDescCIC = Request.Form("opt_bOrderByDescCIC") = "on"
+opt_bTableSortCIC = Request.Form("opt_bTableSortCIC") = "on"
 opt_bDispTableCIC = Request.Form("opt_bDispTableCIC") = "on"
 aTmpFldList = Split(Request.Form("opt_fld_aCustCIC"),",")
 For i = 0 to UBound(aTmpFldList)
@@ -393,6 +400,7 @@ If getSessionValue("session_test") = "ok" Then
 		Call setSessionValue("opt_fld_intCustOrderCIC", Null)
 	End If
 	Call setSessionValue("opt_bOrderByDescCIC", Request.Form("opt_bOrderByDescCIC") = "on")
+	Call setSessionValue("opt_bTableSortCIC", Request.Form("opt_bTableSortCIC") = "on")
 	Call setSessionValue("opt_bDispTableCIC", Request.Form("opt_bDispTableCIC") = "on")
 	Call setSessionValue("opt_bMail", Request.Form("opt_bMail") = "on" And user_bCanRequestUpdateCIC)
 	Call setSessionValue("opt_bPub", Request.Form("opt_bPub") = "on" And ps_intDbArea=DM_CIC And user_intCanUpdatePubs <> UPDATE_NONE And Not user_bLimitedViewCIC)
@@ -433,6 +441,7 @@ Sub saveDisplayOptionsCIC( _
 	intOrderBy, _
 	intOrderByCustom, _
 	bOrderByDesc, _
+	bTableSort, _
 	bShowTable, _
 	bGLinkMail, _
 	bGLinkPub, _
@@ -474,6 +483,7 @@ Sub saveDisplayOptionsCIC( _
 		.Parameters.Append .CreateParameter("@OrderBy", adInteger, adParamInput, 4, intOrderBy)
 		.Parameters.Append .CreateParameter("@OrderByCustom", adInteger, adParamInput, 4, intOrderByCustom)
 		.Parameters.Append .CreateParameter("@OrderByDesc", adBoolean, adParamInput, 1, IIf(bOrderByDesc,SQL_TRUE,SQL_FALSE))
+		.Parameters.Append .CreateParameter("@TableSort", adBoolean, adParamInput, 1, IIf(bTableSort,SQL_TRUE,SQL_FALSE))
 		.Parameters.Append .CreateParameter("@GLinkMail", adBoolean, adParamInput, 1, IIf(bGLinkMail And Not Nl(intUserID),SQL_TRUE,SQL_FALSE))
 		.Parameters.Append .CreateParameter("@GLinkPub", adBoolean, adParamInput, 1, IIf(bGLinkPub And Not Nl(intUserID),SQL_TRUE,SQL_FALSE))
 		.Parameters.Append .CreateParameter("@ShowTable", adBoolean, adParamInput, 1, bShowTable)

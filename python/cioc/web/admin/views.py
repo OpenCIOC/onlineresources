@@ -122,6 +122,7 @@ class ViewBaseCICSchema(ViewBaseSchema):
 	BSrchNear15 = validators.Bool()
 	BSrchNear25 = validators.Bool()
 	BSrchNear50 = validators.Bool()
+	BSrchNear100 = validators.Bool()
 
 	CSrch = validators.Bool()
 	CSrchBusRoute = validators.Bool()
@@ -157,6 +158,7 @@ class ViewBaseCICSchema(ViewBaseSchema):
 	NoProcessNotify = validators.Bool()
 	UseSubmitChangesTo = validators.Bool()
 	MapSearchResults = validators.Bool()
+	AutoMapSearchResults = validators.Bool()
 	ResultsPageSize = validators.Int(min=100, max=9999)
 	ShowRecordDetailsSidebar = validators.Bool()
 
@@ -304,6 +306,7 @@ class DisplayOptionSchema(Schema):
 	OrderBy = validators.Int(not_empty=True)
 	OrderByCustom = ciocvalidators.IDValidator()
 	OrderByDesc = validators.StringBool(if_empy=False, if_missing=False)
+	TableSort = validators.Bool()
 	GLinkMail = validators.Bool()
 	GLinkPub = validators.Bool()
 	ShowTable = validators.Bool()

@@ -945,6 +945,10 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 							${renderer.errorlist("item.BSrchNear50")}
 							${renderer.checkbox("item.BSrchNear50", label=_('Within 50 KM'))}
 						</div>
+						<div class="checkbox">
+							${renderer.errorlist("item.BSrchNear100")}
+							${renderer.checkbox("item.BSrchNear100", label=_('Within 100 KM'))}
+						</div>
 						%else:
 						<div class="checkbox">
 							${renderer.errorlist("item.BSrchStepByStep")}
@@ -1263,6 +1267,12 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 			<td class="field-data-cell">
 				${renderer.errorlist("item.MapSearchResults")}
 				${renderer.checkbox("item.MapSearchResults", label=_('Map search results with Google Maps'))}
+			</td>
+		</tr>
+		<tr>
+			<td class="field-data-cell">
+				${renderer.errorlist("item.AutoMapSearchResults")}
+				${renderer.checkbox("item.AutoMapSearchResults", label=_('Show Map on search results page by default'))}
 			</td>
 		</tr>
 		<tr>

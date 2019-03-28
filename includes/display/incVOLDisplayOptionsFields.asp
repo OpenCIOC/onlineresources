@@ -461,6 +461,7 @@ Sub saveDisplayOptionsVOL( _
 		.Parameters.Append .CreateParameter("@OrderBy", adInteger, adParamInput, 4, intOrderBy)
 		.Parameters.Append .CreateParameter("@OrderByCustom", adInteger, adParamInput, 4, intOrderByCustom)
 		.Parameters.Append .CreateParameter("@OrderByDesc", adBoolean, adParamInput, 1, IIf(bOrderByDesc,SQL_TRUE,SQL_FALSE))
+		.Parameters.Append .CreateParameter("@TableSort", adBoolean, adParamInput, 1, SQL_FALSE)
 		.Parameters.Append .CreateParameter("@GLinkMail", adBoolean, adParamInput, 1, SQL_FALSE)
 		.Parameters.Append .CreateParameter("@GLinkPub", adBoolean, adParamInput, 1, SQL_FALSE)
 		.Parameters.Append .CreateParameter("@ShowTable", adBoolean, adParamInput, 1, bShowTable)
