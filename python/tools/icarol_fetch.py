@@ -26,6 +26,7 @@ import sys
 import traceback
 import urllib
 from collections import OrderedDict
+from datetime import datetime
 
 import isodate
 
@@ -42,7 +43,7 @@ except ImportError:
 
 from tools.toolslib import Context
 
-from cioc.core import constants as const, email
+from cioc.core import constants as const  # , email
 
 
 const.update_cache_values()
@@ -114,6 +115,7 @@ def parse_args(argv):
 	parser.add_argument('--email', dest='email', action='store_const', const=True, default=False)
 	parser.add_argument('--config-prefix', dest='config_prefix', action='store', default='')
 	parser.add_argument('--modified-since', dest='modified_since', action='store', default=None)
+	parser.add_argument('--fetch-mechanism', dest='fetch_mechanism', action='store', default=None)
 
 	args = parser.parse_args(argv)
 	if args.config_prefix and not args.config_prefix.endswith('.'):
@@ -162,8 +164,13 @@ class fakerequest(object):
 def icarol_takeall(args, modifiedSince=None):
 	url = 'https://' + args.host + '/v1/Resource/Search'
 	params = {'term': '*', 'takeAll': True}
+
+	if args.extra_criteria:
+		params.update(args.extra_criteria)
+
 	if modifiedSince:
 		params['modifiedSince'] = modifiedSince.isoformat()
+
 	if args.test:
 		print url + '?' + urllib.urlencode(params)
 	response = args.session.get(url, json=params)
@@ -176,15 +183,16 @@ def icarol_get_records(args, id):
 	if not isinstance(id, list):
 		id = [id]
 
-	id = map(str, id)
-	params = {'id': id}
+	id_str = map(str, id)
+	params = {'id': id_str}
 	start = time.time()
 	response = args.session.get(url, params=params)
 	duration = time.time() - start
 	if args.test:
 		print 'requested {} records in {}s'.format(len(id), duration)
 	response.raise_for_status()
-	result = response.json(object_pairs_hook=OrderedDict)
+	tmp = {x['id']: x for x in response.json(object_pairs_hook=OrderedDict)}
+	result = [tmp[x] for x in id]
 	return result
 
 
@@ -231,8 +239,8 @@ def to_xml(obj):
 
 def fetch_from_icarol(context):
 	records = icarol_takeall(context.args, context.args.modified_since)
-	records.sort(key=lambda x: x['modified'])
 	if context.args.test:
+		records.sort(key=lambda x: x['modified'])
 		records = records[-60:]
 		pprint.pprint(records)
 		return
@@ -247,6 +255,36 @@ def fetch_from_icarol(context):
 			xml_0 = to_xml(record[0])
 			xml_1 = to_xml(record[1])
 			conn.execute(sql, json.dumps(record[0]), xml_0, json.dumps(record[1]), xml_1)
+
+
+def check_db_state(context):
+	context.args.extra_criteria = None
+	if not context.args.fetch_mechanism:
+		return
+
+	sql = 'SELECT * FROM CIC_iCarolImportMeta WHERE Mechanism=?'
+	with context.connmgr.get_connection('admin') as conn:
+		meta_data = conn.execute(sql, context.args.fetch_mechanism).fetchone()
+
+	if not meta_data:
+		# XXX Should we do something to indicate to an operator that something is missing?
+		return
+
+	if meta_data.ExtraCriteria:
+		context.args.extra_criteria = json.loads(meta_data.ExtraCriteria)
+
+	context.args.modified_since = meta_data.LastFetched
+	# XXX Should this be observed value instead of this
+	context.args.next_modified_since = datetime.utcnow()
+
+
+def update_db_state(context):
+	if not context.args.fetch_mechanism:
+		return
+
+	sql = 'UPDATE CIC_iCarolImportMeta SET LastFetched=? WHERE Mechanism=?'
+	with context.connmgr.get_connection('admin') as conn:
+		conn.execute(sql, context.args.next_modified_since, context.args.fetch_mechanism)
 
 
 def main(argv):
@@ -271,8 +309,11 @@ def main(argv):
 	sys.stderr = FileWriteDetector(sys.stderr)
 
 	prepare_session(args)
+	check_db_state(context)
 
 	fetch_from_icarol(context)
+
+	update_db_state(args)
 
 	if sys.stderr.is_dirty():
 		retval = 1
