@@ -177,11 +177,11 @@ Sub getGeoCodeFields()
 
 	intMapPin = Trim(Request("MAP_PIN"))
 	If Nl(intMapPin) Or Not IsNumeric(intMapPin) Then
-		intMapPin = MAP_PIN_MIN
+		intMapPin = Null
 	Else
 		intMapPin = CInt(intMapPin)
 		If Not intMapPin >= MAP_PIN_MIN And intMapPin <= MAP_PIN_MAX Then
-			intMapPin = MAP_PIN_MIN
+			intMapPin = Null
 		End If
 	End If
 
