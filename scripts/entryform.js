@@ -4472,6 +4472,14 @@ Globalize.culture = function( cultureSelector ) {
 					}
 				}
 			});
+			
+			var on_menu_click = function() {
+				var self = $(this);
+				$("#dropdownMAP_PIN .selection").html(self.html());
+				$('#MAP_PIN').val(self.data('value'));
+			};
+			$('#dropdownMAP_PINmenu li a').click(on_menu_click);
+			on_menu_click.call($('#dropdownMAP_PINmenu li a[data-value=' + $('#MAP_PIN').val() + ']'))
 	}
 
 })();
