@@ -227,7 +227,9 @@ Sub getGeoCodeFields()
 
 	If Nl(strErrorList) Then
 		Call addBTInsertField("GEOCODE_TYPE",intGeoCodeType,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
-		Call addBTInsertField("MAP_PIN",intMapPin,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
+		If Not Nl(intMapPin) Then
+			Call addBTInsertField("MAP_PIN",intMapPin,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
+		End If
 		Call addBTInsertField("LATITUDE",decLat,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
 		Call addBTInsertField("LONGITUDE",decLong,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
 		Call addBTInsertField("GEOCODE_NOTES",strNotes,True,strUpdateListBTD,strInsertIntoBTD,strInsertValueBTD)
