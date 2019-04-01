@@ -117,6 +117,7 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_MAIL_CO, _
 	TXT_MAIN_NAME_ONLY, _
 	TXT_MAP_LINK, _
+	TXT_MAPPING_CATEGORY, _
 	TXT_MAX_AGE, _
 	TXT_ME, _
 	TXT_MIN_AGE, _
@@ -319,6 +320,7 @@ Sub setTxtEntryForm()
 			TXT_MAIL_CO = "Aux soins de"
 			TXT_MAIN_NAME_ONLY = "du nom de dossier principal"
 			TXT_MAP_LINK = "Lien de la carte"
+			TXT_MAPPING_CATEGORY = "TRANSLATE_FR -- Mapping Category"
 			TXT_MAX_AGE = "Âge maximal"
 			TXT_ME = "Moi"
 			TXT_MIN_AGE = "Âge minimal"
@@ -521,6 +523,7 @@ Sub setTxtEntryForm()
 			TXT_MAIL_CO = "Mail Care of"
 			TXT_MAIN_NAME_ONLY = "Main Record Name only"
 			TXT_MAP_LINK = "Map Link"
+			TXT_MAPPING_CATEGORY = "Mapping Category"
 			TXT_MAX_AGE = "Maximum Age"
 			TXT_ME = "Me"
 			TXT_MIN_AGE = "Minimum Age"

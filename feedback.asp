@@ -66,6 +66,7 @@ Call setPageInfo(False, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStr
 <!--#include file="includes/list/incFiscalYearEndList.asp" -->
 <!--#include file="includes/list/incGeoCodeTypeList.asp" -->
 <!--#include file="includes/list/incLanguagesList.asp" -->
+<!--#include file="includes/list/incMappingCategoryList.asp" -->
 <!--#include file="includes/list/incMonthList.asp" -->
 <!--#include file="includes/list/incPaymentMethodList.asp" -->
 <!--#include file="includes/list/incPaymentTermsList.asp" -->

@@ -1625,7 +1625,7 @@ Function makeGeoCodeContents(rst,bUseContent)
 					"</div>" & _
 				"</div>" & _
 				"<div class=""form-group row"">" & _
-					"<label class=""control-label col-sm-3 col-md-4"" id=""MAP_PIN_LABEL"">" & "Mapping Category" & "</label>" & _
+					"<label class=""control-label col-sm-3 col-md-4"" id=""MAP_PIN_LABEL"">" & TXT_MAPPING_CATEGORY & "</label>" & _
 					"<div class=""col-sm-9 col-md-8"">"
 	With rsListMappingCategory
 		If .RecordCount = 0 Then
