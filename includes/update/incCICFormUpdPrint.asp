@@ -1620,6 +1620,39 @@ Function makeGeoCodeContents(rst,bUseContent)
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("LONGITUDE",True)
 	End If
+	Call openMappingCategoryListRst()
+	strReturn = strReturn & _
+					"</div>" & _
+				"</div>" & _
+				"<div class=""form-group row"">" & _
+					"<label class=""control-label col-sm-3 col-md-4"" id=""MAP_PIN_LABEL"">" & TXT_MAPPING_CATEGORY & "</label>" & _
+					"<div class=""col-sm-9 col-md-8"">"
+	With rsListMappingCategory
+		If .RecordCount = 0 Then
+			strReturn = TXT_NO_VALUES_AVAILABLE
+		Else
+			If .RecordCount <> 0 Then
+				.MoveFirst
+			End If
+			strReturn = strReturn & _
+						"<div class=""btn-group"" style=""width:100%;"">" & _
+						"<a class=""btn btn-default dropdown-toggle "" data-toggle=""dropdown"" href=""#"" id=""dropdownMAP_PIN"" style=""width:100%;""><span class=""selection pull-left"">Select an option </span> " & _
+      					"<span class=""pull-right glyphiconglyphicon-chevron-down caret"" style=""float:right;margin-top:10px;""></span></a>" & _
+
+						 "<ul class=""dropdown-menu"" id=""dropdownMAP_PINmenu"" role=""menu"" aria-labelledby=""MAP_PIN_LABEL"">"
+			While Not .EOF
+				strReturn = strReturn & _
+					"<li><a data-value=" & AttrQs(.Fields("MapCatID")) & "><img src=" & AttrQs(ps_strPathToStart & "images/mapping/" & .Fields("MapImageSm")) & _
+						 StringIf(Not Nl(.Fields("CategoryName"))," title=" & AttrQs(.Fields("CategoryName"))) & _
+					"> " & Server.HTMLEncode(.Fields("CategoryName")) & "</a></li>"
+				.MoveNext
+			Wend
+		End If
+	End With
+	strReturn = strReturn & _
+			"</ul> </div><div style=""display: none;""><input type=""hidden"" name=""MAP_PIN"" id=""MAP_PIN"" value=" & AttrQs(intMapPin) & "></div>"
+
+	Call closeMappingCategoryListRst()
 	strReturn = strReturn & _
 					"</div>" & _
 				"</div>" & _
