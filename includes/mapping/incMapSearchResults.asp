@@ -86,7 +86,9 @@ jQuery(function() {
 	<% If hasGoogleMapsAPI() Then %>
 	initialize_mapping({map_pins: map_pins, translations: translations,
 			culture: "<%= g_objCurrentLang.Culture %>",
-			key_arg: <%= JSONQs(getGoogleMapsKeyArg(), True)%>});
+			key_arg: <%= JSONQs(getGoogleMapsKeyArg(), True)%>,
+			auto_start: <%= IIf(g_bAutoMapSearchResults, "true", "false") %>
+	});
 	<% End If %>
 <%End If %>
 });

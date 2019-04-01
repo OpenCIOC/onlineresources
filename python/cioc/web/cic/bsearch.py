@@ -513,7 +513,7 @@ class BasicSearch(CicViewBase):
 			focus = ''
 
 		title = cic_view.SearchTitleOverride or request.pageinfo.PageTitle or _("Organization / Program Search")
-		distances = [2, 5, 10, 15, 25, 50]
+		distances = [2, 5, 10, 15, 25, 50, 100]
 		located_near = [
 			(x, _('Within %skm') % x)
 			for x in distances

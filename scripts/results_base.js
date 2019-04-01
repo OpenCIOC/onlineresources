@@ -1356,6 +1356,9 @@ window['initialize_mapping'] = function(options) {
 
 	Globalize.culture(options.culture);
 
+	if (options.auto_start && !(new String(window.location.hash).replace(/^#/, ''))) {
+		history.replaceState(null, "", (new String(window.location)).replace(/#$/,'') + '#/SHOWMAP')
+	}
 	$('#map_my_results_ui').show();
 
 	$(window).bind( 'hashchange', handleAddressChange);

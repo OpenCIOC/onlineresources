@@ -182,6 +182,7 @@ END ELSE BEGIN
 			BSrchNear15,
 			BSrchNear25,
 			BSrchNear50,
+			BSrchNear100,
 			CSrch,
 			CSrchBusRoute,
 			CSrchKeywords,
@@ -213,6 +214,7 @@ END ELSE BEGIN
 			DataUseAuth,
 			DataUseAuthPhone,
 			MapSearchResults,
+			AutoMapSearchResults,
 			MyList,
 			ViewOtherLangs,
 			AllowFeedbackNotInView,
@@ -275,6 +277,7 @@ END ELSE BEGIN
 			BSrchNear15,
 			BSrchNear25,
 			BSrchNear50,
+			BSrchNear100,
 			CSrch,
 			CSrchBusRoute,
 			CSrchKeywords,
@@ -306,6 +309,7 @@ END ELSE BEGIN
 			DataUseAuth,
 			DataUseAuthPhone,
 			MapSearchResults,
+			AutoMapSearchResults,
 			MyList,
 			ViewOtherLangs,
 			AllowFeedbackNotInView,
@@ -454,7 +458,8 @@ END ELSE BEGIN
 				ShowTable,
 				OrderBy,
 				OrderByCustom,
-				OrderByDesc
+				OrderByDesc,
+				TableSort
 			)
 			SELECT 
 				@ViewType,
@@ -469,7 +474,8 @@ END ELSE BEGIN
 				ShowTable,
 				OrderBy,
 				OrderByCustom,
-				OrderByDesc
+				OrderByDesc,
+				TableSort
 			FROM GBL_Display WHERE DD_ID=@DD_ID
 			
 			SELECT @DD_ID_NEW = SCOPE_IDENTITY()
