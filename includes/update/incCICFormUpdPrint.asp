@@ -1644,7 +1644,7 @@ Function makeGeoCodeContents(rst,bUseContent)
 				strReturn = strReturn & _
 					"<li><a data-value=" & AttrQs(.Fields("MapCatID")) & "><img src=" & AttrQs(ps_strPathToStart & "images/mapping/" & .Fields("MapImageSm")) & _
 						 StringIf(Not Nl(.Fields("CategoryName"))," title=" & AttrQs(.Fields("CategoryName"))) & _
-					"> " & Server.HTMLEncode(.Fields("CategoryName")) & "</a></li>"
+					"> " & Server.HTMLEncode(Nz(.Fields("CategoryName"))) & "</a></li>"
 				.MoveNext
 			Wend
 		End If
