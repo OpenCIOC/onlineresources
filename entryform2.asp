@@ -177,11 +177,11 @@ Sub getGeoCodeFields()
 
 	intMapPin = Trim(Request("MAP_PIN"))
 	If Nl(intMapPin) Or Not IsNumeric(intMapPin) Then
-		intMapPin = MAP_PIN_MIN
+		intMapPin = Null
 	Else
 		intMapPin = CInt(intMapPin)
 		If Not intMapPin >= MAP_PIN_MIN And intMapPin <= MAP_PIN_MAX Then
-			intMapPin = MAP_PIN_MIN
+			intMapPin = Null
 		End If
 	End If
 
@@ -227,7 +227,9 @@ Sub getGeoCodeFields()
 
 	If Nl(strErrorList) Then
 		Call addBTInsertField("GEOCODE_TYPE",intGeoCodeType,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
-		Call addBTInsertField("MAP_PIN",intMapPin,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
+		If Not Nl(intMapPin) Then
+			Call addBTInsertField("MAP_PIN",intMapPin,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
+		End If
 		Call addBTInsertField("LATITUDE",decLat,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
 		Call addBTInsertField("LONGITUDE",decLong,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
 		Call addBTInsertField("GEOCODE_NOTES",strNotes,True,strUpdateListBTD,strInsertIntoBTD,strInsertValueBTD)
