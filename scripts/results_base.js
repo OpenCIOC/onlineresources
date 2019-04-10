@@ -854,7 +854,11 @@ var details_page_loaded = function(num, responseText) {
 	}
 
 	var parentNode = current_page_content.parent();
-	current_page_content.remove();
+	if (current_page_content.is(_search_page_content)) {
+		current_page_content.detach();
+	} else {
+		current_page_content.remove();
+	}
 
 	var page_content = responseText.substr(content_start);
 	parentNode.html(page_content);
