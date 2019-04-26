@@ -89,6 +89,7 @@
 			<xs:element name="AgencyLocation" type="tSite"/>
 			<xs:element name="Phone" type="tPhone" maxOccurs="unbounded"/>
 			<xs:element name="URL" type="tURL" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="SocialMedia" type="tURL" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Email" type="tEMail" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Contact" type="tContact" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="LicenseAccreditation" type="tLicenseAccreditation" minOccurs="0" maxOccurs="unbounded"/>
@@ -401,6 +402,7 @@
 			<xs:element name="CrossStreet" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Phone" type="tPhone" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="URL" type="tURL" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="SocialMedia" type="tURL" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Email" type="tEMail" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Contact" type="tContact" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="TimeOpen" type="tTimeOpen" minOccurs="0" maxOccurs="unbounded"/>
@@ -458,6 +460,7 @@
 			<xs:element name="AKA" type="tAKA" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Phone" type="tPhone" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="URL" type="tURL" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="SocialMedia" type="tURL" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Email" type="tEMail" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Contact" type="tContact" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="TimeOpen" type="tTimeOpen" minOccurs="0" maxOccurs="unbounded"/>
