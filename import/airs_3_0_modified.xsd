@@ -101,8 +101,8 @@
 			<xs:element name="InternalNote" type="xs:string" minOccurs="0"/>
 			<xs:element name="EditorsNote" type="xs:string" minOccurs="0"/>
 			<xs:element name="PublicNote" type="xs:string" minOccurs="0"/>
-			<xs:element name="Publications" type="tPublication" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="Distributions" type="tDistribution" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Publication" type="tPublication" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Distribution" type="tDistribution" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Agency" type="tAgency" block="#all" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
@@ -320,7 +320,6 @@
 					<xs:documentation>This is a person who created/maintains the data</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ResourceSpecialistAgency" type="xs:string" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="AvailableForDirectory" type="xs:boolean"/>
 		<xs:attribute name="AvailableForReferral" type="xs:boolean"/>
@@ -425,8 +424,8 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="Publications" type="tPublication" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="Distributions" type="tDistribution" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Publication" type="tPublication" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Distribution" type="tDistribution" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="RecordOwner" type="sRecordOwner"/>
@@ -486,8 +485,8 @@
 			<xs:element name="InternalNote" type="xs:string" minOccurs="0"/>
 			<xs:element name="EditorsNote" type="xs:string" minOccurs="0"/>
 			<xs:element name="PublicNote" type="xs:string" minOccurs="0"/>
-			<xs:element name="Publications" type="tPublication" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="Distributions" type="tDistribution" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Publication" type="tPublication" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Distribution" type="tDistribution" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="RecordOwner" type="sRecordOwner"/>
@@ -565,25 +564,17 @@
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="tDistribution">
-		<xs:sequence>
-			<xs:element name="Code" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:attribute name="Value" type="sCodeType" use="required"/>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
+		<xs:attribute name="Value" type="sCodeType" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="tPublication">
 		<xs:sequence>
-			<xs:element name="Code" minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="Heading" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="Heading" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-					</xs:sequence>
-					<xs:attribute name="Value" type="sCodeType" use="required"/>
+					<xs:attribute name="Value" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
+		<xs:attribute name="Value" type="sCodeType" use="required"/>
 	</xs:complexType>
 	<xs:element name="Source">
 		<xs:annotation>
