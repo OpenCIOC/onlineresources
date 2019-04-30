@@ -66,6 +66,7 @@ Call setPageInfo(False, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStr
 <!--#include file="includes/list/incFiscalYearEndList.asp" -->
 <!--#include file="includes/list/incGeoCodeTypeList.asp" -->
 <!--#include file="includes/list/incLanguagesList.asp" -->
+<!--#include file="includes/list/incMappingCategoryList.asp" -->
 <!--#include file="includes/list/incMonthList.asp" -->
 <!--#include file="includes/list/incPaymentMethodList.asp" -->
 <!--#include file="includes/list/incPaymentTermsList.asp" -->
@@ -558,6 +559,8 @@ If (Not Nl(strUpdatePassword) Or Nl(bUpdatePasswordRequired) Or Not bUpdatePassw
 						strFieldVal = makeEmployeesContents(rsOrg, Not bSuggest)
 					Case "EMPLOYEES_RANGE"
 						strFieldVal = makeEmployeesRangeContents(rsOrg, Not bSuggest)
+					Case "EVENT_SCHEDULE"
+						strFieldVal = makeEventScheduleContents(rsOrg, Not bSuggest)
 					Case "EXEC_1"
 						strFieldVal = makeContactContents(rsOrg, strFieldName, Not bSuggest)
 					Case "EXEC_2"
@@ -880,6 +883,11 @@ If bLanguages Then
 	init_languages($, "<%= TXT_NOT_FOUND %>");
 <%
 End If
+If bHasSchedule Then
+%> 
+	init_entryform_items($('.EntryFormItemContainer'),'<%= TXT_DELETE %>', '<%= TXT_RESTORE %>'); 
+<%
+End If
 If bLocatedIn Or bSiteAddress Then
 %>
 	entryform.community_complete_url = "<%= makeLinkB(ps_strPathToStart & "jsonfeeds/community_generator.asp") %>";
@@ -897,6 +905,14 @@ If bSiteAddress Then
 End If
 %>
 	restore_cached_state();
+
+<%
+If bHasSchedule Then
+%>
+	init_schedule($)
+<%
+End If
+%>
 
 <% If bHaveGeoCodeUI Then %>
 	pageconstants = {};

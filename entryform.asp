@@ -89,6 +89,7 @@ Call setPageInfo(True, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStri
 <!--#include file="includes/mapping/incGoogleMaps.asp" -->
 <!--#include file="includes/search/incNormalizeSearchTerms.asp" -->
 <!--#include file="includes/update/incCICFormUpdPrint.asp" -->
+<!--#include file="includes/update/incEventSchedule.asp" -->
 <!--#include file="includes/update/incEntryFormGeneral.asp" -->
 <!--#include file="includes/update/incFieldHistory.asp" -->
 
@@ -692,6 +693,8 @@ While Not rsFields.EOF
 						strFieldVal = makeEmployeesContents(rsOrg, Not bNew)
 					Case "EMPLOYEES_RANGE"
 						strFieldVal = makeEmployeesRangeContents(rsOrg, Not bNew)
+					Case "EVENT_SCHEDULE"
+						strFieldVal = makeEventScheduleContentsEntryForm(rsOrg, Not bNew)
 					Case "EXEC_1"
 						strFieldVal = makeContactFieldVal(rsOrg, strFieldName, Not bNew)
 					Case "EXEC_2"
@@ -803,7 +806,9 @@ While Not rsFields.EOF
 							Case Else
 								intPubID = rsFields.Fields("PB_ID")
 								If Not Nl(intPubID) Then
-									strFieldVal = makeGeneralHeadingFieldVal(rsOrg, Not bNew, intPubID)
+									If Not bNew Then
+										strFieldVal = makeGeneralHeadingFieldVal(rsOrg, Not bNew, intPubID)
+									End If
 								Else
 									If Not bNew Then
 										strFieldContents = rsOrg(strFieldName)
@@ -958,7 +963,7 @@ jQuery(function($) {
 	init_org_num($);
 	init_locations_services($, <%=JSONQs(TXT_INVALID_RECORD_NUM, True) %>);
 <%
-If bOtherAddressesAdded or bActivityInfoAdded or bBillingAddressesAdded or bContractSignatureAdded or bVacancyAdded Then
+If bOtherAddressesAdded or bActivityInfoAdded or bBillingAddressesAdded or bContractSignatureAdded or bVacancyAdded or bHasSchedule Then
 %> 
 	init_entryform_items($('.EntryFormItemContainer'),'<%= TXT_DELETE %>', '<%= TXT_RESTORE %>'); 
 <%
@@ -1033,6 +1038,13 @@ If bHasVacancyServiceTitles Then
 End If
 %>
 	restore_cached_state();
+<%
+If bHasSchedule Then
+%>
+	init_schedule($)
+<%
+End If
+%>
 
 	update_form_make_required_org_level();
 

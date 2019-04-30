@@ -315,7 +315,7 @@ Else
 <%
 Call openEmailMsgListRst(intDomain, bMultiRecord)
 %>
-<form action="<%=ps_strThisPage%>" method="get" class="form-inline clear-line-below">
+<form action="<%=ps_strThisPage%>" method="post" class="form-inline clear-line-below">
 <%=g_strCacheFormVals%>
 <input type="hidden" name="DM" value="<%=intDomain%>">
 <input type="hidden" name="IDList" value="<%=strIDList%>">

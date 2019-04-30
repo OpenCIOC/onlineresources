@@ -42,8 +42,8 @@ INSERT INTO @OtherAddress
 				CARE_OF,
 				BOX_TYPE,
 				PO_BOX,
-				NULL,
-				NULL,
+				LATITUDE,
+				LONGITUDE,
 				LangID,
 				0
 			),
@@ -60,8 +60,8 @@ INSERT INTO @OtherAddress
 			PROVINCE,
 			COUNTRY,
 			POSTAL_CODE,
-			NULL,
-			NULL,
+			LATITUDE,
+			LONGITUDE,
 			LangID
 		) ELSE NULL END
 	FROM CIC_BT_OTHERADDRESS

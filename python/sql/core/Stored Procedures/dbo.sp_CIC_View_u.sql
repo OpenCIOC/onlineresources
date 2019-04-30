@@ -5,122 +5,125 @@ GO
 
 
 CREATE PROCEDURE [dbo].[sp_CIC_View_u]
-	@ViewType int,
-	@MODIFIED_BY varchar(50),
-	@MemberID int,
-	@AgencyCode char(3),
-	@Owner char(3),
-	@CanSeeNonPublic bit,
-	@CanSeeDeleted bit,
-	@HidePastDueBy smallint,
-	@AlertColumn bit,
-	@Template int,
-	@PrintTemplate int,
-	@PrintVersionResults bit,
-	@DataMgmtFields bit,
-	@LastModifiedDate bit,
-	@SocialMediaShare bit,
-	@CommSrchWrapAt tinyint,
-	@ASrchAges bit,
-	@ASrchBool bit,
-	@ASrchEmail bit,
-	@ASrchLastRequest bit,
-	@ASrchOwner bit,
-	@BSrchAutoComplete bit,
-	@BSrchBrowseByOrg bit,
-	@BSrchKeywords bit,
-	@DataUseAuth bit,
-	@DataUseAuthPhone bit,
-	@MyList bit,
-	@ViewOtherLangs bit,
-	@AllowFeedbackNotInView bit,
-	@AssignSuggestionsTo varchar(3),
-	@AllowPDF bit,
-	@CommSrchDropDown bit,
-	@OtherCommunity bit,
-	@RespectPrivacyProfile bit,
-	@PB_ID int,
-	@LimitedView bit,
-	@VolunteerLink bit,
-	@SrchCommunityDefault bit,
-	@ASrchAddress bit,
-	@ASrchEmployee bit,
-	@ASrchNear bit,
-	@ASrchVacancy bit,
-	@ASrchVOL bit,
-	@BSrchAges bit,
-	@BSrchLanguage bit,
-	@BSrchNUM bit,
-	@BSrchOCG bit,
-	@BSrchVacancy bit,
-	@BSrchVOL bit,
-	@BSrchWWW bit,
-	@BSrchDefaultTab tinyint,
-	@BSrchNear2 bit,
-	@BSrchNear5 bit,
-	@BSrchNear10 bit,
-	@BSrchNear15 bit,
-	@BSrchNear25 bit,
-	@BSrchNear50 bit,
-	@CSrch bit,
-	@CSrchBusRoute bit,
-	@CSrchKeywords bit,
-	@CSrchLanguages bit,
-	@CSrchNear bit,
-	@CSrchSchoolEscort bit,
-	@CSrchSchoolsInArea bit,
-	@CSrchSpaceAvailable bit,
-	@CSrchSubsidy bit,
-	@CSrchTypeOfProgram bit,
-	@CCRFields bit,
-	@QuickListDropDown tinyint,
-	@QuickListWrapAt tinyint,
-	@QuickListMatchAll bit,
-	@QuickListSearchGroups bit,
-	@QuickListPubHeadings int,
-	@LinkOrgLevels bit,
-	@CanSeeNonPublicPub bit,
-	@UsePubNamesOnly bit,
-	@UseNAICSView bit,
-	@UseTaxonomyView bit,
-	@TaxDefnLevel tinyint,
-	@UseThesaurusView bit,
-	@UseLocalSubjects bit,
-	@UseZeroSubjects bit,
-	@AlsoNotify varchar(60),
-	@NoProcessNotify bit,
-	@UseSubmitChangesTo bit,
-	@MapSearchResults bit,
-	@ResultsPageSize smallint,
-	@ShowID bit,
-	@ShowOwner bit,
-	@ShowAlert bit,
-	@ShowOrg bit,
-	@ShowCommunity bit,
-	@ShowUpdateSchedule bit,
-	@LinkUpdate bit,
-	@LinkEmail bit,
-	@LinkSelect bit,
-	@LinkWeb bit,
-	@LinkListAdd bit,
-	@OrderBy int,
-	@OrderByCustom int,
-	@OrderByDesc bit,
-	@GLinkMail bit,
-	@GLinkPub bit,
-	@ShowTable bit,
-	@VShowPosition bit,
-	@VShowDuties bit,
-	@ShowRecordDetailsSidebar bit,
-	@GoogleTranslateWidget bit,
-	@DefaultPrintProfile int,
-	@Descriptions xml,
-	@Views xml,
-	@AdvSrchCheckLists xml,
-	@Publications xml,
-	@AddPublications xml,
-	@DisplayOptFields varchar(MAX),
-	@ErrMsg nvarchar(500) OUTPUT
+	@ViewType INT,
+	@MODIFIED_BY VARCHAR(50),
+	@MemberID INT,
+	@AgencyCode CHAR(3),
+	@Owner CHAR(3),
+	@CanSeeNonPublic BIT,
+	@CanSeeDeleted BIT,
+	@HidePastDueBy SMALLINT,
+	@AlertColumn BIT,
+	@Template INT,
+	@PrintTemplate INT,
+	@PrintVersionResults BIT,
+	@DataMgmtFields BIT,
+	@LastModifiedDate BIT,
+	@SocialMediaShare BIT,
+	@CommSrchWrapAt TINYINT,
+	@ASrchAges BIT,
+	@ASrchBool BIT,
+	@ASrchEmail BIT,
+	@ASrchLastRequest BIT,
+	@ASrchOwner BIT,
+	@BSrchAutoComplete BIT,
+	@BSrchBrowseByOrg BIT,
+	@BSrchKeywords BIT,
+	@DataUseAuth BIT,
+	@DataUseAuthPhone BIT,
+	@MyList BIT,
+	@ViewOtherLangs BIT,
+	@AllowFeedbackNotInView BIT,
+	@AssignSuggestionsTo VARCHAR(3),
+	@AllowPDF BIT,
+	@CommSrchDropDown BIT,
+	@OtherCommunity BIT,
+	@RespectPrivacyProfile BIT,
+	@PB_ID INT,
+	@LimitedView BIT,
+	@VolunteerLink BIT,
+	@SrchCommunityDefault BIT,
+	@ASrchAddress BIT,
+	@ASrchEmployee BIT,
+	@ASrchNear BIT,
+	@ASrchVacancy BIT,
+	@ASrchVOL BIT,
+	@BSrchAges BIT,
+	@BSrchLanguage BIT,
+	@BSrchNUM BIT,
+	@BSrchOCG BIT,
+	@BSrchVacancy BIT,
+	@BSrchVOL BIT,
+	@BSrchWWW BIT,
+	@BSrchDefaultTab TINYINT,
+	@BSrchNear2 BIT,
+	@BSrchNear5 BIT,
+	@BSrchNear10 BIT,
+	@BSrchNear15 BIT,
+	@BSrchNear25 BIT,
+	@BSrchNear50 BIT,
+	@BSrchNear100 BIT,
+	@CSrch BIT,
+	@CSrchBusRoute BIT,
+	@CSrchKeywords BIT,
+	@CSrchLanguages BIT,
+	@CSrchNear BIT,
+	@CSrchSchoolEscort BIT,
+	@CSrchSchoolsInArea BIT,
+	@CSrchSpaceAvailable BIT,
+	@CSrchSubsidy BIT,
+	@CSrchTypeOfProgram BIT,
+	@CCRFields BIT,
+	@QuickListDropDown TINYINT,
+	@QuickListWrapAt TINYINT,
+	@QuickListMatchAll BIT,
+	@QuickListSearchGroups BIT,
+	@QuickListPubHeadings INT,
+	@LinkOrgLevels BIT,
+	@CanSeeNonPublicPub BIT,
+	@UsePubNamesOnly BIT,
+	@UseNAICSView BIT,
+	@UseTaxonomyView BIT,
+	@TaxDefnLevel TINYINT,
+	@UseThesaurusView BIT,
+	@UseLocalSubjects BIT,
+	@UseZeroSubjects BIT,
+	@AlsoNotify VARCHAR(60),
+	@NoProcessNotify BIT,
+	@UseSubmitChangesTo BIT,
+	@MapSearchResults BIT,
+	@AutoMapSearchResults BIT,
+	@ResultsPageSize SMALLINT,
+	@ShowID BIT,
+	@ShowOwner BIT,
+	@ShowAlert BIT,
+	@ShowOrg BIT,
+	@ShowCommunity BIT,
+	@ShowUpdateSchedule BIT,
+	@LinkUpdate BIT,
+	@LinkEmail BIT,
+	@LinkSelect BIT,
+	@LinkWeb BIT,
+	@LinkListAdd BIT,
+	@OrderBy INT,
+	@OrderByCustom INT,
+	@OrderByDesc BIT,
+    @TableSort BIT,
+	@GLinkMail BIT,
+	@GLinkPub BIT,
+	@ShowTable BIT,
+	@VShowPosition BIT,
+	@VShowDuties BIT,
+	@ShowRecordDetailsSidebar BIT,
+	@GoogleTranslateWidget BIT,
+	@DefaultPrintProfile INT,
+	@Descriptions XML,
+	@Views XML,
+	@AdvSrchCheckLists XML,
+	@Publications XML,
+	@AddPublications XML,
+	@DisplayOptFields VARCHAR(MAX),
+	@ErrMsg NVARCHAR(500) OUTPUT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
@@ -408,7 +411,7 @@ IF @MemberID IS NULL BEGIN
 -- Member ID exists ?
 END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS varchar), @MemberObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS VARCHAR), @MemberObjectName)
 -- View given ?
 END ELSE IF @ViewType IS NULL BEGIN
 	SET @Error = 2 -- No ID Given
@@ -416,7 +419,7 @@ END ELSE IF @ViewType IS NULL BEGIN
 -- View exists ?
 END ELSE IF NOT EXISTS (SELECT * FROM CIC_View WHERE ViewType=@ViewType) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@ViewType AS varchar), @ViewObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@ViewType AS VARCHAR), @ViewObjectName)
 -- View belongs to Member ?
 END ELSE IF @ViewType IS NOT NULL AND NOT EXISTS (SELECT * FROM CIC_View WHERE MemberID=@MemberID AND ViewType=@ViewType) BEGIN
 	SET @Error = 8 -- Security Failure
@@ -432,7 +435,7 @@ END ELSE IF @AgencyCode IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_View WHERE 
 -- Template exists ?
 END ELSE IF NOT EXISTS (SELECT * FROM GBL_Template WHERE Template_ID=@Template) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@Template AS varchar), @TemplateObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@Template AS VARCHAR), @TemplateObjectName)
 -- Template ownership OK?
 END ELSE IF NOT EXISTS (SELECT * FROM GBL_Template
 		WHERE Template_ID=@Template
@@ -447,7 +450,7 @@ END ELSE IF NOT EXISTS (SELECT * FROM GBL_Template
 -- Print Template exists ?
 END ELSE IF @PrintTemplate IS NOT NULL AND NOT EXISTS (SELECT * FROM GBL_Template WHERE Template_ID=@PrintTemplate) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@PrintTemplate AS varchar), @TemplateObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@PrintTemplate AS VARCHAR), @TemplateObjectName)
 -- Print Template ownership OK?
 END ELSE IF @PrintTemplate IS NOT NULL AND NOT EXISTS (SELECT * FROM GBL_Template
 		WHERE Template_ID=@PrintTemplate
@@ -462,7 +465,7 @@ END ELSE IF @PrintTemplate IS NOT NULL AND NOT EXISTS (SELECT * FROM GBL_Templat
 -- Publication exists ?
 END ELSE IF @PB_ID IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_Publication pb WHERE pb.PB_ID=@PB_ID) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@PB_ID AS varchar), @PublicationObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@PB_ID AS VARCHAR), @PublicationObjectName)
 -- Publication belongs to Member ?
 END ELSE IF @PB_ID IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_Publication pb WHERE pb.PB_ID=@PB_ID AND pb.MemberID=@MemberID OR pb.MemberID IS NULL) BEGIN
 	SET @Error = 8 -- Security Failure
@@ -470,7 +473,7 @@ END ELSE IF @PB_ID IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_Publication pb W
 -- Publication exists ?
 END ELSE IF @QuickListPubHeadings IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_Publication pb WHERE pb.PB_ID=@QuickListPubHeadings) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@QuickListPubHeadings AS varchar), @PublicationObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@QuickListPubHeadings AS VARCHAR), @PublicationObjectName)
 -- Publication belongs to Member ?
 END ELSE IF @QuickListPubHeadings IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_Publication pb WHERE pb.PB_ID=@QuickListPubHeadings AND pb.MemberID=@MemberID OR pb.MemberID IS NULL) BEGIN
 	SET @Error = 8 -- Security Failure
@@ -478,7 +481,7 @@ END ELSE IF @QuickListPubHeadings IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_P
 -- Print Profile Exists ?
 END ELSE IF @DefaultPrintProfile IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_PrintProfile pp WHERE pp.ProfileID=@DefaultPrintProfile AND pp.Domain=1) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@DefaultPrintProfile AS varchar), @PrintProfileObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@DefaultPrintProfile AS VARCHAR), @PrintProfileObjectName)
 -- Print Profile belongs to Member ?
 END ELSE IF @DefaultPrintProfile IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_PrintProfile pp WHERE pp.ProfileID=@DefaultPrintProfile AND pp.Domain=1 AND pp.MemberID=@MemberID OR pp.MemberID IS NULL) BEGIN
 	SET @Error = 8 -- Security Failure
@@ -566,6 +569,7 @@ IF @Error = 0 BEGIN
 		BSrchNear15				= ISNULL(@BSrchNear15, BSrchNear15),
 		BSrchNear25				= ISNULL(@BSrchNear25, BSrchNear25),
 		BSrchNear50				= ISNULL(@BSrchNear50, BSrchNear50),
+		BSrchNear100			= ISNULL(@BSrchNear100, BSrchNear100),
 		CSrch					= ISNULL(@CSrch,CSrch),
 		CSrchBusRoute			= ISNULL(@CSrchBusRoute,CSrchBusRoute),
 		CSrchKeywords			= ISNULL(@CSrchKeywords,CSrchKeywords),
@@ -595,6 +599,7 @@ IF @Error = 0 BEGIN
 		NoProcessNotify			= ISNULL(@NoProcessNotify,NoProcessNotify),
 		UseSubmitChangesTo		= ISNULL(@UseSubmitChangesTo,UseSubmitChangesTo),
 		MapSearchResults		= ISNULL(@MapSearchResults,MapSearchResults),
+		AutoMapSearchResults	= ISNULL(@AutoMapSearchResults,AutoMapSearchResults),
 		ResultsPageSize			= @ResultsPageSize,
 		ShowRecordDetailsSidebar = ISNULL(@ShowRecordDetailsSidebar, ShowRecordDetailsSidebar)
 	WHERE ViewType = @ViewType	
@@ -722,7 +727,7 @@ IF @Error = 0 BEGIN
 	END
 	
 	IF @Error=0 BEGIN
-		EXEC @Error = dbo.sp_GBL_Display_u NULL, @ViewType, 1, @ShowID, @ShowOwner, @ShowAlert, @ShowOrg, @ShowCommunity, @ShowUpdateSchedule, @LinkUpdate, @LinkEmail, @LinkSelect, @LinkWeb, @LinkListAdd, @OrderBy, @OrderByCustom, @OrderByDesc, @GlinkMail, @GLinkPub, @ShowTable, @VShowPosition, @VShowDuties, @DisplayOptFields, @ErrMsg OUTPUT
+		EXEC @Error = dbo.sp_GBL_Display_u NULL, @ViewType, 1, @ShowID, @ShowOwner, @ShowAlert, @ShowOrg, @ShowCommunity, @ShowUpdateSchedule, @LinkUpdate, @LinkEmail, @LinkSelect, @LinkWeb, @LinkListAdd, @OrderBy, @OrderByCustom, @OrderByDesc, @TableSort, @GlinkMail, @GLinkPub, @ShowTable, @VShowPosition, @VShowDuties, @DisplayOptFields, @ErrMsg OUTPUT
 	END
 END
 

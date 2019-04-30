@@ -13,6 +13,37 @@
 '==================================================================
 %>
 
+<script language="python" runat="server">
+
+def getEventScheduleXML(checkDate, checkInteger, checkID, checkLength, checkAddValidationError):
+	schedules = getEventScheduleValues(checkDate, checkInteger, checkID, checkLength, checkAddValidationError)
+	return convertEventScheduleValuesToXML(schedules)
+
+
+def getEventScheduleSQL_l(checkDate, checkInteger, checkID, checkLength, checkAddValidationError):
+	xml_value = getEventScheduleXML(checkDate, checkInteger, checkID, checkLength, checkAddValidationError)
+
+	if pyrequest.pageinfo.DbArea == const.DM_VOL:
+		id_field = '@VNUM'
+		record_id = '@VNUM'
+	else:
+		id_field = '@NUM'
+		record_id = '@NUM'
+
+	def escape_string(value):
+		return unicode(value).replace(u"'", "''")
+
+	if xml_value:
+		output = u'''
+			EXECUTE sp_GBL_NUMVNUMSetSchedule_u N'<SCHEDULES>{}</SCHEDULES>', '{}', {}={}
+		'''.format(escape_string(xml_value), escape_string(pyrequest.user.Mod), id_field, record_id)
+	else:
+		output = u''
+
+	return output
+
+</script>
+
 <%
 Function addXMLInsertField(bNew, _
 		strFldName, _
@@ -289,7 +320,7 @@ Sub sendNotifyEmails(strID, intFBID, strRecName)
 					TXT_RECORD_WAS_REVIEWED & _
 					vbCrLf & strDetailLink
 			While Not .EOF 
-				Call sendEmail(False, strSender, .Fields("SOURCE_EMAIL"), vbNullString, strSubject, strMsgText)
+				Call sendEmail(False, strSender, .Fields("SOURCE_EMAIL"), strSubject, strMsgText)
 				.MoveNext
 			Wend
 		End If
@@ -688,6 +719,16 @@ Sub addBTInsertWebField(strFieldName, strFieldDisplay, ByVal strFieldVal, intMax
 		If bChanged Then
 			Call addChangeField(strFieldName, g_objCurrentLang.LangID)
 		End If
+	End If
+End Sub
+
+Sub getEventScheduleSQL()
+	Dim strSQLToAdd
+	strSQLToAdd = getEventScheduleSQL_l(GetRef("WrapCheckDate"), GetRef("checkInteger"), GetRef("checkID"), _
+			GetRef("checkLength"), GetRef("checkAddValidationError"))
+
+	If Not Nl(strSQLToAdd) Then
+		strExtraSQL = strExtraSQL & vbCrLf & strSQLToAdd
 	End If
 End Sub
 

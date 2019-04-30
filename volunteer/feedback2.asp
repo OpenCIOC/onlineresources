@@ -55,6 +55,7 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../includes/core/incSendMail.asp" -->
 <!--#include file="../includes/list/incMonthList.asp" -->
 <!--#include file="../includes/update/incAgencyUpdateInfo.asp" -->
+<!--#include file="../includes/update/incEventSchedule.asp" -->
 <!--#include file="../includes/update/incEntryFormGeneral.asp" -->
 <!--#include file="../includes/update/incFeedbackFormProcessGeneral.asp" -->
 <!--#include file="../includes/validation/incFormDataCheck.asp" -->
@@ -281,7 +282,7 @@ Sub getChecklistFeedback(strFieldDisplay, strSP, strPrefix, strFieldName, strNam
 	End With
 	Set rsChecklist = cmdChecklist.Execute
 	
-	Dim strXML, strEmailText, strEmailCon, bChanged, indID, bChecked, strNote
+	Dim strXML, strEmailText, strEmailCon, bChanged, indID, bChecked, strNote, bThisChanged
 	bChanged = False
 	strEmailCon = vbNullString
 	strEmailText = vbNullString
@@ -295,22 +296,32 @@ Sub getChecklistFeedback(strFieldDisplay, strSP, strPrefix, strFieldName, strNam
 
 	With rsChecklist
 		While Not .EOF
+			bThisChanged = False
 			bChecked = InStr(strIDList, "<" & .Fields(strPrefix & "_ID") & ">") > 0 
 			If bChecked Then
-				strEmailText = strEmailText & strEmailCon & .Fields(strNameField)
+				If .Fields("IS_SELECTED") <> 1 Then
+					bChanged = True
+					bThisChanged = True
+				End If
 				If bNotes Then
 					strNote = Trim(Request(strPrefix & "_NOTES_" & .Fields(strPrefix & "_ID")))
-					If Not Nl(strNote) Then
-						strEmailText = strEmailText & TXT_COLON & strNote
-					End If
 					If Ns(strNote) <> Ns(.Fields("Notes")) Then
 						bChanged = True
+						bThisChanged = True
 					End If
 				End If
-				strEmailCon = " ; "
+				If bThisChanged Then
+					strEmailText = strEmailText & strEmailCon & .Fields(strNameField)
+					If bNotes Then
+						If Not Nl(strNote) Then
+							strEmailText = strEmailText & TXT_COLON & strNote
+						End If
+					End If
+					strEmailCon = " ; "
+				End If
 				strXML = strXML & "<" & strPrefix & " ID=" & XMLQs(.Fields(strPrefix & "_ID")) & StringIf(Not Nl(strNote), " NOTE=" & XMLQs(strNote)) & "/>"
-					
 			End If
+					
 			If .Fields("IS_SELECTED") <> IIf(bChecked, 1, 0) Then
 				bChanged = True
 				If Not bChecked Then
@@ -485,7 +496,7 @@ If Not bVNUMError Then
 <h3 class="Alert"><%=TXT_SECURITY_CHECK%></h3>
 <p><span class="AlertBubble"><%=TXT_INST_SECURITY_CHECK_FAIL%></span></p>
 <p><%=TXT_INST_SECURITY_CHECK_2%></p>
-<form action="feedback2.asp" method="post">
+<form action="feedback2.asp" method="post" class="form-horizontal">
 
 <%
 		For Each indItem In Request.QueryString()
@@ -518,7 +529,11 @@ If Not bVNUMError Then
 		<input id="sCheckYear" name="sCheckYear" type="text" size="5" maxlength="8" class="form-control">
 	</div>
 </div>
-<p><input type="submit" value="<%=TXT_SUBMIT%>" class="btn btn-default"></p>
+<div class="form-group">
+	<div class="col-sm-offset-2 col-xs-offset-4 col-sm-10 col-xs-8 col-md-offset-1 col-md-11">
+		<input type="submit" value="<%=TXT_SUBMIT%>" class="btn btn-default">
+	</div>
+</div>
 </form>
 <%
 		Call makePageFooter(True)
@@ -636,12 +651,18 @@ If Not bSuggest Then
 	Select Case Request("FType")
 		Case "F"
 			Call addInsertField("FULL_UPDATE",SQL_TRUE,strInsertInto,strInsertValue)
+			strFieldVal = Replace(Replace(TXT_COMPLETE_UPDATE, "<strong>", ""), "</strong>", "")
 		Case "N"
 			Call addInsertField("FULL_UPDATE",SQL_TRUE,strInsertInto,strInsertValue)
 			Call addInsertField("NO_CHANGES",SQL_TRUE,strInsertInto,strInsertValue)
+			strFieldVal = Replace(Replace(TXT_COMPLETE_NO_CHANGES_REQUIRED, "<strong>", ""), "</strong>", "")
 		Case "D"
 			Call addInsertField("REMOVE_RECORD",SQL_TRUE,strInsertInto,strInsertValue)
+			strFieldVal = Replace(Replace(TXT_REMOVE_RECORD, "<strong>", ""), "</strong>", "")
+		Case "P"
+			strFieldVal = Replace(Replace(TXT_NOT_COMPLETE_UPDATE, "<strong>", ""), "</strong>", "")
 	End Select
+	Call addEmailField(TXT_ABOUT_CHANGES, strFieldVal)
 	Call getROInfo(rsOrg("RECORD_OWNER"),DM_VOL)
 End If
 
@@ -718,6 +739,8 @@ While Not rsFields.EOF
 			Call getContactFields(strFieldName, rsFields.Fields("FieldDisplay"),strInsertInto,strInsertValue)
 		Case "COMMITMENT_LENGTH"
 			Call getChecklistFeedback(strFieldName, "dbo.sp_VOL_VNUMCommitmentLength_s", "CL", "COMMITMENT_LENGTH", "CommitmentLength", strInsertInto, strInsertValue, True)
+		Case "EVENT_SCHEDULE"
+			Call getEventScheduleFields(rsFields.Fields("FieldDisplay"))
 		Case "INTERACTION_LEVEL"
 			Call getChecklistFeedback(strFieldName, "dbo.sp_VOL_VNUMInteractionLevel_s", "IL", "INTERACTION_LEVEL", "InteractionLevel", strInsertInto, strInsertValue, True)
 		Case "MINIMUM_HOURS"
@@ -863,7 +886,7 @@ With cmdInsertFb
 							"SQL state: " & Ns(objErr.SQLState) & vbCrLf
 		Next
 
-		Call sendEmail(True, "qw4afPcItA5KJ18NH4nV@cioc.ca", "qw4afPcItA5KJ18NH4nV@cioc.ca", vbNullString, "Entryform SQL Error", strErrorDetails & strInsSQL)
+		Call sendEmail(True, "qw4afPcItA5KJ18NH4nV@cioc.ca", "qw4afPcItA5KJ18NH4nV@cioc.ca", "Entryform SQL Error", strErrorDetails & strInsSQL)
 	End if
 	On Error Goto 0
 End With

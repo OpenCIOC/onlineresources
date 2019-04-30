@@ -34,6 +34,7 @@ CREATE TABLE [dbo].[VOL_Feedback]
 [DISPLAY_UNTIL] [nvarchar] (25) COLLATE Latin1_General_100_CI_AI NULL,
 [DUTIES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [END_DATE] [nvarchar] (25) COLLATE Latin1_General_100_CI_AI NULL,
+[EVENT_SCHEDULE] [xml] NULL,
 [INTERACTION_LEVEL] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [INTERESTS] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [INTERNAL_MEMO] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -43,7 +44,7 @@ CREATE TABLE [dbo].[VOL_Feedback]
 [MIN_AGE] [varchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
 [MINIMUM_HOURS] [varchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
 [MINIMUM_HOURS_PER] [nvarchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
-[MORE_INFO_URL] [varchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[MORE_INFO_URL] [varchar] (158) COLLATE Latin1_General_100_CI_AI NULL,
 [NO_UPDATE_EMAIL] [nvarchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
 [NON_PUBLIC] [nvarchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
 [NUM_NEEDED] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -75,24 +76,26 @@ CREATE TABLE [dbo].[VOL_Feedback]
 [TRANSPORTATION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [UPDATE_EMAIL] [nvarchar] (60) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-ALTER TABLE [dbo].[VOL_Feedback] ADD 
-CONSTRAINT [PK_VOL_Feedback] PRIMARY KEY CLUSTERED  ([FB_ID]) ON [PRIMARY]
 GO
-
+ALTER TABLE [dbo].[VOL_Feedback] ADD CONSTRAINT [PK_VOL_Feedback] PRIMARY KEY CLUSTERED  ([FB_ID]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_Feedback] WITH NOCHECK ADD CONSTRAINT [FK_VOL_Feedback_GBL_Users] FOREIGN KEY ([User_ID]) REFERENCES [dbo].[GBL_Users] ([User_ID]) ON DELETE SET NULL ON UPDATE CASCADE
+GO
 ALTER TABLE [dbo].[VOL_Feedback] ADD CONSTRAINT [FK_VOL_Feedback_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
 GO
 ALTER TABLE [dbo].[VOL_Feedback] ADD CONSTRAINT [FK_VOL_Feedback_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
 GO
 ALTER TABLE [dbo].[VOL_Feedback] WITH NOCHECK ADD CONSTRAINT [FK_VOL_Feedback_VOL_Opportunity] FOREIGN KEY ([VNUM]) REFERENCES [dbo].[VOL_Opportunity] ([VNUM]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
-ALTER TABLE [dbo].[VOL_Feedback] WITH NOCHECK ADD CONSTRAINT [FK_VOL_Feedback_GBL_Users] FOREIGN KEY ([User_ID]) REFERENCES [dbo].[GBL_Users] ([User_ID]) ON DELETE SET NULL ON UPDATE CASCADE
-GO
 ALTER TABLE [dbo].[VOL_Feedback] ADD CONSTRAINT [FK_VOL_Feedback_VOL_View] FOREIGN KEY ([ViewType]) REFERENCES [dbo].[VOL_View] ([ViewType]) ON DELETE SET NULL
 GO
 ALTER TABLE [dbo].[VOL_Feedback] NOCHECK CONSTRAINT [FK_VOL_Feedback_GBL_Users]
 GO
-GRANT SELECT ON  [dbo].[VOL_Feedback] TO [cioc_login_role]
 GRANT INSERT ON  [dbo].[VOL_Feedback] TO [cioc_login_role]
-GRANT SELECT ON  [dbo].[VOL_Feedback] TO [cioc_vol_search_role]
+GO
+GRANT SELECT ON  [dbo].[VOL_Feedback] TO [cioc_login_role]
+GO
 GRANT INSERT ON  [dbo].[VOL_Feedback] TO [cioc_vol_search_role]
+GO
+GRANT SELECT ON  [dbo].[VOL_Feedback] TO [cioc_vol_search_role]
 GO

@@ -63,13 +63,14 @@ Else
 	If Not IsIDList(strSearchCMID) Then
 		strSearchCMID = vbNullString
 	End If
-	If Nl(strSearchCMID) Then
+	If Nl(strSearchCMID) And Not Nl(strCMID) Then
 		Call getVolSearchComms(strCMID)
 	Else
 		strCommList = strCMID
 		strCommSearchList = strSearchCMID
 	End If
 End If
+
 
 
 '--------------------------------------------------
@@ -311,7 +312,7 @@ End Select
 ' B. Communities Search
 '--------------------------------------------------
 
-If Not Nl(strCMID) Then
+If Not Nl(strCommList) Then
 	strWhere = strWhere & strCon & "EXISTS(SELECT * FROM VOL_OP_CM WHERE VNUM=vo.VNUM AND CM_ID IN (" & strCommSearchList & "))"
 	strCon = AND_CON
 

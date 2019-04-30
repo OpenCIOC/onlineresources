@@ -96,7 +96,7 @@ details.js: ciocbasic.js jquery.bgiframe.js jquery.validate.js jquery.ba-throttl
 entryform.js: ciocbasic.js jquery.bgiframe.js jquery-ui-combobox.js jquery.validate.js globalize.js mapcommon.js mapentryform.js history.js autocomplete.js autocomplete_extra.js entryform_common.js copy_base.js feedback_base.js record_note.js entryform_base.js province-combo.js
 	cat $^ > $@
 
-feedback.js: ciocbasic.js globalize.js mapcommon.js mapentryform.js jquery-ui-combobox.js province-combo.js autocomplete.js autocomplete_extra.js feedback_base.js
+feedback.js: ciocbasic.js globalize.js mapcommon.js mapentryform.js jquery-ui-combobox.js province-combo.js autocomplete.js autocomplete_extra.js entryform_common.js feedback_base.js
 	cat $^ > $@
 
 findreplace.js: ciocbasic.js findandreplace_base.js
@@ -135,10 +135,10 @@ taxrecords.js: bsearch.js tax_base.js
 taxsrch.js: ciocbasic.js jquery.bgiframe.js autocomplete.js search_params.js
 	cat $^ > $@
 
-ventryform.js: ciocbasic.js jquery.bgiframe.js history.js autocomplete.js autocomplete_extra.js feedback_base.js entryform_common.js copy_base.js ventryform_base.js record_note.js
+ventryform.js: ciocbasic.js jquery.bgiframe.js jquery-ui-combobox.js history.js autocomplete.js autocomplete_extra.js feedback_base.js entryform_common.js copy_base.js ventryform_base.js record_note.js
 	cat $^ > $@
 
-vfeedback.js: ciocbasic.js feedback_base.js
+vfeedback.js: ciocbasic.js jquery-ui-combobox.js autocomplete.js autocomplete_extra.js entryform_common.js feedback_base.js
 	cat $^ > $@
 
 vprofiles.js: tablesort.js cached_state.js vprofiles_base.js

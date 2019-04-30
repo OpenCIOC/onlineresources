@@ -17,7 +17,7 @@ DECLARE @FieldOption TABLE (
 	[UseDisplayForFeedback] [bit],
 	[CanUseResults] [bit],
 	[CanUseSearch] [bit],
-	[ChecklistSearch] [varchar](4),
+	[ChecklistSearch] [varchar](28),
 	[CanUseDisplay] [bit],
 	[CanUseUpdate] [bit],
 	[CanUseFeedback] [bit],

@@ -1620,6 +1620,39 @@ Function makeGeoCodeContents(rst,bUseContent)
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("LONGITUDE",True)
 	End If
+	Call openMappingCategoryListRst()
+	strReturn = strReturn & _
+					"</div>" & _
+				"</div>" & _
+				"<div class=""form-group row"">" & _
+					"<label class=""control-label col-sm-3 col-md-4"" id=""MAP_PIN_LABEL"">" & TXT_MAPPING_CATEGORY & "</label>" & _
+					"<div class=""col-sm-9 col-md-8"">"
+	With rsListMappingCategory
+		If .RecordCount = 0 Then
+			strReturn = TXT_NO_VALUES_AVAILABLE
+		Else
+			If .RecordCount <> 0 Then
+				.MoveFirst
+			End If
+			strReturn = strReturn & _
+						"<div class=""btn-group"" style=""width:100%;"">" & _
+						"<a class=""btn btn-default dropdown-toggle "" data-toggle=""dropdown"" href=""#"" id=""dropdownMAP_PIN"" style=""width:100%;""><span class=""selection pull-left"">Select an option </span> " & _
+      					"<span class=""pull-right glyphiconglyphicon-chevron-down caret"" style=""float:right;margin-top:10px;""></span></a>" & _
+
+						 "<ul class=""dropdown-menu"" id=""dropdownMAP_PINmenu"" role=""menu"" aria-labelledby=""MAP_PIN_LABEL"">"
+			While Not .EOF
+				strReturn = strReturn & _
+					"<li><a data-value=" & AttrQs(.Fields("MapCatID")) & "><img src=" & AttrQs(ps_strPathToStart & "images/mapping/" & .Fields("MapImageSm")) & _
+						 StringIf(Not Nl(.Fields("CategoryName"))," title=" & AttrQs(.Fields("CategoryName"))) & _
+					"> " & Server.HTMLEncode(Ns(.Fields("CategoryName"))) & "</a></li>"
+				.MoveNext
+			Wend
+		End If
+	End With
+	strReturn = strReturn & _
+			"</ul> </div><div style=""display: none;""><input type=""hidden"" name=""MAP_PIN"" id=""MAP_PIN"" value=" & AttrQs(intMapPin) & "></div>"
+
+	Call closeMappingCategoryListRst()
 	strReturn = strReturn & _
 					"</div>" & _
 				"</div>" & _
@@ -2119,7 +2152,7 @@ Function oaFieldAttrs(strLabelText, strName, strValue, strSize, strMaxLength, st
 	Dim strQName
 	strQName = AttrQs(strName)
 	oaFieldAttrs = oaLabel(strLabelText, strName) &"<input type=""text"" id=" & strQName & _
-				" name=" & strQName & " size=""" & strSize & """ maxlength=""" & _
+				"class=""form-control"" name=" & strQName & " size=""" & strSize & """ maxlength=""" & _
 				strMaxLength & """ value=" & AttrQs(strValue) & strExtraAttrs & ">"
 End Function
 
@@ -2142,6 +2175,8 @@ Function otherAddressEntry(rst, strHeading, strFPrefix, bUseContent)
 		strProv, _
 		strCountry, _
 		strPC, _
+		decLat, _
+		decLong, _
 		intMapLink
 
 	If bUseContent Then
@@ -2161,6 +2196,8 @@ Function otherAddressEntry(rst, strHeading, strFPrefix, bUseContent)
 		strProv = rst("PROVINCE")
 		strCountry = rst("COUNTRY")
 		strPC = rst("POSTAL_CODE")
+		decLat = rst.Fields("LATITUDE")
+		decLong = rst.Fields("LONGITUDE")
 		intMapLink = rst("MAP_LINK")
 	Else
 		strCountry = strDefaultCountry
@@ -2192,6 +2229,8 @@ Function otherAddressEntry(rst, strHeading, strFPrefix, bUseContent)
 		"<br>" & oaFieldAttrs(TXT_PROVINCE, strFPrefix & "PROVINCE", strProv, 2,2, " class=""Province""") & _
 		"<br>" & oaField(TXT_COUNTRY, strFPrefix & "COUNTRY", strCountry, 40,40) & _
 		"<br>" & oaFieldAttrs(TXT_POSTAL_CODE, strFPrefix & "POSTAL_CODE", strPC, 10,10, "class=""postal""") & _
+		"<br>" & oaField(TXT_LATITUDE, strFPrefix & "LATITUDE", CStr(Nz(decLat,vbNullString)), 12, 12) & _
+		"<br>" & oaField(TXT_LONGITUDE, strFPrefix & "LONGITUDE", CStr(Nz(decLong,vbNullString)), 12, 12) & _
 		"<br>" & oaLabel(TXT_MAP_LINK, strFPrefix & "MAP_LINK") & makeMappingSystemList(intMapLink, strFPrefix & "MAP_LINK", True, False, vbNullString) & _
 		"</div><div id=""" & strFPRefix & "DELETED_TITLE""></div><div style=""clear: both;""></div></div>"
 

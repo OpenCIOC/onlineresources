@@ -69,7 +69,7 @@ If Not ctClientCanMakeRequest() Then
 <%
 ElseIf Nl(strNUM) Then
 %>
-<response xmlns="http://clienttracker.cioc.ca/schema/">
+<response xmlns="https://clienttracker.cioc.ca/schema/">
 	<error><%=TXT_NO_RECORD_CHOSEN%></error>
 </response>
 <%

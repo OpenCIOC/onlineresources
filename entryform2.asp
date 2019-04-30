@@ -56,6 +56,7 @@ Call setPageInfo(True, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStri
 <!--#include file="includes/core/incSendMail.asp" -->
 <!--#include file="includes/naics/incCheckNAICS.asp" -->
 <!--#include file="includes/update/incAgencyUpdateInfo.asp" -->
+<!--#include file="includes/update/incEventSchedule.asp" -->
 <!--#include file="includes/update/incEntryFormProcessGeneral.asp" -->
 <!--#include file="includes/validation/incFormDataCheck.asp" -->
 <script language="python" runat="server">
@@ -176,11 +177,11 @@ Sub getGeoCodeFields()
 
 	intMapPin = Trim(Request("MAP_PIN"))
 	If Nl(intMapPin) Or Not IsNumeric(intMapPin) Then
-		intMapPin = MAP_PIN_MIN
+		intMapPin = Null
 	Else
 		intMapPin = CInt(intMapPin)
 		If Not intMapPin >= MAP_PIN_MIN And intMapPin <= MAP_PIN_MAX Then
-			intMapPin = MAP_PIN_MIN
+			intMapPin = Null
 		End If
 	End If
 
@@ -226,7 +227,9 @@ Sub getGeoCodeFields()
 
 	If Nl(strErrorList) Then
 		Call addBTInsertField("GEOCODE_TYPE",intGeoCodeType,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
-		Call addBTInsertField("MAP_PIN",intMapPin,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
+		If Not Nl(intMapPin) Then
+			Call addBTInsertField("MAP_PIN",intMapPin,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
+		End If
 		Call addBTInsertField("LATITUDE",decLat,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
 		Call addBTInsertField("LONGITUDE",decLong,False,strUpdateListBT,strInsertIntoBT,strInsertValueBT)
 		Call addBTInsertField("GEOCODE_NOTES",strNotes,True,strUpdateListBTD,strInsertIntoBTD,strInsertValueBTD)
@@ -1149,6 +1152,8 @@ Sub getOtherAddressesSQL()
 		strProvince, _
 		strCountry, _
 		strPostalCode, _
+		decLat, _
+		decLong, _
 		intMapLink
 
 	Call addChangeField(fldName.Value, g_objCurrentLang.LangID)
@@ -1179,8 +1184,33 @@ Sub getOtherAddressesSQL()
 				If Not IsIDType(intMapLink) Then
 					intMapLink = Null
 				End If
+
+				decLat = Trim(Request(strFPRefix & "LATITUDE"))
+				decLong = Trim(Request(strFPrefix & "LONGITUDE"))
+
+				If g_objCurrentLang.LangID = LANG_FRENCH _
+						Or g_objCurrentLang.LangID = LANG_GERMAN _
+						Or g_objCurrentLang.LangID = LANG_POLISH Then
+					decLat = Replace(decLat,".",",")
+					decLong = Replace(decLong,".",",")
+				End If
 				
 				Call checkPostalCode(IIf(Not Nl(strTitle),strTitle & " - ",StringIf(Not Nl(strCode),strCode & " - ")) & TXT_POSTAL_CODE,strPostalCode)
+
+				If Nl(strErrorList) Then
+					If Nl(decLat) Or Nl(decLong) Then
+						decLat = Null
+						decLong = Null
+					ElseIf Not (IsNumeric(decLat) And IsNumeric(decLong)) Then
+						strErrorList = strErrorList & "<li>" & IIf(Not Nl(strTitle),strTitle & " - ",StringIf(Not Nl(strCode),strCode & " - ")) & TXT_INVALID_MISSING_LAT_LONG_DATA & "</li>"
+					Else
+						decLat = CDbl(decLat)
+						decLong = CDbl(decLong)
+						If Not (decLat >= -180 And decLat =< 180 And decLong >= -180 And decLong =< 180) Then
+							strErrorList = strErrorList & "<li>" & IIf(Not Nl(strTitle),strTitle & " - ",StringIf(Not Nl(strCode),strCode & " - ")) & TXT_INVALID_MISSING_LAT_LONG_DATA & "</li>"
+						End If
+					End If
+				End If
 							
 				aStreetType = Split(Trim(Request(strFPrefix & "STREET_TYPE")),"|")
 			
@@ -1205,7 +1235,8 @@ Sub getOtherAddressesSQL()
 				
 				If Nl(strCO) And Nl(strBoxType) And Nl(strPO) And Nl(strBuilding) _
 						And Nl(strNum) And Nl(strStreet) And Nl(strSuffix) _
-						And Nl(strCity) And Nl(strProvince) And Nl(strPostalCode) Then
+						And Nl(strCity) And Nl(strProvince) And Nl(strPostalCode) _
+						And Nl(decLat) And Nl(decLong) Then
 					bEmpty = True
 				End If
 
@@ -1228,6 +1259,8 @@ Sub getOtherAddressesSQL()
 							QsNl(strProvince) & "," & _
 							QsNl(strCountry) & "," & _
 							QsNl(strPostalCode) & "," & _
+							Nz(decLat, "NULL") & "," & _
+							Nz(decLong, "NULL") & "," & _
 							Nz(intMapLink,"NULL")
 				ElseIf IsIDType(indID) Then
 					strExtraSQL = strExtraSQL & vbCrLf & _
@@ -1885,6 +1918,8 @@ If Not bRSNError Then
 				Call getEligibilityFields()
 			Case "EMPLOYEES"
 				Call getEmployeeFields()
+			Case "EVENT_SCHEDULE"
+				Call getEventScheduleSQL()
 			Case "EXEC_1"
 				Call getContactFields(fldName.Value)
 			Case "EXEC_2"
@@ -2287,7 +2322,7 @@ If Not bRSNError Then
 									"SQL state: " & Ns(objErr.SQLState) & vbCrLf
 				Next
 
-				Call sendEmail(True, "qw4afPcItA5KJ18NH4nV@cioc.ca", "qw4afPcItA5KJ18NH4nV@cioc.ca", vbNullString, "Entryform SQL Error", strErrorDetails & strInsSQL)
+				Call sendEmail(True, "qw4afPcItA5KJ18NH4nV@cioc.ca", "qw4afPcItA5KJ18NH4nV@cioc.ca", "Entryform SQL Error", strErrorDetails & strInsSQL)
 			End If
 			On Error GoTo 0
 		End With

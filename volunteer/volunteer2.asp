@@ -175,7 +175,7 @@ Else
 <h3 class="Alert"><%=TXT_SECURITY_CHECK%></h3>
 <p><span class="AlertBubble"><%=TXT_INST_SECURITY_CHECK_FAIL%></span></p>
 <p><%=TXT_INST_SECURITY_CHECK_2%></p>
-<form action="<%=ps_strThisPage%>" method="post">
+<form action="<%=ps_strThisPage%>" method="post" class="form-horizontal">
 <div style="display:none">
 <%
 		For Each indItem In Request.QueryString()
@@ -209,7 +209,11 @@ Else
 		<input id="sCheckYear" name="sCheckYear" type="text" size="5" maxlength="8" class="form-control">
 	</div>
 </div>
-<p><input type="submit" value="<%=TXT_SUBMIT%>"></p>
+<div class="form-group">
+	<div class="col-sm-offset-2 col-xs-offset-4 col-sm-10 col-xs-8 col-md-offset-1 col-md-11">
+		<input type="submit" value="<%=TXT_SUBMIT%>" class="btn btn-default">
+	</div>
+</div>
 </form>
 <%
 		Else
@@ -292,7 +296,7 @@ If Not bVNUMError Then
 				strMsgText = strMsgText & vbCrLf & vbCrLf & strContactInfo & _
 					vbCrLf & vbCrLf & strDetailLink & _
 					vbCrLf & vbCrLf & TXT_VOL_THANK_YOU
-				If Not sendEmail(False, strSender,strRecipient,vbNullString,strSubject,strMsgText) Then
+				If Not sendEmail(False, strSender,strRecipient,strSubject,strMsgText) Then
 					Call handleErrorSelected(TXT_WARNING & TXT_PROBLEM_EMAIL & " " & strRecipient & ".", vbNullString, vbNullString)
 				End If
 			End If
@@ -306,7 +310,7 @@ If Not bVNUMError Then
 					vbCrLf & strFullVolunteerInfo & _
 					vbCrLf & vbCrLf & strDetailLink
 				strSentTo = strSentTo & "<br><strong>" & Nz(strContactName,strContactEmail) & " " & TXT_FROM & " " & strContactOrg & "</strong> (" & strContactEmail & ")"
-				If Not sendEmail(False, strSender,strRecipient,vbNullString,strSubject,strMsgText) Then
+				If Not sendEmail(False, strSender,strRecipient,strSubject,strMsgText) Then
 					Call handleErrorSelected(TXT_WARNING & TXT_PROBLEM_EMAIL & " " & strRecipient & ".", vbNullString, vbNullString)
 				Else
 					bOrgEmailed = True
@@ -330,7 +334,7 @@ If Not bVNUMError Then
 					strSentTo = strSentTo & "<br>" & TXT_AND_LC
 				End If
 				strSentTo = strSentTo & "<br><strong>" & strROName & "</strong> ("  & strROUpdateEmail & ")"
-				If Not sendEmail(False, strSender,strRecipient,vbNullString,strSubject,strMsgText) Then
+				If Not sendEmail(False, strSender,strRecipient,strSubject,strMsgText) Then
 					Call handleErrorSelected(TXT_WARNING & TXT_PROBLEM_EMAIL & " " & strRecipient & ".", vbNullString, vbNullString)
 				End If
 			End If

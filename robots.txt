@@ -10,6 +10,15 @@ Disallow: /
 User-agent: googlebot-image
 Disallow: /
 
+User-agent: Seekport Crawler
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: SemrushBot-SA
+Disallow: /
+
 User-agent: SeznamBot
 Disallow: /
 
@@ -40,9 +49,6 @@ Disallow: /
 User-agent: YandexBot
 Disallow: /
 
-User-agent: SeznamBot
-Disallow: /
-
 User-agent: BLEXBot
 Disallow: /
 
@@ -51,6 +57,22 @@ Disallow: /
 
 User-agent: Uptimebot
 Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: Dotbot
+Disallow: /
+
+User-agent: GrapeshotCrawler
+Disallow: /
+
+User-agent: DomainCrawler
+Disallow: /
+
+User-agent: rogerbot
+Disallow: /
+
 
 User-agent: *
 Crawl-delay: 5

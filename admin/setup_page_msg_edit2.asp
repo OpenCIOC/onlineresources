@@ -42,7 +42,9 @@ Call setPageInfo(True, DM_GLOBAL, DM_GLOBAL, "../", "admin/", vbNullString)
 <!--#include file="../includes/core/incFooter.asp" -->
 <!--#include file="../text/txtMenu.asp" -->
 <% 'End Base includes %>
+<!--#include file="../text/txtDisplayOrder.asp" -->
 <!--#include file="../text/txtPageMsg.asp" -->
+<!--#include file="../includes/validation/incDisplayOrder.asp" -->
 <%
 If Not user_bSuperUser Then
 	Call securityFailure()
@@ -75,6 +77,8 @@ Else
 	intPageMsgID = CLng(intPageMsgID)
 End If
 
+Call getDisplayOrder()
+
 If Request("Submit") = TXT_DELETE Then
 	Call goToPage("setup_page_msg_delete.asp","PageMsgID=" & intPageMsgID,vbNullString)
 End If
@@ -100,7 +104,7 @@ bVisiblePrintMode = Request("VisiblePrintMode")="on"
 bLoginOnly = Request("LoginOnly")="on"
 
 strPageMsg = Trim(Request("PageMsg"))
-If Len(strPageMsg) > 4000 Then
+If Len(strPageMsg) > 8000 Then
 	strError = TXT_ERR_PAGE_MESSAGE
 End If
 If Nl(strPageMsg) Then
@@ -153,7 +157,8 @@ If Nl(strError) Then
 		.Parameters.Append .CreateParameter("@LangID", adInteger, adParamInput, 4, intLangID)
 		.Parameters.Append .CreateParameter("@VisiblePrintMode", adBoolean, adParamInput, 1, IIf(bVisiblePrintMode, SQL_TRUE, SQL_FALSE))
 		.Parameters.Append .CreateParameter("@LoginOnly", adBoolean, adParamInput, 1, IIf(bLoginOnly, SQL_TRUE, SQL_FALSE))
-		.Parameters.Append .CreateParameter("@PageMsg", adVarWChar, adParamInput, 4000, strPageMsg)
+		.Parameters.Append .CreateParameter("@DisplayOrder", adInteger, adParamInput, 1, intDisplayOrder)
+		.Parameters.Append .CreateParameter("@PageMsg", adVarWChar, adParamInput, 8000, strPageMsg)
 		.Parameters.Append .CreateParameter("@CICViewList", adLongVarChar, adParamInput, -1, strCICViewList)
 		.Parameters.Append .CreateParameter("@VOLViewList", adLongVarChar, adParamInput, -1, strVOLViewList)
 		.Parameters.Append .CreateParameter("@PageList", adLongVarChar, adParamInput, -1, strPageList)

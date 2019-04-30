@@ -52,6 +52,7 @@ Call setPageInfo(True, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../text/txtRecordPages.asp" -->
 <!--#include file="../includes/core/incFormat.asp" -->
 <!--#include file="../includes/update/incAgencyUpdateInfo.asp" -->
+<!--#include file="../includes/update/incEventSchedule.asp" -->
 <!--#include file="../includes/update/incEntryFormProcessGeneral.asp" -->
 <!--#include file="../includes/validation/incFormDataCheck.asp" -->
 <!--#include file="../includes/core/incSendMail.asp" -->
@@ -726,6 +727,8 @@ If Not bOPIDError Then
 				Call getStdCheckListSQL("CL", True, Null, Null, fldName.Value)
 			Case "CONTACT"
 				Call getContactFields(fldName.Value)
+			Case "EVENT_SCHEDULE"
+				Call getEventScheduleSQL()
 			Case "INTERACTION_LEVEL"
 				Call getStdCheckListSQL("IL", True, Null, Null, fldName.Value)
 			Case "INTERESTS"
@@ -901,7 +904,7 @@ If Not bOPIDError Then
 									"SQL state: " & Ns(objErr.SQLState) & vbCrLf
 				Next
 
-				Call sendEmail(True, "qw4afPcItA5KJ18NH4nV@cioc.ca", "qw4afPcItA5KJ18NH4nV@cioc.ca", vbNullString, "VOL Entryform SQL Error", strErrorDetails & strInsSQL)
+				Call sendEmail(True, "qw4afPcItA5KJ18NH4nV@cioc.ca", "qw4afPcItA5KJ18NH4nV@cioc.ca", "VOL Entryform SQL Error", strErrorDetails & strInsSQL)
 			ElseIf Not rsInsUpd.EOF Then
 				strVNUM = rsInsUpd("VNUM")
 				tmpPosOrg = rsInsUpd.Fields("ORG_NAME_FULL")

@@ -199,7 +199,7 @@ Else
 					TXT_REFERRAL_DATE & TXT_COLON & strReferralDate & vbCrLf & _
 					TXT_POSITION & " " & strPosTitle & vbCrLf & _
 					TXT_ORGANIZATION & TXT_COLON & strOrgName & vbCrLf & vbCrLf
-				Call sendEmail(False, strROUpdateEmail & " <" & strROUpdateEmail & ">",strRecipient, vbNullString, strMsgSubj, strBodyOpening & vbCrLf & vbCrLf & strReferralInfo & strBodyClosing)
+				Call sendEmail(False, strROUpdateEmail & " <" & strROUpdateEmail & ">",strRecipient, strMsgSubj, strBodyOpening & vbCrLf & vbCrLf & strReferralInfo & strBodyClosing)
 				Response.Write(TXT_EMAIL_SENT_TO & "<strong>" & strRecipient & "</strong> (" & strVolunteerName & ") about:<div style=""margin-left:4em;"">" & Replace(Trim(strReferralInfo), vbCrLf, "<br>") & "</div>" & vbCrLf)
 				.Fields("VolunteerContactDate") = Now()
 				.Fields("VolunteerContactType") = 2 'CONTACT_BY_EMAIL
@@ -207,7 +207,7 @@ Else
 
 			Else
 				If strNUM<>intLastNUM Or strRecipient<>strLastRecipient Then
-					Call sendEmail(False, strROUpdateEmail & " <" & strROUpdateEmail & ">",strLastRecipient, vbNullString, strMsgSubj, strBodyOpening & vbCrLf & vbCrLf & strReferralInfo & strBodyClosing)
+					Call sendEmail(False, strROUpdateEmail & " <" & strROUpdateEmail & ">",strLastRecipient, strMsgSubj, strBodyOpening & vbCrLf & vbCrLf & strReferralInfo & strBodyClosing)
 				Response.Write(TXT_EMAIL_SENT_TO & "<strong>" & strLastRecipient & "</strong>"& IIf(Not Nl(strLastContactName), " (" & strLastContactName & ")", vbNullString) & " about:<div style=""margin-left:4em;"">" & Replace(Trim(strReferralInfo), vbCrLf, "<br>") & "</div>" & vbCrLf)
 
 
@@ -228,7 +228,7 @@ Else
 		Wend
 
 		If intType=TYPE_ORG Then
-			Call sendEmail(False, strROUpdateEmail & " <" & strROUpdateEmail & ">",strLastRecipient, vbNullString, strMsgSubj, strBodyOpening & vbCrLf & vbCrLf & strReferralInfo & strBodyClosing)
+			Call sendEmail(False, strROUpdateEmail & " <" & strROUpdateEmail & ">",strLastRecipient, strMsgSubj, strBodyOpening & vbCrLf & vbCrLf & strReferralInfo & strBodyClosing)
 			Response.Write(TXT_EMAIL_SENT_TO & "<strong>" & strLastRecipient & "</strong>"& IIf(Not Nl(strLastContactName), " (" & strLastContactName & ")", vbNullString) & " about:<div style=""margin-left:4em;"">" & Replace(Trim(strReferralInfo), vbCrLf, "<br>") & "</div>" & vbCrLf)
 		End If
 	End With

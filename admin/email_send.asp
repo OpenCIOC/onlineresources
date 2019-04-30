@@ -418,14 +418,18 @@ Else
 								
 			strMsgSubjDisp = makeEmailUpdateSubj(strNUMDesc)
 			
+
 			If Nl(strROUpdateEmail) Then
 				Response.Write("<br>" & TXT_UNABLE_TO_SEND_EMAIL_TO & strNUMDesc & " (" & TXT_NO_AGENCY_EMAIL_FOR & .Fields("RECORD_OWNER") & ")")
 			Else
-				If Not (intDomain = DM_VOL And bMultiRecord) Then
+				If intDomain = DM_CIC Then
 					cmdEmailDate.CommandText = "UPDATE GBL_BaseTable SET EMAIL_UPDATE_DATE=GETDATE() WHERE NUM=" & QsNl(.Fields("ID"))
 					cmdEmailDate.Execute
+				Elseif (intDomain = DM_VOL And Not bMultiRecord) Then
+					cmdEmailDate.CommandText = "UPDATE VOL_Opportunity SET EMAIL_UPDATE_DATE=GETDATE() WHERE VNUM=" & QsNl(.Fields("ID"))
+					cmdEmailDate.Execute
 				End If
-				Call sendEmail(False, strROUpdateEmail & " <" & strROUpdateEmail & ">",strRecipient,vbNullString,strMsgSubjDisp,strMsgTxtDisp)
+				Call sendEmail2(False, strROUpdateEmail & " <" & strROUpdateEmail & ">",strRecipient,strMsgSubjDisp,strMsgTxtDisp, intDomain)
 				Response.Write("<br>" & TXT_EMAIL_SENT_TO & "<strong>" & strRecipient & "</strong> (" & strNUMDesc & ")")
 			End If
 			Response.Flush()

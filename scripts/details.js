@@ -4015,30 +4015,34 @@ window['init_languages'] = function($, txt_not_found) {
 	var map = null;
 	var map_canvas = null;
 
-	var draw_map_start = function() {
+	var draw_map_start = function(keyarg, culture) {
 
-		var myLatlng = new google.maps.LatLng(map_canvas.attr('latitude'), map_canvas.attr('longitude')),
-		mapOptions = {
+		var iframeurl = 'https://www.google.com/maps/embed/v1/place?' + keyarg;
+		var myLatlng = map_canvas.attr('latitude') + ',' + map_canvas.attr('longitude');
+		var mapOptions = {
 			center: myLatlng,
 			zoom: 13,
-			mapTypeId: google.maps.MapTypeId.ROADMAP
-		}, marker = new google.maps.Marker({
-			position: myLatlng
-		});
+			q: myLatlng,
+			maptype: 'roadmap',
+			language: culture
+		};
+		iframeurl = iframeurl + '&' + $.param(mapOptions)
 
 		map_canvas.show();
-
-		map = new google.maps.Map(map_canvas[0], mapOptions);
-		marker.setMap(map);
-
+		map_canvas.append(
+			$('<iframe>').prop({
+				src: iframeurl,
+				frameborder: 0
+			}).css('border', 0)
+		);
+		
 		return;
 	};
 
 	window['initialize_record_maps'] = function(keyarg, culture) {
-		window['draw_map'] = draw_map_start;
-		map_canvas = $('#map_canvas');
+		map_canvas = $('div#map_canvas');
 		if (map_canvas.length) {
-			$.getScript("//maps.googleapis.com/maps/api/js?v=3&" + keyarg + "&sensor=false&callback=draw_map&language=" + culture);
+			draw_map_start(keyarg, culture);
 		}
 	};
 

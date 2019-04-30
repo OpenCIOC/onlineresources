@@ -49,7 +49,7 @@ ${renderer.hidden('IDList')}
 </tr>
 <tr>
 	<td class="FieldLabelLeft">${_('Subject:')}</td>
-	<td>${renderer.errorlist('Subject')}${renderer.text('Subject', maxlength='255')}</td>
+	<td>${renderer.errorlist('Subject')}${renderer.text('Subject', maxlength=255)}</td>
 </tr>
 <tr>
 	<td class="FieldLabelLeft">${renderer.label('AccessURL', _('Domain / View:'))}</td>

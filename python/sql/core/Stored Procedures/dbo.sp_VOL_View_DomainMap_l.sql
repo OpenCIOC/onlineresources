@@ -2,7 +2,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE PROCEDURE [dbo].[sp_VOL_View_DomainMap_l] (
 	@MemberID int
 )
@@ -11,9 +10,8 @@ AS
 SET NOCOUNT ON
 
 /*
-	Checked for Release: 3.1
 	Checked by: KL
-	Checked on: 15-May-2012
+	Checked on: 23-Jan-2018
 	Action: NO ACTION REQUIRED
 */
 
@@ -47,7 +45,7 @@ SELECT	vw.ViewType,
 		ON vw.ViewType=vwd.ViewType
 			AND vwd.LangID = (SELECT TOP 1 LangID FROM VOL_View_Description WHERE ViewType=vwd.ViewType ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
 	LEFT JOIN GBL_View_DomainMap mp
-		ON vw.ViewType = mp.VOLViewType AND mp.MemberID=@MemberID AND mp.SecondaryName=0
+		ON (vw.ViewType = mp.VOLViewType OR (vw.ViewType=@DefaultView AND mp.VOLViewType IS NULL)) AND mp.MemberID=@MemberID AND mp.SecondaryName=0
 WHERE vw.MemberID=@MemberID AND
 	(
 		EXISTS(SELECT * FROM VOL_View_Recurse vr WHERE vr.ViewType=@DefaultView AND vr.CanSee=vw.ViewType)

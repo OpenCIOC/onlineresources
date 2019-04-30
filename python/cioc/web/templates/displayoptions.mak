@@ -204,6 +204,11 @@ ${request.passvars.cached_form_vals |n}
 	<br>${_('Sort:')}
 	${renderer.radio(prefix + 'OrderByDesc', 'False', True, label=_('Ascending'))}
 	${renderer.radio(prefix + 'OrderByDesc', 'True', label=_('Descending'))}
+	%if domain.id == const.DM_CIC:
+
+	<br>
+	${renderer.checkbox(prefix + 'TableSort', 'False', label=_('Show sort options on results page'))}
+	%endif
 
 	</td>
 </tr>

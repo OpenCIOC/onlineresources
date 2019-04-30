@@ -43,10 +43,22 @@ Sub makeMappingSearchFooter()
 <%
 %>
 <%= makeJQueryScriptTags() %>
+<% If opt_bTableSortCIC Then %>
+<script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<% End If %>
 <%= JSVerScriptTag("scripts/results.js") %>
 <%= JSVerScriptTag("scripts/cultures/globalize.culture." & g_objCurrentLang.Culture & ".js") %>
 <% g_bListScriptLoaded = True %>
 <script type="text/javascript">
+
+<% If opt_bTableSortCIC Then %>
+	window.cioc_search_datatable = function() {
+		window.cioc_data_table = $('#results_table').DataTable({
+			"autoWidth": false,
+			"paging": false
+		});
+	}
+<% End If %>
 jQuery(function() {
 	<%= vacancy_script() %>;
 	<%= details_script() %>
@@ -86,8 +98,13 @@ jQuery(function() {
 	<% If hasGoogleMapsAPI() Then %>
 	initialize_mapping({map_pins: map_pins, translations: translations,
 			culture: "<%= g_objCurrentLang.Culture %>",
-			key_arg: <%= JSONQs(getGoogleMapsKeyArg(), True)%>});
+			key_arg: <%= JSONQs(getGoogleMapsKeyArg(), True)%>,
+			auto_start: <%= IIf(g_bAutoMapSearchResults, "true", "false") %>
+	});
 	<% End If %>
+	if (window.cioc_search_datatable) {
+		window.cioc_search_datatable();
+	}
 <%End If %>
 });
 </script>

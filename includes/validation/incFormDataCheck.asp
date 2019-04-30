@@ -16,6 +16,69 @@
 ' =========================================================================================
 
 %>
+<script language="python" runat="server">
+import re
+from datetime import time
+
+from cioc.core.i18n import gettext
+
+_ = lambda x: gettext(x, pyrequest)
+time_re = re.compile(r'''(?P<hour>\d?\d):(?P<minute>\d\d)(:(?P<second>\d\d))?(\s*(?P<ampm>(pm|am)))?''')
+ 
+def check_time(label, value, checkAddValidationError=None):
+	label = label + _(': ')
+	if value is None:
+		return
+	if not value.strip():
+		return
+
+	time_match = time_re.search(value.lower())
+	if time_match is None:
+		checkAddValidationError(label + _('Invalid Time'))
+		return None
+
+	hour = time_match.group('hour')
+	minute = time_match.group('minute')
+	second = time_match.group('second')
+	ampm = time_match.group('ampm')
+	# log.debug('AMPM: %s', ampm)
+	if ampm is None:
+		ampm = ''
+
+	hour = int(hour, 10)
+	minute = int(minute, 10)
+	if second is None:
+		second = '0'
+	second = int(second, 10)
+
+	if hour < 0:
+		checkAddValidationError(label + _('Hour is not valid'))
+		return None
+
+	# includes a time
+	if hour < 12 and ampm.lower() == 'pm':
+		# log.debug("PM bump up 12 hours")
+		hour += 12
+
+	elif hour == 12 and ampm.lower() == 'am':
+		# log.debug("AM and 12, make 0")
+		hour = 0
+
+	if hour > 23:
+		checkAddValidationError(label + _('Hour is not valid'))
+		return None
+
+	if 0 > minute or minute > 59:
+		checkAddValidationError(label + _('Minute is not valid'))
+		return None
+
+	if 0 > second or second > 59:
+		checkAddValidationError(label + _('Second is not valid'))
+		return None
+
+	value = time(hour, minute, second)
+	return value
+</script>
 
 <%
 Function checkDate(strFldName,ByRef strFldVal)

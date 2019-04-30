@@ -18,7 +18,7 @@
 %>
 
 <%
-Sub printBaseTableTextFieldList(strSelectName, bDate, bRadio, bMultiple, bIncludeBlank)
+Sub printBaseTableTextFieldList(strSelectName, bDate, bRadio, bWWW, bMultiple, bIncludeBlank)
 %>
 <select name=<%=AttrQs(strSelectName) & IIf(bMultiple," MULTIPLE size=""15""",vbNullString)%>>
 <%If bIncludeBlank And Not bMultiple Then%>
@@ -56,6 +56,7 @@ With cmdExtraFieldList
 	.Parameters.Append .CreateParameter("@ViewType", adInteger, adParamInput, 4, g_intViewTypeCIC)
 	.Parameters.Append .CreateParameter("InclDate", adBoolean, adParamInput, 1, IIf(bDate,SQL_TRUE,SQL_FALSE))
 	.Parameters.Append .CreateParameter("InclRadio", adBoolean, adParamInput, 1, IIf(bRadio,SQL_TRUE,SQL_FALSE))
+	.Parameters.Append .CreateParameter("InclWWW", adBoolean, adParamInput, 1, IIf(bWWW,SQL_TRUE,SQL_FALSE))
 End With
 Set rsExtraFieldList = Server.CreateObject("ADODB.Recordset")
 With rsExtraFieldList
@@ -175,7 +176,9 @@ Set cmdExtraFieldList = Nothing
 <option value="bt.UPDATE_EMAIL">UPDATE_EMAIL</option>
 <option value="cbtd.VACANCY_NOTES">VACANCY_NOTES</option>
 <option value="cbt.WCB_NO">WCB_NO</option>
+<%If bWWW Then%>
 <option value="btd.WWW_ADDRESS">WWW_ADDRESS</option>
+<%End If%>
 </select>
 <%
 End Sub

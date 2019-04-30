@@ -1,0 +1,174 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_GBL_NUMVNUMSetSchedule_u]
+	@data xml,
+	@Mod nvarchar(50),
+	@NUM varchar(8) = NULL,
+	@VNUM varchar(10) = NULL
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+/*
+	Checked for Release: 3.7
+	Checked by: CL
+	Checked on: 29-Oct-2017
+	Action: NO ACTION REQUIRED
+*/
+
+DECLARE @tmpSchedules table(
+	SchedID int,
+	START_DATE date,
+	END_DATE date,
+	START_TIME time,
+	END_TIME time,
+	RECURS_EVERY tinyint,
+	RECURS_DAY_OF_WEEK bit,
+	RECURS_WEEKDAY_1 bit,
+	RECURS_WEEKDAY_2 bit,
+	RECURS_WEEKDAY_3 bit,
+	RECURS_WEEKDAY_4 bit,
+	RECURS_WEEKDAY_5 bit,
+	RECURS_WEEKDAY_6 bit,
+	RECURS_WEEKDAY_7 bit,
+	RECURS_DAY_OF_MONTH tinyint,
+	RECURS_XTH_WEEKDAY_OF_MONTH tinyint,
+	Label nvarchar(200),
+	Which int IDENTITY
+)
+DECLARE @tmpMap table(
+	SchedID int, Which int
+)
+
+INSERT INTO @tmpSchedules 
+SELECT 
+	N.value('@SchedID', 'int'),
+	N.value('@START_DATE', 'date'),
+	N.value('@END_DATE', 'date'),
+	N.value('@START_TIME', 'time'),
+	N.value('@END_TIME', 'time'),
+	N.value('@RECURS_EVERY', 'tinyint'),
+	N.value('@RECURS_DAY_OF_WEEK', 'bit'),
+	N.value('@RECURS_WEEKDAY_1', 'bit'),
+	N.value('@RECURS_WEEKDAY_2', 'bit'),
+	N.value('@RECURS_WEEKDAY_3', 'bit'),
+	N.value('@RECURS_WEEKDAY_4', 'bit'),
+	N.value('@RECURS_WEEKDAY_5', 'bit'),
+	N.value('@RECURS_WEEKDAY_6', 'bit'),
+	N.value('@RECURS_WEEKDAY_7', 'bit'),
+	N.value('@RECURS_DAY_OF_MONTH', 'tinyint'),
+	N.value('@RECURS_XTH_WEEKDAY_OF_MONTH', 'tinyint'),
+	N.value('@Label', 'nvarchar(200)')
+FROM @data.nodes('//SCHEDULE') AS T(N)
+	LEFT JOIN GBL_Schedule pr
+ON pr.SchedID=N.value('@SchedID', 'int')
+WHERE N.value('@SchedID', 'int') IS NULL OR
+(@NUM IS NOT NULL AND pr.GblNUM=@NUM) OR (@VNUM IS NOT NULL AND pr.VolVNUM=@VNUM)
+
+DELETE pr
+	FROM GBL_Schedule pr
+	INNER JOIN @tmpSchedules tm
+		ON pr.SchedID = tm.SchedID
+WHERE tm.START_DATE IS NULL
+
+UPDATE pr SET 
+	START_DATE=tm.START_DATE,
+	END_DATE=tm.END_DATE,
+	START_TIME=tm.START_TIME,
+	END_TIME=tm.END_TIME,
+	RECURS_EVERY=tm.RECURS_EVERY,
+	RECURS_DAY_OF_WEEK=tm.RECURS_DAY_OF_WEEK,
+	RECURS_WEEKDAY_1=tm.RECURS_WEEKDAY_1,
+	RECURS_WEEKDAY_2=tm.RECURS_WEEKDAY_2,
+	RECURS_WEEKDAY_3=tm.RECURS_WEEKDAY_3,
+	RECURS_WEEKDAY_4=tm.RECURS_WEEKDAY_4,
+	RECURS_WEEKDAY_5=tm.RECURS_WEEKDAY_5,
+	RECURS_WEEKDAY_6=tm.RECURS_WEEKDAY_6,
+	RECURS_WEEKDAY_7=tm.RECURS_WEEKDAY_7,
+	RECURS_DAY_OF_MONTH=tm.RECURS_DAY_OF_MONTH,
+	RECURS_XTH_WEEKDAY_OF_MONTH=tm.RECURS_XTH_WEEKDAY_OF_MONTH,
+	MODIFIED_DATE=GETDATE(),
+	MODIFIED_BY=@Mod
+FROM GBL_Schedule pr
+INNER JOIN @tmpSchedules tm
+	ON pr.SchedID = tm.SchedID
+WHERE tm.START_DATE IS NOT NULL
+
+MERGE INTO GBL_Schedule AS pr
+USING @tmpSchedules AS tm
+	ON tm.SchedID=pr.SchedID
+WHEN NOT MATCHED AND tm.START_DATE IS NOT NULL THEN
+INSERT 
+		(CREATED_DATE,
+		 CREATED_BY,
+		 MODIFIED_DATE,
+		 MODIFIED_BY,
+		 START_DATE,
+		 END_DATE,
+		 START_TIME,
+		 END_TIME,
+		 RECURS_EVERY,
+		 RECURS_DAY_OF_WEEK,
+		 RECURS_WEEKDAY_1,
+		 RECURS_WEEKDAY_2,
+		 RECURS_WEEKDAY_3,
+		 RECURS_WEEKDAY_4,
+		 RECURS_WEEKDAY_5,
+		 RECURS_WEEKDAY_6,
+		 RECURS_WEEKDAY_7,
+		 RECURS_DAY_OF_MONTH,
+		 RECURS_XTH_WEEKDAY_OF_MONTH,
+		 GblNUM,
+		 VolVNUM
+		)
+VALUES ( GETDATE(), @Mod, GETDATE(), @Mod,
+	tm.START_DATE,
+	tm.END_DATE,
+	tm.START_TIME,
+	tm.END_TIME,
+	tm.RECURS_EVERY,
+	tm.RECURS_DAY_OF_WEEK,
+	tm.RECURS_WEEKDAY_1,
+	tm.RECURS_WEEKDAY_2,
+	tm.RECURS_WEEKDAY_3,
+	tm.RECURS_WEEKDAY_4,
+	tm.RECURS_WEEKDAY_5,
+	tm.RECURS_WEEKDAY_6,
+	tm.RECURS_WEEKDAY_7,
+	tm.RECURS_DAY_OF_MONTH,
+	tm.RECURS_XTH_WEEKDAY_OF_MONTH,
+	@NUM,
+	@VNUM
+)
+OUTPUT Inserted.SchedID, tm.Which INTO @tmpMap
+ ;
+
+DELETE pr
+FROM GBL_Schedule_Name pr
+INNER JOIN @tmpSchedules tm
+	ON pr.SchedID=tm.SchedID AND pr.LangID=@@LANGID
+WHERE tm.Label IS NULL
+
+UPDATE pr
+	SET Label=tm.Label
+FROM GBL_Schedule_Name pr
+INNER JOIN @tmpSchedules tm
+	ON tm.SchedID = pr.SchedID AND pr.LangID=@@LANGID
+
+INSERT INTO GBL_Schedule_Name
+		(SchedID, LangID, Label)
+SELECT ISNULL(m.SchedID, tm.SchedID), @@LANGID, tm.Label
+FROM @tmpSchedules tm
+LEFT JOIN @tmpMap m 
+	ON m.Which=tm.Which
+WHERE tm.Label IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_Schedule_Name pr WHERE SchedID=ISNULL(m.SchedID, tm.SchedID) AND LangID=@@LANGID)
+
+SET NOCOUNT OFF
+
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_GBL_NUMVNUMSetSchedule_u] TO [cioc_login_role]
+GO

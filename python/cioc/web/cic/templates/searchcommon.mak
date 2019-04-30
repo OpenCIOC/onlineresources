@@ -65,10 +65,10 @@ from cioc.core.utils import grouper
 	%endif
 %else:
 <div class="inline-radio-list community-search-type">
-	<label for="CMType_L${idsuffix}" class="NoWrap radio-inline cm-select cm-select${idsuffix}"><input type="radio" id="CMType_L${idsuffix}" name="CMType" value="L" ${ 'checked' if not search_info.SrchCommunityDefault else ''} data-suffix="${idsuffix}">${_("Located in Community")}</label>
-	<label for="CMType_S${idsuffix}" class="NoWrap radio-inline cm-select cm-select${idsuffix}"><input type="radio" id="CMType_S${idsuffix}" name="CMType" value="S" ${'checked' if search_info.SrchCommunityDefault else ''} data-suffix="${idsuffix}">${_("Serving Community")}</label>
+	<label for="CMType_L${idsuffix}" class="NoWrap radio-inline"><input type="radio" class="cm-select cm-select${idsuffix}" id="CMType_L${idsuffix}" name="CMType" value="L" ${ 'checked' if not search_info.SrchCommunityDefault else ''} data-suffix="${idsuffix}">${_("Located in Community")}</label>
+	<label for="CMType_S${idsuffix}" class="NoWrap radio-inline"><input type="radio" class="cm-select cm-select${idsuffix}" id="CMType_S${idsuffix}" name="CMType" value="S" ${'checked' if search_info.SrchCommunityDefault else ''} data-suffix="${idsuffix}">${_("Serving Community")}</label>
 	%for distance, label in located_near:
-		<label for="CMType_${distance}${idsuffix}" class="NoWrap radio-inline cm-select cm-select${idsuffix} cmtype-located-near"><input type="radio" id="CMType_${distance}${idsuffix}" name="CMType" value="${distance}" data-suffix="${idsuffix}">${label}</label>
+		<label for="CMType_${distance}${idsuffix}" class="NoWrap radio-inline"><input type="radio" class="cm-select cm-select${idsuffix} cmtype-located-near" id="CMType_${distance}${idsuffix}" name="CMType" value="${distance}" data-suffix="${idsuffix}">${label}</label>
 	%endfor
 </div>
 <div class="inline-no-bold">

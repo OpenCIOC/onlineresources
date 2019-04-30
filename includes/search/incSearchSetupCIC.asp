@@ -25,6 +25,9 @@ Dim bInlineMode
 bInlineMode = Not Nl(Trim(Request("InlineMode")))
 
 Call getDisplayOptionsCIC(g_intViewTypeCIC, Not user_bCIC)
+If opt_bTableSortCIC And Not g_bPrintMode Then
+	Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css""/>")
+End If
 
 If Not bInlineMode Then
 Call makePageHeader(TXT_SEARCH_RESULTS, TXT_SEARCH_RESULTS, True, True, True, True)

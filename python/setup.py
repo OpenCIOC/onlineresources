@@ -52,7 +52,9 @@ setup(name='CiocWeb',
 	  entry_points = """\
 	  [paste.app_factory]
 	  main = cioc.web:main
-	  """,
+	  [babel.extractors]
+      asp = cioc.core.aspextractor:extract_asp
+      """,
 	  dependency_links=[
 		  'http://clientservices.kclsoftware.com/cioc/basket/',
 		],

@@ -160,7 +160,7 @@ class EmailRecordListBase(viewbase.ViewBase):
 		}
 		if model_state.value('ReplyTo'):
 			name = u' '.join([x for x in [request.user.FirstName, request.user.LastName] if x]) or False
-			args['reply'] = formataddr((name, user.Email))
+			args['author'] = formataddr((name, user.Email))
 		try:
 			send_email(request, **args)
 		except Exception:

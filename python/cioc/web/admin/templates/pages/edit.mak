@@ -105,6 +105,11 @@ ${self.makeMgmtInfo(page)}
 </form>
 
 <%def name="bottomjs()">
+<script type="text/javascript">
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover();
+});
+</script>
 <script src='//cdn.tinymce.com/4/tinymce.min.js'></script>
 <script type="text/javascript">
 tinymce.init({
@@ -115,7 +120,7 @@ tinymce.init({
 		'insertdatetime media table contextmenu paste code'
 	],
 	toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link anchor image',
-	extended_valid_elements : 'span[*],[i]*',
+	extended_valid_elements : 'span[*],i[*],script[*]',
 	schema: 'html5'
 });
 </script>

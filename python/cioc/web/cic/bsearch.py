@@ -357,6 +357,7 @@ class LayoutSearch(object):
 			'VOL_LINK_TEXT': vol_link_text,
 
 			'SEARCH_FORM_START': kwargs['searchform_start'],
+			'HAS_KEYWORD_SEARCH': not not search_info.BSrchKeywords,
 			'KEYWORD_SEARCH_BOX': kwargs['searchform_keyword'],
 			'KEYWORD_SEARCH_IN': kwargs['searchform_in_values'],
 			'COMMUNITY_SEARCH': kwargs['searchform_community'],
@@ -512,7 +513,7 @@ class BasicSearch(CicViewBase):
 			focus = ''
 
 		title = cic_view.SearchTitleOverride or request.pageinfo.PageTitle or _("Organization / Program Search")
-		distances = [2, 5, 10, 15, 25, 50]
+		distances = [2, 5, 10, 15, 25, 50, 100]
 		located_near = [
 			(x, _('Within %skm') % x)
 			for x in distances

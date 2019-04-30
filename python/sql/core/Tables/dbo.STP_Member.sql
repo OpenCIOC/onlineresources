@@ -26,6 +26,7 @@ CREATE TABLE [dbo].[STP_Member]
 [DefaultViewCIC] [int] NULL,
 [BaseURLCIC] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [DefaultEmailCIC] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[DefaultEmailNameCIC] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SiteCodeLength] [tinyint] NOT NULL CONSTRAINT [DF_STP_Member_SiteCodeLength] DEFAULT ((0)),
 [UseTaxonomy] [bit] NOT NULL CONSTRAINT [DF_STP_Member_UseTaxonomy] DEFAULT ((0)),
 [VacancyFundedCapacity] [bit] NOT NULL CONSTRAINT [DF_STP_Member_VacancyFundedCapacity] DEFAULT ((0)),
@@ -43,6 +44,7 @@ CREATE TABLE [dbo].[STP_Member]
 [DefaultViewVOL] [int] NULL,
 [BaseURLVOL] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [DefaultEmailVOL] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[DefaultEmailNameVOL] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [UseVolunteerProfiles] [bit] NOT NULL CONSTRAINT [DF_STP_Member_UseVolunteerProfiles] DEFAULT ((0)),
 [LastVolProfileEmailDate] [smalldatetime] NULL,
 [DefaultEmailVOLProfile] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
@@ -68,7 +70,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE TRIGGER [dbo].[tr_STP_Member_u] ON [dbo].[STP_Member]
 FOR UPDATE AS
 
@@ -85,7 +86,6 @@ IF UPDATE(Active) BEGIN
 END
 	
 SET NOCOUNT OFF
-
 GO
 ALTER TABLE [dbo].[STP_Member] ADD CONSTRAINT [CK_STP_Member_CanDeleteRecordNoteCIC] CHECK (([CanDeleteRecordNoteCIC]>=(0) AND [CanDeleteRecordNoteCIC]<(3)))
 GO
@@ -105,18 +105,19 @@ ALTER TABLE [dbo].[STP_Member] ADD CONSTRAINT [PK_STP_Member] PRIMARY KEY CLUSTE
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [IX_STP_Member] ON [dbo].[STP_Member] ([DatabaseCode]) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[STP_Member] ADD CONSTRAINT [FK_STP_Member_STP_Language] FOREIGN KEY ([DefaultLangID]) REFERENCES [dbo].[STP_Language] ([LangID])
-GO
-ALTER TABLE [dbo].[STP_Member] ADD CONSTRAINT [FK_STP_Member_GBL_Template1] FOREIGN KEY ([DefaultPrintTemplate]) REFERENCES [dbo].[GBL_Template] ([Template_ID])
+ALTER TABLE [dbo].[STP_Member] WITH NOCHECK ADD CONSTRAINT [FK_STP_Member_CIC_View] FOREIGN KEY ([DefaultViewCIC]) REFERENCES [dbo].[CIC_View] ([ViewType])
 GO
 ALTER TABLE [dbo].[STP_Member] ADD CONSTRAINT [FK_STP_Member_GBL_Template] FOREIGN KEY ([DefaultTemplate]) REFERENCES [dbo].[GBL_Template] ([Template_ID])
 GO
-ALTER TABLE [dbo].[STP_Member] WITH NOCHECK ADD CONSTRAINT [FK_STP_Member_CIC_View] FOREIGN KEY ([DefaultViewCIC]) REFERENCES [dbo].[CIC_View] ([ViewType])
+ALTER TABLE [dbo].[STP_Member] ADD CONSTRAINT [FK_STP_Member_GBL_Template1] FOREIGN KEY ([DefaultPrintTemplate]) REFERENCES [dbo].[GBL_Template] ([Template_ID])
 GO
-ALTER TABLE [dbo].[STP_Member] WITH NOCHECK ADD CONSTRAINT [FK_STP_Member_VOL_View] FOREIGN KEY ([DefaultViewVOL]) REFERENCES [dbo].[VOL_View] ([ViewType])
+ALTER TABLE [dbo].[STP_Member] ADD CONSTRAINT [FK_STP_Member_STP_Language] FOREIGN KEY ([DefaultLangID]) REFERENCES [dbo].[STP_Language] ([LangID])
 GO
 ALTER TABLE [dbo].[STP_Member] ADD CONSTRAINT [FK_STP_Member_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
 GO
+ALTER TABLE [dbo].[STP_Member] WITH NOCHECK ADD CONSTRAINT [FK_STP_Member_VOL_View] FOREIGN KEY ([DefaultViewVOL]) REFERENCES [dbo].[VOL_View] ([ViewType])
+GO
 GRANT SELECT ON  [dbo].[STP_Member] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[STP_Member] TO [cioc_login_role]
 GO

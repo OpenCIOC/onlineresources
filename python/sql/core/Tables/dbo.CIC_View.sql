@@ -93,48 +93,36 @@ CREATE TABLE [dbo].[CIC_View]
 [BSrchNear25] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSearchNear25] DEFAULT ((0)),
 [BSrchNear50] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSearchNear50] DEFAULT ((0)),
 [BSrchNear2] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSrchNear2] DEFAULT ((0)),
-[DefaultPrintProfile] [int] NULL
+[DefaultPrintProfile] [int] NULL,
+[BSrchNear100] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSrchNear100] DEFAULT ((0)),
+[AutoMapSearchResults] [bit] NOT NULL CONSTRAINT [DF_CIC_View_AutoMapSearchResults] DEFAULT ((0))
 ) ON [PRIMARY]
-ALTER TABLE [dbo].[CIC_View] ADD
-CONSTRAINT [FK_CIC_View_GBL_PrintProfile] FOREIGN KEY ([DefaultPrintProfile]) REFERENCES [dbo].[GBL_PrintProfile] ([ProfileID])
-ALTER TABLE [dbo].[CIC_View] ADD 
-CONSTRAINT [PK_CIC_View] PRIMARY KEY CLUSTERED  ([ViewType]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[CIC_View] WITH NOCHECK ADD CONSTRAINT [CK_CIC_View_TaxDefnLevel] CHECK (([TaxDefnLevel]>=(0) AND [TaxDefnLevel]<=(5)))
+GO
+ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [PK_CIC_View] PRIMARY KEY CLUSTERED  ([ViewType]) ON [PRIMARY]
+GO
 CREATE UNIQUE NONCLUSTERED INDEX [IX_CIC_View_ViewTypeInclViewCriteria] ON [dbo].[CIC_View] ([ViewType]) INCLUDE ([CanSeeDeleted], [CanSeeNonPublic], [HidePastDueBy], [MemberID], [PB_ID]) ON [PRIMARY]
-
-ALTER TABLE [dbo].[CIC_View] WITH NOCHECK ADD
-CONSTRAINT [CK_CIC_View_TaxDefnLevel] CHECK (([TaxDefnLevel]>=(0) AND [TaxDefnLevel]<=(5)))
-ALTER TABLE [dbo].[CIC_View] ADD
-CONSTRAINT [FK_CIC_View_CIC_Publication_Quicklist] FOREIGN KEY ([QuickListPubHeadings]) REFERENCES [dbo].[CIC_Publication] ([PB_ID])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-GO
-
-ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
-GO
-ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_GBL_Agency] FOREIGN KEY ([Owner]) REFERENCES [dbo].[GBL_Agency] ([AgencyCode]) ON DELETE SET NULL ON UPDATE CASCADE
 GO
 ALTER TABLE [dbo].[CIC_View] WITH NOCHECK ADD CONSTRAINT [FK_CIC_View_CIC_Publication] FOREIGN KEY ([PB_ID]) REFERENCES [dbo].[CIC_Publication] ([PB_ID])
 GO
-ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_GBL_Template_Print] FOREIGN KEY ([PrintTemplate]) REFERENCES [dbo].[GBL_Template] ([Template_ID])
+ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_CIC_Publication_Quicklist] FOREIGN KEY ([QuickListPubHeadings]) REFERENCES [dbo].[CIC_Publication] ([PB_ID])
+GO
+ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_GBL_Agency] FOREIGN KEY ([Owner]) REFERENCES [dbo].[GBL_Agency] ([AgencyCode]) ON DELETE SET NULL ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_GBL_PrintProfile] FOREIGN KEY ([DefaultPrintProfile]) REFERENCES [dbo].[GBL_PrintProfile] ([ProfileID])
 GO
 ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_GBL_Template] FOREIGN KEY ([Template]) REFERENCES [dbo].[GBL_Template] ([Template_ID])
 GO
+ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_GBL_Template_Print] FOREIGN KEY ([PrintTemplate]) REFERENCES [dbo].[GBL_Template] ([Template_ID])
+GO
+ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
+GO
 GRANT SELECT ON  [dbo].[CIC_View] TO [cioc_cic_search_role]
-GRANT SELECT ON  [dbo].[CIC_View] TO [cioc_login_role]
+GO
 GRANT DELETE ON  [dbo].[CIC_View] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[CIC_View] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[CIC_View] TO [cioc_login_role]
 GO

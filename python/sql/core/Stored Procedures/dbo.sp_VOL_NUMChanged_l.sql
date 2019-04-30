@@ -42,10 +42,12 @@ GROUP BY btd.NUM, btd.LangID,
 	btd.NON_PUBLIC, btd.DELETION_DATE,
 	vo.RECORD_OWNER
 )
-SELECT a.UpdateEmailVOL, r.*
+SELECT a.UpdateEmailVOL, m.DefaultEmailVOL, m.DefaultEmailNameVOL, r.*
 	FROM records AS r
 	INNER JOIN GBL_Agency a
 		ON r.RECORD_OWNER=a.AgencyCode
+	INNER JOIN STP_Member AS m
+		ON m.MemberID = a.MemberID
 WHERE a.UpdateEmailVOL IS NOT NULL
 ORDER BY r.RECORD_OWNER, ORG_NAME_FULL, NUM, LangID
 

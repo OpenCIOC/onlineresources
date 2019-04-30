@@ -53,6 +53,7 @@ Call setPageInfo(False, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStr
 <!--#include file="includes/core/incFormat.asp" -->
 <!--#include file="includes/list/incMonthList.asp" -->
 <!--#include file="includes/update/incAgencyUpdateInfo.asp" -->
+<!--#include file="includes/update/incEventSchedule.asp" -->
 <!--#include file="includes/update/incEntryFormGeneral.asp" -->
 <!--#include file="includes/update/incFeedbackFormProcessGeneral.asp" -->
 <!--#include file="includes/validation/incFormDataCheck.asp" -->
@@ -763,7 +764,7 @@ If Not bNUMError Then
 <h3 class="Alert"><%=TXT_SECURITY_CHECK%></h3>
 <p><span class="AlertBubble"><%=TXT_INST_SECURITY_CHECK_FAIL%></span></p>
 <p><%=TXT_INST_SECURITY_CHECK_2%></p>
-<form action="feedback2.asp" method="post" class="form-inline">
+<form action="feedback2.asp" method="post" class="form-horizontal">
 <div style="display:none">
 <%
 		For Each indItem In Request.QueryString()
@@ -795,6 +796,11 @@ If Not bNUMError Then
 	<label for="sCheckYear" class="control-label col-xs-4 col-sm-2 col-md-1"><%=TXT_YEAR%></label>
 	<div class="form-inline form-inline-always col-xs-8 col-sm-10 col-md-11">
 		<input id="sCheckYear" name="sCheckYear" type="text" size="5" maxlength="8" class="form-control">
+	</div>
+</div>
+<div class="form-group">
+	<div class="col-sm-offset-2 col-xs-offset-4 col-sm-10 col-xs-8 col-md-offset-1 col-md-11">
+		<input type="submit" value="<%=TXT_SUBMIT%>" class="btn btn-default">
 	</div>
 </div>
 </form>
@@ -1061,6 +1067,8 @@ While Not rsFields.EOF
 			Call getEligibilityFields(rsFields.Fields("FieldDisplay"))
 		Case "EMPLOYEES"
 			Call getEmployeesFields(rsFields.Fields("FieldDisplay"))
+		Case "EVENT_SCHEDULE"
+			Call getEventScheduleFields(rsFields.Fields("FieldDisplay"))
 		Case "EXEC_1"
 			Call getContactFields(strFieldName, rsFields.Fields("FieldDisplay"),strInsertIntoFB,strInsertValueFB)
 		Case "EXEC_2"
@@ -1315,7 +1323,7 @@ With cmdInsertFb
 							"SQL state: " & Ns(objErr.SQLState) & vbCrLf
 		Next
 
-		Call sendEmail(True, "qw4afPcItA5KJ18NH4nV@cioc.ca", "qw4afPcItA5KJ18NH4nV@cioc.ca", vbNullString, "Entryform SQL Error", strErrorDetails & strInsSQL)
+		Call sendEmail(True, "qw4afPcItA5KJ18NH4nV@cioc.ca", "qw4afPcItA5KJ18NH4nV@cioc.ca", "Entryform SQL Error", strErrorDetails & strInsSQL)
 	End if
 	On Error Goto 0
 End With

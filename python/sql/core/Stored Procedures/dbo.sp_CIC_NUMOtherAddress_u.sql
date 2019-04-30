@@ -22,7 +22,9 @@ CREATE PROCEDURE [dbo].[sp_CIC_NUMOtherAddress_u]
 	@Province varchar(2),
 	@Country nvarchar(60),
 	@PostalCode varchar(20),
-	@MapLink int
+	@Latitude DECIMAL(11,7),
+	@Longitude DECIMAL(11,7),
+	@MapLink INT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
@@ -58,6 +60,8 @@ IF EXISTS(SELECT * FROM GBL_BaseTable_Description btd WHERE btd.NUM=@NUM AND Lan
 			PROVINCE = @Province,
 			COUNTRY = @Country,
 			POSTAL_CODE = @PostalCode,
+			LATITUDE = @Latitude,
+			LONGITUDE = @Longitude,
 			MAP_LINK = @MapLink
 		WHERE ADDR_ID=@ADDR_ID
 	END ELSE BEGIN
@@ -80,6 +84,8 @@ IF EXISTS(SELECT * FROM GBL_BaseTable_Description btd WHERE btd.NUM=@NUM AND Lan
 			PROVINCE,
 			COUNTRY,
 			POSTAL_CODE,
+			LATITUDE,
+			LONGITUDE,
 			MAP_LINK
 		) VALUES (
 			@NUM,
@@ -100,6 +106,8 @@ IF EXISTS(SELECT * FROM GBL_BaseTable_Description btd WHERE btd.NUM=@NUM AND Lan
 			@Province,
 			@Country,
 			@PostalCode,
+			@Latitude,
+			@Longitude,
 			@MapLink
 		)
 	END

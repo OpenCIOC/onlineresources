@@ -5,80 +5,81 @@ GO
 
 
 CREATE PROCEDURE [dbo].[sp_VOL_View_u]
-	@ViewType int,
-	@MODIFIED_BY varchar(50),
-	@MemberID int,
-	@AgencyCode char(3),
-	@Owner char(3),
-	@CanSeeNonPublic bit,
-	@CanSeeDeleted bit,
-	@HidePastDueBy smallint,
-	@AlertColumn bit,
-	@Template int,
-	@PrintTemplate int,
-	@PrintVersionResults bit,
-	@DataMgmtFields bit,
-	@LastModifiedDate bit,
-	@SocialMediaShare bit,
-	@CommSrchWrapAt tinyint,
-	@ASrchAges bit,
-	@ASrchBool bit,
-	@ASrchEmail bit,
-	@ASrchLastRequest bit,
-	@ASrchOwner bit,
-	@BSrchAutoComplete bit,
-	@BSrchBrowseAll bit,
-	@BSrchBrowseByInterest bit,
-	@BSrchBrowseByOrg bit,
-	@BSrchKeywords bit,
-	@BSrchStepByStep bit,
-	@BSrchStudent bit,
-	@BSrchWhatsNew bit,
-	@BSrchDefaultTab tinyint,
-	@BSrchCommunity bit,
-	@BSrchCommitmentLength bit,
-	@BSrchSuitableFor bit,
-	@DataUseAuth bit,
-	@DataUseAuthPhone bit,
-	@MyList bit,
-	@ViewOtherLangs bit,
-	@AllowFeedbackNotInView bit,
-	@AssignSuggestionsTo varchar(3),
-	@AllowPDF bit,
-	@CommunitySetID int,
-	@CanSeeExpired bit,
-	@SuggestOpLink bit,
-	@ASrchDatesTimes bit,
-	@ASrchOSSD bit,
-	@SSrchIndividualCount bit,
-	@SSrchDatesTimes bit,
-	@UseProfilesView bit,
-	@ShowID bit,
-	@ShowOwner bit,
-	@ShowAlert bit,
-	@ShowOrg bit,
-	@ShowCommunity bit,
-	@ShowUpdateSchedule bit,
-	@LinkUpdate bit,
-	@LinkEmail bit,
-	@LinkSelect bit,
-	@LinkWeb bit,
-	@LinkListAdd bit,
-	@OrderBy int,
-	@OrderByCustom int,
-	@OrderByDesc bit,
-	@GLinkMail bit,
-	@GLinkPub bit,
-	@ShowTable bit,
-	@VShowPosition bit,
-	@VShowDuties bit,
-	@GoogleTranslateWidget bit,
-	@DefaultPrintProfile int,
-	@Descriptions xml,
-	@Views xml,
-	@AdvSrchCheckLists xml,
-	@DisplayOptFields varchar(MAX),
-	@ErrMsg nvarchar(500) OUTPUT
+	@ViewType INT,
+	@MODIFIED_BY VARCHAR(50),
+	@MemberID INT,
+	@AgencyCode CHAR(3),
+	@Owner CHAR(3),
+	@CanSeeNonPublic BIT,
+	@CanSeeDeleted BIT,
+	@HidePastDueBy SMALLINT,
+	@AlertColumn BIT,
+	@Template INT,
+	@PrintTemplate INT,
+	@PrintVersionResults BIT,
+	@DataMgmtFields BIT,
+	@LastModifiedDate BIT,
+	@SocialMediaShare BIT,
+	@CommSrchWrapAt TINYINT,
+	@ASrchAges BIT,
+	@ASrchBool BIT,
+	@ASrchEmail BIT,
+	@ASrchLastRequest BIT,
+	@ASrchOwner BIT,
+	@BSrchAutoComplete BIT,
+	@BSrchBrowseAll BIT,
+	@BSrchBrowseByInterest BIT,
+	@BSrchBrowseByOrg BIT,
+	@BSrchKeywords BIT,
+	@BSrchStepByStep BIT,
+	@BSrchStudent BIT,
+	@BSrchWhatsNew BIT,
+	@BSrchDefaultTab TINYINT,
+	@BSrchCommunity BIT,
+	@BSrchCommitmentLength BIT,
+	@BSrchSuitableFor BIT,
+	@DataUseAuth BIT,
+	@DataUseAuthPhone BIT,
+	@MyList BIT,
+	@ViewOtherLangs BIT,
+	@AllowFeedbackNotInView BIT,
+	@AssignSuggestionsTo VARCHAR(3),
+	@AllowPDF BIT,
+	@CommunitySetID INT,
+	@CanSeeExpired BIT,
+	@SuggestOpLink BIT,
+	@ASrchDatesTimes BIT,
+	@ASrchOSSD BIT,
+	@SSrchIndividualCount BIT,
+	@SSrchDatesTimes BIT,
+	@UseProfilesView BIT,
+	@ShowID BIT,
+	@ShowOwner BIT,
+	@ShowAlert BIT,
+	@ShowOrg BIT,
+	@ShowCommunity BIT,
+	@ShowUpdateSchedule BIT,
+	@LinkUpdate BIT,
+	@LinkEmail BIT,
+	@LinkSelect BIT,
+	@LinkWeb BIT,
+	@LinkListAdd BIT,
+	@OrderBy INT,
+	@OrderByCustom INT,
+	@OrderByDesc BIT,
+	@TableSort BIT,
+	@GLinkMail BIT,
+	@GLinkPub BIT,
+	@ShowTable BIT,
+	@VShowPosition BIT,
+	@VShowDuties BIT,
+	@GoogleTranslateWidget BIT,
+	@DefaultPrintProfile INT,
+	@Descriptions XML,
+	@Views XML,
+	@AdvSrchCheckLists XML,
+	@DisplayOptFields VARCHAR(MAX),
+	@ErrMsg NVARCHAR(500) OUTPUT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
@@ -288,7 +289,7 @@ IF @MemberID IS NULL BEGIN
 -- Member ID exists ?
 END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS varchar), @MemberObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS VARCHAR), @MemberObjectName)
 -- View given ?
 END ELSE IF @ViewType IS NULL BEGIN
 	SET @Error = 2 -- No ID Given
@@ -296,7 +297,7 @@ END ELSE IF @ViewType IS NULL BEGIN
 -- View exists ?
 END ELSE IF NOT EXISTS (SELECT * FROM VOL_View WHERE ViewType=@ViewType) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@ViewType AS varchar), @ViewObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@ViewType AS VARCHAR), @ViewObjectName)
 -- View belongs to Member ?
 END ELSE IF @ViewType IS NOT NULL AND NOT EXISTS (SELECT * FROM VOL_View WHERE MemberID=@MemberID AND ViewType=@ViewType) BEGIN
 	SET @Error = 8 -- Security Failure
@@ -312,7 +313,7 @@ END ELSE IF @Template IS NULL BEGIN
 -- Template exists ?
 END ELSE IF NOT EXISTS (SELECT * FROM GBL_Template WHERE Template_ID=@Template) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@Template AS varchar), @TemplateObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@Template AS VARCHAR), @TemplateObjectName)
 -- Template ownership OK?
 END ELSE IF NOT EXISTS (SELECT * FROM GBL_Template
 		WHERE Template_ID=@Template
@@ -327,7 +328,7 @@ END ELSE IF NOT EXISTS (SELECT * FROM GBL_Template
 -- Print Template exists ?
 END ELSE IF @PrintTemplate IS NOT NULL AND NOT EXISTS (SELECT * FROM GBL_Template WHERE Template_ID=@PrintTemplate) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@PrintTemplate AS varchar), @TemplateObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@PrintTemplate AS VARCHAR), @TemplateObjectName)
 -- Print Template ownership OK?
 END ELSE IF @PrintTemplate IS NOT NULL AND NOT EXISTS (SELECT * FROM GBL_Template
 		WHERE Template_ID=@PrintTemplate
@@ -346,7 +347,7 @@ END ELSE IF @CommunitySetID IS NULL BEGIN
 -- Community Set exists ?
 END ELSE IF NOT EXISTS(SELECT * FROM VOL_CommunitySet vcs WHERE vcs.CommunitySetID=@CommunitySetID) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@CommunitySetID AS varchar), @CommunitySetObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@CommunitySetID AS VARCHAR), @CommunitySetObjectName)
 -- Community Set belongs to Member ?
 END ELSE IF NOT EXISTS(SELECT * FROM VOL_CommunitySet vcs WHERE vcs.CommunitySetID=@CommunitySetID AND vcs.MemberID=@MemberID) BEGIN
 	SET @Error = 8 -- Security Failure
@@ -354,7 +355,7 @@ END ELSE IF NOT EXISTS(SELECT * FROM VOL_CommunitySet vcs WHERE vcs.CommunitySet
 -- Print Profile Exists ?
 END ELSE IF @DefaultPrintProfile IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_PrintProfile pp WHERE pp.ProfileID=@DefaultPrintProfile AND pp.Domain=2) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@DefaultPrintProfile AS varchar), @PrintProfileObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@DefaultPrintProfile AS VARCHAR), @PrintProfileObjectName)
 -- Print Profile belongs to Member ?
 END ELSE IF @DefaultPrintProfile IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_PrintProfile pp WHERE pp.ProfileID=@DefaultPrintProfile AND pp.Domain=2 AND pp.MemberID=@MemberID OR pp.MemberID IS NULL) BEGIN
 	SET @Error = 8 -- Security Failure
@@ -507,7 +508,7 @@ IF @Error = 0 BEGIN
 		
 		INSERT INTO VOL_View_ChkField (
 			ViewType,
-			FieldID
+			FieldId
 		) SELECT
 			@ViewType,
 			FieldID
@@ -519,7 +520,7 @@ IF @Error = 0 BEGIN
 	END
 	
 	IF @Error=0 BEGIN
-		EXEC @Error = dbo.sp_GBL_Display_u NULL, @ViewType, 2, @ShowID, @ShowOwner, @ShowAlert, @ShowOrg, @ShowCommunity, @ShowUpdateSchedule, @LinkUpdate, @LinkEmail, @LinkSelect, @LinkWeb, @LinkListAdd, @OrderBy, @OrderByCustom, @OrderByDesc, @GlinkMail, @GLinkPub, @ShowTable, @VShowPosition, @VShowDuties, @DisplayOptFields, @ErrMsg OUTPUT
+		EXEC @Error = dbo.sp_GBL_Display_u NULL, @ViewType, 2, @ShowID, @ShowOwner, @ShowAlert, @ShowOrg, @ShowCommunity, @ShowUpdateSchedule, @LinkUpdate, @LinkEmail, @LinkSelect, @LinkWeb, @LinkListAdd, @OrderBy, @OrderByCustom, @OrderByDesc,@TableSort, @GlinkMail, @GLinkPub, @ShowTable, @VShowPosition, @VShowDuties, @DisplayOptFields, @ErrMsg OUTPUT
 	END
 END
 

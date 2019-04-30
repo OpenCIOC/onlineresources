@@ -98,7 +98,9 @@ ${request.passvars.cached_form_vals}
 </%def>
 
 <%def name="searchform_keyword()">
+	%if search_info.BSrchKeywords:
 	<input type="text" maxlength="250" id="STerms" name="STerms" class="input-expand form-control ui-autocomplete-input">
+	%endif
 </%def>
 
 <%def name="searchform()" buffered="True">

@@ -174,6 +174,7 @@ def getDbOptions(handleDBConnetionError):
 		g_intCanDeleteRecordNoteVOL, g_intCanUpdateRecordNoteCIC, \
 		g_intCanUpdateRecordNoteVOL, g_bRecordNoteTypeOptionalCIC, \
 		g_bRecordNoteTypeOptionalVOL, g_intPreventDuplicateOrgNames, \
+		g_strDefaultCountry, g_strDefaultProvState, \
 		g_intMemberID, g_bOtherMembers, g_bOtherMembersActive, g_bSSL, g_intLoginRetryLimit
 
 	try:
@@ -223,6 +224,8 @@ def getDbOptions(handleDBConnetionError):
 	g_bOtherMembers = dboptions.OtherMembers
 	g_bOtherMembersActive = dboptions.OtherMembersActive
 	g_intLoginRetryLimit = dboptions.LoginRetryLimit
+	g_strDefaultCountry = dboptions.DefaultCountry
+	g_strDefaultProvState = dboptions.DefaultProvince
 
 	g_bSSL = not not pyrequest.headers.get('CIOC-USING-SSL')
 
@@ -361,7 +364,7 @@ def getViewData(SetPrintMode, handleDBConnetionError):
 		g_intQuickListWrapAt, g_bLinkOrgLevels, g_bCanSeeNonPublicPub, \
 		g_bUsePubNamesOnly, g_bUseNAICSView, g_bUseTaxonomyView, g_intTaxDefnLevel, \
 		g_bUseThesaurusView, g_bUseLocalSubjects, g_bUseZeroSubjects, \
-		g_bMapSearchResults, g_bUseSubmitChangesTo, \
+		g_bMapSearchResults, g_bAutoMapSearchResults, g_bUseSubmitChangesTo, \
 		g_bHasExcelProfile, g_bHasExportProfile, g_bMyListCIC, g_dicCulturesCIC, g_strAlsoNotifyCIC, \
 		g_bViewOtherLangsCIC, g_bAllowFeedbackNotInViewCIC, g_strAssignSuggestionsToCIC
 
@@ -426,6 +429,7 @@ def getViewData(SetPrintMode, handleDBConnetionError):
 	g_bUseLocalSubjects = vd.cic.UseLocalSubjects
 	g_bUseZeroSubjects = vd.cic.UseZeroSubjects
 	g_bMapSearchResults = vd.cic.MapSearchResults
+	g_bAutoMapSearchResults = vd.cic.AutoMapSearchResults
 	g_bUseSubmitChangesTo = vd.cic.UseSubmitChangesTo
 	g_bHasExcelProfile = vd.cic.HasExcelProfile
 	g_bHasExportProfile = vd.cic.HasExportProfile
