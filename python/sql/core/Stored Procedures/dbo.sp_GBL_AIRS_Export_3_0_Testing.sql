@@ -1112,6 +1112,8 @@ SELECT
 		WHERE svcbtd.CMP_InternalMemo IS NOT NULL) AS EditorsNote,
 	(SELECT svcbtd.PUBLIC_COMMENTS AS Notes
 		WHERE svcbtd.PUBLIC_COMMENTS IS NOT NULL) AS PublicNote,
+
+	-- SITE > SERVICE > PUB AND DIST CODES
 	(SELECT pb.PubCode AS "@Code",
 		(SELECT ghn.Name AS "@Value"
 			FROM dbo.CIC_BT_PB_GH ghr
@@ -1127,6 +1129,7 @@ SELECT
 		INNER JOIN dbo.CIC_Distribution dst ON dst.DST_ID = pr.DST_ID
 		WHERE pr.NUM LIKE svbt.NUM
 		FOR XML PATH('Distribution'), TYPE)
+
 			FROM GBL_BaseTable svbt
 			INNER JOIN GBL_BaseTable_Description svbtd
 				ON svbt.NUM=svbtd.NUM AND svbtd.LangID=@LangID
@@ -1286,6 +1289,12 @@ SELECT
 		(SELECT svbtd.WWW_ADDRESS AS Address
 			WHERE svbtd.WWW_ADDRESS IS NOT NULL
 			FOR XML PATH('URL'), TYPE),
+
+	-- SITE > SERVICE > SOCIAL MEDIA
+		(SELECT pr.Protocol + pr.URL AS Address, sm.DefaultName AS Notes
+			FROM dbo.GBL_BT_SM pr INNER JOIN dbo.GBL_SocialMedia sm ON sm.SM_ID = pr.SM_ID
+			WHERE pr.NUM=svbt.NUM AND pr.LangID=svbtd.LangID
+			FOR XML PATH('SocialMedia'), TYPE),
 		
 	-- SITE > SERVICE > EMAIL
 		(SELECT LTRIM(ItemID) AS Address
