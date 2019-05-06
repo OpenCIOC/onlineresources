@@ -22,7 +22,7 @@ SET NOCOUNT ON
 
 /*
 	Checked by: KL
-	Checked on: 25-Jul-2018
+	Checked on: 03-May-2019
 	Action: NO ACTION REQUIRED
 */
 
@@ -344,7 +344,7 @@ SELECT
 	(SELECT btd.WWW_ADDRESS AS Address WHERE btd.WWW_ADDRESS IS NOT NULL FOR XML PATH('URL'), TYPE),
 	
 	-- SOCIAL MEDIA
-	(SELECT pr.Protocol + pr.URL AS Address, sm.DefaultName AS Notes
+	(SELECT pr.Protocol + pr.URL AS Address, sm.DefaultName AS Note
 		FROM dbo.GBL_BT_SM pr INNER JOIN dbo.GBL_SocialMedia sm ON sm.SM_ID = pr.SM_ID
 		WHERE pr.NUM=bt.NUM AND pr.LangID=btd.LangID
 		FOR XML PATH('SocialMedia'), TYPE),
@@ -619,7 +619,7 @@ SELECT
 			FOR XML PATH('URL'), TYPE),
 		
 	-- SITE > SOCIAL MEDIA
-	(SELECT pr.Protocol + pr.URL AS Address, sm.DefaultName AS Notes
+	(SELECT pr.Protocol + pr.URL AS Address, sm.DefaultName AS Note
 		FROM dbo.GBL_BT_SM pr INNER JOIN dbo.GBL_SocialMedia sm ON sm.SM_ID = pr.SM_ID
 		WHERE pr.NUM=slbt.NUM AND pr.LangID=slbtd.LangID
 		FOR XML PATH('SocialMedia'), TYPE),
@@ -890,7 +890,7 @@ SELECT
 			FOR XML PATH('URL'), TYPE),
 
 	-- SITE > SERVICE > SOCIAL MEDIA
-	(SELECT pr.Protocol + pr.URL AS Address, sm.DefaultName AS Notes
+	(SELECT pr.Protocol + pr.URL AS Address, sm.DefaultName AS Note
 		FROM dbo.GBL_BT_SM pr INNER JOIN dbo.GBL_SocialMedia sm ON sm.SM_ID = pr.SM_ID
 		WHERE pr.NUM=svbt.NUM AND pr.LangID=svbtd.LangID
 		FOR XML PATH('SocialMedia'), TYPE),
@@ -1112,7 +1112,9 @@ SELECT
 		WHERE svcbtd.CMP_InternalMemo IS NOT NULL) AS EditorsNote,
 	(SELECT svcbtd.PUBLIC_COMMENTS AS Notes
 		WHERE svcbtd.PUBLIC_COMMENTS IS NOT NULL) AS PublicNote,
-	(SELECT pb.PubCode AS "@Code",
+
+	-- SITE > SERVICE > PUB AND DIST CODES
+	(SELECT pb.PubCode AS "@Value",
 		(SELECT ghn.Name AS "@Value"
 			FROM dbo.CIC_BT_PB_GH ghr
 			INNER JOIN dbo.CIC_GeneralHeading gh ON gh.GH_ID = ghr.GH_ID
@@ -1122,11 +1124,12 @@ SELECT
 		INNER JOIN dbo.CIC_Publication pb ON pb.PB_ID = pbr.PB_ID
 		WHERE pbr.NUM LIKE svbt.NUM
 		FOR XML PATH('Publication'), TYPE),
-	(SELECT dst.DistCode AS "@Code"
+	(SELECT dst.DistCode AS "@Value"
 		FROM dbo.CIC_BT_DST pr
 		INNER JOIN dbo.CIC_Distribution dst ON dst.DST_ID = pr.DST_ID
 		WHERE pr.NUM LIKE svbt.NUM
 		FOR XML PATH('Distribution'), TYPE)
+
 			FROM GBL_BaseTable svbt
 			INNER JOIN GBL_BaseTable_Description svbtd
 				ON svbt.NUM=svbtd.NUM AND svbtd.LangID=@LangID
@@ -1286,6 +1289,12 @@ SELECT
 		(SELECT svbtd.WWW_ADDRESS AS Address
 			WHERE svbtd.WWW_ADDRESS IS NOT NULL
 			FOR XML PATH('URL'), TYPE),
+
+	-- SITE > SERVICE > SOCIAL MEDIA
+		(SELECT pr.Protocol + pr.URL AS Address, sm.DefaultName AS Note
+			FROM dbo.GBL_BT_SM pr INNER JOIN dbo.GBL_SocialMedia sm ON sm.SM_ID = pr.SM_ID
+			WHERE pr.NUM=svbt.NUM AND pr.LangID=svbtd.LangID
+			FOR XML PATH('SocialMedia'), TYPE),
 		
 	-- SITE > SERVICE > EMAIL
 		(SELECT LTRIM(ItemID) AS Address
@@ -1506,7 +1515,7 @@ SELECT
 		WHERE svcbtd.PUBLIC_COMMENTS IS NOT NULL) AS PublicNote,
 
 	-- SITE > SERVICE > PUB AND DIST CODES
-	(SELECT pb.PubCode AS "@Code",
+	(SELECT pb.PubCode AS "@Value",
 		(SELECT ghn.Name AS "@Value"
 			FROM dbo.CIC_BT_PB_GH ghr
 			INNER JOIN dbo.CIC_GeneralHeading gh ON gh.GH_ID = ghr.GH_ID
@@ -1516,7 +1525,7 @@ SELECT
 		INNER JOIN dbo.CIC_Publication pb ON pb.PB_ID = pbr.PB_ID
 		WHERE pbr.NUM LIKE svbt.NUM
 		FOR XML PATH('Publication'), TYPE),
-	(SELECT dst.DistCode AS "@Code"
+	(SELECT dst.DistCode AS "@Value"
 		FROM dbo.CIC_BT_DST pr
 		INNER JOIN dbo.CIC_Distribution dst ON dst.DST_ID = pr.DST_ID
 		WHERE pr.NUM LIKE svbt.NUM
@@ -1617,7 +1626,7 @@ SELECT
 				FOR XML PATH(''),TYPE),
 
 	-- SITE > PUB AND DIST CODES
-	(SELECT pb.PubCode AS "@Code",
+	(SELECT pb.PubCode AS "@Value",
 		(SELECT ghn.Name AS "@Value"
 			FROM dbo.CIC_BT_PB_GH ghr
 			INNER JOIN dbo.CIC_GeneralHeading gh ON gh.GH_ID = ghr.GH_ID
@@ -1627,7 +1636,7 @@ SELECT
 		INNER JOIN dbo.CIC_Publication pb ON pb.PB_ID = pbr.PB_ID
 		WHERE pbr.NUM LIKE slbt.NUM
 		FOR XML PATH('Publication'), TYPE),
-	(SELECT dst.DistCode AS "@Code"
+	(SELECT dst.DistCode AS "@Value"
 		FROM dbo.CIC_BT_DST pr
 		INNER JOIN dbo.CIC_Distribution dst ON dst.DST_ID = pr.DST_ID
 		WHERE pr.NUM LIKE slbt.NUM
@@ -1730,7 +1739,7 @@ SELECT
 		WHERE cbtd.PUBLIC_COMMENTS IS NOT NULL) AS PublicNote,
 
 	-- PUB AND DIST CODES
-		(SELECT pb.PubCode AS "@Code",
+		(SELECT pb.PubCode AS "@Value",
 		(SELECT ghn.Name AS "@Value"
 			FROM dbo.CIC_BT_PB_GH ghr
 			INNER JOIN dbo.CIC_GeneralHeading gh ON gh.GH_ID = ghr.GH_ID
@@ -1740,7 +1749,7 @@ SELECT
 		INNER JOIN dbo.CIC_Publication pb ON pb.PB_ID = pbr.PB_ID
 		WHERE pbr.NUM LIKE bt.NUM
 		FOR XML PATH('Publication'), TYPE),
-	(SELECT dst.DistCode AS "@Code"
+	(SELECT dst.DistCode AS "@Value"
 		FROM dbo.CIC_BT_DST pr
 		INNER JOIN dbo.CIC_Distribution dst ON dst.DST_ID = pr.DST_ID
 		WHERE pr.NUM LIKE bt.NUM
