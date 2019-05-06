@@ -1114,7 +1114,7 @@ SELECT
 		WHERE svcbtd.PUBLIC_COMMENTS IS NOT NULL) AS PublicNote,
 
 	-- SITE > SERVICE > PUB AND DIST CODES
-	(SELECT pb.PubCode AS "@Value",
+	(SELECT pb.PubCode AS "@Code",
 		(SELECT ghn.Name AS "@Value"
 			FROM dbo.CIC_BT_PB_GH ghr
 			INNER JOIN dbo.CIC_GeneralHeading gh ON gh.GH_ID = ghr.GH_ID
@@ -1291,7 +1291,7 @@ SELECT
 			FOR XML PATH('URL'), TYPE),
 
 	-- SITE > SERVICE > SOCIAL MEDIA
-		(SELECT pr.Protocol + pr.URL AS Address, sm.DefaultName AS Note
+		(SELECT pr.Protocol + pr.URL AS Address, sm.DefaultName AS Notes
 			FROM dbo.GBL_BT_SM pr INNER JOIN dbo.GBL_SocialMedia sm ON sm.SM_ID = pr.SM_ID
 			WHERE pr.NUM=svbt.NUM AND pr.LangID=svbtd.LangID
 			FOR XML PATH('SocialMedia'), TYPE),
