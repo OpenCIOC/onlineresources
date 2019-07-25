@@ -210,132 +210,126 @@ If Not bForView Then
 <%
 End If
 %>
-<table class="BasicBorder cell-padding-3"<%If Not bForView Then%> align="center"<%End If%>>
-<tr>
-	<th class="RevTitleBox" colspan="2"><%=TXT_CHANGE_RESULTS_DISPLAY%></th>
-</tr>
-<tr>
-	<th><%=TXT_SHOW_FIELDS%></th>
-</tr>
-<tr>
-	<td>
-	<table class="NoBorder cell-padding-2" width="100%">
-		<tr>
-		<td><label for="opt_fld_bNUM"><input name="opt_fld_bNUM" id="opt_fld_bNUM" type="checkbox"<%=Checked(opt_fld_bNUM)%> />&nbsp;<%=TXT_RECORD_NUM%></label></td>
-		<td><label for="opt_fld_bRecordOwnerCIC"><input name="opt_fld_bRecordOwnerCIC" id="opt_fld_bRecordOwnerCIC" type="checkbox"<%=Checked(opt_fld_bRecordOwnerCIC)%> />&nbsp;<%=TXT_RECORD_OWNER%></label></td>
-		<td><label for="opt_fld_bOrgCIC"><input name="opt_fld_bOrgCIC" id="opt_fld_bOrgCIC" type="checkbox"<%=Checked(opt_fld_bOrgCIC)%> />&nbsp;<%=TXT_ORG_NAMES_SHORT%></label></td>
-		</tr>
-		<tr>
-		<td><label for="opt_fld_bLocated"><input name="opt_fld_bLocated" id="opt_fld_bLocated" type="checkbox"<%=Checked(opt_fld_bLocated)%> />&nbsp;<%=TXT_LOCATED_IN%></label></td>
-		<td><label for="opt_fld_bUpdateScheduleCIC"><input name="opt_fld_bUpdateScheduleCIC" id="opt_fld_bUpdateScheduleCIC" type="checkbox"<%=Checked(opt_fld_bUpdateScheduleCIC)%> />&nbsp;<%=TXT_UPDATE_SCHEDULE%></label></td>
-<%If g_bAlertColumnCIC And Not bForView Then%>
-		<td><label for="opt_fld_bAlertCIC"><input name="opt_fld_bAlertCIC" id="opt_fld_bAlertCIC" type="checkbox"<%=Checked(opt_fld_bAlertCIC)%> />&nbsp;<%=TXT_ALERT_BOX%></label></td>
-<%Else%>
-		<td><input type="hidden" name="opt_fld_bAlertCIC" value="<%=IIf(opt_fld_bAlertCIC And Not bForView,"on",vbNullString)%>">&nbsp;</td>
-<%End If%>
-		</tr>
-	</table>
-	</td>
-</tr>
-<tr>
-	<td>
-<%
-	Call openCustFieldRst(DM_CIC, intViewType, False, False)
-%>
-	<table class="NoBorder cell-padding-2" width="100%">
-	<tr>
-		<td style="vertical-align: top;"><%=TXT_CUSTOM_FIELDS & TXT_COLON%>
-		<br><span class="SmallNote">(<%=TXT_HOLD_CTRL%>)</span>
-		<br><input type="BUTTON" value="<%=TXT_CLEAR_SELECTIONS%>" onClick="for(var i=0;i<document.EntryForm.opt_fld_aCustCIC.length;i++){document.EntryForm.opt_fld_aCustCIC.options[i].selected = false;};"></td>
-		<td><%=makeCustFieldList(opt_fld_aCustCIC,"opt_fld_aCustCIC",False,True,5)%></td>
-	</tr>
-	</table>
-	</td>
-</tr>
-<tr>
-	<th><%=TXT_SHOW_OPTIONS%></th>
-</tr>
-<tr>
-	<td><table class="NoBorder cell-padding-2" width="100%">
-<%If Not bForView Then%>
-	<tr>
-		<td><label for="opt_bUpdateCIC"><input<%If opt_bUpdateCIC Then%> checked<%End If%> name="opt_bUpdateCIC" id="opt_bUpdateCIC" type="checkbox">&nbsp;<%=TXT_UPDATE_RECORD%></label></td>
-		<td><label for="opt_bSelectCIC"><input<%If opt_bSelectCIC Then%> checked<%End If%> name="opt_bSelectCIC" id="opt_bSelectCIC" type="checkbox">&nbsp;<%=TXT_SELECT_CHECKBOX%></label></td>
-	</tr>
-<%End If%>
-<%If user_bCanRequestUpdateCIC And Not bForView Then%>
-	<tr>
-		<td><label for="opt_bMail"><input<%If opt_bMail Then%> checked<%End If%> name="opt_bMail" id="opt_bMail" type="checkbox">&nbsp;<%=TXT_MAIL_FORM%></label></td>
-	<%If g_bNoEmail Then%>
-		<td><input type="hidden" name="opt_bEmailCIC" value="">&nbsp;</td>
-	<%Else%>
-		<td><label for="opt_bEmailCIC"><input<%If opt_bEmailCIC Then%> checked<%End If%> name="opt_bEmailCIC" id="opt_bEmailCIC" type="checkbox">&nbsp;<%=TXT_EMAIL_UPDATE_REQUEST%></label></td>
-	<%End If%>
-	</tr>
-<%Else%>
-<input type="hidden" name="opt_bMail" value="">
-<input type="hidden" name="opt_bEmailCIC" value="">
-<%End If%>
-	<tr>
-		<td><label for="opt_bDispTableCIC"><input name="opt_bDispTableCIC" id="opt_bDispTableCIC" type="checkbox"<%=Checked(opt_bDispTableCIC)%>>&nbsp;<%=TXT_USE_TABLE_FORMAT%></label></td>
-<% 
-Dim intColCount 
-intColCount = 1
-If user_intCanUpdatePubs <> UPDATE_NONE And Not user_bLimitedViewCIC And Not bForView Then
-	intColCount = intColCount + 1
-%>
-		<td><label for="opt_bPub"><input<%If opt_bPub Then%> checked<%End If%> name="opt_bPub" id="opt_bPub" type="checkbox">&nbsp;<%=TXT_UPDATE_PUBS%></label></td>
-<%
-End If
-If intColCount Mod 2 = 0 Then
-%></tr><tr><%
-End If
-%>
+<div class="panel panel-default max-width-md">
+	<div class="panel-heading">
+		<a name="basic"></a>
+		<h2><%=TXT_CHANGE_RESULTS_DISPLAY%></h2>
+	</div>
+	<div class="panel-body no-padding">
+		<table class="BasicBorder cell-padding-4 full-width form-table inset-table responsive-table">
+			<tr>
+				<th><%=TXT_SHOW_FIELDS%></th>
+			</tr>
+			<tr>
+				<td>
+					<div class="row">
+						<div class="col-xs-6 col-md-4"><label for="opt_fld_bNUM"><input name="opt_fld_bNUM" id="opt_fld_bNUM" type="checkbox"<%=Checked(opt_fld_bNUM)%> />&nbsp;<%=TXT_RECORD_NUM%></label></div>
+						<div class="col-xs-6 col-md-4"><label for="opt_fld_bRecordOwnerCIC"><input name="opt_fld_bRecordOwnerCIC" id="opt_fld_bRecordOwnerCIC" type="checkbox"<%=Checked(opt_fld_bRecordOwnerCIC)%> />&nbsp;<%=TXT_RECORD_OWNER%></label></div>
+						<div class="col-xs-6 col-md-4"><label for="opt_fld_bOrgCIC"><input name="opt_fld_bOrgCIC" id="opt_fld_bOrgCIC" type="checkbox"<%=Checked(opt_fld_bOrgCIC)%> />&nbsp;<%=TXT_ORG_NAMES_SHORT%></label></div>
+						<div class="col-xs-6 col-md-4"><label for="opt_fld_bLocated"><input name="opt_fld_bLocated" id="opt_fld_bLocated" type="checkbox"<%=Checked(opt_fld_bLocated)%> />&nbsp;<%=TXT_LOCATED_IN%></label></div>
+						<div class="col-xs-6 col-md-4"><label for="opt_fld_bUpdateScheduleCIC"><input name="opt_fld_bUpdateScheduleCIC" id="opt_fld_bUpdateScheduleCIC" type="checkbox"<%=Checked(opt_fld_bUpdateScheduleCIC)%> />&nbsp;<%=TXT_UPDATE_SCHEDULE%></label></div>
+			<%If g_bAlertColumnCIC And Not bForView Then%>
+						<div class="col-xs-6 col-md-4"><label for="opt_fld_bAlertCIC"><input name="opt_fld_bAlertCIC" id="opt_fld_bAlertCIC" type="checkbox"<%=Checked(opt_fld_bAlertCIC)%> />&nbsp;<%=TXT_ALERT_BOX%></label></div>
+			<%Else%>
+						<div class="col-xs-6 col-md-4"><input type="hidden" name="opt_fld_bAlertCIC" value="<%=IIf(opt_fld_bAlertCIC And Not bForView,"on",vbNullString)%>"></div>
+			<%End If%>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+			<%
+				Call openCustFieldRst(DM_CIC, intViewType, False, False)
+			%>
+					<p><%=TXT_CUSTOM_FIELDS & TXT_COLON%> <span class="SmallNote">(<%=TXT_HOLD_CTRL%>)</span></p>
+					<%=makeCustFieldList(opt_fld_aCustCIC,"opt_fld_aCustCIC",False,True,5)%>
+					<input type="button" class="btn btn-default" value="<%=TXT_CLEAR_SELECTIONS%>" onClick="for (var i = 0; i < document.EntryForm.opt_fld_aCustCIC.length; i++) { document.EntryForm.opt_fld_aCustCIC.options[i].selected = false; };">
+				</td>
+			</tr>
+			<tr>
+				<th><%=TXT_SHOW_OPTIONS%></th>
+			</tr>
+			<tr>
+				<td><table class="NoBorder cell-padding-2" width="100%">
+			<%If Not bForView Then%>
+				<tr>
+					<td><label for="opt_bUpdateCIC"><input<%If opt_bUpdateCIC Then%> checked<%End If%> name="opt_bUpdateCIC" id="opt_bUpdateCIC" type="checkbox">&nbsp;<%=TXT_UPDATE_RECORD%></label></td>
+					<td><label for="opt_bSelectCIC"><input<%If opt_bSelectCIC Then%> checked<%End If%> name="opt_bSelectCIC" id="opt_bSelectCIC" type="checkbox">&nbsp;<%=TXT_SELECT_CHECKBOX%></label></td>
+				</tr>
+			<%End If%>
+			<%If user_bCanRequestUpdateCIC And Not bForView Then%>
+				<tr>
+					<td><label for="opt_bMail"><input<%If opt_bMail Then%> checked<%End If%> name="opt_bMail" id="opt_bMail" type="checkbox">&nbsp;<%=TXT_MAIL_FORM%></label></td>
+				<%If g_bNoEmail Then%>
+					<td><input type="hidden" name="opt_bEmailCIC" value="">&nbsp;</td>
+				<%Else%>
+					<td><label for="opt_bEmailCIC"><input<%If opt_bEmailCIC Then%> checked<%End If%> name="opt_bEmailCIC" id="opt_bEmailCIC" type="checkbox">&nbsp;<%=TXT_EMAIL_UPDATE_REQUEST%></label></td>
+				<%End If%>
+				</tr>
+			<%Else%>
+			<input type="hidden" name="opt_bMail" value="">
+			<input type="hidden" name="opt_bEmailCIC" value="">
+			<%End If%>
+				<tr>
+					<td><label for="opt_bDispTableCIC"><input name="opt_bDispTableCIC" id="opt_bDispTableCIC" type="checkbox"<%=Checked(opt_bDispTableCIC)%>>&nbsp;<%=TXT_USE_TABLE_FORMAT%></label></td>
+			<% 
+			Dim intColCount 
+			intColCount = 1
+			If user_intCanUpdatePubs <> UPDATE_NONE And Not user_bLimitedViewCIC And Not bForView Then
+				intColCount = intColCount + 1
+			%>
+					<td><label for="opt_bPub"><input<%If opt_bPub Then%> checked<%End If%> name="opt_bPub" id="opt_bPub" type="checkbox">&nbsp;<%=TXT_UPDATE_PUBS%></label></td>
+			<%
+			End If
+			If intColCount Mod 2 = 0 Then
+			%></tr><tr><%
+			End If
+			%>
 
-		<td><label for="opt_bWebCIC"><input<%If opt_bWebCIC Then%> checked<%End If%> name="opt_bWebCIC" id="opt_bWebCIC" type="checkbox">&nbsp;<%=TXT_WEB_ENABLE%></label></td>
-<%
-intColCount = intColCount + 1
-If intColCount Mod 2 = 0 And (g_bMyListCIC Or Not Nl(g_strClientTrackerIP)) Then
-%></tr><tr><%
-End If
-%>
-<%If (g_bMyListCIC Or Not Nl(g_strClientTrackerIP)) Then
-intColCount = intColCount + 1
-%>
-		<td<%If intColCount Mod 2 = 1 Then%> colspan="2"<%End If%>><label for="opt_bListAddRecordCIC"><input<%If opt_bListAddRecordCIC Then%> checked<%End If%> name="opt_bListAddRecordCIC" id="opt_bListAddRecordCIC" type="checkbox">&nbsp;<%=TXT_LIST_CLIENT_TRACKER%></label></td>
-<%ElseIf intColCount Mod 2 = 1 Then%>
-		<td>&nbsp;</td>
-<%End If%>
-	</tr>
-	</table></td>
-</tr>
-<tr>
-	<th><%=TXT_ORDER_RESULTS_BY%></th>
-</tr>
-<tr>
-	<td align="center"><label for="opt_intOrderByCIC_O"><input<%If opt_intOrderByCIC = OB_NAME Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_O" value="<%=OB_NAME%>">&nbsp;<%=TXT_ORG_NAMES_SHORT%></label>
-	<label class="NoWrap" for="opt_intOrderByCIC_R"><input<%If opt_intOrderByCIC = OB_NUM Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_R" value="<%=OB_NUM%>">&nbsp;<%=TXT_RECORD_NUM%></label>
-	<label class="NoWrap" for="opt_intOrderByCIC_U"><input<%If opt_intOrderByCIC = OB_UPDATE Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_U" value="<%=OB_UPDATE%>">&nbsp;<%=TXT_UPDATE_SCHEDULE%></label>
-	<label class="NoWrap" for="opt_intOrderByCIC_L"><input<%If opt_intOrderByCIC = OB_LOCATION Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_L" value="<%=OB_LOCATION%>">&nbsp;<%=TXT_LOCATED_IN%></label>
-	<br><label class="NoWrap" for="opt_intOrderByCIC_RE"><input<%If opt_intOrderByCIC = OB_RELEVANCY Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_RE" value="<%=OB_RELEVANCY%>">&nbsp;<%=TXT_RELEVANCY%></label>
-	<label class="NoWrap" for="opt_intOrderByCIC_C"><input<%If opt_intOrderByCIC = OB_CUSTOM Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_C" value="<%=OB_CUSTOM%>">&nbsp;<%=TXT_CUSTOM_SPECIFY%></label>&nbsp;<%=makeCustFieldList(opt_fld_intCustOrderCIC,"opt_fld_intCustOrderCIC",True,False,0)%>
-	<br><%=TXT_SORT & TXT_COLON%><label for="opt_bOrderByDescCIC_A"><input <%=Checked(Not opt_bOrderByDescCIC)%> type="radio" name="opt_bOrderByDescCIC" id="opt_bOrderByDescCIC_A" value="">&nbsp;<%=TXT_ASCENDING%></label>
-	<label for="opt_bOrderByDescCIC_D"><input <%=Checked(opt_bOrderByDescCIC)%> type="radio" name="opt_bOrderByDescCIC" id="opt_bOrderByDescCIC_D" value="on">&nbsp;<%=TXT_DESCENDING%></label>
-	<br><label for="opt_bTableSortCIC"><input <%=Checked(opt_bTableSortCIC)%> type="checkbox" name="opt_bTableSortCIC" id="opt_bTableSortCIC" value="on">&nbsp;<%=TXT_USE_TABLE_SORT%></label>
-	</td>
-</tr>
-<%
-	Call closeCustFieldRst()
-%>
-<%If Not bForView Then%>
-<tr>
-	<td align="center" class="RevTitleBox"><input type="submit" value="<%=TXT_UPDATE_DISPLAY%>"></td>
-</tr>
-<%End If%>
-</table>
-<%If Not bForView Then%>
+					<td><label for="opt_bWebCIC"><input<%If opt_bWebCIC Then%> checked<%End If%> name="opt_bWebCIC" id="opt_bWebCIC" type="checkbox">&nbsp;<%=TXT_WEB_ENABLE%></label></td>
+			<%
+			intColCount = intColCount + 1
+			If intColCount Mod 2 = 0 And (g_bMyListCIC Or Not Nl(g_strClientTrackerIP)) Then
+			%></tr><tr><%
+			End If
+			%>
+			<%If (g_bMyListCIC Or Not Nl(g_strClientTrackerIP)) Then
+			intColCount = intColCount + 1
+			%>
+					<td<%If intColCount Mod 2 = 1 Then%> colspan="2"<%End If%>><label for="opt_bListAddRecordCIC"><input<%If opt_bListAddRecordCIC Then%> checked<%End If%> name="opt_bListAddRecordCIC" id="opt_bListAddRecordCIC" type="checkbox">&nbsp;<%=TXT_LIST_CLIENT_TRACKER%></label></td>
+			<%ElseIf intColCount Mod 2 = 1 Then%>
+					<td>&nbsp;</td>
+			<%End If%>
+				</tr>
+				</table></td>
+			</tr>
+			<tr>
+				<th><%=TXT_ORDER_RESULTS_BY%></th>
+			</tr>
+			<tr>
+				<td align="center"><label for="opt_intOrderByCIC_O"><input<%If opt_intOrderByCIC = OB_NAME Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_O" value="<%=OB_NAME%>">&nbsp;<%=TXT_ORG_NAMES_SHORT%></label>
+				<label class="NoWrap" for="opt_intOrderByCIC_R"><input<%If opt_intOrderByCIC = OB_NUM Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_R" value="<%=OB_NUM%>">&nbsp;<%=TXT_RECORD_NUM%></label>
+				<label class="NoWrap" for="opt_intOrderByCIC_U"><input<%If opt_intOrderByCIC = OB_UPDATE Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_U" value="<%=OB_UPDATE%>">&nbsp;<%=TXT_UPDATE_SCHEDULE%></label>
+				<label class="NoWrap" for="opt_intOrderByCIC_L"><input<%If opt_intOrderByCIC = OB_LOCATION Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_L" value="<%=OB_LOCATION%>">&nbsp;<%=TXT_LOCATED_IN%></label>
+				<br><label class="NoWrap" for="opt_intOrderByCIC_RE"><input<%If opt_intOrderByCIC = OB_RELEVANCY Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_RE" value="<%=OB_RELEVANCY%>">&nbsp;<%=TXT_RELEVANCY%></label>
+				<label class="NoWrap" for="opt_intOrderByCIC_C"><input<%If opt_intOrderByCIC = OB_CUSTOM Then%> checked<%End If%> type="radio" name="opt_intOrderByCIC" id="opt_intOrderByCIC_C" value="<%=OB_CUSTOM%>">&nbsp;<%=TXT_CUSTOM_SPECIFY%></label>&nbsp;<%=makeCustFieldList(opt_fld_intCustOrderCIC,"opt_fld_intCustOrderCIC",True,False,0)%>
+				<br><%=TXT_SORT & TXT_COLON%><label for="opt_bOrderByDescCIC_A"><input <%=Checked(Not opt_bOrderByDescCIC)%> type="radio" name="opt_bOrderByDescCIC" id="opt_bOrderByDescCIC_A" value="">&nbsp;<%=TXT_ASCENDING%></label>
+				<label for="opt_bOrderByDescCIC_D"><input <%=Checked(opt_bOrderByDescCIC)%> type="radio" name="opt_bOrderByDescCIC" id="opt_bOrderByDescCIC_D" value="on">&nbsp;<%=TXT_DESCENDING%></label>
+				<br><label for="opt_bTableSortCIC"><input <%=Checked(opt_bTableSortCIC)%> type="checkbox" name="opt_bTableSortCIC" id="opt_bTableSortCIC" value="on">&nbsp;<%=TXT_USE_TABLE_SORT%></label>
+				</td>
+			</tr>
+			<%
+				Call closeCustFieldRst()
+			%>
+			<%If Not bForView Then%>
+			<tr>
+				<td align="center" class="RevTitleBox"><input type="submit" value="<%=TXT_UPDATE_DISPLAY%>"></td>
+			</tr>
+		<%End If%>
+		</table>
+		</div>
+	</div>
 </form>
-<%End If%>
 <%
 End Sub
 
