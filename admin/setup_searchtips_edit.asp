@@ -222,7 +222,7 @@ tinymce.init({
 		'insertdatetime media table contextmenu paste code'
 	],
 	toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link anchor image',
-	extended_valid_elements : 'span[*],i[*]',
+	extended_valid_elements : 'span[*],i[*],script[*],a[*]',
 	schema: 'html5'
 });
 </script>
