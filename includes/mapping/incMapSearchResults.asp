@@ -52,12 +52,53 @@ Sub makeMappingSearchFooter()
 <script type="text/javascript">
 
 <% If opt_bTableSortCIC Then %>
+(function($) {
+	var cioc_facet_search = {};
 	window.cioc_search_datatable = function() {
 		window.cioc_data_table = $('#results_table').DataTable({
 			"autoWidth": false,
-			"paging": false
+			"paging": false,
 		});
+		//cioc_update_facet_search_criteria("359", [1292])
 	}
+	window.cioc_update_facet_search_criteria = function(facet, criteria) {
+		if (!Array.isArray(criteria) || !criteria.length) {
+			delete cioc_facet_search[facet];
+		} else {
+			cioc_facet_search[facet] = criteria;
+		}
+		if (window.cioc_data_table) {
+			window.cioc_data_table.search();
+			window.cioc_data_table.draw();
+		}
+	};
+	$.fn.dataTable.ext.search.push(
+		function( settings, data, dataIndex ) {
+			if (!cioc_facet_search || jQuery.isEmptyObject(cioc_facet_search)) {
+				return true;
+			}
+			var tr = settings.aoData[dataIndex].nTr;
+			if (!tr) {
+				return false;
+			}
+			var facets = jQuery(tr).data("facets")
+			if (!facets) {
+				return false;
+			}
+			for(key in cioc_facet_search) {
+				var facet_criteria = cioc_facet_search[key];
+				var facet_data = facets[key];
+				if (!Array.isArray(facet_data) || !facet_data.length) {
+					return false;
+				}
+				if (!facet_criteria.some(r=> facet_data.indexOf(r) >= 0)){
+					return false;
+				}
+			}
+			return true;
+		}
+	);
+})(jQuery);
 <% End If %>
 jQuery(function() {
 	<%= vacancy_script() %>;

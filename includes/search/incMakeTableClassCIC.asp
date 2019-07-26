@@ -88,6 +88,7 @@ Private intCanRank, _
 
 Private aCustFields, _
 		indOrgFldData, _
+		aFacetFields, _
 		intCurFld
 
 Private strFromSQL, _
@@ -222,6 +223,14 @@ Private Function getFields(bWeb)
 			End If
 		Next
 	End If
+	Call getFacetFields()
+	If IsArray(aFacetFields) Then
+		For Each indOrgFldData In aFacetFields
+			If Not Nl(indOrgFldData.fSelect) Then
+				strFieldList = strFieldList & "," & vbCrLf & indOrgFldData.fSelect & " AS FacetField" & indOrgFldData.fFieldID
+			End If
+		Next
+	End If
 	getFields = strFieldList
 End Function
 
@@ -308,6 +317,39 @@ Private Sub getCustomFields(bWeb)
 		Set rsCustField = Nothing
 		Set cmdCustField = Nothing
 	End If
+End Sub
+
+Private Sub getFacetFields()
+	Dim cmdCustField, rsCustField
+	
+	If Not g_bPrintMode Then
+			Set cmdCustField = Server.CreateObject("ADODB.Command")
+			With cmdCustField
+				.ActiveConnection = getCurrentCICBasicCnn()
+				.CommandType = adCmdStoredProc
+				.CommandText = "sp_CIC_View_FacetFields_l"
+				.Parameters.Append .CreateParameter("@ViewType", adInteger, adParamInput, 4, g_intViewTypeCIC)
+				.CommandTimeout = 0
+			End With
+			Set rsCustField = Server.CreateObject("ADODB.Recordset")
+			With rsCustField
+				.CursorLocation = adUseClient
+				.CursorType = adOpenStatic
+				.Open cmdCustField
+				ReDim aFacetFields(.RecordCount-1)
+				intCurFld = 0
+				While Not .EOF
+					Set aFacetFields(intCurFld) = New FacetFieldData
+					Call aFacetFields(intCurFld).setData(.Fields("FieldName"),.Fields("FacetFieldList"),.Fields("FieldDisplay"),.Fields("FieldID"))
+					intCurFld = intCurFld + 1
+					.MoveNext
+				Wend
+				.Close
+			End With
+			Set rsCustField = Nothing
+			Set cmdCustField = Nothing
+	End If
+
 End Sub
 
 Private Function getOrderBy()
@@ -1052,7 +1094,15 @@ While Not .EOF
 		End If
 	End If
 %>
-<tr valign="top">
+<tr valign="top" <% 
+If IsArray(aFacetFields) Then %>data-facets="{<%
+	strCon = vbNullString
+	For Each indOrgFldData In aFacetFields
+		If Not Nl(indOrgFldData.fSelect) Then %><%= strCon %>&quot;<%= indOrgFldData.fFieldID %>&quot;:[<%= Server.HTMLEncode(Ns(.Fields("FacetField" & indOrgFldData.fFieldID))) %>]<%
+		strCon = ","
+		End If
+	Next
+%>}"<% End If %> >
 <% If Not g_bPrintMode Then %>
 <td class="MobileShowField">
 <h3>

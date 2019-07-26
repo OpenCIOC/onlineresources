@@ -31,4 +31,21 @@ Public Sub setData(strName,strSelect,strLabel)
 End Sub
 
 End Class
+
+Class FacetFieldData
+
+Public	fName, _
+		fSelect, _
+		fLabel, _
+		fFieldID
+
+		
+Public Sub setData(strName,strSelect,strLabel,intFieldID)
+	fName = strName
+	fSelect = strSelect
+	fLabel = strLabel
+	fFieldID = intFieldID
+End Sub
+
+End Class
 %>
