@@ -60,6 +60,17 @@ Sub makeMappingSearchFooter()
 			"paging": false,
 		});
 		//cioc_update_facet_search_criteria("359", [1292])
+		$('#search-facet-selectors').on('change', '.facet-selector', function(e) {
+			var self = $(this), facet=self.data('facet').toString(),
+				criteria=$.map(this.value.split(','), function(val) {
+					if (val) {
+						return parseInt(val, 10);
+					} else {
+						return null;
+					}
+				});
+			cioc_update_facet_search_criteria(facet, criteria);
+		}).show();
 	}
 	window.cioc_update_facet_search_criteria = function(facet, criteria) {
 		if (!Array.isArray(criteria) || !criteria.length) {

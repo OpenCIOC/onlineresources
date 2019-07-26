@@ -920,7 +920,49 @@ Else
 <% End If %>
 </style>
 <% End If %>
-<% If Not g_bPrintMode Then %><%If Not opt_bDispTableCIC Then %><div class="CompactResults"><%End If %><% End If %>
+<% If Not g_bPrintMode Then %><%If Not opt_bDispTableCIC Then %><div class="CompactResults"><%End If %>
+<% If IsArray(aFacetFields) Then %>
+<div id="search-facet-selectors">
+<% 
+	Dim cmdFacetLists, rsFacetLists, aFacetLists
+	Set cmdFacetLists = Server.CreateObject("ADODB.Command")
+	With cmdFacetLists
+		.ActiveConnection = getCurrentCICBasicCnn()
+		.CommandType = adCmdStoredProc
+		.CommandText = "sp_CIC_View_FacetFields_l_SearchValues"
+		.Parameters.Append .CreateParameter("@ViewType", adInteger, adParamInput, 4, g_intViewTypeCIC)
+		.CommandTimeout = 0
+	End With
+	Set rsFacetLists = Server.CreateObject("ADODB.Recordset")
+	With rsFacetLists
+		.CursorLocation = adUseClient
+		.CursorType = adOpenStatic
+		.Open cmdFacetLists
+
+	End With
+
+	For Each indOrgFldData In aFacetFields
+		Set rsFacetLists = rsFacetLists.NextRecordset
+		With rsFacetLists
+		%><label for="facet-<%=indOrgFldData.fFieldID%>"><%= indOrgFldData.fLabel %></label>
+		<select class="facet-selector" id="facet-<%=indOrgFldData.fFieldID%>" data-facet="<%= indOrgFldData.fFieldID %>">
+			<option selected value=""></option>
+		<%
+		.MoveFirst
+		While Not .EOF
+			%><option value="<%=.Fields("Facet_ID")%>"><%=Server.HTMLEncode(.Fields("Facet_Value"))%></option>
+			<%
+			.MoveNext
+		Wend
+		%></select><br><%
+		End With
+	Next
+	rsFacetLists.Close
+	Set cmdFacetLists = Nothing
+	Set rsFacetLists = Nothing
+
+%></div><%End If %>
+<% End If %>
 <table class="BasicBorder cell-padding-3 HideListUI HideMapColumn <% If Not g_bPrintMode Then %>ResponsiveResults <%If Not opt_bDispTableCIC Then %>CompactResults<%End If %><% End If %>" id="results_table">
 <thead>
 <tr class="RevTitleBox">
