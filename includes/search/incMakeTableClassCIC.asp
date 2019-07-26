@@ -922,7 +922,7 @@ Else
 <% End If %>
 <% If Not g_bPrintMode Then %><%If Not opt_bDispTableCIC Then %><div class="CompactResults"><%End If %>
 <% If IsArray(aFacetFields) Then %>
-<div id="search-facet-selectors">
+<div id="search-facet-selectors" style="display:none">
 <% 
 	Dim cmdFacetLists, rsFacetLists, aFacetLists
 	Set cmdFacetLists = Server.CreateObject("ADODB.Command")
@@ -1138,10 +1138,11 @@ While Not .EOF
 %>
 <tr valign="top" <% 
 If IsArray(aFacetFields) Then %>data-facets="{<%
-	strCon = vbNullString
+	Dim strFacetCon
+	strFacetCon = vbNullString
 	For Each indOrgFldData In aFacetFields
-		If Not Nl(indOrgFldData.fSelect) Then %><%= strCon %>&quot;<%= indOrgFldData.fFieldID %>&quot;:[<%= Server.HTMLEncode(Ns(.Fields("FacetField" & indOrgFldData.fFieldID))) %>]<%
-		strCon = ","
+		If Not Nl(indOrgFldData.fSelect) Then %><%= strFacetCon %>&quot;<%= indOrgFldData.fFieldID %>&quot;:[<%= Server.HTMLEncode(Ns(.Fields("FacetField" & indOrgFldData.fFieldID))) %>]<%
+		strFacetCon = ","
 		End If
 	Next
 %>}"<% End If %> >
