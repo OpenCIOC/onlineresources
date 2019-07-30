@@ -79,13 +79,17 @@ def export_headings(args, conn):
 	return export(
 		args, conn, 'headings.csv',
 		'''
-		SELECT pbr.NUM, pb.PubCode, CASE WHEN TaxonomyName=1 THEN dbo.fn_CIC_GHIDToTaxTerms(gh.GH_ID, @@LANGID) ELSE ghn.Name END AS HeadingName
-FROM CIC_Publication AS pb
-INNER JOIN CIC_BT_PB AS pbr ON pb.PB_ID = pbr.PB_ID
-INNER JOIN CIC_BT_PB_GH AS ghr ON pbr.BT_PB_ID = ghr.BT_PB_ID
-INNER JOIN CIC_GeneralHeading AS gh ON gh.GH_ID = ghr.GH_ID
-INNER JOIN CIC_GeneralHeading_Name AS ghn ON gh.GH_ID = ghn.GH_ID AND ghn.LangID=0
-INNER JOIN dbo.CIC_BT_EXTRA_TEXT et ON et.NUM=pbr.NUM AND et.FieldName='EXTRA_ICAROLFILECOUNT'
+		SELECT pbr.NUM, pb.PubCode,
+			CASE WHEN TaxonomyName=1 THEN dbo.fn_CIC_GHIDToTaxTerms(gh.GH_ID, 0) ELSE ISNULL(ghne.Name,ghnf.Name) END AS HeadingName,
+			CASE WHEN TaxonomyName=1 THEN dbo.fn_CIC_GHIDToTaxTerms(gh.GH_ID, 0) ELSE ghne.Name END AS HeadingNameEn,
+			CASE WHEN TaxonomyName=1 THEN dbo.fn_CIC_GHIDToTaxTerms(gh.GH_ID, 2) ELSE ghnf.Name END AS HeadingNameFr
+		FROM CIC_Publication AS pb
+		INNER JOIN CIC_BT_PB AS pbr ON pb.PB_ID = pbr.PB_ID
+		INNER JOIN CIC_BT_PB_GH AS ghr ON pbr.BT_PB_ID = ghr.BT_PB_ID
+		INNER JOIN CIC_GeneralHeading AS gh ON gh.GH_ID = ghr.GH_ID
+		LEFT JOIN CIC_GeneralHeading_Name AS ghne ON gh.GH_ID = ghne.GH_ID AND ghne.LangID=0
+		LEFT JOIN CIC_GeneralHeading_Name AS ghnf ON gh.GH_ID = ghnf.GH_ID AND ghnf.LangID=2
+		INNER JOIN dbo.CIC_BT_EXTRA_TEXT et ON et.NUM=pbr.NUM AND et.FieldName='EXTRA_ICAROLFILECOUNT'
 		'''
 	)
 
@@ -94,10 +98,14 @@ def export_publications(args, conn):
 	return export(
 		args, conn, 'publications.csv',
 		'''
-		SELECT pbr.NUM, pb.PubCode, pbn.Name
+		SELECT pbr.NUM, pb.PubCode,
+			ISNULL(pbne.Name,pbnf.Name) AS Name,
+			pbne.Name AS NameEn,
+			pbnf.Name AS NameFr
 		FROM CIC_Publication AS pb
 		INNER JOIN CIC_BT_PB AS pbr ON pb.PB_ID = pbr.PB_ID
-		LEFT JOIN CIC_Publication_Name AS pbn ON pb.PB_ID = pbn.PB_ID AND pbn.LangID=0
+		LEFT JOIN CIC_Publication_Name AS pbne ON pb.PB_ID = pbne.PB_ID AND pbne.LangID=0
+		LEFT JOIN CIC_Publication_Name AS pbnf ON pb.PB_ID = pbnf.PB_ID AND pbnf.LangID=2
 		INNER JOIN dbo.CIC_BT_EXTRA_TEXT et ON et.NUM=pbr.NUM AND et.FieldName='EXTRA_ICAROLFILECOUNT'
 		'''
 	)
