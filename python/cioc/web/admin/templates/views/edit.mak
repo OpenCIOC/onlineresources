@@ -1278,6 +1278,14 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 		<tr>
 			<td class="field-data-cell">
 				<h4>${_('Facet Search Results')}</h4>
+				${renderer.errorlist("item.RefineField1")}
+				${renderer.select("item.RefineField1", options=[('','')] + facet_field_descs, class_="form-control")}
+				${renderer.errorlist("item.RefineField2")}
+				${renderer.select("item.RefineField2", options=[('','')] + facet_field_descs, class_="form-control")}
+				${renderer.errorlist("item.RefineField3")}
+				${renderer.select("item.RefineField3", options=[('','')] + facet_field_descs, class_="form-control")}
+				${renderer.errorlist("item.RefineField4")}
+				${renderer.select("item.RefineField4", options=[('','')] + facet_field_descs, class_="form-control")}
 			</td>
 		</tr>
 		<tr>

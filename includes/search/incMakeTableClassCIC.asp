@@ -721,7 +721,10 @@ Else
 <form name="RecordList" action="<%=ps_strPathToStart%>processRecordList.asp" method="post">
 <%=g_strCacheFormVals%>
 <hr>
-<p><%=TXT_ACTION_ON_SELECTED%> <select name="ActionType">
+<div class="form-horizontal form-group row">
+	<label for="SearchResultActionList" class="control-label col-xs-12 col-sm-4 col-md-3 col-lg-2"><%=TXT_ACTION_ON_SELECTED%></label>
+	<div class="col-xs-10 col-sm-6 col-md-8 col-lg-9">
+	<select name="ActionType" class="form-control" id="SearchResultActionList">
 	<option value="N"><%=TXT_SLCT_NEW_RESULTS%></option>
 	<option value="AR"><%=TXT_SLCT_NEW_REMINDER%></option>
 	<option value="EL"><%=TXT_SLCT_EMAIL_RECORD_LIST%></option>
@@ -755,7 +758,7 @@ Else
 <%
 			If user_bCanDeleteRecordCIC Then
 %>
-<option value="R"><%=TXT_SLCT_DELETE_RESTORE%></option>
+		<option value="R"><%=TXT_SLCT_DELETE_RESTORE%></option>
 <%
 			End If
 			If user_bSuperUserCIC Then
@@ -822,16 +825,26 @@ Else
 <%
 	End If
 %>
-</select> <input type="submit" value="<%=TXT_SUBMIT%>"></p>
-<p><input type="button" onClick="CheckAll();" value="<%=TXT_CHECK_ALL%>"> <input type="button" onClick="ClearAll();" value="<%=TXT_UNCHECK_ALL%>"> 
+</select>
+</div>
+	<div class="col-xs-2 col-sm-2 col-md-1 col-lg-1">
+		<input type="submit" value="<%=TXT_SUBMIT%>" class="btn btn-default">
+	</div>
+</div>
+<div class="form-group row">
+	<div class="hidden-xs col-sm-4 col-md-3 col-lg-2"></div>
+	<div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+	<input type="button" class="btn btn-default" onClick="CheckAll();" value="<%=TXT_CHECK_ALL%>">
+	<input type="button" class="btn btn-default" onClick="ClearAll();" value="<%=TXT_UNCHECK_ALL%>"> 
 <%
 		If g_bMapSearchResults Then
 %>
-<input type="button" onClick="do_check_all_in_viewport();" class="NotVisible" id="check_all_in_viewport" value="<%=TXT_CHECK_IN_VIEWPORT%>">
+	<input type="button" class="btn btn-default" onClick="do_check_all_in_viewport();" class="NotVisible" id="check_all_in_viewport" value="<%=TXT_CHECK_IN_VIEWPORT%>">
 <%
 		End If
 %>
-</p>
+	</div>
+</div>
 <%
 	End If 'Select Checkbox
 
@@ -940,28 +953,49 @@ Else
 		.Open cmdFacetLists
 
 	End With
-
+%>
+<div class="panel panel-default">
+<div class="panel-heading">
+<h3 class="panel-title"><a href="#facet-filtersearch" data-toggle="collapse"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span> Filter Search Results<span class="caret"></span></a></h3>
+</div>
+<div id="facet-filtersearch" class="panel-body panel-collapse collapse">
+	<div class="form-horizontal">
+<%
 	For Each indOrgFldData In aFacetFields
+%>
+		<div class="form-group row">
+		<label for="facet-<%=indOrgFldData.fFieldID%>" class="control-label col-xs-12 col-sm-3 col-lg-2"><%= indOrgFldData.fLabel %></label>
+		<div class="col-xs-9 col-sm-7 col-lg-9">
+			<select class="facet-selector form-control" id="facet-<%=indOrgFldData.fFieldID%>" data-facet="<%= indOrgFldData.fFieldID %>">
+				<option selected value=""></option>
+<%
 		Set rsFacetLists = rsFacetLists.NextRecordset
 		With rsFacetLists
-		%><label for="facet-<%=indOrgFldData.fFieldID%>"><%= indOrgFldData.fLabel %></label>
-		<select class="facet-selector" id="facet-<%=indOrgFldData.fFieldID%>" data-facet="<%= indOrgFldData.fFieldID %>">
-			<option selected value=""></option>
-		<%
-		.MoveFirst
-		While Not .EOF
-			%><option value="<%=.Fields("Facet_ID")%>"><%=Server.HTMLEncode(.Fields("Facet_Value"))%></option>
-			<%
-			.MoveNext
-		Wend
-		%></select><br><%
+			While Not .EOF
+%>
+				<option value="<%=.Fields("Facet_ID")%>"><%=Server.HTMLEncode(.Fields("Facet_Value"))%></option>
+<%
+				.MoveNext
+			Wend
 		End With
+%>
+			</select>
+		</div>
+		<div class="col-xs-3 col-sm-2 col-lg-1">
+			<input type="button" class="btn btn-default" value="<%=TXT_RESET%>"
+				onClick="$('#facet-<%=indOrgFldData.fFieldID%>').val('').trigger('change');"/>
+		</div>
+		</div>
+<%
 	Next
 	rsFacetLists.Close
 	Set cmdFacetLists = Nothing
 	Set rsFacetLists = Nothing
-
-%></div><%End If %>
+%>
+	</div>
+</div>
+</div>
+</div><%End If %>
 <% End If %>
 <table class="BasicBorder cell-padding-3 HideListUI HideMapColumn <% If Not g_bPrintMode Then %>ResponsiveResults <%If Not opt_bDispTableCIC Then %>CompactResults<%End If %><% End If %>" id="results_table">
 <thead>

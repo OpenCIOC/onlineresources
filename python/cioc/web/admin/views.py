@@ -27,7 +27,7 @@ from pyramid.view import view_config, view_defaults
 from cioc.core import validators as ciocvalidators, constants as const, syslanguage
 
 from cioc.core.i18n import gettext as _
-from cioc.core.listformat import format_pub_list
+from cioc.core.listformat import format_list, format_pub_list
 from cioc.web.admin import viewbase
 
 templateprefix = 'cioc.web.admin:templates/views/'
@@ -163,6 +163,11 @@ class ViewBaseCICSchema(ViewBaseSchema):
 	ShowRecordDetailsSidebar = validators.Bool()
 
 	CommSrchDropDown = validators.Bool()
+
+	RefineField1 = ciocvalidators.IDValidator()
+	RefineField2 = ciocvalidators.IDValidator()
+	RefineField3 = ciocvalidators.IDValidator()
+	RefineField4 = ciocvalidators.IDValidator()
 
 	# PDFDetails = validators.Bool()
 
@@ -571,6 +576,8 @@ class View(viewbase.AdminViewBase):
 
 		community_sets = []
 
+		facet_field_descs = []
+
 		ViewType = model_state.value('ViewType')
 		with request.connmgr.get_connection('admin') as conn:
 			cursor = conn.execute('EXEC dbo.sp_%s_View_s_FormLists ?, ?, ?' % domain.str, request.dboptions.MemberID, user.Agency, ViewType)
@@ -622,6 +629,10 @@ class View(viewbase.AdminViewBase):
 
 				publication_descs = cursor.fetchall()
 
+				cursor.nextset()
+
+				facet_field_descs = cursor.fetchall()
+
 			else:
 				cursor.nextset()
 
@@ -665,6 +676,7 @@ class View(viewbase.AdminViewBase):
 				auto_add_pubs=auto_add_pubs,
 				publication_descs=format_pub_list(publication_descs, True),
 				pubs_with_headings=format_pub_list(pubs_with_headings, True),
+				facet_field_descs=format_list(facet_field_descs),
 				inclusion_policies=inclusion_policies, domain=domain,
 				search_tips=search_tips, chk_field_descs=chk_field_descs,
 				view_descs=view_descs, ErrMsg=ErrMsg,
@@ -727,9 +739,12 @@ class View(viewbase.AdminViewBase):
 		disp_opt_field_descs = []
 
 		publication_descs = []
+
 		pubs_with_headings = []
 
 		community_sets = []
+
+		facet_field_descs = []
 
 		with request.connmgr.get_connection('admin') as conn:
 			cursor = conn.execute('EXEC dbo.sp_%s_View_s ?, ?' % domain.str, ViewType, request.dboptions.MemberID)
@@ -819,6 +834,10 @@ class View(viewbase.AdminViewBase):
 
 				publication_descs = cursor.fetchall()
 
+				cursor.nextset()
+
+				facet_field_descs = cursor.fetchall()
+
 			else:
 				cursor.nextset()
 
@@ -864,6 +883,7 @@ class View(viewbase.AdminViewBase):
 				auto_add_pubs=auto_add_pubs,
 				publication_descs=format_pub_list(publication_descs, True),
 				pubs_with_headings=format_pub_list(pubs_with_headings, True),
+				facet_field_descs=format_list(facet_field_descs),
 				inclusion_policies=inclusion_policies, domain=domain,
 				search_tips=search_tips, disp_opt_field_descs=[tuple(x) for x in disp_opt_field_descs],
 				print_profiles=[tuple(x) for x in print_profiles],
