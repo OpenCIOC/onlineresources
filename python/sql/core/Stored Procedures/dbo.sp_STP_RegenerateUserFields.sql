@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -94,6 +93,7 @@ SET MODIFIED_DATE	= GETDATE(),
 	FieldName		= REPLACE(PubCode,'-','_') + '_HEADINGS',
 	DisplayFM		= 'dbo.fn_CIC_NUMToGeneralHeadings([MEMBER],bt.NUM,' + CAST(pb.PB_ID AS varchar) + ',0)',
 	DisplayFMWeb	= 'dbo.fn_CIC_NUMToGeneralHeadings_Web([MEMBER],bt.NUM,' + CAST(pb.PB_ID AS varchar) + ',0,[HTTP],[PTS])',
+	FacetFieldList	= 'STUFF((SELECT '','' + CAST(pbgh.GH_ID AS VARCHAR) FROM dbo.CIC_BT_PB pbr INNER JOIN CIC_BT_PB_GH pbgh ON pbr.BT_PB_ID=pbgh.BT_PB_ID WHERE pbr.NUM=bt.NUM AND pbr.PB_ID=' + CAST(pb.PB_ID AS varchar) + ' FOR XML PATH('''')),1,1,'''')',
 	CanUseResults	= 1,
 	CanUseSearch	= 1,
 	CanUseDisplay	= 1,
@@ -120,6 +120,7 @@ INSERT INTO GBL_FieldOption (
 	PB_ID,
 	DisplayFM,
 	DisplayFMWeb,
+	FacetFieldList,
 	UseDisplayForFeedback, UseDisplayForMailForm,
 	CanUseResults, CanUseSearch, CanUseDisplay, CanUseUpdate, CanUseIndex, CanUseFeedback, CanUsePrivacy, CanUseExport,
 	CanShare, MemberSpecific,
@@ -137,6 +138,7 @@ SELECT
 	PB_ID,
 	'dbo.fn_CIC_NUMToGeneralHeadings([MEMBER],bt.NUM,' + CAST(PB_ID AS varchar) + ',0)',
 	'dbo.fn_CIC_NUMToGeneralHeadings_Web([MEMBER],bt.NUM,' + CAST(PB_ID AS varchar) + ',0,[HTTP],[PTS])',
+	'STUFF((SELECT '','' + CAST(pbgh.GH_ID AS VARCHAR) FROM dbo.CIC_BT_PB pbr INNER JOIN CIC_BT_PB_GH pbgh ON pbr.BT_PB_ID=pbgh.BT_PB_ID WHERE pbr.NUM=bt.NUM AND pbr.PB_ID=' + CAST(pb.PB_ID AS varchar) + ' FOR XML PATH('''')),1,1,'''')',
 	1,1,
 	1,1,1,0,1,1,0,0,
 	0,0,
@@ -152,6 +154,7 @@ SET MODIFIED_DATE	= GETDATE(),
 	FieldName		= REPLACE(PubCode,'-','_') + '_HEADINGS_NP',
 	DisplayFM		= 'dbo.fn_CIC_NUMToGeneralHeadings([MEMBER],bt.NUM,' + CAST(pb.PB_ID AS varchar) + ',1)',
 	DisplayFMWeb	= 'dbo.fn_CIC_NUMToGeneralHeadings_Web([MEMBER],bt.NUM,' + CAST(pb.PB_ID AS varchar) + ',1,[HTTP],[PTS])',
+	FacetFieldList	= 'STUFF((SELECT '','' + CAST(pbgh.GH_ID AS VARCHAR) FROM dbo.CIC_BT_PB pbr INNER JOIN CIC_BT_PB_GH pbgh ON pbr.BT_PB_ID=pbgh.BT_PB_ID WHERE pbr.NUM=bt.NUM AND pbr.PB_ID=' + CAST(pb.PB_ID AS varchar) + ' FOR XML PATH('''')),1,1,'''')',
 	UpdateFieldList	= '(SELECT (SELECT gh.GH_ID AS ''@ID'',
 				gh.Used AS ''@Used'',
 				CASE WHEN TaxonomyName=1 THEN dbo.fn_CIC_GHIDToTaxTerms(gh.GH_ID, @@LANGID) ELSE CASE WHEN ghn.LangID=@@LANGID THEN ghn.Name ELSE ''['' + ghn.Name + '']'' END END AS ''@Name'',
@@ -191,6 +194,7 @@ INSERT INTO GBL_FieldOption (
 	PB_ID,
 	DisplayFM,
 	DisplayFMWeb,
+	FacetFieldList,
 	UpdateFieldList,
 	UseDisplayForFeedback, UseDisplayForMailForm,
 	CanUseResults, CanUseSearch, CanUseDisplay, CanUseUpdate, CanUseIndex, CanUseFeedback, CanUsePrivacy, CanUseExport,
@@ -209,6 +213,7 @@ SELECT
 	PB_ID,
 	'dbo.fn_CIC_NUMToGeneralHeadings([MEMBER],bt.NUM,' + CAST(PB_ID AS varchar) + ',1)',
 	'dbo.fn_CIC_NUMToGeneralHeadings_Web([MEMBER],bt.NUM,' + CAST(PB_ID AS varchar) + ',1,[HTTP],[PTS])',
+	'STUFF((SELECT '','' + CAST(pbgh.GH_ID AS VARCHAR) FROM dbo.CIC_BT_PB pbr INNER JOIN CIC_BT_PB_GH pbgh ON pbr.BT_PB_ID=pbgh.BT_PB_ID WHERE pbr.NUM=bt.NUM AND pbr.PB_ID=' + CAST(pb.PB_ID AS varchar) + ' FOR XML PATH('''')),1,1,'''')',
 	'(SELECT (SELECT gh.GH_ID AS ''@ID'', ghn.Name AS ''@Name'', ghgn.Name AS ''@Group'', CAST(CASE WHEN EXISTS(SELECT * FROM CIC_BT_PB_GH pr INNER JOIN CIC_BT_PB prp ON prp.BT_PB_ID=pr.BT_PB_ID AND prp.NUM=bt.NUM WHERE pr.GH_ID=gh.GH_ID) THEN 1 ELSE 0 END AS bit) AS ''@Selected'' FROM CIC_GeneralHeading gh INNER JOIN CIC_GeneralHeading_Name ghn ON gh.GH_ID=ghn.GH_ID AND ghn.LangID=(SELECT TOP 1 LangID FROM CIC_GeneralHeading_Name WHERE GH_ID=gh.GH_ID ORDER BY CASE WHEN LangID=btd.LangID THEN 0 ELSE 1 END, LangID) LEFT JOIN CIC_GeneralHeading_Group ghg ON gh.HeadingGroup=ghg.GroupID LEFT JOIN CIC_GeneralHeading_Group_Name ghgn ON ghg.GroupID=ghgn.GroupID AND ghgn.LangID=(SELECT TOP 1 LangID FROM CIC_GeneralHeading_Group_Name WHERE GroupID=ghg.GroupID ORDER BY CASE WHEN LangID=btd.LangID THEN 0 ELSE 1 END, LangID) WHERE gh.PB_ID='
 		+ CAST(pb.PB_ID AS varchar) + ' ORDER BY ghg.DisplayOrder, ghgn.Name, gh.DisplayOrder, ghn.Name FOR XML PATH(''GH''), TYPE) FOR XML PATH(''HEADINGS''),TYPE) AS [' + REPLACE(pb.PubCode,'-','_') + '_HEADINGS_NP]',
 	1,1,
@@ -387,6 +392,11 @@ UPDATE fo SET
 				WHEN fo.ExtraFieldType = 'l' THEN 'dbo.fn_CIC_NUMToExtraCheckList_Web(''' + fo.FieldName + ''',bt.NUM,btd.LangID,[HTTP],[PTS])'
 				WHEN fo.ExtraFieldType = 'p' THEN 'dbo.fn_CIC_NUMToExtraDropDown_Web(''' + fo.FieldName + ''',bt.NUM,btd.LangID,[HTTP],[PTS])'
 				WHEN fo.ExtraFieldType = 'w' THEN '(SELECT cioc_shared.dbo.fn_SHR_GBL_Link_WebsiteWithProtocol([Value],0,[Protocol]) FROM CIC_BT_EXTRA_WWW WHERE NUM=bt.NUM and LangID=btd.LangID AND FieldName=''' + fo.FieldName + ''')'
+			END,
+		FacetFieldList = CASE
+				WHEN fo.ExtraFieldType = ('l') THEN 'STUFF((SELECT '','' + CAST(pr.EXC_ID AS varchar) FROM dbo.CIC_BT_EXC pr WHERE pr.NUM=bt.NUM AND pr.FieldName_Cache=''' + fo.FieldName + ''' FOR XML PATH('''')),1,1,'''')'
+				WHEN fo.ExtraFieldType = ('p') THEN '(SELECT CAST(pr.EXD_ID AS varchar) FROM dbo.CIC_BT_EXD pr WHERE pr.NUM=bt.NUM AND pr.FieldName_Cache=''' + fo.FieldName + ''')'
+				ELSE NULL
 			END,
 		UpdateFieldList = CASE
 				WHEN fo.ExtraFieldType = 'a' THEN '(SELECT cioc_shared.dbo.fn_SHR_GBL_DayMonthString([Value]) FROM CIC_BT_EXTRA_DATE WHERE NUM=bt.NUM AND FieldName=''' + fo.FieldName + ''') AS ' + fo.FieldName

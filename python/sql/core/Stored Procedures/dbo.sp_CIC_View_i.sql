@@ -4,20 +4,20 @@ SET ANSI_NULLS ON
 GO
 
 
+
 CREATE PROCEDURE [dbo].[sp_CIC_View_i]
-	@MODIFIED_BY [varchar](50),
-	@MemberID [int],
-	@ViewName [varchar](100),
-	@ViewType [int] OUTPUT,
-	@ErrMsg [nvarchar](500) OUTPUT
+	@MODIFIED_BY [VARCHAR](50),
+	@MemberID [INT],
+	@ViewName [VARCHAR](100),
+	@ViewType [INT] OUTPUT,
+	@ErrMsg [NVARCHAR](500) OUTPUT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
 /*
-	Checked for Release: 3.7.4
 	Checked by: KL
-	Checked on: 12-May-2016
+	Checked on: 25-Jul-2019
 	Action:	NO ACTION REQUIRED
 */
 
@@ -49,7 +49,7 @@ IF @MemberID IS NULL BEGIN
 -- Member ID exists ?
 END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS varchar), @MemberObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS VARCHAR), @MemberObjectName)
 END
 
 IF @Error = 0 BEGIN
@@ -71,7 +71,7 @@ END ELSE IF EXISTS (SELECT * FROM CIC_View vw INNER JOIN CIC_View_Description vw
 -- View we are copying exists ?
 END ELSE IF @ViewType IS NOT NULL AND NOT EXISTS (SELECT * FROM CIC_View WHERE ViewType=@ViewType) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@ViewType AS varchar), @ViewObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@ViewType AS VARCHAR), @ViewObjectName)
 -- View we are copying owned by this member ?
 END ELSE IF @ViewType IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_View WHERE ViewType=@ViewType AND MemberID=@MemberID) BEGIN
 	SET @Error = 8 -- Security Failure
@@ -223,7 +223,11 @@ END ELSE BEGIN
 			AllowPDF,
 			ShowRecordDetailsSidebar,
 			GoogleTranslateWidget,
-			DefaultPrintProfile
+			DefaultPrintProfile,
+			RefineField1,
+			RefineField2,
+			RefineField3,
+			RefineField4
 		)
 		SELECT
 			GETDATE(),
@@ -318,7 +322,11 @@ END ELSE BEGIN
 			AllowPDF,
 			ShowRecordDetailsSidebar,
 			GoogleTranslateWidget,
-			DefaultPrintProfile
+			DefaultPrintProfile,
+			RefineField1,
+			RefineField2,
+			RefineField3,
+			RefineField4
 		FROM CIC_View
 		WHERE ViewType = @DefaultView
 
@@ -605,6 +613,7 @@ END
 RETURN @Error
 
 SET NOCOUNT OFF
+
 
 
 

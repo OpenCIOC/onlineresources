@@ -4,5 +4,5 @@ CREATE TABLE [dbo].[GBL_Banned_Whitelist]
 [AddedBy_MemberID] [int] NULL
 ) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[GBL_Banned_Whitelist] ADD CONSTRAINT [PK__GBL_Banned] PRIMARY KEY CLUSTERED  ([IPAddress]) ON [PRIMARY]
+ALTER TABLE [dbo].[GBL_Banned_Whitelist] ADD CONSTRAINT [PK_GBL_Banned_Whitelist] PRIMARY KEY CLUSTERED  ([IPAddress]) ON [PRIMARY]
 GO

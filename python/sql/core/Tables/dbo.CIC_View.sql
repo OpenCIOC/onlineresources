@@ -87,15 +87,19 @@ CREATE TABLE [dbo].[CIC_View]
 [AllowPDF] [bit] NOT NULL CONSTRAINT [DF_CIC_View_AllowPDF] DEFAULT ((0)),
 [ShowRecordDetailsSidebar] [bit] NOT NULL CONSTRAINT [DF_CIC_View_ShowASSSidebar] DEFAULT ((0)),
 [GoogleTranslateWidget] [bit] NOT NULL CONSTRAINT [DF_CIC_View_GoogleTranslateWidget] DEFAULT ((0)),
+[BSrchNear2] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSrchNear2] DEFAULT ((0)),
 [BSrchNear5] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSearchNear05] DEFAULT ((0)),
 [BSrchNear10] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSearchNear10] DEFAULT ((0)),
 [BSrchNear15] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSearchNear15] DEFAULT ((0)),
 [BSrchNear25] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSearchNear25] DEFAULT ((0)),
 [BSrchNear50] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSearchNear50] DEFAULT ((0)),
-[BSrchNear2] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSrchNear2] DEFAULT ((0)),
-[DefaultPrintProfile] [int] NULL,
 [BSrchNear100] [bit] NOT NULL CONSTRAINT [DF_CIC_View_BSrchNear100] DEFAULT ((0)),
-[AutoMapSearchResults] [bit] NOT NULL CONSTRAINT [DF_CIC_View_AutoMapSearchResults] DEFAULT ((0))
+[DefaultPrintProfile] [int] NULL,
+[AutoMapSearchResults] [bit] NOT NULL CONSTRAINT [DF_CIC_View_AutoMapSearchResults] DEFAULT ((0)),
+[RefineField1] [int] NULL,
+[RefineField2] [int] NULL,
+[RefineField3] [int] NULL,
+[RefineField4] [int] NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_View] WITH NOCHECK ADD CONSTRAINT [CK_CIC_View_TaxDefnLevel] CHECK (([TaxDefnLevel]>=(0) AND [TaxDefnLevel]<=(5)))
@@ -109,6 +113,14 @@ GO
 ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_CIC_Publication_Quicklist] FOREIGN KEY ([QuickListPubHeadings]) REFERENCES [dbo].[CIC_Publication] ([PB_ID])
 GO
 ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_GBL_Agency] FOREIGN KEY ([Owner]) REFERENCES [dbo].[GBL_Agency] ([AgencyCode]) ON DELETE SET NULL ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_GBL_FieldOption1] FOREIGN KEY ([RefineField1]) REFERENCES [dbo].[GBL_FieldOption] ([FieldID])
+GO
+ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_GBL_FieldOption2] FOREIGN KEY ([RefineField2]) REFERENCES [dbo].[GBL_FieldOption] ([FieldID])
+GO
+ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_GBL_FieldOption3] FOREIGN KEY ([RefineField3]) REFERENCES [dbo].[GBL_FieldOption] ([FieldID])
+GO
+ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_GBL_FieldOption4] FOREIGN KEY ([RefineField4]) REFERENCES [dbo].[GBL_FieldOption] ([FieldID])
 GO
 ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [FK_CIC_View_GBL_PrintProfile] FOREIGN KEY ([DefaultPrintProfile]) REFERENCES [dbo].[GBL_PrintProfile] ([ProfileID])
 GO

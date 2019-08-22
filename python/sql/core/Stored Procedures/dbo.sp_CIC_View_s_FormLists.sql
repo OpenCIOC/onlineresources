@@ -12,9 +12,8 @@ AS
 SET NOCOUNT ON
 
 /*
-	Checked for Release: 3.7.3
 	Checked by: KL
-	Checked on: 28-Feb-2016
+	Checked on: 25-Jul-2019
 	Action:	NO ACTION REQUIRED
 */
 
@@ -124,6 +123,8 @@ INNER JOIN GBL_PrintProfile_Description ppd
 WHERE pp.Domain=1 AND (pp.[Public]=1 OR EXISTS(SELECT * FROM CIC_View_PrintProfile WHERE ViewType=@ViewType AND ProfileID=pp.ProfileID))
 
 EXEC dbo.sp_CIC_Publication_l_SharedLocal @MemberID
+
+EXEC dbo.sp_GBL_FieldOption_l_Facet @MemberID
 
 RETURN @Error
 

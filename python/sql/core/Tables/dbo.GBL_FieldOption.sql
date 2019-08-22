@@ -16,6 +16,7 @@ CREATE TABLE [dbo].[GBL_FieldOption]
 [DisplayFMWeb] [varchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [UpdateFieldList] [varchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [FeedbackFieldList] [varchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[FacetFieldList] [varchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [UseDisplayForFeedback] [bit] NOT NULL CONSTRAINT [DF_GBL_FieldOption_UseDisplayForFeedback] DEFAULT ((0)),
 [UseDisplayForMailForm] [bit] NOT NULL CONSTRAINT [DF_GBL_FieldOption_UseDisplayForMailForm] DEFAULT ((0)),
 [DisplayOrder] [tinyint] NOT NULL CONSTRAINT [DF_GBL_FieldOption_DisplayOrder] DEFAULT ((0)),
@@ -41,9 +42,7 @@ CREATE TABLE [dbo].[GBL_FieldOption]
 [DevNotes] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [AIRS] [bit] NOT NULL CONSTRAINT [DF_GBL_FieldOption_AIRS] DEFAULT ((0)),
 [MemberID] [int] NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-ALTER TABLE [dbo].[GBL_FieldOption] ADD
-CONSTRAINT [FK_GBL_FieldOption_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
+) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -79,7 +78,11 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_GBL_FieldOption_FieldNameInclFieldID] ON [d
 GO
 ALTER TABLE [dbo].[GBL_FieldOption] WITH NOCHECK ADD CONSTRAINT [FK_GBL_FieldOption_CIC_Publication] FOREIGN KEY ([PB_ID]) REFERENCES [dbo].[CIC_Publication] ([PB_ID]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
+ALTER TABLE [dbo].[GBL_FieldOption] ADD CONSTRAINT [FK_GBL_FieldOption_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
+GO
 GRANT SELECT ON  [dbo].[GBL_FieldOption] TO [cioc_cic_search_role]
+GO
 GRANT SELECT ON  [dbo].[GBL_FieldOption] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[GBL_FieldOption] TO [cioc_login_role]
 GO

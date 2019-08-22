@@ -117,6 +117,10 @@ CREATE PROCEDURE [dbo].[sp_CIC_View_u]
 	@ShowRecordDetailsSidebar BIT,
 	@GoogleTranslateWidget BIT,
 	@DefaultPrintProfile INT,
+	@RefineField1 INT,
+	@RefineField2 INT,
+	@RefineField3 INT,
+	@RefineField4 INT,
 	@Descriptions XML,
 	@Views XML,
 	@AdvSrchCheckLists XML,
@@ -601,7 +605,11 @@ IF @Error = 0 BEGIN
 		MapSearchResults		= ISNULL(@MapSearchResults,MapSearchResults),
 		AutoMapSearchResults	= ISNULL(@AutoMapSearchResults,AutoMapSearchResults),
 		ResultsPageSize			= @ResultsPageSize,
-		ShowRecordDetailsSidebar = ISNULL(@ShowRecordDetailsSidebar, ShowRecordDetailsSidebar)
+		ShowRecordDetailsSidebar = ISNULL(@ShowRecordDetailsSidebar, ShowRecordDetailsSidebar),
+		RefineField1			= @RefineField1,
+		RefineField2			= @RefineField2,
+		RefineField3			= @RefineField3,
+		RefineField4			= @RefineField4
 	WHERE ViewType = @ViewType	
 	EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @ViewObjectName, @ErrMsg
 

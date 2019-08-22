@@ -1250,7 +1250,7 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 		%endif # CIC
 
 		<tr>
-			<td class="field-label-cell" rowspan="${4 if domain.id == const.DM_CIC and dboptions.UseCIC else 2}">${_('Search Results')}</td>
+			<td class="field-label-cell" rowspan="${5 if domain.id == const.DM_CIC and dboptions.UseCIC else 2}">${_('Search Results')}</td>
 			<td class="field-data-cell">
 				${_('Use the form below to set default display options for this View for users that do not have a login, or have not set any display options for their login.')}<br>
 				${display_options(for_view=True)}
@@ -1273,6 +1273,19 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 			<td class="field-data-cell">
 				${renderer.errorlist("item.AutoMapSearchResults")}
 				${renderer.checkbox("item.AutoMapSearchResults", label=_('Show Map on search results page by default'))}
+			</td>
+		</tr>
+		<tr>
+			<td class="field-data-cell">
+				<h4>${_('Facet Search Results')}</h4>
+				${renderer.errorlist("item.RefineField1")}
+				${renderer.select("item.RefineField1", options=[('','')] + facet_field_descs, class_="form-control")}
+				${renderer.errorlist("item.RefineField2")}
+				${renderer.select("item.RefineField2", options=[('','')] + facet_field_descs, class_="form-control")}
+				${renderer.errorlist("item.RefineField3")}
+				${renderer.select("item.RefineField3", options=[('','')] + facet_field_descs, class_="form-control")}
+				${renderer.errorlist("item.RefineField4")}
+				${renderer.select("item.RefineField4", options=[('','')] + facet_field_descs, class_="form-control")}
 			</td>
 		</tr>
 		<tr>
