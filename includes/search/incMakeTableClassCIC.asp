@@ -839,7 +839,7 @@ Else
 <%
 		If g_bMapSearchResults Then
 %>
-	<input type="button" class="btn btn-default" onClick="do_check_all_in_viewport();" class="NotVisible" id="check_all_in_viewport" value="<%=TXT_CHECK_IN_VIEWPORT%>">
+	<input type="button" class="btn btn-default NotVisible" onClick="do_check_all_in_viewport();" id="check_all_in_viewport" value="<%=TXT_CHECK_IN_VIEWPORT%>">
 <%
 		End If
 %>
