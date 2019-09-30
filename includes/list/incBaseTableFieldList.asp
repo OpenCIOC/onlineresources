@@ -163,6 +163,7 @@ Set cmdExtraFieldList = Nothing
 <option value="btd.SOURCE_PROVINCE">SOURCE_PROVINCE</option>
 <option value="btd.SOURCE_TITLE">SOURCE_TITLE</option>
 <%If bRadio Then%>
+<option value="cbt.SOURCE_FROM_ICAROL">SOURCE_FROM_ICAROL</option>
 <option value="ccbt.SPACE_AVAILABLE">SPACE_AVAILABLE</option>
 <%End If%>
 <option value="ccbtd.SPACE_AVAILABLE_NOTES">SPACE_AVAILABLE_NOTES</option>
