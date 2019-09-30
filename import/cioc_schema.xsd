@@ -1255,6 +1255,7 @@
 									<xsd:attribute name="PCF" type="s-Text20Type" use="optional"/>
 								</xsd:complexType>
 							</xsd:element>
+							<xsd:element name="SOURCE_FROM_ICAROL" type="c-BooleanType" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="SPACE_AVAILABLE" minOccurs="0" maxOccurs="1">
 								<xsd:complexType>
 									<xsd:attribute name="V" type="s-BooleanType" use="optional"/>

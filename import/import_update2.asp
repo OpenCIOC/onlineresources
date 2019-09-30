@@ -5784,6 +5784,8 @@ While Not .EOF
 							Call processGBLDField(Null,Null,FTYPE_TEXT)
 						Case "SOURCE"
 							Call processSourceField()
+						Case "SOURCE_FROM_ICAROL"
+							Call processCICField(Null,Null,FTYPE_NUMBER)
 						Case "SPACE_AVAILABLE"
 							Call processSpaceAvailable()
 						Case "SUBJECTS"
