@@ -316,3 +316,53 @@ class AIRSExportFullList(viewbase.CicViewBase):
 		res.content_length = length
 		res.headers['Content-Disposition'] = 'attachment;filename=records%s.zip' % (model_state.value('FileSuffix') or '')
 		return res
+
+
+@view_config(route_name='export_airs_icarol_source_list', renderer='string')
+class AIRSExportICarolSourceList(viewbase.CicViewBase):
+
+	def __call__(self):
+		request = self.request
+		user = request.user
+
+		if not user:
+			return make_401_error(u'Access Denied')
+
+		if 'airsexport' not in user.cic.ExternalAPIs:
+			return make_401_error(u'Insufficient Permissions')
+
+		log.debug('icarol source list')
+
+		sql = '''EXEC sp_GBL_AIRS_Export_ICarolSource'''
+
+		file = tempfile.TemporaryFile()
+		with request.connmgr.get_connection('admin') as conn:
+			cursor = conn.execute(
+				sql
+			)
+
+			def row_group_iterable():
+				yield [[u'Record NUM']]
+				while True:
+					rows = cursor.fetchmany(2000)
+					if not rows:
+						break
+					yield itertools.imap(lambda x: tuple(y or u'' for y in x), rows)
+
+			with bufferedzip.BufferedZipFile(file, 'w', zipfile.ZIP_DEFLATED) as zip:
+				write_csv_to_zip(
+					zip, itertools.chain.from_iterable(row_group_iterable()),
+					'record_ids.csv')
+
+		response = request.response
+		response.content_type = 'application/zip'
+
+		length = file.tell()
+		file.seek(0)
+		res = request.response
+		res.content_type = 'application/zip'
+		res.charset = None
+		res.app_iter = FileIterator(file)
+		res.content_length = length
+		res.headers['Content-Disposition'] = 'attachment;filename=record_ids.zip'
+		return res

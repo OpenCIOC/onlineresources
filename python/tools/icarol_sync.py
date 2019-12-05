@@ -25,6 +25,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 import traceback
 from urlparse import urljoin
 from zipfile import ZipFile
@@ -179,6 +180,26 @@ def upload_num_report(url, records_sent, counts, field, dest_file, **kwargs):
 	r.raise_for_status()
 
 
+def remove_exclusions(reader_to_exclude_from, url, args, **kwargs):
+	r = requests.get(url + '/icarolsource', stream=True, **kwargs)
+	r.raise_for_status()
+	with tempfile.TemporaryFile() as fd:
+		for chunk in r.iter_content(chunk_size=8192):
+			fd.write(chunk)
+
+		fd.seek(0)
+		csv_file = open_zipfile(fd)
+		reader = UTF8Reader(csv_file)
+		reader.next()
+		exclusion_set = set((x[0] for x in reader))
+
+	for row in reader_to_exclude_from:
+		if row[0] in exclusion_set:
+			continue
+
+		yield tuple(row)
+
+
 def calculate_deletion_list(lang, url, args, **kwargs):
 	suffix = lang.file_suffix + '_full_list'
 	previous_filenames = previous_files(args.dest, args.filename_prefix, suffix)
@@ -205,7 +226,7 @@ def calculate_deletion_list(lang, url, args, **kwargs):
 		csv_file = open_zipfile(previous_filenames[-1])
 		reader = UTF8Reader(csv_file)
 		reader.next()
-		previous = set(itertools.imap(tuple, reader))
+		previous = set(remove_exclusions(reader, url, args, **kwargs))
 		previous_count = len(previous)
 
 		csv_file.close()
