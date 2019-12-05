@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-
 def includeme(config):
 	urlprefix = '/export/'
 
@@ -23,4 +22,7 @@ def includeme(config):
 					factory='cioc.core.rootfactories.AllowSSLRootFactory')
 
 	config.add_route('export_airs_full_list', urlprefix + 'airs/list',
+					factory='cioc.core.rootfactories.AllowSSLRootFactory')
+
+	config.add_route('export_airs_icarol_source_list', urlprefix + 'airs/icarolsource',
 					factory='cioc.core.rootfactories.AllowSSLRootFactory')
