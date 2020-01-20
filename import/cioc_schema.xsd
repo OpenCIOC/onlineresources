@@ -20,7 +20,7 @@
 <xsd:schema
 		attributeFormDefault="unqualified"
 		elementFormDefault="qualified"
-		version="4.5.6"
+		version="5.0"
 		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 		xmlns="urn:ciocshare-schema"
 		targetNamespace="urn:ciocshare-schema">
@@ -582,7 +582,7 @@
 					<xsd:attribute name="LANG" type="s-LangType" use="required"/>
 					<xsd:attribute name="NMH" type="s-Text20Type" use="optional"/>
 					<xsd:attribute name="NMFIRST" type="s-Text60Type" use="optional"/>
-					<xsd:attribute name="NMLAST" type="s-Text100Type" use="optional"/>
+					<xsd:attribute name="NMLAST" type="s-Text150Type" use="optional"/>
 					<xsd:attribute name="NMS" type="s-Text30Type" use="optional"/>
 					<xsd:attribute name="TTL" type="s-Text100Type" use="optional"/>
 					<xsd:attribute name="ORG" type="s-Text100Type" use="optional"/>
@@ -592,7 +592,7 @@
 					<xsd:attribute name="FAXEXT" type="s-Text10Type" use="optional"/>
 					<xsd:attribute name="FAXCALL" type="s-BooleanType" use="optional"/>
 					<xsd:attribute name="PH1TYPE" type="s-Text20Type" use="optional"/>
-					<xsd:attribute name="PH1N" type="s-Text100Type" use="optional"/>
+					<xsd:attribute name="PH1N" type="s-Text500Type" use="optional"/>
 					<xsd:attribute name="PH1NO" type="s-Text20Type" use="optional"/>
 					<xsd:attribute name="PH1EXT" type="s-Text10Type" use="optional"/>
 					<xsd:attribute name="PH1OPT" type="s-Text10Type" use="optional"/>
@@ -792,6 +792,7 @@
 							</xsd:element>
 							<xsd:element name="ACCESSIBILITY" type="c-ChecklistType" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="ACCREDITED" type="c-DropDownType" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ACCREDITATION_NOTES" type="c-Bilingual4000Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="ACTIVITY_INFO" minOccurs="0" maxOccurs="1">
 								<xsd:complexType>
 									<xsd:sequence>
@@ -887,6 +888,8 @@
 											</xsd:complexType>
 										</xsd:element>
 									</xsd:sequence>
+									<xsd:attribute name="N" type="s-Text4000Type" use="optional"/>
+									<xsd:attribute name="NF" type="s-Text4000Type" use="optional"/>
 								</xsd:complexType>
 							</xsd:element>
 							<xsd:element name="CC_LICENSE_INFO" minOccurs="0" maxOccurs="1">
@@ -937,6 +940,7 @@
 							<xsd:element name="DELETED_BY" type="c-Bilingual50Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="DELETION_DATE" type="c-DateType" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="DESCRIPTION" type="c-Bilingual20000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DOCUMENTS_REQUIRED" type="c-Bilingual20000Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="E_MAIL" type="c-EmailType" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="ELECTIONS" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="ELIGIBILITY" minOccurs="0" maxOccurs="1">
@@ -1068,6 +1072,8 @@
 								<xsd:complexType>
 									<xsd:attribute name="CO" type="s-Text100Type" use="optional"/>
 									<xsd:attribute name="COF" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="LN1" type="s-Text255Type" use="optional"/>
+									<xsd:attribute name="LN2" type="s-Text255Type" use="optional"/>
 									<xsd:attribute name="BXTP" type="s-Text20Type" use="optional"/>
 									<xsd:attribute name="BXTPF" type="s-Text20Type" use="optional"/>
 									<xsd:attribute name="BOX" type="s-Text20Type" use="optional"/>
@@ -1190,6 +1196,8 @@
 							<xsd:element name="SERVICE_NAME_LEVEL_2" type="c-OrgNameType" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="SITE_ADDRESS" minOccurs="0" maxOccurs="1">
 								<xsd:complexType>
+									<xsd:attribute name="LN1" type="s-Text255Type" use="optional"/>
+									<xsd:attribute name="LN2" type="s-Text255Type" use="optional"/>
 									<xsd:attribute name="BLD" type="s-Text150Type" use="optional"/>
 									<xsd:attribute name="BLDF" type="s-Text150Type" use="optional"/>
 									<xsd:attribute name="STNUM" type="s-Text30Type" use="optional"/>
