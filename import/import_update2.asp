@@ -548,8 +548,8 @@ End Sub
 '*-------------------------------------*
 
 Sub processAddress(strType)
-	Call processGBLField(strType & "_LINE_1","LN1",FTYPE_TEXT)
-	Call processGBLField(strType & "_LINE_2","LN2",FTYPE_TEXT)
+	Call processGBLDField(strType & "_LINE_1","LN1",FTYPE_TEXT)
+	Call processGBLDField(strType & "_LINE_2","LN2",FTYPE_TEXT)
 	Call processGBLField(strType & "_POSTAL_CODE","PC",FTYPE_TEXT)
 	Call processGBLDField(strType & "_BUILDING","BLD",FTYPE_TEXT)
 	Call processGBLDField(strType & "_STREET_NUMBER","STNUM",FTYPE_TEXT)

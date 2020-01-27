@@ -245,12 +245,15 @@ def _to_xml(obj, parent=None, record_id=None):
 	if obj is None:
 		return parent
 
-	obj = unicode(obj)
+	obj = unicode(obj).strip()
+	if not obj:
+		return parent
+
 	try:
 		parent.text = obj
 	except Exception:
 		try:
-			parent.text = invalid_xml_chars.sub(obj, u'')
+			parent.text = invalid_xml_chars.sub(obj, u'').strip()
 		except Exception as e:
 			print 'error converting to xml:', record_id, e, repr(obj)
 			raise

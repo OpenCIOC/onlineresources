@@ -1040,9 +1040,6 @@
 								</xsd:complexType>
 							</xsd:element>
 							<xsd:element name="HOURS" type="c-Bilingual4000Type" minOccurs="0" maxOccurs="1"/>
-							<xsd:choice>
-								
-							</xsd:choice>
 							<xsd:element name="INTERNAL_MEMO" type="c-RecordNoteType" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="INTERSECTION" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="LANGUAGES" type="c-LanguageChecklistType" minOccurs="0" maxOccurs="1"/>
