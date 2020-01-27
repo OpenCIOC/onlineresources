@@ -19,6 +19,8 @@ import pprint
 import json
 import time
 import string
+import re
+from Queue import Queue
 from collections import namedtuple
 from cStringIO import StringIO
 import os
@@ -27,11 +29,13 @@ import traceback
 import urllib
 from collections import OrderedDict
 from datetime import datetime
+from threading import Thread
 
 import isodate
 
 CREATE_NO_WINDOW = 0x08000000
 creationflags = 0
+
 
 import requests
 from lxml import etree as ET
@@ -44,27 +48,19 @@ except ImportError:
 from tools.toolslib import Context
 
 from cioc.core import constants as const  # , email
+from cioc.core import syslanguage
 
+
+invalid_xml_chars = re.compile(u'[\x00-\x08\x0c\x0e-\x19]')
 
 const.update_cache_values()
-XS = 'http://www.w3.org/2001/XMLSchema'
-XSD = '{' + XS + '}'
-_time_format = '%Y%m%dT%H%M%S'
-_fname_formats = {
-	'full': 'Full{now}{file_suffix}.zip',
-	'part': 'IncrementalFrom{previous}To{now}{file_suffix}.zip',
-}
-SchemaError = namedtuple('SchemaError', 'line column message')
-LangSetting = namedtuple('LangSetting', 'culture file_suffix language_name')
-
+_time_format = '%Y-%m-%d %H:%M:%S'
+LangSetting = namedtuple('LangSetting', 'culture file_suffix language_name sql_language')
 
 _lang_settings = {
-	'en-CA': LangSetting('en-CA', '', 'English'),
-	'fr-CA': LangSetting('fr-CA', '_frCA', 'French')
+	'en-CA': LangSetting('en-CA', '', 'en', syslanguage.SQLALIAS_ENGLISH),
+	'fr-CA': LangSetting('fr-CA', '_frCA', 'fr', syslanguage.SQLALIAS_FRENCH)
 }
-
-
-_date_pattern = '????????T??????'
 
 
 class FileWriteDetector(object):
@@ -100,11 +96,11 @@ def get_config_item(args, key, default=DEFAULT):
 def prepare_session(args):
 	session = requests.Session()
 	session.headers.update({
-		'Authorization': 'Bearer ' + get_config_item(args, 'icarol_api_key', ''),
 		'Accept': 'application/json'
 	})
 	args.session = session
-	args.host = get_config_item(args, 'icarol_api_host')
+	args.host = get_config_item(args, 'o211_api_host')
+	args.key = get_config_item(args, 'o211_api_key', '')
 
 
 def parse_args(argv):
@@ -116,12 +112,13 @@ def parse_args(argv):
 	parser.add_argument('--config-prefix', dest='config_prefix', action='store', default='')
 	parser.add_argument('--modified-since', dest='modified_since', action='store', default=None)
 	parser.add_argument('--fetch-mechanism', dest='fetch_mechanism', action='store', default=None)
+	parser.add_argument('--only-lang', dest='only_lang', action='append', default=[])
 
 	args = parser.parse_args(argv)
 	if args.config_prefix and not args.config_prefix.endswith('.'):
 		args.config_prefix += '.'
 
-	if args.modified_since:
+	if args.modified_since and args.modified_since != 'any':
 		try:
 			args.modified_since = isodate.parse_datetime(args.modified_since)
 		except:
@@ -161,52 +158,70 @@ class fakerequest(object):
 		DbArea = const.DM_CIC
 
 
-def icarol_takeall(args, modifiedSince=None):
-	url = 'https://' + args.host + '/v1/Resource/Search'
-	params = {'term': '*', 'takeAll': True}
+def get_record_list(args, modifiedSince=None, lang='en'):
+	url = 'https://' + args.host + '/api/records/'
+	params = {
+		'key': args.key,
+		'service': '0',
+		'lang': lang
+	}
 
 	if args.extra_criteria:
 		params.update(args.extra_criteria)
 
 	if modifiedSince:
-		params['modifiedSince'] = modifiedSince.isoformat()
+		params['updatedOn'] = modifiedSince
 
-	if args.test:
-		print url + '?' + urllib.urlencode(params)
-	response = args.session.get(url, json=params)
+	url = url + '?' + urllib.urlencode(params)
+
+	response = args.session.get(url)
 	response.raise_for_status()
-	return response.json(object_pairs_hook=OrderedDict)
+	data = response.json(object_pairs_hook=OrderedDict)
+	if isinstance(data, dict):
+		error = data.get('Error')
+		if error:
+			raise Exception('Request Error: %s' % error)
+		raise Exception('Response dictionary not list: %r' % data)
+
+	return data
 
 
-def icarol_get_records(args, id):
-	url = 'https://' + args.host + '/v1/Resource/'
+def get_records(args, id, lang='en'):
+	url = 'https://' + args.host + '/api/record/'
 	if not isinstance(id, list):
 		id = [id]
 
 	id_str = map(str, id)
-	params = {'id': id_str}
+	params = {
+		'id': ",".join(id_str),
+		'key': args.key,
+		'service': '0',
+		'lang': lang
+	}
+	url = url + '?' + urllib.urlencode(params)
 	start = time.time()
-	response = args.session.get(url, params=params)
+	response = args.session.get(url)
 	duration = time.time() - start
 	if args.test:
 		print 'requested {} records in {}s'.format(len(id), duration)
 	response.raise_for_status()
-	tmp = {x['id']: x for x in response.json(object_pairs_hook=OrderedDict)}
+	tmp = {x['ResourceAgencyNum']: x for x in response.json(object_pairs_hook=OrderedDict)}
 	result = [tmp[x] for x in id]
 	return result
 
 
-def fetch_records(args, record_ids):
-	for page in pager(record_ids):
-		for record in icarol_get_records(args, page):
+def fetch_record_batches(args, record_ids, lang):
+	for page in pager(record_ids, 100):
+		for record in get_records(args, page, lang.language_name):
 			yield record
 
 
-def _to_xml(obj, parent=None):
+def _to_xml(obj, parent=None, record_id=None):
 	if parent is None:
 		parent = ET.Element('root')
 
 	if isinstance(obj, dict):
+		record_id = obj.get('ResourceAgencyNum')
 		for key, value in obj.items():
 			if not isinstance(key, basestring):
 				key = unicode(key)
@@ -214,22 +229,37 @@ def _to_xml(obj, parent=None):
 			if key[0] not in string.ascii_letters:
 				key = 'k' + key
 
-			sub = ET.SubElement(parent, key)
-			_to_xml(value, sub)
+			if value:
+				sub = ET.SubElement(parent, 'field', name=key)
+				_to_xml(value, sub, record_id)
 
 		return parent
 
 	if isinstance(obj, (list, tuple)):
 		for value in obj:
 			sub = ET.SubElement(parent, 'item')
-			_to_xml(value, sub)
+			_to_xml(value, sub, record_id)
 
 		return parent
 
 	if obj is None:
 		return parent
 
-	parent.text = unicode(obj)
+	obj = unicode(obj)
+	try:
+		parent.text = obj
+	except Exception:
+		try:
+			parent.text = invalid_xml_chars.sub(obj, u'')
+		except Exception as e:
+			print 'error converting to xml:', record_id, e, repr(obj)
+			raise
+
+		if record_id:
+			print 'Corrected data that was not valid in record id %s: %r' % (record_id, obj)
+		else:
+			print 'Corrected data that was not valid unknown record:', repr(obj)
+
 	return parent
 
 
@@ -237,24 +267,45 @@ def to_xml(obj):
 	return ET.tostring(_to_xml(obj))
 
 
-def fetch_from_icarol(context):
-	records = icarol_takeall(context.args, context.args.modified_since)
+def push_to_database(context, lang, queue, service):
+	sql = u'''
+	EXEC sp_CIC_iCarolImport_Incremental ?, ?, ?
+	'''
+	next_modified = context.args.next_modified_since
+	with context.connmgr.get_connection('admin', language=lang.sql_language) as conn:
+
+		while True:
+			batch = queue.get()
+			if batch is None:
+				queue.task_done()
+				return
+
+			try:
+				xml_0 = to_xml(batch)
+				conn.execute(sql, service, next_modified, xml_0)
+			except Exception:
+				traceback.print_exc()
+			queue.task_done()
+
+
+def fetch_from_o211(context, lang):
+	records = get_record_list(context.args, context.args.modified_since, lang.language_name)
 	if context.args.test:
-		records.sort(key=lambda x: x['modified'])
+		records.sort(key=lambda x: x['UpdatedOn'])
 		records = records[-60:]
 		pprint.pprint(records)
 		return
 
-	sql = u'''
-	INSERT INTO CIC_iCarolImport (TakeAllJson, TakeAllXML, RecordJson, RecordXML)
-	VALUES (?, ?, ?, ?)
-	'''
+	queue = Queue(maxsize=2)
+	thread = Thread(target=push_to_database, args=(context, lang, queue, 0))
+	thread.daemon = True
+	thread.start()
 
-	with context.connmgr.get_connection('admin') as conn:
-		for record in zip(records, fetch_records(context.args, [x['id'] for x in records])):
-			xml_0 = to_xml(record[0])
-			xml_1 = to_xml(record[1])
-			conn.execute(sql, json.dumps(record[0]), xml_0, json.dumps(record[1]), xml_1)
+	for batch in pager(fetch_record_batches(context.args, (x['ResourceAgencyNum'] for x in records), lang), 1000):
+		queue.put(batch)
+
+	queue.put(None)
+	queue.join()
 
 
 def check_db_state(context):
@@ -273,9 +324,18 @@ def check_db_state(context):
 	if meta_data.ExtraCriteria:
 		context.args.extra_criteria = json.loads(meta_data.ExtraCriteria)
 
-	context.args.modified_since = meta_data.LastFetched
+	if not context.args.modified_since:
+		context.args.modified_since = meta_data.LastFetched
+
 	# XXX Should this be observed value instead of this
-	context.args.next_modified_since = datetime.utcnow()
+	context.args.next_modified_since = datetime.now()
+
+
+def format_modified_date(context):
+	if context.args.modified_since == 'any':
+		return
+
+	context.args.modified_since = context.args.modified_since.strftime(_time_format)
 
 
 def update_db_state(context):
@@ -307,17 +367,31 @@ def main(argv):
 			sys.stderr = sys.stdout
 
 	sys.stderr = FileWriteDetector(sys.stderr)
+	import traceback
 
-	prepare_session(args)
-	check_db_state(context)
+	try:
+		prepare_session(args)
+		check_db_state(context)
+		format_modified_date(context)
 
-	fetch_from_icarol(context)
+		langs = get_config_item(args, 'o211_import_languages', 'en-CA').split(',')
+		for culture in langs:
+			if args.only_lang and culture not in args.only_lang:
+				print 'Skipping ', culture
+				continue
 
-	update_db_state(args)
+			lang = _lang_settings.get(culture.strip(), _lang_settings['en-CA'])
+
+			fetch_from_o211(context, lang)
+
+		update_db_state(context)
+	except Exception:
+		traceback.print_exc()
 
 	if sys.stderr.is_dirty():
 		retval = 1
 
+	# TODO: Add email sending.
 	return retval
 
 
