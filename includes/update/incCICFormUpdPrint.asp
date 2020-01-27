@@ -265,6 +265,8 @@ Function makeAddress(rst,bMail,bUseContent)
 	Dim strCO, _
 		strBoxType, _
 		strPO, _
+		strLine1, _
+		strLine2, _
 		strBuilding, _
 		strNumber, _
 		strStreet, _
@@ -286,6 +288,8 @@ Function makeAddress(rst,bMail,bUseContent)
 			strPO = rst.Fields("MAIL_PO_BOX")
 		End If
 		strBuilding = rst(strAddrPrefix & "BUILDING")
+		strLine1 = rst(strAddrPrefix & "LINE_1")
+		strLine2 = rst(strAddrPrefix & "LINE_2")
 		strNumber = rst(strAddrPrefix & "STREET_NUMBER")
 		strStreet = rst(strAddrPrefix & "STREET")
 		strType = rst(strAddrPrefix & "STREET_TYPE")
@@ -335,6 +339,31 @@ Function makeAddress(rst,bMail,bUseContent)
 				"</div>" & _
 			"</div>"
 	End If
+
+	If Not Nl(strLine1) Or Not Nl(strLine2) Then
+		strReturn = strReturn & _
+			"<div class=""row form-group"">" & _
+				"<label for=""" & strAddrPrefix & "LINE_1"" class=""control-label col-sm-3 col-lg-2"">" & TXT_LINE & " 1</label>" & _
+				"<div class=""col-sm-9 col-lg-10"">" & _
+					"<input type=""text"" name=""" & strAddrPrefix & "LINE_1"" id=""" & strAddrPrefix & "LINE_1"" maxlength=""255"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strLine1) & ">"
+		If bFeedback Then
+			strReturn = strReturn & getFeedback(strAddrPrefix & "LINE_1",True)
+		End If
+		strReturn = strReturn & _
+				"</div>" & _
+			"</div>" & _
+			"<div class=""row form-group"">" & _
+				"<label for=""" & strAddrPrefix & "LINE_2"" class=""control-label col-sm-3 col-lg-2"">" & TXT_LINE & " 2</label>" & _
+				"<div class=""col-sm-9 col-lg-10"">" & _
+					"<input type=""text"" name=""" & strAddrPrefix & "LINE_2"" id=""" & strAddrPrefix & "LINE_2"" maxlength=""255"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strLine2) & ">"
+		If bFeedback Then
+			strReturn = strReturn & getFeedback(strAddrPrefix & "LINE_2",True)
+		End If
+		strReturn = strReturn & _
+				"</div>" & _
+			"</div>"
+	End If
+
 	strReturn = strReturn & _
 		"<div class=""row form-group"">" & _
 			"<label for=""" & strAddrPrefix & "BUILDING"" class=""control-label col-sm-3 col-lg-2"">" & TXT_BUILDING & "</label>" & _

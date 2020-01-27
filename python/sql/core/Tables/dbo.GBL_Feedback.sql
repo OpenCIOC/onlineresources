@@ -102,12 +102,12 @@ CREATE TABLE [dbo].[GBL_Feedback]
 [VOLCONTACT_PHONE3] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [VOLCONTACT_FAX] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [VOLCONTACT_EMAIL] [nvarchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
-[WWW_ADDRESS] [nvarchar] (200) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-ALTER TABLE [dbo].[GBL_Feedback] ADD 
-CONSTRAINT [PK_GBL_Feedback] PRIMARY KEY CLUSTERED  ([FB_ID]) ON [PRIMARY]
-CREATE NONCLUSTERED INDEX [IX_GBL_Feedback_FBID] ON [dbo].[GBL_Feedback] ([FB_ID]) ON [PRIMARY]
-
+[WWW_ADDRESS] [nvarchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
+[MAIL_LINE_1] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[MAIL_LINE_2] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[SITE_LINE_1] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[SITE_LINE_2] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -135,10 +135,17 @@ DELETE fbe
 
 SET NOCOUNT OFF
 GO
+ALTER TABLE [dbo].[GBL_Feedback] ADD CONSTRAINT [PK_GBL_Feedback] PRIMARY KEY CLUSTERED  ([FB_ID]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_GBL_Feedback_FBID] ON [dbo].[GBL_Feedback] ([FB_ID]) ON [PRIMARY]
+GO
 ALTER TABLE [dbo].[GBL_Feedback] WITH NOCHECK ADD CONSTRAINT [FK_GBL_Feedback_GBL_FeedbackEntry] FOREIGN KEY ([FB_ID]) REFERENCES [dbo].[GBL_FeedbackEntry] ([FB_ID]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
-GRANT SELECT ON  [dbo].[GBL_Feedback] TO [cioc_cic_search_role]
 GRANT INSERT ON  [dbo].[GBL_Feedback] TO [cioc_cic_search_role]
-GRANT SELECT ON  [dbo].[GBL_Feedback] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[GBL_Feedback] TO [cioc_cic_search_role]
+GO
 GRANT INSERT ON  [dbo].[GBL_Feedback] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[GBL_Feedback] TO [cioc_login_role]
 GO

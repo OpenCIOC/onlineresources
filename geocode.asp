@@ -124,7 +124,7 @@ If Not bError Then
 	If intGeoCodeType = GC_CURRENT Or intGeoCodeType = GC_SITE Then
 		strSQL = strSQL & ", CMP_SiteAddress SITE_ADDRESS" 
 		If bRetryWOPostal Then
-			strSQL = strSQL & ", dbo.fn_GBL_FullAddress(NULL, NULL, NULL, btd.SITE_STREET_NUMBER, btd.SITE_STREET, btd.SITE_STREET_TYPE, btd.SITE_STREET_TYPE_AFTER, " & _
+			strSQL = strSQL & ", dbo.fn_GBL_FullAddress(NULL, NULL, btd.SITE_LINE_1, btd.SITE_LINE_2, NULL, btd.SITE_STREET_NUMBER, btd.SITE_STREET, btd.SITE_STREET_TYPE, btd.SITE_STREET_TYPE_AFTER, " & _
 				"btd.SITE_STREET_DIR, NULL, btd.SITE_CITY, btd.SITE_PROVINCE, ISNULL(btd.SITE_COUNTRY, 'Canada'), NULL, NULL, NULL, NULL, NULL, NULL, btd.LangID, 0) " & _
 				"AS SITE_ADDRESS_NO_PC" 
 		End If

@@ -940,7 +940,7 @@
 							<xsd:element name="DELETED_BY" type="c-Bilingual50Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="DELETION_DATE" type="c-DateType" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="DESCRIPTION" type="c-Bilingual20000Type" minOccurs="0" maxOccurs="1"/>
-							<xsd:element name="DOCUMENTS_REQUIRED" type="c-Bilingual20000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DOCUMENTS_REQUIRED" type="c-Bilingual4000Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="E_MAIL" type="c-EmailType" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="ELECTIONS" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="ELIGIBILITY" minOccurs="0" maxOccurs="1">
@@ -1040,6 +1040,9 @@
 								</xsd:complexType>
 							</xsd:element>
 							<xsd:element name="HOURS" type="c-Bilingual4000Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:choice>
+								
+							</xsd:choice>
 							<xsd:element name="INTERNAL_MEMO" type="c-RecordNoteType" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="INTERSECTION" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="LANGUAGES" type="c-LanguageChecklistType" minOccurs="0" maxOccurs="1"/>

@@ -13,7 +13,7 @@ CREATE TABLE [dbo].[GBL_Contact]
 [VolVNUM] [varchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
 [NAME_HONORIFIC] [nvarchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
 [NAME_FIRST] [nvarchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
-[NAME_LAST] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
+[NAME_LAST] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [NAME_SUFFIX] [nvarchar] (30) COLLATE Latin1_General_100_CI_AI NULL,
 [TITLE] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [ORG] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
@@ -23,7 +23,7 @@ CREATE TABLE [dbo].[GBL_Contact]
 [FAX_EXT] [nvarchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
 [FAX_CALLFIRST] [bit] NOT NULL CONSTRAINT [DF_GBL_Contact_FAX_CALLFIRST] DEFAULT ((0)),
 [PHONE_1_TYPE] [nvarchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
-[PHONE_1_NOTE] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
+[PHONE_1_NOTE] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
 [PHONE_1_NO] [nvarchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
 [PHONE_1_EXT] [nvarchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
 [PHONE_1_OPTION] [nvarchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
@@ -37,24 +37,13 @@ CREATE TABLE [dbo].[GBL_Contact]
 [PHONE_3_NO] [nvarchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
 [PHONE_3_EXT] [nvarchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
 [PHONE_3_OPTION] [nvarchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
-[CMP_Name] [nvarchar] (210) COLLATE Latin1_General_100_CI_AI NULL,
+[CMP_Name] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
 [CMP_Fax] [nvarchar] (130) COLLATE Latin1_General_100_CI_AI NULL,
-[CMP_Phone1] [nvarchar] (160) COLLATE Latin1_General_100_CI_AI NULL,
+[CMP_Phone1] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
 [CMP_Phone2] [nvarchar] (160) COLLATE Latin1_General_100_CI_AI NULL,
 [CMP_Phone3] [nvarchar] (160) COLLATE Latin1_General_100_CI_AI NULL,
-[CMP_PhoneFull] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL
+[CMP_PhoneFull] [nvarchar] (700) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
-ALTER TABLE [dbo].[GBL_Contact] WITH NOCHECK ADD
-CONSTRAINT [FK_GBL_Contact_VOL_Opportunity_Description] FOREIGN KEY ([VolVNUM], [LangID]) REFERENCES [dbo].[VOL_Opportunity_Description] ([VNUM], [LangID]) NOT FOR REPLICATION
-ALTER TABLE [dbo].[GBL_Contact] NOCHECK CONSTRAINT [FK_GBL_Contact_VOL_Opportunity_Description]
-ALTER TABLE [dbo].[GBL_Contact] ADD 
-CONSTRAINT [PK_GBL_Contact] PRIMARY KEY CLUSTERED  ([ContactID]) ON [PRIMARY]
-CREATE NONCLUSTERED INDEX [IX_GBL_Contact_GblNUMGblContactTypeinclLangIDTITLEORGEMAILCMPNameCMPFaxCMPPhoneFull] ON [dbo].[GBL_Contact] ([GblNUM], [GblContactType]) INCLUDE ([CMP_Fax], [CMP_Name], [CMP_PhoneFull], [EMAIL], [LangID], [ORG], [TITLE]) ON [PRIMARY]
-
-CREATE NONCLUSTERED INDEX [IX_GBL_Contact_VolVNUMVolContactTypeinclLangIDTITLEORGEMAILCMPNameCMPFaxCMPPhoneFull] ON [dbo].[GBL_Contact] ([VolVNUM], [VolContactType]) INCLUDE ([CMP_Fax], [CMP_Name], [CMP_PhoneFull], [EMAIL], [LangID], [ORG], [TITLE]) ON [PRIMARY]
-
-ALTER TABLE [dbo].[GBL_Contact] ADD
-CONSTRAINT [CK_GBL_Contact] CHECK (([dbo].[fn_GBL_Contact_CheckModule]([GblContactType],[GblNUM],[VolContactType],[VolVNUM])=(0)))
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -187,25 +176,39 @@ END
 
 SET NOCOUNT OFF
 GO
-
-ALTER TABLE [dbo].[GBL_Contact] ADD CONSTRAINT [FK_GBL_Contact_GBL_FieldOption] FOREIGN KEY ([GblContactType]) REFERENCES [dbo].[GBL_FieldOption] ([FieldName]) ON UPDATE CASCADE
+ALTER TABLE [dbo].[GBL_Contact] ADD CONSTRAINT [CK_GBL_Contact] CHECK (([dbo].[fn_GBL_Contact_CheckModule]([GblContactType],[GblNUM],[VolContactType],[VolVNUM])=(0)))
+GO
+ALTER TABLE [dbo].[GBL_Contact] ADD CONSTRAINT [PK_GBL_Contact] PRIMARY KEY CLUSTERED  ([ContactID]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_GBL_Contact_GblNUMGblContactTypeinclLangIDTITLEORGEMAILCMPNameCMPFaxCMPPhoneFull] ON [dbo].[GBL_Contact] ([GblNUM], [GblContactType]) INCLUDE ([CMP_Fax], [CMP_Name], [CMP_PhoneFull], [EMAIL], [LangID], [ORG], [TITLE]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_GBL_Contact_VolVNUMVolContactTypeinclLangIDTITLEORGEMAILCMPNameCMPFaxCMPPhoneFull] ON [dbo].[GBL_Contact] ([VolVNUM], [VolContactType]) INCLUDE ([CMP_Fax], [CMP_Name], [CMP_PhoneFull], [EMAIL], [LangID], [ORG], [TITLE]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[GBL_Contact] ADD CONSTRAINT [FK_GBL_Contact_GBL_BaseTable_Description] FOREIGN KEY ([GblNUM], [LangID]) REFERENCES [dbo].[GBL_BaseTable_Description] ([NUM], [LangID]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
 ALTER TABLE [dbo].[GBL_Contact] WITH NOCHECK ADD CONSTRAINT [FK_GBL_Contact_GBL_Contact_Honorific] FOREIGN KEY ([NAME_HONORIFIC]) REFERENCES [dbo].[GBL_Contact_Honorific] ([Honorific]) NOT FOR REPLICATION
 GO
+ALTER TABLE [dbo].[GBL_Contact] ADD CONSTRAINT [FK_GBL_Contact_GBL_FieldOption] FOREIGN KEY ([GblContactType]) REFERENCES [dbo].[GBL_FieldOption] ([FieldName]) ON UPDATE CASCADE
+GO
 ALTER TABLE [dbo].[GBL_Contact] ADD CONSTRAINT [FK_GBL_Contact_VOL_FieldOption] FOREIGN KEY ([VolContactType]) REFERENCES [dbo].[VOL_FieldOption] ([FieldName]) ON UPDATE CASCADE
 GO
+ALTER TABLE [dbo].[GBL_Contact] WITH NOCHECK ADD CONSTRAINT [FK_GBL_Contact_VOL_Opportunity_Description] FOREIGN KEY ([VolVNUM], [LangID]) REFERENCES [dbo].[VOL_Opportunity_Description] ([VNUM], [LangID]) NOT FOR REPLICATION
+GO
 ALTER TABLE [dbo].[GBL_Contact] ADD CONSTRAINT [FK_GBL_Contact_VOL_Opportunity_Description_OPDID] FOREIGN KEY ([VolOPDID]) REFERENCES [dbo].[VOL_Opportunity_Description] ([OPD_ID]) ON DELETE CASCADE
-
-
 GO
 ALTER TABLE [dbo].[GBL_Contact] NOCHECK CONSTRAINT [FK_GBL_Contact_GBL_Contact_Honorific]
 GO
+ALTER TABLE [dbo].[GBL_Contact] NOCHECK CONSTRAINT [FK_GBL_Contact_VOL_Opportunity_Description]
+GO
 GRANT SELECT ON  [dbo].[GBL_Contact] TO [cioc_cic_search_role]
-GRANT SELECT ON  [dbo].[GBL_Contact] TO [cioc_login_role]
-GRANT INSERT ON  [dbo].[GBL_Contact] TO [cioc_login_role]
+GO
 GRANT DELETE ON  [dbo].[GBL_Contact] TO [cioc_login_role]
+GO
+GRANT INSERT ON  [dbo].[GBL_Contact] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[GBL_Contact] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[GBL_Contact] TO [cioc_login_role]
+GO
 GRANT SELECT ON  [dbo].[GBL_Contact] TO [cioc_vol_search_role]
 GO
