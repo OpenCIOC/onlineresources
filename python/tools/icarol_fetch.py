@@ -99,8 +99,8 @@ def prepare_session(args):
 		'Accept': 'application/json'
 	})
 	args.session = session
-	args.host = get_config_item(args, 'o211_api_host')
-	args.key = get_config_item(args, 'o211_api_key', '')
+	args.host = get_config_item(args, 'o211_import_api_host')
+	args.key = get_config_item(args, 'o211_import_api_key', '')
 
 
 def parse_args(argv):
