@@ -362,8 +362,8 @@ def main(argv):
 		return 1
 
 	if args.email:
-		if not get_config_item(args, 'airs_export_notify_emails', None):
-			sys.stderr.write('ERROR: No value for airs_export_notify_emails set in config\n')
+		if not get_config_item(args, 'o211_import_notify_emails', None):
+			sys.stderr.write('ERROR: No value for o211_import_notify_emails set in config\n')
 			return 1
 		else:
 			sys.stdout = StringIO()
