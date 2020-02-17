@@ -199,7 +199,8 @@ CREATE TABLE [dbo].[CIC_iCarolImport]
 [SYNC_DATE] [smalldatetime] NULL,
 [IMPORTED_DATE] [smalldatetime] NULL,
 [RECORD_OWNER] [char] (3) COLLATE Latin1_General_100_CI_AI NULL,
-[InternalMemoGUID] [uniqueidentifier] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_InternalMemoGUID] DEFAULT (newid())
+[InternalMemoGUID] [uniqueidentifier] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_InternalMemoGUID] DEFAULT (newid()),
+[DELETION_DATE] [smalldatetime] NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_iCarolImport] ADD CONSTRAINT [PK_CIC_iCarolImport] PRIMARY KEY CLUSTERED  ([ResourceAgencyNum], [LangID]) ON [PRIMARY]

@@ -137,6 +137,12 @@ FieldOrder = [
 	"Custom_Facebook", "Custom_Instagram", "Custom_LinkedIn", "Custom_Twitter", "Custom_YouTube"
 ]
 
+AllRecordsFieldOrder = [
+	"ResourceAgencyNum", "ParentAgencyNum", "ConnectsToSiteNum",
+	"ConnectsToProgramNum", "UniqueIDPriorSystem", "PublicName",
+	"TaxonomyLevelName", "iCarolManaged", "RecordOwner", "UpdatedOn",
+]
+
 dts_file_template = os.path.join(os.environ.get('CIOC_UDL_BASE', r'd:\UDLS'), '%s', 'cron_job_runner.UDL')
 
 
@@ -393,19 +399,8 @@ def _to_unicode(value):
 	return invalid_xml_chars.sub(u'', value).strip()
 
 
-def to_csv(records, target_file):
-	headings = FieldOrder
+def to_csv(records, target_file, headings):
 	fn = itemgetter(*headings)
-
-	if False:
-		for batch in pager(records, 100):
-			segment = u'<#>'.join(u'{#}'.join(_to_unicode(y) for y in fn(x)) for x in batch).encode('utf-8')
-			target_file.write(
-				segment
-			)
-			target_file.write('<#>')
-
-		return
 
 	writer = UTF8CSVWriter(target_file, dialect=SQLServerBulkDialect)
 	out_stream = (map(_to_unicode, fn(x)) for x in records)
@@ -413,11 +408,12 @@ def to_csv(records, target_file):
 
 
 class CsvFileWriter(object):
-	def __init__(self, context):
+	def __init__(self, context, headings):
 		self.target_dir = context.csv_target_dir
 		self.source_dir = context.csv_source_dir
 		self.fd = None
 		self.full_name = None
+		self.headings = headings
 
 	def __enter__(self):
 		self.fd = tempfile.NamedTemporaryFile(suffix='.csv', dir=self.target_dir, delete=False)
@@ -435,7 +431,7 @@ class CsvFileWriter(object):
 		if not self.fd:
 			raise Exception('File not opened yet')
 
-		to_csv(records, self.fd)
+		to_csv(records, self.fd, self.headings)
 
 	def close(self):
 		if self.fd:
@@ -445,6 +441,13 @@ class CsvFileWriter(object):
 	@property
 	def source_file(self):
 		return os.path.join(self.source_dir, os.path.basename(self.full_name))
+
+
+def push_bulk(context, conn, sql, headings, batch, *args):
+	with CsvFileWriter(context, headings) as writer:
+		writer.serialize_records(batch)
+		writer.close()
+		conn.execute(sql, *(args + (writer.source_file,)))
 
 
 def push_to_database(context, lang, queue):
@@ -461,13 +464,18 @@ def push_to_database(context, lang, queue):
 				return
 
 			try:
-				with CsvFileWriter(context) as writer:
-					writer.serialize_records(batch)
-					writer.close()
-					conn.execute(sql, next_modified, writer.source_file)
+				push_bulk(context, conn, sql, FieldOrder, batch, next_modified)
 			except Exception:
 				traceback.print_exc()
 			queue.task_done()
+
+
+def push_all_records(conext, lang, all_records):
+	sql = u'''
+	EXEC sp_CIC_iCarolImport_AllRecords ?
+	'''
+	with get_bulk_connection(language=lang.sql_language) as conn:
+		push_bulk(conext, conn, sql, AllRecordsFieldOrder, all_records)
 
 
 def fetch_from_o211(context, lang):
@@ -488,6 +496,9 @@ def fetch_from_o211(context, lang):
 
 	queue.put(None)
 	queue.join()
+
+	all_records = get_record_list(context.args, 'any', lang.language_name)
+	push_all_records(context, lang, all_records)
 
 
 def check_db_state(context):
@@ -524,9 +535,9 @@ def update_db_state(context):
 	if not context.args.fetch_mechanism:
 		return
 
-	sql = 'UPDATE CIC_iCarolImportMeta SET LastFetched=? WHERE Mechanism=?'
+	sql = 'EXEC dbo.sp_CIC_iCarolImportMeta_u ?, ?'
 	with context.connmgr.get_connection('admin') as conn:
-		conn.execute(sql, context.args.next_modified_since, context.args.fetch_mechanism)
+		conn.execute(sql, context.args.fetch_mechanism, context.args.next_modified_since)
 
 
 def main(argv):
