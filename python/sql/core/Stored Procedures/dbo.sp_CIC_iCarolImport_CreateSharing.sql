@@ -156,7 +156,7 @@ SELECT (
 		(SELECT COALESCE(a.WebsiteAddress, '') AS [@V] FOR XML PATH('WWW_ADDRESS'), TYPE)
 
 	FROM dbo.CIC_iCarolImport AS a
-	WHERE a.service=0 AND a.langid=0 AND TaxonomyLevelName='Agency'
+	WHERE a.langid=0 AND TaxonomyLevelName='Agency'
 	FOR XML PATH('RECORD'), TYPE
 ), 
 (
@@ -302,7 +302,7 @@ SELECT (
 	FROM dbo.CIC_iCarolImport s
 	LEFT JOIN dbo.CIC_iCarolImport a
 		ON s.ParentAgencyNum=a.ResourceAgencyNum AND a.TaxonomyLevelName='Agency' AND a.LangID=0
-	WHERE s.service=0 AND s.langid=0 AND s.TaxonomyLevelName='Site'
+	WHERE s.langid=0 AND s.TaxonomyLevelName='Site'
 	FOR XML PATH('RECORD'), TYPE
 ), 
 (
@@ -463,7 +463,7 @@ SELECT (
 		ON s.ResourceAgencyNum=pas.ConnectsToSiteNum AND s.TaxonomyLevelName='Site' AND s.langid=0
 	LEFT JOIN dbo.CIC_iCarolImport a
 		ON pas.ParentAgencyNum=a.ResourceAgencyNum AND a.TaxonomyLevelName='Agency' AND a.LangID=0
-	WHERE pas.service=0 AND pas.langid=0 AND pas.TaxonomyLevelName='ProgramAtSite'
+	WHERE pas.langid=0 AND pas.TaxonomyLevelName='ProgramAtSite'
 	FOR XML PATH('RECORD'), TYPE
 )
  FOR XML PATH(''), ROOT('ROOT')

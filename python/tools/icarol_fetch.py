@@ -25,11 +25,14 @@ from collections import namedtuple
 from cStringIO import StringIO
 import os
 import sys
+import tempfile
 import traceback
 import urllib
+import pyodbc
 from collections import OrderedDict
 from datetime import datetime
 from threading import Thread
+from operator import itemgetter
 
 import isodate
 
@@ -49,6 +52,8 @@ from tools.toolslib import Context
 
 from cioc.core import constants as const  # , email
 from cioc.core import syslanguage
+from cioc.core.utf8csv import UTF8CSVWriter, SQLServerBulkDialect
+from cioc.core.connection import ConnectionError
 
 
 invalid_xml_chars = re.compile(u'[\x00-\x08\x0c\x0e-\x19]')
@@ -61,6 +66,110 @@ _lang_settings = {
 	'en-CA': LangSetting('en-CA', '', 'en', syslanguage.SQLALIAS_ENGLISH),
 	'fr-CA': LangSetting('fr-CA', '_frCA', 'fr', syslanguage.SQLALIAS_FRENCH)
 }
+
+FieldOrder = [
+	"ResourceAgencyNum", "ImportDate", "ImportStatus", "Refresh",
+	"PublicName", "AlternateName", "OfficialName", "TaxonomyLevelName",
+	"ParentAgency", "ParentAgencyNum", "RecordOwner", "UniqueIDPriorSystem",
+	"MailingAttentionName", "MailingAddress1", "MailingAddress2",
+	"MailingCity", "MailingStateProvince", "MailingPostalCode",
+	"MailingCountry", "MailingAddressIsPrivate", "PhysicalAddress1",
+	"PhysicalAddress2", "PhysicalCity", "PhysicalCounty",
+	"PhysicalStateProvince", "PhysicalPostalCode", "PhysicalCountry",
+	"PhysicalAddressIsPrivate", "OtherAddress1", "OtherAddress2", "OtherCity",
+	"OtherCounty", "OtherStateProvince", "OtherPostalCode", "OtherCountry",
+	"Latitude", "Longitude", "HoursOfOperation", "Phone1Number", "Phone1Name",
+	"Phone1Description", "Phone1IsPrivate", "Phone1Type", "Phone2Number",
+	"Phone2Name", "Phone2Description", "Phone2IsPrivate", "Phone2Type",
+	"Phone3Number", "Phone3Name", "Phone3Description", "Phone3IsPrivate",
+	"Phone3Type", "Phone4Number", "Phone4Name", "Phone4Description",
+	"Phone4IsPrivate", "Phone4Type", "Phone5Number", "Phone5name",
+	"Phone5Description", "Phone5IsPrivate", "Phone5Type", "PhoneFax",
+	"PhoneFaxDescription", "PhoneFaxIsPrivate", "PhoneTTY",
+	"PhoneTTYDescription", "PhoneTTYIsPrivate", "PhoneTollFree",
+	"PhoneTollFreeDescription", "PhoneTollFreeIsPrivate", "PhoneNumberHotline",
+	"PhoneNumberHotlineDescription", "PhoneNumberHotlineIsPrivate",
+	"PhoneNumberBusinessLine", "PhoneNumberBusinessLineDescription",
+	"PhoneNumberBusinessLineIsPrivate", "PhoneNumberOutOfArea",
+	"PhoneNumberOutOfAreaDescription", "PhoneNumberOutOfAreaIsPrivate",
+	"PhoneNumberAfterHours", "PhoneNumberAfterHoursDescription",
+	"PhoneNumberAfterHoursIsPrivate", "EmailAddressMain", "WebsiteAddress",
+	"AgencyStatus", "AgencyClassification", "AgencyDescription", "SearchHints",
+	"CoverageArea", "CoverageAreaText", "Eligibility",
+	"EligibilityAdult", "EligibilityChild", "EligibilityFamily",
+	"EligibilityFemale", "EligibilityMale", "EligibilityTeen",
+	"SeniorWorkerName", "SeniorWorkerTitle", "SeniorWorkerEmailAddress",
+	"SeniorWorkerPhoneNumber", "SeniorWorkerIsPrivate", "MainContactName",
+	"MainContactTitle", "MainContactEmailAddress", "MainContactPhoneNumber",
+	"MainContactType", "MainContactIsPrivate", "LicenseAccreditation",
+	"IRSStatus", "FEIN", "YearIncorporated", "AnnualBudgetTotal",
+	"LegalStatus", "SourceOfFunds", "ExcludeFromWebsite",
+	"ExcludeFromDirectory", "DisabilitiesAccess",
+	"PhysicalLocationDescription", "BusServiceAccess",
+	"PublicAccessTransportation", "PaymentMethods", "FeeStructureSource",
+	"ApplicationProcess", "ResourceInfo", "DocumentsRequired",
+	"LanguagesOffered", "LanguagesOfferedList", "AvailabilityNumberOfTimes",
+	"AvailabilityFrequency", "AvailabilityPeriod",
+	"ServiceNotAlwaysAvailability", "CapacityType", "ServiceCapacity",
+	"NormalWaitTime", "TemporaryMessage", "TemporaryMessageAppears",
+	"TemporaryMessageExpires", "EnteredOn", "UpdatedOn", "MadeInactiveOn",
+	"InternalNotes", "InternalNotesForEditorsAndViewers",
+	"HighlightedResource", "LastVerifiedOn", "LastVerifiedByName",
+	"LastVerifiedByTitle", "LastVerifiedByPhoneNumber",
+	"LastVerifiedByEmailAddress", "LastVerificationApprovedBy",
+	"AvailableForDirectory", "AvailableForReferral", "AvailableForResearch",
+	"PreferredProvider", "ConnectsToSiteNum", "ConnectsToProgramNum",
+	"LanguageOfRecord", "CurrentWorkflowStepCode", "VolunteerOpportunities",
+	"VolunteerDuties", "IsLinkOnly", "ProgramAgencyNamePublic",
+	"SiteAgencyNamePublic", "Categories", "TaxonomyTerm", "TaxonomyTerms",
+	"TaxonomyTermsNotDeactivated", "TaxonomyCodes", "Coverage", "Hours",
+	"Custom_A1) Does your organization consent to participate in the",
+	"Custom_Public Comments", "Custom_A2) What is the likelihood that within the next 2-5 year",
+	"Custom_S1) Does your organization own/rent/sublease the space",
+	"Custom_S2) If your organization rents the space please state fr",
+	"Custom_S3) What type of facilities do you have at the space (Ch",
+	"Custom_S4) What is the approximate square footage of the space",
+	"Custom_S5) In what type of building is the space located",
+	"Custom_S6) If your organization plans to move from the space in",
+	"Custom_Former Names", "Custom_Headings",
+	"Custom_Legal Name", "Custom_Pub Codes", "Custom_Record Owner (211 Central)",
+	"Custom_Record Owner (controlled)", "Custom_SINV", "Custom_iCarol-managed record",
+	"Custom_Facebook", "Custom_Instagram", "Custom_LinkedIn", "Custom_Twitter", "Custom_YouTube"
+]
+
+dts_file_template = os.path.join(os.environ.get('CIOC_UDL_BASE', r'd:\UDLS'), '%s', 'cron_job_runner.UDL')
+
+
+def get_bulk_connection(language):
+	dts = dts_file_template % const._app_name
+	with open(dts) as dts_file:
+
+		# the [1:] is there to drop the bom from the start of the file
+		connstr = dts_file.read().decode('utf_16_le')[1:].replace(u'\r', u'').split(u'\n')
+
+	for line in connstr:
+		if line and line.startswith((u';', u'[')):
+			continue
+
+		break
+
+	settings = dict(x.split(u'=') for x in line.split(';'))
+	settings = [
+		('Driver', '{SQL Server Native Client 10.0}'),
+		('Server', settings['Data Source']),
+		('Database', settings['Initial Catalog']),
+		('UID', settings['User ID']),
+		('PWD', settings['Password'])
+	]
+	connstr = ';'.join('='.join(x) for x in settings)
+
+	try:
+		conn = pyodbc.connect(connstr, autocommit=True, unicode_results=True)
+		conn.execute("SET LANGUAGE '" + language + "'")
+	except pyodbc.Error as e:
+		raise ConnectionError(e)
+
+	return conn
 
 
 class FileWriteDetector(object):
@@ -211,7 +320,7 @@ def get_records(args, id, lang='en'):
 
 
 def fetch_record_batches(args, record_ids, lang):
-	for page in pager(record_ids, 100):
+	for page in pager(record_ids, 500):
 		for record in get_records(args, page, lang.language_name):
 			yield record
 
@@ -253,7 +362,7 @@ def _to_xml(obj, parent=None, record_id=None):
 		parent.text = obj
 	except Exception:
 		try:
-			parent.text = invalid_xml_chars.sub(obj, u'').strip()
+			parent.text = invalid_xml_chars.sub(u'', obj).strip()
 		except Exception as e:
 			print 'error converting to xml:', record_id, e, repr(obj)
 			raise
@@ -270,12 +379,74 @@ def to_xml(obj):
 	return ET.tostring(_to_xml(obj))
 
 
-def push_to_database(context, lang, queue, service):
+def _to_unicode(value):
+	if value is None:
+		return u''
+
+	value = unicode(value)
+	return invalid_xml_chars.sub(u'', value).strip()
+
+
+def to_csv(records, target_file):
+	headings = FieldOrder
+	fn = itemgetter(*headings)
+
+	if False:
+		for batch in pager(records, 100):
+			segment = u'<#>'.join(u'{#}'.join(_to_unicode(y) for y in fn(x)) for x in batch).encode('utf-8')
+			target_file.write(
+				segment
+			)
+			target_file.write('<#>')
+
+		return
+
+	writer = UTF8CSVWriter(target_file, dialect=SQLServerBulkDialect)
+	out_stream = (map(_to_unicode, fn(x)) for x in records)
+	writer.writerows(out_stream)
+
+
+class CsvFileWriter(object):
+	def __init__(self, context):
+		self.target_dir = context.csv_target_dir
+		self.source_dir = context.csv_source_dir
+		self.fd = None
+		self.full_name = None
+
+	def __enter__(self):
+		self.fd = tempfile.NamedTemporaryFile(suffix='.csv', dir=self.target_dir, delete=False)
+		self.full_name = self.fd.name
+		return self
+
+	def __exit__(self, type, value, tb):
+		if self.full_name:
+			try:
+				os.remove(self.full_name)
+			except Exception:
+				pass
+
+	def serialize_records(self, records):
+		if not self.fd:
+			raise Exception('File not opened yet')
+
+		to_csv(records, self.fd)
+
+	def close(self):
+		if self.fd:
+			self.fd.close()
+			self.fd = None
+
+	@property
+	def source_file(self):
+		return os.path.join(self.source_dir, os.path.basename(self.full_name))
+
+
+def push_to_database(context, lang, queue):
 	sql = u'''
-	EXEC sp_CIC_iCarolImport_Incremental ?, ?, ?
+	EXEC sp_CIC_iCarolImport_Incremental ?, ?
 	'''
 	next_modified = context.args.next_modified_since
-	with context.connmgr.get_connection('admin', language=lang.sql_language) as conn:
+	with get_bulk_connection(language=lang.sql_language) as conn:
 
 		while True:
 			batch = queue.get()
@@ -284,8 +455,10 @@ def push_to_database(context, lang, queue, service):
 				return
 
 			try:
-				xml_0 = to_xml(batch)
-				conn.execute(sql, service, next_modified, xml_0)
+				with CsvFileWriter(context) as writer:
+					writer.serialize_records(batch)
+					writer.close()
+					conn.execute(sql, next_modified, writer.source_file)
 			except Exception:
 				traceback.print_exc()
 			queue.task_done()
@@ -300,11 +473,11 @@ def fetch_from_o211(context, lang):
 		return
 
 	queue = Queue(maxsize=2)
-	thread = Thread(target=push_to_database, args=(context, lang, queue, 0))
+	thread = Thread(target=push_to_database, args=(context, lang, queue))
 	thread.daemon = True
 	thread.start()
 
-	for batch in pager(fetch_record_batches(context.args, (x['ResourceAgencyNum'] for x in records), lang), 1000):
+	for batch in pager(fetch_record_batches(context.args, (x['ResourceAgencyNum'] for x in records), lang), 5000):
 		queue.put(batch)
 
 	queue.put(None)
@@ -376,6 +549,8 @@ def main(argv):
 		prepare_session(args)
 		check_db_state(context)
 		format_modified_date(context)
+		context.csv_target_dir = get_config_item(args, 'o211_import_csv_target')
+		context.csv_source_dir = get_config_item(args, 'o211_import_csv_source')
 
 		langs = get_config_item(args, 'o211_import_languages', 'en-CA').split(',')
 		for culture in langs:

@@ -2,7 +2,6 @@ CREATE TABLE [dbo].[CIC_iCarolImport]
 (
 [ResourceAgencyNum] [nvarchar] (50) COLLATE Latin1_General_100_CI_AI NOT NULL,
 [LangID] [smallint] NOT NULL,
-[service] [bit] NOT NULL,
 [ImportDate] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [ImportStatus] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Refresh] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -201,7 +200,7 @@ CREATE TABLE [dbo].[CIC_iCarolImport]
 [IMPORTED_DATE] [smalldatetime] NULL,
 [RECORD_OWNER] [char] (3) COLLATE Latin1_General_100_CI_AI NULL,
 [InternalMemoGUID] [uniqueidentifier] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_InternalMemoGUID] DEFAULT (newid())
-) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[CIC_iCarolImport] ADD CONSTRAINT [PK_CIC_iCarolImport2] PRIMARY KEY CLUSTERED  ([ResourceAgencyNum], [LangID], [service]) ON [PRIMARY]
+ALTER TABLE [dbo].[CIC_iCarolImport] ADD CONSTRAINT [PK_CIC_iCarolImport] PRIMARY KEY CLUSTERED  ([ResourceAgencyNum], [LangID]) ON [PRIMARY]
 GO
