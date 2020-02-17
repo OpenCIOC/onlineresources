@@ -10,6 +10,20 @@ SET NOCOUNT ON
 DECLARE	@Error		INT
 SET @Error = 0
 
+DECLARE @updated AS TABLE
+(
+	ResourceAgencyNum NVARCHAR(50) COLLATE Latin1_General_100_CI_AI  NOT NULL  PRIMARY KEY,
+	TaxonomyLevelName NVARCHAR(MAX) COLLATE Latin1_General_100_CI_AI NULL
+)
+
+UPDATE i SET i.IMPORTED_DATE=GETDATE() 
+OUTPUT deleted.ResourceAgencyNum, deleted.TaxonomyLevelName INTO @updated
+FROM dbo.CIC_iCarolImport i
+INNER JOIN dbo.GBL_BaseTable ib 
+	ON ib.EXTERNAL_ID=i.ResourceAgencyNum
+WHERE i.LangID=@@LANGID AND i.IMPORTED_DATE IS NULL OR i.IMPORTED_DATE < i.SYNC_DATE AND i.TaxonomyLevelName <> 'Program'
+
+
 SELECT m.MemberID,
 (SELECT (
 	-- Agency
@@ -164,6 +178,8 @@ SELECT m.MemberID,
 		(SELECT REPLACE(REPLACE(a.WebsiteAddress, 'https://', ''), 'http://', '') AS [@V] FOR XML PATH('WWW_ADDRESS'), TYPE)
 
 	FROM dbo.CIC_iCarolImport AS a
+	INNER JOIN @updated AS u
+		ON u.ResourceAgencyNum = a.ResourceAgencyNum AND u.TaxonomyLevelName=a.TaxonomyLevelName
 	INNER JOIN dbo.GBL_BaseTable bt ON
 		bt.EXTERNAL_ID=a.ResourceAgencyNum
 	WHERE a.langid=@@LANGID AND a.TaxonomyLevelName='Agency' AND bt.MemberID=m.MemberID
@@ -324,6 +340,8 @@ SELECT m.MemberID,
 		(SELECT REPLACE(REPLACE(COALESCE(s.WebsiteAddress, a.WebsiteAddress), 'https://', ''), 'http://', '') AS [@V] FOR XML PATH('WWW_ADDRESS'), TYPE)
 
 	FROM dbo.CIC_iCarolImport s
+	INNER JOIN @updated AS u
+		ON u.ResourceAgencyNum = s.ResourceAgencyNum AND u.TaxonomyLevelName=s.TaxonomyLevelName
 	INNER JOIN dbo.GBL_BaseTable bt ON
 		bt.EXTERNAL_ID=s.ResourceAgencyNum
 	LEFT JOIN dbo.CIC_iCarolImport a
@@ -497,6 +515,8 @@ SELECT m.MemberID,
 		(SELECT REPLACE(REPLACE(COALESCE(pas.WebsiteAddress, p.WebsiteAddress, s.WebsiteAddress, a.WebsiteAddress), 'https://', ''), 'http://', '') AS [@V] FOR XML PATH('WWW_ADDRESS'), TYPE)
 
 	FROM dbo.CIC_iCarolImport pas
+	INNER JOIN @updated AS u
+		ON u.ResourceAgencyNum = pas.ResourceAgencyNum AND u.TaxonomyLevelName=pas.TaxonomyLevelName
 	INNER JOIN dbo.GBL_BaseTable bt ON
 		bt.EXTERNAL_ID=pas.ResourceAgencyNum
 	LEFT JOIN dbo.CIC_iCarolImport p
