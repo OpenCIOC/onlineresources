@@ -7,9 +7,7 @@
   <DefaultFilegroup>PRIMARY</DefaultFilegroup>
   <DatabaseVersion>12</DatabaseVersion>
   <IsAzure>False</IsAzure>
-  <ScriptFolderType>Default</ScriptFolderType>
   <MaxDataFileSize>10485760</MaxDataFileSize>
-  <ProjectGuid>005b9fd6-d838-4008-baf1-92e32ddf4a84</ProjectGuid>
   <WriteToFileOptions>
     <Prefixes>
       <None>

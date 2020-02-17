@@ -18,7 +18,6 @@ import argparse
 import pprint
 import json
 import time
-import string
 import re
 from Queue import Queue
 from collections import namedtuple
@@ -41,7 +40,6 @@ creationflags = 0
 
 
 import requests
-from lxml import etree as ET
 
 try:
 	import cioc  # NOQA
@@ -54,6 +52,7 @@ from cioc.core import constants as const, email
 from cioc.core import syslanguage
 from cioc.core.utf8csv import UTF8CSVWriter, SQLServerBulkDialect
 from cioc.core.connection import ConnectionError
+from cioc.web.import_.upload import process_import
 
 
 invalid_xml_chars = re.compile(u'[\x00-\x08\x0c\x0e-\x19]')
@@ -228,6 +227,8 @@ def parse_args(argv):
 	parser.add_argument('--modified-since', dest='modified_since', action='store', default=None)
 	parser.add_argument('--fetch-mechanism', dest='fetch_mechanism', action='store', default=None)
 	parser.add_argument('--only-lang', dest='only_lang', action='append', default=[])
+	parser.add_argument('--skip-fetch', dest='skip_fetch', action='store_true', default=False)
+	parser.add_argument('--skip-import', dest='skip_import', action='store_true', default=False)
 
 	args = parser.parse_args(argv)
 	if args.config_prefix and not args.config_prefix.endswith('.'):
@@ -335,60 +336,6 @@ def fetch_record_batches(args, record_ids, lang):
 	for page in pager(record_ids, 500):
 		for record in get_records(args, page, lang.language_name):
 			yield record
-
-
-def _to_xml(obj, parent=None, record_id=None):
-	if parent is None:
-		parent = ET.Element('root')
-
-	if isinstance(obj, dict):
-		record_id = obj.get('ResourceAgencyNum')
-		for key, value in obj.items():
-			if not isinstance(key, basestring):
-				key = unicode(key)
-
-			if key[0] not in string.ascii_letters:
-				key = 'k' + key
-
-			if value:
-				sub = ET.SubElement(parent, 'field', name=key)
-				_to_xml(value, sub, record_id)
-
-		return parent
-
-	if isinstance(obj, (list, tuple)):
-		for value in obj:
-			sub = ET.SubElement(parent, 'item')
-			_to_xml(value, sub, record_id)
-
-		return parent
-
-	if obj is None:
-		return parent
-
-	obj = unicode(obj).strip()
-	if not obj:
-		return parent
-
-	try:
-		parent.text = obj
-	except Exception:
-		try:
-			parent.text = invalid_xml_chars.sub(u'', obj).strip()
-		except Exception as e:
-			print 'error converting to xml:', record_id, e, repr(obj)
-			raise
-
-		if record_id:
-			print 'Corrected data that was not valid in record id %s: %r' % (record_id, obj)
-		else:
-			print 'Corrected data that was not valid unknown record:', repr(obj)
-
-	return parent
-
-
-def to_xml(obj):
-	return ET.tostring(_to_xml(obj))
 
 
 def _to_unicode(value):
@@ -540,6 +487,42 @@ def update_db_state(context):
 		conn.execute(sql, context.args.fetch_mechanism, context.args.next_modified_since)
 
 
+def generate_and_upload_import(context, lang):
+	sql = 'EXEC sp_CIC_iCarolImport_CreateSharing'
+	with context.connmgr.get_connection('admin') as conn:
+		cursor = conn.execute(sql)
+		for member in cursor.fetchall():
+			print "process_import", member.MemberID
+			if not member.records:
+				print "process_import skiping", member.MemberID
+				continue
+
+			print "Importing for MemberID", member.MemberID
+			with tempfile.TemporaryFile() as fd:
+				fd.write(u'''<?xml version="1.0" encoding="UTF-8"?>
+				<root xmlns="urn:ciocshare-schema"><DIST_CODE_LIST/><PUB_CODE_LIST/>'''.encode('utf8'))
+				fd.write(member.records.encode('utf8'))
+				fd.write(u'</root>'.encode('utf8'))
+				fd.seek(0)
+
+				error_log, total_inserted = process_import(
+					'icarol_import_%s_%s.xml' % (lang.language_name, context.args.next_modified_since.isoformat()),
+					fd, member.MemberID, const.DM_CIC, const.DM_S_CIC, "(import system)",
+					'iCarol Import %s %s' % (lang.language_name, context.args.next_modified_since.isoformat()),
+					context.connmgr, lambda x: x
+				)
+
+			print "Import Complete for MemberID %s. %s records imported" % (member.MemberID, total_inserted)
+			if error_log:
+				print >>sys.stderr, "A problem was encountered validating input for MemberID %s, see below." % (member.MemberID,)
+
+			for record, errmsg in error_log:
+				if record:
+					print >>sys.stderr, u': '.join((record, errmsg))
+				else:
+					print >>sys.stderr, errmsg
+
+
 def main(argv):
 	args = parse_args(argv)
 	context = Context(args)
@@ -577,7 +560,10 @@ def main(argv):
 
 			lang = _lang_settings.get(culture.strip(), _lang_settings['en-CA'])
 
-			fetch_from_o211(context, lang)
+			if not args.skip_fetch:
+				fetch_from_o211(context, lang)
+			if not args.skip_import:
+				generate_and_upload_import(context, lang)
 
 		update_db_state(context)
 	except Exception:
