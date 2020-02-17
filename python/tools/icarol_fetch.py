@@ -50,7 +50,7 @@ except ImportError:
 
 from tools.toolslib import Context
 
-from cioc.core import constants as const  # , email
+from cioc.core import constants as const, email
 from cioc.core import syslanguage
 from cioc.core.utf8csv import UTF8CSVWriter, SQLServerBulkDialect
 from cioc.core.connection import ConnectionError
@@ -265,6 +265,12 @@ class fakerequest(object):
 
 	class pageinfo(object):
 		DbArea = const.DM_CIC
+
+
+def email_log(args, outputstream, is_error):
+	author = get_config_item(args, 'o211_import_notify_from', 'admin@cioc.ca')
+	to = [x.strip() for x in get_config_item(args, 'o211_import_notify_emails', 'admin@cioc.ca').split(',')]
+	email.send_email(fakerequest(args.config), author, to, 'Import from iCarol%s' % (' -- ERRORS!' if is_error else ''), outputstream.getvalue())
 
 
 def get_record_list(args, modifiedSince=None, lang='en'):
@@ -532,12 +538,12 @@ def main(argv):
 	except Exception:
 		sys.stderr.write('ERROR: Could not process config file:\n')
 		sys.stderr.write(traceback.format_exc())
-		return 1
+		return 2
 
 	if args.email:
 		if not get_config_item(args, 'o211_import_notify_emails', None):
 			sys.stderr.write('ERROR: No value for o211_import_notify_emails set in config\n')
-			return 1
+			return 3
 		else:
 			sys.stdout = StringIO()
 			sys.stderr = sys.stdout
@@ -569,7 +575,13 @@ def main(argv):
 	if sys.stderr.is_dirty():
 		retval = 1
 
-	# TODO: Add email sending.
+	if args.email:
+		email_log(
+			args,
+			sys.stdout,
+			sys.stderr.is_dirty()
+		)
+
 	return retval
 
 
