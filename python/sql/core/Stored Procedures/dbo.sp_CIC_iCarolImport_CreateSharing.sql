@@ -42,6 +42,20 @@ SELECT m.MemberID,
 				)
 			FOR XML PATH('ALT_ORG'), TYPE),
 		(SELECT a.ApplicationProcess AS [@V] FOR XML PATH('APPLICATION'), TYPE),
+		(SELECT 
+			(SELECT [1] AS [@PRV], COALESCE([5], [4], [3], [2], [1]) AS [@V] FROM (
+				SELECT areas.ItemID AS TotalItemID, ROW_NUMBER() OVER (PARTITION BY areas.ItemID ORDER BY (SELECT NULL)) AS cm_level, levels.* 
+				FROM dbo.fn_GBL_ParseVarCharIDList(a.Coverage, ';') AS areas
+				CROSS APPLY dbo.fn_GBL_ParseVarCharIDList(areas.ItemID, '-') AS levels
+				) t 
+				PIVOT(
+				MIN(ItemID)
+				 FOR cm_level IN (
+						[1], [2], [3], [4], [5]
+				 )
+			) AS pivot_table
+			FOR XML PATH('CM'), TYPE)
+		FOR XML PATH ('AREAS_SERVED'), TYPE),
 		(SELECT a.BusServiceAccess AS [@N] FOR XML PATH('BUS_ROUTES'),TYPE),
 		(SELECT a.InternalNotes AS [@V] FOR XML PATH('COMMENTS'), TYPE),
 		(SELECT 'E' AS [@LANG], a.MainContactName AS [@NMLAST], a.MainContactTitle AS [@TTL], a.MainContactPhoneNumber AS [@PH1N], a.MainContactEmailAddress AS [@EML]
@@ -202,6 +216,20 @@ SELECT m.MemberID,
 				)
 			FOR XML PATH('ALT_ORG'), TYPE),
 		(SELECT COALESCE(s.ApplicationProcess, a.ApplicationProcess) AS [@V] FOR XML PATH('APPLICATION'), TYPE),
+		(SELECT
+			(SELECT [1] AS [@PRV], COALESCE([5], [4], [3], [2], [1]) AS [@V] FROM (
+				SELECT areas.ItemID AS TotalItemID, ROW_NUMBER() OVER (PARTITION BY areas.ItemID ORDER BY (SELECT NULL)) AS cm_level, levels.* 
+				FROM dbo.fn_GBL_ParseVarCharIDList(COALESCE(s.Coverage, a.Coverage), ';') AS areas
+				CROSS APPLY dbo.fn_GBL_ParseVarCharIDList(areas.ItemID, '-') AS levels
+				) t 
+				PIVOT(
+				MIN(ItemID)
+				 FOR cm_level IN (
+						[1], [2], [3], [4], [5]
+				 )
+			) AS pivot_table
+			FOR XML PATH('CM'), TYPE)
+		FOR XML PATH ('AREAS_SERVED'), TYPE),
 		(SELECT COALESCE(s.BusServiceAccess, a.BusServiceAccess) AS [@N] FOR XML PATH('BUS_ROUTES'),TYPE),
 		(SELECT COALESCE(s.InternalNotes, a.InternalNotes) AS [@V] FOR XML PATH('COMMENTS'), TYPE),
 		(SELECT 'E' AS [@LANG], COALESCE(s.MainContactName, a.MainContactName) AS [@NMLAST], COALESCE(s.MainContactTitle, a.MainContactTitle) AS [@TTL], COALESCE(s.MainContactPhoneNumber, a.MainContactPhoneNumber) AS [@PH1N], COALESCE(s.MainContactEmailAddress, a.MainContactEmailAddress) AS [@EML]
@@ -366,6 +394,20 @@ SELECT m.MemberID,
 				)
 			FOR XML PATH('ALT_ORG'), TYPE),
 		(SELECT COALESCE(pas.ApplicationProcess, pas.ApplicationProcess, s.ApplicationProcess, a.ApplicationProcess) AS [@V] FOR XML PATH('APPLICATION'), TYPE),
+		(SELECT
+			(SELECT [1] AS [@PRV], COALESCE([5], [4], [3], [2], [1]) AS [@V] FROM (
+				SELECT areas.ItemID AS TotalItemID, ROW_NUMBER() OVER (PARTITION BY areas.ItemID ORDER BY (SELECT NULL)) AS cm_level, levels.* 
+				FROM dbo.fn_GBL_ParseVarCharIDList(COALESCE(pas.Coverage, p.Coverage, s.Coverage, a.Coverage), ';') AS areas
+				CROSS APPLY dbo.fn_GBL_ParseVarCharIDList(areas.ItemID, '-') AS levels
+				) t 
+				PIVOT(
+				MIN(ItemID)
+				 FOR cm_level IN (
+						[1], [2], [3], [4], [5]
+				 )
+			) AS pivot_table
+			FOR XML PATH('CM'), TYPE)
+		FOR XML PATH ('AREAS_SERVED'), TYPE),
 		(SELECT COALESCE(pas.BusServiceAccess, p.BusServiceAccess, s.BusServiceAccess, a.BusServiceAccess) AS [@N] FOR XML PATH('BUS_ROUTES'),TYPE),
 		(SELECT COALESCE(pas.InternalNotes, p.InternalNotes, s.InternalNotes, a.InternalNotes) AS [@V] FOR XML PATH('COMMENTS'), TYPE),
 		(SELECT 'E' AS [@LANG], COALESCE(pas.MainContactName, p.MainContactName, s.MainContactName, a.MainContactName) AS [@NMLAST], COALESCE(pas.MainContactTitle, p.MainContactTitle, s.MainContactTitle, a.MainContactTitle) AS [@TTL], COALESCE(pas.MainContactPhoneNumber, p.MainContactPhoneNumber, s.MainContactPhoneNumber, a.MainContactPhoneNumber) AS [@PH1N], COALESCE(pas.MainContactEmailAddress, p.MainContactEmailAddress, s.MainContactEmailAddress, a.MainContactEmailAddress) AS [@EML]
