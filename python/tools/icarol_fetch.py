@@ -518,9 +518,9 @@ def generate_and_upload_import(context, lang):
 
 			for record, errmsg in error_log:
 				if record:
-					print >>sys.stderr, u': '.join((record, errmsg))
+					print >>sys.stderr, u': '.join((record, errmsg)).encode('utf8')
 				else:
-					print >>sys.stderr, errmsg
+					print >>sys.stderr, errmsg.encode('utf8')
 
 
 def main(argv):
