@@ -219,7 +219,7 @@ If Not bError Then
 						updating: <%=JsQs(TXT_GEOCODE_UPDATING)%>,
 						unknown: <%=JsQs(TXT_GEOCODE_UNKNOWN_ADDRESS) %>,
 						error_unknown_address: <%=JsQs(TXT_GEOCODE_UNKNOWN_ADDRESS) %>,
-						error_map_key_fail: <%= JsQs(TXT_GEOCODE_TOO_MANY_QUERIES) %>,
+						error_map_key_fail: <%= JsQs(TXT_GEOCODE_MAP_KEY_FAIL) %>,
 						error_too_many_queries: <%= JsQs(TXT_GEOCODE_TOO_MANY_QUERIES) %>,
 						error_unknown_error: <%= JsQs(TXT_GEOCODE_UNKNOWN_ERROR & TXT_COLON) %>,
 						error_server: <%= JsQs(TXT_SERVER_ERROR) %>
