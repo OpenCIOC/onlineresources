@@ -47,7 +47,7 @@ _xmlschema_mtime = None
 
 def get_xmlschema():
 	global _xmlschema, _xmlschema_elements, _xmlschema_mtime
-	schema_path = os.path.join('..', 'import', 'cioc_schema.xsd')
+	schema_path = os.path.join(const._app_path, 'import', 'cioc_schema.xsd')
 	mtime = os.path.getmtime(schema_path)
 
 	if _xmlschema is None or mtime != _xmlschema_mtime:
