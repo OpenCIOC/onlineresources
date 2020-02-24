@@ -2600,7 +2600,7 @@ SELECT m.*,
 		bt.EXTERNAL_ID=a.ResourceAgencyNum
 	LEFT JOIN dbo.CIC_iCarolImportRollup AS f
 		ON a.ResourceAgencyNum=f.ResourceAgencyNum AND a.LangID=0 AND f.LangID=2
-	WHERE bt.MemberID=m.MemberID
+	WHERE bt.MemberID=m.MemberID AND a.LangID=0
 	FOR XML PATH('RECORD'), TYPE
 )
 	FOR XML PATH('')
