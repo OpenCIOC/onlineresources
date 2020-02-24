@@ -573,7 +573,9 @@ def main(argv):
 		if not args.skip_import:
 			generate_and_upload_import(context)
 
-		update_db_state(context)
+		if not args.skip_fetch:
+			# we only want to update the High Water Mark when we actually fetch data.
+			update_db_state(context)
 	except Exception:
 		traceback.print_exc()
 
