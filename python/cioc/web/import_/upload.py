@@ -264,6 +264,8 @@ def _handle_record(self, element, conn, EFID, dm, id_column='NUM'):
 
 	if ERID:
 		conn.execute('EXEC dbo.sp_%s_ImportEntry_Data_Language_i ?, ?, ?, ?, ?, ?, ?' % dm, ERID, has_english, has_french, non_public_e, non_public_f, deletion_date_e, deletion_date_f)
+	else:
+		print 'NO ERID, so NO Language import'
 
 	self.total_inserted += 1
 

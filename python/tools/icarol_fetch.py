@@ -487,17 +487,19 @@ def update_db_state(context):
 		conn.execute(sql, context.args.fetch_mechanism, context.args.next_modified_since)
 
 
-def generate_and_upload_import(context, lang):
+def generate_and_upload_import(context):
 	sql = 'EXEC sp_CIC_iCarolImport_CreateSharing'
+	total_import_count = 0
 	with context.connmgr.get_connection('admin') as conn:
 		cursor = conn.execute(sql)
 		for member in cursor.fetchall():
-			print "process_import", member.MemberID
+			member_name = member.DefaultEmailNameCIC or member.BaseURLCIC or member.MemberID
 			if not member.records:
-				print "process_import skiping", member.MemberID
+				print "No Records for %s, skiping" % (member_name,)
 				continue
+			else:
+				print "Processing Imports for %s" % (member_name,)
 
-			print "Importing for MemberID", member.MemberID
 			with tempfile.TemporaryFile() as fd:
 				fd.write(u'''<?xml version="1.0" encoding="UTF-8"?>
 				<root xmlns="urn:ciocshare-schema"><DIST_CODE_LIST/><PUB_CODE_LIST/>'''.encode('utf8'))
@@ -506,21 +508,26 @@ def generate_and_upload_import(context, lang):
 				fd.seek(0)
 
 				error_log, total_inserted = process_import(
-					'icarol_import_%s_%s.xml' % (lang.language_name, context.args.next_modified_since.isoformat()),
+					'icarol_import_%s.xml' % (context.args.next_modified_since.isoformat(),),
 					fd, member.MemberID, const.DM_CIC, const.DM_S_CIC, "(import system)",
-					'iCarol Import %s %s' % (lang.language_name, context.args.next_modified_since.isoformat()),
+					'iCarol Import %s' % (context.args.next_modified_since.isoformat(),),
 					context.connmgr, lambda x: x
 				)
 
-			print "Import Complete for MemberID %s. %s records imported" % (member.MemberID, total_inserted)
+			total_import_count += total_inserted
+			print "Import Complete for Member %s. %s records imported" % (member_name, total_inserted)
 			if error_log:
-				print >>sys.stderr, "A problem was encountered validating input for MemberID %s, see below." % (member.MemberID,)
+				print >>sys.stderr, "A problem was encountered validating input for Member %s, see below." % (member_name,)
 
 			for record, errmsg in error_log:
 				if record:
 					print >>sys.stderr, u': '.join((record, errmsg)).encode('utf8')
 				else:
 					print >>sys.stderr, errmsg.encode('utf8')
+
+			print
+
+	print "Completed Processing Imports. %s Records imported" % (total_import_count,)
 
 
 def main(argv):
@@ -562,8 +569,9 @@ def main(argv):
 
 			if not args.skip_fetch:
 				fetch_from_o211(context, lang)
-			if not args.skip_import:
-				generate_and_upload_import(context, lang)
+
+		if not args.skip_import:
+			generate_and_upload_import(context)
 
 		update_db_state(context)
 	except Exception:

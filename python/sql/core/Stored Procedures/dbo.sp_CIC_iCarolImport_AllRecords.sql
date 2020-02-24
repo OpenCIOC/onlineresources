@@ -79,6 +79,13 @@ WHEN NOT MATCHED BY SOURCE AND dst.LangID=@@LANGID THEN
 
 	;
 
+UPDATE ii SET ii.DELETION_DATE=GETDATE()
+FROM dbo.CIC_iCarolImport ii
+LEFT JOIN dbo.CIC_iCarolImportAllRecords ar
+	ON ii.ResourceAgencyNum=ar.ResourceAgencyNum AND ii.LangID=ar.LangID
+WHERE ar.ResourceAgencyNum IS NULL AND ii.LANGID=@@LANGID
+
+
 RETURN @Error
 
 SET NOCOUNT OFF

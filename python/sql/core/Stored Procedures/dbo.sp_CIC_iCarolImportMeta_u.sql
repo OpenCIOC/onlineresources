@@ -14,13 +14,6 @@ SET NOCOUNT ON
 DECLARE	@Error		INT
 SET @Error = 0
 
-
-UPDATE ii SET ii.DELETION_DATE=@LastFetched
-FROM dbo.CIC_iCarolImport ii
-LEFT JOIN dbo.CIC_iCarolImportAllRecords ar
-	ON ii.ResourceAgencyNum=ar.ResourceAgencyNum AND ii.LangID=ar.LangID
-WHERE ar.ResourceAgencyNum IS NULL
-
 UPDATE dbo.CIC_iCarolImportMeta SET LastFetched=@LastFetched WHERE Mechanism=@Mechanism
 
 RETURN @Error
