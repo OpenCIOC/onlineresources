@@ -112,6 +112,8 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_LOCATION_WARNING, _
 	TXT_LOGO_ADDRESS, _
 	TXT_LOGO_LINK_ADDRESS, _
+	TXT_LOGO_ALT_TEXT, _
+	TXT_LOGO_HOVER_TEXT, _
 	TXT_LOWEST_UNUSED_FOR, _
 	TXT_MAIL_ADDRESS, _
 	TXT_MAIL_CO, _
@@ -315,6 +317,8 @@ Sub setTxtEntryForm()
 			TXT_LOCATION_WARNING = "Pas un site"
 			TXT_LOGO_ADDRESS = "Adresse du logo"
 			TXT_LOGO_LINK_ADDRESS = "Adresse du lien du logo"
+			TXT_LOGO_ALT_TEXT = "Texte alternatif du logo"
+			TXT_LOGO_HOVER_TEXT = "Titre du logo"
 			TXT_LOWEST_UNUSED_FOR = "Numéro le plus bas non utilisé pour "
 			TXT_MAIL_ADDRESS = "Adresse postale"
 			TXT_MAIL_CO = "Aux soins de"
@@ -518,6 +522,8 @@ Sub setTxtEntryForm()
 			TXT_LOCATION_WARNING = "Not a Location"
 			TXT_LOGO_ADDRESS = "Logo Address"
 			TXT_LOGO_LINK_ADDRESS = "Logo Link Address"
+			TXT_LOGO_ALT_TEXT = "Logo Alt Text"
+			TXT_LOGO_HOVER_TEXT = "Logo Hover (Title) Text"
 			TXT_LOWEST_UNUSED_FOR = "Lowest Unused for "
 			TXT_MAIL_ADDRESS = "Mailing Address"
 			TXT_MAIL_CO = "Mail Care of"

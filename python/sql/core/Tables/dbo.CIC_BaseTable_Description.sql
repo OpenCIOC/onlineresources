@@ -36,6 +36,9 @@ CREATE TABLE [dbo].[CIC_BaseTable_Description]
 [TDD_PHONE] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [TRANSPORTATION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [VACANCY_NOTES] [nvarchar] (4000) COLLATE Latin1_General_100_CI_AI NULL,
+[BUS_ROUTE_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[ACCREDITATION_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[DOCUMENTS_REQUIRED] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [CMP_AreasServed] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [CMP_Fees] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [CMP_Funding] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -52,10 +55,10 @@ CREATE TABLE [dbo].[CIC_BaseTable_Description]
 [SRCH_Taxonomy] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SRCH_Taxonomy_U] [bit] NOT NULL CONSTRAINT [DF_CIC_BaseTable_Description_SRCH_Taxonomy_U] DEFAULT ((1)),
 [LOGO_ADDRESS_PROTOCOL] [varchar] (8) COLLATE Latin1_General_100_CI_AI NULL,
-[LOGO_ADDRESS_LINK_PROTOCOL] [varchar] (8) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-CREATE UNIQUE NONCLUSTERED INDEX [IX_CIC_BaseTable_Description_NUMLangIDCBTDIDinclCOMMENTS] ON [dbo].[CIC_BaseTable_Description] ([NUM], [LangID], [CBTD_ID]) INCLUDE ([COMMENTS]) ON [PRIMARY]
-
+[LOGO_ADDRESS_LINK_PROTOCOL] [varchar] (8) COLLATE Latin1_General_100_CI_AI NULL,
+[LOGO_ADDRESS_HOVER_TEXT] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
+[LOGO_ADDRESS_ALT_TEXT] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -151,7 +154,6 @@ DELETE pr
 
 SET NOCOUNT OFF
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -175,7 +177,6 @@ END
 
 SET NOCOUNT OFF
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -210,18 +211,25 @@ ALTER TABLE [dbo].[CIC_BaseTable_Description] ADD CONSTRAINT [PK_CIC_BaseTable_D
 GO
 ALTER TABLE [dbo].[CIC_BaseTable_Description] ADD CONSTRAINT [IX_CIC_BaseTable_Description] UNIQUE NONCLUSTERED  ([NUM], [LangID]) ON [PRIMARY]
 GO
-
-ALTER TABLE [dbo].[CIC_BaseTable_Description] ADD CONSTRAINT [FK_CIC_BaseTable_Description_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
+CREATE UNIQUE NONCLUSTERED INDEX [IX_CIC_BaseTable_Description_NUMLangIDCBTDIDinclCOMMENTS] ON [dbo].[CIC_BaseTable_Description] ([NUM], [LangID], [CBTD_ID]) INCLUDE ([COMMENTS]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_BaseTable_Description] ADD CONSTRAINT [FK_CIC_BaseTable_Description_CIC_BaseTable] FOREIGN KEY ([NUM]) REFERENCES [dbo].[CIC_BaseTable] ([NUM]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
+ALTER TABLE [dbo].[CIC_BaseTable_Description] ADD CONSTRAINT [FK_CIC_BaseTable_Description_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
+GO
 GRANT SELECT ON  [dbo].[CIC_BaseTable_Description] TO [cioc_cic_search_role]
-GRANT SELECT ON  [dbo].[CIC_BaseTable_Description] TO [cioc_login_role]
-GRANT INSERT ON  [dbo].[CIC_BaseTable_Description] TO [cioc_login_role]
+GO
 GRANT DELETE ON  [dbo].[CIC_BaseTable_Description] TO [cioc_login_role]
+GO
+GRANT INSERT ON  [dbo].[CIC_BaseTable_Description] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[CIC_BaseTable_Description] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[CIC_BaseTable_Description] TO [cioc_login_role]
 GO
-CREATE FULLTEXT INDEX ON [dbo].[CIC_BaseTable_Description] KEY INDEX [PK_CIC_BaseTable_Description] ON [GBLRecord] WITH STOPLIST [CIOC_DEFAULT_STOPLIST]
+CREATE FULLTEXT INDEX ON [dbo].[CIC_BaseTable_Description] KEY INDEX [PK_CIC_BaseTable_Description] ON [GBLRecord]
+GO
+ALTER FULLTEXT INDEX ON [dbo].[CIC_BaseTable_Description] ADD ([CMP_Languages] LANGUAGE 1033)
 GO
 ALTER FULLTEXT INDEX ON [dbo].[CIC_BaseTable_Description] ADD ([SRCH_Subjects] LANGUAGE 0)
 GO

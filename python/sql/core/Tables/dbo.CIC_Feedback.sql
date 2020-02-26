@@ -63,8 +63,10 @@ CREATE TABLE [dbo].[CIC_Feedback]
 [EXTRA_CONTACT_A_PHONE2] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [EXTRA_CONTACT_A_PHONE3] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [EXTRA_CONTACT_A_FAX] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[EXTRA_CONTACT_A_EMAIL] [nvarchar] (60) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+[EXTRA_CONTACT_A_EMAIL] [nvarchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[LOGO_ADDRESS_HOVER_TEXT] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[LOGO_ADDRESS_ALT_TEXT] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -94,8 +96,11 @@ ALTER TABLE [dbo].[CIC_Feedback] ADD CONSTRAINT [PK_CIC_Feedback] PRIMARY KEY CL
 GO
 ALTER TABLE [dbo].[CIC_Feedback] WITH NOCHECK ADD CONSTRAINT [FK_CIC_Feedback_GBL_FeedbackEntry] FOREIGN KEY ([FB_ID]) REFERENCES [dbo].[GBL_FeedbackEntry] ([FB_ID]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
-GRANT SELECT ON  [dbo].[CIC_Feedback] TO [cioc_cic_search_role]
 GRANT INSERT ON  [dbo].[CIC_Feedback] TO [cioc_cic_search_role]
-GRANT SELECT ON  [dbo].[CIC_Feedback] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[CIC_Feedback] TO [cioc_cic_search_role]
+GO
 GRANT INSERT ON  [dbo].[CIC_Feedback] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[CIC_Feedback] TO [cioc_login_role]
 GO

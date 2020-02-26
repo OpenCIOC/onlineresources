@@ -1805,7 +1805,7 @@ Function makeLanguageItem(intLNID, bIsSelected, strLanguageName, strLangID, strN
 		strReturn = strReturn & _
 			"<div><input type=""text"" name=""LN_NOTES_" & intLNID & """ " & _
 			"title=" & AttrQs(TXT_NOTES & TXT_COLON & strLanguageName) & " " & _
-			"id=""LN_NOTES_" & intLNID & """ " & _
+			"id=""LN_NOTES_" & intLNID & """ class=""form-control"" " & _
 			"value=""" & strNotes & """ " & _
 			"size=""" & TEXT_SIZE-25 & """ maxlength=""" & MAX_LENGTH_CHECKLIST_NOTES & """></div>"
 	Else

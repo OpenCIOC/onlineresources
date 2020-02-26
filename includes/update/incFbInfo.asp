@@ -206,6 +206,9 @@ Sub printFeedbackInfo(intFBID,intDbAreaID,intFBType)
 			dicFieldNames("EMPLOYEES_FT") = Nz(dicFieldNames("EMPLOYEES"),"EMPLOYEES") & " - " & TXT_FULL_TIME
 			dicFieldNames("EMPLOYEES_PT") = Nz(dicFieldNames("EMPLOYEES"),"EMPLOYEES") & " - " & TXT_PART_TIME
 			dicFieldNames("EMPLOYEES_TOTAL") = Nz(dicFieldNames("EMPLOYEES"),"EMPLOYEES") & " - " & TXT_TOTAL
+			dicFieldNames("LOGO_ADDRESS_LINK") = TXT_LOGO_LINK_ADDRESS
+			dicFieldNames("LOGO_ADDRESS_ALT_TEXT") = TXT_LOGO_ALT_TEXT
+			dicFieldNames("LOGO_ADDRESS_HOVER_TEXT") = TXT_LOGO_HOVER_TEXT
 			dicFieldNames("PO_BOX") = TXT_BOX_NUMBER
 			dicFieldNames("POSTAL_CODE") = TXT_POSTAL_CODE
 			dicFieldNames("PROVINCE") = TXT_PROVINCE

@@ -531,7 +531,7 @@ Function makeAreasServedContents(rst,bUseContent)
 					.Fields("Community") & .Fields("ProvinceState") & StringIf(Not Nl(.Fields("ParentCommunityName")), _
 							" (" & TXT_IN & " " & .Fields("ParentCommunityName") & ")") & "</label></td><td>" & _
 					"<input type=""text"" title=" & AttrQs(.Fields("Community") & TXT_COLON & TXT_NOTES) & " name=""CM_NOTES_" & .Fields("CM_ID") & """ " & _
-					"id=""CM_NOTES_" & .Fields("CM_ID") & """ " & _
+					"id=""CM_NOTES_" & .Fields("CM_ID") & """ class=""form-control"" " & _
 					"value=""" & .Fields("Notes") & """ " & _
 					"size=""" & TEXT_SIZE-25 & """ maxlength=""" & MAX_LENGTH_CHECKLIST_NOTES & """>" & _
 					"</td></tr>"
@@ -1782,19 +1782,49 @@ Function makeLogoAddressContents(rst, bUseContent)
 	Dim strLogoAddress, _
 		strLogoLink, _
 		strLogoAddressProtocol, _
-		strLogoLinkProtocol
+		strLogoLinkProtocol, _
+		strLogoHoverText, _
+		strLogoAltText, _
+		strReturn
 		
 	If bUseContent Then
 		strLogoAddress = rst("LOGO_ADDRESS").Value
 		strLogoLink = rst("LOGO_ADDRESS_LINK").Value
 		strLogoAddressProtocol = rst.Fields("LOGO_ADDRESS_PROTOCOL").Value
 		strLogoLinkProtocol = rst.Fields("LOGO_ADDRESS_LINK_PROTOCOL").Value
+		strLogoHoverText = rst.Fields("LOGO_ADDRESS_HOVER_TEXT").Value
+		strLogoAltText = rst.Fields("LOGO_ADDRESS_ALT_TEXT").Value
+		If Not Nl(strLogoAltText) Then
+			strLogoAltText = Server.HTMLEncode(strLogoAltText)
+		End If
 	End If
 
-	makeLogoAddressContents = "<strong><label for=""LOGO_ADDRESS"">" & TXT_LOGO_ADDRESS & "</label></strong><br>" & _
-		makeWebFieldVal("LOGO_ADDRESS", strLogoAddress, 200, True, strLogoAddressProtocol) & _
-		"<br><strong><label for=""LOGO_ADDRESS_LINK"">" & TXT_LOGO_LINK_ADDRESS & "</label></strong><br>" & _
-		makeWebFieldVal("LOGO_ADDRESS_LINK", strLogoLink, 200, True, strLogoLinkProtocol)
+	strReturn = "<div class=""row form-group"">" & _
+		"<label for=""LOGO_ADDRESS"" class=""control-label col-md-3"">" & TXT_LOGO_ADDRESS & "</label>" & _
+		"<div class=""col-md-9"">" & makeWebFieldVal("LOGO_ADDRESS", strLogoAddress, 200, True, strLogoAddressProtocol) & "</div>" & _
+		"</div><div class=""row form-group"">" & _
+		"<label for=""LOGO_ADDRESS_LINK"" class=""control-label col-md-3"">" & TXT_LOGO_LINK_ADDRESS & "</label>" & _
+		"<div class=""col-md-9"">" & makeWebFieldVal("LOGO_ADDRESS_LINK", strLogoLink, 200, True, strLogoLinkProtocol) & "</div>" & _
+		"</div><div class=""row form-group"">" & _
+		"<label for=""LOGO_ADDRESS_ALT_TEXT"" class=""control-label col-md-3"">" & TXT_LOGO_ALT_TEXT & "</label>" & _
+		"<div class=""col-md-9""><input type=""text"" id=""LOGO_ADDRESS_ALT_TEXT"" name=""LOGO_ADDRESS_ALT_TEXT"" maxlength=""255"" class=""form-control"" value=" & AttrQs(strLogoAltText) & ">"
+	
+	If bFeedback Then
+		strReturn = strReturn & getFeedback("LOGO_ADDRESS_ALT_TEXT",True)
+	End If
+
+	strReturn = strReturn & "</div></div><div class=""row form-group"">" & _
+		"<label for=""LOGO_ADDRESS_HOVER_TEXT"" class=""control-label col-md-3"">" & TXT_LOGO_HOVER_TEXT & "</label>" & _
+		"<div class=""col-md-9""><textarea id=""LOGO_ADDRESS_HOVER_TEXT"" name=""LOGO_ADDRESS_HOVER_TEXT"" rows=""3"" maxlength=""500"" class=""form-control"">" & strLogoHoverText & "</textarea>"
+
+	If bFeedback Then
+		strReturn = strReturn & getFeedback("LOGO_ADDRESS_HOVER_TEXT",True)
+	End If
+
+	strReturn = strReturn & "</div></div>"
+
+	makeLogoAddressContents = strReturn
+
 End Function
 
 Function makeMainAddressContents(rst,bUseContent)
@@ -2511,7 +2541,7 @@ Function makeSchoolsInAreaContents(rst,bUseContent)
 					"<input name=""INAREA_SCH_ID"" id=""INAREA_SCH_ID_" & .Fields("SCH_ID") & """ type=""checkbox"" value=""" & .Fields("SCH_ID") & """ checked>&nbsp;" & _
 					.Fields("SchoolName") & IIf(Nl(.Fields("SchoolBoard")),vbNullString," (" & .Fields("SchoolBoard") & ")") & "</td><td>" & _
 					"<input type=""text"" name=""INAREA_SCH_NOTES_" & .Fields("SCH_ID") & """ " & _
-					"id=""INAREA_SCH_NOTES_" & .Fields("SCH_ID") & """ " & _
+					"id=""INAREA_SCH_NOTES_" & .Fields("SCH_ID") & """ class=""form-control"" " & _
 					"value=""" & .Fields("Notes") & """ " & _
 					"size=""" & TEXT_SIZE-25 & """ maxlength=""" & MAX_LENGTH_CHECKLIST_NOTES & """>" & _
 					"</td></tr>"
