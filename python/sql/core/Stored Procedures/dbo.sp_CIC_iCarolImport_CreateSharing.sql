@@ -1300,7 +1300,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Site' THEN
 		'SITE',
 		src.DELETION_DATE
 	)
-
+OPTION (ROBUST PLAN)
 	;
 
 MERGE INTO dbo.CIC_iCarolImportRollup dst
@@ -2055,7 +2055,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='ProgramAtSite' THEN
 		'SERVICE',
 		src.DELETION_DATE
 	)
-
+OPTION (ROBUST PLAN)
 	;
 
 
@@ -2094,13 +2094,14 @@ CAST((SELECT (
 				 FOR XML PATH('NM'), TYPE
 				)
 			FOR XML PATH('ALT_ORG'), TYPE),
+			
 		(SELECT a.ApplicationProcess AS [@V], f.ApplicationProcess AS [@VF] FOR XML PATH('APPLICATION'), TYPE),
 		(SELECT -- NOTE: This needs some work
 			(SELECT COALESCE(cmn.Name,i.AreaName) AS [@V], i.Prov AS [@PRV] FROM (
 				SELECT DISTINCT FIRST_VALUE(ItemID) OVER (PARTITION BY t.TotalItemID ORDER BY t.cm_level DESC) AS AreaName, FIRST_VALUE(ItemID) OVER (PARTITION BY t.TotalItemID ORDER BY t.cm_level) AS Prov,
 				 REPLACE(REPLACE(REPLACE(REPLACE(FIRST_VALUE(cm_level) OVER (PARTITION BY t.TotalItemID ORDER BY cm_level DESC), 1, 'State'), 2, 'County'), 3, 'City'), '4', 'Community') AS cm_level
 				FROM (
-				SELECT areas.ItemID AS TotalItemID, ROW_NUMBER() OVER (PARTITION BY areas.ItemID ORDER BY (SELECT NULL)) AS cm_level, levels.* 
+				SELECT areas.ItemID AS TotalItemID, ROW_NUMBER() OVER (PARTITION BY areas.ItemID ORDER BY (SELECT 1)) AS cm_level, levels.* 
 				FROM dbo.fn_GBL_ParseVarCharIDList(a.Coverage, ';') AS areas
 				CROSS APPLY dbo.fn_GBL_ParseVarCharIDList(areas.ItemID, '-') AS levels
 				) AS t
@@ -2143,7 +2144,7 @@ CAST((SELECT (
 			 FOR XML PATH('CONTACT'), TYPE)
 		 FOR XML PATH('EXEC_1'),TYPE),
 		(SELECT a.PhoneFax AS [@V], f.PhoneFax AS [@VF] FOR XML PATH('FAX'), TYPE),
-		(SELECT a.FeeStructureSource AS [@N], f.FeeStructureSource AS [@VF] FOR XML PATH('FEES'), TYPE),
+		(SELECT a.FeeStructureSource AS [@N], f.FeeStructureSource AS [@NF] FOR XML PATH('FEES'), TYPE),
 		(SELECT
 			 CASE WHEN a.Latitude IS NOT NULL AND a.Longitude IS NOT NULL THEN 3 ELSE 0 END AS [@TYPE],
 			 a.Latitude AS [@LAT],
@@ -2208,7 +2209,7 @@ CAST((SELECT (
 						(a.PhoneNumberOutOfArea, a.PhoneNumberOutOfAreaDescription)
 					) AS cte (PhoneNumber, PhoneName)
 					WHERE cte.PhoneNumber IS NOT NULL
-				) AS i FOR XML PATH('')), 1, 2, '')
+				) AS i FOR XML PATH(''),TYPE).value('.', 'nvarchar(max)'), 1, 2, '')
 			
 			 ) AS [@V],
 			 (SELECT STUFF((SELECT '; ' + NumberValue FROM (
@@ -2226,7 +2227,7 @@ CAST((SELECT (
 						(f.PhoneNumberOutOfArea, f.PhoneNumberOutOfAreaDescription)
 					) AS cte (PhoneNumber, PhoneName)
 					WHERE cte.PhoneNumber IS NOT NULL
-				) AS i FOR XML PATH('')), 1, 2, '')
+				) AS i FOR XML PATH(''),TYPE).value('.', 'nvarchar(max)') , 1, 2, '')
 			
 			 ) AS [@VF]
 		  FOR XML PATH('OFFICE_PHONE'), TYPE),

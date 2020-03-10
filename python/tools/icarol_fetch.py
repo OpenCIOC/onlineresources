@@ -277,7 +277,7 @@ class fakerequest(object):
 def email_log(args, outputstream, is_error):
 	author = get_config_item(args, 'o211_import_notify_from', 'admin@cioc.ca')
 	to = [x.strip() for x in get_config_item(args, 'o211_import_notify_emails', 'admin@cioc.ca').split(',')]
-	email.send_email(fakerequest(args.config), author, to, 'Import from iCarol%s' % (' -- ERRORS!' if is_error else ''), outputstream.getvalue())
+	email.send_email(fakerequest(args.config), author, to, 'Import from iCarol%s' % (' -- ERRORS!' if is_error else ''), outputstream.getvalue().replace('\r', '').replace('\n', '\r\n'))
 
 
 def get_record_list(args, modifiedSince=None, lang='en'):
@@ -394,7 +394,9 @@ def push_bulk(context, conn, sql, headings, batch, *args):
 	with CsvFileWriter(context, headings) as writer:
 		writer.serialize_records(batch)
 		writer.close()
-		conn.execute(sql, *(args + (writer.source_file,)))
+		cursor = conn.execute(sql, *(args + (writer.source_file,)))
+
+	return cursor
 
 
 def push_to_database(context, lang, queue):
@@ -422,11 +424,14 @@ def push_all_records(conext, lang, all_records):
 	EXEC sp_CIC_iCarolImport_AllRecords ?
 	'''
 	with get_bulk_connection(language=lang.sql_language) as conn:
-		push_bulk(conext, conn, sql, AllRecordsFieldOrder, all_records)
+		records = push_bulk(conext, conn, sql, AllRecordsFieldOrder, all_records).fetchall()
+
+	return records
 
 
 def fetch_from_o211(context, lang):
-	records = get_record_list(context.args, context.args.modified_since, lang.language_name)
+	all_records = get_record_list(context.args, 'any', lang.language_name)
+	records = push_all_records(context, lang, all_records)
 	if context.args.test:
 		records.sort(key=lambda x: x['UpdatedOn'])
 		records = records[-60:]
@@ -438,14 +443,15 @@ def fetch_from_o211(context, lang):
 	thread.daemon = True
 	thread.start()
 
-	for batch in pager(fetch_record_batches(context.args, (x['ResourceAgencyNum'] for x in records), lang), 5000):
+	pulled_record_count = 0
+	for batch in pager(fetch_record_batches(context.args, (x.ResourceAgencyNum for x in records), lang), 5000):
+		pulled_record_count += len(batch)
 		queue.put(batch)
 
 	queue.put(None)
 	queue.join()
 
-	all_records = get_record_list(context.args, 'any', lang.language_name)
-	push_all_records(context, lang, all_records)
+	print 'Pulled %s changed source records' % (pulled_record_count,)
 
 
 def check_db_state(context):

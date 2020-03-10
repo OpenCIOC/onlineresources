@@ -85,6 +85,12 @@ LEFT JOIN dbo.CIC_iCarolImportAllRecords ar
 	ON ii.ResourceAgencyNum=ar.ResourceAgencyNum AND ii.LangID=ar.LangID
 WHERE ar.ResourceAgencyNum IS NULL AND ii.LANGID=@@LANGID
 
+SELECT a.*
+FROM dbo.CIC_iCarolImportAllRecords a 
+LEFT JOIN dbo.CIC_iCarolImport i
+	ON i.ResourceAgencyNum=a.ResourceAgencyNum AND i.LangID=a.LangID
+WHERE a.LANGID=@@LANGID AND (i.ResourceAgencyNum IS NULL OR a.UpdatedOn <> i.UpdatedOn)
+
 
 RETURN @Error
 

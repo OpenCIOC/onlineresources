@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -26,7 +25,7 @@ IF @IdList = '' BEGIN
 	RETURN
 END
 
-SET @xmlData = '<r><n>' + REPLACE(REPLACE(REPLACE(REPLACE(@IdList, '&', '&amp;'), '>', '&gt;'), '<', '&lt;'), @Separator, '</n><n>') + '</n></r>'
+SET @xmlData = '<r><n>' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@IdList, @Separator, CHAR(3)), '&', '&amp;'), '>', '&gt;'), '<', '&lt;'), CHAR(3), '</n><n>') + '</n></r>'
 
 INSERT INTO @ParsedList
 		(ItemID)
