@@ -451,7 +451,7 @@ def fetch_from_o211(context, lang):
 	queue.put(None)
 	queue.join()
 
-	print 'Pulled %s changed source records' % (pulled_record_count,)
+	print 'Pulled %s changed source records in %s\n' % (pulled_record_count, lang)
 
 
 def check_db_state(context):
@@ -501,7 +501,7 @@ def generate_and_upload_import(context):
 		for member in cursor.fetchall():
 			member_name = member.DefaultEmailNameCIC or member.BaseURLCIC or member.MemberID
 			if not member.records:
-				print "No Records for %s, skiping" % (member_name,)
+				print "No Records for %s, skiping\n" % (member_name,)
 				continue
 			else:
 				print "Processing Imports for %s" % (member_name,)
@@ -523,7 +523,7 @@ def generate_and_upload_import(context):
 			total_import_count += total_inserted
 			print "Import Complete for Member %s. %s records imported" % (member_name, total_inserted)
 			if error_log:
-				print >>sys.stderr, "A problem was encountered validating input for Member %s, see below." % (member_name,)
+				print >>sys.stderr, "\nA problem was encountered validating input for Member %s, see below.\n" % (member_name,)
 
 			for record, errmsg in error_log:
 				if record:
