@@ -451,7 +451,7 @@ def fetch_from_o211(context, lang):
 	queue.put(None)
 	queue.join()
 
-	print 'Pulled %s changed source records in %s\n' % (pulled_record_count, lang.sql_language)
+	print 'Pulled %s changed source records in %s.' % (pulled_record_count, lang.sql_language)
 
 
 def check_db_state(context):
@@ -523,7 +523,7 @@ def generate_and_upload_import(context):
 			total_import_count += total_inserted
 			print "Import Complete for Member %s. %s records imported." % (member_name, total_inserted)
 			if error_log:
-				print >>sys.stderr, "\nA problem was encountered validating input for Member %s, see below.\n" % (member_name,)
+				print >>sys.stderr, "A problem was encountered validating input for Member %s, see below." % (member_name,)
 
 			for record, errmsg in error_log:
 				if record:
@@ -575,6 +575,7 @@ def main(argv):
 
 			if not args.skip_fetch:
 				fetch_from_o211(context, lang)
+				print "\n"
 
 		if not args.skip_import:
 			generate_and_upload_import(context)
