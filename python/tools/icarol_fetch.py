@@ -451,7 +451,7 @@ def fetch_from_o211(context, lang):
 	queue.put(None)
 	queue.join()
 
-	print 'Pulled %s changed source records in %s\n' % (pulled_record_count, lang)
+	print 'Pulled %s changed source records in %s\n' % (pulled_record_count, lang.sql_language)
 
 
 def check_db_state(context):
@@ -501,10 +501,10 @@ def generate_and_upload_import(context):
 		for member in cursor.fetchall():
 			member_name = member.DefaultEmailNameCIC or member.BaseURLCIC or member.MemberID
 			if not member.records:
-				print "No Records for %s, skipping\n" % (member_name,)
+				print "No Records for %s, skipping.\n" % (member_name,)
 				continue
 			else:
-				print "Processing Imports for %s" % (member_name,)
+				print "Processing Imports for %s." % (member_name,)
 
 			with tempfile.TemporaryFile() as fd:
 				fd.write(u'''<?xml version="1.0" encoding="UTF-8"?>
@@ -521,7 +521,7 @@ def generate_and_upload_import(context):
 				)
 
 			total_import_count += total_inserted
-			print "Import Complete for Member %s. %s records imported" % (member_name, total_inserted)
+			print "Import Complete for Member %s. %s records imported." % (member_name, total_inserted)
 			if error_log:
 				print >>sys.stderr, "\nA problem was encountered validating input for Member %s, see below.\n" % (member_name,)
 
@@ -533,7 +533,7 @@ def generate_and_upload_import(context):
 
 			print
 
-	print "Completed Processing Imports. %s Records imported" % (total_import_count,)
+	print "Completed Processing Imports: %s Records imported." % (total_import_count,)
 
 
 def main(argv):
