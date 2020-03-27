@@ -501,7 +501,7 @@ def generate_and_upload_import(context):
 		for member in cursor.fetchall():
 			member_name = member.DefaultEmailNameCIC or member.BaseURLCIC or member.MemberID
 			if not member.records:
-				print "No Records for %s, skiping\n" % (member_name,)
+				print "No Records for %s, skipping\n" % (member_name,)
 				continue
 			else:
 				print "Processing Imports for %s" % (member_name,)
