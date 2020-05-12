@@ -277,7 +277,7 @@ class fakerequest(object):
 def email_log(args, outputstream, is_error):
 	author = get_config_item(args, 'o211_import_notify_from', 'admin@cioc.ca')
 	to = [x.strip() for x in get_config_item(args, 'o211_import_notify_emails', 'admin@cioc.ca').split(',')]
-	email.send_email(fakerequest(args.config), author, to, 'Import from iCarol%s' % (' -- ERRORS!' if is_error else ''), outputstream.getvalue())
+	email.send_email(fakerequest(args.config), author, to, 'Import from iCarol%s' % (' -- ERRORS!' if is_error else ''), outputstream.getvalue().replace('\r', '').replace('\n', '\r\n'))
 
 
 def get_record_list(args, modifiedSince=None, lang='en'):
@@ -394,7 +394,9 @@ def push_bulk(context, conn, sql, headings, batch, *args):
 	with CsvFileWriter(context, headings) as writer:
 		writer.serialize_records(batch)
 		writer.close()
-		conn.execute(sql, *(args + (writer.source_file,)))
+		cursor = conn.execute(sql, *(args + (writer.source_file,)))
+
+	return cursor
 
 
 def push_to_database(context, lang, queue):
@@ -422,11 +424,14 @@ def push_all_records(conext, lang, all_records):
 	EXEC sp_CIC_iCarolImport_AllRecords ?
 	'''
 	with get_bulk_connection(language=lang.sql_language) as conn:
-		push_bulk(conext, conn, sql, AllRecordsFieldOrder, all_records)
+		records = push_bulk(conext, conn, sql, AllRecordsFieldOrder, all_records).fetchall()
+
+	return records
 
 
 def fetch_from_o211(context, lang):
-	records = get_record_list(context.args, context.args.modified_since, lang.language_name)
+	all_records = get_record_list(context.args, 'any', lang.language_name)
+	records = push_all_records(context, lang, all_records)
 	if context.args.test:
 		records.sort(key=lambda x: x['UpdatedOn'])
 		records = records[-60:]
@@ -438,14 +443,15 @@ def fetch_from_o211(context, lang):
 	thread.daemon = True
 	thread.start()
 
-	for batch in pager(fetch_record_batches(context.args, (x['ResourceAgencyNum'] for x in records), lang), 5000):
+	pulled_record_count = 0
+	for batch in pager(fetch_record_batches(context.args, (x.ResourceAgencyNum for x in records), lang), 5000):
+		pulled_record_count += len(batch)
 		queue.put(batch)
 
 	queue.put(None)
 	queue.join()
 
-	all_records = get_record_list(context.args, 'any', lang.language_name)
-	push_all_records(context, lang, all_records)
+	print 'Pulled %s changed source records in %s.' % (pulled_record_count, lang.sql_language)
 
 
 def check_db_state(context):
@@ -495,10 +501,10 @@ def generate_and_upload_import(context):
 		for member in cursor.fetchall():
 			member_name = member.DefaultEmailNameCIC or member.BaseURLCIC or member.MemberID
 			if not member.records:
-				print "No Records for %s, skiping" % (member_name,)
+				print "No Records for %s, skipping.\n" % (member_name,)
 				continue
 			else:
-				print "Processing Imports for %s" % (member_name,)
+				print "Processing Imports for %s." % (member_name,)
 
 			with tempfile.TemporaryFile() as fd:
 				fd.write(u'''<?xml version="1.0" encoding="UTF-8"?>
@@ -515,7 +521,7 @@ def generate_and_upload_import(context):
 				)
 
 			total_import_count += total_inserted
-			print "Import Complete for Member %s. %s records imported" % (member_name, total_inserted)
+			print "Import Complete for Member %s. %s records imported." % (member_name, total_inserted)
 			if error_log:
 				print >>sys.stderr, "A problem was encountered validating input for Member %s, see below." % (member_name,)
 
@@ -527,7 +533,7 @@ def generate_and_upload_import(context):
 
 			print
 
-	print "Completed Processing Imports. %s Records imported" % (total_import_count,)
+	print "Completed Processing Imports: %s Records imported." % (total_import_count,)
 
 
 def main(argv):
@@ -569,6 +575,7 @@ def main(argv):
 
 			if not args.skip_fetch:
 				fetch_from_o211(context, lang)
+				print "\n"
 
 		if not args.skip_import:
 			generate_and_upload_import(context)

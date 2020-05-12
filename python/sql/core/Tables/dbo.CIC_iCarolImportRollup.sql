@@ -2,6 +2,12 @@ CREATE TABLE [dbo].[CIC_iCarolImportRollup]
 (
 [ResourceAgencyNum] [nvarchar] (50) COLLATE Latin1_General_100_CI_AI NOT NULL,
 [LangID] [smallint] NOT NULL,
+[RECORD_OWNER] [char] (3) COLLATE Latin1_General_100_CI_AI NULL,
+[InternalMemoGUID] [uniqueidentifier] NOT NULL CONSTRAINT [DF_CIC_iCarolImportRollup_InternalMemoGUID] DEFAULT (newid()),
+[DELETION_DATE] [smalldatetime] NULL,
+[DATE_MODIFIED] [smalldatetime] NULL,
+[DATE_IMPORTED] [smalldatetime] NULL,
+[ORG_LOCATION_SERVICE] [nvarchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
 [PublicName] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [AlternateName] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [OfficialName] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -176,19 +182,13 @@ CREATE TABLE [dbo].[CIC_iCarolImportRollup]
 [Custom_LinkedIn] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Custom_Twitter] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Custom_YouTube] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[DATE_MODIFIED] [smalldatetime] NULL,
-[DATE_IMPORTED] [smalldatetime] NULL,
-[RECORD_OWNER] [char] (3) COLLATE Latin1_General_100_CI_AI NULL,
-[InternalMemoGUID] [uniqueidentifier] NOT NULL CONSTRAINT [DF_CIC_iCarolImportRollup_InternalMemoGUID] DEFAULT (newid()),
-[DELETION_DATE] [smalldatetime] NULL,
 [ORG_LEVEL_1] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [ORG_DESCRIPTION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [LOCATION_NAME] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [LOCATION_DESCRIPTION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SERVICE_NAME_LEVEL_1] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SERVICE_NAME_LEVEL_2] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[DESCRIPTION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[ORG_LOCATION_SERVICE] [nvarchar] (50) COLLATE Latin1_General_100_CI_AI NULL
+[DESCRIPTION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_iCarolImportRollup] ADD CONSTRAINT [PK_CIC_iCarolImportRollup] PRIMARY KEY CLUSTERED  ([ResourceAgencyNum], [LangID]) ON [PRIMARY]
