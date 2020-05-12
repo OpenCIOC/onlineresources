@@ -1070,8 +1070,8 @@
 							<xsd:element name="LOGO_ADDRESS" type="c-URLType" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="MAIL_ADDRESS" minOccurs="0" maxOccurs="1">
 								<xsd:complexType>
-									<xsd:attribute name="CO" type="s-Text100Type" use="optional"/>
-									<xsd:attribute name="COF" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="CO" type="s-Text150Type" use="optional"/>
+									<xsd:attribute name="COF" type="s-Text150Type" use="optional"/>
 									<xsd:attribute name="LN1" type="s-Text255Type" use="optional"/>
 									<xsd:attribute name="LN1F" type="s-Text255Type" use="optional"/>
 									<xsd:attribute name="LN2" type="s-Text255Type" use="optional"/>

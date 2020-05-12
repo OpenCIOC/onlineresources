@@ -18,7 +18,7 @@ CREATE FUNCTION [dbo].[fn_GBL_FullAddress](
 	@Province varchar(2),
 	@Country nvarchar(60),
 	@PostalCode varchar(20),
-	@CareOf nvarchar(100),
+	@CareOf nvarchar(150),
 	@BoxType nvarchar(20),
 	@POBox nvarchar(20),
 	@Latitude [decimal](11, 7),

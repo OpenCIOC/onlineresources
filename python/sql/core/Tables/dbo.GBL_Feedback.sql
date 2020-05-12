@@ -53,7 +53,7 @@ CREATE TABLE [dbo].[GBL_Feedback]
 [LOCATED_IN_CM] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [LOCATION_DESCRIPTION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [LOCATION_NAME] [nvarchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
-[MAIL_CARE_OF] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
+[MAIL_CARE_OF] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [MAIL_BOX_TYPE] [nvarchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
 [MAIL_PO_BOX] [nvarchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
 [MAIL_BUILDING] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,

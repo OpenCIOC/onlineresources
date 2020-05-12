@@ -1172,7 +1172,7 @@ Sub getOtherAddressesSQL()
 			
 				strTitle = Left(Trim(Request(strFPrefix & "TITLE")),100)
 				strCode = Left(Trim(Request(strFPrefix & "SITE_CODE")),100)
-				strCO = Left(Trim(Request(strFPrefix & "CARE_OF")),100)
+				strCO = Left(Trim(Request(strFPrefix & "CARE_OF")),150)
 				strBoxType = Left(Trim(Request(strFPrefix & "BOX_TYPE")),20)
 				strPO = Left(Trim(Request(strFPrefix & "PO_BOX")),20)
 				strBuilding = Left(Trim(Request(strFPrefix & "BUILDING")),100)
