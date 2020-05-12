@@ -1485,8 +1485,8 @@ SELECT
 		a.AgencyDescription AS ORG_DESCRIPTION,
 		s.PublicName AS LOCATION_NAME,
 		s.AgencyDescription AS LOCATION_DESCRIPTION,
-		s.PublicName AS SERVICE_NAME_LEVEL_1,
-		COALESCE(pas.PublicName, p.PublicName) AS SERVICE_NAME_LEVEL_2,
+		COALESCE(p.PublicName, pas.PublicName) AS SERVICE_NAME_LEVEL_1,
+		s.PublicName AS SERVICE_NAME_LEVEL_2,
 		COALESCE(pas.AgencyDescription, p.AgencyDescription) AS DESCRIPTION,
 		pas.DELETION_DATE
 	FROM dbo.CIC_iCarolImport pas
