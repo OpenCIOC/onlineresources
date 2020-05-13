@@ -5642,6 +5642,8 @@ While Not .EOF
 							Call processGBLDField(Null,Null,FTYPE_TEXT)
 						Case "DISTRIBUTION"
 							Call processDistributionC()
+						Case "DOCUMENTS_REQUIRED"
+							Call processCICDField(Null,Null,FTYPE_TEXT)
 						Case "EXTERNAL_ID"
 							If Nl(fldEXTERNALID) Then
 								Call processGBLField(Null,Null,FTYPE_TEXT)
