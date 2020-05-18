@@ -29,7 +29,7 @@ IF @HTTPVals = '' SET @HTTPVals = NULL
 DECLARE	@returnStr	nvarchar(MAX)
 
 SELECT @returnStr =  COALESCE(@returnStr + ' ; ','')
-		+ '<a href="' + @PathToStart + 'results.asp?EXC' + @ExtraFieldName + 'ID=' + CAST(exc.EXC_ID AS varchar)
+		+ '<a href="' + @PathToStart + 'volunteer/results.asp?EXC' + @ExtraFieldName + 'ID=' + CAST(exc.EXC_ID AS varchar)
 		+ '&EXC=' + @ExtraFieldName
 		+ CASE WHEN @HTTPVals IS NOT NULL THEN '&' + @HTTPVals ELSE '' END + '">' + exc.ExtraCheckList + '</a>'
 	FROM dbo.fn_VOL_VNUMToExtraCheckList_rst(@FieldName, @VNUM, @LangID) exc

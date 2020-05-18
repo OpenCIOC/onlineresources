@@ -878,6 +878,10 @@ class ChkExtraChecklist(CheckListModel):
 	def Domain(self):
 		return const.DMT_CIC if self.is_cic else const.DMT_VOL
 
+	@reify
+	def SearchLinkTitle(self):
+		return _('CIC:') if self.is_cic else _('Volunteer:')
+
 	ID = 'EXC_ID'
 
 	@reify
@@ -955,6 +959,10 @@ class ChkExtraDropDown(CheckListModel):
 	@reify
 	def Domain(self):
 		return const.DMT_CIC if self.is_cic else const.DMT_VOL
+
+	@reify
+	def SearchLinkTitle(self):
+		return _('CIC:') if self.is_cic else _('Volunteer:')
 
 	ID = 'EXD_ID'
 
