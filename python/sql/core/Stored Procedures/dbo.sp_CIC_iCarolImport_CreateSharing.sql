@@ -27,7 +27,7 @@ WHEN MATCHED AND src.SYNC_DATE > dst.DATE_MODIFIED THEN
 		[TaxonomyLevelName]=src.[TaxonomyLevelName],
 		[ParentAgency]=src.[ParentAgency],
 		[ParentAgencyNum]=src.[ParentAgencyNum],
-		[RecordOwner]=src.[RecordOwner],
+		[RECORD_OWNER]=src.[Custom_Record Owner (controlled)],
 		[UniqueIDPriorSystem]=src.[UniqueIDPriorSystem],
 		[MailingAttentionName]=src.[MailingAttentionName],
 		[MailingAddress1]=src.[MailingAddress1],
@@ -208,7 +208,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Agency' THEN
 		[TaxonomyLevelName],
 		[ParentAgency],
 		[ParentAgencyNum],
-		[RecordOwner],
+		[RECORD_OWNER],
 		[UniqueIDPriorSystem],
 		[MailingAttentionName],
 		[MailingAddress1],
@@ -388,7 +388,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Agency' THEN
 		src.[TaxonomyLevelName],
 		src.[ParentAgency],
 		src.[ParentAgencyNum],
-		src.[RecordOwner],
+		src.[Custom_Record Owner (controlled)],
 		src.[UniqueIDPriorSystem],
 		src.[MailingAttentionName],
 		src.[MailingAddress1],
@@ -576,7 +576,7 @@ SELECT
 		COALESCE(s.[TaxonomyLevelName], a.[TaxonomyLevelName]) AS [TaxonomyLevelName],
 		COALESCE(s.[ParentAgency], a.[ParentAgency]) AS [ParentAgency],
 		COALESCE(s.[ParentAgencyNum], a.[ParentAgencyNum]) AS [ParentAgencyNum],
-		COALESCE(s.[RecordOwner], a.[RecordOwner]) AS [RecordOwner],
+		s.[Custom_Record Owner (controlled)] AS [RECORD_OWNER],
 		COALESCE(s.[UniqueIDPriorSystem], a.[UniqueIDPriorSystem]) AS [UniqueIDPriorSystem],
 		COALESCE(s.[MailingAttentionName], a.[MailingAttentionName]) AS [MailingAttentionName],
 		COALESCE(s.[MailingAddress1], a.[MailingAddress1]) AS [MailingAddress1],
@@ -761,7 +761,7 @@ WHEN MATCHED AND src.SYNC_DATE > dst.DATE_MODIFIED THEN
 		[TaxonomyLevelName]=src.[TaxonomyLevelName],
 		[ParentAgency]=src.[ParentAgency],
 		[ParentAgencyNum]=src.[ParentAgencyNum],
-		[RecordOwner]=src.[RecordOwner],
+		[RECORD_OWNER]=src.[RECORD_OWNER],
 		[UniqueIDPriorSystem]=src.[UniqueIDPriorSystem],
 		[MailingAttentionName]=src.[MailingAttentionName],
 		[MailingAddress1]=src.[MailingAddress1],
@@ -944,7 +944,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Site' THEN
 		[TaxonomyLevelName],
 		[ParentAgency],
 		[ParentAgencyNum],
-		[RecordOwner],
+		[RECORD_OWNER],
 		[UniqueIDPriorSystem],
 		[MailingAttentionName],
 		[MailingAddress1],
@@ -1126,7 +1126,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Site' THEN
 		src.[TaxonomyLevelName],
 		src.[ParentAgency],
 		src.[ParentAgencyNum],
-		src.[RecordOwner],
+		src.[RECORD_OWNER],
 		src.[UniqueIDPriorSystem],
 		src.[MailingAttentionName],
 		src.[MailingAddress1],
@@ -1315,7 +1315,7 @@ SELECT
 		COALESCE(pas.[TaxonomyLevelName], p.[TaxonomyLevelName], s.[TaxonomyLevelName], a.[TaxonomyLevelName]) AS [TaxonomyLevelName],
 		COALESCE(pas.[ParentAgency], p.[ParentAgency], s.[ParentAgency], a.[ParentAgency]) AS [ParentAgency],
 		COALESCE(pas.[ParentAgencyNum], p.[ParentAgencyNum], s.[ParentAgencyNum], a.[ParentAgencyNum]) AS [ParentAgencyNum],
-		COALESCE(pas.[RecordOwner], p.[RecordOwner], s.[RecordOwner], a.[RecordOwner]) AS [RecordOwner],
+		COALESCE(pas.[Custom_Record Owner (controlled)], p.[Custom_Record Owner (controlled)]) AS [RECORD_OWNER],
 		COALESCE(pas.[UniqueIDPriorSystem], p.[UniqueIDPriorSystem], s.[UniqueIDPriorSystem], a.[UniqueIDPriorSystem]) AS [UniqueIDPriorSystem],
 		COALESCE(pas.[MailingAttentionName], p.[MailingAttentionName], s.[MailingAttentionName], a.[MailingAttentionName]) AS [MailingAttentionName],
 		COALESCE(pas.[MailingAddress1], p.[MailingAddress1], s.[MailingAddress1], a.[MailingAddress1]) AS [MailingAddress1],
@@ -1507,7 +1507,7 @@ WHEN MATCHED AND src.SYNC_DATE > dst.DATE_MODIFIED THEN
 		[TaxonomyLevelName]=src.[TaxonomyLevelName],
 		[ParentAgency]=src.[ParentAgency],
 		[ParentAgencyNum]=src.[ParentAgencyNum],
-		[RecordOwner]=src.[RecordOwner],
+		[RECORD_OWNER]=src.[RECORD_OWNER],
 		[UniqueIDPriorSystem]=src.[UniqueIDPriorSystem],
 		[MailingAttentionName]=src.[MailingAttentionName],
 		[MailingAddress1]=src.[MailingAddress1],
@@ -1693,7 +1693,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='ProgramAtSite' THEN
 		[TaxonomyLevelName],
 		[ParentAgency],
 		[ParentAgencyNum],
-		[RecordOwner],
+		[RECORD_OWNER],
 		[UniqueIDPriorSystem],
 		[MailingAttentionName],
 		[MailingAddress1],
@@ -1878,7 +1878,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='ProgramAtSite' THEN
 		src.[TaxonomyLevelName],
 		src.[ParentAgency],
 		src.[ParentAgencyNum],
-		src.[RecordOwner],
+		src.[RECORD_OWNER],
 		src.[UniqueIDPriorSystem],
 		src.[MailingAttentionName],
 		src.[MailingAddress1],
@@ -2063,16 +2063,16 @@ OPTION (ROBUST PLAN)
 UPDATE i SET i.DATE_IMPORTED=GETDATE() 
 OUTPUT deleted.ResourceAgencyNum, deleted.TaxonomyLevelName INTO @updated
 FROM dbo.CIC_iCarolImportRollup i
-INNER JOIN dbo.GBL_BaseTable ib 
+LEFT JOIN dbo.GBL_BaseTable ib 
 	ON ib.EXTERNAL_ID=i.ResourceAgencyNum
-WHERE i.LangID=@@LANGID AND i.DATE_IMPORTED IS NULL OR i.DATE_IMPORTED < i.DATE_MODIFIED
+WHERE (i.DATE_IMPORTED IS NULL OR i.DATE_IMPORTED < i.DATE_MODIFIED OR i.DATE_IMPORTED < i.DELETION_DATE) AND (ib.EXTERNAL_ID IS NOT NULL OR EXISTS(SELECT * FROM dbo.GBL_Agency a WHERE a.AgencyCode = i.RECORD_OWNER AND a.AutoImportFromICarol=1))
 
 
 SELECT m.MemberID, m.DefaultEmailNameCIC, m.BaseURLCIC,
 CAST((SELECT (
 	-- Agency
 	SELECT 
-	 a.ResourceAgencyNum AS [@NUM], bt.RECORD_OWNER AS [@RECORD_OWNER],
+	 a.ResourceAgencyNum AS [@NUM], COALESCE(bt.RECORD_OWNER, a.RECORD_OWNER) AS [@RECORD_OWNER],
 		1 AS [@HAS_ENGLISH], CASE WHEN f.ResourceAgencyNum IS NOT NULL THEN 1 ELSE NULL END AS [@HAS_FRENCH],
 		(SELECT a.DisabilitiesAccess AS [@N], f.DisabilitiesAccess AS [@NF] FOR XML PATH('ACCESSIBILITY'), TYPE),
 		(SELECT a.LicenseAccreditation AS [@V], f.LicenseAccreditation AS [@VF] FOR XML PATH('ACCREDITED'), TYPE),
@@ -2146,9 +2146,9 @@ CAST((SELECT (
 		(SELECT a.PhoneFax AS [@V], f.PhoneFax AS [@VF] FOR XML PATH('FAX'), TYPE),
 		(SELECT a.FeeStructureSource AS [@N], f.FeeStructureSource AS [@NF] FOR XML PATH('FEES'), TYPE),
 		(SELECT
-			 CASE WHEN a.Latitude IS NOT NULL AND a.Longitude IS NOT NULL THEN 3 ELSE 0 END AS [@TYPE],
-			 a.Latitude AS [@LAT],
-			 a.Longitude AS [@LONG]
+			 CASE WHEN a.Latitude IS NOT NULL AND a.Latitude <> 0 AND a.Longitude IS NOT NULL AND a.Longitude <> 0 THEN 3 ELSE 0 END AS [@TYPE],
+			 NULLIF(a.Latitude, 0) AS [@LAT],
+			 NULLIF(a.Longitude, 0) AS [@LONG]
 		  FOR XML PATH('GEOCODE'), TYPE),
 		(SELECT COALESCE(a.HoursOfOperation, a.Hours) AS [@V], COALESCE(f.HoursOfOperation, f.Hours) AS [@VF] FOR XML PATH('HOURS'), TYPE),
 		(SELECT
@@ -2179,7 +2179,7 @@ CAST((SELECT (
 			 a.MailingAddress2 AS [@LN2],
 			 a.MailingCity AS [@CTY],
 			 a.MailingStateProvince AS [@PRV],
-			 a.MailingPostalCode AS [@PC],
+			 CASE WHEN a.MailingPostalCode LIKE '[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]' THEN LEFT(a.MailingPostalCode,3) + ' ' + RIGHT(a.MailingPostalCode, 3) ELSE a.MailingPostalCode END AS [@PC],
 			 a.MailingCountry AS [@CTRY],
 
 			 f.MailingAttentionName AS [@COF],
@@ -2236,13 +2236,13 @@ CAST((SELECT (
 		(SELECT a.ORG_LOCATION_SERVICE AS [@V] FOR XML PATH('CD'), ROOT('ORG_LOCATION_SERVICE'), TYPE),
 		(SELECT a.[Custom_Public Comments] AS [@V], f.[Custom_Public Comments] AS [@VF] FOR XML PATH('PUBLIC_COMMENTS'), TYPE),
 		(SELECT a.SERVICE_NAME_LEVEL_1 AS [@V], f.SERVICE_NAME_LEVEL_1 AS [@VF] FOR XML PATH('SERVICE_NAME_LEVEL_1'), TYPE),
-		(SELECT a.SERVICE_NAME_LEVEL_2 AS [@V], f.SERVICE_NAME_LEVEL_2 AS [@VF] FOR XML PATH('SERVICE_NAME_LEVEL_2'), TYPE),
+		(SELECT CASE WHEN a.SERVICE_NAME_LEVEL_2 <> a.SERVICE_NAME_LEVEL_1 THEN a.SERVICE_NAME_LEVEL_2 ELSE NULL END AS [@V], CASE WHEN f.SERVICE_NAME_LEVEL_2 <> f.SERVICE_NAME_LEVEL_1 THEN f.SERVICE_NAME_LEVEL_2 ELSE NULL END AS [@VF] FOR XML PATH('SERVICE_NAME_LEVEL_2'), TYPE),
 		(SELECT 
 			 a.PhysicalAddress1 AS [@LN1],
 			 a.PhysicalAddress2 AS [@LN2],
 			 a.PhysicalCity AS [@CTY],
 			 a.PhysicalStateProvince AS [@PRV],
-			 a.PhysicalPostalCode AS [@PC],
+			 CASE WHEN a.PhysicalPostalCode LIKE '[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]' THEN LEFT(a.PhysicalPostalCode,3) + ' ' + RIGHT(a.PhysicalPostalCode, 3) ELSE a.PhysicalPostalCode END AS [@PC],
 			 a.PhysicalCountry AS [@CTRY],
 
 			 f.PhysicalAddress1 AS [@LN1F],
@@ -2358,13 +2358,12 @@ CAST((SELECT (
 		(SELECT REPLACE(REPLACE(a.WebsiteAddress, 'https://', ''), 'http://', '') AS [@V], REPLACE(REPLACE(a.WebsiteAddress, 'https://', ''), 'http://', '') AS [@VF] FOR XML PATH('WWW_ADDRESS'), TYPE)
 
 	FROM dbo.CIC_iCarolImportRollup AS a
-	INNER JOIN @updated AS u
-		ON u.ResourceAgencyNum = a.ResourceAgencyNum AND u.TaxonomyLevelName=a.TaxonomyLevelName
-	INNER JOIN dbo.GBL_BaseTable bt ON
-		bt.EXTERNAL_ID=a.ResourceAgencyNum
 	LEFT JOIN dbo.CIC_iCarolImportRollup AS f
 		ON a.ResourceAgencyNum=f.ResourceAgencyNum AND a.LangID=0 AND f.LangID=2
-	WHERE bt.MemberID=m.MemberID AND a.LangID=0
+	LEFT JOIN dbo.GBL_BaseTable bt ON
+		bt.EXTERNAL_ID=a.ResourceAgencyNum
+	WHERE a.LangID=0 AND ((bt.MemberID IS NOT NULL AND bt.MemberID=m.MemberID) OR (bt.MemberID IS NULL AND EXISTS(SELECT * FROM dbo.GBL_Agency ac WHERE ac.AgencyCode=a.RECORD_OWNER AND ac.AutoImportFromICarol=1 AND ac.MemberID=m.MemberID)))
+		AND EXISTS(SELECT * FROM @updated AS u WHERE u.ResourceAgencyNum = a.ResourceAgencyNum AND u.TaxonomyLevelName=a.TaxonomyLevelName)
 	FOR XML PATH('RECORD'), TYPE
 )
 	FOR XML PATH(''), TYPE

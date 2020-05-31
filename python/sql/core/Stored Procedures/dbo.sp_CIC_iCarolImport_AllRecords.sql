@@ -83,7 +83,16 @@ UPDATE ii SET ii.DELETION_DATE=GETDATE()
 FROM dbo.CIC_iCarolImport ii
 LEFT JOIN dbo.CIC_iCarolImportAllRecords ar
 	ON ii.ResourceAgencyNum=ar.ResourceAgencyNum AND ii.LangID=ar.LangID
-WHERE ar.ResourceAgencyNum IS NULL AND ii.LANGID=@@LANGID
+WHERE ar.ResourceAgencyNum IS NULL AND ii.LANGID=@@LANGID AND ii.DELETION_DATE IS NULL
+
+DELETE ii 
+FROM dbo.CIC_iCarolImport ii
+LEFT JOIN dbo.CIC_iCarolImportRollup ir
+	ON ii.ResourceAgencyNum=ir.ResourceAgencyNum AND ii.LangID=ir.LangID
+WHERE ii.DELETION_DATE IS NOT NULL AND (ir.ResourceAgencyNum IS NULL OR (ir.DELETION_DATE IS NOT NULL AND ir.DATE_IMPORTED > ir.DELETION_DATE))
+
+DELETE ir FROM dbo.CIC_iCarolImportRollup AS ir
+WHERE ir.DELETION_DATE IS NOT NULL AND ir.DATE_IMPORTED > ir.DELETION_DATE
 
 SELECT a.*
 FROM dbo.CIC_iCarolImportAllRecords a 
