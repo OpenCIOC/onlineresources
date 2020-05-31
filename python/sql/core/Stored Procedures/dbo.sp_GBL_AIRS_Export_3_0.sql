@@ -3,17 +3,18 @@ GO
 SET ANSI_NULLS ON
 GO
 
+
 CREATE PROCEDURE [dbo].[sp_GBL_AIRS_Export_3_0] (
-	@ViewType [int],
-	@LangID [smallint],
-	@DistCode [varchar](20),
-	@PubCodeSynch [bit],
-	@PartialDate [datetime],
-	@IncludeDeleted [bit],
-	@AutoIncludeSiteAgency [bit],
-	@AgencyNUM [varchar](8) = NULL,
-	@LabelLangOverride smallint = 0,
-	@AnyLanguageChange bit = 0
+	@ViewType [INT],
+	@LangID [SMALLINT],
+	@DistCode [VARCHAR](20),
+	@PubCodeSynch [BIT],
+	@PartialDate [DATETIME],
+	@IncludeDeleted [BIT],
+	@AutoIncludeSiteAgency [BIT],
+	@AgencyNUM [VARCHAR](8) = NULL,
+	@LabelLangOverride SMALLINT = 0,
+	@AnyLanguageChange BIT = 0
 )
 WITH EXECUTE AS CALLER
 AS
@@ -21,7 +22,7 @@ SET NOCOUNT ON
 
 /*
 	Checked by: KL
-	Checked on: 25-Jul-2018
+	Checked on: 03-May-2019
 	Action: NO ACTION REQUIRED
 */
 
@@ -224,7 +225,7 @@ SELECT
 					WHERE pvf.ProfileID=bt.PRIVACY_PROFILE)
 					THEN 'true' ELSE 'false' END AS "@Confidential",
 				btd.SITE_BUILDING AS PreAddressLine,
-				dbo.fn_GBL_FullAddress(NULL,NULL,NULL,btd.SITE_STREET_NUMBER,btd.SITE_STREET,btd.SITE_STREET_TYPE,btd.SITE_STREET_TYPE_AFTER,btd.SITE_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,btd.LangID,0) AS Line1,
+				dbo.fn_GBL_FullAddress(NULL,NULL,btd.SITE_LINE_1,btd.SITE_LINE_2,NULL,btd.SITE_STREET_NUMBER,btd.SITE_STREET,btd.SITE_STREET_TYPE,btd.SITE_STREET_TYPE_AFTER,btd.SITE_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,btd.LangID,0) AS Line1,
 				btd.SITE_SUFFIX AS Line2,
 				COALESCE(
 					(SELECT EXPORT_CITY FROM @SiteCityTable WHERE SITE_CITY=btd.SITE_CITY),
@@ -251,8 +252,8 @@ SELECT
 						ON pvf.FieldID=fo.FieldID AND fo.FieldName='MAIL_ADDRESS'
 					WHERE pvf.ProfileID=bt.PRIVACY_PROFILE)
 					THEN 'true' ELSE 'false' END AS "@Confidential",
-				REPLACE(dbo.fn_GBL_FullAddress(NULL,NULL,btd.MAIL_BUILDING,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,btd.MAIL_CARE_OF,NULL,NULL,NULL,NULL,@LangID,0),@nLine,', ') AS PreAddressLine,
-				REPLACE(dbo.fn_GBL_FullAddress(NULL,NULL,NULL,btd.MAIL_STREET_NUMBER,btd.MAIL_STREET,btd.MAIL_STREET_TYPE,btd.MAIL_STREET_TYPE_AFTER,btd.MAIL_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,btd.MAIL_BOX_TYPE,btd.MAIL_PO_BOX,NULL,NULL,@LangID,0),@nLine,', ') AS Line1,
+				REPLACE(dbo.fn_GBL_FullAddress(NULL,NULL,NULL,NULL,btd.MAIL_BUILDING,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,btd.MAIL_CARE_OF,NULL,NULL,NULL,NULL,@LangID,0),@nLine,', ') AS PreAddressLine,
+				REPLACE(dbo.fn_GBL_FullAddress(NULL,NULL,btd.MAIL_LINE_1,btd.MAIL_LINE_2,NULL,btd.MAIL_STREET_NUMBER,btd.MAIL_STREET,btd.MAIL_STREET_TYPE,btd.MAIL_STREET_TYPE_AFTER,btd.MAIL_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,btd.MAIL_BOX_TYPE,btd.MAIL_PO_BOX,NULL,NULL,@LangID,0),@nLine,', ') AS Line1,
 				btd.MAIL_SUFFIX AS Line2,
 				COALESCE(btd.MAIL_CITY,btd.SITE_CITY,cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Unknown',@LangID)) AS City,
 				ISNULL(btd.MAIL_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=@MemberID)) AS [State],
@@ -342,6 +343,12 @@ SELECT
 	-- URL
 	(SELECT btd.WWW_ADDRESS AS Address WHERE btd.WWW_ADDRESS IS NOT NULL FOR XML PATH('URL'), TYPE),
 	
+	-- SOCIAL MEDIA
+	(SELECT pr.Protocol + pr.URL AS Address, sm.DefaultName AS Note
+		FROM dbo.GBL_BT_SM pr INNER JOIN dbo.GBL_SocialMedia sm ON sm.SM_ID = pr.SM_ID
+		WHERE pr.NUM=bt.NUM AND pr.LangID=btd.LangID
+		FOR XML PATH('SocialMedia'), TYPE),
+
 	-- EMAIL
 	(SELECT LTRIM(ItemID) AS Address FROM dbo.fn_GBL_ParseVarCharIDList(btd.E_MAIL,',') FOR XML PATH('Email'), TYPE),
 	
@@ -513,7 +520,7 @@ SELECT
 					WHERE pvf.ProfileID=slbt.PRIVACY_PROFILE)
 					THEN 'true' ELSE 'false' END AS "@Confidential",
 				slbtd.SITE_BUILDING AS PreAddressLine,
-				dbo.fn_GBL_FullAddress(NULL,NULL,NULL,slbtd.SITE_STREET_NUMBER,slbtd.SITE_STREET,slbtd.SITE_STREET_TYPE,slbtd.SITE_STREET_TYPE_AFTER,slbtd.SITE_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,@LangID,0) AS Line1,
+				dbo.fn_GBL_FullAddress(NULL,NULL,slbtd.SITE_LINE_1,slbtd.SITE_LINE_2,NULL,slbtd.SITE_STREET_NUMBER,slbtd.SITE_STREET,slbtd.SITE_STREET_TYPE,slbtd.SITE_STREET_TYPE_AFTER,slbtd.SITE_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,@LangID,0) AS Line1,
 				slbtd.SITE_SUFFIX AS Line2,
 				COALESCE(
 					(SELECT EXPORT_CITY FROM @SiteCityTable WHERE SITE_CITY=slbtd.SITE_CITY),
@@ -541,8 +548,8 @@ SELECT
 						ON pvf.FieldID=fo.FieldID AND fo.FieldName='MAIL_ADDRESS'
 					WHERE pvf.ProfileID=slbt.PRIVACY_PROFILE)
 					THEN 'true' ELSE 'false' END AS "@Confidential",
-				REPLACE(dbo.fn_GBL_FullAddress(NULL,NULL,slbtd.MAIL_BUILDING,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,slbtd.MAIL_CARE_OF,NULL,NULL,NULL,NULL,slbtd.LangID,0),@nLine,', ') AS PreAddressLine,
-				REPLACE(dbo.fn_GBL_FullAddress(NULL,NULL,NULL,slbtd.MAIL_STREET_NUMBER,slbtd.MAIL_STREET,slbtd.MAIL_STREET_TYPE,slbtd.MAIL_STREET_TYPE_AFTER,slbtd.MAIL_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,slbtd.MAIL_BOX_TYPE,slbtd.MAIL_PO_BOX,NULL,NULL,slbtd.LangID,0),@nLine,', ') AS Line1,
+				REPLACE(dbo.fn_GBL_FullAddress(NULL,NULL,NULL,NULL,slbtd.MAIL_BUILDING,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,slbtd.MAIL_CARE_OF,NULL,NULL,NULL,NULL,slbtd.LangID,0),@nLine,', ') AS PreAddressLine,
+				REPLACE(dbo.fn_GBL_FullAddress(NULL,NULL,slbtd.MAIL_LINE_1,slbtd.MAIL_LINE_2,NULL,slbtd.MAIL_STREET_NUMBER,slbtd.MAIL_STREET,slbtd.MAIL_STREET_TYPE,slbtd.MAIL_STREET_TYPE_AFTER,slbtd.MAIL_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,slbtd.MAIL_BOX_TYPE,slbtd.MAIL_PO_BOX,NULL,NULL,slbtd.LangID,0),@nLine,', ') AS Line1,
 				slbtd.MAIL_SUFFIX AS Line2,
 				COALESCE(slbtd.MAIL_CITY,slbtd.SITE_CITY,cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Unknown',@LangID)) AS City,
 				ISNULL(slbtd.MAIL_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=@MemberID)) AS [State],
@@ -611,6 +618,12 @@ SELECT
 			WHERE slbtd.WWW_ADDRESS IS NOT NULL
 			FOR XML PATH('URL'), TYPE),
 		
+	-- SITE > SOCIAL MEDIA
+	(SELECT pr.Protocol + pr.URL AS Address, sm.DefaultName AS Note
+		FROM dbo.GBL_BT_SM pr INNER JOIN dbo.GBL_SocialMedia sm ON sm.SM_ID = pr.SM_ID
+		WHERE pr.NUM=slbt.NUM AND pr.LangID=slbtd.LangID
+		FOR XML PATH('SocialMedia'), TYPE),
+
 	-- SITE > EMAIL
 		(SELECT LTRIM(ItemID) AS Address
 			FROM dbo.fn_GBL_ParseVarCharIDList(slbtd.E_MAIL,',')
@@ -751,6 +764,9 @@ SELECT
 	-- SITE > SERVICE
 		(SELECT
 
+	-- RECORD OWNER
+		bt.RECORD_OWNER + 'CIOC' AS "@RecordOwner",
+
 	-- EXCLUDE FROM WEB / DIRECTORY
 		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 OR svbtd.LangID<>@LangID THEN 'true' ELSE 'false' END AS "@ExcludeFromWebsite",
 		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 OR svbtd.LangID<>@LangID THEN 'true' ELSE 'false' END AS "@ExcludeFromDirectory",
@@ -872,6 +888,12 @@ SELECT
 		(SELECT svbtd.WWW_ADDRESS AS Address
 			WHERE svbtd.WWW_ADDRESS IS NOT NULL
 			FOR XML PATH('URL'), TYPE),
+
+	-- SITE > SERVICE > SOCIAL MEDIA
+	(SELECT pr.Protocol + pr.URL AS Address, sm.DefaultName AS Note
+		FROM dbo.GBL_BT_SM pr INNER JOIN dbo.GBL_SocialMedia sm ON sm.SM_ID = pr.SM_ID
+		WHERE pr.NUM=svbt.NUM AND pr.LangID=svbtd.LangID
+		FOR XML PATH('SocialMedia'), TYPE),
 		
 	-- SITE > SERVICE > EMAIL
 		(SELECT LTRIM(ItemID) AS Address
@@ -1013,7 +1035,7 @@ SELECT
 	-- SITE > SERVICE > GEOGRAPHIC AREA SERVED
 			(SELECT 
 					(SELECT
-						CAST(N'<' + excm.AIRSExportType + N'>' + (SELECT excm.AreaName AS [text()] FOR XML PATH('')) + N'</' + excm.AIRSExportType + N'>' AS xml) AS [node()]
+						CAST(N'<' + excm.AIRSExportType + N'>' + (SELECT excm.AreaName AS [text()] FOR XML PATH('')) + N'</' + excm.AIRSExportType + N'>' AS XML) AS [node()]
 						FROM (SELECT DISTINCT excm.AIRSExportType, excm.AreaName, cmat.[Order]
 							FROM CIC_BT_CM cpr
 							INNER JOIN GBL_Community cm
@@ -1039,9 +1061,9 @@ SELECT
 					CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 OR svbtd.LangID<>@LangID THEN 'false' ELSE 'true' END AS "@AvailableForDirectory",
 					CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) THEN 'false' ELSE 'true' END AS "@AvailableForReferral",
 					CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) THEN 'false' ELSE 'true' END AS "@AvailableForResearch",
-					CAST(svbtd.CREATED_DATE AS date) AS "@DateAdded",
-					CAST(svbtd.UPDATE_DATE AS date) AS "@DateLastVerified",
-					CAST(svbtd.MODIFIED_DATE AS date) AS "@DateOfLastAction",
+					CAST(svbtd.CREATED_DATE AS DATE) AS "@DateAdded",
+					CAST(svbtd.UPDATE_DATE AS DATE) AS "@DateLastVerified",
+					CAST(svbtd.MODIFIED_DATE AS DATE) AS "@DateOfLastAction",
 					(SELECT
 						'Source' AS "@Type",
 						svbtd.SOURCE_TITLE AS Title,
@@ -1089,7 +1111,25 @@ SELECT
 	(SELECT svcbtd.CMP_InternalMemo AS Notes
 		WHERE svcbtd.CMP_InternalMemo IS NOT NULL) AS EditorsNote,
 	(SELECT svcbtd.PUBLIC_COMMENTS AS Notes
-		WHERE svcbtd.PUBLIC_COMMENTS IS NOT NULL) AS PublicNote
+		WHERE svcbtd.PUBLIC_COMMENTS IS NOT NULL) AS PublicNote,
+
+	-- SITE > SERVICE > PUB AND DIST CODES
+	(SELECT pb.PubCode AS "@Value",
+		(SELECT ghn.Name AS "@Value"
+			FROM dbo.CIC_BT_PB_GH ghr
+			INNER JOIN dbo.CIC_GeneralHeading gh ON gh.GH_ID = ghr.GH_ID
+			INNER JOIN dbo.CIC_GeneralHeading_Name ghn ON ghn.GH_ID = gh.GH_ID AND ghn.LangID=svbtd.LangID
+			WHERE ghr.BT_PB_ID=pbr.BT_PB_ID FOR XML PATH('Heading'), TYPE)
+		FROM dbo.CIC_BT_PB pbr
+		INNER JOIN dbo.CIC_Publication pb ON pb.PB_ID = pbr.PB_ID
+		WHERE pbr.NUM LIKE svbt.NUM
+		FOR XML PATH('Publication'), TYPE),
+	(SELECT dst.DistCode AS "@Value"
+		FROM dbo.CIC_BT_DST pr
+		INNER JOIN dbo.CIC_Distribution dst ON dst.DST_ID = pr.DST_ID
+		WHERE pr.NUM LIKE svbt.NUM
+		FOR XML PATH('Distribution'), TYPE)
+
 			FROM GBL_BaseTable svbt
 			INNER JOIN GBL_BaseTable_Description svbtd
 				ON svbt.NUM=svbtd.NUM AND svbtd.LangID=@LangID
@@ -1124,6 +1164,9 @@ SELECT
 		
 	-- SITE > SERVICE
 		(SELECT
+
+	-- RECORD OWNER
+		bt.RECORD_OWNER + 'CIOC' AS "@RecordOwner",
 
 	-- EXCLUDE FROM WEB / DIRECTORY
 		CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 OR svbtd.LangID<>@LangID THEN 'true' ELSE 'false' END AS "@ExcludeFromWebsite",
@@ -1246,6 +1289,12 @@ SELECT
 		(SELECT svbtd.WWW_ADDRESS AS Address
 			WHERE svbtd.WWW_ADDRESS IS NOT NULL
 			FOR XML PATH('URL'), TYPE),
+
+	-- SITE > SERVICE > SOCIAL MEDIA
+		(SELECT pr.Protocol + pr.URL AS Address, sm.DefaultName AS Note
+			FROM dbo.GBL_BT_SM pr INNER JOIN dbo.GBL_SocialMedia sm ON sm.SM_ID = pr.SM_ID
+			WHERE pr.NUM=svbt.NUM AND pr.LangID=svbtd.LangID
+			FOR XML PATH('SocialMedia'), TYPE),
 		
 	-- SITE > SERVICE > EMAIL
 		(SELECT LTRIM(ItemID) AS Address
@@ -1387,7 +1436,7 @@ SELECT
 	-- SITE > SERVICE > GEOGRAPHIC AREA SERVED
 			(SELECT 
 					(SELECT
-						CAST(N'<' + excm.AIRSExportType + N'>' + (SELECT excm.AreaName AS [text()] FOR XML PATH('')) + N'</' + excm.AIRSExportType + N'>' AS xml) AS [node()]
+						CAST(N'<' + excm.AIRSExportType + N'>' + (SELECT excm.AreaName AS [text()] FOR XML PATH('')) + N'</' + excm.AIRSExportType + N'>' AS XML) AS [node()]
 						FROM (SELECT DISTINCT excm.AIRSExportType, excm.AreaName, cmat.[Order]
 							FROM CIC_BT_CM cpr
 							INNER JOIN GBL_Community cm
@@ -1413,9 +1462,9 @@ SELECT
 					CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) OR svbtd.NON_PUBLIC=1 OR svbtd.LangID<>@LangID THEN 'false' ELSE 'true' END AS "@AvailableForDirectory",
 					CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) THEN 'false' ELSE 'true' END AS "@AvailableForReferral",
 					CASE WHEN (svbtd.DELETION_DATE IS NOT NULL AND svbtd.DELETION_DATE <= GETDATE()) THEN 'false' ELSE 'true' END AS "@AvailableForResearch",
-					CAST(svbtd.CREATED_DATE AS date) AS "@DateAdded",
-					CAST(svbtd.UPDATE_DATE AS date) AS "@DateLastVerified",
-					CAST(svbtd.MODIFIED_DATE AS date) AS "@DateOfLastAction",
+					CAST(svbtd.CREATED_DATE AS DATE) AS "@DateAdded",
+					CAST(svbtd.UPDATE_DATE AS DATE) AS "@DateLastVerified",
+					CAST(svbtd.MODIFIED_DATE AS DATE) AS "@DateOfLastAction",
 					(SELECT
 						'Source' AS "@Type",
 						svbtd.SOURCE_TITLE AS Title,
@@ -1463,7 +1512,24 @@ SELECT
 	(SELECT svcbtd.CMP_InternalMemo AS Notes
 		WHERE svcbtd.CMP_InternalMemo IS NOT NULL) AS EditorsNote,
 	(SELECT svcbtd.PUBLIC_COMMENTS AS Notes
-		WHERE svcbtd.PUBLIC_COMMENTS IS NOT NULL) AS PublicNote
+		WHERE svcbtd.PUBLIC_COMMENTS IS NOT NULL) AS PublicNote,
+
+	-- SITE > SERVICE > PUB AND DIST CODES
+	(SELECT pb.PubCode AS "@Value",
+		(SELECT ghn.Name AS "@Value"
+			FROM dbo.CIC_BT_PB_GH ghr
+			INNER JOIN dbo.CIC_GeneralHeading gh ON gh.GH_ID = ghr.GH_ID
+			INNER JOIN dbo.CIC_GeneralHeading_Name ghn ON ghn.GH_ID = gh.GH_ID AND ghn.LangID=svbtd.LangID
+			WHERE ghr.BT_PB_ID=pbr.BT_PB_ID FOR XML PATH('Heading'), TYPE)
+		FROM dbo.CIC_BT_PB pbr
+		INNER JOIN dbo.CIC_Publication pb ON pb.PB_ID = pbr.PB_ID
+		WHERE pbr.NUM LIKE svbt.NUM
+		FOR XML PATH('Publication'), TYPE),
+	(SELECT dst.DistCode AS "@Value"
+		FROM dbo.CIC_BT_DST pr
+		INNER JOIN dbo.CIC_Distribution dst ON dst.DST_ID = pr.DST_ID
+		WHERE pr.NUM LIKE svbt.NUM
+		FOR XML PATH('Distribution'), TYPE)
 				
 			FROM GBL_BaseTable svbt
 			INNER JOIN GBL_BaseTable_Description svbtd
@@ -1501,11 +1567,44 @@ SELECT
 		(SELECT
 			slbtd.GEOCODE_NOTES AS [Description],
 			'WGS84' AS Datum,
-			CASE WHEN slbt.LATITUDE > 0 THEN '+' ELSE '' END + CAST(slbt.LATITUDE AS varchar(30)) AS Latitude,
-			CASE WHEN slbt.LONGITUDE > 0 THEN '+' ELSE '' END + CAST(slbt.LONGITUDE AS varchar(30)) AS Longitude
+			CASE WHEN slbt.LATITUDE > 0 THEN '+' ELSE '' END + CAST(slbt.LATITUDE AS VARCHAR(30)) AS Latitude,
+			CASE WHEN slbt.LONGITUDE > 0 THEN '+' ELSE '' END + CAST(slbt.LONGITUDE AS VARCHAR(30)) AS Longitude
 			WHERE slbt.LATITUDE IS NOT NULL
 				AND slbt.NUM=slbtd.NUM
 			FOR XML PATH('SpatialLocation'),TYPE
+		),
+
+	-- SITE > RESOURCE INFO
+		(SELECT 
+				CASE WHEN (slbtd.DELETION_DATE IS NOT NULL AND slbtd.DELETION_DATE <= GETDATE()) OR slbtd.NON_PUBLIC=1 OR slbtd.LangID<>@LangID THEN 'false' ELSE 'true' END AS "@AvailableForDirectory",
+				CASE WHEN (slbtd.DELETION_DATE IS NOT NULL AND slbtd.DELETION_DATE <= GETDATE()) THEN 'false' ELSE 'true' END AS "@AvailableForReferral",
+				CASE WHEN (slbtd.DELETION_DATE IS NOT NULL AND slbtd.DELETION_DATE <= GETDATE()) THEN 'false' ELSE 'true' END AS "@AvailableForResearch",
+				CAST(slbtd.CREATED_DATE AS DATE) AS "@DateAdded",
+				CAST(slbtd.UPDATE_DATE AS DATE) AS "@DateLastVerified",
+				CAST(slbtd.MODIFIED_DATE AS DATE) AS "@DateOfLastAction",
+				(SELECT
+					'Source' AS "@Type",
+					slbtd.SOURCE_TITLE AS Title,
+					slbtd.SOURCE_NAME AS Name,
+					(SELECT LTRIM(ItemID) AS Address FROM dbo.fn_GBL_ParseVarCharIDList(slbtd.SOURCE_EMAIL,',') FOR XML PATH('Email'), TYPE),
+					(SELECT 
+							'false' AS "@TollFree",
+							'false' AS "@Confidential",
+							slbtd.SOURCE_PHONE AS PhoneNumber,
+							'Voice' AS Type
+						WHERE slbtd.SOURCE_PHONE IS NOT NULL
+						FOR XML PATH('Phone'), TYPE),
+					(SELECT 
+							'false' AS "@TollFree",
+							'false' AS "@Confidential",
+							slbtd.SOURCE_FAX AS PhoneNumber,
+							'Fax' AS Type
+						WHERE slbtd.SOURCE_FAX IS NOT NULL
+						FOR XML PATH('Phone'), TYPE)
+					WHERE slbtd.SOURCE_NAME IS NOT NULL
+					FOR XML PATH('Contact'), TYPE),
+				slbtd.UPDATED_BY AS ResourceSpecialist
+			FOR XML PATH('ResourceInfo'), TYPE
 		),
 		
 	-- SITE > COMMENTS
@@ -1524,7 +1623,24 @@ SELECT
 				INNER JOIN dbo.GBL_Community_External_Community excm
 					ON excm.EXT_ID = cmap.MapOneEXTID AND excm.SystemCode='ONTARIO211'
 				WHERE cmap.CM_ID=slbt.LOCATED_IN_CM
-				FOR XML PATH(''),TYPE)
+				FOR XML PATH(''),TYPE),
+
+	-- SITE > PUB AND DIST CODES
+	(SELECT pb.PubCode AS "@Value",
+		(SELECT ghn.Name AS "@Value"
+			FROM dbo.CIC_BT_PB_GH ghr
+			INNER JOIN dbo.CIC_GeneralHeading gh ON gh.GH_ID = ghr.GH_ID
+			INNER JOIN dbo.CIC_GeneralHeading_Name ghn ON ghn.GH_ID = gh.GH_ID AND ghn.LangID=slbtd.LangID
+			WHERE ghr.BT_PB_ID=pbr.BT_PB_ID FOR XML PATH('Heading'), TYPE)
+		FROM dbo.CIC_BT_PB pbr
+		INNER JOIN dbo.CIC_Publication pb ON pb.PB_ID = pbr.PB_ID
+		WHERE pbr.NUM LIKE slbt.NUM
+		FOR XML PATH('Publication'), TYPE),
+	(SELECT dst.DistCode AS "@Value"
+		FROM dbo.CIC_BT_DST pr
+		INNER JOIN dbo.CIC_Distribution dst ON dst.DST_ID = pr.DST_ID
+		WHERE pr.NUM LIKE slbt.NUM
+		FOR XML PATH('Distribution'), TYPE)
 
 		FROM GBL_BaseTable slbt
 		LEFT JOIN GBL_BaseTable_Description slbtd
@@ -1586,9 +1702,9 @@ SELECT
 			CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) OR btd.NON_PUBLIC=1 OR btd.LangID<>@LangID THEN 'false' ELSE 'true' END AS "@AvailableForDirectory",
 			CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) THEN 'false' ELSE 'true' END AS "@AvailableForReferral",
 			CASE WHEN (btd.DELETION_DATE IS NOT NULL AND btd.DELETION_DATE <= GETDATE()) THEN 'false' ELSE 'true' END AS "@AvailableForResearch",
-			CAST(btd.CREATED_DATE AS date) AS "@DateAdded",
-			CAST(btd.UPDATE_DATE AS date) AS "@DateLastVerified",
-			CAST(btd.MODIFIED_DATE AS date) AS "@DateOfLastAction",
+			CAST(btd.CREATED_DATE AS DATE) AS "@DateAdded",
+			CAST(btd.UPDATE_DATE AS DATE) AS "@DateLastVerified",
+			CAST(btd.MODIFIED_DATE AS DATE) AS "@DateOfLastAction",
 			(SELECT
 				'Source' AS "@Type",
 				btd.SOURCE_TITLE AS Title,
@@ -1620,7 +1736,25 @@ SELECT
 	(SELECT cbtd.CMP_InternalMemo AS Notes
 		WHERE cbtd.CMP_InternalMemo IS NOT NULL) AS EditorsNote,
 	(SELECT cbtd.PUBLIC_COMMENTS AS Notes
-		WHERE cbtd.PUBLIC_COMMENTS IS NOT NULL) AS PublicNote
+		WHERE cbtd.PUBLIC_COMMENTS IS NOT NULL) AS PublicNote,
+
+	-- PUB AND DIST CODES
+		(SELECT pb.PubCode AS "@Value",
+		(SELECT ghn.Name AS "@Value"
+			FROM dbo.CIC_BT_PB_GH ghr
+			INNER JOIN dbo.CIC_GeneralHeading gh ON gh.GH_ID = ghr.GH_ID
+			INNER JOIN dbo.CIC_GeneralHeading_Name ghn ON ghn.GH_ID = gh.GH_ID AND ghn.LangID=btd.LangID
+			WHERE ghr.BT_PB_ID=pbr.BT_PB_ID FOR XML PATH('Heading'), TYPE)
+		FROM dbo.CIC_BT_PB pbr
+		INNER JOIN dbo.CIC_Publication pb ON pb.PB_ID = pbr.PB_ID
+		WHERE pbr.NUM LIKE bt.NUM
+		FOR XML PATH('Publication'), TYPE),
+	(SELECT dst.DistCode AS "@Value"
+		FROM dbo.CIC_BT_DST pr
+		INNER JOIN dbo.CIC_Distribution dst ON dst.DST_ID = pr.DST_ID
+		WHERE pr.NUM LIKE bt.NUM
+		FOR XML PATH('Distribution'), TYPE)
+
 	FOR XML PATH('Agency')
 )
 				
@@ -1697,6 +1831,7 @@ RETURN @Error
 SET NOCOUNT OFF
 
 --DELETE FROM GBL_BT_LOCATION_SERVICE where LOCATION_NUM='ZZZ00002'
+
 
 
 

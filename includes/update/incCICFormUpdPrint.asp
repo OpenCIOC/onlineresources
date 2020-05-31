@@ -265,6 +265,8 @@ Function makeAddress(rst,bMail,bUseContent)
 	Dim strCO, _
 		strBoxType, _
 		strPO, _
+		strLine1, _
+		strLine2, _
 		strBuilding, _
 		strNumber, _
 		strStreet, _
@@ -286,6 +288,8 @@ Function makeAddress(rst,bMail,bUseContent)
 			strPO = rst.Fields("MAIL_PO_BOX")
 		End If
 		strBuilding = rst(strAddrPrefix & "BUILDING")
+		strLine1 = rst(strAddrPrefix & "LINE_1")
+		strLine2 = rst(strAddrPrefix & "LINE_2")
 		strNumber = rst(strAddrPrefix & "STREET_NUMBER")
 		strStreet = rst(strAddrPrefix & "STREET")
 		strType = rst(strAddrPrefix & "STREET_TYPE")
@@ -308,7 +312,7 @@ Function makeAddress(rst,bMail,bUseContent)
 			"<div class=""row form-group"">" & _
 				"<label for=""MAIL_CARE_OF"" class=""control-label col-sm-3 col-lg-2"">" & TXT_MAIL_CO & "</label>" & _
 				"<div class=""col-sm-9 col-lg-10"">" & _
-					"<input type=""text"" name=""MAIL_CARE_OF"" id=""MAIL_CARE_OF"" maxlength=""100"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strCO) & ">"
+					"<input type=""text"" name=""MAIL_CARE_OF"" id=""MAIL_CARE_OF"" maxlength=""150"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strCO) & ">"
 		If bFeedback Then
 			strReturn = strReturn & getFeedback("MAIL_CARE_OF",True)
 		End If
@@ -335,6 +339,31 @@ Function makeAddress(rst,bMail,bUseContent)
 				"</div>" & _
 			"</div>"
 	End If
+
+	If Not Nl(strLine1) Or Not Nl(strLine2) Then
+		strReturn = strReturn & _
+			"<div class=""row form-group"">" & _
+				"<label for=""" & strAddrPrefix & "LINE_1"" class=""control-label col-sm-3 col-lg-2"">" & TXT_LINE & " 1</label>" & _
+				"<div class=""col-sm-9 col-lg-10"">" & _
+					"<input type=""text"" name=""" & strAddrPrefix & "LINE_1"" id=""" & strAddrPrefix & "LINE_1"" maxlength=""255"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strLine1) & ">"
+		If bFeedback Then
+			strReturn = strReturn & getFeedback(strAddrPrefix & "LINE_1",True)
+		End If
+		strReturn = strReturn & _
+				"</div>" & _
+			"</div>" & _
+			"<div class=""row form-group"">" & _
+				"<label for=""" & strAddrPrefix & "LINE_2"" class=""control-label col-sm-3 col-lg-2"">" & TXT_LINE & " 2</label>" & _
+				"<div class=""col-sm-9 col-lg-10"">" & _
+					"<input type=""text"" name=""" & strAddrPrefix & "LINE_2"" id=""" & strAddrPrefix & "LINE_2"" maxlength=""255"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strLine2) & ">"
+		If bFeedback Then
+			strReturn = strReturn & getFeedback(strAddrPrefix & "LINE_2",True)
+		End If
+		strReturn = strReturn & _
+				"</div>" & _
+			"</div>"
+	End If
+
 	strReturn = strReturn & _
 		"<div class=""row form-group"">" & _
 			"<label for=""" & strAddrPrefix & "BUILDING"" class=""control-label col-sm-3 col-lg-2"">" & TXT_BUILDING & "</label>" & _
@@ -2216,7 +2245,7 @@ Function otherAddressEntry(rst, strHeading, strFPrefix, bUseContent)
 			"<br>" & oaField(TXT_SITE_CODE, strFPrefix & "SITE_CODE", strCode, IIf(intSiteCodeLength>TEXT_SIZE,TEXT_SIZE,intSiteCodeLength+1), intSiteCodeLength)
 	End If
 	strReturn = strReturn & _
-		"<br>" & oaField(TXT_MAIL_CO, strFPrefix & "CARE_OF", strCO, TEXT_SIZE, 100) & _
+		"<br>" & oaField(TXT_MAIL_CO, strFPrefix & "CARE_OF", strCO, TEXT_SIZE, 150) & _
 		"<br>" & oaLabel(TXT_BOX_TYPE, strFPrefix & "BOX_TYPE") & makeBoxTypeList(strBoxType, strFPrefix & "BOX_TYPE", True) & _
 		"<br>" & oaField(TXT_BOX_NUMBER, strFPrefix & "PO_BOX", strPO, 20, 20) & _
 		"<br>" & oaField(TXT_BUILDING, strFPrefix & "BUILDING", strBuilding, TEXT_SIZE, 150) & _

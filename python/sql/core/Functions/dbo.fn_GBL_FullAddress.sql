@@ -5,6 +5,8 @@ GO
 CREATE FUNCTION [dbo].[fn_GBL_FullAddress](
 	@NUM varchar(8),
 	@RSN int,
+	@Line1 NVARCHAR(255),
+	@Line2 NVARCHAR(255),
 	@Building nvarchar(100),
 	@StreetNumber nvarchar(30),
 	@Street nvarchar(200),
@@ -16,7 +18,7 @@ CREATE FUNCTION [dbo].[fn_GBL_FullAddress](
 	@Province varchar(2),
 	@Country nvarchar(60),
 	@PostalCode varchar(20),
-	@CareOf nvarchar(100),
+	@CareOf nvarchar(150),
 	@BoxType nvarchar(20),
 	@POBox nvarchar(20),
 	@Latitude [decimal](11, 7),
@@ -27,12 +29,6 @@ CREATE FUNCTION [dbo].[fn_GBL_FullAddress](
 RETURNS nvarchar(max) WITH EXECUTE AS CALLER
 AS 
 BEGIN
-
-/*
-	Checked by: KL
-	Checked on: 26-Mar-2018
-	Action: NO ACTION REQUIRED
-*/
 
 SET @LangID = ISNULL(@LangID,@@LANGID)
 
@@ -86,6 +82,17 @@ IF @CareOf IS NOT NULL BEGIN
 	SET @returnStr = cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('c/o',@LangID) + ' ' + @CareOf
 	SET @conStr = @newLine
 END
+
+IF @Line1 IS NOT NULL BEGIN
+	SET @returnStr = @returnStr + @conStr + @Line1
+	SET @conStr = @newLine
+END
+
+IF @Line2 IS NOT NULL BEGIN
+	SET @returnStr = @returnStr + @conStr + @Line2
+	SET @conStr = @newLine
+END
+
 IF @POBox IS NOT NULL BEGIN
 	SET @returnStr = @returnStr + @conStr + @BoxType + ' ' + @POBox
 	SET @conStr = @newLine

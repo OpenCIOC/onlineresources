@@ -268,6 +268,8 @@ Sub getMailAddressFields()
 			Or addBTInsertField("MAIL_STREET_TYPE",aStreetType(0),True,strUpdateListBTD,strInsertIntoBTD,strInsertValueBTD) _
 			Or addBTInsertField("MAIL_STREET_TYPE_AFTER",aStreetType(1),False,strUpdateListBTD,strInsertIntoBTD,strInsertValueBTD) _
 			Or processStrFldArray(Array("MAIL_CARE_OF", _
+				"MAIL_LINE_1", _
+				"MAIL_LINE_2", _
 				"MAIL_PO_BOX", _
 				"MAIL_BOX_TYPE", _
 				"MAIL_BUILDING", _
@@ -414,7 +416,9 @@ Sub getSiteAddressFields()
 		If addBTInsertField("SITE_POSTAL_CODE",strPostalCode,True,strUpdateListBT,strInsertIntoBT,strInsertValueBT) _
 			Or addBTInsertField("SITE_STREET_TYPE",aStreetType(0),True,strUpdateListBTD,strInsertIntoBTD,strInsertValueBTD) _
 			Or addBTInsertField("SITE_STREET_TYPE_AFTER",aStreetType(1),False,strUpdateListBTD,strInsertIntoBTD,strInsertValueBTD) _
-			Or processStrFldArray(Array("SITE_BUILDING", _
+			Or processStrFldArray(Array("SITE_LINE_1", _
+				"SITE_LINE_2", _
+				"SITE_BUILDING", _
 				"SITE_STREET_NUMBER", _
 				"SITE_STREET", _
 				"SITE_STREET_DIR", _
@@ -1168,7 +1172,7 @@ Sub getOtherAddressesSQL()
 			
 				strTitle = Left(Trim(Request(strFPrefix & "TITLE")),100)
 				strCode = Left(Trim(Request(strFPrefix & "SITE_CODE")),100)
-				strCO = Left(Trim(Request(strFPrefix & "CARE_OF")),100)
+				strCO = Left(Trim(Request(strFPrefix & "CARE_OF")),150)
 				strBoxType = Left(Trim(Request(strFPrefix & "BOX_TYPE")),20)
 				strPO = Left(Trim(Request(strFPrefix & "PO_BOX")),20)
 				strBuilding = Left(Trim(Request(strFPrefix & "BUILDING")),100)

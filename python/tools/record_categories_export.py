@@ -1,4 +1,3 @@
-
 # =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
@@ -22,28 +21,9 @@ import os
 import subprocess
 import sys
 
-from pyramid.decorator import reify
+from tools.toolslib import Context
 
-try:
-	import cioc  # NOQA
-except ImportError:
-	sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-
-from cioc.core import constants as const, request, config
-
-const.update_cache_values()
-
-
-class ContextBase(object):
-	def __init__(self, args):
-		self.params = {}
-		self.args = args
-
-
-class Context(request.CiocRequestMixin, ContextBase):
-	@reify
-	def config(self):
-		return config.get_config(self.args.configfile, const._app_name)
+from cioc.core import constants as const
 
 
 def export(args, conn, filename, sql):

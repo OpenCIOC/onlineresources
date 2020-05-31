@@ -47,7 +47,7 @@ _xmlschema_mtime = None
 
 def get_xmlschema():
 	global _xmlschema, _xmlschema_elements, _xmlschema_mtime
-	schema_path = os.path.join('..', 'import', 'cioc_schema.xsd')
+	schema_path = os.path.join(const._app_path, 'import', 'cioc_schema.xsd')
 	mtime = os.path.getmtime(schema_path)
 
 	if _xmlschema is None or mtime != _xmlschema_mtime:
@@ -89,6 +89,10 @@ class UploadSchema(validators.RootSchema):
 
 	ImportFile = validators.FieldStorageUploadConverter(not_empty=True)
 	DisplayName = validators.String(max=255, if_empty=None)
+
+
+class Context(object):
+	pass
 
 
 @view_defaults(renderer=templateprefix + 'index.mak')
@@ -134,66 +138,14 @@ class UploadBase(viewbase.ViewBase):
 			zipfile = ZipFile(file, 'r')
 			files = zipfile.namelist()
 			xmlfile = zipfile.open(files[0], 'r')
-		except Exception, e:
+		except Exception:
 			file.seek(0)
 			xmlfile = file
 
-		error_log = []
-		xmlschema, element_schemas = get_xmlschema()
-
-		self.made_field_list = False
-		self.total_inserted = 0
-
-		log.debug('domain: %d', request.pageinfo.Domain)
-		domain = request.pageinfo.Domain
-		domain_str = request.pageinfo.DbAreaS
-		if domain == const.DM_CIC:
-			handlers = _xml_handlers
-			id_column = 'NUM'
-		else:
-			handlers = _xml_handlers_vol
-			id_column = 'VNUM'
-
-		with request.connmgr.get_connection('admin') as conn:
-
-			EFID = conn.execute('''
-					DECLARE @EF_ID int
-					EXEC dbo.sp_%s_ImportEntry_i ?,?,?,?, @EF_ID OUTPUT
-					SELECT @EF_ID''' % domain_str, request.dboptions.MemberID, user.Mod, filename, data.get('DisplayName')).fetchone()[0]
-
-			root = None
-			try:
-				for event, element in etree.iterparse(xmlfile):
-					if root is None:
-						root = element.getroottree().getroot()
-
-					if element.getparent() != root:
-						continue
-
-					if domain == const.DM_CIC:
-						validator = element_schemas.get(element.tag)
-						if not validator:
-							error_log.append((None, _('Warning: unexpected element %s at line %d', request) %
-									(element.tag[len(CIOC_NS):], element.sourceline)))
-							continue
-
-						if not validator.validate(element):
-							log.debug('Schema error: %s', validator.error_log)
-							errmsg = _('Line %d, Column %d: %s', request)
-							error_log.extend((element.get(id_column), errmsg % (x.line, x.column, x.message.replace(CIOC_NS, ''))) for x in validator.error_log)
-
-							continue
-					handler = handlers.get(element.tag)
-					if handler:
-						handler(self, element, conn, EFID, domain_str)
-
-					element.clear()
-			except etree.XMLSyntaxError, e:
-				error_log.append((None, e.message))
-
-			root = None
-			element = None
-
+		error_log, total_inserted = process_import(
+			filename, xmlfile, request.dboptions.MemberID,
+			request.pageinfo.Domain, request.pageinfo.DbAreaS, user.Mod,
+			data.get('DisplayName'), request.connmgr, lambda x: _(x, request))
 		xmlfile.close()
 
 		if zipfile:
@@ -203,9 +155,70 @@ class UploadBase(viewbase.ViewBase):
 		request.override_renderer = templateprefix + 'result.mak'
 
 		return self._create_response_namespace(title, title,
-				{'error_log': error_log, 'total_inserted': self.total_inserted,
+				{'error_log': error_log, 'total_inserted': total_inserted,
 				'filename': filename},
 				print_table=False, no_index=True)
+
+
+def process_import(filename, xmlfile, member_id, domain, domain_str, user_mod, display_name, connmgr, _):
+	error_log = []
+	xmlschema, element_schemas = get_xmlschema()
+
+	self = Context()
+	self.made_field_list = False
+	self.total_inserted = 0
+
+	log.debug('domain: %d', domain)
+	# domain = request.pageinfo.Domain
+	# domain_str = request.pageinfo.DbAreaS
+	if domain == const.DM_CIC:
+		handlers = _xml_handlers
+		id_column = 'NUM'
+	else:
+		handlers = _xml_handlers_vol
+		id_column = 'VNUM'
+
+	with connmgr.get_connection('admin') as conn:
+
+		EFID = conn.execute('''
+				DECLARE @EF_ID int
+				EXEC dbo.sp_%s_ImportEntry_i ?,?,?,?, @EF_ID OUTPUT
+				SELECT @EF_ID''' % domain_str, member_id, user_mod, filename, display_name).fetchone()[0]
+
+		root = None
+		try:
+			for event, element in etree.iterparse(xmlfile):
+				if root is None:
+					root = element.getroottree().getroot()
+
+				if element.getparent() != root:
+					continue
+
+				if domain == const.DM_CIC:
+					validator = element_schemas.get(element.tag)
+					if not validator:
+						error_log.append((None, _('Warning: unexpected element %s at line %d') %
+								(element.tag[len(CIOC_NS):], element.sourceline)))
+						continue
+
+					if not validator.validate(element):
+						log.debug('Schema error: %s', validator.error_log)
+						errmsg = _('Line %d, Column %d: %s')
+						error_log.extend((element.get(id_column), errmsg % (x.line, x.column, x.message.replace(CIOC_NS, ''))) for x in validator.error_log)
+
+						continue
+				handler = handlers.get(element.tag)
+				if handler:
+					handler(self, element, conn, EFID, domain_str)
+
+				element.clear()
+		except etree.XMLSyntaxError, e:
+			error_log.append((None, e.message))
+
+		root = None
+		element = None
+
+	return error_log, self.total_inserted
 
 
 def _handle_record(self, element, conn, EFID, dm, id_column='NUM'):
@@ -251,6 +264,8 @@ def _handle_record(self, element, conn, EFID, dm, id_column='NUM'):
 
 	if ERID:
 		conn.execute('EXEC dbo.sp_%s_ImportEntry_Data_Language_i ?, ?, ?, ?, ?, ?, ?' % dm, ERID, has_english, has_french, non_public_e, non_public_f, deletion_date_e, deletion_date_f)
+	else:
+		print 'NO ERID, so NO Language import'
 
 	self.total_inserted += 1
 
