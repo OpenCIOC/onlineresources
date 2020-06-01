@@ -385,6 +385,14 @@ Sub getLogoAddressFields(strFieldDisplay)
 	If addInsertField("LOGO_ADDRESS_LINK",QsNNl(strFieldVal),strInsertIntoCFB,strInsertValueCFB) Then
 		Call addEmailField(TXT_LOGO_LINK_ADDRESS,strFieldVal)
 	End If
+	strFieldVal = getStrSetValue("LOGO_ADDRESS_HOVER_TEXT")
+	If addInsertField("LOGO_ADDRESS_HOVER_TEXT",QsNNl(strFieldVal),strInsertIntoCFB,strInsertValueCFB) Then
+		Call addEmailField(TXT_LOGO_HOVER_TEXT,strFieldVal)
+	End If
+	strFieldVal = getStrSetValue("LOGO_ADDRESS_ALT_TEXT")
+	If addInsertField("LOGO_ADDRESS_ALT_TEXT",QsNNl(strFieldVal),strInsertIntoCFB,strInsertValueCFB) Then
+		Call addEmailField(TXT_LOGO_ALT_TEXT,strFieldVal)
+	End If
 End Sub
 
 Sub getMailAddressFields(strFieldDisplay)

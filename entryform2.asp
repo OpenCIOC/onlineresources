@@ -1037,20 +1037,34 @@ Sub getLocationServices()
 End Sub
 
 Sub getLogoAddress()
-	Dim strLogoAddress, strLogoAddressLink, strLogoAddressProtocol, strLogoAddressLinkProtocol
+	Dim strLogoAddress, _
+		strLogoAddressLink, _
+		strLogoAddressProtocol, _
+		strLogoAddressLinkProtocol, _
+		strLogoAltText, _
+		strLogoHoverText
+
 	strLogoAddress = Trim(Request("LOGO_ADDRESS"))
 	Call checkWebWithProtocol(TXT_LOGO_ADDRESS, strLogoAddress, strLogoAddressProtocol)
 	Call checkLength(TXT_LOGO_ADDRESS, strLogoAddress, 200)
 
 	strLogoAddressLink = Trim(Request("LOGO_ADDRESS_LINK"))
 	Call checkWebWithProtocol(TXT_LOGO_ADDRESS, strLogoAddressLink, strLogoAddressLinkProtocol)
-	Call checkLength(TXT_LOGO_ADDRESS, strLogoAddressLink, 200)
+	Call checkLength(TXT_LOGO_LINK_ADDRESS, strLogoAddressLink, 200)
+
+	strLogoAltText = Trim(Request("LOGO_ADDRESS_ALT_TEXT"))
+	Call checkLength(TXT_LOGO_ALT_TEXT, strLogoAddressLink, 255)
+
+	strLogoHoverText = Trim(Request("LOGO_ADDRESS_HOVER_TEXT"))
+	Call checkLength(TXT_LOGO_HOVER_TEXT, strLogoAddressLink, 500)
 
 	If Nl(strErrorList) Then
 		If addBTInsertField("LOGO_ADDRESS", strLogoAddress, True, strUpdateListCBTD,strInsertIntoCBTD,strInsertValueCBTD) _
 			Or addBTInsertField("LOGO_ADDRESS_LINK", strLogoAddressLink, True, strUpdateListCBTD,strInsertIntoCBTD,strInsertValueCBTD) _
 			Or addBTInsertField("LOGO_ADDRESS_PROTOCOL", strLogoAddressProtocol, True, strUpdateListCBTD,strInsertIntoCBTD,strInsertValueCBTD) _
-			Or addBTInsertField("LOGO_ADDRESS_LINK_PROTOCOL", strLogoAddressLinkProtocol, True, strUpdateListCBTD,strInsertIntoCBTD,strInsertValueCBTD) Then
+			Or addBTInsertField("LOGO_ADDRESS_LINK_PROTOCOL", strLogoAddressLinkProtocol, True, strUpdateListCBTD,strInsertIntoCBTD,strInsertValueCBTD) _
+			Or addBTInsertField("LOGO_ADDRESS_ALT_TEXT", strLogoAltText, True, strUpdateListCBTD,strInsertIntoCBTD,strInsertValueCBTD) _
+			Or addBTInsertField("LOGO_ADDRESS_HOVER_TEXT", strLogoHoverText, True, strUpdateListCBTD,strInsertIntoCBTD,strInsertValueCBTD) Then
 				Call addChangeField(fldName.Value, g_objCurrentLang.LangID)
 		End If
 	End If

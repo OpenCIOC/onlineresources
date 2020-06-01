@@ -55,7 +55,10 @@ CREATE TABLE [dbo].[CIC_BaseTable_Description]
 [SRCH_Taxonomy] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SRCH_Taxonomy_U] [bit] NOT NULL CONSTRAINT [DF_CIC_BaseTable_Description_SRCH_Taxonomy_U] DEFAULT ((1)),
 [LOGO_ADDRESS_PROTOCOL] [varchar] (8) COLLATE Latin1_General_100_CI_AI NULL,
-[LOGO_ADDRESS_LINK_PROTOCOL] [varchar] (8) COLLATE Latin1_General_100_CI_AI NULL
+[LOGO_ADDRESS_LINK_PROTOCOL] [varchar] (8) COLLATE Latin1_General_100_CI_AI NULL,
+[LOGO_ADDRESS_HOVER_TEXT] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
+[LOGO_ADDRESS_ALT_TEXT] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
+
 ) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON
