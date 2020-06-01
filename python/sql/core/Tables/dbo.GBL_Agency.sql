@@ -27,11 +27,9 @@ CREATE TABLE [dbo].[GBL_Agency]
 [GetInvolvedToken] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [GetInvolvedCommunitySet] [int] NULL,
 [GetInvolvedSite] [nvarchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
-[VNUMSize] [tinyint] NOT NULL CONSTRAINT [DF_GBL_Agency_VNUMSize] DEFAULT ((4))
+[VNUMSize] [tinyint] NOT NULL CONSTRAINT [DF_GBL_Agency_VNUMSize] DEFAULT ((4)),
+[AutoImportFromICarol] [bit] NOT NULL CONSTRAINT [DF_GBL_Agency_AutoImportIcarol] DEFAULT ((0))
 ) ON [PRIMARY]
-ALTER TABLE [dbo].[GBL_Agency] WITH NOCHECK ADD
-CONSTRAINT [FK_GBL_Agency_GBL_BaseTable_AgencyNUMVOL] FOREIGN KEY ([AgencyNUMVOL]) REFERENCES [dbo].[GBL_BaseTable] ([NUM]) NOT FOR REPLICATION
-ALTER TABLE [dbo].[GBL_Agency] NOCHECK CONSTRAINT [FK_GBL_Agency_GBL_BaseTable_AgencyNUMVOL]
 GO
 ALTER TABLE [dbo].[GBL_Agency] ADD CONSTRAINT [CK_GBL_Agency_AgencyCode] CHECK (([AgencyCode] like '[A-Z][A-Z][A-Z]'))
 GO
@@ -43,16 +41,21 @@ ALTER TABLE [dbo].[GBL_Agency] ADD CONSTRAINT [IX_Agency] UNIQUE NONCLUSTERED  (
 GO
 ALTER TABLE [dbo].[GBL_Agency] WITH NOCHECK ADD CONSTRAINT [FK_GBL_Agency_GBL_BaseTable_AgencyNUMCIC] FOREIGN KEY ([AgencyNUMCIC]) REFERENCES [dbo].[GBL_BaseTable] ([NUM]) NOT FOR REPLICATION
 GO
-
-ALTER TABLE [dbo].[GBL_Agency] ADD CONSTRAINT [FK_GBL_Agency_VOL_CommunitySet] FOREIGN KEY ([GetInvolvedCommunitySet]) REFERENCES [dbo].[VOL_CommunitySet] ([CommunitySetID]) ON DELETE SET NULL ON UPDATE CASCADE
-GO
-ALTER TABLE [dbo].[GBL_Agency] ADD CONSTRAINT [FK_GBL_Agency_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
+ALTER TABLE [dbo].[GBL_Agency] WITH NOCHECK ADD CONSTRAINT [FK_GBL_Agency_GBL_BaseTable_AgencyNUMVOL] FOREIGN KEY ([AgencyNUMVOL]) REFERENCES [dbo].[GBL_BaseTable] ([NUM]) NOT FOR REPLICATION
 GO
 ALTER TABLE [dbo].[GBL_Agency] ADD CONSTRAINT [FK_GBL_Agency_STP_Language] FOREIGN KEY ([UpdateAccountLangID]) REFERENCES [dbo].[STP_Language] ([LangID])
 GO
+ALTER TABLE [dbo].[GBL_Agency] ADD CONSTRAINT [FK_GBL_Agency_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
+GO
+ALTER TABLE [dbo].[GBL_Agency] ADD CONSTRAINT [FK_GBL_Agency_VOL_CommunitySet] FOREIGN KEY ([GetInvolvedCommunitySet]) REFERENCES [dbo].[VOL_CommunitySet] ([CommunitySetID]) ON DELETE SET NULL ON UPDATE CASCADE
+GO
 ALTER TABLE [dbo].[GBL_Agency] NOCHECK CONSTRAINT [FK_GBL_Agency_GBL_BaseTable_AgencyNUMCIC]
 GO
+ALTER TABLE [dbo].[GBL_Agency] NOCHECK CONSTRAINT [FK_GBL_Agency_GBL_BaseTable_AgencyNUMVOL]
+GO
 GRANT SELECT ON  [dbo].[GBL_Agency] TO [cioc_cic_search_role]
+GO
 GRANT SELECT ON  [dbo].[GBL_Agency] TO [cioc_login_role]
+GO
 GRANT SELECT ON  [dbo].[GBL_Agency] TO [cioc_vol_search_role]
 GO

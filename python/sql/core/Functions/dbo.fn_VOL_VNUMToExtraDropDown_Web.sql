@@ -29,7 +29,7 @@ IF @HTTPVals = '' SET @HTTPVals = NULL
 
 DECLARE	@ExtraDropDown	nvarchar(200)
 
-SELECT @ExtraDropDown = '<a href="' + @PathToStart + 'results.asp?EXD' + @ExtraFieldName + 'ID=' + CAST(exd.EXD_ID AS varchar)
+SELECT @ExtraDropDown = '<a href="' + @PathToStart + 'volunteer/results.asp?EXD' + @ExtraFieldName + 'ID=' + CAST(exd.EXD_ID AS varchar)
 		+ '&EXD=' + @ExtraFieldName
 		+ CASE WHEN @HTTPVals IS NOT NULL THEN '&' + @HTTPVals ELSE '' END + '">' + ISNULL(Name,Code) + '</a>'
 	FROM VOL_ExtraDropDown exd

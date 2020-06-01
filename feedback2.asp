@@ -444,6 +444,8 @@ Sub getMailAddressFields(strFieldDisplay)
 	End If
 
 	If addInsertField("MAIL_CARE_OF",QsNNl(getStrSetValue("MAIL_CARE_OF")),strInsertIntoFB,strInsertValueFB) Or _
+			addInsertField("MAIL_LINE_1",QsNNl(getStrSetValue("MAIL_LINE_1")),strInsertIntoFB,strInsertValueFB) Or _
+			addInsertField("MAIL_LINE_2",QsNNl(getStrSetValue("MAIL_LINE_2")),strInsertIntoFB,strInsertValueFB) Or _
 			addInsertField("MAIL_BOX_TYPE",QsNNl(getStrSetValue("MAIL_BOX_TYPE")),strInsertIntoFB,strInsertValueFB) Or _
 			addInsertField("MAIL_PO_BOX",QsNNl(getStrSetValue("MAIL_PO_BOX")),strInsertIntoFB,strInsertValueFB) Or _
 			addInsertField("MAIL_BUILDING",QsNNl(getStrSetValue("MAIL_BUILDING")),strInsertIntoFB,strInsertValueFB) Or _
@@ -467,6 +469,8 @@ Sub getMailAddressFields(strFieldDisplay)
 			.Parameters.Append .CreateParameter("@RETURN_VALUE", adVarChar, adParamReturnValue, 8000)
 			.Parameters.Append .CreateParameter("@NUM", adVarChar, adParamInput, 8, Null)
 			.Parameters.Append .CreateParameter("@RSN", adInteger, adParamInput, 4, Null)
+			.Parameters.Append .CreateParameter("@Line1", adVarChar, adParamInput, 100, Left(Trim(Request("MAIL_LINE_1")),255))
+			.Parameters.Append .CreateParameter("@Line2", adVarChar, adParamInput, 100, Left(Trim(Request("MAIL_LINE_2")),255))
 			.Parameters.Append .CreateParameter("@Building", adVarChar, adParamInput, 100, Left(Trim(Request("MAIL_BUILDING")),100))
 			.Parameters.Append .CreateParameter("@StreetNumber", adVarWChar, adParamInput, 30, Left(Trim(Request("MAIL_STREET_NUMBER")),30))
 			.Parameters.Append .CreateParameter("@Street", adVarWChar, adParamInput, 150, Left(Trim(Request("MAIL_STREET")),150))
@@ -478,7 +482,7 @@ Sub getMailAddressFields(strFieldDisplay)
 			.Parameters.Append .CreateParameter("@Province", adVarChar, adParamInput, 2, Left(Trim(Request("MAIL_PROVINCE")),2))
 			.Parameters.Append .CreateParameter("@Country", adVarWChar, adParamInput, 100, Left(Trim(Request("MAIL_COUNTRY")),100))
 			.Parameters.Append .CreateParameter("@PostalCode", adVarChar, adParamInput, 20, Left(Trim(Request("MAIL_POSTAL_CODE")),20))
-			.Parameters.Append .CreateParameter("@CareOf", adVarWChar, adParamInput, 100, Left(Trim(Request("MAIL_CARE_OF")),100))
+			.Parameters.Append .CreateParameter("@CareOf", adVarWChar, adParamInput, 150, Left(Trim(Request("MAIL_CARE_OF")),150))
 			.Parameters.Append .CreateParameter("@BoxType", adVarWChar, adParamInput, 20, Left(Trim(Request("MAIL_BOX_TYPE")),20))
 			.Parameters.Append .CreateParameter("@POBox", adVarWChar, adParamInput, 100, Left(Trim(Request("MAIL_PO_BOX")),100))
 			.Parameters.Append .CreateParameter("@LATITUDE", adDecimal, adParamInput)
@@ -548,7 +552,9 @@ Sub getSiteAddressFields(strFieldDisplay)
 		End If
 	End If
 
-	If addInsertField("SITE_BUILDING",QsNNl(getStrSetValue("SITE_BUILDING")),strInsertIntoFB,strInsertValueFB) Or _
+	If addInsertField("SITE_LINE_1",QsNNl(getStrSetValue("SITE_LINE_1")),strInsertIntoFB,strInsertValueFB) Or _
+			addInsertField("SITE_LINE_2",QsNNl(getStrSetValue("SITE_LINE_2")),strInsertIntoFB,strInsertValueFB) Or _
+			addInsertField("SITE_BUILDING",QsNNl(getStrSetValue("SITE_BUILDING")),strInsertIntoFB,strInsertValueFB) Or _
 			addInsertField("SITE_STREET_NUMBER",QsNNl(getStrSetValue("SITE_STREET_NUMBER")),strInsertIntoFB,strInsertValueFB) Or _
 			addInsertField("SITE_STREET",QsNNl(getStrSetValue("SITE_STREET")),strInsertIntoFB,strInsertValueFB) Or _
 			addInsertField("SITE_STREET_TYPE",QsNNl(aStreetType(0)),strInsertIntoFB,strInsertValueFB) Or _
@@ -569,6 +575,8 @@ Sub getSiteAddressFields(strFieldDisplay)
 			.Parameters.Append .CreateParameter("@RETURN_VALUE", adVarChar, adParamReturnValue, 8000)
 			.Parameters.Append .CreateParameter("@NUM", adVarChar, adParamInput, 8, Null)
 			.Parameters.Append .CreateParameter("@RSN", adInteger, adParamInput, 4, Null)
+			.Parameters.Append .CreateParameter("@Line1", adVarChar, adParamInput, 100, Left(Trim(Request("SITE_LINE_1")),255))
+			.Parameters.Append .CreateParameter("@Line2", adVarChar, adParamInput, 100, Left(Trim(Request("SITE_LINE_2")),255))
 			.Parameters.Append .CreateParameter("@Building", adVarWChar, adParamInput, 100, Left(Trim(Request("SITE_BUILDING")),100))
 			.Parameters.Append .CreateParameter("@StreetNumber", adVarWChar, adParamInput, 30, Left(Trim(Request("SITE_STREET_NUMBER")),30))
 			.Parameters.Append .CreateParameter("@Street", adVarWChar, adParamInput, 150, Left(Trim(Request("SITE_STREET")),150))

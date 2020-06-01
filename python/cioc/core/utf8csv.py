@@ -20,6 +20,14 @@ import codecs
 import tempfile
 
 
+class SQLServerBulkDialect(csv.Dialect):
+	delimiter = '\x03'
+	lineterminator = '\x04'
+	skipinitialspace = False
+	escapechar = None
+	quoting = csv.QUOTE_NONE
+
+
 class UTF8Reader(object):
 	"""
 	A CSV reader which will iterate over lines in the CSV file "f",

@@ -124,7 +124,7 @@ If Not bError Then
 	If intGeoCodeType = GC_CURRENT Or intGeoCodeType = GC_SITE Then
 		strSQL = strSQL & ", CMP_SiteAddress SITE_ADDRESS" 
 		If bRetryWOPostal Then
-			strSQL = strSQL & ", dbo.fn_GBL_FullAddress(NULL, NULL, NULL, btd.SITE_STREET_NUMBER, btd.SITE_STREET, btd.SITE_STREET_TYPE, btd.SITE_STREET_TYPE_AFTER, " & _
+			strSQL = strSQL & ", dbo.fn_GBL_FullAddress(NULL, NULL, btd.SITE_LINE_1, btd.SITE_LINE_2, NULL, btd.SITE_STREET_NUMBER, btd.SITE_STREET, btd.SITE_STREET_TYPE, btd.SITE_STREET_TYPE_AFTER, " & _
 				"btd.SITE_STREET_DIR, NULL, btd.SITE_CITY, btd.SITE_PROVINCE, ISNULL(btd.SITE_COUNTRY, 'Canada'), NULL, NULL, NULL, NULL, NULL, NULL, btd.LangID, 0) " & _
 				"AS SITE_ADDRESS_NO_PC" 
 		End If
@@ -219,7 +219,7 @@ If Not bError Then
 						updating: <%=JsQs(TXT_GEOCODE_UPDATING)%>,
 						unknown: <%=JsQs(TXT_GEOCODE_UNKNOWN_ADDRESS) %>,
 						error_unknown_address: <%=JsQs(TXT_GEOCODE_UNKNOWN_ADDRESS) %>,
-						error_map_key_fail: <%= JsQs(TXT_GEOCODE_TOO_MANY_QUERIES) %>,
+						error_map_key_fail: <%= JsQs(TXT_GEOCODE_MAP_KEY_FAIL) %>,
 						error_too_many_queries: <%= JsQs(TXT_GEOCODE_TOO_MANY_QUERIES) %>,
 						error_unknown_error: <%= JsQs(TXT_GEOCODE_UNKNOWN_ERROR & TXT_COLON) %>,
 						error_server: <%= JsQs(TXT_SERVER_ERROR) %>

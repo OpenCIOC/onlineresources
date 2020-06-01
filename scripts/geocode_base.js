@@ -15,7 +15,7 @@
 // =========================================================================================
 
 (function(status_messages) {
-/*global pageconstants:true google:true Globalize:true */
+/*global google:true Globalize:true */
 	var geocoder = null;
 	var geocode_delay = 200;
 	var geocode_type_target;
@@ -23,6 +23,7 @@
 	var stateField = null;
 	var types = null;
 	var url = null;
+	var status_messages;
 
 	var get_num = function(row) {
 		return row.id.substr('row_to_code_'.length);
@@ -67,7 +68,7 @@
 
 	};
 	var got_geocode = function(row, try_no_postal) {
-		return function (response, status) {
+		return function (response, status, other) {
 			if (status !== google.maps.GeocoderStatus.OK ) {
 				if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
 					geocode_delay += 100;
@@ -80,17 +81,17 @@
 					var msg = null;
 					switch (status) {
 						case google.maps.GeocoderStatus.ZERO_RESULTS:
-							msg = pageconstants.txt_geocode_unknown_address;
+							msg = status_messages.error_unknown_address;
 							break;
 						case google.maps.GeocoderStatus.REQUEST_DENIED:
-							msg = pageconstants.txt_geocode_map_key_fail;
+							msg = status_messages.error_map_key_fail;
 							break;
 						case google.maps.GeocoderStatus.OVER_QUERY_LIMIT:
-							msg = pageconstants.txt_geocode_too_many_queries;
+							msg = status_messages.error_too_many_queries;
 							break;
 
 						default:
-							msg = pageconstants.txt_geocode_unknown_error + status;
+							msg = status_messages.error_unknown_error + status;
 							break;
 
 					}

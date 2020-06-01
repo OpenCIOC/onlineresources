@@ -19,13 +19,6 @@ RETURNS nvarchar(1000) WITH EXECUTE AS CALLER
 AS 
 BEGIN
 
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 04-Jan-2012
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE @addrStr nvarchar(400),
 		@conStr	nvarchar(3),
 		@colonStr nvarchar(3),
@@ -61,6 +54,8 @@ IF @Email IS NOT NULL BEGIN
 END
 
 SET @addrStr = dbo.fn_GBL_FullAddress (
+	NULL,
+	NULL,
 	NULL,
 	NULL,
 	@Building,

@@ -130,6 +130,10 @@ Sub addHistoryField(strFieldName)
 			dicHistoryFields("MAIL_ADDRESS") = IIf(Nl(dicHistoryFields("MAIL_ADDRESS")),Null,g_objCurrentLang.LangID)
 		Case "MAIL_COUNTRY"
 			dicHistoryFields("MAIL_ADDRESS") = IIf(Nl(dicHistoryFields("MAIL_ADDRESS")),Null,g_objCurrentLang.LangID)
+		Case "MAIL_LINE_1"
+			dicHistoryFields("MAIL_ADDRESS") = IIf(Nl(dicHistoryFields("MAIL_ADDRESS")),Null,g_objCurrentLang.LangID)
+		Case "MAIL_LINE_2"
+			dicHistoryFields("MAIL_ADDRESS") = IIf(Nl(dicHistoryFields("MAIL_ADDRESS")),Null,g_objCurrentLang.LangID)
 		Case "MAIL_PO_BOX"
 			dicHistoryFields("MAIL_ADDRESS") = IIf(Nl(dicHistoryFields("MAIL_ADDRESS")),Null,g_objCurrentLang.LangID)
 		Case "MAIL_POSTAL_CODE"
@@ -155,6 +159,10 @@ Sub addHistoryField(strFieldName)
 		Case "SITE_CITY"
 			dicHistoryFields("SITE_ADDRESS") = IIf(Nl(dicHistoryFields("SITE_ADDRESS")),Null,g_objCurrentLang.LangID)
 		Case "SITE_COUNTRY"
+			dicHistoryFields("SITE_ADDRESS") = IIf(Nl(dicHistoryFields("SITE_ADDRESS")),Null,g_objCurrentLang.LangID)
+		Case "SITE_LINE_1"
+			dicHistoryFields("SITE_ADDRESS") = IIf(Nl(dicHistoryFields("SITE_ADDRESS")),Null,g_objCurrentLang.LangID)
+		Case "SITE_LINE_2"
 			dicHistoryFields("SITE_ADDRESS") = IIf(Nl(dicHistoryFields("SITE_ADDRESS")),Null,g_objCurrentLang.LangID)
 		Case "SITE_POSTAL_CODE"
 			dicHistoryFields("SITE_ADDRESS") = Null

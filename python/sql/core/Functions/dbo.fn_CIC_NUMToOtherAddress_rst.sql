@@ -15,18 +15,13 @@ RETURNS @OtherAddress TABLE (
 AS 
 BEGIN
 
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 03-Jan-2012
-	Action: NO ACTION REQUIRED
-*/
-
 INSERT INTO @OtherAddress 
 	SELECT TITLE,
 		SITE_CODE,
 		dbo.fn_GBL_FullAddress(
 				NUM,
+				NULL,
+				NULL,
 				NULL,
 				BUILDING,
 				STREET_NUMBER,

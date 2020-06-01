@@ -6,7 +6,7 @@ GO
 
 CREATE PROCEDURE [dbo].[sp_GBL_Page_l] (
 	@MemberID [int],
-	@DM [bit],
+	@DM [tinyint],
 	@AgencyCode char(3)
 )
 WITH EXECUTE AS CALLER

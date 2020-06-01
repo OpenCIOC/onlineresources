@@ -548,6 +548,8 @@ End Sub
 '*-------------------------------------*
 
 Sub processAddress(strType)
+	Call processGBLDField(strType & "_LINE_1","LN1",FTYPE_TEXT)
+	Call processGBLDField(strType & "_LINE_2","LN2",FTYPE_TEXT)
 	Call processGBLField(strType & "_POSTAL_CODE","PC",FTYPE_TEXT)
 	Call processGBLDField(strType & "_BUILDING","BLD",FTYPE_TEXT)
 	Call processGBLDField(strType & "_STREET_NUMBER","STNUM",FTYPE_TEXT)
@@ -5640,6 +5642,8 @@ While Not .EOF
 							Call processGBLDField(Null,Null,FTYPE_TEXT)
 						Case "DISTRIBUTION"
 							Call processDistributionC()
+						Case "DOCUMENTS_REQUIRED"
+							Call processCICDField(Null,Null,FTYPE_TEXT)
 						Case "EXTERNAL_ID"
 							If Nl(fldEXTERNALID) Then
 								Call processGBLField(Null,Null,FTYPE_TEXT)
