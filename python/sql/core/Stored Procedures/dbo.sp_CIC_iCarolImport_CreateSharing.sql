@@ -12,8 +12,10 @@ SET @Error = 0
 
 DECLARE @updated AS TABLE
 (
-	ResourceAgencyNum NVARCHAR(50) COLLATE Latin1_General_100_CI_AI  NOT NULL  PRIMARY KEY,
-	TaxonomyLevelName NVARCHAR(MAX) COLLATE Latin1_General_100_CI_AI NULL
+	ResourceAgencyNum NVARCHAR(50) COLLATE Latin1_General_100_CI_AI  NOT NULL,
+	LangID TINYINT NOT NULL,
+	TaxonomyLevelName NVARCHAR(MAX) COLLATE Latin1_General_100_CI_AI NULL,
+	PRIMARY KEY (ResourceAgencyNum, LangID)
 )
 
 MERGE INTO dbo.CIC_iCarolImportRollup dst
@@ -2060,11 +2062,12 @@ OPTION (ROBUST PLAN)
 
 
 
+-- Hypothesis: There should be a transaction around this and the SQL below to prevent updating the DATE_IMPORTED if there is a failure in the export generation SQL
 UPDATE i SET i.DATE_IMPORTED=GETDATE() 
-OUTPUT deleted.ResourceAgencyNum, deleted.TaxonomyLevelName INTO @updated
+OUTPUT deleted.ResourceAgencyNum, deleted.LangID, deleted.TaxonomyLevelName INTO @updated
 FROM dbo.CIC_iCarolImportRollup i
 LEFT JOIN dbo.GBL_BaseTable ib 
-	ON ib.EXTERNAL_ID=i.ResourceAgencyNum
+	ON ib.EXTERNAL_ID=i.ResourceAgencyNum AND ib.SOURCE_DB_CODE = 'ICAROL'
 WHERE (i.DATE_IMPORTED IS NULL OR i.DATE_IMPORTED < i.DATE_MODIFIED OR i.DATE_IMPORTED < i.DELETION_DATE) AND (ib.EXTERNAL_ID IS NOT NULL OR EXISTS(SELECT * FROM dbo.GBL_Agency a WHERE a.AgencyCode = i.RECORD_OWNER AND a.AutoImportFromICarol=1))
 
 
@@ -2146,9 +2149,9 @@ CAST((SELECT (
 		(SELECT a.PhoneFax AS [@V], f.PhoneFax AS [@VF] FOR XML PATH('FAX'), TYPE),
 		(SELECT a.FeeStructureSource AS [@N], f.FeeStructureSource AS [@NF] FOR XML PATH('FEES'), TYPE),
 		(SELECT
-			 CASE WHEN a.Latitude IS NOT NULL AND a.Latitude <> 0 AND a.Longitude IS NOT NULL AND a.Longitude <> 0 THEN 3 ELSE 0 END AS [@TYPE],
-			 NULLIF(a.Latitude, 0) AS [@LAT],
-			 NULLIF(a.Longitude, 0) AS [@LONG]
+			 CASE WHEN a.Latitude IS NOT NULL AND a.Latitude <> '0' AND a.Longitude IS NOT NULL AND a.Longitude <> '0' THEN 3 ELSE 0 END AS [@TYPE],
+			 NULLIF(a.Latitude, '0') AS [@LAT],
+			 NULLIF(a.Longitude, '0') AS [@LONG]
 		  FOR XML PATH('GEOCODE'), TYPE),
 		(SELECT COALESCE(a.HoursOfOperation, a.Hours) AS [@V], COALESCE(f.HoursOfOperation, f.Hours) AS [@VF] FOR XML PATH('HOURS'), TYPE),
 		(SELECT
@@ -2173,6 +2176,7 @@ CAST((SELECT (
 		(SELECT COALESCE(a.[Custom_Legal Name], a.[OfficialName]) AS [@V], COALESCE(f.[Custom_Legal Name], f.[OfficialName]) AS [@VF] FOR XML PATH('LEGAL_ORG'), TYPE),
 		(SELECT a.LOCATION_DESCRIPTION AS [@V], f.LOCATION_DESCRIPTION AS [@VF] FOR XML PATH('LOCATION_DESCRIPTION'), TYPE),
 		(SELECT a.LOCATION_NAME AS [@V], f.LOCATION_NAME AS [@VF] FOR XML PATH('LOCATION_NAME'), TYPE),
+		(SELECT irr.ResourceAgencyNum AS [@V] FROM dbo.CIC_iCarolImportRollup irr WHERE a.TaxonomyLevelName = 'Site' AND irr.TaxonomyLevelName='ProgramAtSite' AND irr.ConnectsToSiteNum=a.ResourceAgencyNum FOR XML PATH('SERVICE_NUM'), ROOT('LOCATION_SERVICES'), TYPE),
 		(SELECT 
 			 a.MailingAttentionName AS [@CO],
 			 a.MailingAddress1 AS [@LN1],
@@ -2234,6 +2238,7 @@ CAST((SELECT (
 		(SELECT a.ORG_DESCRIPTION AS [@V], f.ORG_DESCRIPTION AS [@VF] FOR XML PATH('ORG_DESCRIPTION'), TYPE),
 		(SELECT a.ORG_LEVEL_1 AS [@V], f.ORG_LEVEL_1 AS [@VF] FOR XML PATH('ORG_LEVEL_1'), TYPE),
 		(SELECT a.ORG_LOCATION_SERVICE AS [@V] FOR XML PATH('CD'), ROOT('ORG_LOCATION_SERVICE'), TYPE),
+		(SELECT a.ParentAgencyNum AS [@V]  FOR XML PATH('ORG_NUM'),TYPE),
 		(SELECT a.[Custom_Public Comments] AS [@V], f.[Custom_Public Comments] AS [@VF] FOR XML PATH('PUBLIC_COMMENTS'), TYPE),
 		(SELECT a.SERVICE_NAME_LEVEL_1 AS [@V], f.SERVICE_NAME_LEVEL_1 AS [@VF] FOR XML PATH('SERVICE_NAME_LEVEL_1'), TYPE),
 		(SELECT CASE WHEN a.SERVICE_NAME_LEVEL_2 <> a.SERVICE_NAME_LEVEL_1 THEN a.SERVICE_NAME_LEVEL_2 ELSE NULL END AS [@V], CASE WHEN f.SERVICE_NAME_LEVEL_2 <> f.SERVICE_NAME_LEVEL_1 THEN f.SERVICE_NAME_LEVEL_2 ELSE NULL END AS [@VF] FOR XML PATH('SERVICE_NAME_LEVEL_2'), TYPE),
@@ -2337,6 +2342,7 @@ CAST((SELECT (
 			f.LastVerifiedByPhoneNumber [@PHNF],
 			f.LastVerifiedByEmailAddress [@EMLF]
 		FOR XML PATH('SOURCE'), TYPE),
+		(SELECT 1 AS [@V] FOR XML PATH('SOURCE_FROM_ICAROL'),TYPE),
 		(SELECT 
 			(SELECT
 				(SELECT i.ItemID AS [@V]
@@ -2364,6 +2370,9 @@ CAST((SELECT (
 		bt.EXTERNAL_ID=a.ResourceAgencyNum
 	WHERE a.LangID=0 AND ((bt.MemberID IS NOT NULL AND bt.MemberID=m.MemberID) OR (bt.MemberID IS NULL AND EXISTS(SELECT * FROM dbo.GBL_Agency ac WHERE ac.AgencyCode=a.RECORD_OWNER AND ac.AutoImportFromICarol=1 AND ac.MemberID=m.MemberID)))
 		AND EXISTS(SELECT * FROM @updated AS u WHERE u.ResourceAgencyNum = a.ResourceAgencyNum AND u.TaxonomyLevelName=a.TaxonomyLevelName)
+	-- Records MUST be in order of Agency, ProgramAtSite, Site so that ProgramAtSite and Site can reference agency in ORG_NUM and Site can reference ProgramAtSite in LOCATION_SERVICES
+	-- Records will be processed by import system in the order they appear in this file.
+	ORDER BY CASE WHEN a.TaxonomyLevelName = 'Agency' THEN 0 WHEN a.TaxonomyLevelName='ProgramAtSite' THEN 1 WHEN a.TaxonomyLevelName = 'Site' THEN 2 ELSE 3 END
 	FOR XML PATH('RECORD'), TYPE
 )
 	FOR XML PATH(''), TYPE

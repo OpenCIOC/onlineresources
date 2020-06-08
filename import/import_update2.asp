@@ -2630,6 +2630,7 @@ Sub processLocationServicesA()
 		.CommandType = adCmdStoredProc
 		.CommandTimeout = 0
 		.Parameters.Append .CreateParameter("@NUM", adVarChar, adParamInput, 8)
+		.Parameters.Append .CreateParameter("@SourceDbCode", adVarChar, adParamInput, 20)
 		.Parameters.Append .CreateParameter("@ServiceNUMs", adVarWChar, adParamInput, -1)
 		.Parameters.Append .CreateParameter("@BadNUMs", adVarChar, adParamOutput, 8000)
 	End With
@@ -2651,6 +2652,7 @@ Sub processLocationServicesB()
 	Dim strBadVals
 
 	cmdImportLocationServices.Parameters("@NUM").Value = fldNUM
+	cmdImportLocationServices.Parameters("@SourceDbCode").Value = Nz(fldSourceDbCode.Value,Null)
 	cmdImportLocationServices.Parameters("@ServiceNUMs").Value = Nz(xmlChildNode.xml,Null)
 
 	Set rsImportLocationServices = cmdImportLocationServices.Execute
@@ -2879,6 +2881,7 @@ Sub NUMExistsConfig()
 		.Parameters.Append .CreateParameter("@RSN", adInteger, adParamInput, 4, Null)
 		.Parameters.Append .CreateParameter("@NUM", adVarChar, adParamInputOutput, 8, Null)
 		.Parameters.Append .CreateParameter("@EXTERNAL_ID", adVarChar, adParamInput, 50, Null)
+		.Parameters.Append .CreateParameter("@SOURCE_DB_CODE", adVarChar, adParamInput, 20, Null)
 		.Parameters.Append .CreateParameter("@Agency", adVarChar, adParamInput, 3, Null)
 	End With
 End Sub
@@ -2896,6 +2899,7 @@ Function NUMExists(ByRef strNUM)
 		Else
 			strExtID = strNUM
 			cmdCheckNUM.Parameters("@EXTERNAL_ID") = strExtID
+			cmdCheckNUM.Parameters("@SOURCE_DB_CODE") = fldSourceDbCode.Value
 		End If
 
 		Set rsCheckNUM = cmdCheckNUM.Execute
@@ -4854,6 +4858,7 @@ Sub makeGBLRecordCheck()
 		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
 		.Parameters.Append .CreateParameter("@NUM", adVarChar, adParamInputOutput, 8, fldNUM.Value)
 		.Parameters.Append .CreateParameter("@EXTERNAL_ID", adVarChar, adParamInput, 50, fldEXTERNALID.Value)
+		.Parameters.Append .CreateParameter("@SourceDbCode", adVarChar, adParamInput, 20, fldSourceDbCode.Value)
 		.Parameters.Append .CreateParameter("@OWNER", adChar, adParamInput, 3, fldOWNER.Value)
 		.Parameters.Append .CreateParameter("@HAS_ENGLISH", adBoolean, adParamInputOutput, 1, Nz(fldHASE.Value,SQL_FALSE))
 		.Parameters.Append .CreateParameter("@HAS_FRENCH", adBoolean, adParamInputOutput, 1, Nz(fldHASF.Value,SQL_FALSE))
@@ -5127,6 +5132,7 @@ Dim bQ, _
 strSQL = "SELECT ie.EF_ID, dbo.fn_CIC_ImportEntry_FieldList(ie.EF_ID) AS FieldList, ISNULL(DisplayName,FileName) AS DisplayName," & vbCrLf & _
 		"iede.SourceDbName AS SourceDbNameEn, iede.SourceDbURL AS SourceDbURLEn," & vbCrLf & _
 		"iedf.SourceDbName AS SourceDbNameFr, iedf.SourceDbURL AS SourceDbURLFr," & vbCrLf & _
+		"ie.SourceDbCode," & vbCrLf & _
 		"CAST(CASE WHEN EXISTS(SELECT * FROM CIC_ImportEntry_PrivacyProfile ipp WHERE ipp.EF_ID=ie.EF_ID) THEN 1 ELSE 0 END AS bit) AS HasPrivacyProfiles,"
 
 If Not Nl(intEFID) Then
@@ -5199,7 +5205,7 @@ Dim bCreatedCIC
 Dim strReport, strReportCon
 
 Dim fldEFID, fldDisplayName, fldFieldList, fldOwnerConflict, fldPublicConflict, fldDeletedConflict, fldPrivacyProfileConflict, fldQAutoAddPubs, fldImportSourceDb, fldQDate, fldQBy, _
-	fldSourceDbNameEn, fldSourceDbNameFr, fldSourceDbURLEn, fldSourceDbURLFr
+	fldSourceDbCode, fldSourceDbNameEn, fldSourceDbNameFr, fldSourceDbURLEn, fldSourceDbURLFr
 Dim fldERID, fldNUM, fldEXTERNALID, fldOWNER, fldHASE, fldHASF, fldPrivacyProfile, fldDATA, fldREPORT, fldNUME, fldNUMF
 
 Dim bHavePrivacyProfiles, dicPrivacyProfileFields, dicPrivacyProfileMap, dicPrivacyProfiles
@@ -5224,6 +5230,7 @@ Set fldDeletedConflict = rsImportEntry.Fields("QDeletedConflict")
 Set fldPrivacyProfileConflict = rsImportEntry.Fields("QPrivacyProfileConflict")
 Set fldQAutoAddPubs = rsImportEntry.Fields("QAutoAddPubs")
 Set fldImportSourceDb = rsImportEntry.Fields("QImportSourceDbInfo")
+Set fldSourceDbCode = rsImportEntry.Fields("SourceDbCode")
 Set fldSourceDbNameEn = rsImportEntry.Fields("SourceDbNameEn")
 Set fldSourceDbNameFr = rsImportEntry.Fields("SourceDbNameFr")
 Set fldSourceDbURLEn = rsImportEntry.Fields("SourceDbURLEn")
@@ -5789,7 +5796,7 @@ While Not .EOF
 						Case "SOURCE"
 							Call processSourceField()
 						Case "SOURCE_FROM_ICAROL"
-							Call processCICField(Null,Null,FTYPE_NUMBER)
+							Call processGBLField(Null,Null,FTYPE_NUMBER)
 						Case "SPACE_AVAILABLE"
 							Call processSpaceAvailable()
 						Case "SUBJECTS"

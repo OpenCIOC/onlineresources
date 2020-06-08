@@ -165,6 +165,10 @@ With rsImportStats
 	<br><%=TXT_FRENCH & TXT_COLON & .Fields("UPDATE_FRENCH")%>
 	<br><%=TXT_BILINGUAL & TXT_COLON & .Fields("COMPLETED_MULTILINGUAL")%></td>
 </tr>
+<tr>
+	<td class="FieldLabelLeft"><%=TXT_SOURCE_DATABASE_CODE%></td>
+	<td><%= Ns(.Fields("SourceDbCode")) %></td>
+</tr>
 <%
 	Set rsImportStats = rsImportStats.NextRecordSet
 	While Not rsImportStats.EOF

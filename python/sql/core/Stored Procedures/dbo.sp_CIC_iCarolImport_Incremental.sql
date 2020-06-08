@@ -223,6 +223,7 @@ ON dst.ResourceAgencyNum=src.ResourceAgencyNum AND dst.LangID=@@LANGID
 WHEN MATCHED THEN
 	UPDATE SET 
 		[SYNC_DATE]=@SYNC_DATE,
+		dst.DELETION_DATE=NULL,
 		[ImportDate]=src.[ImportDate],
 		[ImportStatus]=src.[ImportStatus],
 		[Refresh]=src.[Refresh],
@@ -422,6 +423,7 @@ WHEN NOT MATCHED BY TARGET THEN
 		[ResourceAgencyNum],
 		[LangID],
 		[SYNC_DATE],
+		DELETION_DATE,
 		[ImportDate],
 		[ImportStatus],
 		[Refresh],
@@ -619,6 +621,7 @@ WHEN NOT MATCHED BY TARGET THEN
 		src.[ResourceAgencyNum],
 		@@LANGID,
 		@SYNC_DATE,
+		NULL,
 		src.[ImportDate],
 		src.[ImportStatus],
 		src.[Refresh],

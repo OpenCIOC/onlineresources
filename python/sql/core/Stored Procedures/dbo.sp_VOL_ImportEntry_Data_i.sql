@@ -8,7 +8,8 @@ CREATE PROCEDURE [dbo].[sp_VOL_ImportEntry_Data_i]
 	@EF_ID int,
 	@ID varchar(50),
 	@OWNER varchar(3),
-	@PRIVACY_PROFILE varchar(100),
+	@PRIVACY_PROFILE VARCHAR(100),
+    @SOURCE_DB_CODE VARCHAR(20), -- Not used, for compatabliity with CIC stored procedure
 	@DATA nvarchar(MAX),
 	@ER_ID int OUTPUT
 WITH EXECUTE AS CALLER

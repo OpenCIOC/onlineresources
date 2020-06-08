@@ -744,6 +744,7 @@
 						<xsd:attribute name="NMF" type="s-Text255Type" use="optional"/>
 						<xsd:attribute name="URL" type="s-URLWithProtocolType" use="optional"/>
 						<xsd:attribute name="URLF" type="s-URLWithProtocolType" use="optional"/>
+						<xsd:attribute name="CD" type="s-CodeType" use="optional"/>
 					</xsd:complexType>
 				</xsd:element>
 				<xsd:element name="PRIVACY_PROFILE_LIST" minOccurs="0" maxOccurs="1">

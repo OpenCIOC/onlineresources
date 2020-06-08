@@ -8,23 +8,24 @@ CREATE PROCEDURE [dbo].[sp_CIC_ImportEntry_u_Source]
 	@SourceDbNameEn varchar(255),
 	@SourceDbNameFr varchar(255),
 	@SourceDbURLEn varchar(200),
-	@SourceDbURLFr varchar(200)
+	@SourceDbURLFr VARCHAR(200),
+    @SourceDbCode VARCHAR(20)
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 27-Mar-2012
-	Action: NO ACTION REQUIRED
-*/
 
 IF @SourceDbNameEn='' SET @SourceDbNameEn = NULL
 IF @SourceDbURLEn='' SET @SourceDbURLEn = NULL
 
 IF @SourceDbURLFr='' SET @SourceDbURLFr = NULL
 IF @SourceDbNameFr='' SET @SourceDbNameFr = NULL
+
+IF @SourceDbCode='' SET @SourceDbCode = NULL
+
+IF @SourceDbCode IS NOT NULL BEGIN
+	UPDATE dbo.CIC_ImportEntry SET SourceDbCode=@SourceDbCode
+	WHERE EF_ID=@EF_ID
+END
 
 IF (@SourceDbNameEn IS NOT NULL OR @SourceDbURLEn IS NOT NULL) BEGIN
 		INSERT INTO CIC_ImportEntry_Description (EF_ID,LangID,SourceDbName,SourceDbURL)

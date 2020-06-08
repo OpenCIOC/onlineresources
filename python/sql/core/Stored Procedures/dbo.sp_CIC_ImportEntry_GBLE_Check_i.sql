@@ -32,7 +32,7 @@ END
 DECLARE @tmpOwner char(3)
 SET @tmpOwner = LEFT(@NUM,3)
 
-EXEC sp_CIC_ImportEntry_GBL_Check_i @MemberID, @NUM OUTPUT, NULL, @tmpOwner, 0, 0
+EXEC sp_CIC_ImportEntry_GBL_Check_i @MemberID, @NUM OUTPUT, NULL, NULL, @tmpOwner, 0, 0
 
 INSERT INTO GBL_BaseTable_Description (NUM,LangID,CREATED_BY)
 SELECT NUM, 0, '(Import)'
