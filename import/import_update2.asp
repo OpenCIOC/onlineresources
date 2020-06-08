@@ -5322,6 +5322,7 @@ End If
 
 
 If fldImportSourceDb.Value Then
+	strSourceDbEn = Nz(fldSourceDbNameEn.Value,fldSourceDbURLEn.Value)
 	If Not Nl(fldSourceDbURLEn.Value) Then
 		strSourceDbEn = "&copy; <a href=""" & fldSourceDbURLEn.Value & """>" & strSourceDbEn & "</a>"
 	End If
