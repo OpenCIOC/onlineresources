@@ -119,6 +119,7 @@ Sub getNUM()
 				.Parameters.Append .CreateParameter("@RSN", adInteger, adParamInput, 4, Null)
 				.Parameters.Append .CreateParameter("@NUM", adVarChar, adParamInput, 8, strNUM)
 				.Parameters.Append .CreateParameter("@EXTERNAL_ID", adVarChar, adParamInput, 50, Null)
+				.Parameters.Append .CreateParameter("@SOURCE_DB_CODE", adVarChar, adParamInput, 20, Null)
 				.Parameters.Append .CreateParameter("@Agency", adVarChar, adParamInput, 3, Null)
 			End With
 			Set rsCheckNUM = cmdCheckNUM.Execute

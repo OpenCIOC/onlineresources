@@ -338,6 +338,7 @@ Sub getNUM()
 				.Parameters.Append .CreateParameter("@RSN", adInteger, adParamInput, 4, intRSN)
 				.Parameters.Append .CreateParameter("@NUM", adVarChar, adParamInputOutput, 8, Nz(strNUM,Null))
 				.Parameters.Append .CreateParameter("@EXTERNAL_ID", adVarChar, adParamInput, 50, Null)
+				.Parameters.Append .CreateParameter("@SOURCE_DB_CODE", adVarChar, adParamInput, 20, Null)
 				.Parameters.Append .CreateParameter("@Agency", adVarChar, adParamInput, 3, Nz(Trim(Request("RECORD_OWNER")),user_strAgency))
 			End With
 			Set rsCheckNUM = cmdCheckNUM.Execute
