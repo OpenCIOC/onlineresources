@@ -508,7 +508,7 @@ def generate_and_upload_import(context):
 
 			with tempfile.TemporaryFile() as fd:
 				fd.write(u'''<?xml version="1.0" encoding="UTF-8"?>
-				<root xmlns="urn:ciocshare-schema"><DIST_CODE_LIST/><PUB_CODE_LIST/>'''.encode('utf8'))
+				<root xmlns="urn:ciocshare-schema"><SOURCE_DB CD="ICAROL"/><DIST_CODE_LIST/><PUB_CODE_LIST/>'''.encode('utf8'))
 				fd.write(member.records.encode('utf8'))
 				fd.write(u'</root>'.encode('utf8'))
 				fd.seek(0)

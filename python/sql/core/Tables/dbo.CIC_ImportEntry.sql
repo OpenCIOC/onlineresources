@@ -18,18 +18,21 @@ CREATE TABLE [dbo].[CIC_ImportEntry]
 [QPrivacyProfileConflict] [smallint] NULL,
 [QAutoAddPubs] [varchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [QPublicConflict] [smallint] NULL,
-[QDeletedConflict] [smallint] NULL
+[QDeletedConflict] [smallint] NULL,
+[SourceDbCode] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-CREATE NONCLUSTERED INDEX [IX_CIC_ImportEntry_MemberID] ON [dbo].[CIC_ImportEntry] ([MemberID]) ON [PRIMARY]
-
 GO
 ALTER TABLE [dbo].[CIC_ImportEntry] ADD CONSTRAINT [CK_CIC_ImportEntry] CHECK (([QOwnerConflict] IS NULL OR [QOwnerConflict]>=(0) AND [QOwnerConflict]<=(2)))
 GO
 ALTER TABLE [dbo].[CIC_ImportEntry] ADD CONSTRAINT [PK_GBL_ImportEntry] PRIMARY KEY CLUSTERED  ([EF_ID]) ON [PRIMARY]
 GO
+CREATE NONCLUSTERED INDEX [IX_CIC_ImportEntry_MemberID] ON [dbo].[CIC_ImportEntry] ([MemberID]) ON [PRIMARY]
+GO
 ALTER TABLE [dbo].[CIC_ImportEntry] ADD CONSTRAINT [FK_CIC_ImportEntry_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
 GO
 GRANT SELECT ON  [dbo].[CIC_ImportEntry] TO [cioc_cic_search_role]
+GO
 GRANT SELECT ON  [dbo].[CIC_ImportEntry] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[CIC_ImportEntry] TO [cioc_login_role]
 GO

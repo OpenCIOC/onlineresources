@@ -158,6 +158,7 @@ Set cmdExtraFieldList = Nothing
 <option value="btd.SOURCE_BUILDING">SOURCE_BUILDING</option>
 <option value="btd.SOURCE_CITY">SOURCE_CITY</option>
 <option value="btd.SOURCE_DB">SOURCE_DB</option>
+<option value="bt.SOURCE_DB_CODE">SOURCE_DB_CODE</option>
 <option value="btd.SOURCE_EMAIL">SOURCE_EMAIL</option>
 <option value="btd.SOURCE_FAX">SOURCE_FAX</option>
 <option value="btd.SOURCE_NAME">SOURCE_NAME</option>

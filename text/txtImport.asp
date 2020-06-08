@@ -90,6 +90,7 @@ Dim TXT_ADD_PROFILE_FAILED, _
 	TXT_SKIP_FIELDS, _
 	TXT_SKIP_RECORD, _
 	TXT_SOURCE_DATABASE, _
+	TXT_SOURCE_DATABASE_CODE, _
 	TXT_TAXONOMY_INDEXING_DOES_NOT_MATCH, _
 	TXT_TO_IMPORT_SELECT, _
 	TXT_TO_LIMIT, _
@@ -184,6 +185,7 @@ Sub setTxtImport()
 			TXT_SKIP_FIELDS = "Don't import private fields"
 			TXT_SKIP_RECORD = "Postpone processing of entire record"
 			TXT_SOURCE_DATABASE = "Source Database"
+			TXT_SOURCE_DATABASE_CODE = "Source Database Code"
 			TXT_TAXONOMY_INDEXING_DOES_NOT_MATCH = "Taxonomy Indexing does not allow a match for the Heading(s)" & TXT_COLON
 			TXT_TO_IMPORT_SELECT = "To import these records into the database, select from the options below."
 			TXT_TO_LIMIT = "You may wish to limit the number of records imported at one time for performance reasons." & _
@@ -277,6 +279,7 @@ Sub setTxtImport()
 			TXT_SKIP_FIELDS = "Ne pas importer les champs confidentiels"
 			TXT_SKIP_RECORD = "Reporter à plus tard le traitement du dossier complet"
 			TXT_SOURCE_DATABASE = "Base de données source"
+			TXT_SOURCE_DATABASE_CODE = "TRANSLATE_FR -- Source Database Code"
 			TXT_TAXONOMY_INDEXING_DOES_NOT_MATCH = "L'indexation taxonomique ne permet pas de correspondance avec les en-têtes" & TXT_COLON
 			TXT_TO_IMPORT_SELECT = "Pour importer ces dossiers dans la base de données, choisir parmi les options ci-dessous."
 			TXT_TO_LIMIT = "Par souci d'efficacité, vous pourriez vouloir limiter le nombre de dossiers à importer à la fois." & _

@@ -167,6 +167,7 @@ def process_import(filename, xmlfile, member_id, domain, domain_str, user_mod, d
 	self = Context()
 	self.made_field_list = False
 	self.total_inserted = 0
+	self.source_db_code = None
 
 	log.debug('domain: %d', domain)
 	# domain = request.pageinfo.Domain
@@ -257,8 +258,8 @@ def _handle_record(self, element, conn, EFID, dm, id_column='NUM'):
 
 	ERID = conn.execute('''
 				DECLARE @ER_ID int
-				EXEC dbo.sp_%s_ImportEntry_Data_i ?, ?, ?, ?, ?, @ER_ID OUTPUT
-				SELECT @ER_ID''' % dm, EFID, num, record_owner, privacy_profile, xml).fetchone()
+				EXEC dbo.sp_%s_ImportEntry_Data_i ?, ?, ?, ?, ?, ?, @ER_ID OUTPUT
+				SELECT @ER_ID''' % dm, EFID, num, record_owner, privacy_profile, self.source_db_code, xml).fetchone()
 	if ERID:
 		ERID = ERID[0]
 
@@ -271,9 +272,10 @@ def _handle_record(self, element, conn, EFID, dm, id_column='NUM'):
 
 
 def _handle_source_db(self, element, conn, EFID, dm):
-	attrs = ['NM', 'NMF', 'URL', 'URLF']
+	self.source_db_code = element.get('CD')
+	attrs = ['NM', 'NMF', 'URL', 'URLF', 'CD']
 	args = [element.get(x) for x in attrs]
-	conn.execute('EXEC dbo.sp_CIC_ImportEntry_u_Source ?,?,?,?,?', EFID, *args)
+	conn.execute('EXEC dbo.sp_CIC_ImportEntry_u_Source ?,?,?,?,?,?', EFID, *args)
 
 
 def _handle_dist_code_list(self, element, conn, EFID, dm):
