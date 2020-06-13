@@ -494,14 +494,22 @@ def update_db_state(context):
 
 
 def generate_and_upload_import(context):
-	sql = 'EXEC sp_CIC_iCarolImport_CreateSharing'
+	sql = 'EXEC sp_CIC_iCarolImport_Rollup'
 	total_import_count = 0
 	with context.connmgr.get_connection('admin') as conn:
 		cursor = conn.execute(sql)
-		for member in cursor.fetchall():
+		members = cursor.fetchall()
+		cursor.close()
+		for member in members:
 			member_name = member.DefaultEmailNameCIC or member.BaseURLCIC or member.MemberID
-			if not member.records:
+			print "Generating sharing file for %s.\n" % (member_name,)
+
+			cursor = conn.execute('EXEC sp_CIC_iCarolImport_CreateSharing ?', member.MemberID)
+			batch = cursor.fetchmany(5000)
+
+			if not batch:
 				print "No Records for %s, skipping.\n" % (member_name,)
+				cursor.close()
 				continue
 			else:
 				print "Processing Imports for %s." % (member_name,)
@@ -509,9 +517,13 @@ def generate_and_upload_import(context):
 			with tempfile.TemporaryFile() as fd:
 				fd.write(u'''<?xml version="1.0" encoding="UTF-8"?>
 				<root xmlns="urn:ciocshare-schema"><SOURCE_DB CD="ICAROL"/><DIST_CODE_LIST/><PUB_CODE_LIST/>'''.encode('utf8'))
-				fd.write(member.records.encode('utf8'))
+				while batch:
+					fd.write(u''.join(x.record for x in batch).encode('utf8'))
+					batch = cursor.fetchmany(5000)
+
 				fd.write(u'</root>'.encode('utf8'))
 				fd.seek(0)
+				cursor.close()
 
 				error_log, total_inserted = process_import(
 					'icarol_import_%s.xml' % (context.args.next_modified_since.isoformat(),),
