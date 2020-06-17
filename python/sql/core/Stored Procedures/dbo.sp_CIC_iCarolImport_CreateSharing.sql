@@ -75,7 +75,7 @@ SELECT CAST((SELECT (
 			FOR XML PATH('CM'), TYPE)
 		FOR XML PATH ('AREAS_SERVED'), TYPE),
 		(SELECT a.BusServiceAccess AS [@N], f.BusServiceAccess AS [@NF] FOR XML PATH('BUS_ROUTES'),TYPE),
-		(SELECT a.InternalNotes AS [@V], f.InternalNotes AS [@VF] FOR XML PATH('COMMENTS'), TYPE),
+		(SELECT a.InternalNotesForEditorsAndViewers AS [@V], f.InternalNotesForEditorsAndViewers AS [@VF] FOR XML PATH('COMMENTS'), TYPE),
 		(SELECT 
 			(SELECT 'E' AS [@LANG], a.MainContactName AS [@NMLAST], a.MainContactTitle AS [@TTL], a.MainContactPhoneNumber AS [@PH1N], a.MainContactEmailAddress AS [@EML]
 			-- NOTE a.MainContactType didn't have any data in it so it was not mapped
@@ -94,6 +94,7 @@ SELECT CAST((SELECT (
 		(SELECT a.DESCRIPTION AS [@V], f.DESCRIPTION AS [@VF] FOR XML PATH('DESCRIPTION'), TYPE),
 		(SELECT a.DocumentsRequired AS [@V], f.DocumentsRequired AS [@VF] FOR XML PATH('DOCUMENTS_REQUIRED'), TYPE),
 		(SELECT a.EmailAddressMain AS [@V], f.EmailAddressMain AS [@VF] FOR XML PATH('E_MAIL'), TYPE),
+		(SELECT a.Eligibility AS [@N], f.Eligibility AS [@NF] FOR XML PATH('ELIGIBLITY'), TYPE),
 		(SELECT a.YearIncorporated AS [@V], f.YearIncorporated AS [@VF] FOR XML PATH('ESTABLISHED'), TYPE),
 		(SELECT
 			(SELECT 'E' AS [@LANG], a.SeniorWorkerName AS [@NMLAST], a.SeniorWorkerTitle AS [@TTL], a.SeniorWorkerPhoneNumber AS [@PH1N], a.SeniorWorkerEmailAddress AS [@EML]
@@ -118,25 +119,24 @@ SELECT CAST((SELECT (
 				REPLACE(COALESCE(a.UpdatedOn, cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(GETDATE())), ' ', 'T') AS [@CREATED],
 				'E' AS [@LANG],
 				REPLACE(COALESCE(a.UpdatedOn, cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(GETDATE())), ' ', 'T') AS [@MOD],
-				a.InternalNotesForEditorsAndViewers AS [@V]
-				WHERE a.InternalNotesForEditorsAndViewers IS NOT NULL
+				a.InternalNotes AS [@V]
+				WHERE a.InternalNotes IS NOT NULL
 			 FOR XML PATH('N'),TYPE ),
 			(SELECT
 				f.InternalMemoGUID AS [@GID],
 				REPLACE(COALESCE(f.UpdatedOn, cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(GETDATE())), ' ', 'T') AS [@CREATED],
 				'F' AS [@LANG],
 				REPLACE(COALESCE(f.UpdatedOn, cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(GETDATE())), ' ', 'T') AS [@MOD],
-				f.InternalNotesForEditorsAndViewers AS [@V]
-				WHERE f.InternalNotesForEditorsAndViewers IS NOT NULL
+				f.InternalNotes AS [@V]
+				WHERE f.InternalNotes IS NOT NULL
 			 FOR XML PATH('N'),TYPE )
 		 FOR XML PATH ('INTERNAL_MEMO'), TYPE),
 		(SELECT COALESCE(a.LanguagesOffered, a.LanguagesOfferedList) AS [@N], COALESCE(f.LanguagesOffered, f.LanguagesOfferedList) AS [@NF] FOR XML PATH('LANGUAGES'), TYPE),
 		(SELECT COALESCE(a.[Custom_Legal Name], a.[OfficialName]) AS [@V], COALESCE(f.[Custom_Legal Name], f.[OfficialName]) AS [@VF] FOR XML PATH('LEGAL_ORG'), TYPE),
 		(SELECT a.LOCATION_DESCRIPTION AS [@V], f.LOCATION_DESCRIPTION AS [@VF] FOR XML PATH('LOCATION_DESCRIPTION'), TYPE),
 		(SELECT a.LOCATION_NAME AS [@V], f.LOCATION_NAME AS [@VF] FOR XML PATH('LOCATION_NAME'), TYPE),
-		(SELECT DISTINCT irr.ResourceAgencyNum AS [@V] FROM dbo.CIC_iCarolImportRollup irr WHERE a.TaxonomyLevelName = 'Site' AND irr.ConnectsToSiteNum=a.ResourceAgencyNum AND irr.TaxonomyLevelName='ProgramAtSite' FOR XML PATH('SERVICE_NUM'), ROOT('LOCATION_SERVICES'), TYPE),
+		(SELECT DISTINCT irr.ResourceAgencyNum AS [@V] FROM dbo.CIC_iCarolImportRollup irr WHERE a.TaxonomyLevelName = 'Site' AND irr.ConnectsToSiteNum=a.ResourceAgencyNum AND irr.TaxonomyLevelName='ProgramAtSite' AND irr.DELETION_DATE IS NULL FOR XML PATH('SERVICE_NUM'), ROOT('LOCATION_SERVICES'), TYPE),
 		(SELECT 
-			 a.MailingAttentionName AS [@CO],
 			 a.MailingAddress1 AS [@LN1],
 			 a.MailingAddress2 AS [@LN2],
 			 a.MailingCity AS [@CTY],
@@ -144,7 +144,6 @@ SELECT CAST((SELECT (
 			 CASE WHEN a.MailingPostalCode LIKE '[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]' THEN LEFT(a.MailingPostalCode,3) + ' ' + RIGHT(a.MailingPostalCode, 3) ELSE a.MailingPostalCode END AS [@PC],
 			 a.MailingCountry AS [@CTRY],
 
-			 f.MailingAttentionName AS [@COF],
 			 f.MailingAddress1 AS [@LN1F],
 			 f.MailingAddress2 AS [@LN2F],
 			 f.MailingCity AS [@CTYF],
