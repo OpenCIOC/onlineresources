@@ -11,7 +11,7 @@ CREATE TABLE [dbo].[CIC_iCarolImportRollup]
 [PublicName] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [AlternateName] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [OfficialName] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[TaxonomyLevelName] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[TaxonomyLevelName] [nvarchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
 [ParentAgency] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [ParentAgencyNum] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [RecordOwner] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -156,8 +156,8 @@ CREATE TABLE [dbo].[CIC_iCarolImportRollup]
 [AvailableForReferral] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [AvailableForResearch] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [PreferredProvider] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[ConnectsToSiteNum] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[ConnectsToProgramNum] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[ConnectsToSiteNum] [nvarchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
+[ConnectsToProgramNum] [nvarchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
 [LanguageOfRecord] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [CurrentWorkflowStepCode] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [VolunteerOpportunities] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -192,4 +192,6 @@ CREATE TABLE [dbo].[CIC_iCarolImportRollup]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_iCarolImportRollup] ADD CONSTRAINT [PK_CIC_iCarolImportRollup] PRIMARY KEY CLUSTERED  ([ResourceAgencyNum], [LangID]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_CIC_iCarolImportRollup] ON [dbo].[CIC_iCarolImportRollup] ([ConnectsToProgramNum], [TaxonomyLevelName], [ResourceAgencyNum]) ON [PRIMARY]
 GO

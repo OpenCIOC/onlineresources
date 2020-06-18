@@ -5409,7 +5409,7 @@ If Not Nl(strImportOwners) Then
 	strSQL = strSQL & " AND OWNER IN (" & strImportOwners & ")"
 End If
 
-strSQL = strSQL & " ORDER BY NUM"
+strSQL = strSQL & " ORDER BY ied.ER_ID"
 
 'Response.Write("<pre>" & strSQL & "</pre>")
 'Response.Flush()

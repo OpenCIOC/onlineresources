@@ -18,12 +18,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked by: KL
-	Checked on: 25-Jul-2018
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE @HAS_ENGLISH bit,
 		@HAS_FRENCH bit,
 		@BT_CM_ID int
@@ -47,19 +41,30 @@ ORDER BY CASE
 	CASE WHEN pst.NameOrCode=@ProvState THEN 4 WHEN @ProvState IS NULL AND pst.NameOrCode=@DefaultProvState THEN 2 ELSE 0 END +
 	CASE WHEN pst.Country=@Country THEN 1 WHEN pst.Country IS NULL OR @Country IS NULL THEN 0 ELSE -1 END DESC
 
-IF @CM_ID IS NULL AND @AuthCommunity IS NOT NULL BEGIN
-	SELECT TOP 1 @CM_ID = CM_ID
-		FROM GBL_Community_Name
-	WHERE [Name]=@AuthCommunity
-	ORDER BY LangID
-	
-	IF @CM_ID IS NOT NULL BEGIN
-		IF @HAS_ENGLISH=1 BEGIN
-			SET @NotesEn = @CommunityEn + CASE WHEN @NotesEn IS NULL THEN '' ELSE ', ' END + ISNULL(@NotesEn,'')
+IF @CM_ID IS NULL BEGIN
+	IF @AuthCommunity IS NOT NULL BEGIN
+		SELECT TOP 1 @CM_ID = CM_ID
+			FROM GBL_Community_Name
+		WHERE [Name]=@AuthCommunity
+		ORDER BY LangID
+
+		IF @CM_ID IS NOT NULL BEGIN
+			IF @HAS_ENGLISH=1 BEGIN
+				SET @NotesEn = @CommunityEn + CASE WHEN @NotesEn IS NULL THEN '' ELSE ', ' END + ISNULL(@NotesEn,'')
+			END
+			IF @HAS_FRENCH=1 BEGIN
+				SET @NotesFr = @CommunityFr + CASE WHEN @NotesFr IS NULL THEN '' ELSE ', ' END + ISNULL(@NotesFr,'')
+			END
 		END
-		IF @HAS_FRENCH=1 BEGIN
-			SET @NotesFr = @CommunityFr + CASE WHEN @NotesFr IS NULL THEN '' ELSE ', ' END + ISNULL(@NotesFr,'')
-		END
+	END ELSE BEGIN
+		SELECT TOP 1 @CM_ID = CM_ID
+			FROM dbo.GBL_Community_External_Community ec
+			INNER JOIN dbo.GBL_Community_External_Map ecm ON ecm.MapOneEXTID = ec.EXT_ID
+		WHERE [ec].[AreaName] IN (@CommunityEn,@CommunityFr)
+		ORDER BY CASE
+			WHEN ec.ProvinceState=@ProvState THEN 4
+			WHEN @ProvState IS NULL AND ec.ProvinceState=@DefaultProvState THEN 2
+			ELSE 0 END
 	END
 END
 
