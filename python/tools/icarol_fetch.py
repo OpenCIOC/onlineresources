@@ -122,16 +122,9 @@ FieldOrder = [
 	"VolunteerDuties", "IsLinkOnly", "ProgramAgencyNamePublic",
 	"SiteAgencyNamePublic", "Categories", "TaxonomyTerm", "TaxonomyTerms",
 	"TaxonomyTermsNotDeactivated", "TaxonomyCodes", "Coverage", "Hours",
-	"Custom_A1) Does your organization consent to participate in the",
-	"Custom_Public Comments", "Custom_A2) What is the likelihood that within the next 2-5 year",
-	"Custom_S1) Does your organization own/rent/sublease the space",
-	"Custom_S2) If your organization rents the space please state fr",
-	"Custom_S3) What type of facilities do you have at the space (Ch",
-	"Custom_S4) What is the approximate square footage of the space",
-	"Custom_S5) In what type of building is the space located",
-	"Custom_S6) If your organization plans to move from the space in",
+	"Custom_Public Comments",
 	"Custom_Former Names", "Custom_Headings",
-	"Custom_Legal Name", "Custom_Pub Codes", "Custom_Record Owner (211 Central)",
+	"Custom_Legal Name", "Custom_Pub Codes",
 	"Custom_Record Owner (controlled)", "Custom_SINV", "Custom_iCarol-managed record",
 	"Custom_Facebook", "Custom_Instagram", "Custom_LinkedIn", "Custom_Twitter", "Custom_YouTube"
 ]
