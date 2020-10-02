@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import logging
 
 # 3rd party
@@ -27,6 +28,7 @@ from formencode import validators, ForEach
 # this app
 from cioc.core import i18n, validators as ciocvalidators
 from cioc.web.admin import viewbase
+import six
 
 log = logging.getLogger(__name__)
 
@@ -41,7 +43,7 @@ def make_headers(extra_headers=None):
 def make_internal_server_error(message):
 	error = HTTPInternalServerError()
 	error.content_type = "text/plain"
-	error.text = unicode(message)
+	error.text = six.text_type(message)
 	return error
 
 

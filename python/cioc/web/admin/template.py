@@ -15,13 +15,19 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging
+import six
+from six.moves import range
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
 from itertools import groupby
 from operator import attrgetter, itemgetter
-from cgi import escape
+try:
+	from cgi import escape
+except ImportError:
+	from html import escape
 
 from formencode import Schema, validators, ForEach, Any, Pipe, variabledecode
 from pyramid.view import view_config, view_defaults
@@ -97,7 +103,7 @@ class TemplateBaseSchema(Schema):
 
 	# NOTE some field validators added dynamically below
 
-all_fields = tuple(TemplateBaseSchema.fields.iterkeys()) + colour_fields + link_fields
+all_fields = tuple(six.iterkeys(TemplateBaseSchema.fields)) + colour_fields + link_fields
 
 for field in colour_fields:
 	TemplateBaseSchema.add_field(field, ciocvalidators.HexColourValidator())
@@ -247,18 +253,18 @@ class Template(AdminViewBase):
 
 			root = ET.Element('DESCS')
 
-			for culture, data in model_state.form.data['descriptions'].iteritems():
+			for culture, data in six.iteritems(model_state.form.data['descriptions']):
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-				for name, value in data.iteritems():
+				for name, value in six.iteritems(data):
 					if value:
-						ET.SubElement(desc, name).text = unicode(value)
+						ET.SubElement(desc, name).text = six.text_type(value)
 
 			args.append(ET.tostring(root))
 
 			root = ET.Element('MENUS')
-			for menu_type, data in model_state.form.data['menus'].iteritems():
-				for culture, menu_item_list in data.iteritems():
+			for menu_type, data in six.iteritems(model_state.form.data['menus']):
+				for culture, menu_item_list in six.iteritems(data):
 					for i, menu_item in enumerate(menu_item_list):
 						if menu_item.get('delete') or (not menu_item.get('Link') and not menu_item.get('Display')):
 							# deletion
@@ -267,13 +273,13 @@ class Template(AdminViewBase):
 						menu = ET.SubElement(root, 'MENU')
 						ET.SubElement(menu, "Culture").text = culture.replace('_', '-')
 						ET.SubElement(menu, "MenuType").text = menu_type
-						ET.SubElement(menu, "DisplayOrder").text = unicode(i)
-						for name, value in menu_item.iteritems():
+						ET.SubElement(menu, "DisplayOrder").text = six.text_type(i)
+						for name, value in six.iteritems(menu_item):
 							if name == 'MenuID' and value == 'NEW':
 								continue
 
 							if value:
-								ET.SubElement(menu, name).text = unicode(value)
+								ET.SubElement(menu, name).text = six.text_type(value)
 
 			args.append(ET.tostring(root))
 
@@ -396,11 +402,11 @@ class Template(AdminViewBase):
 		if is_add:
 			if template:
 				template.SystemTemplate = False
-			for desc in template_descriptions.itervalues():
+			for desc in six.itervalues(template_descriptions):
 				desc.Name = None
 
-			for menu_group in menus.itervalues():
-				for menu_lang in menu_group.itervalues():
+			for menu_group in six.itervalues(menus):
+				for menu_lang in six.itervalues(menu_group):
 					for menu_item in menu_lang:
 						menu_item['MenuID'] = 'NEW'
 		else:
@@ -423,7 +429,7 @@ class Template(AdminViewBase):
 		views = []
 
 		xml = ET.fromstring(related_views.encode('utf8'))
-		MemberID = unicode(self.request.dboptions.MemberID)
+		MemberID = six.text_type(self.request.dboptions.MemberID)
 		for view in xml.findall('./VIEW'):
 			attrib = view.attrib
 			if view.get('Owner', agency) == agency and view.get('MemberID', MemberID) == MemberID:

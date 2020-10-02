@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import decimal
 import logging
 import re
@@ -32,6 +33,7 @@ import babel
 import cioc.core.syslanguage as syslanguage
 import cioc.core.constants as const
 import cioc.core.i18n as i18n
+import six
 
 log = logging.getLogger(__name__)
 
@@ -87,11 +89,11 @@ class Url(validators.Regex):
 			return
 		if value is None:
 			value = ''
-		elif not isinstance(value, basestring):
+		elif not isinstance(value, six.string_types):
 			try:
 				value = str(value)
 			except UnicodeEncodeError:
-				value = unicode(value)
+				value = six.text_type(value)
 		if self.max is not None and len(value) > self.max:
 			raise Invalid(
 				self.message('tooLong', state, max=self.max), value, state)
@@ -341,7 +343,7 @@ class DateConverter(FancyValidator):
 		day = date_match.group('day')
 		year = date_match.group('year')
 
-		months = dict((v.lower(), k) for (k, v) in chain(months.iteritems(), shortmonths.iteritems()))
+		months = dict((v.lower(), k) for (k, v) in chain(six.iteritems(months), six.iteritems(shortmonths)))
 		days = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 		day = int(day)
@@ -461,8 +463,8 @@ class DeleteKeyIfEmpty(FancyValidator):
 	def _to_python(self, value_dict, state):
 		to_del = []
 		try:
-			for key, value in value_dict.iteritems():
-				if not any(v for v in value.itervalues()):
+			for key, value in six.iteritems(value_dict):
+				if not any(v for v in six.itervalues(value)):
 					to_del.append(key)
 
 			for key in to_del:
@@ -529,7 +531,7 @@ class FlagRequiredIfNoCulture(validators.FormValidator):
 		errors = {}
 
 		# log.debug('active_cultures: %s', active_cultures)
-		for fieldname, validator in self.targetvalidator.fields.iteritems():
+		for fieldname, validator in six.iteritems(self.targetvalidator.fields):
 			if not validator.not_empty:
 				continue
 
@@ -639,7 +641,7 @@ class RequireIfAny(validators.FormValidator):
 		return value_dict
 
 	def _convert_to_list(self, value):
-		if isinstance(value, (str, unicode)):
+		if isinstance(value, (str, six.text_type)):
 			return [value]
 		elif value is None:
 			return []
@@ -672,7 +674,7 @@ class RequireAtLeastOne(validators.FormValidator):
 		return value_dict
 
 	def _convert_to_list(self, value):
-		if isinstance(value, (str, unicode)):
+		if isinstance(value, (str, six.text_type)):
 			return [value]
 		elif value is None:
 			return []
@@ -707,7 +709,7 @@ class RequireNoneOrAll(validators.FormValidator):
 		return value_dict
 
 	def _convert_to_list(self, value):
-		if isinstance(value, (str, unicode)):
+		if isinstance(value, (str, six.text_type)):
 			return [value]
 		elif value is None:
 			return []
@@ -760,7 +762,7 @@ class RequireIfPredicate(validators.FormValidator):
 		return value_dict
 
 	def _convert_to_list(self, value):
-		if isinstance(value, (str, unicode)):
+		if isinstance(value, (str, six.text_type)):
 			return [value]
 		elif value is None:
 			return []
@@ -828,7 +830,7 @@ class ISODateConverter(FancyValidator):
 				return isodate.parse_datetime(value)
 			else:
 				return isodate.parse_date(value)
-		except (ValueError, isodate.ISO8601Error), e:
+		except (ValueError, isodate.ISO8601Error) as e:
 			raise Invalid(
 				self.message('invalidDate', state,
 					exception=str(e)), value, state)
@@ -869,7 +871,7 @@ class ForceRequire(validators.FormValidator):
 		return field_dict
 
 	def _convert_to_list(self, value):
-		if isinstance(value, (str, unicode)):
+		if isinstance(value, (str, six.text_type)):
 			return [value]
 		elif value is None:
 			return []
@@ -886,7 +888,7 @@ class ForceRequire(validators.FormValidator):
 
 class CSVForEach(ForEach):
 	def _convert_to_list(self, value):
-		if isinstance(value, (str, unicode)):
+		if isinstance(value, (str, six.text_type)):
 			return value.split(',')
 
 		return ForEach._convert_to_list(self, value)

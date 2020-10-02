@@ -21,7 +21,7 @@
 import lxml.html
 
 def clean_html_for_label(data):
-	tree = lxml.html.document_fromstring(unicode(data))
+	tree = lxml.html.document_fromstring(six.text_type(data))
 	return tree.text_content()
 
 </script>

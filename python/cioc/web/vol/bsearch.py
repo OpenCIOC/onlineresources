@@ -14,6 +14,7 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
 import os
 import itertools
 from functools import partial
@@ -21,12 +22,16 @@ from functools import partial
 from markupsafe import Markup
 from pyramid.view import view_config
 from pyramid.decorator import reify
-from webhelpers.html import tags
+from webhelpers2.html import tags
 
 from cioc.core import template, i18n, volprofileuser, constants as const
 from cioc.web.vol.viewbase import VolViewBase
 from cioc.core.browselist import makeAlphaList, makeAlphaListItems
 from cioc.core.format import textToHTML
+from cioc.core.modelstate import convert_options
+import six
+from six.moves import map
+from six.moves import zip
 
 _system_layout_dir = template._system_layout_dir
 encode_link_values = template.encode_link_values
@@ -169,7 +174,7 @@ class LayoutSearch(object):
 
 		other_langs = []
 		if user or self.menu_items_custom:
-			for key, val in viewdata.Cultures.iteritems():
+			for key, val in six.iteritems(viewdata.Cultures):
 				if key == Culture:
 					continue
 				httpvals = {}
@@ -237,10 +242,10 @@ class LayoutSearch(object):
 
 			if self.viewslist:
 				cv_select = tags.select('UseVOLVw', None,
-							[('', '')] + map(tuple, self.viewslist))
+							convert_options([('', '')] + list(map(tuple, self.viewslist))))
 
 				cv_params = ''.join(tags.hidden(n, value=v) for n, v in
-						request.params.iteritems() if n != 'UseVOLVw')
+						six.iteritems(request.params) if n != 'UseVOLVw')
 
 				cv_submit = tags.submit(None, value=_('Change View'))
 
@@ -330,7 +335,7 @@ class LayoutSearch(object):
 			'KEYWORD_SEARCH_IN': kwargs['searchform_in_values'],
 			'PROFILE_LINKS': kwargs['searchform_profilelinks'],
 			'MAKE_LINK': template.make_linkify_fn(request),
-			'VIEWS_LIST': [{'VIEWTYPE': unicode(x.ViewType), 'VIEWNAME': x.ViewName} for x in self.viewslist] if self.viewslist else [],
+			'VIEWS_LIST': [{'VIEWTYPE': six.text_type(x.ViewType), 'VIEWNAME': x.ViewName} for x in self.viewslist] if self.viewslist else [],
 			'CHANGE_VIEW_TITLE': _('Change View'),
 		}
 		namespace['HAS_LEFT_CONTENT'] = any(namespace[x] for x in ['SEARCH_ALERT', 'SEARCH_MENU', 'SEARCH_LEFT_CONTENT'])
@@ -373,9 +378,7 @@ class BasicSearch(VolViewBase):
 			search_info = conn.execute('EXEC dbo.sp_VOL_View_s_BSrch ?', vol_view.ViewType).fetchone()
 
 		if layout_info.SystemLayout and layout_info.LayoutHTMLURL:
-			f = open(os.path.join(_system_layout_dir, layout_info.LayoutHTMLURL), 'rU')
-			layout_info.SearchLayoutHTML = f.read().decode('utf8')
-			f.close()
+			layout_info.SearchLayoutHTML = read_file(os.path.join(_system_layout_dir, layout_info.LayoutHTMLURL))
 
 		viewslist = None
 		if request.user:

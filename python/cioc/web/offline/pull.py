@@ -15,6 +15,7 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import zipfile
 import tempfile
 import os
@@ -32,6 +33,8 @@ from cioc.web.offline.auth import AuthFailure, verify_auth
 
 
 import logging
+import six
+from six.moves import zip
 log = logging.getLogger(__name__)
 
 _ = i18n.gettext
@@ -93,7 +96,7 @@ class Pull(viewbase.CicViewBase):
 
 		try:
 			user_type = verify_auth(request)
-		except AuthFailure, e:
+		except AuthFailure as e:
 			return e.result_info, None
 
 		model_state = request.model_state
@@ -165,7 +168,7 @@ class Pull2(viewbase.CicViewBase):
 
 		try:
 			user_type = verify_auth(request)
-		except AuthFailure, e:
+		except AuthFailure as e:
 			return e.result_info, None
 
 		model_state = request.model_state
@@ -178,11 +181,11 @@ class Pull2(viewbase.CicViewBase):
 
 		new_fields = model_state.value('NewFields')
 		if new_fields:
-			new_fields = u','.join(unicode(x) for x in sorted(set(new_fields)))
+			new_fields = u','.join(six.text_type(x) for x in sorted(set(new_fields)))
 
 		new_records = model_state.value('NewRecords')
 		if new_records:
-			new_records = u','.join(unicode(x).upper() for x in sorted(set(new_records)))
+			new_records = u','.join(six.text_type(x).upper() for x in sorted(set(new_records)))
 
 		data = {}
 		log.debug('Machine id: %d', user_type.MachineID)
@@ -207,7 +210,7 @@ def _get_record_data(cursor):
 	file.write(u'<record_data>'.encode('utf-8'))
 	cols = None
 	while True:
-		rows = cursor.fetchmany(20000)
+		rows = cursor.fetchmany(5000)
 		if not rows:
 			break
 

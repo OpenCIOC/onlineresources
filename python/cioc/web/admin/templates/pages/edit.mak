@@ -18,7 +18,10 @@
 
 
 <%inherit file="cioc.web:templates/master.mak" />
-<%! from operator import itemgetter %>
+<%! 
+from operator import itemgetter
+import six
+%>
 <p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp' if request.user.SuperUser else 'setup_webdev.asp')}">${_('Return to Setup')}</a> | <a href="${request.passvars.route_path('admin_pages_index', _query=[('DM', domain.id)])}">${_('Pages')}</a> ]</p>
 <form method="post" action="${request.current_route_path()}">
 <div class="NotVisible">
@@ -85,9 +88,9 @@ ${self.makeMgmtInfo(page)}
 		 ${renderer.ms_checkbox('views', view.ViewType, label=view.ViewName)}
 		 %if page and view.Selected:
 			 %if domain.id == const.DM_CIC:
-				<% lnk = request.passvars.route_path('pages_cic', slug=page.Slug, _query=[('UseCICVw', unicode(view.ViewType))]) %>
+				<% lnk = request.passvars.route_path('pages_cic', slug=page.Slug, _query=[('UseCICVw', six.text_type(view.ViewType))]) %>
 			 %else:
-				<% lnk = request.passvars.route_path('pages_vol', slug=page.Slug, _query=[('UseVOLVw', unicode(view.ViewType))]) %>
+				<% lnk = request.passvars.route_path('pages_vol', slug=page.Slug, _query=[('UseVOLVw', six.text_type(view.ViewType))]) %>
 			 %endif
 			 <a href="${lnk}" target="_blank">${_('View Page')} <span class="glyphicon glyphicon-new-window" class="aria-hidden"></span></a>
 		 %endif

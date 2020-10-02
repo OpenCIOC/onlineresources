@@ -16,12 +16,14 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import re
 import logging
 
 # 3rd party
-from webhelpers.html import tags
-from webhelpers.html.builder import HTML, literal
+from webhelpers2.html import tags
+from webhelpers2.html.tags import Option, OptGroup
+from webhelpers2.html.builder import HTML, literal
 from markupsafe import Markup
 
 from pyramid_simpleform import Form, State
@@ -30,8 +32,29 @@ from pyramid_simpleform.renderers import FormRenderer
 # this app
 from cioc.core.i18n import gettext, format_date, TranslationString, TranslationStringFactory
 import cioc.core.constants as const
+import six
 
 log = logging.getLogger(__name__)
+
+
+def convert_options(options):
+	# convert from webhelpers1 to webhelpers2
+	opts = []
+	for opt in options:
+		if isinstance(opt, (Option, OptGroup)):
+			opts.append(opt)
+			continue
+		if isinstance(opt, (list, tuple)):
+			value, label = opt[:2]
+			if isinstance(value, (list, tuple)):  # It's an optgroup
+				opts.append(OptGroup(label, convert_options(value)))
+				continue
+		else:
+			value = label = opt
+
+		opt = Option(label=label, value=value)
+		opts.append(opt)
+	return opts
 
 
 class DefaultModel(object):
@@ -86,7 +109,7 @@ class CiocFormRenderer(FormRenderer):
 		Outputs radio input.
 		"""
 		try:
-			checked = unicode(traverse_object_for_value(self.form.data, name)) == unicode(value)
+			checked = six.text_type(traverse_object_for_value(self.form.data, name)) == six.text_type(value)
 		except (KeyError, AttributeError):
 			pass
 
@@ -119,8 +142,8 @@ class CiocFormRenderer(FormRenderer):
 		"""
 		Outputs checkbox in radio style (i.e. multi select)
 		"""
-		checked = unicode(value) in self.value(name, []) or checked
-		id = self._fix_id(id or ('_'.join((name, unicode(value)))))
+		checked = six.text_type(value) in self.value(name, []) or checked
+		id = self._fix_id(id or ('_'.join((name, six.text_type(value)))))
 		return tags.checkbox(name, value, checked, label, id, **attrs)
 
 	def label(self, name, label=None, **attrs):

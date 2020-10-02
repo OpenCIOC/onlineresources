@@ -14,6 +14,7 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
 import logging
 
 from itertools import groupby
@@ -31,6 +32,7 @@ def link_code(request, link_text, naics_codes, link_page=None):
 		return Markup('<a href="%s">%s</a>') % (request.passvars.makeLink(link_page, {'NAICS': naics_codes}), link_text)
 
 	return escape(link_text)
+
 
 def get_exclusions(request, naics_code, link_page=None, all_langs=False):
 	with request.connmgr.get_connection() as conn:

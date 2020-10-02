@@ -20,6 +20,7 @@
 <%namespace file="cioc.web.admin:templates/shown_cultures.mak" name="sc" />
 <%! 
 from markupsafe import Markup
+import six
 %>
 <% 
 makeLink = request.passvars.makeLink 
@@ -168,7 +169,7 @@ jQuery(function($) {
 %endfor
 <% display_cultures = [model_state.value(prefix + 'Descriptions.' + culture_map[item].FormCulture + '.Name') for item in record_cultures if model_state.value(prefix + 'Descriptions.' + culture_map[item].FormCulture + '.Name') is not None] %>
 <% title = model_state.value(prefix+chk_type.CodeField) or display_cultures[0] if display_cultures else model_state.value(prefix+chk_type.CodeField)%>
-<% title = unicode(title or _('New')) %>
+<% title = six.text_type(title or _('New')) %>
 %if chk_type.CanDelete:
 	<td class="text-center">
 	%if ForceDeleteable or chk_type.can_delete_item(itemid, chkusage):
@@ -242,7 +243,7 @@ if _context.OtherMembersActive:
 %>
 %for which in  types:
 	<% 
-		usage = chkusage.get(unicode(renderer.value(prefix + chk_type.ID)))
+		usage = chkusage.get(six.text_type(renderer.value(prefix + chk_type.ID)))
 		usage1 = getattr(usage, 'Usage1' + which, None)
 		usage2 = getattr(usage, 'Usage2' + which, None)
 	%>

@@ -25,6 +25,7 @@ from email.utils import parseaddr, formataddr
 from markupsafe import Markup, escape_silent
 from marrow.mailer import Mailer, Message
 from marrow.mailer.exc import DeliveryException
+import six
 
 DeliveryException
 
@@ -65,7 +66,7 @@ def _get_mailer(request):
 			'tls': 'ssl' if os.environ.get('CIOC_MAIL_USE_SSL') else None,
 		}
 		# print transport['host']
-		transport = {k: v for k, v in transport.iteritems() if v}
+		transport = {k: v for k, v in six.iteritems(transport) if v}
 		_mailer = Mailer({
 			'transport': transport,
 			'manager': {'use': request.config.get('mailer.manager', 'immediate')}
@@ -80,7 +81,7 @@ def send_email(request, author, to, subject, message, ignore_block=False, domain
 	if not isinstance(to, (list, tuple, set)):
 		to = [x.strip() for x in to.split(',')]
 
-	to = [unicode(x) for x in to if x]
+	to = [six.text_type(x) for x in to if x]
 	dboptions = request.dboptions
 	TrainingMode = dboptions.TrainingMode
 	NoEmail = dboptions.NoEmail
@@ -121,9 +122,9 @@ def send_email(request, author, to, subject, message, ignore_block=False, domain
 
 	if (not TrainingMode or ignore_block) and (not NoEmail or ignore_block) and to and author:
 		mailer = _get_mailer(request)
-		args = dict(author=[unicode(author)], to=to, subject=subject, plain=message)
+		args = dict(author=[six.text_type(author)], to=to, subject=subject, plain=message)
 		if reply:
-			args['reply'] = [unicode(reply)]
+			args['reply'] = [six.text_type(reply)]
 		message = Message(**args)
 		mailer.send(message)
 

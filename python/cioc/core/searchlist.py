@@ -14,7 +14,9 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
 from cioc.core import constants as const
+import six
 
 
 def get_search_list(request, dbarea):
@@ -29,4 +31,4 @@ def get_search_list(request, dbarea):
 	value = request.session.get(key)
 
 	if value:
-		return unicode(value).split(u',')
+		return six.text_type(value).split(u',')

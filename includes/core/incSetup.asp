@@ -545,13 +545,13 @@ def init_asset_mgr():
 	pyrequest.assetmgr = asset.AssetManager(pyrequest)
 
 def makeAssetVer(strScriptName):
-	return pyrequest.assetmgr.makeAssetVer(str(strScriptName))
+	return pyrequest.assetmgr.makeAssetVer(six.text_type(strScriptName))
 	
 def JSVerScriptTag(strScriptName):
-	return pyrequest.assetmgr.JSVerScriptTag(str(strScriptName))
+	return pyrequest.assetmgr.JSVerScriptTag(six.text_type(strScriptName))
 
 def makeSingletonScriptTag(strScriptName):
-	return pyrequest.assetmgr.makeSingletonScriptTag(str(strScriptName))
+	return pyrequest.assetmgr.makeSingletonScriptTag(six.text_type(strScriptName))
 def makeJQueryScriptTags():
 	return pyrequest.assetmgr.makeJQueryScriptTags()
 </script>

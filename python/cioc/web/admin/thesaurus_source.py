@@ -15,7 +15,9 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging 
+import six
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -119,20 +121,20 @@ class ThesaurusSource(AdminViewBase):
 
 
 				source_el = ET.SubElement(root, 'Source')
-				ET.SubElement(source_el, 'CNT').text = unicode(i)
+				ET.SubElement(source_el, 'CNT').text = six.text_type(i)
 				
 				if src_id == 'NEW':
 					src_id = -1
 
-				ET.SubElement(source_el, 'SRC_ID').text = unicode(src_id)
+				ET.SubElement(source_el, 'SRC_ID').text = six.text_type(src_id)
 
 				descs = ET.SubElement(source_el, 'DESCS')
-				for culture,value in (descriptions or {}).iteritems():
+				for culture,value in six.iteritems((descriptions or {})):
 					value = value.get('SourceName')
 					if value is not None:
 						desc = ET.SubElement(descs, 'DESC')
-						ET.SubElement(desc, 'Culture').text = unicode(culture.replace('_', '-'))
-						ET.SubElement(desc, 'SourceName').text = unicode(value)
+						ET.SubElement(desc, 'Culture').text = six.text_type(culture.replace('_', '-'))
+						ET.SubElement(desc, 'SourceName').text = six.text_type(value)
 
 
 			args = [user.Mod, ET.tostring(root)]
@@ -190,7 +192,7 @@ class ThesaurusSource(AdminViewBase):
 			sources = conn.execute('EXEC sp_THS_Source_lf').fetchall()
 
 		for source in sources:
-			usage[unicode(source.SRC_ID)] = source.Usage
+			usage[six.text_type(source.SRC_ID)] = source.Usage
 			source.Descriptions = self._culture_dict_from_xml(source.Descriptions, 'DESC')
 
 

@@ -1,7 +1,10 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
 import subprocess
 import argparse
+from cioc.core.utils import write_file
 
 site_root = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
@@ -57,27 +60,26 @@ def parse_args():
 def populate_config_file(args):
 	config_dir = os.path.abspath(os.path.join(site_root, '..', '..', 'config'))
 	if not os.path.exists(config_dir):
-		print 'creating config directory', config_dir
+		print('creating config directory', config_dir)
 		os.mkdir(config_dir)
 
 	config_file = os.path.join(config_dir, os.path.basename(site_root) + '.ini')
 	if not os.path.exists(config_file):
-		print 'creating config file', config_file
+		print('creating config file', config_file)
 		contents = config_tmpl % {
 			'server': args.db_server,
 			'database': args.db_name,
 			'username': args.user_name,
 			'password': args.password,
 		}
-		with open(config_file, 'w') as f:
-			f.write(contents)
+		write_file(config_file, contents)
 
 
 def main():
 	args = parse_args()
 
-	subprocess.call([os.path.join(sys.prefix, 'scripts', 'mkvirtualenv.bat'), '--system-site-packages', 'ciocenv31'])
-	env_python = os.path.join(os.environ['HOMEPATH'], 'Envs', 'ciocenv31', 'scripts', 'python.exe')
+	subprocess.call([os.path.join(sys.prefix, 'scripts', 'mkvirtualenv.bat'), '--system-site-packages', 'ciocenv4py3'])
+	env_python = os.path.join(os.environ['HOMEPATH'], 'Envs', 'ciocenv4py3', 'scripts', 'python.exe')
 	subprocess.call([env_python, '-m', 'pip', 'install', '-U', 'pip'])
 	subprocess.call([env_python, '-m', 'pip', 'install', '-r', 'requirements.txt'])
 

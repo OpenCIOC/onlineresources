@@ -15,6 +15,7 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 from json import dumps
 
 from cioc.core.i18n import gettext as _

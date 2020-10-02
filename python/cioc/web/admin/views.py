@@ -15,7 +15,9 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging
+import six
 log = logging.getLogger(__name__)
 
 import collections
@@ -35,16 +37,16 @@ templateprefix = 'cioc.web.admin:templates/views/'
 TopicSearchEditValues = collections.namedtuple('TopicSearchEditValues', 'ViewType TopicSearchID topic_search descriptions publications view_info is_edit')
 
 CanSeeNonPublicPubOptions = {'A': True, 'P': False, 'S': None}
-RCanSeeNonPublicPubOptions = dict((v, k) for k, v in CanSeeNonPublicPubOptions.iteritems())
+RCanSeeNonPublicPubOptions = dict((v, k) for k, v in six.iteritems(CanSeeNonPublicPubOptions))
 
 SrchCommunityDefaultOptions = {'L': False, 'S': True}
-RSrchCommunityDefaultOptions = dict((v, k) for k, v in SrchCommunityDefaultOptions.iteritems())
+RSrchCommunityDefaultOptions = dict((v, k) for k, v in six.iteritems(SrchCommunityDefaultOptions))
 
 CCRFieldsOptions = {'P': False, 'A': True}
-RCCRFieldsOptions = dict((v, k) for k, v in CCRFieldsOptions.iteritems())
+RCCRFieldsOptions = dict((v, k) for k, v in six.iteritems(CCRFieldsOptions))
 
 QuickListMatchAllOptions = {'ALL': True, 'ANY': False}
-RQuickListMatchAllOptions = dict((v, k) for k, v in QuickListMatchAllOptions.iteritems())
+RQuickListMatchAllOptions = dict((v, k) for k, v in six.iteritems(QuickListMatchAllOptions))
 
 
 class QuickListType(validators.Int):
@@ -473,12 +475,12 @@ class View(viewbase.AdminViewBase):
 
 			args = [ViewType, user.Mod, request.dboptions.MemberID, user.Agency]
 
-			view_fields = schema.fields['item'].fields.keys()
+			view_fields = list(schema.fields['item'].fields.keys())
 			view = form_data.get('item', {})
 
 			args.extend(view.get(k) for k in view_fields)
 
-			dopts_fields = DisplayOptionSchema.fields.keys()
+			dopts_fields = list(DisplayOptionSchema.fields.keys())
 			dopts_fields.remove('FieldIDs')
 			dopts = form_data.get('dopts', {})
 
@@ -490,14 +492,14 @@ class View(viewbase.AdminViewBase):
 				root = ET.Element('PubIDs')
 				if view.get('CanSeeNonPublicPub') is None:
 					for pub in form_data['PUB_ID']:
-						ET.SubElement(root, "PBID").text = unicode(pub)
+						ET.SubElement(root, "PBID").text = six.text_type(pub)
 
 				args.append(ET.tostring(root))
 				argnames.append('Publications')
 
 				root = ET.Element('PubIDs')
 				for pub in form_data['ADDPUB_ID']:
-					ET.SubElement(root, "PBID").text = unicode(pub)
+					ET.SubElement(root, "PBID").text = six.text_type(pub)
 
 				args.append(ET.tostring(root))
 				argnames.append('AddPublications')
@@ -505,26 +507,26 @@ class View(viewbase.AdminViewBase):
 			root = ET.Element('DESCS')
 
 			has_label_overrides = form_data.get('HasLabelOverrides')
-			for culture, data in (form_data['descriptions'] or {}).iteritems():
+			for culture, data in six.iteritems((form_data['descriptions'] or {})):
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-				for name, value in data.iteritems():
+				for name, value in six.iteritems(data):
 					if not has_label_overrides and name in label_override_fields:
 						continue
 					if value:
-						ET.SubElement(desc, name).text = unicode(value)
+						ET.SubElement(desc, name).text = six.text_type(value)
 
 			args.append(ET.tostring(root))
 
 			root = ET.Element('VIEWS')
 			for view_type in form_data['Views']:
-				ET.SubElement(root, 'VIEW').text = unicode(view_type)
+				ET.SubElement(root, 'VIEW').text = six.text_type(view_type)
 
 			args.append(ET.tostring(root))
 
 			root = ET.Element('AdvSearchCheckLists')
 			for field in form_data['AdvSearchCheckLists']:
-				ET.SubElement(root, "Chk").text = unicode(field)
+				ET.SubElement(root, "Chk").text = six.text_type(field)
 
 			args.append(ET.tostring(root))
 
@@ -1209,15 +1211,15 @@ class View(viewbase.AdminViewBase):
 		if model_state.validate():
 			data = model_state.form.data
 			ts_data = data.get('topic_search', {})
-			fields = TopicSearchBaseSchema.fields.keys()
+			fields = list(TopicSearchBaseSchema.fields.keys())
 			args = [TopicSearchID, user.Mod, request.dboptions.MemberID, user.Agency, ViewType] + [ts_data.get(f) for f in fields]
 
 			root = ET.Element('DESCS')
 
-			for culture, description in (data['descriptions'] or {}).iteritems():
+			for culture, description in six.iteritems((data['descriptions'] or {})):
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, 'Culture').text = culture.replace('_', '-')
-				for name, value in description.iteritems():
+				for name, value in six.iteritems(description):
 					if value:
 						ET.SubElement(desc, name).text = value
 

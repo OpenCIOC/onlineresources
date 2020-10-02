@@ -14,6 +14,8 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
+from __future__ import print_function
 import optparse
 import sys
 import textwrap
@@ -93,7 +95,7 @@ class PRoutesCommand(object):
 			else:
 				urls.add(pattern)
 
-		print "\n".join(sorted(urls))
+		print("\n".join(sorted(urls)))
 
 		return 0
 

@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import argparse
 import hashlib
 import os
@@ -56,7 +58,7 @@ def parse_args(argv):
 
 
 def upload_file(bucket, location, filename, mime_type, content=None, filebase=None):
-	print 'Uploading %s ' % (filename,),
+	print('Uploading %s ' % (filename,), end=' ')
 
 	def percent_cb(complete, total):
 		sys.stdout.write('.')
@@ -69,7 +71,7 @@ def upload_file(bucket, location, filename, mime_type, content=None, filebase=No
 	else:
 		k.set_contents_from_filename(os.path.join(filebase, filename), cb=percent_cb, num_cb=10, policy='public-read')
 
-	print
+	print()
 
 
 def gethash():
@@ -99,7 +101,7 @@ def main(argv):
 	bucket = conn.get_bucket(bucket_name)
 	location = 'fontello/' + gethash() + '/'
 
-	print 'Uploading to Amazon S3 path', location
+	print('Uploading to Amazon S3 path', location)
 	filebase = os.path.join(const._app_path, 'fonts')
 
 	for filename, mime_type in files:
@@ -121,7 +123,7 @@ def main(argv):
 	location = 'bootstrap-3.3.5/'
 	filebase = os.path.join(const._app_path, 'fonts', 'bootstrap')
 
-	print 'Uploading to Amazon S3 path', location
+	print('Uploading to Amazon S3 path', location)
 	for filename, mime_type in bootstrap_files:
 		upload_file(bucket, location, filename, mime_type, filebase=filebase)
 

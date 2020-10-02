@@ -65,7 +65,7 @@ ${request.passvars.getHTTPVals(bForm=True)}
 			<tr>
 				<td>
 				${renderer.errorlist(prefix + 'CICViewType')}
-				${renderer.select(prefix + 'CICViewType', [('',_('-- Database Default View --'))]+map(tuple,cic_views), title=domain_name + _(': Community Information View'))}
+				${renderer.select(prefix + 'CICViewType', [('',_('-- Database Default View --'))]+list(map(tuple,cic_views)), title=domain_name + _(': Community Information View'))}
 				</td>
 			</tr>
 			%endif
@@ -76,7 +76,7 @@ ${request.passvars.getHTTPVals(bForm=True)}
 			<tr>
 				<td>
 				${renderer.errorlist(prefix + 'VOLViewType')}
-				${renderer.select(prefix + 'VOLViewType', [('',_('-- Database Default View --'))]+map(tuple,vol_views), title=domain_name + _(': Volunteer View'))}
+				${renderer.select(prefix + 'VOLViewType', [('',_('-- Database Default View --'))]+list(map(tuple,vol_views)), title=domain_name + _(': Volunteer View'))}
 				</td>
 			</tr>
 			%endif

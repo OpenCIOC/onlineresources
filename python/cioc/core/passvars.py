@@ -14,8 +14,9 @@
 #  limitations under the License.
 # =========================================================================================
 
-from urllib import urlencode
-from urlparse import parse_qs
+from __future__ import absolute_import
+from six.moves.urllib.parse import urlencode
+from six.moves.urllib.parse import parse_qs
 import posixpath
 
 from markupsafe import Markup
@@ -24,6 +25,7 @@ import cioc.core.syslanguage as syslanguage
 from cioc.core.basetypes import IsIDType
 
 import logging
+import six
 log = logging.getLogger(__name__)
 
 
@@ -98,10 +100,10 @@ class PassVars(object):
 
 		if not exclude_keys:
 			exclude_keys = ()
-		elif isinstance(exclude_keys, basestring):
+		elif isinstance(exclude_keys, six.string_types):
 			exclude_keys = (exclude_keys,)
 
-		items = [(key, val) for (key, val) in self.httpvals.iteritems() if key not in exclude_keys]
+		items = [(key, val) for (key, val) in six.iteritems(self.httpvals) if key not in exclude_keys]
 		return items
 
 	def getHTTPVals(self, exclude_keys=None, bForm=False):
@@ -118,8 +120,8 @@ class PassVars(object):
 
 		vals = {'NUM': num}
 		if httpvals:
-			if isinstance(httpvals, basestring):
-				httpvals = dict((k, ','.join(v)) for (k, v) in parse_qs(httpvals, True).iteritems())
+			if isinstance(httpvals, six.string_types):
+				httpvals = dict((k, ','.join(v)) for (k, v) in six.iteritems(parse_qs(httpvals, True)))
 			vals.update(httpvals)
 
 		return self.makeLink(posixpath.join(self.path_from_start, 'details.asp'), vals, exclude_keys)
@@ -130,8 +132,8 @@ class PassVars(object):
 
 		vals = {'VNUM': vnum}
 		if httpvals:
-			if isinstance(httpvals, basestring):
-				httpvals = dict((k, ','.join(v)) for (k, v) in parse_qs(httpvals, True).iteritems())
+			if isinstance(httpvals, six.string_types):
+				httpvals = dict((k, ','.join(v)) for (k, v) in six.iteritems(parse_qs(httpvals, True)))
 			vals.update(httpvals)
 
 		return self.makeLink(posixpath.join(self.path_from_start, 'volunteer', 'details.asp'), vals, exclude_keys)
@@ -148,14 +150,14 @@ class PassVars(object):
 			vars.append(passvars)
 
 		if httpvals:
-			if isinstance(httpvals, basestring):
+			if isinstance(httpvals, six.string_types):
 				vars.append(httpvals)
 
 			elif isinstance(httpvals, (dict, list, tuple)):
 				if isinstance(httpvals, dict):
-					httpvals = httpvals.items()
+					httpvals = list(httpvals.items())
 
-				force_utf8 = lambda x: x if not isinstance(x, unicode) else x.encode('utf-8')
+				force_utf8 = lambda x: x if not isinstance(x, six.text_type) else x.encode('utf-8')
 				vars.append(urlencode([(force_utf8(k), force_utf8(v)) for k, v in httpvals]))
 
 			else:
@@ -181,7 +183,7 @@ class PassVars(object):
 		if '_query' in kw and _query:
 			_q = kw.pop('_query')
 			if isinstance(_q, dict):
-				_q = _q.items()
+				_q = list(_q.items())
 			_query = _query + list(_q)
 
 		if _query:
@@ -201,8 +203,8 @@ class PassVars(object):
 	def makeLinkAdmin(self, url, httpvals=None):
 		if not httpvals:
 			httpvals = {}
-		elif isinstance(httpvals, basestring):
-			httpvals = dict((k, ','.join(v)) for (k, v) in parse_qs(httpvals, True).iteritems())
+		elif isinstance(httpvals, six.string_types):
+			httpvals = dict((k, ','.join(v)) for (k, v) in six.iteritems(parse_qs(httpvals, True)))
 
 		default_culture = self.request.default_culture
 		current_culture = self.request.language.Culture

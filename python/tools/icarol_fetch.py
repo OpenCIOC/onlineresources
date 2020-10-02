@@ -14,19 +14,23 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
+from __future__ import print_function
 import argparse
 import pprint
 import json
 import time
 import re
-from Queue import Queue
+from six.moves.queue import Queue
 from collections import namedtuple
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 import os
 import sys
 import tempfile
 import traceback
-import urllib
+import six.moves.urllib.request
+import six.moves.urllib.parse
+import six.moves.urllib.error
 import pyodbc
 from collections import OrderedDict
 from datetime import datetime
@@ -34,6 +38,8 @@ from threading import Thread
 from operator import itemgetter
 
 import isodate
+from six.moves import map
+import six
 
 CREATE_NO_WINDOW = 0x08000000
 creationflags = 0
@@ -141,10 +147,10 @@ dts_file_template = os.path.join(os.environ.get('CIOC_UDL_BASE', r'd:\UDLS'), '%
 
 def get_bulk_connection(language):
 	dts = dts_file_template % const._app_name
-	with open(dts) as dts_file:
+	with open(dts, 'rb') as dts_file:
 
 		# the [1:] is there to drop the bom from the start of the file
-		connstr = dts_file.read().decode('utf_16_le')[1:].replace(u'\r', u'').split(u'\n')
+		connstr = dts_file.read().decode('utf_16').replace(u'\r', u'').split(u'\n')
 
 	for line in connstr:
 		if line and line.startswith((u';', u'[')):
@@ -288,7 +294,7 @@ def get_record_list(args, modifiedSince=None, lang='en'):
 	if modifiedSince:
 		params['updatedOn'] = modifiedSince
 
-	url = url + '?' + urllib.urlencode(params)
+	url = url + '?' + six.moves.urllib.parse.urlencode(params)
 
 	response = args.session.get(url)
 	response.raise_for_status()
@@ -307,19 +313,19 @@ def get_records(args, id, lang='en'):
 	if not isinstance(id, list):
 		id = [id]
 
-	id_str = map(str, id)
+	id_str = list(map(str, id))
 	params = {
 		'id': ",".join(id_str),
 		'key': args.key,
 		'service': '0',
 		'lang': lang
 	}
-	url = url + '?' + urllib.urlencode(params)
+	url = url + '?' + six.moves.urllib.parse.urlencode(params)
 	start = time.time()
 	response = args.session.get(url)
 	duration = time.time() - start
 	if args.test:
-		print 'requested {} records in {}s'.format(len(id), duration)
+		print('requested {} records in {}s'.format(len(id), duration))
 	response.raise_for_status()
 	tmp = {x['ResourceAgencyNum']: x for x in response.json(object_pairs_hook=OrderedDict)}
 	result = [tmp[x] for x in id]
@@ -336,7 +342,7 @@ def _to_unicode(value):
 	if value is None:
 		return u''
 
-	value = unicode(value)
+	value = six.text_type(value)
 	return invalid_xml_chars.sub(u'', value).strip()
 
 
@@ -344,7 +350,7 @@ def to_csv(records, target_file, headings):
 	fn = itemgetter(*headings)
 
 	writer = UTF8CSVWriter(target_file, dialect=SQLServerBulkDialect)
-	out_stream = (map(_to_unicode, fn(x)) for x in records)
+	out_stream = (list(map(_to_unicode, fn(x))) for x in records)
 	writer.writerows(out_stream)
 
 
@@ -445,7 +451,7 @@ def fetch_from_o211(context, lang):
 	queue.put(None)
 	queue.join()
 
-	print 'Pulled %s changed source records in %s.' % (pulled_record_count, lang.sql_language)
+	print('Pulled %s changed source records in %s.' % (pulled_record_count, lang.sql_language))
 
 
 def check_db_state(context):
@@ -502,17 +508,17 @@ def generate_and_upload_import(context):
 			stderr = FileWriteDetector(stdout)
 			try:
 				member_name = member.DefaultEmailNameCIC or member.BaseURLCIC or member.MemberID
-				print >>stdout, "Generating sharing file for %s.\n" % (member_name,)
+				print("Generating sharing file for %s.\n" % (member_name,), file=stdout)
 
 				cursor = conn.execute('EXEC sp_CIC_iCarolImport_CreateSharing ?', member.MemberID)
 				batch = cursor.fetchmany(5000)
 
 				if not batch:
-					print >>stdout, "No Records for %s, skipping.\n" % (member_name,)
+					print("No Records for %s, skipping.\n" % (member_name,), file=stdout)
 					cursor.close()
 					continue
 				else:
-					print >>stdout, "Processing Imports for %s." % (member_name,)
+					print("Processing Imports for %s." % (member_name,), file=stdout)
 
 				with tempfile.TemporaryFile() as fd:
 					fd.write(u'''<?xml version="1.0" encoding="UTF-8"?>
@@ -533,15 +539,15 @@ def generate_and_upload_import(context):
 					)
 
 				total_import_count += total_inserted
-				print >>stdout, "Import Complete for Member %s. %s records imported." % (member_name, total_inserted)
+				print ("Import Complete for Member %s. %s records imported." % (member_name, total_inserted), file=stdout)
 				if error_log:
-					print >>stderr, "A problem was encountered validating input for Member %s, see below." % (member_name,)
+					print("A problem was encountered validating input for Member %s, see below." % (member_name,), file=stderr)
 
 				for record, errmsg in error_log:
 					if record:
-						print >>stderr, u': '.join((record, errmsg)).encode('utf8')
+						print(u': '.join((record, errmsg)).encode('utf8'), file=stderr)
 					else:
-						print >>stderr, errmsg.encode('utf8')
+						print(errmsg.encode('utf8'), file=stderr)
 
 				if context.args.email and member.ImportNotificationEmailCIC:
 					# email sending is turned on and this member has a configured email target.
@@ -555,11 +561,11 @@ def generate_and_upload_import(context):
 			finally:
 
 				if stderr.is_dirty():
-					print >>sys.stderr, stdout.getvalue()
+					print(stdout.getvalue(), file=sys.stderr)
 				else:
-					print stdout.getvalue()
+					print(stdout.getvalue())
 
-	print "Completed Processing Imports: %s Records imported." % (total_import_count,)
+	print("Completed Processing Imports: %s Records imported." % (total_import_count,))
 
 
 def main(argv):
@@ -594,14 +600,14 @@ def main(argv):
 		langs = get_config_item(args, 'o211_import_languages', 'en-CA').split(',')
 		for culture in langs:
 			if args.only_lang and culture not in args.only_lang:
-				print 'Skipping ', culture
+				print('Skipping ', culture)
 				continue
 
 			lang = _lang_settings.get(culture.strip(), _lang_settings['en-CA'])
 
 			if not args.skip_fetch:
 				fetch_from_o211(context, lang)
-				print "\n"
+				print("\n")
 
 		if not args.skip_import:
 			generate_and_upload_import(context)

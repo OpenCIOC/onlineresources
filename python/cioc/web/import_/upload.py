@@ -21,6 +21,8 @@
 # software, please contact CIOC via their website above.
 # ==================================================================
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import copy
 import logging
@@ -213,7 +215,7 @@ def process_import(filename, xmlfile, member_id, domain, domain_str, user_mod, d
 					handler(self, element, conn, EFID, domain_str)
 
 				element.clear()
-		except etree.XMLSyntaxError, e:
+		except etree.XMLSyntaxError as e:
 			error_log.append((None, e.message))
 
 		root = None
@@ -266,7 +268,7 @@ def _handle_record(self, element, conn, EFID, dm, id_column='NUM'):
 	if ERID:
 		conn.execute('EXEC dbo.sp_%s_ImportEntry_Data_Language_i ?, ?, ?, ?, ?, ?, ?' % dm, ERID, has_english, has_french, non_public_e, non_public_f, deletion_date_e, deletion_date_f)
 	else:
-		print 'NO ERID, so NO Language import'
+		print('NO ERID, so NO Language import')
 
 	self.total_inserted += 1
 

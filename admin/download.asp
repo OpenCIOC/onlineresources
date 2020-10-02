@@ -63,7 +63,7 @@ link_tmpl = Markup(u'''
 dm_map = {const.DM_CIC: const.DM_S_CIC, const.DM_VOL: const.DM_S_VOL}
 #<%= ps_strPathToStart & "downloads/" & strDBName & "Stats" & IIf(intDomain = DM_CIC, DM_S_CIC, DM_S_VOL)%>.zip
 def generate_stats_links(domain, db_name, txt_download_stats):
-	dirname = os.path.join(str(Request.ServerVariables('APPL_PHYSICAL_PATH')), 'download')
+	dirname = os.path.join(six.text_type(Request.ServerVariables('APPL_PHYSICAL_PATH')), 'download')
 	dm = dm_map[domain]
 
 	links = []

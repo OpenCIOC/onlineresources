@@ -15,6 +15,7 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import cioc.core.constants as const
 from cioc.core.i18n import gettext as _
 

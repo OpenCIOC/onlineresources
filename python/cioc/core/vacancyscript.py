@@ -15,6 +15,7 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 from json import dumps
 
 from collections import namedtuple
@@ -23,14 +24,16 @@ import isodate
 
 from markupsafe import Markup
 from cioc.core.i18n import gettext as _, format_datetime
+import six
+from six.moves import zip
 
 
 _fields = 'MODIFIED_DATE MODIFIED_BY VacancyChange VacancyFinal'.split()
-_xml_transform = [isodate.parse_datetime, unicode, int, int]
+_xml_transform = [isodate.parse_datetime, six.text_type, int, int]
 
 ChangesTuple = namedtuple('ChangesTuple', _fields)
 
-_fields = zip(_fields, _xml_transform)
+_fields = list(zip(_fields, _xml_transform))
 
 _change_item_template = Markup('''
 <tr><td>%(date)s (%(by)s)</td><td style="text-align: right">%(change)s</td><td style="text-align: right">%(total)s</td></tr>

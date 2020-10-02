@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import logging
 from collections import namedtuple
 
@@ -28,6 +29,7 @@ from pyramid.view import view_config, view_defaults
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 from cioc.core import constants as const, validators
+from six.moves import map
 
 log = logging.getLogger(__name__)
 

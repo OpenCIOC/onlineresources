@@ -16,7 +16,10 @@
 
 
 # std lib
+from __future__ import absolute_import
 import logging
+import six
+from six.moves import map
 log = logging.getLogger(__name__)
 
 from operator import attrgetter
@@ -82,11 +85,11 @@ class Community(viewbase.AdminViewBase):
 		getter = attrgetter(*fields)
 
 		def row_getter(x):
-			return tuple(u'' if y is None else unicode(y) for y in getter(x))
+			return tuple(u'' if y is None else six.text_type(y) for y in getter(x))
 
 		file = tempfile.TemporaryFile()
 		with BufferedZipFile(file, 'w', zipfile.ZIP_DEFLATED) as zip:
-			write_csv_to_zip(zip, itertools.chain([headings], itertools.imap(row_getter, history)), 'vacancy_history.csv')
+			write_csv_to_zip(zip, itertools.chain([headings], map(row_getter, history)), 'vacancy_history.csv')
 
 		length = file.tell()
 		file.seek(0)

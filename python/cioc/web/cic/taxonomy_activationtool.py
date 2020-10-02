@@ -16,7 +16,9 @@
 
 
 # Logging
+from __future__ import absolute_import
 import logging
+from six.moves import map
 log = logging.getLogger(__name__)
 
 # Python Libraries
@@ -305,4 +307,4 @@ class ActivtionsView(CicViewBase):
 				'can_deactivate': '' if (term.Active or term.Active is None) and term.CAN_DEACTIVATE else 'hidden',
 				'can_rollup': '' if term.Active is not None and term.CAN_ROLLUP else 'hidden',
 			}
-		return map(build_line, terms)
+		return list(map(build_line, terms))

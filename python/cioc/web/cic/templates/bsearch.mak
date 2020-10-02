@@ -24,11 +24,13 @@ from functools import partial
 from itertools import groupby
 from operator import attrgetter
 
+import six
 from markupsafe import Markup
-from webhelpers.html import tags
+from webhelpers2.html import tags
 
 from cioc.core import constants as const, googlemaps as maps, listformat, vacancyscript
 from cioc.core.utils import grouper
+from cioc.core.modelstate import convert_options
 
 subitem_prefix = Markup('&nbsp;&nbsp;&nbsp;&nbsp;')
 %>
@@ -97,7 +99,7 @@ subitem_prefix = Markup('&nbsp;&nbsp;&nbsp;&nbsp;')
 </%def>
 
 <%def name="age_groups_form(ages)">
-${tags.select("AgeGroup", None, [('', _('Select an age group'))] + [(x[0], x[1]) for x in ages], class_="form-control check-placeholder")}
+${tags.select("AgeGroup", None, convert_options([('', _('Select an age group'))] + [(x[0], x[1]) for x in ages]), class_="form-control check-placeholder")}
 </%def>
 
 <%def name="quicklist_form(quicklist, quicklist_type, field_suffix='', expand_class='', force_heading=False)">
@@ -157,7 +159,7 @@ ${tags.select("AgeGroup", None, [('', _('Select an age group'))] + [(x[0], x[1])
 				%endif
 			<label class="search-group-header checkbox-inline" for="QuickList_${grpid}">${grpname}</label><br>
 			%endif
-			${tags.select(field_name,None,[('',_('Select a category'))] + map(tuple, items), id="QuickList_" + str(grpid), class_="form-control checkbox-inline check-placeholder" + extra_class, **kwargs)}
+			${tags.select(field_name,None,convert_options([('',_('Select a category'))] + list(map(tuple, items))), id="QuickList_" + str(grpid), class_="form-control checkbox-inline check-placeholder" + extra_class, **kwargs)}
 			</div>
 		%endfor
 	%else:
@@ -176,7 +178,7 @@ ${tags.select("AgeGroup", None, [('', _('Select an age group'))] + [(x[0], x[1])
 			%if grpid is not None:
 			<tr><td colspan="${wrap_at}" class="search-group-header">
 			%if search_groups:
-				${tags.checkbox(field_name + "_GRP" + unicode(field_suffix), value=grpid, label=grpname)} 
+				${tags.checkbox(field_name + "_GRP" + six.text_type(field_suffix), value=grpid, label=grpname)} 
 			%else:
 				${grpname}
 			%endif
@@ -218,7 +220,7 @@ ${request.passvars.cached_form_vals}
 </%def>
 
 <%def name="searchform_languages(idsuffix='')">
-	${renderer.select('LNID', options=[('', _('Select a language of service'))] + map(tuple, languages), class_='form-control check-placeholder')}
+	${renderer.select('LNID', options=[('', _('Select a language of service'))] + list(map(tuple, languages)), class_='form-control check-placeholder')}
 </%def>
 
 <%def name="searchform_keyword()">
@@ -317,7 +319,7 @@ ${request.passvars.cached_form_vals}
 	<div class="col-sm-9">
 		<div class="inline-radio-list form-inline-always">
 		<label for="vacancytp">${_("Has capacity / availability for")}</label>
-		${tags.select("VacancyTP", None, [('','')] + [(x.VTP_ID, x.TargetPopulation) for x in vacancy_targets], class_="form-control")}
+		${tags.select("VacancyTP", None, convert_options([('','')] + [(x.VTP_ID, x.TargetPopulation) for x in vacancy_targets]), class_="form-control")}
 		</div>
 		<span class="inline-no-bold">
 		<label for="Vacancy_NONE"><input type="radio" name="Vacancy" value="" checked id="Vacancy_NONE">${_("Do not search availability information")}</label>

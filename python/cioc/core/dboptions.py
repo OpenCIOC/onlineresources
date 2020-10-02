@@ -16,6 +16,7 @@
 
 
 # std lib
+from __future__ import absolute_import
 import logging
 from datetime import datetime
 
@@ -24,6 +25,8 @@ from pyramid.decorator import reify
 
 # this app
 from . import constants as const
+import six
+from six.moves import zip
 
 log = logging.getLogger(__name__)
 
@@ -113,10 +116,13 @@ class DbOptions(object):
 				import traceback
 				traceback.print_exc()
 
-		data = cache.get_or_create(cache_key, self._get_data)
+		try:
+			data = cache.get_or_create(cache_key, self._get_data)
+		except UnicodeDecodeError:
+			return self.load(True)
 
 		self._last_modified, self.dbopts, rows = data
-		self.dbopts_lang = {k: DbOptionsDescription(v) for k, v in rows.iteritems()}
+		self.dbopts_lang = {k: DbOptionsDescription(v) for k, v in six.iteritems(rows)}
 
 	def _get_data(self):
 		# log.debug('getting member data')
@@ -194,7 +200,10 @@ def fetch_domain_map(request, reset_db):
 
 		return domain_map
 
-	val = cache.get_or_create('domain_map', get_domain_map_values)
+	try:
+		val = cache.get_or_create('domain_map', get_domain_map_values)
+	except UnicodeDecodeError:
+		val = fetch_domain_map(request, True)
 
 	return val
 

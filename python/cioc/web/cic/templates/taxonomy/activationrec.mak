@@ -53,7 +53,7 @@ ${request.passvars.cached_form_vals|n}
 <div class="NotVisible">
 ${request.passvars.cached_form_vals|n}
 <input type="hidden" name="mod" value="on">
-%for k,v in options._asdict().iteritems():
+%for k,v in options._asdict().items():
 	%if v:
 		${renderer.hidden(k, 'on')}
 	%endif

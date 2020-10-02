@@ -20,6 +20,7 @@
 <%namespace file="cioc.web.admin:templates/shown_cultures.mak" name="sc" />
 <%! 
 from markupsafe import Markup
+import six
 %>
 <% 
 makeLink = request.passvars.makeLink 
@@ -214,7 +215,7 @@ if _context.OtherMembersActive:
 %>
 %for which in types:
 	<% 
-		usage = chkusage.get(unicode(getattr(chkitem, chk_type.ID)))
+		usage = chkusage.get(six.text_type(getattr(chkitem, chk_type.ID)))
 		usage1 = getattr(usage, 'Usage1' + which, None)
 		usage2 = getattr(usage, 'Usage2' + which, None)
 	%>

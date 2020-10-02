@@ -15,7 +15,9 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging
+import six
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -31,14 +33,14 @@ from cioc.web.admin.viewbase import AdminViewBase
 
 
 RecordNoteSettings = {'N': 0, 'A': 1, 'S': 2}
-RRecordNoteSettings = dict((v, k) for k, v in RecordNoteSettings.iteritems())
+RRecordNoteSettings = dict((v, k) for k, v in six.iteritems(RecordNoteSettings))
 
 PreventDuplicateOrgNamesSettings = {'A': 0, 'W': 1, 'D': 2}
-RPreventDuplicateOrgNamesSettings = dict((v, k) for k, v in PreventDuplicateOrgNamesSettings.iteritems())
+RPreventDuplicateOrgNamesSettings = dict((v, k) for k, v in six.iteritems(PreventDuplicateOrgNamesSettings))
 
 DefaultGCTypeSettings = {'B': const.GC_BLANK, 'S': const.GC_SITE,
 						'I': const.GC_INTERSECTION, 'M': const.GC_MANUAL}
-RDefaultGCTypeSettings = dict((v, k) for k, v in DefaultGCTypeSettings.iteritems())
+RDefaultGCTypeSettings = dict((v, k) for k, v in six.iteritems(DefaultGCTypeSettings))
 
 
 def IsCICSuperUser(value_dict, state):
@@ -166,7 +168,7 @@ class GeneralSetup(AdminViewBase):
 
 			args = [request.dboptions.MemberID, user.Mod, user.Agency, user.cic.SuperUser, user.vol.SuperUser]
 
-			fields = GeneralBaseSchema.fields.keys()
+			fields = list(GeneralBaseSchema.fields.keys())
 
 			kwargs = ", ".join(k.join(("@", "=?")) for k in fields)
 
@@ -174,10 +176,10 @@ class GeneralSetup(AdminViewBase):
 
 			root = ET.Element('DESCS')
 
-			for culture, data in model_state.form.data['descriptions'].iteritems():
+			for culture, data in six.iteritems(model_state.form.data['descriptions']):
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-				for name, value in data.iteritems():
+				for name, value in six.iteritems(data):
 					if value:
 						ET.SubElement(desc, name).text = value
 

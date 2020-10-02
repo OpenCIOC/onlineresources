@@ -15,7 +15,9 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging 
+import six
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -130,23 +132,23 @@ class FieldRadio(viewbase.AdminViewBase):
 			root = ET.Element('FIELDS')
 			for field in model_state.form.data['field']:
 				field_el = ET.SubElement(root, 'Field')
-				for key,value in field.iteritems():
+				for key,value in six.iteritems(field):
 					if not value:
 						continue 
 
 					if key != 'Descriptions':
-						ET.SubElement(field_el, key).text = unicode(value)
+						ET.SubElement(field_el, key).text = six.text_type(value)
 						continue
 
 					descs = ET.SubElement(field_el, 'DESCS')
-					for culture, data in value.iteritems():
+					for culture, data in six.iteritems(value):
 						culture = culture.replace('_', '-')
 						if culture not in shown_cultures:
 							continue 
 
 						desc = ET.SubElement(descs, 'DESC')
 						ET.SubElement(desc, 'Culture').text = culture.replace('_', '-')
-						for key, value in data.iteritems():
+						for key, value in six.iteritems(data):
 							if value:
 								ET.SubElement(desc, key).text = value
 

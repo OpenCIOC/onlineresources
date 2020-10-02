@@ -14,6 +14,7 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
 import argparse
 import codecs
 import csv
@@ -24,6 +25,7 @@ import sys
 from tools.toolslib import Context
 
 from cioc.core import constants as const
+import six
 
 
 def export(args, conn, filename, sql):
@@ -38,7 +40,7 @@ def export(args, conn, filename, sql):
 				if not rows:
 					break
 
-				writer.writerows(tuple(y.encode('utf-8') if isinstance(y, unicode) else y for y in x) for x in rows)
+				writer.writerows(tuple(y.encode('utf-8') if isinstance(y, six.text_type) else y for y in x) for x in rows)
 
 	return filename
 

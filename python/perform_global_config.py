@@ -1,7 +1,8 @@
+from __future__ import absolute_import
 import os
 import sys
 import subprocess
-from urllib import urlretrieve
+from six.moves.urllib.request import urlretrieve
 from tempfile import gettempdir
 
 

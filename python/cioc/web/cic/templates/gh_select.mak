@@ -17,25 +17,21 @@
 </%doc>
 
 <%!
-from itertools import izip_longest
-
-def grouper(n, iterable, fillvalue=None):
-	"grouper(3, 'ABCDEFG', 'x') --> ABC DEF Gxx"
-	args = [iter(iterable)] * n
-	return izip_longest(fillvalue=fillvalue, *args)
+import six
+from cioc.core.utils import grouper
 %>
 
 <%def name="gh_selector(fieldname, headings, existing)">
 	%if existing:
 		<div><strong>${_('Existing Headings')}</strong></div>
-		${heading_checkboxes(fieldname, (x for x in headings if unicode(x.GH_ID) in existing))}
+		${heading_checkboxes(fieldname, (x for x in headings if six.text_type(x.GH_ID) in existing))}
 	%endif
 	%if caller:
 	${caller.body()}
 	%endif
-	%if set(unicode(x.GH_ID) for x in headings) - existing:
+	%if set(six.text_type(x.GH_ID) for x in headings) - existing:
 	<div><br><strong>${_('Add New Headings')}</strong></div>
-	${heading_checkboxes(fieldname, (x for x in headings if unicode(x.GH_ID) not in existing))}
+	${heading_checkboxes(fieldname, (x for x in headings if six.text_type(x.GH_ID) not in existing))}
 	%endif
 </%def>
 

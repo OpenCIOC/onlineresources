@@ -18,15 +18,13 @@
 
 <%namespace file="cioc.web:templates/master.mak" import="makeMgmtInfo"/>
 <%!
-from itertools import izip_longest, groupby
+from itertools import groupby
 
-from webhelpers.html import tags
+from webhelpers2.html import tags
 from markupsafe import Markup
 
-def grouper(n, iterable, fillvalue=None):
-	"grouper(3, 'ABCDEFG', 'x') --> ABC DEF Gxx"
-	args = [iter(iterable)] * n
-	return izip_longest(fillvalue=fillvalue, *args)
+from cioc.core.modelstate import convert_options
+from cioc.core.utils import grouper
 
 %>
 
@@ -130,7 +128,7 @@ ${renderer.select('reminder.Culture', options=[('', _('Any Language'))] + langua
 			%for agency in reminder_agencies:
 			<li>${renderer.ms_checkbox('reminder_agency_ID', value=agency.AgencyCode, label=' ' + agency.AgencyCode)}
 			%endfor
-			<li>${tags.select(None, None, id="NEW_reminder_agency", options=[('','')] + agencies)}
+			<li>${tags.select(None, None, id="NEW_reminder_agency", options=convert_options([('','')] + agencies))}
 			<button id="add_reminder_agency">${_('Add')}</button></li>
 		</ul>
 	%endif

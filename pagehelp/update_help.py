@@ -17,6 +17,7 @@
 import xml.etree.cElementTree as ET
 import os, codecs
 
+from cioc.core.utils import read_file, write_file
 from cioc.db.adohelper import *
 
 def get_connection_string():
@@ -53,9 +54,7 @@ def perform_update(to_database=True):
 			if not os.path.exists(fname):
 				dstrs.MoveNext()
 				continue
-			f = codecs.open(fname, 'rU', 'utf8')
-			d = f.read()
-			f.close()
+			d = read_file(fname)
 			dstrs.Fields('PageHelp').Value = d.encode('latin1').replace('\n', '\r\n')
 			dstrs.Update()
 
@@ -65,9 +64,7 @@ def perform_update(to_database=True):
 				continue
 
 
-			f = codecs.open(fname, 'w', 'utf8')
-			f.write(row['PageHelp'])
-			f.close()
+			write_file(fname, row['PageHelp'])
 
 		dstrs.MoveNext()
 

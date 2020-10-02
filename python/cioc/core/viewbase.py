@@ -14,6 +14,7 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
 import xml.etree.cElementTree as ET
 
 from pyramid.renderers import render_to_response, render
@@ -23,6 +24,7 @@ from cioc.core import pageinfo, template, asset, modelstate, security
 from cioc.core.rootfactories import BasicRootFactory
 
 import logging
+from six.moves import zip
 log = logging.getLogger(__name__)
 
 

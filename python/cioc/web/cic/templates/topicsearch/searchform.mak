@@ -21,7 +21,8 @@
 <%namespace file="cioc.web.cic:templates/bsearch.mak" name="bsearch"/>
 <%namespace file="cioc.web.cic:templates/searchcommon.mak" import="community_form" />
 <%
-from webhelpers.html import tags
+from webhelpers2.html import tags
+from cioc.core.modelstate import convert_options
 %>
 
 %if not request.params.get('InlineMode'):
@@ -74,7 +75,7 @@ ${tags.hidden(name, value)}
 %elif f.SearchType == 'G2':
 	${bsearch.quicklist_form(search_items, f.ListType, '_2', force_heading=True)}
 %elif f.SearchType == 'L':
-	${tags.select('LNID', [], [('','')] + [tuple(x)[:2] for x in search_items])}
+	${tags.select('LNID', [], convert_options([('','')] + [tuple(x)[:2] for x in search_items]))}
 %endif
 	</div>
 %endif

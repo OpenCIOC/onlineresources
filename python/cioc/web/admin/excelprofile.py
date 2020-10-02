@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import logging
 
 import xml.etree.cElementTree as ET
@@ -29,13 +30,14 @@ from cioc.core import validators as ciocvalidators
 
 from cioc.core.i18n import gettext as _
 from cioc.web.admin.viewbase import AdminViewBase
+import six
 
 log = logging.getLogger(__name__)
 
 templateprefix = 'cioc.web.admin:templates/excelprofile/'
 
 column_headers = {'N': None, 'F': False, 'L': True}
-column_headers_reverse = {v: k for k, v in column_headers.iteritems()}
+column_headers_reverse = {v: k for k, v in six.iteritems(column_headers)}
 
 
 class ProfileBaseSchema(Schema):
@@ -127,10 +129,10 @@ class ExcelProfile(AdminViewBase):
 
 			root = ET.Element('DESCS')
 
-			for culture, data in model_state.form.data['descriptions'].iteritems():
+			for culture, data in six.iteritems(model_state.form.data['descriptions']):
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-				for name, value in data.iteritems():
+				for name, value in six.iteritems(data):
 					if value:
 						ET.SubElement(desc, name).text = value
 
@@ -138,7 +140,7 @@ class ExcelProfile(AdminViewBase):
 
 			root = ET.Element('VIEWS')
 			for view_type in model_state.form.data['Views']:
-				ET.SubElement(root, 'VIEW').text = unicode(view_type)
+				ET.SubElement(root, 'VIEW').text = six.text_type(view_type)
 
 			#raise Exception
 
@@ -148,9 +150,9 @@ class ExcelProfile(AdminViewBase):
 			for field in model_state.form.data['Fields']:
 				if field['DisplayOrder'] is not None or field['SortByOrder'] is not None:
 					field_el = ET.SubElement(root, "FIELD")
-					for name, value in field.iteritems():
+					for name, value in six.iteritems(field):
 						if value is not None:
-							ET.SubElement(field_el, name).text = unicode(value)
+							ET.SubElement(field_el, name).text = six.text_type(value)
 
 			args.append(ET.tostring(root))
 
@@ -307,7 +309,7 @@ class ExcelProfile(AdminViewBase):
 			model_state.form.data['profile.ColumnHeadersWeb'] = column_headers_reverse.get(profile.ColumnHeaders, 'L')
 
 		if is_add:
-			for desc in profile_descriptions.itervalues():
+			for desc in six.itervalues(profile_descriptions):
 				desc.Name = None
 
 		title = _('Manage Excel Profiles', request)

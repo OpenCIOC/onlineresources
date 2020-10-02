@@ -15,7 +15,9 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging 
+import six
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -112,9 +114,9 @@ class NaicsExclusion(viewbase.AdminViewBase):
 					continue
 
 				exclusion_el = ET.SubElement(root, 'Exclusion')
-				ET.SubElement(exclusion_el, 'CNT').text = unicode(i)
+				ET.SubElement(exclusion_el, 'CNT').text = six.text_type(i)
 
-				for key,value in exclusion.iteritems():
+				for key,value in six.iteritems(exclusion):
 					if key == 'Exclusion_ID' and value == 'NEW':
 						value = -1
 
@@ -123,14 +125,14 @@ class NaicsExclusion(viewbase.AdminViewBase):
 
 					if key != 'UseCodes':
 						if value is not None:
-							ET.SubElement(exclusion_el, key).text = unicode(value)
+							ET.SubElement(exclusion_el, key).text = six.text_type(value)
 
 						continue
 
 					# Use Codes
 					usecodes = ET.SubElement(exclusion_el, key)
 					for usecode in value or []:
-						ET.SubElement(usecodes, 'UseCode').text = unicode(usecode)
+						ET.SubElement(usecodes, 'UseCode').text = six.text_type(usecode)
 
 			args = [Code, user.Mod, ET.tostring(root)]
 
@@ -170,7 +172,7 @@ class NaicsExclusion(viewbase.AdminViewBase):
 
 		for exclusion in exclusions:
 			use_codes = exclusion['UseCodes']
-			if isinstance(use_codes, basestring):
+			if isinstance(use_codes, six.string_types):
 				exclusion['UseCodes'] = [use_codes]
 
 		model_state.form.data['exclusion'] = exclusions
@@ -194,7 +196,7 @@ class NaicsExclusion(viewbase.AdminViewBase):
 		validator = ciocvalidators.IDValidator(not_empty=True)
 		try:
 			Code = validator.to_python(request.params.get('Code'))
-		except validators.Invalid, e:
+		except validators.Invalid as e:
 			self._error_page( _('Invalid NAICS Code:', request) + e.message )
 
 		return Code

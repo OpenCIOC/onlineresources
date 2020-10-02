@@ -15,7 +15,10 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging
+from six.moves import map
+import six
 log = logging.getLogger(__name__)
 
 from pyramid.view import view_config, view_defaults
@@ -66,7 +69,7 @@ class Vacancy(viewbase.CicViewBase):
 		if not ids:
 			return []
 
-		ids = ','.join(map(unicode, ids))
+		ids = ','.join(map(six.text_type, ids))
 
 		with request.connmgr.get_connection() as conn:
 			editable = conn.execute('EXEC sp_CIC_Vacancy_l_CanUpdate ?, ?, ?', user.User_ID, request.viewdata.cic.ViewType, ids).fetchall()
@@ -91,7 +94,7 @@ class Vacancy(viewbase.CicViewBase):
 		if not ids:
 			return {'success': False}
 
-		ids = ','.join(map(unicode, ids))
+		ids = ','.join(map(six.text_type, ids))
 
 		with request.connmgr.get_connection('admin') as conn:
 			updates = conn.execute('EXEC sp_CIC_Vacancy_l_Refresh ?, ?, ?', request.dboptions.MemberID, request.viewdata.cic.ViewType, ids).fetchall()

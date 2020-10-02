@@ -15,17 +15,23 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 from collections import deque
 from binascii import crc32
 
+
 class RecentSearches(object):
 
-	def __init__(self):
-		self.items = {}
-		self.lru = deque(maxlen=20)
+	def __init__(self, items=None):
+		if items:
+			self.items = {v['key']: v for v in items}
+			self.lru = deque([v['key'] for v in items], maxlen=20)
+		else:
+			self.items = {}
+			self.lru = deque(maxlen=20)
 
 	def get(self, key):
-		""" key is md5 hexdigest of a previous where clause """
+		""" key is crc32 hexdigest of a previous where clause """
 		return self.items.get(key)
 
 	def add(self, value):
@@ -35,15 +41,15 @@ class RecentSearches(object):
 		info = value.get('info')
 		if sql and sql[0] == '(' and sql[-1] == ')':
 			# check if we have paren padded previous sql
-			key = '%08x' % crc32(sql[1:-1].encode('utf-8'))
+			key = '%08x' % (crc32(sql[1:-1].encode('utf-8')) & 0xffffffff)
 			try:
 				old_item = self.items[key]
 				sql = old_item['sql']
 				info = info or old_item.get('info')
 			except KeyError:
-				key = '%08x' % crc32(sql.encode('utf-8'))
+				key = '%08x' % (crc32(sql.encode('utf-8')) & 0xffffffff)
 		else:
-			key = '%08x' % crc32(sql.encode('utf-8'))
+			key = '%08x' % (crc32(sql.encode('utf-8')) & 0xffffffff)
 
 		value['key'] = key
 		value['sql'] = sql
@@ -65,10 +71,6 @@ class RecentSearches(object):
 
 		return key
 
-	def itervalues(self):
-		"Returns in order of most recent to least"
-
-		
 	def values(self):
 		"Returns in order of most recent to least"
 		return list(iter(self))
@@ -90,6 +92,8 @@ class RecentSearches(object):
 
 	def __nonzero__(self):
 		return not not self.items
+
+	__bool__ = __nonzero__
 
 
 class RecentSearchManager(object):

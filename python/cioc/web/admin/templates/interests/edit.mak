@@ -16,6 +16,9 @@
 =========================================================================================
 </%doc>
 
+<%!
+import six
+%>
 
 <%inherit file="cioc.web:templates/master.mak" />
 <%namespace file="cioc.web.admin:templates/shown_cultures.mak" name="sc" />
@@ -85,7 +88,7 @@ ${self.makeMgmtInfo(interest)}
 		%if i:
 		<br>
 		%endif
-		${renderer.ms_checkbox('groups', unicode(group_desc.IG_ID), label=group_desc.Name)}
+		${renderer.ms_checkbox('groups', six.text_type(group_desc.IG_ID), label=group_desc.Name)}
 	%endfor
 	</td>
 </tr>

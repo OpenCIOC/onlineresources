@@ -15,9 +15,11 @@
 # =========================================================================================
 
 # this is adapted from the example at the bottom of https://docs.python.org/2/library/csv.html
+from __future__ import absolute_import
 import csv
 import codecs
 import tempfile
+import six
 
 
 class SQLServerBulkDialect(csv.Dialect):
@@ -38,8 +40,8 @@ class UTF8Reader(object):
 		self.reader = csv.reader(f, dialect=dialect, **kwds)
 
 	def next(self):
-		row = self.reader.next()
-		return [unicode(s, "utf-8-sig") for s in row]
+		row = next(self.reader)
+		return [six.text_type(s, "utf-8-sig") for s in row]
 
 	def __iter__(self):
 		return self

@@ -19,6 +19,7 @@
 <%!
 from datetime import date
 import json
+import six
 
 from markupsafe import Markup
 
@@ -75,7 +76,7 @@ ${map_search_form()}
 	%if request.user:
 	<br>${renderer.radio("AgeType", id="AgeTypeS", value="S", label=Markup(_("Match programs that serve <strong>child #</strong>")))}
 		%for i in range(4):
-		${renderer.radio("AgeTypeSpecific", value=unicode(i), checked=not i, id="AgeTypeSpecific%d" % i, label=unicode(i+1))}
+		${renderer.radio("AgeTypeSpecific", value=six.text_type(i), checked=not i, id="AgeTypeSpecific%d" % i, label=six.text_type(i+1))}
 		%endfor
 	%endif
 	</p>
@@ -96,7 +97,7 @@ ${map_search_form()}
 	%if age_groups:
 	<hr style="border: 1px dashed #999999">
 	<p>${_('<em><strong>Or</strong></em>, you can select the age group of the child at the time they require care')|n}</p>
-	<p>${renderer.select('AgeGroup', options=[('', '')] + map(tuple, age_groups), class_='form-control')}</p>
+	<p>${renderer.select('AgeGroup', options=[('', '')] + list(map(tuple, age_groups)), class_='form-control')}</p>
 	%endif
 	</td>
 </tr>
@@ -151,28 +152,28 @@ ${map_search_form()}
 %if bus_routes:
 <tr>
 	<td class="field-label-cell">${renderer.label('BRID', _('On / Near Bus Route'))}</td>
-	<td class="field-data-cell">${renderer.select('BRID', options=[('', '')] + map(tuple, bus_routes), class_='form-control')}</td>
+	<td class="field-data-cell">${renderer.select('BRID', options=[('', '')] + list(map(tuple, bus_routes)), class_='form-control')}</td>
 </tr>
 %endif
 
 %if search_info.CSrchSchoolsInArea and schools:
 <tr>
 	<td class="field-label-cell">${renderer.label("SCHAID", _('Local schools'))}</td>
-	<td class="field-data-cell">${renderer.select('SCHAID', options=[('', '')] + map(tuple, schools), class_='form-control')}</td>
+	<td class="field-data-cell">${renderer.select('SCHAID', options=[('', '')] + list(map(tuple, schools)), class_='form-control')}</td>
 </tr>
 %endif
 
 %if search_info.CSrchSchoolEscort and schools:
 <tr>
 	<td class="field-label-cell">${renderer.label("SCHEID", _('Escorts to / from School'))}</td>
-	<td class="field-data-cell">${renderer.select('SCHEID', options=[('', '')] + map(tuple, schools), class_='form-control')}</td>
+	<td class="field-data-cell">${renderer.select('SCHEID', options=[('', '')] + list(map(tuple, schools)), class_='form-control')}</td>
 </tr>
 %endif
 
 %if languages:
 <tr>
 	<td class="field-label-cell">${renderer.label("LNID", _('Languages'))}</td>
-	<td class="field-data-cell">${renderer.select('LNID', options=[('', '')] + map(tuple, languages), class_='form-control')}</td>
+	<td class="field-data-cell">${renderer.select('LNID', options=[('', '')] + list(map(tuple, languages)), class_='form-control')}</td>
 </tr>
 %endif
 

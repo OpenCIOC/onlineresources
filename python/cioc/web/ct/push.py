@@ -15,12 +15,15 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging 
+import six
+from six.moves import range
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
 #import elementtree.ElementTree as ET
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 
 from pyramid.view import view_config
 import requests
@@ -60,13 +63,13 @@ class InRequest(viewbase.CicViewBase):
 		validator = Any(validators=validator)
 		try:
 			idstring = validator.to_python(idstring)
-		except Invalid, e:
+		except Invalid as e:
 			return {'fail': True, 'errinfo': _('Error: The following is an invalid ID: %s', request) % idstring}
 
 
 		if remove:
 			domain = remove
-		elif isinstance(idstring, basestring):
+		elif isinstance(idstring, six.string_types):
 			domain = 'CIC'
 			idstring = idstring.upper()
 		else:
@@ -74,11 +77,11 @@ class InRequest(viewbase.CicViewBase):
 
 		if remove:
 			root = ET.Element(u'pushResourceRemove', xmlns=u'http://clienttracker.cioc.ca/schema/')
-			ET.SubElement(root, u'login').text = unicode(login)
-			ET.SubElement(root, u'key').text = unicode(key)
-			ET.SubElement(root, u'ctid').text = unicode(ctid)
+			ET.SubElement(root, u'login').text = six.text_type(login)
+			ET.SubElement(root, u'key').text = six.text_type(key)
+			ET.SubElement(root, u'ctid').text = six.text_type(ctid)
 			resource_item = ET.SubElement(root, u'resourceItem')
-			ET.SubElement(resource_item, u'id').text = unicode(idstring)
+			ET.SubElement(resource_item, u'id').text = six.text_type(idstring)
 		else:
 			idfield = 'NUM'
 			sql = ["SELECT bt.NUM, btd.ORG_LEVEL_1, btd.ORG_LEVEL_2, btd.ORG_LEVEL_3, btd.ORG_LEVEL_4, btd.ORG_LEVEL_5"]
@@ -109,12 +112,12 @@ class InRequest(viewbase.CicViewBase):
 				org_name = '%s (%s)' % (record.POSITION_TITLE, org_name)
 
 			root = ET.Element(u'pushResource', xmlns=u'http://clienttracker.cioc.ca/schema/')
-			ET.SubElement(root, u'login').text = unicode(login)
-			ET.SubElement(root, u'key').text = unicode(key)
-			ET.SubElement(root, u'ctid').text = unicode(ctid)
+			ET.SubElement(root, u'login').text = six.text_type(login)
+			ET.SubElement(root, u'key').text = six.text_type(key)
+			ET.SubElement(root, u'ctid').text = six.text_type(ctid)
 			resource_item = ET.SubElement(root, u'resourceItem')
-			ET.SubElement(resource_item, u'id').text = unicode(getattr(record, idfield))
-			ET.SubElement(resource_item, u'name').text = unicode(org_name)
+			ET.SubElement(resource_item, u'id').text = six.text_type(getattr(record, idfield))
+			ET.SubElement(resource_item, u'name').text = six.text_type(org_name)
 			
 			pfs = request.passvars.path_from_start
 			request.passvars.path_from_start = '/'
@@ -126,7 +129,7 @@ class InRequest(viewbase.CicViewBase):
 
 			request.passvars.path_from_start = pfs
 
-			ET.SubElement(resource_item, u'url').text = unicode(url)
+			ET.SubElement(resource_item, u'url').text = six.text_type(url)
 
 
 
@@ -144,7 +147,7 @@ class InRequest(viewbase.CicViewBase):
 		r = requests.post(url, data=xml, headers=headers)
 		try:
 			r.raise_for_status()
-		except Exception, e:
+		except Exception as e:
 			log.debug('unable to contact %s: %s %s, %s', url, r.status_code, r.reason, e)
 			return {'fail': True, 'errinfo': _('There was an error communicating with the Client Tracker server: %s', request) % e}
 

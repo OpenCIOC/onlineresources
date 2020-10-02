@@ -15,6 +15,7 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging
 
 from pyramid.decorator import reify
@@ -75,6 +76,8 @@ class ViewType(object):
 
 	def __nonzero__(self):
 		return bool(self.view)
+
+	__bool__ = __nonzero__
 
 
 class ViewData(object):

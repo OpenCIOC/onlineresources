@@ -14,13 +14,15 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
+from __future__ import print_function
 import win32serviceutil
 import win32service
 import win32event
 import sys
 import os
 import getopt
-import ConfigParser
+import six.moves.configparser
 
 
 def getServiceClassString(o, argv):
@@ -37,7 +39,7 @@ class ServiceSettings(object):
 
         self.override = override
 
-        c = ConfigParser.SafeConfigParser()
+        c = six.moves.configparser.SafeConfigParser()
         c.read(cfg_file_name)
 
         self.cfg_file_name = cfg_file_name
@@ -60,7 +62,7 @@ class ServiceSettings(object):
 
         try:
             return self.c.get(self._wssection_,"svc_name")
-        except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
+        except (six.moves.configparser.NoOptionError, six.moves.configparser.NoSectionError):
             return os.path.splitext(os.path.basename(self.cfg_file_name))[0]
     
     def getSvcDisplayName(self):
@@ -70,7 +72,7 @@ class ServiceSettings(object):
 
         try: 
             return self.c.get(self._wssection_,"svc_display_name")
-        except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
+        except (six.moves.configparser.NoOptionError, six.moves.configparser.NoSectionError):
             return "%s Paste Service" % self.getSvcName()
     
     def getHttpPort(self):
@@ -80,13 +82,13 @@ class ServiceSettings(object):
 
         try:
             return self.c.get(self._wssection_,"http_port").strip()
-        except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
+        except (six.moves.configparser.NoOptionError, six.moves.configparser.NoSectionError):
             return None
     
     def getSvcDescription(self):
         try:
             desc = self.c.get(self._wssection_,"svc_description")+"; "
-        except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
+        except (six.moves.configparser.NoOptionError, six.moves.configparser.NoSectionError):
             desc = ""
         return desc +"wsgi_ini_file: %s"%(self.getCfgFileName(),)
     
@@ -97,7 +99,7 @@ class ServiceSettings(object):
 
         try:
             return self.c.get(self._wssection_,"virtual_env")
-        except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
+        except (six.moves.configparser.NoOptionError, six.moves.configparser.NoSectionError):
             return None
     
     def transferEssential(self,o):
@@ -111,7 +113,7 @@ def checkIniFileName(file_name):
 
 def activate_virtualenv(ve_dir):
     activate_this = os.path.abspath(os.path.join(ve_dir, 'scripts', 'activate_this.py'))
-    execfile(activate_this, dict(__file__=activate_this))
+    exec(compile(open(activate_this, "rb").read(), activate_this, 'exec'), dict(__file__=activate_this))
 
 class PasteWinService(win32serviceutil.ServiceFramework):
     
@@ -175,14 +177,14 @@ def getCfgNameFromRegistry(svc_name):
     return win32serviceutil.GetServiceCustomOption(svc_name,'wsgi_ini_file')
 
 def custom_usage():
-    print ""
-    print "Option for wsgi deployments as windows services. This option is mandatory! :"
-    print " -c config_file : the deployment ini file"
-    print
-    print "Optional settings for wsgi deployments via command line: "
-    print " -n name : The name of the service "
-    print " -d dispname : The display name of the service "
-    print " -v virtualenv : the virtualenv to activate"
+    print("")
+    print("Option for wsgi deployments as windows services. This option is mandatory! :")
+    print(" -c config_file : the deployment ini file")
+    print()
+    print("Optional settings for wsgi deployments via command line: ")
+    print(" -n name : The name of the service ")
+    print(" -d dispname : The display name of the service ")
+    print(" -v virtualenv : the virtualenv to activate")
 
 def usage():    
     try:
@@ -205,8 +207,8 @@ def handle_command_line(argv):
         return
     
     if len(args) == 1 and args[0] =='list':
-        print "List of wsgi services (display names) installed: "
-        print listServices()
+        print("List of wsgi services (display names) installed: ")
+        print(listServices())
         return
     
     cmd_cfg_file = None
@@ -230,7 +232,7 @@ def handle_command_line(argv):
             
 
     if not cmd_cfg_file:
-        print "Incorrect parameters"
+        print("Incorrect parameters")
         usage()
         return
 
@@ -246,9 +248,9 @@ def handle_command_line(argv):
             win32serviceutil.SetServiceCustomOption(ds.getSvcName(), 'wsgi_' + key, value)
 
         if override:
-            win32serviceutil.SetServiceCustomOption(ds.getSvcName(), 'wsgi_override_keys', ' '.join(override.keys()))
+            win32serviceutil.SetServiceCustomOption(ds.getSvcName(), 'wsgi_override_keys', ' '.join(list(override.keys())))
 
-    except SystemExit, e:
+    except SystemExit as e:
         if e.code==1:
             custom_usage()
 

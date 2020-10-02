@@ -15,12 +15,13 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging
+import six
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
-#import elementtree.ElementTree as ET
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 
 from pyramid.view import view_config
 import requests
@@ -46,9 +47,9 @@ class InRequest(viewbase.CicViewBase):
 
 
 		root = ET.Element(u'isInRequest', xmlns=u'http://clienttracker.cioc.ca/schema/')
-		ET.SubElement(root, u'login').text = unicode(login)
-		ET.SubElement(root, u'key').text = unicode(key)
-		ET.SubElement(root, u'ctid').text = unicode(ctid)
+		ET.SubElement(root, u'login').text = six.text_type(login)
+		ET.SubElement(root, u'key').text = six.text_type(key)
+		ET.SubElement(root, u'ctid').text = six.text_type(ctid)
 
 		fd = StringIO()
 		ET.ElementTree(root).write(fd, 'utf-8', True)
@@ -61,7 +62,7 @@ class InRequest(viewbase.CicViewBase):
 		r = requests.post(url, data=xml, headers=headers)
 		try:
 			r.raise_for_status()
-		except Exception, e:
+		except Exception as e:
 			log.debug('unable to contact %s: %s %s, %s', url, r.status_code, r.reason, e)
 			return {'fail': True, 'errinfo': _('There was an error communicating with the Client Tracker server: %s', request) % e}
 

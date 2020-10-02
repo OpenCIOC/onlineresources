@@ -16,7 +16,11 @@
 
 
 # std lib
+from __future__ import absolute_import
 import logging
+import six
+from six.moves import map
+from six.moves import zip
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -159,13 +163,13 @@ class Community(viewbase.AdminViewBase):
 
 			root = ET.Element('DESCS')
 
-			for culture, description in model_state.form.data['descriptions'].iteritems():
+			for culture, description in six.iteritems(model_state.form.data['descriptions']):
 				if culture.replace('_', '-') not in shown_cultures:
 					continue
 
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-				for name, value in description.iteritems():
+				for name, value in six.iteritems(description):
 					if value:
 						ET.SubElement(desc, name).text = value
 
@@ -188,7 +192,7 @@ class Community(viewbase.AdminViewBase):
 			if is_alt_area:
 				root = ET.Element('ALTAREAS')
 				for area in data.get('alt_areas') or []:
-					ET.SubElement(root, 'CM_ID').text = unicode(area)
+					ET.SubElement(root, 'CM_ID').text = six.text_type(area)
 
 				args.append(ET.tostring(root))
 
@@ -323,7 +327,7 @@ class Community(viewbase.AdminViewBase):
 					# not found
 					self._error_page(_('Community Not Found', request))
 
-			prov_state = map(tuple, conn.execute('SELECT ProvID, GBL_ProvinceStateCountry FROM dbo.vw_GBL_ProvinceStateCountry').fetchall())
+			prov_state = list(map(tuple, conn.execute('SELECT ProvID, GBL_ProvinceStateCountry FROM dbo.vw_GBL_ProvinceStateCountry').fetchall()))
 			if alt_area_get_names:
 				alt_area_name_map = {str(x[0]): x[1] for x in conn.execute('EXEC sp_GBL_Community_ls_Names ?', ','.join(str(x) for x in alt_area_get_names)).fetchall()}
 
@@ -513,11 +517,11 @@ class Community(viewbase.AdminViewBase):
 			name_field_getter = lambda x: tuple(x.Names.get(y, {}).get('Name') for y in form_cultures)
 
 			def row_getter(x):
-				return tuple(u'' if y is None else unicode(y) for y in x[0:0] + name_field_getter(x) + base_field_getter(x))
+				return tuple(u'' if y is None else six.text_type(y) for y in x[0:0] + name_field_getter(x) + base_field_getter(x))
 
 			file = tempfile.TemporaryFile()
 			with BufferedZipFile(file, 'w', zipfile.ZIP_DEFLATED) as zip:
-				write_csv_to_zip(zip, itertools.chain([headings], itertools.imap(row_getter, communities)), 'communities.csv')
+				write_csv_to_zip(zip, itertools.chain([headings], map(row_getter, communities)), 'communities.csv')
 
 			length = file.tell()
 			file.seek(0)

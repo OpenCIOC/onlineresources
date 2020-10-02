@@ -16,7 +16,9 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import logging
+import six
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -190,7 +192,7 @@ class ListValues(viewbase.AdminViewBase):
 
 				list_el = ET.SubElement(root, 'CHK')
 
-				for key, value in listitem.iteritems():
+				for key, value in six.iteritems(listitem):
 					if key == list_type.ID and value == 'NEW':
 						value = -1
 
@@ -198,7 +200,7 @@ class ListValues(viewbase.AdminViewBase):
 						value = int(value)
 
 					if value is not None:
-						ET.SubElement(list_el, key).text = unicode(value)
+						ET.SubElement(list_el, key).text = six.text_type(value)
 
 			if list_type.HasModified:
 				args = [user.Mod, ET.tostring(root)]
@@ -368,7 +370,7 @@ class ListContactPhoneType(ListValuesModel):
 
 	HasModified = False
 
-list_types = dict((x.FieldCode, x) for k, x in globals().iteritems() if k.startswith('List') and issubclass(x, ListValuesModel) and x is not ListValuesModel)
+list_types = dict((x.FieldCode, x) for k, x in six.iteritems(globals()) if k.startswith('List') and issubclass(x, ListValuesModel) and x is not ListValuesModel)
 
 _ = old_
 del old_

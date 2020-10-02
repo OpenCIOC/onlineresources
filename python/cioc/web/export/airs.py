@@ -15,6 +15,7 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import itertools
 import tempfile
 from xml.sax.saxutils import quoteattr
@@ -32,6 +33,9 @@ from cioc.web.cic import viewbase
 
 
 import logging
+import six
+from six.moves import zip
+from six.moves import map
 log = logging.getLogger(__name__)
 
 _ = i18n.gettext
@@ -146,7 +150,7 @@ def _zip_stream(request, model_state):
 
 def _get_record_data(root_parameters, cursor, zipfile, fname):
 	names = [t[0] for t in root_parameters.cursor_description]
-	values = [quoteattr(unicode(x) if x is not None else u'') for x in root_parameters]
+	values = [quoteattr(six.text_type(x) if x is not None else u'') for x in root_parameters]
 	root_parameters = u' '.join(u'='.join(x) for x in zip(names, values))
 
 	with tempfile.TemporaryFile() as file:
@@ -205,8 +209,8 @@ class AIRSExportUpdateCount(viewbase.CicViewBase):
 			return make_internal_server_error(u'Error getting request body as JSON')
 
 		counts = ET.Element('root')
-		for num, count in data['counts'].iteritems():
-			ET.SubElement(counts, 'row', {'num': num, 'count': unicode(count)})
+		for num, count in six.iteritems(data['counts']):
+			ET.SubElement(counts, 'row', {'num': num, 'count': six.text_type(count)})
 
 		sent = ET.Element('sent')
 		for num in data['sent']:
@@ -297,7 +301,7 @@ class AIRSExportFullList(viewbase.CicViewBase):
 					rows = cursor.fetchmany(2000)
 					if not rows:
 						break
-					yield itertools.imap(lambda x: tuple(y or u'' for y in x), rows)
+					yield map(lambda x: tuple(y or u'' for y in x), rows)
 
 			with bufferedzip.BufferedZipFile(file, 'w', zipfile.ZIP_DEFLATED) as zip:
 				write_csv_to_zip(
@@ -347,7 +351,7 @@ class AIRSExportICarolSourceList(viewbase.CicViewBase):
 					rows = cursor.fetchmany(2000)
 					if not rows:
 						break
-					yield itertools.imap(lambda x: tuple(y or u'' for y in x), rows)
+					yield map(lambda x: tuple(y or u'' for y in x), rows)
 
 			with bufferedzip.BufferedZipFile(file, 'w', zipfile.ZIP_DEFLATED) as zip:
 				write_csv_to_zip(

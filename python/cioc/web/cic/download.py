@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import zipfile
 import tempfile
 import os
@@ -126,8 +127,7 @@ class DownloadView(viewbase.ViewBase):
 			if len(username) != 2 or username[0] != user.Login.replace(' ', '_'):
 				self._security_failure()
 
-		if '/' in filename or '\\' in filename or '..' in filename or \
-				':' in filename:
+		if '/' in filename or '\\' in filename or '..' in filename or ':' in filename:
 			self._security_failure()
 
 		root, ext = os.path.splitext(filename)
@@ -144,8 +144,7 @@ class DownloadView(viewbase.ViewBase):
 
 		relativepath = os.path.relpath(fullpath, download_dir)
 
-		if '..' in relativepath or '/' in relativepath or '\\' in relativepath or \
-				':' in relativepath:
+		if '..' in relativepath or '/' in relativepath or '\\' in relativepath or ':' in relativepath:
 			self._security_failure()
 
 		if not os.path.exists(fullpath):
@@ -172,5 +171,5 @@ class DownloadView(viewbase.ViewBase):
 			res.etag = '%s-%s-%s' % (os.path.getmtime(fullpath),
 						os.path.getsize(fullpath), hash(fullpath))
 
-		res.headers['Content-Disposition'] = 'attachment;filename=' + strip_accents(request.context.filename).encode('utf8')
+		res.headers['Content-Disposition'] = 'attachment;filename=' + strip_accents(request.context.filename)
 		return res

@@ -21,6 +21,7 @@ from itertools import groupby
 from datetime import datetime 
 
 from markupsafe import Markup
+import six
 
 from cioc.core.format import textToHTML
 %>
@@ -59,7 +60,7 @@ makeLink = request.passvars.makeLink
 <strong>${_('For:')}</strong>
 <% 
 for_targets = []
-not_me = [x for x in reminder.Users if x['User_ID'] != unicode(request.user.User_ID)] 
+not_me = [x for x in reminder.Users if x['User_ID'] != six.text_type(request.user.User_ID)] 
 if len(not_me) != len(reminder.Users) or (not reminder.Users and not reminder.Agencies):
 	for_targets.append(Markup('<em>%s</em>' % request.user.UserName))
 for_targets.extend(x['UserName'] for x in not_me)

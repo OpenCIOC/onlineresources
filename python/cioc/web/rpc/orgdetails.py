@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 from collections import OrderedDict
 from itertools import groupby
 from operator import attrgetter
@@ -30,6 +31,7 @@ from cioc.core.format import textToHTML
 from cioc.core import i18n, syslanguage
 from cioc.core.stat import insert_stat
 from cioc.web.cic import viewbase
+from six.moves import range
 
 _ = i18n.gettext
 

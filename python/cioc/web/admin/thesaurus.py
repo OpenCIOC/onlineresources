@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import logging
 
 import xml.etree.cElementTree as ET
@@ -29,6 +30,7 @@ from cioc.core import validators, rootfactories, constants as const
 from cioc.core.i18n import gettext as _
 from cioc.core.viewbase import security_failure, init_page_info, error_page
 from cioc.web.admin.viewbase import AdminViewBase
+import six
 
 log = logging.getLogger(__name__)
 
@@ -69,13 +71,13 @@ class ThesaurusContext(rootfactories.BasicRootFactory):
 		self.subject = subject
 
 AuthorizedOptions = {'F': False, 'T': True}
-RAuthorizedOptions = dict((v, k) for k, v in AuthorizedOptions.iteritems())
+RAuthorizedOptions = dict((v, k) for k, v in six.iteritems(AuthorizedOptions))
 
 UsedOptions = {'U': True, 'N': False}
-RUsedOptions = dict((v, k) for k, v in UsedOptions.iteritems())
+RUsedOptions = dict((v, k) for k, v in six.iteritems(UsedOptions))
 
 UseAllOptions = {'ALL': True, 'ANY': False}
-RUseAllOptions = dict((v, k) for k, v in UseAllOptions.iteritems())
+RUseAllOptions = dict((v, k) for k, v in six.iteritems(UseAllOptions))
 
 
 class ThesaurusInactivateSchema(Schema):
@@ -163,7 +165,7 @@ class Thesaurus(AdminViewBase):
 		model_state.schema = schema
 		model_state.form.variable_decode = True
 
-		base_fields = schema.fields['subject'].fields.keys()
+		base_fields = list(schema.fields['subject'].fields.keys())
 
 		if model_state.validate():
 			# valid. Save changes and redirect
@@ -183,10 +185,10 @@ class Thesaurus(AdminViewBase):
 			if is_add or user.cic.SuperUserGlobal or context.subject.MemberID == request.dboptions.MemberID:
 				root = ET.Element('DESCS')
 
-				for culture, data in form_data['descriptions'].iteritems():
+				for culture, data in six.iteritems(form_data['descriptions']):
 					desc = ET.SubElement(root, 'DESC')
 					ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-					for name, value in data.iteritems():
+					for name, value in six.iteritems(data):
 						if value:
 							ET.SubElement(desc, name).text = value
 
@@ -196,7 +198,7 @@ class Thesaurus(AdminViewBase):
 				for field in ['UseSubj_ID', 'BroaderSubj_ID', 'RelatedSubj_ID']:
 					root = ET.Element('SUBJS')
 					for value in form_data[field] or []:
-						ET.SubElement(root, "SUBJ").text = unicode(value)
+						ET.SubElement(root, "SUBJ").text = six.text_type(value)
 
 					args.append(ET.tostring(root))
 
@@ -290,15 +292,15 @@ class Thesaurus(AdminViewBase):
 			if not is_add:
 				cursor = conn.execute('EXEC dbo.sp_THS_Subject_s ?, 1', request.POST.get('SubjID'))
 
-				usesubjects = set(unicode(x[0]) for x in cursor.fetchall())
+				usesubjects = set(six.text_type(x[0]) for x in cursor.fetchall())
 
 				cursor.nextset()
 
-				broadersubjects = set(unicode(x[0]) for x in cursor.fetchall())
+				broadersubjects = set(six.text_type(x[0]) for x in cursor.fetchall())
 
 				cursor.nextset()
 
-				relatedsubjects = set(unicode(x[0]) for x in cursor.fetchall())
+				relatedsubjects = set(six.text_type(x[0]) for x in cursor.fetchall())
 
 				cursor.close()
 
@@ -370,15 +372,15 @@ class Thesaurus(AdminViewBase):
 
 				cursor.nextset()
 
-				usesubjects = set(unicode(x[0]) for x in cursor.fetchall())
+				usesubjects = set(six.text_type(x[0]) for x in cursor.fetchall())
 
 				cursor.nextset()
 
-				broadersubjects = set(unicode(x[0]) for x in cursor.fetchall())
+				broadersubjects = set(six.text_type(x[0]) for x in cursor.fetchall())
 
 				cursor.nextset()
 
-				relatedsubjects = set(unicode(x[0]) for x in cursor.fetchall())
+				relatedsubjects = set(six.text_type(x[0]) for x in cursor.fetchall())
 
 				cursor.close()
 

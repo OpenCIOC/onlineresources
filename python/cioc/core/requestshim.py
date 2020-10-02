@@ -5,7 +5,7 @@
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+#	   http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,14 +15,17 @@
 # =========================================================================================
 
 
-from datetime import date
+from __future__ import absolute_import
+from datetime import datetime, date
 
 # 3rd party
 from pyramid.decorator import reify
+import pywintypes
 
 # this app
 from cioc.core import syslanguage
 from cioc.core.request import CiocRequestMixin
+import six
 
 
 class FakeRegistry(object):
@@ -40,7 +43,7 @@ class CollectionShim(object):
 		if val is None:
 			raise KeyError(key)
 
-		return unicode(val)
+		return six.text_type(val)
 
 	def __iter__(self):
 		return iter(self._collection)
@@ -51,6 +54,24 @@ class CollectionShim(object):
 		except KeyError:
 			return default
 
+class MultiCollectionShim(object):
+	def __init__(self, collections):
+		self._collections = [CollectionShim(x) for x in collections]
+
+	def __getitem__(self, key):
+		for col in self._collections:
+			try:
+				return col[key]
+			except KeyError:
+				pass
+
+		raise KeyError(key)
+
+	def get(self, key, default=None):
+		try:
+			return self[key]
+		except KeyError:
+			return default
 
 class HeaderShim(object):
 	def __init__(self, collection):
@@ -63,7 +84,7 @@ class HeaderShim(object):
 
 		val = self._collection[tmpkey]
 
-		return unicode(val)
+		return six.text_type(val)
 
 	def get(self, key, default=None):
 		try:
@@ -77,7 +98,7 @@ class RequestShim(CiocRequestMixin):
 		self.req = req
 		self.GET = CollectionShim(req.QueryString)
 		self.POST = CollectionShim(req.Form)
-		self.params = CollectionShim(req)
+		self.params = MultiCollectionShim([req.QueryString, req.Form])
 		self.cookies = CollectionShim(req.Cookies)
 		self.headers = HeaderShim(req.ServerVariables)
 		self.appvars = CollectionShim(req.ServerVariables)
@@ -89,8 +110,8 @@ class RequestShim(CiocRequestMixin):
 
 	@reify
 	def application_url(self):
-		applpath = unicode(self.appvars.get('APPL_PHYSICAL_PATH'))
-		scriptpath = unicode(self.appvars.get('PATH_TRANSLATED'))
+		applpath = six.text_type(self.appvars.get('APPL_PHYSICAL_PATH'))
+		scriptpath = six.text_type(self.appvars.get('PATH_TRANSLATED'))
 		scripturl = scriptpath[len(applpath):]
 
 		return self.host_url + self.path[:-len(scripturl)]
@@ -121,28 +142,32 @@ class RequestShim(CiocRequestMixin):
 
 	@reify
 	def method(self):
-		return unicode(self.appvars.get('REQUEST_METHOD'))
+		return six.text_type(self.appvars.get('REQUEST_METHOD'))
 
 	@reify
 	def host(self):
-		return unicode(self.appvars.get('SERVER_NAME'))
+		return six.text_type(self.appvars.get('SERVER_NAME'))
 
 	@reify
 	def path(self):
-		return unicode(self.appvars.get('PATH_INFO'))
+		return six.text_type(self.appvars.get('PATH_INFO'))
 
 	@reify
 	def query_string(self):
-		return unicode(self.appvars.get('QUERY_STRING'))
+		return six.text_type(self.appvars.get('QUERY_STRING'))
 
 	@reify
 	def remote_addr(self):
-		return unicode(self.appvars.get('REMOTE_ADDR'))
+		return six.text_type(self.appvars.get('REMOTE_ADDR'))
 
 	def cioc_set_cookie(self, key, value, **args):
 		if value is None:
 			value = u''
-			args['expires'] = date(1997, 01, 01)
+			if six.PY3:
+				expires = pywintypes.Time(datetime(1997, 1, 1, 0,0,0).timestamp())
+			else:
+				expires = date(1997, 1, 1)
+			args['expires'] = expires
 
 		self.response.Cookies[key] = value
 		for x, y in args.items():
