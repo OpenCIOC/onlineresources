@@ -126,7 +126,8 @@ FieldOrder = [
 	"Custom_Former Names", "Custom_Headings",
 	"Custom_Legal Name", "Custom_Pub Codes",
 	"Custom_Record Owner (controlled)", "Custom_SINV", "Custom_iCarol-managed record",
-	"Custom_Facebook", "Custom_Instagram", "Custom_LinkedIn", "Custom_Twitter", "Custom_YouTube"
+	"Custom_Facebook", "Custom_Instagram", "Custom_LinkedIn", "Custom_Twitter", "Custom_YouTube",
+	"Custom_Minimum Age", "Custom_Maximum Age"
 ]
 
 AllRecordsFieldOrder = [

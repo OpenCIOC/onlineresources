@@ -201,7 +201,9 @@ CREATE TABLE #source (
 	[Custom_Instagram] [NVARCHAR](MAX) COLLATE Latin1_General_100_CI_AI NULL,
 	[Custom_LinkedIn] [NVARCHAR](MAX) COLLATE Latin1_General_100_CI_AI NULL,
 	[Custom_Twitter] [NVARCHAR](MAX) COLLATE Latin1_General_100_CI_AI NULL,
-	[Custom_YouTube] [NVARCHAR](MAX) COLLATE Latin1_General_100_CI_AI NULL
+	[Custom_YouTube] [NVARCHAR](MAX) COLLATE Latin1_General_100_CI_AI NULL,
+	[Custom_Minimum Age] [NVARCHAR](255) COLLATE Latin1_General_100_CI_AI NULL,
+	[Custom_Maximum Age] [NVARCHAR](255) COLLATE Latin1_General_100_CI_AI NULL,
 )
 
 DECLARE @sql VARCHAR(MAX)
@@ -398,7 +400,9 @@ WHEN MATCHED THEN
 		[Custom_Instagram]=src.[Custom_Instagram],
 		[Custom_LinkedIn]=src.[Custom_LinkedIn],
 		[Custom_Twitter]=src.[Custom_Twitter],
-		[Custom_YouTube]=src.[Custom_YouTube]
+		[Custom_YouTube]=src.[Custom_YouTube],
+		[Custom_Minimum Age]=src.[Custom_Minimum Age],
+		[Custom_Maximum Age]=src.[Custom_Maximum Age]
 
 WHEN NOT MATCHED BY TARGET THEN
 	INSERT (
@@ -589,7 +593,9 @@ WHEN NOT MATCHED BY TARGET THEN
 		[Custom_Instagram],
 		[Custom_LinkedIn],
 		[Custom_Twitter],
-		[Custom_YouTube]
+		[Custom_YouTube],
+		[Custom_Minimum Age],
+		[Custom_Maximum Age]
 	) VALUES (
 		src.[ResourceAgencyNum],
 		@@LANGID,
@@ -778,7 +784,9 @@ WHEN NOT MATCHED BY TARGET THEN
 		src.[Custom_Instagram],
 		src.[Custom_LinkedIn],
 		src.[Custom_Twitter],
-		src.[Custom_YouTube]
+		src.[Custom_YouTube],
+		src.[Custom_Minimum Age],
+		src.[Custom_Maximum Age]
 	)
 
 	;

@@ -173,21 +173,12 @@ CREATE TABLE [dbo].[CIC_iCarolImport]
 [TaxonomyCodes] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Coverage] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Hours] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[Custom_A1) Does your organization consent to participate in the] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Custom_Public Comments] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[Custom_A2) What is the likelihood that within the next 2-5 year] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[Custom_S1) Does your organization own/rent/sublease the space] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[Custom_S2) If your organization rents the space please state fr] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[Custom_S3) What type of facilities do you have at the space (Ch] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[Custom_S4) What is the approximate square footage of the space] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[Custom_S5) In what type of building is the space located] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[Custom_S6) If your organization plans to move from the space in] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Custom_211 Record] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Custom_Former Names] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Custom_Headings] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Custom_Legal Name] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Custom_Pub Codes] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[Custom_Record Owner (211 Central)] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Custom_Record Owner (controlled)] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Custom_SINV] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Custom_iCarol-managed record] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -200,7 +191,9 @@ CREATE TABLE [dbo].[CIC_iCarolImport]
 [IMPORTED_DATE] [smalldatetime] NULL,
 [RECORD_OWNER] [char] (3) COLLATE Latin1_General_100_CI_AI NULL,
 [InternalMemoGUID] [uniqueidentifier] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_InternalMemoGUID] DEFAULT (newid()),
-[DELETION_DATE] [smalldatetime] NULL
+[DELETION_DATE] [smalldatetime] NULL,
+[Custom_Minimum Age] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[Custom_Maximum Age] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_iCarolImport] ADD CONSTRAINT [PK_CIC_iCarolImport] PRIMARY KEY CLUSTERED  ([ResourceAgencyNum], [LangID]) ON [PRIMARY]

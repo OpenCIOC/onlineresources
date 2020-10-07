@@ -188,7 +188,9 @@ CREATE TABLE [dbo].[CIC_iCarolImportRollup]
 [LOCATION_DESCRIPTION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SERVICE_NAME_LEVEL_1] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SERVICE_NAME_LEVEL_2] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[DESCRIPTION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
+[DESCRIPTION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[Custom_Minimum Age] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[Custom_Maximum Age] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_iCarolImportRollup] ADD CONSTRAINT [PK_CIC_iCarolImportRollup] PRIMARY KEY CLUSTERED  ([ResourceAgencyNum], [LangID]) ON [PRIMARY]

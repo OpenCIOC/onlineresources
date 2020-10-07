@@ -94,7 +94,7 @@ SELECT CAST((SELECT (
 		(SELECT a.DESCRIPTION AS [@V], f.DESCRIPTION AS [@VF] FOR XML PATH('DESCRIPTION'), TYPE),
 		(SELECT a.DocumentsRequired AS [@V], f.DocumentsRequired AS [@VF] FOR XML PATH('DOCUMENTS_REQUIRED'), TYPE),
 		(SELECT a.EmailAddressMain AS [@V], f.EmailAddressMain AS [@VF] FOR XML PATH('E_MAIL'), TYPE),
-		(SELECT a.Eligibility AS [@N], f.Eligibility AS [@NF] FOR XML PATH('ELIGIBLITY'), TYPE),
+		(SELECT a.Eligibility AS [@N], f.Eligibility AS [@NF], a.[Custom_Minimum Age] AS [@MIN_AGE], a.[Custom_Maximum Age] AS [@MAX_AGE] FOR XML PATH('ELIGIBILITY'), TYPE),
 		(SELECT a.YearIncorporated AS [@V], f.YearIncorporated AS [@VF] FOR XML PATH('ESTABLISHED'), TYPE),
 		(SELECT
 			(SELECT 'E' AS [@LANG], a.SeniorWorkerName AS [@NMLAST], a.SeniorWorkerTitle AS [@TTL], a.SeniorWorkerPhoneNumber AS [@PH1N], a.SeniorWorkerEmailAddress AS [@EML]
