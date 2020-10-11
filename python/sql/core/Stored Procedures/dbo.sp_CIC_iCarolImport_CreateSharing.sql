@@ -69,7 +69,7 @@ SELECT CAST((SELECT (
 				) AS t
 			) AS i
 			LEFT JOIN dbo.GBL_Community_External_Community c
-				ON i.cm_level=c.AIRSExportType COLLATE Latin1_General_100_CI_AI AND i.AreaName=c.AreaName COLLATE Latin1_General_100_CI_AI AND c.SystemCode='ONTARIO211'
+				ON i.cm_level=c.AIRSExportType COLLATE Latin1_General_100_CI_AI AND i.AreaName=c.AreaName COLLATE Latin1_General_100_CI_AI AND c.SystemCode='ICAROLSTD'
 			LEFT JOIN dbo.GBL_Community_External_Map_All m 
 					ON m.EXT_ID = c.EXT_ID
 			LEFT JOIN dbo.GBL_Community_Name cmn
