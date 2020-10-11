@@ -57,6 +57,8 @@ SELECT CAST((SELECT (
 			
 		(SELECT a.ApplicationProcess AS [@V], f.ApplicationProcess AS [@VF] FOR XML PATH('APPLICATION'), TYPE),
 		(SELECT -- NOTE: This needs some work
+			a.CoverageArea AS [@N],
+			f.CoverageArea AS [@NF],
 			(SELECT COALESCE(cmn.Name,i.AreaName) AS [@V], i.Prov AS [@PRV] FROM (
 				SELECT DISTINCT FIRST_VALUE(ItemID) OVER (PARTITION BY t.TotalItemID ORDER BY t.cm_level DESC) AS AreaName, FIRST_VALUE(ItemID) OVER (PARTITION BY t.TotalItemID ORDER BY t.cm_level) AS Prov,
 				 REPLACE(REPLACE(REPLACE(REPLACE(FIRST_VALUE(cm_level) OVER (PARTITION BY t.TotalItemID ORDER BY cm_level DESC), 1, 'State'), 2, 'County'), 3, 'City'), '4', 'Community') AS cm_level
