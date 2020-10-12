@@ -57,6 +57,8 @@ SELECT CAST((SELECT (
 			
 		(SELECT a.ApplicationProcess AS [@V], f.ApplicationProcess AS [@VF] FOR XML PATH('APPLICATION'), TYPE),
 		(SELECT -- NOTE: This needs some work
+			a.CoverageArea AS [@N],
+			f.CoverageArea AS [@NF],
 			(SELECT COALESCE(cmn.Name,i.AreaName) AS [@V], i.Prov AS [@PRV] FROM (
 				SELECT DISTINCT FIRST_VALUE(ItemID) OVER (PARTITION BY t.TotalItemID ORDER BY t.cm_level DESC) AS AreaName, FIRST_VALUE(ItemID) OVER (PARTITION BY t.TotalItemID ORDER BY t.cm_level) AS Prov,
 				 REPLACE(REPLACE(REPLACE(REPLACE(FIRST_VALUE(cm_level) OVER (PARTITION BY t.TotalItemID ORDER BY cm_level DESC), 1, 'State'), 2, 'County'), 3, 'City'), '4', 'Community') AS cm_level
@@ -67,7 +69,7 @@ SELECT CAST((SELECT (
 				) AS t
 			) AS i
 			LEFT JOIN dbo.GBL_Community_External_Community c
-				ON i.cm_level=c.AIRSExportType COLLATE Latin1_General_100_CI_AI AND i.AreaName=c.AreaName COLLATE Latin1_General_100_CI_AI AND c.SystemCode='ONTARIO211'
+				ON i.cm_level=c.AIRSExportType COLLATE Latin1_General_100_CI_AI AND i.AreaName=c.AreaName COLLATE Latin1_General_100_CI_AI AND c.SystemCode='ICAROLSTD'
 			LEFT JOIN dbo.GBL_Community_External_Map_All m 
 					ON m.EXT_ID = c.EXT_ID
 			LEFT JOIN dbo.GBL_Community_Name cmn
@@ -94,7 +96,7 @@ SELECT CAST((SELECT (
 		(SELECT a.DESCRIPTION AS [@V], f.DESCRIPTION AS [@VF] FOR XML PATH('DESCRIPTION'), TYPE),
 		(SELECT a.DocumentsRequired AS [@V], f.DocumentsRequired AS [@VF] FOR XML PATH('DOCUMENTS_REQUIRED'), TYPE),
 		(SELECT a.EmailAddressMain AS [@V], f.EmailAddressMain AS [@VF] FOR XML PATH('E_MAIL'), TYPE),
-		(SELECT a.Eligibility AS [@N], f.Eligibility AS [@NF] FOR XML PATH('ELIGIBLITY'), TYPE),
+		(SELECT a.Eligibility AS [@N], f.Eligibility AS [@NF], a.[Custom_Minimum Age] AS [@MIN_AGE], a.[Custom_Maximum Age] AS [@MAX_AGE] FOR XML PATH('ELIGIBILITY'), TYPE),
 		(SELECT a.YearIncorporated AS [@V], f.YearIncorporated AS [@VF] FOR XML PATH('ESTABLISHED'), TYPE),
 		(SELECT
 			(SELECT 'E' AS [@LANG], a.SeniorWorkerName AS [@NMLAST], a.SeniorWorkerTitle AS [@TTL], a.SeniorWorkerPhoneNumber AS [@PH1N], a.SeniorWorkerEmailAddress AS [@EML]
