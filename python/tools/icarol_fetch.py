@@ -472,6 +472,9 @@ def check_db_state(context):
 
 
 def format_modified_date(context):
+	if context.args.modified_since is None:
+		context.args.modified_since = 'any'
+
 	if context.args.modified_since == 'any':
 		return
 
