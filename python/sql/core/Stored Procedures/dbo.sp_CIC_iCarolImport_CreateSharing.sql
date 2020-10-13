@@ -70,8 +70,8 @@ SELECT CAST((SELECT (
 			) AS i
 			LEFT JOIN dbo.GBL_Community_External_Community c
 				ON i.cm_level=c.AIRSExportType COLLATE Latin1_General_100_CI_AI AND i.AreaName=c.AreaName COLLATE Latin1_General_100_CI_AI AND c.SystemCode='ICAROLSTD'
-			LEFT JOIN dbo.GBL_Community_External_Map_All m 
-					ON m.EXT_ID = c.EXT_ID
+			LEFT JOIN dbo.GBL_Community_External_Map m 
+					ON m.MapOneEXTID = c.EXT_ID
 			LEFT JOIN dbo.GBL_Community_Name cmn
 				ON cmn.CM_ID = m.CM_ID AND cmn.LangID=(SELECT TOP(1) LangID FROM dbo.GBL_Community_Name ic WHERE cmn.CM_ID = ic.CM_ID ORDER BY CASE WHEN ic.LangID=@@LANGID THEN 0 ELSE 1 END, ic.LangID)
 			FOR XML PATH('CM'), TYPE)
