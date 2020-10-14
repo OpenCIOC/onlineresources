@@ -111,8 +111,8 @@ SELECT CAST((SELECT (
 		(SELECT
 		-- I think this is now handled in the rollup so we can go back to checking for NULL
 			 CASE WHEN a.Latitude IS NOT NULL AND a.Longitude IS NOT NULL THEN 3 ELSE 0 END AS [@TYPE],
-			 a.Latitude AS [@LAT],
-			 a.Longitude AS [@LONG]
+			 CAST(a.Latitude AS NUMERIC(11,7))  AS [@LAT],
+			 CAST(a.Longitude AS NUMERIC(11,7)) AS [@LONG]
 		  FOR XML PATH('GEOCODE'), TYPE),
 		(SELECT COALESCE(a.HoursOfOperation, a.Hours) AS [@V], COALESCE(f.HoursOfOperation, f.Hours) AS [@VF] FOR XML PATH('HOURS'), TYPE),
 		(SELECT
