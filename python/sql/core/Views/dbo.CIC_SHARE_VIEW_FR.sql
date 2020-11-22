@@ -1,8 +1,8 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
+
 
 
 
@@ -59,7 +59,7 @@ ACCREDITED = ISNULL((
 		ON acrne.ACR_ID=acr.ACR_ID AND acrne.LangID=(SELECT TOP 1 LangID FROM CIC_Accreditation_Name WHERE ACR_ID=acrne.ACR_ID ORDER BY CASE WHEN LangID=bte.LangID THEN 0 ELSE 1 END, LangID)
 	WHERE acr.ACR_ID=cbt.ACCREDITED
 	FOR XML PATH('ACCREDITED'), TYPE
-	), CAST('<ACCREDITED/>' AS xml)),
+	), CAST('<ACCREDITED/>' AS XML)),
 ACTIVITY_INFO = (
 	SELECT
 		cbtf.ACTIVITY_NOTES "@NF",
@@ -94,11 +94,12 @@ ALT_ORG = ISNULL((
 			WHERE ao.NUM=bt.NUM AND (ao.LangID=btf.LangID)
 			FOR XML PATH('NM'), TYPE)
 	FOR XML PATH('ALT_ORG'), TYPE
-	),CAST('<ALT_ORG/>' AS xml)),
+	),CAST('<ALT_ORG/>' AS XML)),
 [APPLICATION] = (SELECT cbtf.APPLICATION "@VF" FOR XML PATH('APPLICATION'), TYPE),
 AREAS_SERVED = (
 	SELECT
 		cbtf.AREAS_SERVED_NOTES "@NF",
+		cbtf.AREAS_SERVED_ONLY_DISPLAY_NOTES "@ODNF",
 		(SELECT
 				cm.Code "@CD",
 				cmne.Name "@V",
@@ -851,6 +852,7 @@ FROM (SELECT 0 AS LangID) bte,
 		ON bt.NUM = ccbt.NUM
 	LEFT JOIN CCR_BaseTable_Description ccbtf
 		ON ccbt.NUM=ccbtf.NUM AND ccbtf.LangID=btf.LangID
+
 
 
 

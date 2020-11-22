@@ -710,6 +710,7 @@ Sub processAreasServedC()
 		strProv, strCountry, _
 		strCommunityNoteE, strCommunityNoteF, _
 		strCommunityNotesE, strCommunityNotesF, _
+		bCommunityOnlyNotesE, bCommunityOnlyNotesF, _
 		strNoteConE, strNoteConF
 
 	strCommunityNotesE = vbNullString
@@ -724,12 +725,14 @@ Sub processAreasServedC()
 		If Not Nl(strCommunityNotesE) Then
 			strNoteConE = " ; "
 		End If
+		bCommunityOnlyNotesE = Nz(xmlChildNode.getAttribute("ODN"),Null)
 	End If
 	If bInsertFrench Then
 		strCommunityNotesF = Nz(xmlChildNode.getAttribute("NF"),vbNullString)
 		If Not Nl(strCommunityNotesF) Then
 			strNoteConF = " ; "
 		End If
+		bCommunityOnlyNotesF = Nz(xmlChildNode.getAttribute("ODNF"),Null)
 	End If
 
 	For Each xmlCommunityNode in xmlChildNode.childNodes
@@ -788,6 +791,12 @@ Sub processAreasServedC()
 
 	Call dicTableList("CICE").processField("AREAS_SERVED_NOTES",Null,strCommunityNotesE,True,FTYPE_TEXT)
 	Call dicTableList("CICF").processField("AREAS_SERVED_NOTES",Null,strCommunityNotesF,True,FTYPE_TEXT)
+	If Not Nl(bCommunityOnlyNotesE) Then
+		Call dicTableList("CICE").processField("AREAS_SERVED_ONLY_DISPLAY_NOTES",Null,bCommunityOnlyNotesE,True,FTYPE_NUMBER)
+	End If
+	If Not Nl(bCommunityOnlyNotesF) Then
+		Call dicTableList("CICF").processField("AREAS_SERVED_ONLY_DISPLAY_NOTES",Null,bCommunityOnlyNotesF,True,FTYPE_NUMBER)
+	End If
 End Sub
 
 '*-------------------------------------*

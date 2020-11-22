@@ -1311,6 +1311,12 @@ Sub getSortAsSQL()
 	End If
 End Sub
 
+Sub getAreasServedOnlyDisplayNotes()
+	Dim bOnlyDisplayNotes
+	bOnlyDisplayNotes = Cint(Not Nl(Request("AREAS_SERVED_ONLY_DISPLAY_NOTES")))
+	Call addBTInsertField("AREAS_SERVED_ONLY_DISPLAY_NOTES", bOnlyDisplayNotes, False, strUpdateListCBTD, strInsertIntoCBTD, strInsertValueCBTD)
+
+End Sub
 Sub getStdCheckListSQL(strDomain, strIDType, bCheckNotes, strFieldName, strIDListName, strNotesPrefix, ByRef strUpdateList, ByRef strInsertInto, ByRef strInsertValue)
 	Dim strNotes, aIDS, indID, strItemNote
 	Dim strIDList
@@ -1918,6 +1924,7 @@ If Not bRSNError Then
 			Case "ALT_ORG"
 				Call getAltOrgSQL()
 			Case "AREAS_SERVED"
+			    Call getAreasServedOnlyDisplayNotes()
 				Call getStdCheckListSQL("CIC", "CM", True, Null, Null, fldName.Value, strUpdateListCBTD, strInsertIntoCBTD, strInsertValueCBTD)
 			Case "BILLING_ADDRESSES"
 				Call getBillingAddressesSQL()
