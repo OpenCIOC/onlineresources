@@ -23,7 +23,7 @@ UPDATE btd
 		ON bt.NUM=btd.NUM
 	
 UPDATE cbtd
-	SET	CMP_AreasServed = dbo.fn_CIC_NUMToAreasServed(cbtd.NUM,cbtd.AREAS_SERVED_NOTES,cbtd.LangID),
+	SET	CMP_AreasServed = dbo.fn_CIC_NUMToAreasServed(cbtd.NUM,cbtd.AREAS_SERVED_NOTES,cbtd.LangID,cbtd.AREAS_SERVED_ONLY_DISPLAY_NOTES),
 		CMP_Funding = dbo.fn_CIC_NUMToFunding(cbtd.NUM,cbtd.FUNDING_NOTES,cbtd.LangID),
 		CMP_Languages = dbo.fn_CIC_NUMToLanguages(cbtd.NUM,cbtd.LANGUAGE_NOTES,cbtd.LangID),
 		CMP_Fees = dbo.fn_CIC_NUMToFeeType(cbtd.NUM,cbtd.FEE_NOTES,cbt.FEE_ASSISTANCE_AVAILABLE,cbtd.FEE_ASSISTANCE_FOR,cbtd.FEE_ASSISTANCE_FROM,cbtd.LangID),

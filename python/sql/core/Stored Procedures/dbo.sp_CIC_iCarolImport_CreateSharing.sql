@@ -59,6 +59,8 @@ SELECT CAST((SELECT (
 		(SELECT -- NOTE: This needs some work
 			a.CoverageArea AS [@N],
 			f.CoverageArea AS [@NF],
+			CASE WHEN a.CoverageArea IS NOT NULL THEN 1 ELSE NULL END AS [@ODN],
+			CASE WHEN f.CoverageArea IS NOT NULL THEN 1 ELSE NULL END AS [@ODNF],
 			(SELECT COALESCE(cmn.Name,i.AreaName) AS [@V], i.Prov AS [@PRV] FROM (
 				SELECT DISTINCT FIRST_VALUE(ItemID) OVER (PARTITION BY t.TotalItemID ORDER BY t.cm_level DESC) AS AreaName, FIRST_VALUE(ItemID) OVER (PARTITION BY t.TotalItemID ORDER BY t.cm_level) AS Prov,
 				 REPLACE(REPLACE(REPLACE(REPLACE(FIRST_VALUE(cm_level) OVER (PARTITION BY t.TotalItemID ORDER BY cm_level DESC), 1, 'State'), 2, 'County'), 3, 'City'), '4', 'Community') AS cm_level
@@ -68,12 +70,10 @@ SELECT CAST((SELECT (
 				CROSS APPLY dbo.fn_GBL_ParseVarCharIDList(areas.ItemID, '-') AS levels
 				) AS t
 			) AS i
-			LEFT JOIN dbo.GBL_Community_External_Community c
+			LEFT JOIN CommunityRepo_2012_11.dbo.External_Community c
 				ON i.cm_level=c.AIRSExportType COLLATE Latin1_General_100_CI_AI AND i.AreaName=c.AreaName COLLATE Latin1_General_100_CI_AI AND c.SystemCode='ICAROLSTD'
-			LEFT JOIN dbo.GBL_Community_External_Map m 
-					ON m.MapOneEXTID = c.EXT_ID
-			LEFT JOIN dbo.GBL_Community_Name cmn
-				ON cmn.CM_ID = m.CM_ID AND cmn.LangID=(SELECT TOP(1) LangID FROM dbo.GBL_Community_Name ic WHERE cmn.CM_ID = ic.CM_ID ORDER BY CASE WHEN ic.LangID=@@LANGID THEN 0 ELSE 1 END, ic.LangID)
+			LEFT JOIN CommunityRepo_2012_11.dbo.Community_Name cmn
+				ON cmn.CM_ID = c.CM_ID AND cmn.LangID=(SELECT TOP(1) LangID FROM CommunityRepo_2012_11.dbo.Community_Name ic WHERE cmn.CM_ID = ic.CM_ID ORDER BY CASE WHEN ic.LangID=@@LANGID THEN 0 ELSE 1 END, ic.LangID)
 			FOR XML PATH('CM'), TYPE)
 		FOR XML PATH ('AREAS_SERVED'), TYPE),
 		(SELECT a.BusServiceAccess AS [@N], f.BusServiceAccess AS [@NF] FOR XML PATH('BUS_ROUTES'),TYPE),

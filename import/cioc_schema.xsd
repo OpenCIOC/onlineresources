@@ -848,6 +848,9 @@
 									</xsd:sequence>
 									<xsd:attribute name="N" type="s-Text4000Type" use="optional"/>
 									<xsd:attribute name="NF" type="s-Text4000Type" use="optional"/>
+									<!-- Only Display Notes -->
+									<xsd:attribute name="ODN" type="s-BooleanType" use="optional"/>
+									<xsd:attribute name="ODNF" type="s-BooleanType" use="optional"/>
 								</xsd:complexType>
 							</xsd:element>
 							<xsd:element name="BEST_TIME_TO_CALL" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>

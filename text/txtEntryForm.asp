@@ -43,6 +43,7 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_AFTER_NAME, _
 	TXT_AGENCY_WARNING, _
 	TXT_ALL_AGENCIES, _
+	TXT_AREAS_SERVED_DISPLAY_ONLY_NOTES, _
 	TXT_AUTO_ASSIGN_LOWEST_NUM, _
 	TXT_AVAILABLE, _
 	TXT_BEFORE_NAME, _
@@ -245,6 +246,7 @@ Sub setTxtEntryForm()
 			TXT_AFTER_NAME = "Après le nom"
 			TXT_AGENCY_WARNING = "Pas une agence"
 			TXT_ALL_AGENCIES = "toutes les agences"
+			TXT_AREAS_SERVED_DISPLAY_ONLY_NOTES = "TRANSLATE_FR -- Only Display Notes"
 			TXT_AUTO_ASSIGN_LOWEST_NUM = "Assigner automatiquement le numéro de dossier disponible le plus bas"
 			TXT_AVAILABLE = "Disponible"
 			TXT_BEFORE_NAME = "Avant le nom"
@@ -449,6 +451,7 @@ Sub setTxtEntryForm()
 			TXT_AFTER_NAME = "After Name"
 			TXT_AGENCY_WARNING = "Not an Agency"
 			TXT_ALL_AGENCIES = "all Agencies"
+			TXT_AREAS_SERVED_DISPLAY_ONLY_NOTES = "Only Display Notes"
 			TXT_AUTO_ASSIGN_LOWEST_NUM = "Automatically assign the lowest available record number"
 			TXT_AVAILABLE = "Available"
 			TXT_BEFORE_NAME = "Before Name"

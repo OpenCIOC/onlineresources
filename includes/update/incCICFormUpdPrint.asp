@@ -530,10 +530,11 @@ Function makeAreasServedContents(rst,bUseContent)
 	bHasDynamicAddField = True
 	bAreasServed = True
 	Dim strReturn
-	Dim strNUM, strNotes, intNotesLen
+	Dim strNUM, strNotes, intNotesLen, bOnlyDisplayNotes
 	If bUseContent Then
 		strNUM = rst.Fields("NUM")
 		strNotes = rst.Fields("AREAS_SERVED_NOTES")
+		bOnlyDisplayNotes = rst.Fields("AREAS_SERVED_ONLY_DISPLAY_NOTES")
 	Else
 		strNUM = Null
 	End If
@@ -598,7 +599,9 @@ Function makeAreasServedContents(rst,bUseContent)
 			" cols=""" & TEXTAREA_COLS & """" & _
 			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
 			" class=""form-control""" & _
-			">" & strNotes & "</textarea>"
+			">" & strNotes & "</textarea><div><label class=""FieldLabelLeftClr"" for=""AREAS_SERVED_ONLY_DISPLAY_NOTES"">" & TXT_AREAS_SERVED_DISPLAY_ONLY_NOTES & _
+			"</label> <input type=""checkbox"" name=""AREAS_SERVED_ONLY_DISPLAY_NOTES"" id=""AREAS_SERVED_ONLY_DISPLAY_NOTES"" value=""1"" " & _
+			Checked(bOnlyDisplayNotes) & "></div>"
 
 	If bFeedback Then
 		strReturn = strReturn & getFeedback(strFieldName,False)

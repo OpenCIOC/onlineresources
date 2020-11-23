@@ -41,7 +41,7 @@ FOR UPDATE AS
 SET NOCOUNT ON
 
 UPDATE cbtd
-	SET	CMP_AreasServed = dbo.fn_CIC_NUMToAreasServed(cbtd.NUM,cbtd.AREAS_SERVED_NOTES,cbtd.LangID)
+	SET	CMP_AreasServed = dbo.fn_CIC_NUMToAreasServed(cbtd.NUM,cbtd.AREAS_SERVED_NOTES,cbtd.LangID,cbtd.AREAS_SERVED_ONLY_DISPLAY_NOTES)
 	FROM CIC_BaseTable_Description cbtd
 	INNER JOIN CIC_BaseTable cbt
 		ON cbtd.NUM=cbt.NUM
@@ -51,7 +51,7 @@ UPDATE cbtd
 		ON pr.CM_ID=i.CM_ID
 	INNER JOIN Deleted d
 		ON pr.CM_ID=d.CM_ID
-	WHERE i.LangID=cbtd.LangID OR d.LangID=cbtd.LangID
+	WHERE cbtd.AREAS_SERVED_ONLY_DISPLAY_NOTES=0 AND (i.LangID=cbtd.LangID OR d.LangID=cbtd.LangID)
 
 UPDATE btd
 	SET	CMP_LocatedIn = dbo.fn_GBL_DisplayCommunity(bt.LOCATED_IN_CM,btd.LangID)

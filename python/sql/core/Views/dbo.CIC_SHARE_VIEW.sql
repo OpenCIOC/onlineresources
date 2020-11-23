@@ -10,6 +10,7 @@ GO
 
 
 
+
 CREATE VIEW [dbo].[CIC_SHARE_VIEW]
 AS
 
@@ -110,6 +111,8 @@ AREAS_SERVED = (
 	SELECT
 		cbte.AREAS_SERVED_NOTES "@N",
 		cbtf.AREAS_SERVED_NOTES "@NF",
+		cbte.AREAS_SERVED_ONLY_DISPLAY_NOTES "@ODN",
+		cbtf.AREAS_SERVED_ONLY_DISPLAY_NOTES "@ODNF",
 		(SELECT
 				cm.Code "@CD",
 				cmne.Name "@V",
@@ -957,6 +960,7 @@ FROM GBL_BaseTable bt
 		ON ccbt.NUM=ccbte.NUM AND ccbte.LangID=bte.LangID
 	LEFT JOIN CCR_BaseTable_Description ccbtf
 		ON ccbt.NUM=ccbtf.NUM AND ccbtf.LangID=btf.LangID
+
 
 
 
