@@ -55,7 +55,7 @@ END
 SELECT @Error AS Error, @ErrMsg AS ErrMsg
 
 IF @Error = 0 BEGIN
-	SELECT COUNT(*) AS RecordCount
+	SELECT COUNT(CASE WHEN ied.IMPORTED=0 THEN 1 ELSE NULL END) AS RecordCount, COUNT(CASE WHEN ied.IMPORTED=1 THEN 1 ELSE NULL END) AS RetryRecordCount
 		FROM CIC_ImportEntry_Data ied
 	WHERE ied.EF_ID=@EF_ID
 		AND ied.DATA IS NOT NULL

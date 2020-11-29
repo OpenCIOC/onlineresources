@@ -55,7 +55,7 @@ END
 SELECT @Error AS Error, @ErrMsg AS ErrMsg
 
 IF @Error = 0 BEGIN
-	SELECT COUNT(*) AS RecordCount
+	SELECT SUM(CASE WHEN ied.IMPORTED=0 THEN 1 ELSE 0 END) AS RecordCount, SUM(CAST(ied.IMPORTED AS INT)) AS RetryRecordCount
 		FROM CIC_ImportEntry_Data ied
 		INNER JOIN GBL_BaseTable bt
 			ON bt.NUM=ied.NUM

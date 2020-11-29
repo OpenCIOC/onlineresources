@@ -5067,6 +5067,7 @@ Dim strImportOwners, _
 	intPublicConflict, _
 	intDeletedConflict, _
 	intImportTop, _
+	bRetryFailed, _
 	bImportSourceDb, _
 	bUnmappedPrivacySkipFields, _
 	strAutoAddPubs
@@ -5132,6 +5133,7 @@ Else
 	intImportTop = Null
 End If
 
+bRetryFailed = Request("RetryFailed") = "on"
 bImportSourceDb = Request("ImportSourceDb") = "on"
 bUnmappedPrivacySkipFields = Trim(Request("UnmappedPrivacySkipFields")) = "F"
 
@@ -5149,6 +5151,7 @@ If Not Nl(intEFID) Then
 	strSQL = strSQL & vbCrLf & _
 		intOwnerConflict & " AS QOwnerConflict, CAST(" & IIf(bImportSourceDb,SQL_TRUE,SQL_FALSE) & " AS bit) AS QImportSourceDbInfo, " & vbCrLf & _
 		"CAST(" & IIf(bUnmappedPrivacySkipFields,SQL_TRUE,SQL_FALSE) & " AS bit) AS QUnmappedPrivacySkipFields," & vbCrLf & _
+		"CAST(" & IIf(bRetryFailed,SQL_TRUE,SQL_FALSE) & " AS bit) AS QRetryFailed," & vbCrLf & _
 		" " & intPrivacyProfileConflict & " AS QPrivacyProfileConflict," & vbCrLf & _
 		" " & QsNl(strAutoAddPubs) & " AS QAutoAddPubs," & intPublicConflict & " AS QPublicConflict," & intDeletedConflict & " AS QDeletedConflict" & vbCrLf & _
 		"FROM CIC_ImportEntry ie" & vbCrLf & _
@@ -5165,7 +5168,8 @@ Else
 		"QAutoAddPubs," & vbCrLf & _
 		"QPublicConflict," & vbCrLf & _
 		"QDeletedConflict," & vbCrLf & _
-		"QDate, QBy" & vbCrLf & _
+		"QDate, QBy," & vbCrLf & _
+		"QRetryFailed"  & vbCrLf & _
 		"FROM CIC_ImportEntry ie" & vbCrLf & _
 		"LEFT JOIN CIC_ImportEntry_Description iede ON ie.EF_ID=iede.EF_ID AND iede.LangID=" & LANG_ENGLISH & vbCrLf & _
 		"LEFT JOIN CIC_ImportEntry_Description iedf ON ie.EF_ID=iedf.EF_ID AND iedf.LangID=" & LANG_FRENCH & vbCrLf & _
@@ -5214,8 +5218,8 @@ Dim bCreatedCIC
 Dim strReport, strReportCon
 
 Dim fldEFID, fldDisplayName, fldFieldList, fldOwnerConflict, fldPublicConflict, fldDeletedConflict, fldPrivacyProfileConflict, fldQAutoAddPubs, fldImportSourceDb, fldQDate, fldQBy, _
-	fldSourceDbCode, fldSourceDbNameEn, fldSourceDbNameFr, fldSourceDbURLEn, fldSourceDbURLFr
-Dim fldERID, fldNUM, fldEXTERNALID, fldOWNER, fldHASE, fldHASF, fldPrivacyProfile, fldDATA, fldREPORT, fldNUME, fldNUMF
+	fldSourceDbCode, fldSourceDbNameEn, fldSourceDbNameFr, fldSourceDbURLEn, fldSourceDbURLFr, fldRetryFailed
+Dim fldERID, fldNUM, fldEXTERNALID, fldOWNER, fldHASE, fldHASF, fldPrivacyProfile, fldDATA, fldREPORT, fldIMPORTED, fldNUME, fldNUMF
 
 Dim bHavePrivacyProfiles, dicPrivacyProfileFields, dicPrivacyProfileMap, dicPrivacyProfiles
 
@@ -5234,6 +5238,7 @@ Set fldEFID = rsImportEntry.Fields("EF_ID")
 Set fldDisplayName = rsImportEntry.Fields("DisplayName")
 Set fldFieldList = rsImportEntry.Fields("FieldList")
 Set fldOwnerConflict = rsImportEntry.Fields("QOwnerConflict")
+Set fldRetryFailed = rsImportEntry.Fields("QRetryFailed")
 Set fldPublicConflict = rsImportEntry.Fields("QPublicConflict")
 Set fldDeletedConflict = rsImportEntry.Fields("QDeletedConflict")
 Set fldPrivacyProfileConflict = rsImportEntry.Fields("QPrivacyProfileConflict")
@@ -5347,7 +5352,7 @@ End If
 'Response.Flush()
 
 strSQL = "SELECT " & IIf(intImportTop > 0,"TOP " & intImportTop,vbNullString) & vbCrLf & _
-		"ied.ER_ID, ied.NUM, ied.EXTERNAL_ID, ied.OWNER, ied.DATA, ied.REPORT, btde.NUM AS NUME, btdf.NUM AS NUMF, " & vbCrLf & _
+		"ied.ER_ID, ied.NUM, ied.EXTERNAL_ID, ied.OWNER, ied.DATA, ied.REPORT, ied.IMPORTED, btde.NUM AS NUME, btdf.NUM AS NUMF, " & vbCrLf & _
 		"CASE WHEN iedle.ER_ID IS NOT NULL THEN 1 ELSE 0 END AS HAS_ENGLISH," & vbCrLf & _
 		"CASE WHEN iedlf.ER_ID IS NOT NULL THEN 1 ELSE 0 END AS HAS_FRENCH," & vbCrLf & _
 		"ied.PRIVACY_PROFILE" & vbCrLf & _
@@ -5405,6 +5410,10 @@ If fldDeletedConflict.Value = CNF_DO_NOT_IMPORT Then
 	strSQL = strSQL & " AND (bt.NUM IS NULL OR ((btde.NUM IS NULL OR iedle.ER_ID IS NULL OR ISNULL(btde.DELETION_DATE, '1900-01-01')=ISNULL(iedle.DELETION_DATE, '1900-01-01')) AND (btdf.NUM IS NULL OR iedlf.ER_ID IS NULL OR ISNULL(btdf.DELETION_DATE, '1900-01-01')=ISNULL(iedlf.DELETION_DATE, '1900-01-01'))))"
 End If
 
+If Not fldRetryFailed.Value Then
+	strSQL = strSQL & " AND IMPORTED=0"
+End If
+
 If bHavePrivacyProfiles Then
 	If fldPrivacyProfileConflict.Value = CNF_DO_NOT_IMPORT Then
 		strSQL = strSQL & " AND (bt.PRIVACY_PROFILE IS NULL OR bt.PRIVACY_PROFILE=pm.QPrivacyMap OR (pm.ProfileName IS NOT NULL AND pm.QPrivacyMap IS NULL))"
@@ -5420,8 +5429,8 @@ End If
 
 strSQL = strSQL & " ORDER BY ied.ER_ID"
 
-'Response.Write("<pre>" & strSQL & "</pre>")
-'Response.Flush()
+Response.Write("<pre>" & strSQL & "</pre>")
+Response.Flush()
 
 With cmdListImport
 	.ActiveConnection = getCurrentAdminCnn()
@@ -5459,6 +5468,7 @@ With rsListImport
 		Set fldPrivacyProfile = .Fields("PRIVACY_PROFILE")
 		Set fldDATA = .Fields("DATA")
 		Set fldREPORT = .Fields("REPORT")
+		Set fldIMPORTED = .Fields("IMPORTED")
 		Set fldNUME = .Fields("NUME")
 		Set fldNUMF = .Fields("NUMF")
 
@@ -5942,7 +5952,10 @@ While Not .EOF
 			End If
 
 			If Not bIsError Then
-				fldDATA.Value = Null
+			    fldIMPORTED.Value = SQL_TRUE
+				If Nl(strReport) Then
+					fldDATA.Value = Null
+				End If
 
 				If Not bQ Or .AbsolutePosition Mod 50 = 0 Then
 					Response.Write(". ")

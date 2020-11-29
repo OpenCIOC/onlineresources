@@ -48,7 +48,7 @@ SELECT ied.*,
 	(SELECT COUNT(*)
 		FROM CIC_ImportEntry_Data ied
 		WHERE ied.EF_ID=@EF_ID
-			AND ied.DATA IS NOT NULL
+			AND ied.DATA IS NOT NULL AND ied.IMPORTED=0
 			AND NOT EXISTS(SELECT * FROM GBL_BaseTable bt WHERE bt.NUM=ied.NUM)
 			AND EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID=0)
 			AND NOT EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID<>0)
@@ -56,7 +56,7 @@ SELECT ied.*,
 	(SELECT COUNT(*)
 		FROM CIC_ImportEntry_Data ied
 		WHERE ied.EF_ID=@EF_ID
-			AND ied.DATA IS NOT NULL
+			AND ied.DATA IS NOT NULL AND ied.IMPORTED=0
 			AND NOT EXISTS(SELECT * FROM GBL_BaseTable bt WHERE bt.NUM=ied.NUM)
 			AND EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID=2)
 			AND NOT EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID<>2)
@@ -64,7 +64,7 @@ SELECT ied.*,
 	(SELECT COUNT(*)
 		FROM CIC_ImportEntry_Data ied
 		WHERE ied.EF_ID=@EF_ID
-			AND ied.DATA IS NOT NULL
+			AND ied.DATA IS NOT NULL AND ied.IMPORTED=0
 			AND NOT EXISTS(SELECT * FROM GBL_BaseTable bt WHERE bt.NUM=ied.NUM)
 			AND (SELECT COUNT(*) FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID) > 1
 		) AS ADD_MULTILINGUAL,
@@ -74,7 +74,7 @@ SELECT ied.*,
 				ON bt.NUM=ied.NUM
 			WHERE bt.MemberID=@MemberID
 				AND ied.EF_ID=@EF_ID
-				AND ied.DATA IS NOT NULL
+				AND ied.DATA IS NOT NULL AND ied.IMPORTED=0
 				AND EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID=0)
 				AND NOT EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID<>0)
 		) AS UPDATE_ENGLISH,
@@ -84,7 +84,7 @@ SELECT ied.*,
 				ON bt.NUM=ied.NUM
 			WHERE bt.MemberID=@MemberID
 				AND ied.EF_ID=@EF_ID
-				AND ied.DATA IS NOT NULL
+				AND ied.DATA IS NOT NULL AND ied.IMPORTED=0
 				AND EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID=2)
 				AND NOT EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID<>2)
 		) AS UPDATE_FRENCH,
@@ -94,7 +94,7 @@ SELECT ied.*,
 				ON bt.NUM=ied.NUM
 			WHERE bt.MemberID=@MemberID
 				AND ied.EF_ID=@EF_ID
-				AND ied.DATA IS NOT NULL
+				AND ied.DATA IS NOT NULL AND ied.IMPORTED=0
 				AND (SELECT COUNT(*) FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID) > 1
 		) AS UPDATE_MULTILINGUAL,
 	(SELECT COUNT(*)
@@ -103,7 +103,7 @@ SELECT ied.*,
 				ON bt.NUM=ied.NUM
 			WHERE bt.MemberID<>@MemberID
 				AND ied.EF_ID=@EF_ID
-				AND ied.DATA IS NOT NULL
+				AND ied.DATA IS NOT NULL AND ied.IMPORTED=0
 				AND EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID=0)
 				AND NOT EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID<>0)
 		) AS NOUPDATE_ENGLISH,
@@ -113,7 +113,7 @@ SELECT ied.*,
 				ON bt.NUM=ied.NUM
 			WHERE bt.MemberID<>@MemberID
 				AND ied.EF_ID=@EF_ID
-				AND ied.DATA IS NOT NULL
+				AND ied.DATA IS NOT NULL AND ied.IMPORTED=0
 				AND EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID=2)
 				AND NOT EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID<>2)
 		) AS NOUPDATE_FRENCH,
@@ -123,29 +123,49 @@ SELECT ied.*,
 				ON bt.NUM=ied.NUM
 			WHERE bt.MemberID<>@MemberID
 				AND ied.EF_ID=@EF_ID
-				AND ied.DATA IS NOT NULL
+				AND ied.DATA IS NOT NULL AND ied.IMPORTED=0
 				AND (SELECT COUNT(*) FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID) > 1
 		) AS NOUPDATE_MULTILINGUAL,
 	(SELECT COUNT(*)
 			FROM CIC_ImportEntry_Data ied
 			WHERE ied.EF_ID=@EF_ID
-				AND ied.DATA IS NULL
+				AND (ied.DATA IS NULL OR ied.IMPORTED=1)
 				AND EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID=0)
 				AND NOT EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID<>0)
 		) AS COMPLETED_ENGLISH,
 	(SELECT COUNT(*)
 			FROM CIC_ImportEntry_Data ied
 			WHERE ied.EF_ID=@EF_ID
-				AND ied.DATA IS NULL
+				AND (ied.DATA IS NULL OR ied.IMPORTED=1)
 				AND EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID=2)
 				AND NOT EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID<>2)
 		) AS COMPLETED_FRENCH,
 	(SELECT COUNT(*)
 			FROM CIC_ImportEntry_Data ied
 			WHERE ied.EF_ID=@EF_ID
-				AND ied.DATA IS NULL
+				AND (ied.DATA IS NULL OR ied.IMPORTED=1)
 				AND (SELECT COUNT(*) FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID) > 1
-		) AS COMPLETED_MULTILINGUAL
+		) AS COMPLETED_MULTILINGUAL,
+	(SELECT COUNT(*)
+			FROM CIC_ImportEntry_Data ied
+			WHERE ied.EF_ID=@EF_ID
+				AND ied.DATA IS NOT NULL AND ied.IMPORTED=1
+				AND EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID=0)
+				AND NOT EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID<>0)
+		) AS COMPLETED_ENGLISH_RETRYABLE,
+	(SELECT COUNT(*)
+			FROM CIC_ImportEntry_Data ied
+			WHERE ied.EF_ID=@EF_ID
+				AND ied.DATA IS NOT NULL AND ied.IMPORTED=1
+				AND EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID=2)
+				AND NOT EXISTS(SELECT * FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID AND LangID<>2)
+		) AS COMPLETED_FRENCH_RETRYABLE,
+	(SELECT COUNT(*)
+			FROM CIC_ImportEntry_Data ied
+			WHERE ied.EF_ID=@EF_ID
+				AND ied.DATA IS NOT NULL AND ied.IMPORTED=1
+				AND (SELECT COUNT(*) FROM CIC_ImportEntry_Data_Language WHERE ER_ID=ied.ER_ID) > 1
+		) AS COMPLETED_MULTILINGUAL_RETRYABLE
 FROM CIC_ImportEntry ied
 WHERE MemberID=@MemberID
 	AND EF_ID=@EF_ID

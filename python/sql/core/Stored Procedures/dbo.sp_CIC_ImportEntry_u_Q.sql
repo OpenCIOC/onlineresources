@@ -15,7 +15,8 @@ CREATE PROCEDURE [dbo].[sp_CIC_ImportEntry_u_Q]
 	@QPublicConflict smallint,
 	@QDeletedConflict smallint,
 	@QPrivacyMap varchar(max),
-	@QAutoAddPubs varchar(max),
+	@QAutoAddPubs VARCHAR(MAX),
+    @QRetryFailed BIT,
 	@ErrMsg nvarchar(500) OUTPUT
 WITH EXECUTE AS CALLER
 AS
@@ -72,7 +73,8 @@ END ELSE BEGIN
 			QPrivacyProfileConflict		= NULL,
 			QPublicConflict				= NULL,
 			QDeletedConflict			= NULL,
-			QAutoAddPubs				= NULL
+			QAutoAddPubs				= NULL,
+			QRetryFailed				= 0
 		WHERE EF_ID = @EF_ID
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @ImportEntryObjectName, @ErrMsg
 		UPDATE CIC_ImportEntry_PrivacyProfile SET
@@ -91,7 +93,8 @@ END ELSE BEGIN
 			QPrivacyProfileConflict		= @QPrivacyProfileConflict,
 			QPublicConflict				= @QPublicConflict,
 			QDeletedConflict			= @QDeletedConflict,
-			QAutoAddPubs				= @QAutoAddPubs
+			QAutoAddPubs				= @QAutoAddPubs,
+			@QRetryFailed				= @QRetryFailed
 		
 		WHERE EF_ID = @EF_ID
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @ImportEntryObjectName, @ErrMsg

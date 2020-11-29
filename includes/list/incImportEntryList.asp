@@ -20,12 +20,13 @@
 <%
 Dim cmdListImportEntry, rsListImportEntry
 
-Sub openImportEntryListRst()
+Sub openImportEntryListRst(bArchived)
 	Set cmdListImportEntry = Server.CreateObject("ADODB.Command")
 	With cmdListImportEntry
 		.ActiveConnection = getCurrentAdminCnn()
 		.CommandText = "dbo.sp_CIC_ImportEntry_l"
 		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
+		.Parameters.Append .CreateParameter("@Archived", adBoolean, adParamInput, 1, bArchived)
 		.CommandType = adCmdStoredProc
 		.CommandTimeout = 0
 	End With

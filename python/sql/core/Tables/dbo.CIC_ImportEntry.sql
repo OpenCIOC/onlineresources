@@ -19,7 +19,9 @@ CREATE TABLE [dbo].[CIC_ImportEntry]
 [QAutoAddPubs] [varchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [QPublicConflict] [smallint] NULL,
 [QDeletedConflict] [smallint] NULL,
-[SourceDbCode] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL
+[SourceDbCode] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
+[QRetryFailed] [bit] NOT NULL CONSTRAINT [DF_CIC_ImportEntry_QRetryFailed] DEFAULT ((0)),
+[Archived] [bit] NOT NULL CONSTRAINT [DF_CIC_ImportEntry_Archived] DEFAULT ((0))
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_ImportEntry] ADD CONSTRAINT [CK_CIC_ImportEntry] CHECK (([QOwnerConflict] IS NULL OR [QOwnerConflict]>=(0) AND [QOwnerConflict]<=(2)))

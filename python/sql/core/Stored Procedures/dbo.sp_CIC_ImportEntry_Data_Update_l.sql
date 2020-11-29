@@ -59,7 +59,8 @@ IF @Error = 0 BEGIN
 			dbo.fn_CIC_ImportEntry_Data_Languages(ied.ER_ID) AS LANGUAGES,
 			dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL,
 			dbo.fn_CIC_RecordInView(bt.NUM,@ViewType,@@LANGID,0,GETDATE()) AS CAN_SEE,
-			CAST(CASE WHEN bt.MemberID=@MemberID THEN 1 ELSE 0 END AS bit) AS CAN_IMPORT
+			CAST(CASE WHEN bt.MemberID=@MemberID THEN 1 ELSE 0 END AS bit) AS CAN_IMPORT,
+			ied.IMPORTED
 		FROM CIC_ImportEntry_Data ied
 		INNER JOIN GBL_BaseTable bt
 			ON bt.NUM=ied.NUM

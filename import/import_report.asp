@@ -73,7 +73,8 @@ Dim cmdListImportData, _
 	fldERID, _
 	fldNUM, _
 	fldOWNER, _
-	fldREPORT
+	fldREPORT, _
+	fldCANRETRY
 
 Dim intError
 intError = 0
@@ -117,12 +118,14 @@ If intError = 0 Then
 			Set fldNUM = .Fields("NUM")
 			Set fldOWNER = .Fields("OWNER")
 			Set fldREPORT = .Fields("REPORT")
+			Set fldCANRETRY = .Fields("CAN_RETRY")
 %>
 <table class="BasicBorder cell-padding-2">
 <tr>
 	<th><%=TXT_RECORD_NUM%></th>
 	<th><%=TXT_ORG_NAMES%></th>
 	<th><%=TXT_RECORD_OWNER%></th>
+	<th><%=TXT_CAN_RETRY%></th>
 	<th><%=TXT_IMPORT_REPORT%></th>
 </tr>
 <%
@@ -143,6 +146,7 @@ If intError = 0 Then
 		End If
 %>
 	<td><%=fldOWNER%></td>
+	<td><%=StringIf(fldCANRETRY, TXT_CAN_RETRY)%></td>
 	<td><%=IIf(Nl(fldREPORT),TXT_NO_ISSUES,"<span class=""Alert"">" & fldREPORT & "</span>")%></td>
 </tr>
 <%
