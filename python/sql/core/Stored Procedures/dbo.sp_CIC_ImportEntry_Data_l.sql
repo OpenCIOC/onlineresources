@@ -55,6 +55,7 @@ IF @Error=0 BEGIN
 	SELECT	ied.ER_ID,
 			ied.NUM,
 			ied.EXTERNAL_ID,
+			ied.IMPORTED,
 			ied.OWNER + CASE WHEN bt.RECORD_OWNER IS NULL THEN '' WHEN bt.RECORD_OWNER=ied.OWNER THEN '' ELSE ' (' + bt.RECORD_OWNER + ')' END AS OWNER,
 			dbo.fn_CIC_ImportEntry_Data_Languages(ied.ER_ID) AS LANGUAGES,
 			CASE WHEN bt.NUM IS NULL

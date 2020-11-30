@@ -41,30 +41,19 @@ ORDER BY CASE
 	CASE WHEN pst.NameOrCode=@ProvState THEN 4 WHEN @ProvState IS NULL AND pst.NameOrCode=@DefaultProvState THEN 2 ELSE 0 END +
 	CASE WHEN pst.Country=@Country THEN 1 WHEN pst.Country IS NULL OR @Country IS NULL THEN 0 ELSE -1 END DESC
 
-IF @CM_ID IS NULL BEGIN
-	IF @AuthCommunity IS NOT NULL BEGIN
-		SELECT TOP 1 @CM_ID = CM_ID
-			FROM GBL_Community_Name
-		WHERE [Name]=@AuthCommunity
-		ORDER BY LangID
+IF @CM_ID IS NULL AND @AuthCommunity IS NOT NULL BEGIN
+	SELECT TOP 1 @CM_ID = CM_ID
+		FROM GBL_Community_Name
+	WHERE [Name]=@AuthCommunity
+	ORDER BY LangID
 
-		IF @CM_ID IS NOT NULL BEGIN
-			IF @HAS_ENGLISH=1 BEGIN
-				SET @NotesEn = @CommunityEn + CASE WHEN @NotesEn IS NULL THEN '' ELSE ', ' END + ISNULL(@NotesEn,'')
-			END
-			IF @HAS_FRENCH=1 BEGIN
-				SET @NotesFr = @CommunityFr + CASE WHEN @NotesFr IS NULL THEN '' ELSE ', ' END + ISNULL(@NotesFr,'')
-			END
+	IF @CM_ID IS NOT NULL BEGIN
+		IF @HAS_ENGLISH=1 BEGIN
+			SET @NotesEn = @CommunityEn + CASE WHEN @NotesEn IS NULL THEN '' ELSE ', ' END + ISNULL(@NotesEn,'')
 		END
-	END ELSE BEGIN
-		SELECT TOP 1 @CM_ID = CM_ID
-			FROM dbo.GBL_Community_External_Community ec
-			INNER JOIN dbo.GBL_Community_External_Map ecm ON ecm.MapOneEXTID = ec.EXT_ID
-		WHERE [ec].[AreaName] IN (@CommunityEn,@CommunityFr)
-		ORDER BY CASE
-			WHEN ec.ProvinceState=@ProvState THEN 4
-			WHEN @ProvState IS NULL AND ec.ProvinceState=@DefaultProvState THEN 2
-			ELSE 0 END
+		IF @HAS_FRENCH=1 BEGIN
+			SET @NotesFr = @CommunityFr + CASE WHEN @NotesFr IS NULL THEN '' ELSE ', ' END + ISNULL(@NotesFr,'')
+		END
 	END
 END
 

@@ -98,7 +98,8 @@ Dim cmdListImportData, _
 	fldNUM, _
 	fldEXTERNALID, _
 	fldOWNER, _
-	fldLANGUAGES
+	fldLANGUAGES, _
+	fldIMPORTED
 
 Dim intError
 intError = 0
@@ -170,6 +171,7 @@ With rsListImportData
 		Set fldEXTERNALID = .Fields("EXTERNAL_ID")
 		Set fldOWNER = .Fields("OWNER")
 		Set fldLANGUAGES = .Fields("LANGUAGES")
+		Set fldIMPORTED = .Fields("IMPORTED")
 %>
 <table class="BasicBorder cell-padding-2">
 <tr>
@@ -177,6 +179,9 @@ With rsListImportData
 	<th><%=IIf(intDataSet=DATASET_ADD,TXT_NAME,TXT_CURRENT_NAMES)%></th>
 	<th><%=TXT_RECORD_OWNER%></th>
 	<th><%=TXT_LANGUAGE%></th>
+<%If intDataSet<>DATASET_ADD Then %>
+	<th><%=TXT_CAN_RETRY%></th>
+<%End If%>
 	<th<%If intDataSet = DATASET_FULL Then%> colspan="2"<%End If%>><%=TXT_ACTION%></th>
 </tr>
 <%
@@ -198,6 +203,9 @@ With rsListImportData
 %>
 	<td><%=fldOWNER.Value%></td>
 	<td><%=fldLANGUAGES.Value%></td>
+<%If intDataSet <> DATASET_ADD Then%>
+	<td><%=StringIf(fldIMPORTED,TXT_CAN_RETRY)%></td>
+<% End If%>
 <%
 		If intDataSet = DATASET_FULL Then
 %>

@@ -63,6 +63,7 @@ Dim intEFID, _
 	intPublicConflict, _
 	intDeletedConflict, _
 	bImportSourceDb, _
+	bRetryFailed, _
 	bCancelQ, _
 	bUnmappedPrivacySkipFields, _
 	strPrivacyMap, _
@@ -128,6 +129,7 @@ Select Case intDeletedConflict
 End Select
 
 bImportSourceDb = Request("ImportSourceDb") = "on"
+bRetryFailed = Request("RetryFailed") = "on"
 
 bUnmappedPrivacySkipFields = Trim(Request("QUnmappedPrivacySkipFields")) = "F"
 
@@ -177,6 +179,7 @@ With cmdUpdateMappingSystem
 	.Parameters.Append .CreateParameter("@QDeletedConflict", adInteger, adParamInput, 2, intDeletedConflict)
 	.Parameters.Append .CreateParameter("@QPrivacyMap", adVarChar, adParamInput, -1, strPrivacyMap)
 	.Parameters.Append .CreateParameter("@QAutoAddPubs", adVarChar, adParamInput, -1, strAutoAddPubs)
+	.Parameters.Append .CreateParameter("@QRetryFailed", adBoolean, adParamInput, 1, IIf(bRetryFailed,SQL_TRUE,SQL_FALSE))
 	Set objErrMsg = .CreateParameter("@ErrMsg", adVarWChar, adParamOutput, 500)
 	.Parameters.Append objErrMsg
 End With

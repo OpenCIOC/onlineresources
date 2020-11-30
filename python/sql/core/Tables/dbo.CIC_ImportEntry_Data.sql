@@ -7,7 +7,8 @@ CREATE TABLE [dbo].[CIC_ImportEntry_Data]
 [EXTERNAL_ID] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
 [PRIVACY_PROFILE] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [DATA] [xml] NULL,
-[REPORT] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
+[REPORT] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[IMPORTED] [bit] NOT NULL CONSTRAINT [DF_CIC_ImportEntry_Data_Imported] DEFAULT ((0))
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_ImportEntry_Data] ADD CONSTRAINT [CK_CIC_ImportEntry_Data] CHECK (([NUM] IS NOT NULL OR [EXTERNAL_ID] IS NOT NULL))
@@ -19,7 +20,10 @@ GO
 ALTER TABLE [dbo].[CIC_ImportEntry_Data] ADD CONSTRAINT [FK_CIC_ImportEntry_Data_CIC_ImportEntry] FOREIGN KEY ([EF_ID]) REFERENCES [dbo].[CIC_ImportEntry] ([EF_ID]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
 GRANT SELECT ON  [dbo].[CIC_ImportEntry_Data] TO [cioc_cic_search_role]
-GRANT SELECT ON  [dbo].[CIC_ImportEntry_Data] TO [cioc_login_role]
+GO
 GRANT INSERT ON  [dbo].[CIC_ImportEntry_Data] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[CIC_ImportEntry_Data] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[CIC_ImportEntry_Data] TO [cioc_login_role]
 GO

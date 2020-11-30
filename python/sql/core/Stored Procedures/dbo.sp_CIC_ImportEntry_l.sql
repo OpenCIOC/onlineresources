@@ -4,7 +4,8 @@ SET ANSI_NULLS ON
 GO
 
 CREATE PROCEDURE [dbo].[sp_CIC_ImportEntry_l]
-	@MemberID int
+	@MemberID INT,
+	@Archived BIT = 0
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
@@ -41,6 +42,7 @@ SELECT ie.EF_ID,
 			WHERE ied.EF_ID=ie.EF_ID
 				AND ied.DATA IS NOT NULL
 				AND bt.MemberID=@MemberID
+				AND ied.IMPORTED=0
 		) AS UpdateCount,
 		(SELECT COUNT(*)
 			FROM GBL_BaseTable bt
@@ -49,20 +51,22 @@ SELECT ie.EF_ID,
 			WHERE ied.EF_ID=ie.EF_ID
 				AND ied.DATA IS NOT NULL
 				AND bt.MemberID<>@MemberID
+				AND ied.IMPORTED=0
 		) AS NoUpdateCount,
 		(SELECT COUNT(*)
 			FROM CIC_ImportEntry_Data ied
 			WHERE NOT EXISTS (SELECT * FROM GBL_BaseTable bt WHERE bt.NUM=ied.NUM)
 				AND ied.EF_ID=ie.EF_ID
 				AND ied.DATA IS NOT NULL
+				AND ied.IMPORTED=0
 		) AS AddCount,
 		(SELECT COUNT(*)
 			FROM CIC_ImportEntry_Data ied
 			WHERE ied.EF_ID=ie.EF_ID
-				AND  ied.DATA IS NULL
+				AND  ied.DATA IS NULL OR ied.IMPORTED=1
 		) AS CompletedCount
 	FROM CIC_ImportEntry ie
-WHERE MemberID=@MemberID
+WHERE MemberID=@MemberID AND ie.Archived=@Archived
 
 ORDER BY LoadDate
 

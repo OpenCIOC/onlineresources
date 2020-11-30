@@ -20,6 +20,13 @@
 <%
 Dim TXT_ADD_PROFILE_FAILED, _
 	TXT_ALL_RECORDS, _
+	TXT_ARCHIVE_DATASET, _
+	TXT_ARCHIVE, _
+	TXT_ARCHIVED, _
+	TXT_ARE_YOU_SURE_ARCHIVE, _
+	TXT_ARE_YOU_SURE_UNARCHIVE, _
+	TXT_CAN_BE_RETRIED, _
+	TXT_CAN_RETRY, _
 	TXT_CANCEL_QUEUE, _
 	TXT_CANNOT_IMPORT, _
 	TXT_CASE_DELETED_CONFLICT, _
@@ -82,11 +89,15 @@ Dim TXT_ADD_PROFILE_FAILED, _
 	TXT_RECORDS_THAT_DONT_MATCH, _
 	TXT_RECORDS_THAT_MATCH, _
 	TXT_RECORDS_TO_IMPORT, _
+	TXT_RECORDS_TO_RETRY, _
+	TXT_RETRY_FAILED_RECORDS, _
 	TXT_RETURN_TO_IMPORT, _
 	TXT_RETURN_TO_LIST, _
 	TXT_REVIEW_LIST_BELOW, _
 	TXT_SELECT_OWNERS, _
 	TXT_SELECT_PUBS, _
+	TXT_SHOW_ARCHIVED_IMPORTS, _
+	TXT_SHOW_UNARCHIVED_IMPORTS, _
 	TXT_SKIP_FIELDS, _
 	TXT_SKIP_RECORD, _
 	TXT_SOURCE_DATABASE, _
@@ -96,6 +107,9 @@ Dim TXT_ADD_PROFILE_FAILED, _
 	TXT_TO_LIMIT, _
 	TXT_UNABLE_LIST_FIELDS, _
 	TXT_UNABLE_QUEUE_IMPORT_FILE, _
+	TXT_UNARCHIVE, _
+	TXT_UNARCHIVED, _
+	TXT_UNARCHIVE_DATASET, _
 	TXT_UNKNOWN_FIELD, _
 	TXT_UNKNOWN_INACTIVE_OR_DUPLICATE_VALUE, _
 	TXT_UNKNOWN_VALUE, _
@@ -115,6 +129,15 @@ Sub setTxtImport()
 		Case CULTURE_ENGLISH_CANADIAN
 			TXT_ADD_PROFILE_FAILED = "Add Privacy Profile failed"
 			TXT_ALL_RECORDS = "All Records"
+			TXT_ARCHIVE_DATASET = "Archive Dataset"
+			TXT_ARCHIVE = "Archive"
+			TXT_ARCHIVED = "Archived"
+			TXT_ARE_YOU_SURE_ARCHIVE = "Are you sure you want to archive this item?" & _
+				"<br>Use your back button to return to the form if you do not want to archive."
+			TXT_ARE_YOU_SURE_UNARCHIVE = "Are you sure you want to unarchive this item?" & _
+				"<br>Use your back button to return to the form if you do not want to unarchive."
+			TXT_CAN_BE_RETRIED = "can be retried."
+			TXT_CAN_RETRY = "Can Retry"
 			TXT_CANCEL_QUEUE = "Cancel Queue"
 			TXT_CANNOT_IMPORT = "Cannot Import"
 			TXT_CASE_DELETED_CONFLICT = "In case of a deletion date conflict"
@@ -177,11 +200,15 @@ Sub setTxtImport()
 			TXT_RECORDS_THAT_DONT_MATCH = " records in this dataset that do not match existing records."
 			TXT_RECORDS_THAT_MATCH = " records in this dataset that correspond to existing records."
 			TXT_RECORDS_TO_IMPORT = " records to import."
+			TXT_RECORDS_TO_RETRY = "records to retry."
+			TXT_RETRY_FAILED_RECORDS = "Retry records from previous run that reported issues"
 			TXT_RETURN_TO_LIST = "Return to Record List"
 			TXT_RETURN_TO_IMPORT = "Return to Import Menu"
 			TXT_REVIEW_LIST_BELOW = "You can review the list of records below."
 			TXT_SELECT_OWNERS = "Select Record Owner(s)"
 			TXT_SELECT_PUBS = "Select Publications Codes"
+			TXT_SHOW_ARCHIVED_IMPORTS = "Show Archived Imports"
+			TXT_SHOW_UNARCHIVED_IMPORTS = "Show Unarchived Imports"
 			TXT_SKIP_FIELDS = "Don't import private fields"
 			TXT_SKIP_RECORD = "Postpone processing of entire record"
 			TXT_SOURCE_DATABASE = "Source Database"
@@ -193,6 +220,9 @@ Sub setTxtImport()
 				"<br>You can repeat the process as necessary to complete the import."
 			TXT_UNABLE_LIST_FIELDS = "Unable to retrieve a list of fields."
 			TXT_UNABLE_QUEUE_IMPORT_FILE = "Unable to add / remove the selected file from the Import Queue"
+			TXT_UNARCHIVE = "Unarchive"
+			TXT_UNARCHIVED = "unarchived"
+			TXT_UNARCHIVE_DATASET = "Unarchive Dataset"
 			TXT_UNKNOWN_FIELD = "Unknown field"
 			TXT_UNKNOWN_INACTIVE_OR_DUPLICATE_VALUE = "Unknown, inactive, or duplicate value(s)"
 			TXT_UNKNOWN_VALUE = "Unknown value"
@@ -209,6 +239,15 @@ Sub setTxtImport()
 		Case CULTURE_FRENCH_CANADIAN
 			TXT_ADD_PROFILE_FAILED = "L'ajout du Profil de confidentialité a échoué."
 			TXT_ALL_RECORDS = "Tous les dossiers"
+			TXT_ARCHIVE_DATASET = "TRANSLATE_FR -- Archive Dataset"
+			TXT_ARCHIVE = "TRANSLATE_FR -- Archive"
+			TXT_ARCHIVED = "TRANSLATE_FR -- Archived"
+			TXT_ARE_YOU_SURE_ARCHIVE = "TRANSLATE_FR -- Are you sure you want to archive this item?" & _
+				"<br>Use your back button to return to the form if you do not want to archive."
+			TXT_ARE_YOU_SURE_UNARCHIVE = "TRANSLATE_FR -- Are you sure you want to unarchive this item?" & _
+				"<br>Use your back button to return to the form if you do not want to unarchive."
+			TXT_CAN_BE_RETRIED = "TRANSLATE_FR -- can be retried."
+			TXT_CAN_RETRY = "TRANSLATE_FR -- Can Retry"
 			TXT_CANCEL_QUEUE = "Annuler la file d'attente"
 			TXT_CANNOT_IMPORT = "Impossible d'importer"
 			TXT_CASE_DELETED_CONFLICT = "Dans le cas d'un conflit sur la date de suppression"
@@ -271,11 +310,15 @@ Sub setTxtImport()
 			TXT_RECORDS_THAT_DONT_MATCH = " dossiers dans cet ensemble de données qui ne concordent pas avec des dossiers existants."
 			TXT_RECORDS_THAT_MATCH = " dossiers dans cet ensemble de données qui concordent avec des dossiers existants."
 			TXT_RECORDS_TO_IMPORT = " dossiers à importer."
+			TXT_RECORDS_TO_RETRY = "TRANSLATE_FR -- records to retry."
+			TXT_RETRY_FAILED_RECORDS = "TRANSLATE_FR -- Retry records from previous run that reported issues"
 			TXT_RETURN_TO_LIST = "Retourner à la liste des dossiers"
 			TXT_RETURN_TO_IMPORT = "Retourner au menu de l'importation"
 			TXT_REVIEW_LIST_BELOW = "Vous pouvez consulter la liste des dossiers ci-dessous."
 			TXT_SELECT_OWNERS = "Sélectionner le(s) propriétaire(s) du dossier"
 			TXT_SELECT_PUBS = "Sélectionner les codes du publication"
+			TXT_SHOW_ARCHIVED_IMPORTS = "TRANSLATE_FR -- Show Archived Imports"
+			TXT_SHOW_UNARCHIVED_IMPORTS = "TRANSLATE_FR -- Show Unarchived Imports"
 			TXT_SKIP_FIELDS = "Ne pas importer les champs confidentiels"
 			TXT_SKIP_RECORD = "Reporter à plus tard le traitement du dossier complet"
 			TXT_SOURCE_DATABASE = "Base de données source"
@@ -287,6 +330,9 @@ Sub setTxtImport()
 				"<br>Vous pouvez répéter l'opération autant de fois que nécessaire pour terminer l'importation."
 			TXT_UNABLE_LIST_FIELDS = "Impossible de retourner une liste des champs."
 			TXT_UNABLE_QUEUE_IMPORT_FILE = "Impossible d'ajouter / supprimer le dossier sélectionné de la file d'attente des importations"
+			TXT_UNARCHIVE = "TRANSLATE_FR -- Unarchive"
+			TXT_UNARCHIVED = "TRANSLATE_FR -- unarchived"
+			TXT_UNARCHIVE_DATASET = "TRANSLATE_FR -- Unarchive Dataset"
 			TXT_UNKNOWN_FIELD = "Champ inconnue"
 			TXT_UNKNOWN_INACTIVE_OR_DUPLICATE_VALUE = "Valeur(s) inconnue(s), inactive(s) ou doublon(s)"
 			TXT_UNKNOWN_VALUE = "Valeur inconnue"

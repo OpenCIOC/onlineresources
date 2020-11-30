@@ -62,7 +62,8 @@ IF @Error=0 BEGIN
 				1, 1 -- TODO Should this come from the XML?
 				) AS ORG_NAME_FULL,
 			CAST(0 AS bit) AS CAN_SEE,
-			CAST(1 AS bit) AS CAN_IMPORT
+			CAST(1 AS bit) AS CAN_IMPORT,
+			IMPORTED
 		FROM CIC_ImportEntry_Data ied
 	WHERE ied.EF_ID=@EF_ID
 		AND ied.DATA IS NOT NULL

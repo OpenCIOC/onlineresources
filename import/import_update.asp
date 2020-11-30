@@ -94,7 +94,8 @@ Call makePageHeader(TXT_IMPORT_RECORD_DATA, TXT_IMPORT_RECORD_DATA, True, False,
 
 Dim cmdImportData, _
 	rsImportData, _
-	intImportDataCount
+	intImportDataCount, _
+	intImportRetryCount
 
 Dim intError
 intError = 0
@@ -127,6 +128,7 @@ End With
 If intError = 0 Then
 	Set rsImportData = rsImportData.NextRecordset
 	intImportDataCount = rsImportData.Fields("RecordCount")
+	intImportRetryCount = rsImportData.Fields("RetryRecordCount")
 
 %>
 <p>[ <a href="<%=makeLinkB("import.asp")%>"><%=TXT_RETURN_TO_IMPORT%></a> ]</p>
@@ -139,14 +141,17 @@ Select Case intDataSet
 	Case Else
 %><%=TXT_RECORDS_TO_IMPORT%><%
 End Select
+If intImportRetryCount > 0 Then
+%> <%=TXT_THERE_ARE%> <strong><%=intImportRetryCount%></strong> <%= TXT_RECORDS_TO_RETRY %><%
+End If
 
-If intImportDataCount > 0 Then
+If intImportDataCount + intImportRetryCount > 0 Then
 %> [ <a href="<%=makeLink("import_update_list.asp","EFID=" & intEFID & "&DataSet=" & intDataSet,vbNullString)%>"><%=TXT_VIEW_DATA%></a> ]<%
 End If
 %></p>
 
 <%
-If intImportDataCount > 0 Then
+If intImportDataCount + intImportRetryCount > 0 Then
 %>
 <p><%=TXT_TO_IMPORT_SELECT%></p>
 <h1><%=TXT_IMPORT_OPTIONS%></h1>
@@ -310,6 +315,7 @@ Set cmdImportData = Nothing
 </select></p>
 <h2><%=TXT_SOURCE_DATABASE%></h2>
 <p><label for="ImportSourceDb"><input type="checkbox" name="ImportSourceDb" id="ImportSourceDb" checked><%=TXT_IMPORT_SOURCE_DATABASE_INFO%></label></p>
+<p><label for="RetryFailed"><input type="checkbox" name="RetryFailed" id="RetryFailed"><%=TXT_RETRY_FAILED_RECORDS%></label></p>
 <p><input type="submit" value="<%=TXT_IMPORT_RECORD_DATA%>"></p>
 </form>
 <%

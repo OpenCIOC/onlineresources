@@ -52,14 +52,23 @@ Const DATASET_ADD = 1
 Const DATASET_UPDATE = 2
 Const DATASET_NOUPDATE = 3
 
+Dim bArchived
+
 If Not user_bImportPermissionCIC Then
 	Call securityFailure()
 End If
 
 Call makePageHeader(TXT_IMPORT_RECORD_DATA, TXT_IMPORT_RECORD_DATA, True, False, True, True)
+bArchived = Request("Archived") = "on"
 %>
 
-<p>[ <a href="javascript:openWin('<%=makeLinkB("upload")%>','dataLoad')"><%=TXT_LOAD_NEW_DATASET%></a> ]</p>
+<p>[ <a href="javascript:openWin('<%=makeLinkB("upload")%>','dataLoad')"><%=TXT_LOAD_NEW_DATASET%></a> |
+<% If bArchived Then %>
+<a href="<%= makeLinkB("import.asp") %>"><%= TXT_SHOW_UNARCHIVED_IMPORTS %></a>
+<% Else %>
+<a href="<%= makeLink("import.asp", "Archived=on", vbNullString) %>"><%= TXT_SHOW_ARCHIVED_IMPORTS %></a>
+<% End If %>
+]</p>
 <table class="BasicBorder cell-padding-3">
 <tr>
 	<th colspan="4" class="RevTitleBox"><%=TXT_EXISTING_DATASETS%></th>
@@ -73,7 +82,7 @@ Call makePageHeader(TXT_IMPORT_RECORD_DATA, TXT_IMPORT_RECORD_DATA, True, False,
 Dim intQCount
 intQCount = 0
 
-Call openImportEntryListRst()
+Call openImportEntryListRst(bArchived)
 With rsListImportEntry
 	While Not .EOF
 		If Not Nl(.Fields("QDate")) Then
@@ -93,7 +102,9 @@ With rsListImportEntry
 		| <a href="<%=makeLink("import_update_list.asp","DataSet=" & DATASET_NOUPDATE & "&EFID=" & .Fields("EF_ID"),vbNullString)%>"><%=TXT_CANNOT_IMPORT%></a>&nbsp;(<%=.Fields("NoUpdateCount")%>)
 		| <a href="<%=makeLink("import_report.asp","EFID=" & .Fields("EF_ID"),vbNullString)%>"><%=TXT_COMPLETED%></a>&nbsp;(<%=.Fields("CompletedCount")%>)
 		| <a href="<%=makeLink("import_info.asp","EFID=" & .Fields("EF_ID"),vbNullString)%>"><%=TXT_MORE_INFO%></a>
-		| <a href="<%=makeLink("import_delete.asp","EFID=" & .Fields("EF_ID"),vbNullString)%>"><%=TXT_DELETE_DATASET%></a></td>
+		| <a href="<%=makeLink("import_delete.asp","EFID=" & .Fields("EF_ID"),vbNullString)%>"><%=TXT_DELETE_DATASET%></a> 
+		| <a href="<%=makeLink("import_archive.asp", "EFID=" & .Fields("EF_ID") & StringIf(bArchived, "&Unarchive=on"),vbNullString)%>"><%=IIf(bArchived,TXT_UNARCHIVE_DATASET,TXT_ARCHIVE_DATASET)%></a>
+		</td>
 </tr>
 <%
 		.MoveNext

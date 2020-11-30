@@ -57,7 +57,8 @@ SELECT	ied.ER_ID,
 		ied.OWNER + CASE WHEN bt.RECORD_OWNER=ied.OWNER THEN '' ELSE ' (' + bt.RECORD_OWNER + ')' END AS OWNER,
 		dbo.fn_CIC_ImportEntry_Data_Languages(ied.ER_ID) AS LANGUAGES,
 		dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL,
-		dbo.fn_CIC_RecordInView(bt.NUM,@ViewType,@@LANGID,0,GETDATE()) AS CAN_SEE
+		dbo.fn_CIC_RecordInView(bt.NUM,@ViewType,@@LANGID,0,GETDATE()) AS CAN_SEE,
+		ied.IMPORTED
 	FROM CIC_ImportEntry ie
 	INNER JOIN CIC_ImportEntry_Data ied
 		ON ie.EF_ID=ied.EF_ID

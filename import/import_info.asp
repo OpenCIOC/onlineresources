@@ -162,8 +162,12 @@ With rsImportStats
 <tr>
 	<td class="FieldLabelLeft"><%=TXT_COMPLETED%></td>
 	<td><%=TXT_ENGLISH & TXT_COLON & .Fields("COMPLETED_ENGLISH")%>
-	<br><%=TXT_FRENCH & TXT_COLON & .Fields("UPDATE_FRENCH")%>
-	<br><%=TXT_BILINGUAL & TXT_COLON & .Fields("COMPLETED_MULTILINGUAL")%></td>
+	<% If .Fields("COMPLETED_ENGLISH_RETRYABLE").Value > 0 Then %> - <%=.Fields("COMPLETED_ENGLISH_RETRYABLE").Value%> <%= " " & TXT_CAN_BE_RETRIED %><% End If%>
+	<br><%=TXT_FRENCH & TXT_COLON & .Fields("COMPLETED_FRENCH")%>
+	<% If .Fields("COMPLETED_FRENCH_RETRYABLE").Value > 0 Then %> - <%=.Fields("COMPLETED_FRENCH_RETRYABLE").Value%> <%= " " & TXT_CAN_BE_RETRIED %><% End If%>
+	<br><%=TXT_BILINGUAL & TXT_COLON & .Fields("COMPLETED_MULTILINGUAL")%>
+	<% If .Fields("COMPLETED_MULTILINGUAL_RETRYABLE").Value > 0 Then %> - <%=.Fields("COMPLETED_MULTILINGUAL_RETRYABLE").Value%> <%= " " & TXT_CAN_BE_RETRIED %><% End If%>
+	</td>
 </tr>
 <tr>
 	<td class="FieldLabelLeft"><%=TXT_SOURCE_DATABASE_CODE%></td>
