@@ -185,7 +185,7 @@ function openWinXL(pageToOpen,windowName)  {
 		%>
 
 		%if errmsg or ErrMsg:
-			<p class="Alert" role="alert">${errmsg or ErrMsg |n}</p>
+			<p class="Alert" role="alert" id="show_page_error_msg">${errmsg or ErrMsg |n}</p>
 		%endif
 		%if infomsg or Info:
 			<p class="Info">${infomsg or Info |n}</p>
