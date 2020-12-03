@@ -52,7 +52,7 @@ Const DATASET_ADD = 1
 Const DATASET_UPDATE = 2
 Const DATASET_NOUPDATE = 3
 
-Dim bArchived
+Dim bArchived, bHasIcarolImport
 
 If Not user_bImportPermissionCIC Then
 	Call securityFailure()
@@ -60,6 +60,10 @@ End If
 
 Call makePageHeader(TXT_IMPORT_RECORD_DATA, TXT_IMPORT_RECORD_DATA, True, False, True, True)
 bArchived = Request("Archived") = "on"
+Call openImportEntryListRst(bArchived)
+
+bHasIcarolImport = rsListImportEntry.Fields("HAS_ICAROL_IMPORT")
+Set rsListImportEntry = rsListImportEntry.NextRecordset
 %>
 
 <p>[ <a href="javascript:openWin('<%=makeLinkB("upload")%>','dataLoad')"><%=TXT_LOAD_NEW_DATASET%></a> |
@@ -67,7 +71,15 @@ bArchived = Request("Archived") = "on"
 <a href="<%= makeLinkB("import.asp") %>"><%= TXT_SHOW_UNARCHIVED_IMPORTS %></a>
 <% Else %>
 <a href="<%= makeLink("import.asp", "Archived=on", vbNullString) %>"><%= TXT_SHOW_ARCHIVED_IMPORTS %></a>
-<% End If %>
+<%
+End If
+If bHasIcarolImport Then
+%>
+| <a href="<%= makeLinkB("../admin/icarol/unmatched")%>"><%= TXT_UNMATCHED_ICAROL_RECORDS %></a>
+<%
+End If
+%>
+
 ]</p>
 <table class="BasicBorder cell-padding-3">
 <tr>
@@ -82,7 +94,6 @@ bArchived = Request("Archived") = "on"
 Dim intQCount
 intQCount = 0
 
-Call openImportEntryListRst(bArchived)
 With rsListImportEntry
 	While Not .EOF
 		If Not Nl(.Fields("QDate")) Then

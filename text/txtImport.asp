@@ -115,6 +115,7 @@ Dim TXT_ADD_PROFILE_FAILED, _
 	TXT_UNKNOWN_VALUE, _
 	TXT_UNKNOWN_VALUE_MOVED_TO_NOTES, _
 	TXT_UNMAPPED_PROFILES, _
+	TXT_UNMATCHED_ICAROL_RECORDS, _
 	TXT_UPDATE_DELETED, _
 	TXT_UPDATE_OWNER, _
 	TXT_UPDATE_PRIVACY, _
@@ -228,6 +229,7 @@ Sub setTxtImport()
 			TXT_UNKNOWN_VALUE = "Unknown value"
 			TXT_UNKNOWN_VALUE_MOVED_TO_NOTES = "Unknown value moved to notes"
 			TXT_UNMAPPED_PROFILES = "In case of unmapped Privacy Profiles"
+			TXT_UNMATCHED_ICAROL_RECORDS = "Unmatched iCarol Records"
 			TXT_UPDATE_DELETED = "Update Deletion Date"
 			TXT_UPDATE_OWNER = "Update Owner"
 			TXT_UPDATE_PRIVACY = "Update Privacy Profile"
@@ -338,6 +340,7 @@ Sub setTxtImport()
 			TXT_UNKNOWN_VALUE = "Valeur inconnue"
 			TXT_UNKNOWN_VALUE_MOVED_TO_NOTES = "Valeur inconnue a été déplacé dans les notes"
 			TXT_UNMAPPED_PROFILES = "Au cas où il n'existe pas de correspondance avec le profil de confidentialité"
+			TXT_UNMATCHED_ICAROL_RECORDS = "TRANSLATE_FR -- Unmatched iCarol Records"
 			TXT_UPDATE_DELETED = "Mettre à jour la date de suppression"
 			TXT_UPDATE_OWNER = "Mettre à jour le propriétaire du dossier"
 			TXT_UPDATE_PRIVACY = "Mettre à jour le profil de confidentialité"

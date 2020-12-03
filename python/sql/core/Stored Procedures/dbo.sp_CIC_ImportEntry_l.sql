@@ -28,6 +28,7 @@ END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @MemberID = NULL
 END
+SELECT CAST(CASE WHEN EXISTS(SELECT * FROM dbo.CIC_iCarolImport) THEN 1 ELSE 0 END AS BIT) AS HAS_ICAROL_IMPORT
 
 SELECT ie.EF_ID,
 		ISNULL(ie.DisplayName, ie.[FileName]) AS DisplayName,
@@ -63,7 +64,7 @@ SELECT ie.EF_ID,
 		(SELECT COUNT(*)
 			FROM CIC_ImportEntry_Data ied
 			WHERE ied.EF_ID=ie.EF_ID
-				AND  ied.DATA IS NULL OR ied.IMPORTED=1
+				AND  (ied.DATA IS NULL OR ied.IMPORTED=1)
 		) AS CompletedCount
 	FROM CIC_ImportEntry ie
 WHERE MemberID=@MemberID AND ie.Archived=@Archived
