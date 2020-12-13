@@ -268,9 +268,9 @@ class fakerequest(object):
 		DbArea = const.DM_CIC
 
 
-def email_log(args, outputstream, is_error):
+def email_log(args, outputstream, is_error, to=None):
 	author = get_config_item(args, 'o211_import_notify_from', 'admin@cioc.ca')
-	to = [x.strip() for x in get_config_item(args, 'o211_import_notify_emails', 'admin@cioc.ca').split(',')]
+	to = [x.strip() for x in (to or get_config_item(args, 'o211_import_notify_emails', 'admin@cioc.ca')).split(',')]
 	email.send_email(fakerequest(args.config), author, to, 'Import from iCarol%s' % (' -- ERRORS!' if is_error else ''), outputstream.getvalue().replace('\r', '').replace('\n', '\r\n'))
 
 
@@ -498,49 +498,66 @@ def generate_and_upload_import(context):
 		members = cursor.fetchall()
 		cursor.close()
 		for member in members:
-			member_name = member.DefaultEmailNameCIC or member.BaseURLCIC or member.MemberID
-			print "Generating sharing file for %s.\n" % (member_name,)
+			stdout = StringIO()
+			stderr = FileWriteDetector(stdout)
+			try:
+				member_name = member.DefaultEmailNameCIC or member.BaseURLCIC or member.MemberID
+				print >>stdout, "Generating sharing file for %s.\n" % (member_name,)
 
-			cursor = conn.execute('EXEC sp_CIC_iCarolImport_CreateSharing ?', member.MemberID)
-			batch = cursor.fetchmany(5000)
+				cursor = conn.execute('EXEC sp_CIC_iCarolImport_CreateSharing ?', member.MemberID)
+				batch = cursor.fetchmany(5000)
 
-			if not batch:
-				print "No Records for %s, skipping.\n" % (member_name,)
-				cursor.close()
-				continue
-			else:
-				print "Processing Imports for %s." % (member_name,)
-
-			with tempfile.TemporaryFile() as fd:
-				fd.write(u'''<?xml version="1.0" encoding="UTF-8"?>
-				<root xmlns="urn:ciocshare-schema"><SOURCE_DB CD="ICAROL"/><DIST_CODE_LIST/><PUB_CODE_LIST/>'''.encode('utf8'))
-				while batch:
-					fd.write(u''.join(x.record for x in batch).encode('utf8'))
-					batch = cursor.fetchmany(5000)
-
-				fd.write(u'</root>'.encode('utf8'))
-				fd.seek(0)
-				cursor.close()
-
-				error_log, total_inserted = process_import(
-					'icarol_import_%s.xml' % (context.args.next_modified_since.isoformat(),),
-					fd, member.MemberID, const.DM_CIC, const.DM_S_CIC, "(import system)",
-					'iCarol Import %s' % (context.args.next_modified_since.isoformat(),),
-					context.connmgr, lambda x: x
-				)
-
-			total_import_count += total_inserted
-			print "Import Complete for Member %s. %s records imported." % (member_name, total_inserted)
-			if error_log:
-				print >>sys.stderr, "A problem was encountered validating input for Member %s, see below." % (member_name,)
-
-			for record, errmsg in error_log:
-				if record:
-					print >>sys.stderr, u': '.join((record, errmsg)).encode('utf8')
+				if not batch:
+					print >>stdout, "No Records for %s, skipping.\n" % (member_name,)
+					cursor.close()
+					continue
 				else:
-					print >>sys.stderr, errmsg.encode('utf8')
+					print >>stdout, "Processing Imports for %s." % (member_name,)
 
-			print
+				with tempfile.TemporaryFile() as fd:
+					fd.write(u'''<?xml version="1.0" encoding="UTF-8"?>
+					<root xmlns="urn:ciocshare-schema"><SOURCE_DB CD="ICAROL"/><DIST_CODE_LIST/><PUB_CODE_LIST/>'''.encode('utf8'))
+					while batch:
+						fd.write(u''.join(x.record for x in batch).encode('utf8'))
+						batch = cursor.fetchmany(5000)
+
+					fd.write(u'</root>'.encode('utf8'))
+					fd.seek(0)
+					cursor.close()
+
+					error_log, total_inserted = process_import(
+						'icarol_import_%s.xml' % (context.args.next_modified_since.isoformat(),),
+						fd, member.MemberID, const.DM_CIC, const.DM_S_CIC, "(import system)",
+						'iCarol Import %s' % (context.args.next_modified_since.isoformat(),),
+						context.connmgr, lambda x: x
+					)
+
+				total_import_count += total_inserted
+				print >>stdout, "Import Complete for Member %s. %s records imported." % (member_name, total_inserted)
+				if error_log:
+					print >>stderr, "A problem was encountered validating input for Member %s, see below." % (member_name,)
+
+				for record, errmsg in error_log:
+					if record:
+						print >>stderr, u': '.join((record, errmsg)).encode('utf8')
+					else:
+						print >>stderr, errmsg.encode('utf8')
+
+				if context.args.email and member.ImportNotificationEmailCIC:
+					# email sending is turned on and this member has a configured email target.
+					email_log(
+						context.args,
+						stdout,
+						stderr.is_dirty(),
+						to=member.ImportNotificationEmailCIC
+					)
+
+			finally:
+
+				if stderr.is_dirty():
+					print >>sys.stderr, stdout.getvalue()
+				else:
+					print stdout.getvalue()
 
 	print "Completed Processing Imports: %s Records imported." % (total_import_count,)
 

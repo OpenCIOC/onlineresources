@@ -38,7 +38,8 @@ CREATE PROCEDURE [dbo].[sp_STP_Member_u]
 	@UseOfflineTools bit,
 	@UseLowestNUM [bit],
 	@OnlySpecificInterests bit,
-	@LoginRetryLimit tinyint,
+	@LoginRetryLimit TINYINT,
+	@ImportNotificationEmailCIC [varchar](500),
 	@Descriptions [xml],
 	@ErrMsg [nvarchar](500) OUTPUT
 WITH EXECUTE AS CALLER
@@ -212,6 +213,7 @@ IF @Error = 0 BEGIN
 			UseLowestNUM = CASE WHEN @UseCIC=1 THEN @UseLowestNUM ELSE UseLowestNUM END,
 			UseOfflineTools = CASE WHEN @UseCIC=1 THEN @UseOfflineTools ELSE UseOfflineTools END,
 			OnlySpecificInterests = CASE WHEN @UseVOL=1 THEN @OnlySpecificInterests ELSE OnlySpecificInterests END,
+			ImportNotificationEmailCIC = CASE WHEN @UseCIC=1 THEN @ImportNotificationEmailCIC ELSE ImportNotificationEmailCIC END,
 			LoginRetryLimit = CASE WHEN @LoginRetryLimit = 0 THEN NULL ELSE @LoginRetryLimit END
 	WHERE MemberID=@MemberID
 	
