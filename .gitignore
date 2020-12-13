@@ -174,3 +174,7 @@ pythonport.config
 aspprofiler.asp
 
 /cioc_dev.komodoproject
+*.lock
+*.ide
+*.ide-shm
+*.ide-wal
