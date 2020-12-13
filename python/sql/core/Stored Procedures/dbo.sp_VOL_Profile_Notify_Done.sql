@@ -21,7 +21,7 @@ SET @TodayAtMidnight = CONVERT(DATETIME, FLOOR(CONVERT(FLOAT, GETDATE())))
 
 UPDATE STP_Member
 	SET LastVolProfileEmailDate = @TodayAtMidnight
-WHERE MemberID=@MemberID
+WHERE MemberID=@MemberID AND (LastVolProfileEmailDate IS NULL OR LastVolProfileEmailDate < @TodayAtMidnight)
 
 SET NOCOUNT OFF
 
