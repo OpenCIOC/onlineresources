@@ -63,7 +63,8 @@ CREATE TABLE [dbo].[STP_Member]
 [GlobalGoogleAnalyticsLanguageDimension] [tinyint] NULL,
 [GlobalGoogleAnalyticsDomainDimension] [tinyint] NULL,
 [GlobalGoogleAnalyticsResultsCountMetric] [tinyint] NULL,
-[BillingInfoPassword] [varchar] (200) COLLATE Latin1_General_100_CI_AI NULL
+[BillingInfoPassword] [varchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
+[ImportNotificationEmailCIC] [varchar] (1000) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON

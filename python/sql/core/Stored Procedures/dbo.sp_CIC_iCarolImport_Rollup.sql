@@ -2084,8 +2084,8 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Site' THEN
 OPTION (ROBUST PLAN)
 	;
 
-SELECT m.MemberID, m.DefaultEmailNameCIC, m.BaseURLCIC
-FROM dbo.STP_Member m
+SELECT m.MemberID, m.DefaultEmailNameCIC, m.BaseURLCIC, m.ImportNotificationEmailCIC
+FROM dbo.STP_Member m WHERE m.Active=1
 
 
 RETURN @Error
