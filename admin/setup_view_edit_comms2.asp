@@ -108,6 +108,10 @@ End IF
 If intActionType <> ACTION_DELETE Then
 	getDisplayOrder()
 End If
+If Not Nl(strError) Then
+	Call handleError(TXT_COMM_WAS_NOT & TXT_UPDATED & TXT_COLON & Server.HTMLEncode(strError) & ".", _
+		"setup_view_edit_comms.asp", "ViewType=" & intViewType)
+End If
 
 Dim objReturn, objErrMsg
 Dim cmdViewComms, rsViewComms
