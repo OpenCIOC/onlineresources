@@ -93,14 +93,13 @@ class ServiceSettings(object):
         return desc +"wsgi_ini_file: %s"%(self.getCfgFileName(),)
     
     def getVirtualEnv(self):
-        val = self.override.get('virtual_env')
-        if val:
-            return val
+		# NOTE also update includes/core/incInitPython.asp
+		env = 'ciocenv4py2'
+		if sys.version_info[0] == 3:
+			env = 'ciocenv4py3'
 
-        try:
-            return self.c.get(self._wssection_,"virtual_env")
-        except (six.moves.configparser.NoOptionError, six.moves.configparser.NoSectionError):
-            return None
+		app_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+		return os.path.join(os.environ.get('CIOC_ENV_ROOT', os.path.join(app_dir, '..', '..')), env)
     
     def transferEssential(self,o):
         o._svc_name_ = self.getSvcName()

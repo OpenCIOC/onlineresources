@@ -22,6 +22,7 @@ def initialize_python(app_dir):
 	import os, sys
 
     # This will be driven by the python version that is registered for activescript
+	# NOTE: also update python/wsgisvc.py
 	env = 'ciocenv4py2'
 	if sys.version_info[0] == 3:
 		env = 'ciocenv4py3'
