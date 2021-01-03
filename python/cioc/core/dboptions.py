@@ -118,8 +118,10 @@ class DbOptions(object):
 
 		try:
 			data = cache.get_or_create(cache_key, self._get_data)
-		except UnicodeDecodeError:
-			return self.load(True)
+		except (UnicodeDecodeError, ValueError):
+			if not force:
+				return self.load(True)
+			raise
 
 		self._last_modified, self.dbopts, rows = data
 		self.dbopts_lang = {k: DbOptionsDescription(v) for k, v in six.iteritems(rows)}
@@ -202,8 +204,11 @@ def fetch_domain_map(request, reset_db):
 
 	try:
 		val = cache.get_or_create('domain_map', get_domain_map_values)
-	except UnicodeDecodeError:
-		val = fetch_domain_map(request, True)
+	except (UnicodeDecodeError, ValueError):
+		if not reset_db:
+			return fetch_domain_map(request, True)
+		else:
+			raise
 
 	return val
 
