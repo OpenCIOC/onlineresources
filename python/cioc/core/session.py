@@ -14,6 +14,7 @@
 #  limitations under the License.
 # =========================================================================================
 
+import time
 import cPickle
 import functools
 from uuid import uuid4
@@ -52,6 +53,21 @@ def _generate_session_id():
 	return const._app_name + ':' + uuid4().hex
 
 
+def session_dumps(value, dumps=cPickle.dumps):
+	return dumps(value)
+
+
+def session_loads(value, loads=cPickle.loads):
+	try:
+		return loads(value)
+	except (ValueError, UnicodeDecodeError, cPickle.UnpicklingError):
+		return {
+			'managed_dict': {},
+			'created': time.time(),
+			'timeout': 1200,
+		}
+
+
 def RedisSessionFactory(
 	secret,
 	timeout=1200,
@@ -73,8 +89,8 @@ def RedisSessionFactory(
 	errors='strict',
 	unix_socket_path=None,
 	client_callable=None,
-	serialize=cPickle.dumps,
-	deserialize=cPickle.loads,
+	serialize=session_dumps,
+	deserialize=session_loads,
 	id_generator=_generate_session_id,
 	):
 	"""

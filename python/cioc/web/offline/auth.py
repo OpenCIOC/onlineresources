@@ -24,6 +24,10 @@ from Crypto.Hash import SHA256
 from Crypto import Random
 
 import json
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
 
 from cioc.core import validators as ciocvalidators, i18n
 from cioc.web.cic import viewbase
@@ -40,6 +44,7 @@ class VerifySchema(StartSchema):
 	filter_extra_fields = True
 
 	ChallengeSig = ciocvalidators.String(not_empty=True)
+	AuthVersion = ciocvalidators.Int(max=2, not_empty=False)
 
 
 class AuthFailure(Exception):
@@ -103,10 +108,29 @@ def verify_auth(request):
 		raise AuthFailure({'fail': True, 'reason': _('not authorized', request)})
 
 	tocheck = ''.join([challenge.decode('base64'), machine_name.encode('utf-8')])
-	challengedigest = SHA256.new(tocheck).digest()
+	if data['AuthVersion'] == 2:
+		tocheck = b''.join([decode_base64_nonce(challenge), machine_name.encode('utf-8')])
+		public_key = serialization.load_pem_public_key(
+			user_type.PublicKey.encode('ascii'),
+		)
+		try:
+			public_key.verify(
+				base64.b64decode(data['ChallengeSig']), tocheck,
+				padding.PSS(
+					mgf=padding.MGF1(hashes.SHA256()),
+					salt_length=padding.PSS.MAX_LENGTH
+				),
+				hashes.SHA256()
+			)
+		except InvalidSignature:
+			request.cache.delete(cache_key)
+			log.debug('sig failure')
+			raise AuthFailure({'fail': True, 'reason': _('not authorized', request)})
+	else:
+		challengedigest = SHA256.new(tocheck).digest()
 
-	key = RSA.importKey(user_type.PublicKey)
-	if not key.verify(challengedigest, json.loads(data['ChallengeSig'])):
-		raise AuthFailure({'fail': True, 'reason': _('not authorized', request)})
+		key = RSA.importKey(user_type.PublicKey)
+		if not key.verify(challengedigest, json.loads(data['ChallengeSig'])):
+			raise AuthFailure({'fail': True, 'reason': _('not authorized', request)})
 
-	return user_type
+		return user_type

@@ -113,7 +113,12 @@ class DbOptions(object):
 				import traceback
 				traceback.print_exc()
 
-		data = cache.get_or_create(cache_key, self._get_data)
+		try:
+			data = cache.get_or_create(cache_key, self._get_data)
+		except Exception:
+			if not force:
+				return self.load(force=True)
+			raise
 
 		self._last_modified, self.dbopts, rows = data
 		self.dbopts_lang = {k: DbOptionsDescription(v) for k, v in rows.iteritems()}
@@ -194,7 +199,12 @@ def fetch_domain_map(request, reset_db):
 
 		return domain_map
 
-	val = cache.get_or_create('domain_map', get_domain_map_values)
+	try:
+		val = cache.get_or_create('domain_map', get_domain_map_values)
+	except Exception as e:
+		if not reset_db:
+			return fetch_domain_map(request, reset_db=True)
+		raise
 
 	return val
 
