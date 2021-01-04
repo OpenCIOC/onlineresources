@@ -19,7 +19,7 @@ import os
 
 import struct
 from zlib import crc32
-
+from binascii import unhexlify
 
 class FormatError(Exception):
 	pass
@@ -38,7 +38,7 @@ class jQueryUIIcons(object):
 		return mtime
 
 	def get_icon_string(self, colour):
-		colour = bytes.fromhex(colour)
+		colour = unhexlify(colour)
 
 		mtime = os.path.getmtime(self.location)
 
