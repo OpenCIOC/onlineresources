@@ -29,6 +29,7 @@ from cioc.web.vol.viewbase import VolViewBase
 from cioc.core.browselist import makeAlphaList, makeAlphaListItems
 from cioc.core.format import textToHTML
 from cioc.core.modelstate import convert_options
+from cioc.core.utils import read_file
 import six
 from six.moves import map
 from six.moves import zip
