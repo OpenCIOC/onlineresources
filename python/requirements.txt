@@ -42,4 +42,4 @@ adodbapi==2.6.2.0
 pdfkit==0.5.0
 libsass==0.20.1
 futures==3.1.1
-cryptography==3.1.1
+cryptography==3.3.1
