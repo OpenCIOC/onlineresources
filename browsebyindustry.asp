@@ -75,7 +75,7 @@ ElseIf Len(strChosenCode) > 6 Then
 		vbNullString, _
 		vbNullString)
 	Call makePageFooter(False)
-	%><!--#include file="../includes/core/incClose.asp" --><%
+	%><!--#include file="includes/core/incClose.asp" --><%
 	Response.End()
 End If
 
