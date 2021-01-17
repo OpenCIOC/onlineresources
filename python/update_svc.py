@@ -15,9 +15,9 @@
 # =========================================================================================
 
 from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
-import win32serviceutil
 
 this_dir_name = os.path.dirname(__file__)
 app_path = os.path.abspath(os.path.join(this_dir_name, '..'))
@@ -27,6 +27,16 @@ envname = 'ciocenv4py3'
 if len(sys.argv) == 2:
 	envname = sys.argv[1]
 
+this_dir_name = os.path.dirname(__file__)
+os.chdir(this_dir_name)
+
+app_path = os.path.abspath(os.path.join(this_dir_name, '..'))
+app_name = os.path.split(app_path)[1]
+
 virtualenv = os.path.abspath(os.path.join(os.environ.get('CIOC_ENV_ROOT', os.path.join(app_path, '..', '..')), envname))
 
-win32serviceutil.SetServiceCustomOption("PyCioc" + app_name, 'wsgi_virtual_env', virtualenv)
+args = dict(virtualenv=virtualenv, app_name=app_name, http_port=sys.argv[1])
+cmd = r'%(virtualenv)s\Scripts\python.exe wsgisvc.py -n PyCioc%(app_name)s -d "CIOC %(app_name)s" -v %(virtualenv)s -c production.ini -p %(http_port)s update' % args
+print(cmd)
+result = os.system(cmd)
+sys.exit(result)
