@@ -33,7 +33,7 @@ pyramid_simpleform==0.7.dev0
 redis==2.10.6
 requests==2.24.0
 ipaddress==1.0.6
-pyramid_redis_sessions==1.0a2
+pyramid_redis_sessions==1.0.1
 dogpile.cache==0.6.5
 dogpile_backend_redis_advanced==0.2.2
 lxml==4.5.2
