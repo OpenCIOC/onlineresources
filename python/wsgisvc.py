@@ -16,11 +16,20 @@
 
 from __future__ import absolute_import
 from __future__ import print_function
+
+import os
+app_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+_app_name = os.path.split(app_path)[1]
+_log_root = os.environ.get('CIOC_LOG_ROOT', 'd:\logs')
+_logfilename = os.path.join(_log_root, _app_name, 'python', 'boot.log')
+
+import sys
+
+sys.stdout = sys.stderr = open(_logfilename, 'w')
+
 import win32serviceutil
 import win32service
 import win32event
-import sys
-import os
 import getopt
 import six.moves.configparser
 
@@ -150,15 +159,19 @@ class PasteWinService(win32serviceutil.ServiceFramework):
 		self.stop_event = win32event.CreateEvent(None, 0, 0, None)
 
 	def SvcDoRun(self):
-
+		print("start run")
 		if self.ss.getVirtualEnv():
+			print("before activate virtualenv")
 			activate_virtualenv(self.ss.getVirtualEnv())
 
+		print("before chdir")
 		os.chdir(self.ss.getCfgFileDir())
 		sys.path.append(self.ss.getCfgFileDir())
 
+		print("import paste")
 		from paste.script.serve import ServeCommand as Server
 
+		print("create server")
 		s = Server(None)
 		args = [self.ss.getCfgFileName()]
 
@@ -166,16 +179,17 @@ class PasteWinService(win32serviceutil.ServiceFramework):
 		if http_port:
 			args.append("http_port=" + str(http_port))
 
+		print("server run")
 		s.run(args)
 		win32event.WaitForSingleObject(self.stop_event, win32event.INFINITE)
 
 	def SvcStop(self):
 		self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
-		"send stop event"
+		print("send stop event")
 		win32event.SetEvent(self.stop_event)
-		"stop event sent"
+		print("stop event sent")
 		self.ReportServiceStatus(win32service.SERVICE_STOPPED)
-		"Exit"
+		print("Exit")
 		sys.exit()
 
 
