@@ -27,7 +27,7 @@ backports.ssl-match-hostname==3.7.0.1
 isodate==0.6.0
 https://github.com/LexMachinaInc/util/archive/d82029336b2be595e74eefc9d07d9786c1b05e2b.zip#egg=marrow.util==1.2.4
 marrow.mailer==4.0.3
-pyramid-exclog==0.4
+pyramid-exclog==0.8
 FormEncode==2.0.0
 pyramid_simpleform==0.7.dev0
 redis==2.10.6
