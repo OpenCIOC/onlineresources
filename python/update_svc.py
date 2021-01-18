@@ -19,15 +19,15 @@ from __future__ import print_function
 import os
 import sys
 
-this_dir_name = os.path.dirname(__file__)
-app_path = os.path.abspath(os.path.join(this_dir_name, '..'))
-app_name = os.path.split(app_path)[1]
+if len(sys.argv) < 2:
+	print("Missing port number")
+	sys.exit(1)
 
 envname = 'ciocenv4py3'
-if len(sys.argv) == 2:
-	envname = sys.argv[1]
+if len(sys.argv) == 3:
+	envname = sys.argv[2]
 
-this_dir_name = os.path.dirname(__file__)
+this_dir_name = os.path.abspath(os.path.dirname(__file__))
 os.chdir(this_dir_name)
 
 app_path = os.path.abspath(os.path.join(this_dir_name, '..'))
