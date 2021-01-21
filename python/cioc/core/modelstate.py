@@ -60,7 +60,8 @@ def convert_options(options):
 class DefaultModel(object):
 	pass
 
-_split_re = re.compile(r'((?:-\d+)?\.?)')
+
+_split_re = re.compile(r'((?:-\d+)\.?|\.)')
 
 
 def split(value):
