@@ -118,9 +118,9 @@ class DbOptions(object):
 
 		try:
 			data = cache.get_or_create(cache_key, self._get_data)
-		except (UnicodeDecodeError, ValueError):
+		except Exception:
 			if not force:
-				return self.load(True)
+				return self.load(force=True)
 			raise
 
 		self._last_modified, self.dbopts, rows = data
@@ -204,11 +204,10 @@ def fetch_domain_map(request, reset_db):
 
 	try:
 		val = cache.get_or_create('domain_map', get_domain_map_values)
-	except (UnicodeDecodeError, ValueError):
+	except Exception as e:
 		if not reset_db:
-			return fetch_domain_map(request, True)
-		else:
-			raise
+			return fetch_domain_map(request, reset_db=True)
+		raise
 
 	return val
 

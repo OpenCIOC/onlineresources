@@ -59,6 +59,7 @@ class VerifySchema(StartSchema):
 	filter_extra_fields = True
 
 	ChallengeSig = ciocvalidators.String(not_empty=True)
+	AuthVersion = ciocvalidators.Int(max=2, not_empty=False)
 
 
 class AuthFailure(Exception):
