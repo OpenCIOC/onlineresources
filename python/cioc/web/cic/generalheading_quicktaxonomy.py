@@ -16,7 +16,9 @@
 
 
 # Logging
+from __future__ import absolute_import
 import logging
+from six.moves import map
 log = logging.getLogger(__name__)
 
 # 3rd Party Libraries
@@ -111,7 +113,7 @@ class ActivtionsView(CicViewBase):
 		validator = validators.IDValidator(not_empty=True)
 		try:
 			PB_ID = validator.to_python(request.POST.get('PB_ID'))
-		except validators.Invalid, e:
+		except validators.Invalid as e:
 			self._error_page(_('Publication ID:', request) + e.message)
 
 		if user.cic.LimitedView and PB_ID and user.cic.PB_ID != PB_ID:
@@ -230,4 +232,4 @@ class ActivtionsView(CicViewBase):
 				'Count': (Markup('&nbsp;[%d]') % term.CountRecords) if term.CountRecords else '',
 				'Rollup': '' if term.Active is None else 'hidden',
 			}
-		return map(build_line, terms)
+		return list(map(build_line, terms))

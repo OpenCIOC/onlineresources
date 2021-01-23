@@ -15,12 +15,15 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging
+import six
+from six.moves import map
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
-from urlparse import parse_qsl
-from urllib import urlencode
+from six.moves.urllib.parse import parse_qsl
+from six.moves.urllib.parse import urlencode
 
 from formencode import Schema, validators, foreach, variabledecode, Any, schema
 from pyramid.view import view_config, view_defaults
@@ -51,7 +54,7 @@ def should_skip_item(quicksearch):
 
 	if quicksearch.get('QuickSearchID') == 'NEW':
 		log.debug('quicksearch: %s', quicksearch)
-		if all(not v for k, v in quicksearch.iteritems() if k not in ['PageName', 'Descriptions', 'QuickSearchID', 'DisplayOrder']):
+		if all(not v for k, v in six.iteritems(quicksearch) if k not in ['PageName', 'Descriptions', 'QuickSearchID', 'DisplayOrder']):
 			descriptions = quicksearch.get('Descriptions') or {}
 			if not descriptions or all(not v for d in descriptions.values() for v in d.values()):
 				return True
@@ -162,7 +165,7 @@ class QuickSearch(viewbase.AdminViewBase):
 					continue
 
 				quicksearch_el = ET.SubElement(root, 'QuickSearch')
-				ET.SubElement(quicksearch_el, 'CNT').text = unicode(i)
+				ET.SubElement(quicksearch_el, 'CNT').text = six.text_type(i)
 
 				qp = quicksearch['QueryParameters']
 				if '?' in qp:
@@ -181,22 +184,22 @@ class QuickSearch(viewbase.AdminViewBase):
 
 				quicksearch['QueryParameters'] = qp
 
-				for key, value in quicksearch.iteritems():
+				for key, value in six.iteritems(quicksearch):
 					if key == 'QuickSearchID' and value == 'NEW':
 						value = -1
 
 					if key != 'Descriptions':
 						if value is not None:
-							ET.SubElement(quicksearch_el, key).text = unicode(value)
+							ET.SubElement(quicksearch_el, key).text = six.text_type(value)
 						continue
 
 					descs = ET.SubElement(quicksearch_el, 'DESCS')
-					for culture, data in (value or {}).iteritems():
+					for culture, data in six.iteritems((value or {})):
 						culture = culture.replace('_', '-')
 
 						desc = ET.SubElement(descs, 'DESC')
 						ET.SubElement(desc, 'Culture').text = culture
-						for key, value in data.iteritems():
+						for key, value in six.iteritems(data):
 							if value:
 								ET.SubElement(desc, key).text = value
 
@@ -252,7 +255,7 @@ class QuickSearch(viewbase.AdminViewBase):
 
 				cursor.nextset()
 
-				pages = map(tuple, cursor.fetchall())
+				pages = list(map(tuple, cursor.fetchall()))
 
 				cursor.nextset()
 
@@ -281,7 +284,7 @@ class QuickSearch(viewbase.AdminViewBase):
 		validator = ciocvalidators.IDValidator(not_empty=True)
 		try:
 			ViewType = validator.to_python(request.params.get('ViewType'))
-		except validators.Invalid, e:
+		except validators.Invalid as e:
 			self._error_page(_('Invalid View Type: ', request) + e.message)
 
 		return ViewType, domain

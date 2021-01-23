@@ -15,7 +15,10 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging
+import six
+from six.moves import map
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -32,14 +35,14 @@ from cioc.web.admin import viewbase
 
 templateprefix = 'cioc.web.admin:templates/checklists/'
 
-from checklist_model import checklists, ChkExtraChecklist, ChkExtraDropDown
+from .checklist_model import checklists, ChkExtraChecklist, ChkExtraDropDown
 
 
 def should_skip_item(chk_type, chkitem):
 	if not chkitem.get(chk_type.ID):
 		return True
 
-	if all(not v for k, v in chkitem.iteritems() if k != 'Descriptions' and not (k == chk_type.ID and v == 'NEW')):
+	if all(not v for k, v in six.iteritems(chkitem) if k != 'Descriptions' and not (k == chk_type.ID and v == 'NEW')):
 
 		if all(not v for d in chkitem.get('Descriptions', {}).values() for k, v in d.items()):
 			return True
@@ -190,7 +193,7 @@ class Checklists(viewbase.AdminViewBase):
 			if chk_type.UsageSQL:
 				cursor.nextset()
 
-				chkusage = dict((unicode(x[0]), x) for x in cursor.fetchall())
+				chkusage = dict((six.text_type(x[0]), x) for x in cursor.fetchall())
 
 			if chk_type.NameSQL:
 				cursor.nextset()
@@ -306,7 +309,7 @@ class Checklists(viewbase.AdminViewBase):
 
 		request = self.request
 		if chk_type.Shared == 'partial':
-			request.model_state.form.data['ChkHide'] = [unicode(getattr(x, chk_type.ID)) for x in retval['chkitems'] if x.Hidden]
+			request.model_state.form.data['ChkHide'] = [six.text_type(getattr(x, chk_type.ID)) for x in retval['chkitems'] if x.Hidden]
 		return retval
 
 	@view_config(route_name='admin_checklists_shared', renderer=templateprefix + 'edit.mak')
@@ -395,9 +398,9 @@ class Checklists(viewbase.AdminViewBase):
 					continue
 
 				chk_el = ET.SubElement(root, 'CHK')
-				ET.SubElement(chk_el, "CNT").text = unicode(i)
+				ET.SubElement(chk_el, "CNT").text = six.text_type(i)
 
-				for key, value in chkitem.iteritems():
+				for key, value in six.iteritems(chkitem):
 					if key == chk_type.ID and value == 'NEW':
 						value = -1
 
@@ -406,18 +409,18 @@ class Checklists(viewbase.AdminViewBase):
 
 					if key != 'Descriptions':
 						if value is not None:
-							ET.SubElement(chk_el, key).text = unicode(value)
+							ET.SubElement(chk_el, key).text = six.text_type(value)
 						continue
 
 					descs = ET.SubElement(chk_el, 'DESCS')
-					for culture, data in value.iteritems():
+					for culture, data in six.iteritems(value):
 						culture = culture.replace('_', '-')
 						if culture not in shown_cultures:
 							continue
 
 						desc = ET.SubElement(descs, 'DESC')
 						ET.SubElement(desc, 'Culture').text = culture
-						for key, value in data.iteritems():
+						for key, value in six.iteritems(data):
 							if value:
 								ET.SubElement(desc, key).text = value
 

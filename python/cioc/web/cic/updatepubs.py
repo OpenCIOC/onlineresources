@@ -15,7 +15,9 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging 
+import six
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -93,10 +95,10 @@ class UpdatePubs(CicViewBase):
 
 			root = ET.Element('DESCS')
 
-			for culture, data in (form_data['descriptions'] or {}).iteritems():
+			for culture, data in six.iteritems((form_data['descriptions'] or {})):
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-				for name, value in data.iteritems():
+				for name, value in six.iteritems(data):
 					if value:
 						ET.SubElement(desc, name).text = value
 
@@ -104,7 +106,7 @@ class UpdatePubs(CicViewBase):
 
 			root = ET.Element('HEADINGS')
 			for heading in (form_data['GHID'] or []):
-				ET.SubElement(root, 'GHID').text = unicode(heading)
+				ET.SubElement(root, 'GHID').text = six.text_type(heading)
 
 			args.append(ET.tostring(root))
 
@@ -250,7 +252,7 @@ class UpdatePubs(CicViewBase):
 
 			self._error_page(errordata.ErrMsg or _('An unknown error occurred.', request))
 
-		linked_headings = set(unicode(x.GH_ID) for x in generalheadings if x.SELECTED)
+		linked_headings = set(six.text_type(x.GH_ID) for x in generalheadings if x.SELECTED)
 
 		record_cultures = [x for x in syslanguage.active_record_cultures() 
 						if x.replace('-', '_') in publication_descriptions]

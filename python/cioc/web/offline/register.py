@@ -15,6 +15,7 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 from formencode import Schema
 
 from pyramid.view import view_config

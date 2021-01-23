@@ -15,7 +15,9 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging
+import six
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -125,9 +127,9 @@ class FieldDisplay(viewbase.AdminViewBase):
 			root = ET.Element('FIELDS')
 			for field in model_state.form.data['field']:
 				field_el = ET.SubElement(root, 'Field')
-				for key, value in field.iteritems():
+				for key, value in six.iteritems(field):
 					if key != 'Descriptions':
-						ET.SubElement(field_el, key).text = unicode(value)
+						ET.SubElement(field_el, key).text = six.text_type(value)
 						continue
 
 					descs = ET.SubElement(field_el, 'DESCS')
@@ -135,7 +137,7 @@ class FieldDisplay(viewbase.AdminViewBase):
 
 						desc = ET.SubElement(descs, 'DESC')
 						ET.SubElement(desc, 'Culture').text = culture
-						for key, val in (value.get(culture.replace('-', '_')) or {}).iteritems():
+						for key, val in six.iteritems((value.get(culture.replace('-', '_')) or {})):
 							if val:
 								ET.SubElement(desc, key).text = val
 

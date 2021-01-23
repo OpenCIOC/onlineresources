@@ -15,12 +15,14 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 from collections import namedtuple
 from operator import attrgetter
 import datetime
 
 from pyramid.decorator import reify
 from cioc.core.connection import ConnectionError
+from six.moves import zip
 
 # System Language Constants
 LANG_ENGLISH = 0

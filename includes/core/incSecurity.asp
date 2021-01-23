@@ -40,7 +40,7 @@ def getRemoteIP():
 #***************************************
 
 def MD5Hash(strValue):
-	return HashComponents(unicode(strValue))
+	return HashComponents(six.text_type(strValue))
 
 def do_logout():
 	py_do_logout(pyrequest)

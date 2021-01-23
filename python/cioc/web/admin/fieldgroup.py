@@ -15,7 +15,9 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging
+import six
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -140,30 +142,30 @@ class FieldGroup(viewbase.AdminViewBase):
 				if group.get('delete'):
 					continue
 
-				if all(not v for k, v in group.iteritems() if not (k == 'DisplayFieldGroupID' and v == 'NEW')):
+				if all(not v for k, v in six.iteritems(group) if not (k == 'DisplayFieldGroupID' and v == 'NEW')):
 					continue
 
 				group_el = ET.SubElement(root, 'GROUP')
-				ET.SubElement(group_el, 'CNT').text = unicode(i)
+				ET.SubElement(group_el, 'CNT').text = six.text_type(i)
 
-				for key, value in group.iteritems():
+				for key, value in six.iteritems(group):
 					if key == 'DisplayFieldGroupID' and value == 'NEW':
 						value = -1
 
 					if key != 'Descriptions':
 						if value is not None:
-							ET.SubElement(group_el, key).text = unicode(value)
+							ET.SubElement(group_el, key).text = six.text_type(value)
 						continue
 
 					descs = ET.SubElement(group_el, 'DESCS')
-					for culture, data in value.iteritems():
+					for culture, data in six.iteritems(value):
 						culture = culture.replace('_', '-')
 						if culture not in shown_cultures:
 							continue
 
 						desc = ET.SubElement(descs, 'DESC')
 						ET.SubElement(desc, 'Culture').text = culture
-						for key, value in data.iteritems():
+						for key, value in six.iteritems(data):
 							if value:
 								ET.SubElement(desc, key).text = value
 
@@ -238,7 +240,7 @@ class FieldGroup(viewbase.AdminViewBase):
 		validator = ciocvalidators.IDValidator(not_empty=True)
 		try:
 			ViewType = validator.to_python(request.params.get('ViewType'))
-		except validators.Invalid, e:
+		except validators.Invalid as e:
 			self._error_page(_('Invalid View Type: ', request) + e.message) 
 
 		return ViewType, domain, shown_cultures

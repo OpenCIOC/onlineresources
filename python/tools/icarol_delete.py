@@ -14,11 +14,15 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
 from zipfile import ZipFile
 import zipfile
 import itertools
+from six.moves import map
+from six.moves import filter
 
 try:
 	import cioc  # NOQA
@@ -45,8 +49,8 @@ def main(previous_name, dest_file):
 		csv_file = open(previous_name)
 
 	reader = UTF8Reader(csv_file)
-	reader.next()
-	previous = set(itertools.ifilter(lambda x: x[-1] in ['AGENCY', 'SITE', 'PROGRAM'], itertools.imap(lambda x: (x[0], x[1], x[2].upper()), reader)))
+	next(reader)
+	previous = set(filter(lambda x: x[-1] in ['AGENCY', 'SITE', 'PROGRAM'], map(lambda x: (x[0], x[1], x[2].upper()), reader)))
 	previous_count = len(previous)
 
 	csv_file.close()
@@ -57,9 +61,9 @@ def main(previous_name, dest_file):
 		csv_file = open(dest_file)
 
 	reader = UTF8Reader(csv_file)
-	header = reader.next()
+	header = next(reader)
 
-	current_records = map(tuple, reader)
+	current_records = list(map(tuple, reader))
 
 	previous.difference_update(current_records)
 
@@ -82,4 +86,4 @@ def main(previous_name, dest_file):
 
 
 if __name__ == '__main__':
-	print main(*sys.argv[1:3])
+	print(main(*sys.argv[1:3]))

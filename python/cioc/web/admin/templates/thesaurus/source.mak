@@ -19,6 +19,7 @@
 <%inherit file="cioc.web:templates/master.mak" />
 <%! 
 from cioc.core import constants as const
+import six
 %>
 <p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> | 
 	<a href="${request.passvars.makeLink('~/admin/thesaurus.asp')}">${_('Return to Manage Thesaurus')}</a> ]</p>
@@ -93,7 +94,7 @@ jQuery(function($) {
 	<% args = [True] if itemid == 'NEW' else [] %>
 	<td>
 		${renderer.hidden(prefix + 'SRC_ID', itemid)}
-	%if not usage.get(unicode(itemid)):
+	%if not usage.get(six.text_type(itemid)):
 		${renderer.checkbox(prefix + 'delete')}
 	%endif
 	</td>

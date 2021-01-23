@@ -25,13 +25,13 @@ import ipaddress
 from cioc.core import clienttracker
 
 def myListDetailsAddRecord(strID):
-	return Response.Write(unicode(clienttracker.my_list_details_add_record(pyrequest, unicode(strID))))
+	return Response.Write(six.text_type(clienttracker.my_list_details_add_record(pyrequest, six.text_type(strID))))
 
 def myListAddRecordBasicUI(strID):
-	return unicode(clienttracker.my_list_add_record_basic_ui(pyrequest, unicode(strID)))
+	return six.text_type(clienttracker.my_list_add_record_basic_ui(pyrequest, six.text_type(strID)))
 def ip_in_networks(networks, remote_addr):
 	network_list = []
-	for addr in [y.strip() for y in unicode(networks).split(u',')]:
+	for addr in [y.strip() for y in six.text_type(networks).split(u',')]:
 		if not addr:
 			continue
 		try:
@@ -39,7 +39,7 @@ def ip_in_networks(networks, remote_addr):
 		except ValueError:
 			pass
 
-	ipaddr = ipaddress.ip_address(unicode(remote_addr))
+	ipaddr = ipaddress.ip_address(six.text_type(remote_addr))
 
 	return any(ipaddr in x for x in network_list)
 

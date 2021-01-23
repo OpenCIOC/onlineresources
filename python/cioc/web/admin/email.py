@@ -16,6 +16,7 @@
 
 
 #std library
+from __future__ import absolute_import
 import logging
 import collections
 import xml.etree.cElementTree as ET
@@ -27,6 +28,7 @@ from pyramid.view import view_config, view_defaults
 from cioc.core import validators, constants as const
 from cioc.core.i18n import gettext as _
 from cioc.web.admin.viewbase import AdminViewBase, domain_validator
+import six
 
 log = logging.getLogger(__name__)
 
@@ -138,12 +140,12 @@ class EmailValues(AdminViewBase):
 			args = [email_id, user.Mod, request.dboptions.MemberID, options.DM.id, options.MR, model_state.value('email.DefaultMsg'), model_state.value('email.StdSubjectBilingual')]
 
 			root = ET.Element('DESCS')
-			for culture, data in (model_state.value('descriptions') or {}).iteritems():
+			for culture, data in six.iteritems((model_state.value('descriptions') or {})):
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, 'Culture').text = culture.replace('_', '-')
-				for name, value in data.iteritems():
+				for name, value in six.iteritems(data):
 					if value:
-						ET.SubElement(desc, name).text = unicode(value)
+						ET.SubElement(desc, name).text = six.text_type(value)
 
 			args.append(ET.tostring(root))
 
@@ -262,7 +264,7 @@ class EmailValues(AdminViewBase):
 		validator = OptionsSchema()
 		try:
 			options = validator.to_python(request.params)
-		except validators.Invalid, e:
+		except validators.Invalid as e:
 			self._error_page(_('Invalid Domain: %s', self.request) % e.message)
 
 		options['MR'] = not not options['MR']

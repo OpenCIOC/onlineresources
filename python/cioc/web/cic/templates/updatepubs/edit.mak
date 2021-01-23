@@ -21,7 +21,7 @@
 <%namespace file="cioc.web.cic:templates/gh_select.mak" import="gh_selector"/>
 <%!
 from markupsafe import escape_silent as h, Markup
-from webhelpers.html import tags
+from webhelpers2.html import tags
 %>
 
 <h2>${_('Update Publication information for %s:') % publication.PubCode}

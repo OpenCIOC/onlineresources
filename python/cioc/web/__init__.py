@@ -14,6 +14,7 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
 import datetime
 from decimal import Decimal
 
@@ -105,6 +106,7 @@ def main(global_config, **settings):
 	json_renderer.add_adapter(datetime.date, datetime_adapter)
 	json_renderer.add_adapter(Decimal, decimal_adapter)
 	config.add_renderer('json', json_renderer)
+	config.include('pyramid_mako')
 
 	# allow for multiple templated css files with the which match parameter
 	config.add_route('template_css', 'styles/d/{version}/cioc{which:[^_]+}_{templateid:\d+}{debug:(_debug)?}.css',

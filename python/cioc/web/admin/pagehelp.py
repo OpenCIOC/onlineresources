@@ -16,6 +16,7 @@
 
 
 #std library
+from __future__ import absolute_import
 import os
 import logging
 import subprocess
@@ -26,6 +27,7 @@ from pyramid.view import view_config
 
 #this app
 from cioc.core.i18n import gettext as _, format_date
+from cioc.core.utils import read_file
 from cioc.web.admin.viewbase import AdminViewBase
 
 log = logging.getLogger(__name__)
@@ -78,15 +80,14 @@ def get_help_content(request, strHelpFileName):
 			last_mod_date = datetime.now()
 
 		last_mod_date = format_date(last_mod_date, request)
-	except SubProcException, e:
+	except SubProcException as e:
 		log.error('Error getting last change timestamp. Subproc returned %d: %s', e.args[1], e.args[0])
 		last_mod_date = '%s' % _('Unknown')
-	except WindowsError, e:
+	except WindowsError as e:
 		log.exception('Error getting last change timestamp.')
 		last_mod_date = '%s' % _('Unknown')
 
-	with open(filename, 'rU') as f:
-		return f.read().decode('utf-8-sig').replace('$Date$', last_mod_date)
+	return read_file(filename, 'utf-8-sig').replace('$Date$', last_mod_date)
 
 
 class EmailValues(AdminViewBase):

@@ -17,10 +17,12 @@
 </%doc>
 
 <%def name="header()">
-
+<%!
+import six
+%>
 <%
 
-inline_results = unicode(request.params.get('InlineResults')) == u'on'
+inline_results = six.text_type(request.params.get('InlineResults')) == u'on'
 culture = request.language.Culture
 
 custom_style_sheet_url = request.template_values['StyleSheetUrl']

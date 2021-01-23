@@ -14,9 +14,10 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
 import sys
 import argparse
-from urlparse import urljoin
+from six.moves.urllib.parse import urljoin
 from xml.etree import cElementTree as ET
 from datetime import date, timedelta
 

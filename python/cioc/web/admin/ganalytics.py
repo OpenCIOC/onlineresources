@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import logging
 from collections import namedtuple
 import xml.etree.cElementTree as ET
@@ -30,6 +31,7 @@ from cioc.core import validators
 
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
+import six
 
 log = logging.getLogger(__name__)
 
@@ -83,12 +85,12 @@ class GoogleAnalyticsView(viewbase.AdminViewBase):
 					continue
 
 				el = ET.SubElement(domains, 'Domain')
-				for key, val in domain.iteritems():
+				for key, val in six.iteritems(domain):
 					if isinstance(val, bool):
-						ET.SubElement(el, key).text = unicode(int(val))
+						ET.SubElement(el, key).text = six.text_type(int(val))
 
 					if val:
-						ET.SubElement(el, key).text = unicode(val)
+						ET.SubElement(el, key).text = six.text_type(val)
 
 			args = [request.dboptions.MemberID, user.Mod, ET.tostring(domains)]
 

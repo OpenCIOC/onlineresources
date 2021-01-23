@@ -31,7 +31,7 @@ def getEventScheduleSQL_l(checkDate, checkInteger, checkID, checkLength, checkAd
 		record_id = '@NUM'
 
 	def escape_string(value):
-		return unicode(value).replace(u"'", "''")
+		return six.text_type(value).replace(u"'", "''")
 
 	if xml_value:
 		output = u'''

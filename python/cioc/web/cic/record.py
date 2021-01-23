@@ -14,11 +14,12 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
 import logging
 import itertools
 import tempfile
 import os
-from urllib import urlencode
+from six.moves.urllib.parse import urlencode
 
 import pyodbc
 from xml.etree import cElementTree as ET
@@ -29,6 +30,7 @@ from pyramid.view import view_config
 from cioc.core import i18n, constants as const, validators, searchlist, recordowner, renderpdf, googlemaps
 from cioc.web.cic.viewbase import CicViewBase
 from cioc.core.stat import insert_stat
+from six.moves import range
 
 gettext = i18n.gettext
 ngettext = i18n.ngettext
@@ -36,9 +38,8 @@ log = logging.getLogger(__name__)
 
 BASE_SKIP_FIELDS = frozenset(
 	'RSN NUM RECORD_OWNER ORG_NUM DELETION_DATE MODIFIED_DATE UPDATE_DATE UPDATE_SCHEDULE'.split() +
-	['ORG_LEVEL_%d' % _ for _ in range(1, 6)]
+	['ORG_LEVEL_%d' % t for t in range(1, 6)]
 )
-del _
 
 link_template = Markup('<a class="RecordDetailsHeaderText" href="%s">%s</a>')
 
@@ -695,7 +696,7 @@ SET NOCOUNT OFF
 			result = html.tostring(doctree, doctype=doctree.docinfo.doctype)
 
 			if request.params.get('DebugPDF') != 'True':
-				params = dict(request.GET.items())
+				params = dict(list(request.GET.items()))
 				vw_tmp = params.pop(u'UseCICVwTmp', None)
 				if vw_tmp:
 					params[u'UseCICVw'] = vw_tmp

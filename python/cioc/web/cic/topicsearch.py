@@ -16,7 +16,9 @@
 
 
 # Logging
+from __future__ import absolute_import
 import logging
+from six.moves import map
 log = logging.getLogger(__name__)
 
 # Python Libraries

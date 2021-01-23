@@ -15,9 +15,10 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import os
 import logging
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 from zipfile import ZipFile
 
 from pyramid.view import view_config, view_defaults
@@ -118,7 +119,7 @@ class CommunityUpload(AdminViewBase):
 			data = zipfile.read(files[0])
 			zipfile.close()
 			file.close()
-		except Exception, e:
+		except Exception as e:
 			file.seek(0)
 			data = file.read()
 			file.close()
@@ -143,7 +144,7 @@ class CommunityUpload(AdminViewBase):
 			if not error_log:
 				sqlargs = self.get_sql_args(data, community_doc)
 
-		except etree.XMLSyntaxError, e:
+		except etree.XMLSyntaxError as e:
 			error_log.append(e.message)
 
 		finally:

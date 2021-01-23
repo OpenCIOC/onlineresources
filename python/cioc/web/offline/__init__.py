@@ -30,6 +30,7 @@
 # LoginName=useraname&ChallengeSig=signedchallenge, the challenge expires after
 # 15 minutes and a new challenge would be required for subsequent actions.
 # #######
+from __future__ import absolute_import
 from functools import partial
 
 from cioc.core import constants as const

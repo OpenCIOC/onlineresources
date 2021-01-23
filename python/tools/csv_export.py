@@ -14,14 +14,16 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
+from __future__ import print_function
 import argparse
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 import datetime
 import os
 import subprocess
 import sys
 import traceback
-from urlparse import urljoin
+from six.moves.urllib.parse import urljoin
 from zipfile import ZipFile
 
 import requests
@@ -96,7 +98,7 @@ def stream_download(dest_file, url, **kwargs):
 			size += len(chunk)
 			fd.write(chunk)
 
-	print 'downloaded', size, 'bytes'
+	print('downloaded', size, 'bytes')
 
 
 def download_content(url, data, **kwargs):

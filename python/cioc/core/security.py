@@ -16,35 +16,45 @@
 
 
 # std lib
+from __future__ import absolute_import
 import binascii
 import hashlib
 import re
 from datetime import datetime
+from random import SystemRandom as StrongRandom
+from os import urandom as get_random_bytes
 
 # 3rd party
-from beaker.crypto.pbkdf2 import PBKDF2
-from Crypto.Random import get_random_bytes
-from Crypto.Random.random import StrongRandom
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC as PBKDF2
 from pyramid.decorator import reify
 
 # this app
 import cioc.core.constants as const
 from cioc.core.i18n import gettext, format_datetime
 from cioc.core.email import send_email, format_message
+import six
+from six.moves import range
+import base64
 
 
 def Crypt(salt, password, repeat):
-	pbkdf2 = PBKDF2(password, salt, int(repeat))
-	return pbkdf2.read(33).encode('base64').strip()
+	pbkdf2 = PBKDF2(
+		algorithm=hashes.SHA1(),
+		length=33,
+		salt=salt.encode('utf-8'),
+		iterations=int(repeat)
+	)
+	return base64.b64encode(pbkdf2.derive(password.encode('utf-8'))).decode('ascii').strip()
 
 
 def MakeSalt():
-	return get_random_bytes(33).encode('base64').strip()
+	return base64.b64encode(get_random_bytes(33)).decode('ascii').strip()
 
 
 def getRandomString(length):
 	l, r = divmod(length, 2)
-	return get_random_bytes(l + r).encode('hex')[:length]
+	return binascii.hexlify(get_random_bytes(l + r)).decode('ascii')[:length]
 
 # Alphabet for generating passwords. Double up on the numbers so that
 # they are not significantly less probable than the upper or lower case letters.
@@ -72,15 +82,24 @@ def getRandomPassword(length):
 	return ''.join(sr.choice(password_chars) for x in range(length))
 
 
+if six.PY3:
+	def _hex_encode(b):
+		return b.hex()
+
+else:
+	def _hex_encode(b):
+		return b.encode('hex')
+
+
 def HashComponents(*args):
 	md5 = hashlib.md5()
 	for arg in args:
-		if isinstance(arg, unicode):
+		if isinstance(arg, six.text_type):
 			arg = arg.encode('utf8')
 
 		md5.update(arg)
 
-	return md5.digest().encode('hex')
+	return _hex_encode(md5.digest())
 
 
 non_bool_user_values = {
@@ -161,6 +180,7 @@ class UserType(object):
 			return True
 		return False
 
+	__bool__ = __nonzero__
 
 class User(object):
 	def __init__(self, request):
@@ -205,6 +225,8 @@ class User(object):
 		if self.user:
 			return True
 		return False
+
+	__bool__ = __nonzero__
 
 	# ***************************************************
 	# everything here processes login information and is
@@ -302,16 +324,16 @@ class User(object):
 		authorization = self.request.headers.get('Authorization', '')
 		try:
 			authmeth, auth = authorization.split(' ', 1)
-		except ValueError:	# not enough values to unpack
+		except ValueError:  # not enough values to unpack
 			return None
 		if authmeth.lower() == 'basic':
 			try:
-				auth = auth.strip().decode('base64')
-			except binascii.Error:	# can't decode
+				auth = base64.b64decode(auth.strip().encode('ascii')).decode('utf-8')
+			except binascii.Error:  # can't decode
 				return None
 			try:
 				login, password = auth.split(':', 1)
-			except ValueError:	# not enough values to unpack
+			except ValueError:  # not enough values to unpack
 				return None
 			auth = (login, password)
 			return auth
@@ -393,10 +415,10 @@ def get_auth_principal(request):
 
 
 def remember(request, principal, **kw):
-	request.session[_userid_key] = unicode(principal)
+	request.session[_userid_key] = six.text_type(principal)
 	login_key = kw.get('login_key')
 	if login_key:
-		request.session[_login_key] = unicode(login_key)
+		request.session[_login_key] = six.text_type(login_key)
 	return []
 
 
@@ -432,4 +454,4 @@ def render_ssl_domain_list(request):
 
 	inner = Markup(u'').join(item_template % (x, link, x) for x in sorted(request.dboptions.SSLDomains))
 
-	return unicode(full_template % inner)
+	return six.text_type(full_template % inner)

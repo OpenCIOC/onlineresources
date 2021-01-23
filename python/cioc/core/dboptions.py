@@ -16,6 +16,7 @@
 
 
 # std lib
+from __future__ import absolute_import
 import logging
 from datetime import datetime
 
@@ -24,6 +25,8 @@ from pyramid.decorator import reify
 
 # this app
 from . import constants as const
+import six
+from six.moves import zip
 
 log = logging.getLogger(__name__)
 
@@ -121,7 +124,7 @@ class DbOptions(object):
 			raise
 
 		self._last_modified, self.dbopts, rows = data
-		self.dbopts_lang = {k: DbOptionsDescription(v) for k, v in rows.iteritems()}
+		self.dbopts_lang = {k: DbOptionsDescription(v) for k, v in six.iteritems(rows)}
 
 	def _get_data(self):
 		# log.debug('getting member data')

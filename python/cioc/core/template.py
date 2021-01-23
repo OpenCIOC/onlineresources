@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import os
 import re
 import posixpath
@@ -25,8 +26,8 @@ import time
 import json
 import glob
 from xml.etree import cElementTree as ET
-from urlparse import urlparse, parse_qs, urlunparse
-from urllib import urlencode
+from six.moves.urllib.parse import urlparse, parse_qs, urlunparse
+from six.moves.urllib.parse import urlencode
 from functools import partial
 
 import logging
@@ -45,6 +46,10 @@ import cioc.core.syslanguage as syslanguage
 import cioc.core.jquiicons as jquiicons
 import cioc.core.clienttracker as clienttracker
 from cioc.core.i18n import gettext, ngettext, format_date
+from cioc.core.utils import read_file
+import six
+from six.moves import map
+from six.moves import zip
 
 log = logging.getLogger(__name__)
 
@@ -306,9 +311,7 @@ def get_css_template_info(request):
 	for layout in layout_css:
 		if layout.SystemLayout and layout.LayoutCSSURL:
 			try:
-				f = open(os.path.join(_system_layout_dir, layout.LayoutCSSURL), 'rU')
-				layout.LayoutCSS = f.read().decode('utf8')
-				f.close()
+				layout.LayoutCSS = read_file(os.path.join(_system_layout_dir, layout.LayoutCSSURL))
 			except:
 				log.error('Error Loading template css')
 
@@ -500,7 +503,7 @@ _html_values_re = re.compile(r'\[([^]\s]+)\]')
 
 
 def apply_html_values(text, values):
-	values = dict((k.upper(), v) for k, v in values.iteritems())
+	values = dict((k.upper(), v) for k, v in six.iteritems(values))
 
 	def block_repl(matchobj):
 		oper = matchobj.group(1).upper()
@@ -540,7 +543,7 @@ def apply_html_values(text, values):
 			val = values[key]
 			if callable(val):
 				val = values[key] = val()
-			return unicode(val)
+			return six.text_type(val)
 
 		return matchobj.group(0)
 
@@ -579,9 +582,7 @@ class LayoutHeader(object):
 		template_values = self.request.template_values
 		header_layout_template = template_values['HeaderLayoutHTML']
 		if template_values['HeaderSystemLayout'] and template_values['HeaderLayoutHTMLURL']:
-			f = open(os.path.join(_system_layout_dir, template_values['HeaderLayoutHTMLURL']), 'rU')
-			header_layout_template = f.read().decode('utf8')
-			f.close()
+			header_layout_template = read_file(os.path.join(_system_layout_dir, template_values['HeaderLayoutHTMLURL']))
 
 		if not header_layout_template:
 			return ''
@@ -596,7 +597,7 @@ class LayoutHeader(object):
 		for key, group in itertools.groupby(template_values['menus'].get('header', []), lambda x: x.MenuGroup):
 			menu_groups[key] = list(group)
 
-		if len(menu_groups.keys()) >= 3 and request.user:
+		if len(list(menu_groups.keys())) >= 3 and request.user:
 			search_menu = menu_groups.setdefault(4, [])
 		else:
 			search_menu = site_menu
@@ -728,7 +729,7 @@ class LayoutHeader(object):
 			menu_items.append((passvars.makeLink(PathToStart + 'logout.asp'), icon + gettext('Logout', request)))
 
 			names = ['LINK', 'DISPLAY', 'NOTICE']
-			site_bar_items = [dict(map(None, names, (escape(x[0]), ''.join(reversed(x[1:]))))) for x in menu_items]
+			site_bar_items = [dict(map(lambda y, z: (y, z), names, (escape(x[0]), ''.join(reversed(x[1:]))))) for x in menu_items]
 			item_tmpl = u'<li><a href="%(LINK)s">%(DISPLAY)s</a></li>'
 			site_bar_menu.extend(item_tmpl % {'LINK': x['LINK'], 'DISPLAY': x['DISPLAY']} for x in site_bar_items)
 			if pageinfo.HasHelp:
@@ -841,9 +842,7 @@ class LayoutFooter(object):
 		layout_template = template_values['FooterLayoutHTML']
 
 		if template_values['FooterSystemLayout'] and template_values['FooterLayoutHTMLURL']:
-			f = open(os.path.join(_system_layout_dir, template_values['FooterLayoutHTMLURL']), 'rU')
-			layout_template = f.read().decode('utf8')
-			f.close()
+			layout_template = read_file(os.path.join(_system_layout_dir, template_values['FooterLayoutHTMLURL']))
 		if not layout_template:
 			return ''
 

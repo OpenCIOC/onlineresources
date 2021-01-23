@@ -14,10 +14,12 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
+from __future__ import print_function
 import argparse
 from collections import namedtuple, defaultdict, Counter
 import copy
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 import datetime
 from glob import glob
 import itertools
@@ -27,9 +29,10 @@ import subprocess
 import sys
 import tempfile
 import traceback
-from urlparse import urljoin
+from six.moves.urllib.parse import urljoin
 from zipfile import ZipFile
 import zipfile
+from six.moves import map
 
 CREATE_NO_WINDOW = 0x08000000
 creationflags = 0
@@ -163,7 +166,7 @@ def stream_download(dest_file, url, **kwargs):
 			size += len(chunk)
 			fd.write(chunk)
 
-	print 'downloaded', size, 'bytes'
+	print('downloaded', size, 'bytes')
 
 
 def upload_num_report(url, records_sent, counts, field, dest_file, **kwargs):
@@ -190,7 +193,7 @@ def remove_exclusions(reader_to_exclude_from, url, args, **kwargs):
 		fd.seek(0)
 		csv_file = open_zipfile(fd)
 		reader = UTF8Reader(csv_file)
-		reader.next()
+		next(reader)
 		exclusion_set = set((x[0] for x in reader))
 
 	for row in reader_to_exclude_from:
@@ -225,16 +228,16 @@ def calculate_deletion_list(lang, url, args, **kwargs):
 
 		csv_file = open_zipfile(previous_filenames[-1])
 		reader = UTF8Reader(csv_file)
-		reader.next()
+		next(reader)
 		previous = set(remove_exclusions(reader, url, args, **kwargs))
 		previous_count = len(previous)
 
 		csv_file.close()
 		csv_file = open_zipfile(dest_file)
 		reader = UTF8Reader(csv_file)
-		header = reader.next()
+		header = next(reader)
 
-		current_records = map(tuple, reader)
+		current_records = list(map(tuple, reader))
 		record_counts = Counter(x[0] for x in current_records)
 
 		previous.difference_update(current_records)
@@ -259,7 +262,7 @@ def calculate_deletion_list(lang, url, args, **kwargs):
 	else:
 		csv_file = open_zipfile(dest_file)
 		reader = UTF8Reader(csv_file)
-		header = reader.next()
+		header = next(reader)
 		record_counts = Counter(x[0] for x in reader)
 		csv_file.close()
 
@@ -484,7 +487,7 @@ def process_language(args, lang):
 	kwargs = {}
 	counts = defaultdict(lambda: 0)
 
-	print '\n\nProcessing %s:\n' % lang.language_name
+	print('\n\nProcessing %s:\n' % lang.language_name)
 
 	try:
 		args.previous, args.now = calculate_previous_date_and_this_date(lang, args.dest, args.filename_prefix, args.force_previous)
@@ -533,7 +536,7 @@ def process_language(args, lang):
 
 	db_count_field = get_config_item(args, 'airs_export_db_count_field', None)
 	if record_counts and db_count_field and not args.file:
-		records_sent = counts.keys()
+		records_sent = list(counts.keys())
 		try:
 			upload_num_report(url, records_sent, record_counts, db_count_field, args.dest_file, **download_kwargs(lang, args))
 		except requests.HTTPError as e:
@@ -581,7 +584,7 @@ def main(argv):
 	langs = get_config_item(args, 'airs_export_languages', 'en-CA').split(',')
 	for culture in langs:
 		if args.only_lang and culture not in args.only_lang:
-			print 'Skipping ', culture
+			print('Skipping ', culture)
 			continue
 
 		lang = _lang_settings.get(culture.strip(), _lang_settings['en-CA'])
@@ -601,8 +604,8 @@ def main(argv):
 			sys.stderr.is_dirty() and any(x is None for x in error_logs)
 		)
 	else:
-		print
-		print "".join(results)
+		print()
+		print("".join(results))
 
 	if after_cmd:
 		p = subprocess.Popen(after_cmd, shell=True, cwd=args.dest)

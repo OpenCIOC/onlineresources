@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import logging
 from datetime import datetime
 
@@ -28,6 +29,7 @@ from pyramid.renderers import render
 from cioc.core import constants as const, viewbase, i18n, validators, format, syslanguage
 from cioc.web.admin.notices import get_notices_info
 from cioc.core.rootfactories import BasicRootFactory
+import six
 
 log = logging.getLogger(__name__)
 
@@ -36,7 +38,7 @@ _ = i18n.gettext
 templateprefix = 'cioc.web.cic:templates/reminders/'
 
 dismiss_options = {'S': False, 'A': True}
-dismiss_options_reverse = {v: k for k, v in dismiss_options.iteritems()}
+dismiss_options_reverse = {v: k for k, v in six.iteritems(dismiss_options)}
 
 
 class ReminderBaseSchema(validators.Schema):
@@ -358,10 +360,10 @@ class ReminderView(viewbase.ViewBase):
 		if not is_add:
 			if not is_error:
 				data['reminder'] = reminder
-				data['reminder_user_ID'] = [unicode(x[0]) for x in reminder_users]
+				data['reminder_user_ID'] = [six.text_type(x[0]) for x in reminder_users]
 				data['reminder_agency_ID'] = [x[0] for x in reminder_agencies]
 				data['NUM'] = [x[0] for x in nums]
-				data['VNUM'] = [unicode(x[0]) for x in vnums]
+				data['VNUM'] = [six.text_type(x[0]) for x in vnums]
 
 		if is_add or is_error:
 			data['NUM'] = request.params.getall('NUM')

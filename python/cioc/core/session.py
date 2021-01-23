@@ -14,14 +14,16 @@
 #  limitations under the License.
 # =========================================================================================
 
-import time
-import cPickle
+from __future__ import absolute_import
+import json
 import functools
+import time
 from uuid import uuid4
 
 from pyramid_redis_sessions.session import RedisSession
 from pyramid_redis_sessions.connection import get_default_connection
 from pyramid_redis_sessions.util import get_unique_session_id
+from cioc.core.cache import EnhancedJSONEncoder, EnhancedJSONDecoder
 
 from cioc.core import constants as const
 
@@ -53,14 +55,14 @@ def _generate_session_id():
 	return const._app_name + ':' + uuid4().hex
 
 
-def session_dumps(value, dumps=cPickle.dumps):
-	return dumps(value)
+def session_dumps(value, dumps=json.dumps, cls=EnhancedJSONEncoder):
+	return dumps(value, cls=cls)
 
 
-def session_loads(value, loads=cPickle.loads):
+def session_loads(value, loads=json.loads, cls=EnhancedJSONDecoder):
 	try:
-		return loads(value)
-	except (ValueError, UnicodeDecodeError, cPickle.UnpicklingError):
+		return loads(value, cls=cls)
+	except (ValueError, UnicodeDecodeError):
 		return {
 			'managed_dict': {},
 			'created': time.time(),

@@ -22,8 +22,10 @@ from datetime import datetime
 from json import dumps as j
 from cioc.core import constants as const, googlemaps, clienttracker, vacancyscript, detailsscript, gtranslate
 from cioc.core.format import textToHTML
+from cioc.core.modelstate import convert_options
 
-from webhelpers.html import tags
+from webhelpers2.html import tags
+import six
 %>
 <%
 viewdata = request.viewdata
@@ -51,7 +53,7 @@ ${gtranslate.render_ui(request)}
 							%endif
 						%endfor
 					</span>
-					${tags.select('UseCICVwTmp', None, [('', '')] + map(tuple, views), class_="form-control")} <input type="submit" value="${_('Change View (Temp.)')}" class="btn btn-default">
+					${tags.select('UseCICVwTmp', None, convert_options([('', '')] + list(map(tuple, views))), class_="form-control")} <input type="submit" value="${_('Change View (Temp.)')}" class="btn btn-default">
 				</div> <!-- .cioc-col-md-6 -->
 			%endif
 		</div> <!-- .cioc-grid-row -->
@@ -204,7 +206,7 @@ ${gtranslate.render_ui(request)}
 						%if field_contents:
 							%if field.CheckMultiline or field.CheckHTML:
 								<% field_contents = textToHTML(field_contents) %>
-							%elif field.FieldName.endswith('_DATE') and not isinstance(field_contents, basestring):
+							%elif field.FieldName.endswith('_DATE') and not isinstance(field_contents, six.string_types):
 								<% field_contents = format_date(field_contents) %>
 							%endif
 							<% field_display = field.FieldDisplay %>
@@ -213,7 +215,7 @@ ${gtranslate.render_ui(request)}
 							%endif
 							<tr>
 								<td class="FieldLabelLeft">${field_display|n}</td>
-								<td class="field-detail clearfix">${unicode(field_contents)|n}</td>
+								<td class="field-detail clearfix">${six.text_type(field_contents)|n}</td>
 							</tr>
 						%endif
 					%endfor
@@ -288,7 +290,7 @@ ${gtranslate.render_ui(request)}
 						%if related_record.NON_PUBLIC and request.user:
 							<div class="Alert NoWrap SmallNote">${_('NON PUBLIC')}</div>
 						%endif
-						${unicode(related_record.SUMMARY if not related_record.CheckHTML else textToHTML(related_record.SUMMARY))|n}
+						${six.text_type(related_record.SUMMARY if not related_record.CheckHTML else textToHTML(related_record.SUMMARY))|n}
 					</div>
 					%endif
 					%endfor

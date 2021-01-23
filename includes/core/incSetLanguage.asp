@@ -6,7 +6,7 @@
 '  you may not use this file except in compliance with the License.
 '  You may obtain a copy of the License at
 '
-'      http://www.apache.org/licenses/LICENSE-2.0
+'	   http://www.apache.org/licenses/LICENSE-2.0
 '
 '  Unless required by applicable law or agreed to in writing, software
 '  distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,7 +43,7 @@ End Sub
 <!--#include file="incInitPython.asp"-->
 <script language="python" runat="server">
 # XXX this needs to be the first bit of python executed
-if Application("InitPython"):
+if Application.Value("InitPython"):
 	initialize_python(str(Request.ServerVariables('APPL_PHYSICAL_PATH')))
 	Application.SetValue("InitPython", False)
 
@@ -51,7 +51,7 @@ if Application("InitPython"):
 #import cioc.core.reloader as reloader
 #reloader.check_reloader()
 #reloader.start_profiler()
-
+import six
 
 from win32com.server.util import wrap, unwrap
 from cioc.core import syslanguage
@@ -67,18 +67,17 @@ CULTURE_CHINESE_SIMPLIFIED = syslanguage.CULTURE_CHINESE_SIMPLIFIED
 LCID_ENGLISH_CANADIAN = syslanguage.LCID_ENGLISH_CANADIAN
 LCID_FRENCH_CANADIAN = syslanguage.LCID_FRENCH_CANADIAN
 
-
 pyrequest = RequestShim(Request, Response)
 pycurent_lang = pyrequest.language
 g_objCurrentLang = wrap(pycurent_lang)
 
-if not Application('CulturesUpdated') or Application('CulturesUpdated') != syslanguage._updated:
+if not Application.Value('CulturesUpdated') or Application.Value('CulturesUpdated') != syslanguage._updated:
 	Application.SetValue('CulturesUpdated', syslanguage._updated)
 	Application.SetValue("Cultures",[x.Culture for x in syslanguage._culture_list])
 	#Application.SetValue("DefaultCulture", dboptions.DefaultCulture)
 	for desc in syslanguage._culture_list:
-		Application.SetValue(u'LangID_' + unicode(desc.LangID), desc.Culture)
-		for key,value in desc._asdict().iteritems():
+		Application.SetValue(u'LangID_' + six.text_type(desc.LangID), desc.Culture)
+		for key,value in desc._asdict().items():
 			if key == 'Culture':
 				Application.SetValue("Culture_" + value, True)
 			else:

@@ -15,12 +15,17 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging
+import six
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
-from cgi import escape
-import urllib2
+try:
+	from cgi import escape
+except ImportError:
+	from html import escape
+import six.moves.urllib.request, six.moves.urllib.error, six.moves.urllib.parse
 import codecs
 import os
 
@@ -28,6 +33,7 @@ from formencode import Schema, validators
 from pyramid.view import view_config, view_defaults
 
 from cioc.core import validators as ciocvalidators
+from cioc.core.utils import read_file
 
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
@@ -134,10 +140,10 @@ class TemplateLayout(viewbase.AdminViewBase):
 
 			root = ET.Element('DESCS')
 
-			for culture, data in model_state.form.data['descriptions'].iteritems():
+			for culture, data in six.iteritems(model_state.form.data['descriptions']):
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, "LANG").text = culture.replace('_', '-')
-				for name, value in data.iteritems():
+				for name, value in six.iteritems(data):
 					if value:
 						ET.SubElement(desc, name).text = value
 
@@ -241,22 +247,18 @@ class TemplateLayout(viewbase.AdminViewBase):
 
 		if layout and layout.SystemLayout:
 			if layout.LayoutCSSURL:
-				f = open(os.path.join(_system_layout_dir, layout.LayoutCSSURL), 'rU')
-				layout.LayoutCSS = f.read().decode('utf8')
-				f.close()
+				layout.LayoutCSS = read_file(os.path.join(_system_layout_dir, layout.LayoutCSSURL))
 				layout.LayoutCSSURL = None
 
-			for desc in layout_descriptions.itervalues():
+			for desc in six.itervalues(layout_descriptions):
 				if desc.LayoutHTMLURL:
-					f = open(os.path.join(_system_layout_dir, desc.LayoutHTMLURL), 'rU')
-					desc.LayoutHTML = f.read().decode('utf8')
-					f.close()
+					desc.LayoutHTML = read_file(os.path.join(_system_layout_dir, desc.LayoutHTMLURL))
 					desc.LayoutHTMLURL = None
 
 		templates = None
 		if is_add and layout:
 			layout.SystemLayout = False
-			for desc in layout_descriptions.itervalues():
+			for desc in six.itervalues(layout_descriptions):
 				desc.LayoutName = None
 		else:
 			if is_add:
@@ -276,7 +278,7 @@ class TemplateLayout(viewbase.AdminViewBase):
 
 		retval = []
 		xml = ET.fromstring(layout.RELATED_TEMPLATE.encode('utf8'))
-		MemberID = unicode(self.request.dboptions.MemberID)
+		MemberID = six.text_type(self.request.dboptions.MemberID)
 		for template in xml.findall('./TMPL'):
 
 			if template.get('Owner', agency) == agency and template.get('MemberID', MemberID) == MemberID:
@@ -381,7 +383,7 @@ class TemplateLayout(viewbase.AdminViewBase):
 			return {'fail': True, 'message': 'URL not valid:' + ','.join(model_state.errors_for('url'))}
 
 		try:
-			response = urllib2.urlopen('http://' + model_state.form.data['url'])
+			response = six.moves.urllib.request.urlopen('http://' + model_state.form.data['url'])
 
 			headers = response.info()
 			contenttype = headers['Content-Type'].split(';')
@@ -398,5 +400,5 @@ class TemplateLayout(viewbase.AdminViewBase):
 			log.debug(data)
 
 			return {'fail': False, 'data': data}
-		except urllib2.HTTPError, e:
+		except six.moves.urllib.error.HTTPError as e:
 			return {'fail': True, 'message': str(e)}

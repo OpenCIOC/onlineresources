@@ -14,13 +14,16 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
 import os
 
 import struct
 from zlib import crc32
+from binascii import unhexlify
 
 class FormatError(Exception):
 	pass
+
 
 class jQueryUIIcons(object):
 	def __init__(self, location):
@@ -35,8 +38,8 @@ class jQueryUIIcons(object):
 		return mtime
 
 	def get_icon_string(self, colour):
-		colour = colour.decode('hex')
-		
+		colour = unhexlify(colour)
+
 		mtime = os.path.getmtime(self.location)
 
 		if not self._template or mtime != self._changed:
@@ -44,19 +47,15 @@ class jQueryUIIcons(object):
 			data = f.read()
 			f.close()
 
-			pos = data.find('PLTE') - 4
+			pos = data.find(b'PLTE') - 4
 			if pos < 0:
 				raise FormatError()
-			
-			length = self._palette_length = struct.unpack('>L', data[pos:pos+4])[0]
 
-			self._template = (data[:pos+8], data[pos+8+length+4:])
+			length = self._palette_length = struct.unpack('>L', data[pos:pos + 4])[0]
 
-		colour = colour * (self._palette_length / 3)
-		colour = colour + struct.pack('>L', crc32('PLTE' + colour) & 0xffffffff)
+			self._template = (data[:pos + 8], data[pos + 8 + length + 4:])
+
+		colour = colour * (self._palette_length // 3)
+		colour = colour + struct.pack('>L', crc32(b'PLTE' + colour) & 0xffffffff)
 
 		return colour.join(self._template)
-			
-
-
-

@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import logging
 
 # 3rd party
@@ -25,6 +26,8 @@ from pyramid.view import view_config
 # this app
 from cioc.core import i18n
 from cioc.core import viewbase
+from six.moves import map
+from six.moves import zip
 
 log = logging.getLogger(__name__)
 
@@ -95,5 +98,5 @@ class JsonfeedsQuicklist(viewbase.ViewBase):
 		request.response.headers["Access-Control-Allow-Origin"] = "*"
 		return {
 			'type': type_name,
-			'quicklist': map(fixfn, quicklist)
+			'quicklist': list(map(fixfn, quicklist))
 		}

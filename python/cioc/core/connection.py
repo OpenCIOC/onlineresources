@@ -14,6 +14,7 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
 import pyodbc
 
 import cioc.core.constants as const
@@ -71,7 +72,7 @@ class ConnectionManager(object):
 		try:
 			conn = pyodbc.connect(self.get_connection_string(perm), autocommit=True, unicode_results=True)
 			conn.execute("SET LANGUAGE '" + language + "'")
-		except pyodbc.Error, e:
+		except pyodbc.Error as e:
 			raise ConnectionError(e)
 
 		return conn

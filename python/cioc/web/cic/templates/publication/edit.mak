@@ -20,7 +20,9 @@
 <%inherit file="cioc.web:templates/master.mak" />
 <%!
 from markupsafe import escape_silent as h, Markup
-from webhelpers.html import tags
+from webhelpers2.html import tags
+
+from cioc.core.modelstate import convert_options
 %>
 
 %if not request.user.cic.LimitedView and not is_shared_edit:
@@ -229,7 +231,7 @@ ${self.makeMgmtInfo(publication)}
 	<input type="hidden" name="PB_ID" value="${PB_ID}">
 	</div>
 	<br>
-	${tags.select("GH_ID", None, options=generalheadings) }
+	${tags.select("GH_ID", None, options=convert_options(generalheadings)) }
 	<input type="submit" value="${_('View/Edit General Heading')}">
 	</form>
 	%endif
@@ -243,7 +245,7 @@ ${self.makeMgmtInfo(publication)}
 	<form action="${request.pageinfo.PathToStart}pubs_edit_gh_copy.asp" method="post">
 	<div class="NotVisible">${request.passvars.cached_form_vals|n}
 	<input type="hidden" name="PBID" value="${PB_ID}"></div>
-	${tags.select("CopyPBID", None, options=[('', '')] + publications, id="CopyPBID") }
+	${tags.select("CopyPBID", None, options=convert_options([('', '')] + publications), id="CopyPBID") }
 	<input type="submit" value="${_('View/Copy General Headings')}">
 	</form>
 	</td>

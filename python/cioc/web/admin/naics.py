@@ -15,7 +15,9 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging 
+import six
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -65,7 +67,7 @@ class NaicsBaseSchema(Schema):
 
 	chained_validators = [MaybeRequireParent()]
 
-base_fields = NaicsBaseSchema.fields.keys()
+base_fields = list(NaicsBaseSchema.fields.keys())
 
 class NaicsDescriptionSchema(Schema):
 	if_key_missing = None
@@ -135,10 +137,10 @@ class Naics(viewbase.AdminViewBase):
 
 			root = ET.Element('DESCS')
 
-			for culture, data in model_state.form.data['descriptions'].iteritems():
+			for culture, data in six.iteritems(model_state.form.data['descriptions']):
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-				for name, value in data.iteritems():
+				for name, value in six.iteritems(data):
 					if value:
 						ET.SubElement(desc, name).text = value
 
@@ -199,7 +201,7 @@ class Naics(viewbase.AdminViewBase):
 					self._error_page(_('NAICS Code Not Found', request))
 
 
-		descs = sorted(descriptions.items(), key=lambda x: x[0] != request.language.Culture)
+		descs = sorted(list(descriptions.items()), key=lambda x: x[0] != request.language.Culture)
 
 		classification = None
 		if not is_add:
@@ -269,7 +271,7 @@ class Naics(viewbase.AdminViewBase):
 		if naics:
 			model_state.form.data['naics.NewCode'] = Code
 
-		descs = sorted(descriptions.items(), key=lambda x: x[0] != request.language.Culture)
+		descs = sorted(list(descriptions.items()), key=lambda x: x[0] != request.language.Culture)
 
 
 		classification = None

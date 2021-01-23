@@ -61,14 +61,13 @@ End If
 <script language="python" runat="server">
 import cioc.core.template as template 
 from markupsafe import Markup
-reload(template)
 
 def render_popup_page_help_link(TXT_PAGE_HELP, extra_class=None):
 	pageinfo = pyrequest.pageinfo
 	if not pageinfo.HasHelp or not user_bLoggedIn:
 		return ''
 	
-	exc = '' if not extra_class else ('class="%s"' % unicode(extra_class))
+	exc = '' if not extra_class else ('class="%s"' % six.text_type(extra_class))
 	return ' | <a href="%(link)s" target="pHelp" %(extra_class)s onClick="openWinL(\'%(link)s\', \'pHelp\')">%(display)s</a>' % \
 				dict(link=Server.HTMLEncode(pyrequest.passvars.makeLinkAdmin('pagehelp', {'Page': pageinfo.ThisPageFull})),
 					display=TXT_PAGE_HELP, extra_class=exc)

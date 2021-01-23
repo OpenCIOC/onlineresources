@@ -14,6 +14,7 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
 from collections import namedtuple
 from operator import itemgetter
 import xml.etree.cElementTree as ET
@@ -27,6 +28,8 @@ from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase 
 
 import logging 
+from six.moves import map
+import six
 log = logging.getLogger(__name__)
 
 templateprefix = 'cioc.web.admin:templates/'
@@ -68,9 +71,9 @@ class OfflineTools(viewbase.AdminViewBase):
 			root = ET.Element('Data')
 
 			for machine in machines:
-				machine_id = unicode(machine['MachineID'])
+				machine_id = six.text_type(machine['MachineID'])
 				for sl in machine['SecurityLevels']:
-					ET.SubElement(root, 'MachineSL', MachineID=machine_id, SL_ID=unicode(sl))
+					ET.SubElement(root, 'MachineSL', MachineID=machine_id, SL_ID=six.text_type(sl))
 
 			
 			args = [user.Agency, ET.tostring(root)]
@@ -148,7 +151,7 @@ class OfflineTools(viewbase.AdminViewBase):
 		data = []
 		if all:
 			for machine in offline_machines:
-				machine.SecurityLevels = map(int,self._list_from_xml(machine.SecurityLevels, 'SL_ID'))
+				machine.SecurityLevels = list(map(int,self._list_from_xml(machine.SecurityLevels, 'SL_ID')))
 				data.append({'MachineID': machine.MachineID, 'SecurityLevels': machine.SecurityLevels})
 
 

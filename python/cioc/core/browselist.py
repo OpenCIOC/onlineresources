@@ -15,8 +15,12 @@
 # =========================================================================================
 
 # std library
+from __future__ import absolute_import
 import string
-from cgi import escape
+try:
+	from cgi import escape
+except ImportError:
+	from html import escape
 
 # 3rd party
 
@@ -27,7 +31,7 @@ _ = i18n.gettext
 
 
 def makeAlphaListItems(include_nums, link_url, request):
-	letters = string.uppercase
+	letters = string.ascii_uppercase
 	if include_nums:
 		letters = ['0-9'] + list(letters)
 

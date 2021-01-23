@@ -14,20 +14,25 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import absolute_import
 import os
 import logging
 import itertools
 
 from markupsafe import Markup
-from webhelpers.html import tags
+from webhelpers2.html import tags
 
 from cioc.core import template, viewbase, i18n, constants as const
 from cioc.web.cic.viewbase import CicViewBase
+from cioc.core.modelstate import convert_options
 from cioc.web.gbl.icons import make_icon_html
 from cioc.core.browselist import makeAlphaList, makeAlphaListItems
+from cioc.core.utils import read_file
 from pyramid.view import view_config
 
 from .csearch import ChildCareSearch
+import six
+from six.moves import map
 
 _system_layout_dir = template._system_layout_dir
 encode_link_values = template.encode_link_values
@@ -133,7 +138,7 @@ class LayoutSearch(object):
 		# main menu:
 		other_langs = []
 		if user or self.menu_items_custom:
-			for key, val in viewdata.Cultures.iteritems():
+			for key, val in six.iteritems(viewdata.Cultures):
 				if key == Culture:
 					continue
 				httpvals = {}
@@ -209,10 +214,10 @@ class LayoutSearch(object):
 
 			if self.viewslist:
 				cv_select = tags.select('UseCICVw', None,
-							[('', '')] + map(tuple, self.viewslist), class_="form-control")
+							convert_options([('', '')] + list(map(tuple, self.viewslist))), class_="form-control")
 
 				cv_params = ''.join(tags.hidden(n, value=v) for n, v in
-						request.params.iteritems() if n != 'UseCICVw')
+						six.iteritems(request.params) if n != 'UseCICVw')
 
 				cv_submit = tags.submit(None, value=_('Change View'))
 
@@ -379,7 +384,7 @@ class LayoutSearch(object):
 			'ORGS_WITH_OPS': request.viewdata.cic.OrganizationsWithVolOps or _("Organizations with Volunteer Opportunities"),
 
 			'MAKE_LINK': template.make_linkify_fn(request),
-			'VIEWS_LIST': [{'VIEWTYPE': unicode(x.ViewType), 'VIEWNAME': x.ViewName} for x in self.viewslist] if self.viewslist else [],
+			'VIEWS_LIST': [{'VIEWTYPE': six.text_type(x.ViewType), 'VIEWNAME': x.ViewName} for x in self.viewslist] if self.viewslist else [],
 			'CHANGE_VIEW_TITLE': _('Change View'),
 
 			'HAS_CENTRE_SECTION': has_centre_section
@@ -504,9 +509,7 @@ class BasicSearch(CicViewBase):
 				viewslist = cursor.fetchall()
 
 		if layout_info.SystemLayout and layout_info.LayoutHTMLURL:
-			f = open(os.path.join(_system_layout_dir, layout_info.LayoutHTMLURL), 'rU')
-			layout_info.SearchLayoutHTML = f.read().decode('utf8')
-			f.close()
+			layout_info.SearchLayoutHTML = read_file(os.path.join(_system_layout_dir, layout_info.LayoutHTMLURL))
 
 		focus = 'Search.STerms'
 		if not search_info.BSrchKeywords:

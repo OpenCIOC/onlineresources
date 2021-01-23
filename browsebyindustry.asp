@@ -70,6 +70,13 @@ Dim strChosenCode
 strChosenCode = Request("NAICS")
 If Nl(strChosenCode) Then
 	strChosenCode = Null
+ElseIf Len(strChosenCode) > 6 Then
+	Call handleError(TXT_INVALID_CODE, _
+		vbNullString, _
+		vbNullString)
+	Call makePageFooter(False)
+	%><!--#include file="includes/core/incClose.asp" --><%
+	Response.End()
 End If
 
 Dim dispSubjTerm

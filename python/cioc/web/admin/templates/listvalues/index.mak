@@ -19,6 +19,7 @@
 <%inherit file="cioc.web:templates/master.mak" />
 <%! 
 from markupsafe import Markup
+import six
 %>
 <% 
 makeLink = request.passvars.makeLink 
@@ -86,7 +87,7 @@ ${make_row(prefix, listitem, list_id)}
 
 %if list_type.Usage:
 	<% 
-		usage = list_type.Usage.get(unicode(getattr(listitem, list_type.ID or list_type.NameField)))
+		usage = list_type.Usage.get(six.text_type(getattr(listitem, list_type.ID or list_type.NameField)))
 		usage1 = getattr(usage, 'Usage1', None)
 		usage2 = getattr(usage, 'Usage2', None)
 	%>

@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import logging
 import xml.etree.cElementTree as ET
 
@@ -28,6 +29,7 @@ from cioc.core import validators as ciocvalidators, syslanguage
 
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
+import six
 
 log = logging.getLogger(__name__)
 
@@ -121,13 +123,13 @@ class MappingSystem(viewbase.AdminViewBase):
 
 			root = ET.Element('DESCS')
 
-			for culture, data in model_state.form.data['descriptions'].iteritems():
+			for culture, data in six.iteritems(model_state.form.data['descriptions']):
 				if culture.replace('_', '-') not in shown_cultures:
 					continue
 
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-				for name, value in data.iteritems():
+				for name, value in six.iteritems(data):
 					if value:
 						ET.SubElement(desc, name).text = value
 

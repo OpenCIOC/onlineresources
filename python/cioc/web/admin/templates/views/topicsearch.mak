@@ -70,7 +70,7 @@ ${request.passvars.cached_form_vals|n}
 <tr>
 	<td class="FieldLabelLeft">${renderer.label(prefix + 'Step', _('Step'))}</td>
 	<td>${renderer.errorlist(prefix + "Step")}
-    ${renderer.select(prefix + 'Step', [''] + map(str,range(1,6)))}</td>
+    ${renderer.select(prefix + 'Step', [''] + list(map(str,range(1,6))))}</td>
 </tr>
 %if field_name != 'Heading1':
 <tr>

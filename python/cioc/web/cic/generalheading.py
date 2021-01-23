@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import logging
 
 from itertools import groupby
@@ -35,13 +36,15 @@ from cioc.core import validators, constants as const
 
 from cioc.core.i18n import gettext as _
 from cioc.web.cic.viewbase import CicViewBase
+import six
+from six.moves import map
 
 log = logging.getLogger(__name__)
 
 templateprefix = 'cioc.web.cic:templates/generalheading/'
 
 UsedOptions = {'Y': True, 'N': False, 'T': None}
-RUsedOptions = dict((v, k) for k, v in UsedOptions.iteritems())
+RUsedOptions = dict((v, k) for k, v in six.iteritems(UsedOptions))
 
 
 class GeneralHeadingBaseSchema(Schema):
@@ -57,7 +60,7 @@ class GeneralHeadingBaseSchema(Schema):
 
 	IconNameFull = validators.String(max=65)
 
-base_fields = GeneralHeadingBaseSchema.fields.keys()
+base_fields = list(GeneralHeadingBaseSchema.fields.keys())
 
 
 class GeneralHeadingDescriptionSchema(Schema):
@@ -148,7 +151,7 @@ class GeneralHeading(CicViewBase):
 		validator = validators.IDValidator(not_empty=True)
 		try:
 			PB_ID = validator.to_python(request.POST.get('PB_ID'))
-		except validators.Invalid, e:
+		except validators.Invalid as e:
 			self._error_page(_('Publication ID:', request) + e.message)
 
 		if user.cic.LimitedView and PB_ID and user.cic.PB_ID != PB_ID:
@@ -181,10 +184,10 @@ class GeneralHeading(CicViewBase):
 
 			root = ET.Element('DESCS')
 
-			for culture, data in (form_data['descriptions'] or {}).iteritems():
+			for culture, data in six.iteritems((form_data['descriptions'] or {})):
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-				for name, value in data.iteritems():
+				for name, value in six.iteritems(data):
 					if value:
 						ET.SubElement(desc, name).text = value
 
@@ -194,7 +197,7 @@ class GeneralHeading(CicViewBase):
 			root = ET.Element('HEADINGS')
 
 			for value in form_data['RelatedHeadings'] or []:
-				desc = ET.SubElement(root, 'HEADING').text = unicode(value)
+				desc = ET.SubElement(root, 'HEADING').text = six.text_type(value)
 
 			args.append(ET.tostring(root))
 			kwargs.append('RelatedHeadings')
@@ -351,7 +354,7 @@ class GeneralHeading(CicViewBase):
 
 					cursor.nextset()
 
-					relatedheadings = set(unicode(x[0]) for x in cursor.fetchall())
+					relatedheadings = set(six.text_type(x[0]) for x in cursor.fetchall())
 
 					cursor.nextset()
 
@@ -382,7 +385,7 @@ class GeneralHeading(CicViewBase):
 
 			cursor.nextset()
 
-			headinggroups = map(tuple, cursor.fetchall())
+			headinggroups = list(map(tuple, cursor.fetchall()))
 
 			cursor.nextset()
 

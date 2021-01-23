@@ -15,6 +15,7 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 from cioc.core.basetypes import IsIDType
 
 def test_is_id_type():

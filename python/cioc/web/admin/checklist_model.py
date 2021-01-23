@@ -15,11 +15,13 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 from formencode import validators
 from pyramid.decorator import reify
 from markupsafe import Markup
 
 from cioc.core import constants as const, i18n, validators as ciocvalidators
+import six
 
 _ = lambda x: x
 
@@ -125,7 +127,7 @@ class CheckListModel(object):
 		if not chkusage:
 			return True
 
-		usage = chkusage.get(unicode(chkid))
+		usage = chkusage.get(six.text_type(chkid))
 
 		return not any(getattr(usage, x, None) for x in ['Usage1Local', 'Usage1Other', 'Usage2Local', 'Usage2Other'])
 
@@ -1232,7 +1234,7 @@ class ChkNoteType(CheckListModel):
 
 
 def gen_map_pin_field(itemid, usage, request):
-	chkusage = usage.get(unicode(itemid))
+	chkusage = usage.get(six.text_type(itemid))
 	if not chkusage:
 		return ''
 	return Markup('<img src="%s">' % request.static_url('cioc:images/mapping/' + chkusage.MapImageSm))
@@ -1850,4 +1852,4 @@ class ChkLanguageDetail(CheckListModel):
 						'''
 	CanDeleteCondition = 'NOT EXISTS(SELECT * FROM CIC_BT_LN_LND WHERE LND_ID=chk.LND_ID)'
 
-checklists = dict((x.FieldCode, x) for k, x in globals().iteritems() if k.startswith('Chk') and not x.skip)
+checklists = dict((x.FieldCode, x) for k, x in six.iteritems(globals()) if k.startswith('Chk') and not x.skip)

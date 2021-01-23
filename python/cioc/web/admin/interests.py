@@ -15,7 +15,10 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging
+import six
+from six.moves import map
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -82,7 +85,7 @@ class Interests(viewbase.AdminViewBase):
 			if interest.Groups is not None:
 				interest.Groups = ' ; '.join(x['Name'] for x in self._dict_list_from_xml(interest.Groups, 'GROUP') if x.get('Name'))
 
-		request.model_state.form.data['ChkHide'] = [unicode(x.AI_ID) for x in interests if x.Hidden]
+		request.model_state.form.data['ChkHide'] = [six.text_type(x.AI_ID) for x in interests if x.Hidden]
 		domain, shown_cultures = viewbase.get_domain_and_show_cultures(request.params)
 		record_cultures = syslanguage.active_record_cultures()
 
@@ -157,13 +160,13 @@ class Interests(viewbase.AdminViewBase):
 
 			root = ET.Element('DESCS')
 
-			for culture, data in model_state.form.data['descriptions'].iteritems():
+			for culture, data in six.iteritems(model_state.form.data['descriptions']):
 				if culture.replace('_', '-') not in shown_cultures:
 					continue
 
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-				for name, value in data.iteritems():
+				for name, value in six.iteritems(data):
 					if value:
 						ET.SubElement(desc, name).text = value
 
@@ -171,7 +174,7 @@ class Interests(viewbase.AdminViewBase):
 
 			root = ET.Element('GROUPS')
 			for group_id in model_state.form.data['groups']:
-				ET.SubElement(root, 'GROUP').text = unicode(group_id)
+				ET.SubElement(root, 'GROUP').text = six.text_type(group_id)
 
 			args.append(ET.tostring(root))
 
@@ -279,7 +282,7 @@ class Interests(viewbase.AdminViewBase):
 						interest_descriptions[lng.Culture.replace('-', '_')] = lng
 
 					cursor.nextset()
-					groups = [unicode(x[0]) for x in cursor.fetchall()]
+					groups = [six.text_type(x[0]) for x in cursor.fetchall()]
 
 					cursor.close()
 

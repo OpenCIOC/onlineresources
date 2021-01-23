@@ -15,13 +15,12 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import codecs
 
 from pyramid.response import Response
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPUnauthorized, HTTPInternalServerError
-
-#from cStringIO import StringIO
 
 import lxml.etree as ET
 import isodate
@@ -100,7 +99,7 @@ class ClbcUpdate(viewbase.CicViewBase):
 
 				process_transactions(conn, inroot, outxmlroot, user.Mod)
 
-		except HTTPInternalServerError, e:
+		except HTTPInternalServerError as e:
 			return e
 
 		# Transaction committed and connection closed

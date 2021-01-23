@@ -16,6 +16,7 @@
 
 
 # std library
+from __future__ import absolute_import
 import logging
 
 # 3rd party libs
@@ -25,6 +26,8 @@ from pyramid.view import view_config, view_defaults
 from cioc.core import validators, constants as const
 from cioc.core.i18n import gettext as _
 from cioc.web.admin.viewbase import AdminViewBase, get_domain
+from six.moves import map
+import six
 
 log = logging.getLogger(__name__)
 
@@ -91,7 +94,7 @@ class PagesView(AdminViewBase):
 		if model_state.validate():
 			page_id = model_state.value('PageID')
 
-			args = [page_id, user.Mod, request.dboptions.MemberID, domain.id, user.Agency, model_state.value('page.Culture'), model_state.value('page.Slug'), model_state.value('page.Title'), model_state.value('page.Owner'), model_state.value('page.PageContent'), u','.join(map(unicode, model_state.value('views', [])))]
+			args = [page_id, user.Mod, request.dboptions.MemberID, domain.id, user.Agency, model_state.value('page.Culture'), model_state.value('page.Slug'), model_state.value('page.Title'), model_state.value('page.Owner'), model_state.value('page.PageContent'), u','.join(map(six.text_type, model_state.value('views', [])))]
 
 			log.debug('args %s', args)
 			with request.connmgr.get_connection('admin') as conn:
@@ -192,7 +195,7 @@ class PagesView(AdminViewBase):
 
 		data = model_state.form.data
 		data['page'] = page
-		data['views'] = set(unicode(v.ViewType) for v in views if v.Selected)
+		data['views'] = set(six.text_type(v.ViewType) for v in views if v.Selected)
 
 		title = _('Page (%s)', request) % _(domain.label, request)
 		return self._create_response_namespace(title, title, dict(PageID=page_id, page=page, is_add=is_add, views=views, domain=domain), no_index=True)

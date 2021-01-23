@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import logging
 
 import xml.etree.cElementTree as ET
@@ -31,6 +32,8 @@ from cioc.core.listformat import format_pub_list
 
 from cioc.core.i18n import gettext as _
 from cioc.web.cic.viewbase import CicViewBase
+import six
+from six.moves import map
 
 log = logging.getLogger(__name__)
 
@@ -50,7 +53,7 @@ class PublicationBaseSchema(Schema):
 
 	CanEditHeadingsShared = validators.Bool()
 
-base_fields = PublicationBaseSchema.fields.keys()
+base_fields = list(PublicationBaseSchema.fields.keys())
 
 
 class PublicationDescriptionSchema(Schema):
@@ -163,7 +166,7 @@ class Publication(CicViewBase):
 
 		pubs, shared_pubs, other_pubs = self._get_index_edit_info()
 
-		request.model_state.form.data['PubHide'] = {unicode(p.PB_ID) for p in shared_pubs if p.Hide}
+		request.model_state.form.data['PubHide'] = {six.text_type(p.PB_ID) for p in shared_pubs if p.Hide}
 
 		title = _('Manage Publications', request)
 		return self._create_response_namespace(title, title, dict(pubs=pubs, shared_pubs=shared_pubs, other_pubs=other_pubs), no_index=True, print_table=True)
@@ -242,10 +245,10 @@ class Publication(CicViewBase):
 
 			root = ET.Element('DESCS')
 
-			for culture, data in (form_data['descriptions'] or {}).iteritems():
+			for culture, data in six.iteritems((form_data['descriptions'] or {})):
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-				for name, value in data.iteritems():
+				for name, value in six.iteritems(data):
 					if value:
 						ET.SubElement(desc, name).text = value
 
@@ -266,25 +269,25 @@ class Publication(CicViewBase):
 					continue
 
 				group_el = ET.SubElement(root, 'GROUP')
-				ET.SubElement(group_el, 'CNT').text = unicode(i)
+				ET.SubElement(group_el, 'CNT').text = six.text_type(i)
 
-				for key, value in group.iteritems():
+				for key, value in six.iteritems(group):
 					if key == 'GroupID' and value == 'NEW':
 						value = -1
 
 					if key != 'Descriptions':
 						if value is not None:
-							ET.SubElement(group_el, key).text = unicode(value)
+							ET.SubElement(group_el, key).text = six.text_type(value)
 
 						continue
 
 					descs = ET.SubElement(group_el, 'DESCS')
-					for culture, data in value.iteritems():
+					for culture, data in six.iteritems(value):
 						culture = culture.replace('_', '-')
 
 						desc = ET.SubElement(descs, 'DESC')
 						ET.SubElement(desc, 'Culture').text = culture
-						for key, value in data.iteritems():
+						for key, value in six.iteritems(data):
 							if value:
 								ET.SubElement(desc, key).text = value
 

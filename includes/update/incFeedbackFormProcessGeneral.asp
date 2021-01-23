@@ -26,7 +26,7 @@ def getEventScheduleFields_l(
 		checkInteger, checkID, checkLength, checkAddValidationError, DateString):
 
 	feedback_schedules = getEventScheduleValues(checkDate, checkInteger, checkID, checkLength, checkAddValidationError)
-	feedback_map = {k: sorted(v) for k, v in feedback_schedules if not unicode(k).startswith('NEW')}
+	feedback_map = {k: sorted(v) for k, v in feedback_schedules if not six.text_type(k).startswith('NEW')}
 	existing_value = []
 	if not bSuggest:
 		xml = rsOrg.Fields('EVENT_SCHEDULE').Value or u'<SCHEDULES />'
@@ -38,7 +38,7 @@ def getEventScheduleFields_l(
 	changed = False
 	lines = []
 	for sched_id, schedule in existing_value:
-		new_schedule = [(k,unicode(format_time_if_iso(v) if k.endswith('_TIME') else format_date_if_iso(v) if k.endswith('_DATE') else int(v) if isinstance(v, bool) else v)) for k, v in feedback_map.get(sched_id, schedule)]
+		new_schedule = [(k,six.text_type(format_time_if_iso(v) if k.endswith('_TIME') else format_date_if_iso(v) if k.endswith('_DATE') else int(v) if isinstance(v, bool) else v)) for k, v in feedback_map.get(sched_id, schedule)]
 		if new_schedule != sorted(schedule):
 			changed = True
 
@@ -53,7 +53,7 @@ def getEventScheduleFields_l(
 			lines.append(line)
 
 	for sched_id, schedule in feedback_schedules:
-		if not unicode(sched_id).startswith(u'NEW'):
+		if not six.text_type(sched_id).startswith(u'NEW'):
 			continue
 
 		changed = True

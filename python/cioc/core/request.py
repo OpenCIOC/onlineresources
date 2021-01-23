@@ -16,8 +16,9 @@
 
 
 # Python STD Lib
-import Cookie
-import urllib2
+from __future__ import absolute_import
+import six.moves.http_cookies
+import six.moves.urllib.request, six.moves.urllib.error, six.moves.urllib.parse
 import logging
 
 # 3rd party libs
@@ -131,20 +132,20 @@ class CiocRequest(CiocRequestMixin, Request):
 		self.passvars
 
 	def cioc_get_cookie(self, name):
-		val = self.cookies.get(urllib2.quote(name).replace('_', '%5F'))
+		val = self.cookies.get(six.moves.urllib.parse.quote(name).replace('_', '%5F'))
 		if val:
-			val = urllib2.unquote(val)
+			val = six.moves.urllib.parse.unquote(val)
 		return val
 
 	def cioc_set_cookie(self, name, value, **args):
-		cookie = Cookie.SimpleCookie()
-		key = urllib2.quote(name).replace('_', '%5F')
+		cookie = six.moves.http_cookies.SimpleCookie()
+		key = six.moves.urllib.parse.quote(name).replace('_', '%5F')
 		if value is None:
 			# deleting value
 			value = ''
 			args['max_age'] = 0
 			args['expires'] = 'Wed, 31-Dec-97 23:59:59 GMT'
-		cookie[key] = urllib2.quote(value)
+		cookie[key] = six.moves.urllib.parse.quote(value)
 		morsel = cookie[key]
 		morsel.update((x, y) for x, y in args.items() if y is not None)
 

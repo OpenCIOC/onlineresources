@@ -15,6 +15,7 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 from pyramid import testing, url
 from cioc.core import viewbase, constants as const, pageinfo
 from cioc.web import on_new_request, on_context_found
@@ -82,7 +83,7 @@ class Test_ViewBase(object):
 		
 		try:
 			vb._go_to_page('~/test.asp')
-		except viewbase.GoToPage, e:
+		except viewbase.GoToPage as e:
 			assert e.url == '~/test.asp'
 			assert e.httpvals is None
 			assert e.exclude_keys is None
@@ -92,7 +93,7 @@ class Test_ViewBase(object):
 
 		try:
 			vb._go_to_page('~/test.asp', 'orange', 'blue')
-		except viewbase.GoToPage, e:
+		except viewbase.GoToPage as e:
 			assert e.url == '~/test.asp'
 			assert e.httpvals == 'orange'
 			assert e.exclude_keys == 'blue'
@@ -104,7 +105,7 @@ class Test_ViewBase(object):
 		
 		try:
 			vb._go_to_route('test')
-		except viewbase.GoToRoute, e:
+		except viewbase.GoToRoute as e:
 			assert e.route_name == 'test'
 			assert e.exclude_keys is None
 			assert not e.kw
@@ -114,7 +115,7 @@ class Test_ViewBase(object):
 
 		try:
 			vb._go_to_route('test', 'blue', orange='orange')
-		except viewbase.GoToRoute, e:
+		except viewbase.GoToRoute as e:
 			assert e.route_name == 'test'
 			assert e.exclude_keys == 'blue'
 			assert e.kw['orange'] == 'orange'

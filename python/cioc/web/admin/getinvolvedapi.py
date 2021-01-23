@@ -15,6 +15,7 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 from collections import namedtuple
 import xml.etree.cElementTree as ET
 from itertools import groupby
@@ -29,6 +30,8 @@ from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 
 import logging
+import six
+from six.moves import map
 log = logging.getLogger(__name__)
 
 templateprefix = 'cioc.web.admin:templates/'
@@ -100,9 +103,9 @@ class GetInvolvedAPI(viewbase.AdminViewBase):
 					continue
 
 				el = ET.SubElement(agencies, 'Agency')
-				for key, val in agency.iteritems():
+				for key, val in six.iteritems(agency):
 					if val:
-						ET.SubElement(el, key).text = unicode(val)
+						ET.SubElement(el, key).text = six.text_type(val)
 
 			interests = ET.Element('Interests')
 
@@ -111,9 +114,9 @@ class GetInvolvedAPI(viewbase.AdminViewBase):
 					continue
 
 				el = ET.SubElement(interests, 'Interest')
-				for key, val in interest.iteritems():
+				for key, val in six.iteritems(interest):
 					if val:
-						ET.SubElement(el, key).text = unicode(val)
+						ET.SubElement(el, key).text = six.text_type(val)
 
 			skills = ET.Element('Skills')
 			for skill in model_state.value('skills') or []:
@@ -121,9 +124,9 @@ class GetInvolvedAPI(viewbase.AdminViewBase):
 					continue
 
 				el = ET.SubElement(skills, 'Skill')
-				for key, val in skill.iteritems():
+				for key, val in six.iteritems(skill):
 					if val:
-						ET.SubElement(el, key).text = unicode(val)
+						ET.SubElement(el, key).text = six.text_type(val)
 
 			args = [request.dboptions.MemberID, ET.tostring(agencies), ET.tostring(interests), ET.tostring(skills)]
 
@@ -186,7 +189,7 @@ class GetInvolvedAPI(viewbase.AdminViewBase):
 		with request.connmgr.get_connection('admin') as conn:
 			cursor = conn.execute('EXEC sp_VOL_GetInvolvedAPI_s ?, ?', request.dboptions.MemberID, all)
 
-			community_sets = map(tuple, cursor.fetchall())
+			community_sets = list(map(tuple, cursor.fetchall()))
 
 			cursor.nextset()
 
@@ -194,7 +197,7 @@ class GetInvolvedAPI(viewbase.AdminViewBase):
 
 			cursor.nextset()
 
-			skills = map(tuple, cursor.fetchall())
+			skills = list(map(tuple, cursor.fetchall()))
 
 			cursor.nextset()
 
@@ -202,7 +205,7 @@ class GetInvolvedAPI(viewbase.AdminViewBase):
 
 			cursor.nextset()
 
-			gi_skills = map(tuple, cursor.fetchall())
+			gi_skills = list(map(tuple, cursor.fetchall()))
 
 			if all:
 				cursor.nextset()

@@ -15,7 +15,9 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import logging 
+import six
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -109,14 +111,14 @@ class NaicsExample(viewbase.AdminViewBase):
 					continue
 
 				example_el = ET.SubElement(root, 'Example')
-				ET.SubElement(example_el, 'CNT').text = unicode(i)
+				ET.SubElement(example_el, 'CNT').text = six.text_type(i)
 
-				for key,value in example.iteritems():
+				for key,value in six.iteritems(example):
 					if key == 'Example_ID' and value == 'NEW':
 						value = -1
 
 					if value is not None:
-						ET.SubElement(example_el, key).text = unicode(value)
+						ET.SubElement(example_el, key).text = six.text_type(value)
 
 			args = [Code, user.Mod, ET.tostring(root)]
 
@@ -176,7 +178,7 @@ class NaicsExample(viewbase.AdminViewBase):
 		validator = ciocvalidators.IDValidator(not_empty=True)
 		try:
 			Code = validator.to_python(request.params.get('Code'))
-		except validators.Invalid, e:
+		except validators.Invalid as e:
 			self._error_page(_('Invalid NAICS Code:', request) + e.message )
 
 		return Code

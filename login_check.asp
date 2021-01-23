@@ -60,6 +60,7 @@ def l_needs_ssl_domains():
 
 def l_render_ssl_domain_list():
 	return render_ssl_domain_list(pyrequest)
+
 </script>
 <%
 If l_needs_ssl_domains() Then
@@ -137,9 +138,9 @@ Else
 				bLockedAccount = True
 			Else
 				Dim intRepetitions, strHash
-				strHash = Crypt(Trim(.Fields("PasswordHashSalt")), CStr(Request.Form("LoginPwd")), .Fields("PasswordHashRepeat"))
+				strHash = Crypt(Trim(.Fields("PasswordHashSalt").Value), CStr(Request.Form("LoginPwd")), .Fields("PasswordHashRepeat").Value)
 
-				If strHash = .Fields("PasswordHash") Then
+				If strHash = .Fields("PasswordHash").Value Then
 					If .Fields("Inactive") Then
 						strErrorMessage = Replace(TXT_INACTIVE_USER, "[USER]", Server.HTMLEncode(Request.Form("LoginName")))
 					Else

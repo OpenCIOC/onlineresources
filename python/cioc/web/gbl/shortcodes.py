@@ -16,6 +16,7 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import logging
 
 
@@ -25,6 +26,7 @@ from pyramid.view import view_config, view_defaults
 # this app
 from cioc.core.i18n import gettext as _
 from cioc.core.viewbase import ViewBase
+from six.moves import map
 
 log = logging.getLogger(__name__)
 
@@ -75,10 +77,10 @@ class ShortcodesView(ViewBase):
 				EXEC sp_GBL_FeedAPIKey_l @MemberID, 1'''
 				cursor = conn.execute(sql, request.dboptions.MemberID)
 
-				vol_view_types = map(make_url, cursor.fetchall())
+				vol_view_types = list(map(make_url, cursor.fetchall()))
 
 				cursor.nextset()
-				cic_view_types = map(make_url, cursor.fetchall())
+				cic_view_types = list(map(make_url, cursor.fetchall()))
 
 				cursor.nextset()
 

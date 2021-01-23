@@ -21,16 +21,21 @@
 from datetime import date, time, datetime
 from collections import defaultdict
 from xml.etree import cElementTree as ET
-from adodbapi import variantConversions, dateconverter
-from itertools import izip, imap
-import cgi
+from adodbapi.apibase import variantConversions
+from adodbapi import dateconverter
+try:
+	from cgi import escape as cgiescape
+except ImportError:
+	from html import escape as cgiescape
+
 import json
 
-from markupsafe import Markup, escape
-from webhelpers.html import tags
+from markupsafe import Markup
+from webhelpers2.html import tags
 
 from cioc.core import constants as const
 from cioc.core.i18n import gettext
+from cioc.core.modelstate import convert_options
 
 _ = lambda x: gettext(x, pyrequest)
 
@@ -45,16 +50,18 @@ def _tmp_cast(v, t):
 	v = convertVariantToPython(v, t)
 	if isinstance(v, date) and not isinstance(v, datetime):
 		v = datetime(v.year, v.month, v.day)
+	if isinstance(v, bytes):
+		v = v.decode('utf-8')
 	return v
 
 def rs_iter(rs):
 	if rs.EOF:
 		return []
 
-	fields = [field.Name.encode('ascii') for field in rs.Fields]
+	fields = [field.Name for field in rs.Fields]
 	types = [field.Type for field in rs.Fields]
-	rows = izip(*rs.GetRows())
-	return [dict(izip(fields, imap(_tmp_cast, row, types))) for row in rows]
+	rows = zip(*rs.GetRows())
+	return [dict(zip(fields, map(_tmp_cast, row, types))) for row in rows]
 
 def prepSocialMediaFeedback(rsFb):
 	global sm_feedback_values
@@ -76,7 +83,7 @@ def prepSocialMediaFeedback(rsFb):
 				
 def getSocialMediaFeedback(sm_id, txt_feeback_num, txt_colon,txt_update, txt_content_deleted):
 	template = u'<br><span class="Info">{}%d{}{}</span> <span class="Alert">%s</span> <input type="button" value="{}" onClick="document.EntryForm.SOCIAL_MEDIA_%s.value=%s;">'.format(txt_feeback_num, " (%s)" if pyrequest.multilingual else '%s', txt_colon, txt_update)
-	escape = cgi.escape
+	escape = cgiescape
 	dumps = json.dumps
 
 	output = []
@@ -122,27 +129,27 @@ def prepLanguagesFeedback(rsFb):
 def getLanguagesFeedback(ln_id, language_name, checked, note, txt_feedback_num, txt_colon, txt_update, txt_content_deleted):
 	lnds = language_details
 	template = u'<br><span class="Info">{txt_feedback_num}%(no)d{txt_multi_lingual}{txt_colon}</span> <span class="Alert">%(value)s</span> <input type="button" value="{txt_update}" onClick="restore_form_values(\'#language-entry-%(id)s\', %(update_values)s); languages_check_state.apply(document.EntryForm.LN_ID_%(id)s);">'.format(txt_feedback_num=txt_feedback_num, txt_multi_lingual=" (%(language_name)s)" if pyrequest.multilingual else '', txt_colon=txt_colon, txt_update=txt_update)
-	escape = cgi.escape
+	escape = cgiescape
 	dumps = json.dumps
 
 	output = []
 	for i, values in enumerate(ln_feedback_values):
 		if not values:
 			continue
-		fb = values.get(str(ln_id), {})
+		fb = values.get(six.text_type(ln_id), {})
 		if not fb:
 			if not int(checked):
 				continue
 		
-			value = unicode(txt_content_deleted)
+			value = six.text_type(txt_content_deleted)
 			update_values = {'LN_ID': '', 'LN_NOTES_%s' % ln_id: '', 'LND_%s' % ln_id: []}
 		else:
-			value = unicode(language_name)
+			value = six.text_type(language_name)
 			update_values = {
-				'LN_ID': [unicode(ln_id)], 'LN_NOTES_%s' % unicode(ln_id): [unicode(fb['note'])],
-				'LND_%s' % unicode(ln_id): [unicode(x['LND_ID']) for x in lnds if str(x['LND_ID']) in fb['lnds']]
+				'LN_ID': [six.text_type(ln_id)], 'LN_NOTES_%s' % six.text_type(ln_id): [six.text_type(fb['note'])],
+				'LND_%s' % six.text_type(ln_id): [six.text_type(x['LND_ID']) for x in lnds if six.text_type(x['LND_ID']) in fb['lnds']]
 			}
-			details = [unicode(x['Name']) for x in lnds if str(x['LND_ID']) in fb['lnds']]
+			details = [six.text_type(x['Name']) for x in lnds if six.text_type(x['LND_ID']) in fb['lnds']]
 			if fb['note']:
 				details.append(escape(fb['note'], True))
 			if details:
@@ -155,7 +162,7 @@ def getLanguagesFeedback(ln_id, language_name, checked, note, txt_feedback_num, 
 def getLanguageNotesFeedback(note, txt_feedback_num, txt_colon, txt_update, txt_content_deleted):
 	template = u'<br><span class="Info">{txt_feedback_num}%(no)d{txt_multi_lingual}{txt_colon}</span> <span class="Alert">%(value)s</span> <input type="button" value="{txt_update}" onClick="document.EntryForm.LANGUAGE_NOTES.value=%(update_value)s;">'.format(txt_feedback_num=txt_feedback_num, txt_multi_lingual=" (%(language_name)s)" if pyrequest.multilingual else '', txt_colon=txt_colon, txt_update=txt_update)
 
-	escape = cgi.escape
+	escape = cgiescape
 	dumps = json.dumps
 
 	output = []
@@ -168,13 +175,13 @@ def getLanguageNotesFeedback(note, txt_feedback_num, txt_colon, txt_update, txt_
 			if not note:
 				continue
 			
-			value = unicode(txt_content_deleted)
+			value = six.text_type(txt_content_deleted)
 			update_value = u''
 
 		else:
 			update_value = value = fb['note']
 			
-		output.append(template % {'no': i, 'language_name': values['LanguageName'], 'update_value': escape(dumps(unicode(update_value)), True), 'value': escape(value)})
+		output.append(template % {'no': i, 'language_name': values['LanguageName'], 'update_value': escape(dumps(six.text_type(update_value)), True), 'value': escape(value)})
 
 	return u''.join(output)
 
@@ -192,14 +199,14 @@ _language_detail_row_template = u'''
 		 <div class="margin-bottom-5"><label><input name="LND_%(lnid)s" type="checkbox" value="%(LND_ID)s" %(checked)s> %(Name)s</label>%(help_ui)s</div>'''
 
 def languageDetailsUI(lnid, lndids, txt_help):
-	selected_ids = [x.strip() for x in str(lndids).split(',')]
-	escape = cgi.escape
+	selected_ids = [x.strip() for x in six.text_type(lndids).split(',')]
+	escape = cgiescape
 	rows = []
 	for detail in language_details:
 		vars = {
 			'lnid': lnid, 'help_ui': u'', 
 			'LND_ID': detail['LND_ID'], 'Name': escape(detail['Name']),
-			'checked': u'checked' if str(detail['LND_ID']) in selected_ids else u''
+			'checked': u'checked' if six.text_type(detail['LND_ID']) in selected_ids else u''
 		}
 		if detail['HelpText']:
 			vars['help_ui'] = _language_detail_help_ui_template % (escape(detail['HelpText']), txt_help) 
@@ -214,7 +221,7 @@ def makeLanguageDetailsMap(rsLanguage):
 
 	rsLanguage.MoveFirst
 	for row in rs_iter(rsLanguage):
-		language_detail_map[str(row['LND_ID'])] = row
+		language_detail_map[six.text_type(row['LND_ID'])] = row
 
 def getLanguageDetailValue(lndid, key):
 	try:
@@ -258,7 +265,7 @@ def getStdChecklistFeedback(prefix, field_name, item_notes, item_id, checked, no
 		notes_update = u'$(\'#{prefix}_NOTES_%(id)s\').val(%(note)s);'.format(prefix=prefix)
 
 	template = u'<br><span class="Info">{fbnum}%(no)d{lang}{colon}</span> <span class="Alert">%(value)s</span> <input type="button" value="{update}" onClick="$(\'#{prefix}_ID_%(id)s\').prop(\'checked\', %(chked)s);{notes_update}">'.format(fbnum=txt_feeback_num, lang=" (%(language_name)s)" if pyrequest.multilingual else '', colon=txt_colon, update=txt_update, prefix=prefix, notes_update=notes_update)
-	escape = cgi.escape
+	escape = cgiescape
 	dumps = json.dumps
 
 	output = []
@@ -268,13 +275,13 @@ def getStdChecklistFeedback(prefix, field_name, item_notes, item_id, checked, no
 			continue
 
 		ns = {'no': i, 'language_name': values['language_name'], 'id': item_id}
-		fb = values.get(str(item_id), {})
+		fb = values.get(six.text_type(item_id), {})
 		if not fb:
 			if not int(checked):
 				# no change
 				continue
 
-			ns['value'] = unicode(txt_content_deleted)
+			ns['value'] = six.text_type(txt_content_deleted)
 			ns['chked'] = 'false'
 			ns['note'] = ''
 
@@ -283,11 +290,11 @@ def getStdChecklistFeedback(prefix, field_name, item_notes, item_id, checked, no
 				if not item_notes:
 					# no change
 					continue
-				elif unicode(note) == fb['note']:
+				elif six.text_type(note) == fb['note']:
 					#no change
 					continue
 				
-			value = unicode(item_name)
+			value = six.text_type(item_name)
 			if item_notes and fb['note']:
 				value += u' - ' + escape(fb['note'])
 
@@ -309,7 +316,7 @@ def getStdChecklistFeedback(prefix, field_name, item_notes, item_id, checked, no
 def getStdChecklistNotesFeedback(field_name, note, txt_feedback_num, txt_colon, txt_update, txt_content_deleted):
 	template = u'<br><span class="Info">{txt_feedback_num}%(no)d{txt_multi_lingual}{txt_colon}</span> <span class="Alert">%(value)s</span> <input type="button" value="{txt_update}" onClick="document.EntryForm.{field}_NOTES.value=%(update_value)s;">'.format(txt_feedback_num=txt_feedback_num, txt_multi_lingual=" (%(language_name)s)" if pyrequest.multilingual else '', txt_colon=txt_colon, txt_update=txt_update, field=field_name)
 
-	escape = cgi.escape
+	escape = cgiescape
 	dumps = json.dumps
 
 	output = []
@@ -322,13 +329,13 @@ def getStdChecklistNotesFeedback(field_name, note, txt_feedback_num, txt_colon, 
 			if not note:
 				continue
 			
-			value = unicode(txt_content_deleted)
+			value = six.text_type(txt_content_deleted)
 			update_value = u''
 
 		else:
 			update_value = value = fb['note']
 			
-		output.append(template % {'no': i, 'language_name': values['language_name'], 'update_value': escape(dumps(unicode(update_value)), True), 'value': escape(value)})
+		output.append(template % {'no': i, 'language_name': values['language_name'], 'update_value': escape(dumps(six.text_type(update_value)), True), 'value': escape(value)})
 
 	return u''.join(output)
 
@@ -491,8 +498,8 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 		'END_DATE': entry.get('END_DATE') or u'',
 		'START_TIME': entry.get('START_TIME') or u'',
 		'END_TIME': entry.get('END_TIME') or u'',
-		'RECURS_TYPE': tags.select(prefix + 'RECURS_TYPE', ui_select_value, [
-				('0', _('Never')), ('1', _('Weekly')), ('2', _('Monthly by Day of Month')), ('3', _('Montly by Week of Month'))],
+		'RECURS_TYPE': tags.select(prefix + 'RECURS_TYPE', ui_select_value, convert_options([
+				('0', _('Never')), ('1', _('Weekly')), ('2', _('Monthly by Day of Month')), ('3', _('Montly by Week of Month'))]),
 				class_='recur-type-selector'),
 		'RECURS_EVERY': recurs_every,
 		'RECURS_DAY_OF_WEEK': recurs_day_of_week,
@@ -582,7 +589,7 @@ def makeEventScheduleContents_l(rst, bUseContent, has_feedback=False, rsFb=None,
 	xml = ET.fromstring(xml.encode('utf-8'))
 
 	output = [Markup(u"""<div id="ScheduleEditArea" class="ScheduleEditArea EntryFormItemContainer" data-add-tmpl="{}">""").format(
-		unicode(makeEventScheduleEntry({}, Markup(u'%s <span class="EntryFormItemCount">[COUNT]</span> %s') % (_('Schedule #'), _('(new)')), u"Sched_[ID]_")))
+		six.text_type(makeEventScheduleEntry({}, Markup(u'%s <span class="EntryFormItemCount">[COUNT]</span> %s') % (_('Schedule #'), _('(new)')), u"Sched_[ID]_")))
 	]
 
 	if is_entryform and bUseContent and has_feedback:

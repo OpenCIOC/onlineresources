@@ -16,7 +16,10 @@
 
 
 # stdlib
+from __future__ import absolute_import
 import logging
+import six
+from six.moves import map
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -308,10 +311,10 @@ class SharingProfile(AdminViewBase):
 
 			root = ET.Element('DESCS')
 
-			for culture, data in model_state.form.data['descriptions'].iteritems():
+			for culture, data in six.iteritems(model_state.form.data['descriptions']):
 				desc = ET.SubElement(root, 'DESC')
 				ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-				for name, value in data.iteritems():
+				for name, value in six.iteritems(data):
 					if value:
 						ET.SubElement(desc, name).text = value
 
@@ -320,14 +323,14 @@ class SharingProfile(AdminViewBase):
 
 			root = ET.Element('VIEWS')
 			for view_type in model_state.value('profile.Views') or []:
-				ET.SubElement(root, 'VIEW').text = unicode(view_type)
+				ET.SubElement(root, 'VIEW').text = six.text_type(view_type)
 
 			args.append(ET.tostring(root))
 			kwnames.append('Views')
 
 			root = ET.Element('FIELDS')
 			for field in model_state.value('profile.Fields') or []:
-				ET.SubElement(root, "FIELD").text = unicode(field)
+				ET.SubElement(root, "FIELD").text = six.text_type(field)
 
 			args.append(ET.tostring(root))
 			kwnames.append('Fields')
@@ -386,7 +389,7 @@ class SharingProfile(AdminViewBase):
 		with request.connmgr.get_connection('admin') as conn:
 			cursor = conn.execute('EXEC dbo.sp_%s_SharingProfile_s_FormLists ?, ?' % domain.str, request.MemberID, model_state.value('ProfileID'))
 
-			members = map(tuple, cursor.fetchall())
+			members = list(map(tuple, cursor.fetchall()))
 
 			cursor.nextset()
 
@@ -497,7 +500,7 @@ class SharingProfile(AdminViewBase):
 
 			cursor = conn.execute('EXEC dbo.sp_%s_SharingProfile_s_FormLists ?, ?' % domain.str, request.MemberID, ProfileID)
 
-			members = map(tuple, cursor.fetchall())
+			members = list(map(tuple, cursor.fetchall()))
 
 			cursor.nextset()
 
@@ -524,7 +527,7 @@ class SharingProfile(AdminViewBase):
 		model_state.form.data['profile.CanUseAnyView'] = 'Y' if not profile or profile.CanUseAnyView else 'N'
 
 		if is_add:
-			for desc in profile_descriptions.itervalues():
+			for desc in six.itervalues(profile_descriptions):
 				desc.Name = None
 
 		always_shared_fields = []

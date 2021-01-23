@@ -208,7 +208,7 @@ If Not .EOF Then
 <h3><%= TXT_SEARCH_NOW %>!</h3>
 <p>
 <%If Not Nl(strSearchArgs) Then%>
-<%= TXT_USE_MY_SAVED_SEARCH_PROFILE %><a href="<%=makeLink(ps_strPathToStart & "volunteer/results.asp", strSearchArgs, vbNullString)%>" style="font-weight:bolder"><%= TXT_SEARCH_NOW %></a>
+<%= TXT_USE_MY_SAVED_SEARCH_PROFILE %> <a href="<%=makeLink(ps_strPathToStart & "volunteer/results.asp", strSearchArgs, vbNullString)%>" style="font-weight:bolder"><%= TXT_SEARCH_NOW %></a>
 <em><%= TXT_OR_LC %></em> 
 <%End If%>
 <%= TXT_START_A_NEW %><a href="<%=makeLinkB(ps_strPathToStart & "volunteer/")%>" style="font-weight:bolder"><%=TXT_VOLUNTEER_SEARCH%></a>.</p>

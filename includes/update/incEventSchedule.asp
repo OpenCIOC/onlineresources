@@ -17,7 +17,10 @@
 
 %>
 <script language="python" runat="server">
-import cgi
+try:
+	from cgi import escape as cgiescape
+except ImportError:
+	from html import escape as cgiescape
 import re
 import itertools
 from datetime import date
@@ -77,7 +80,7 @@ def format_event_schedule_line(values):
 			number = recurs_day_of_month or recurs_xth_weekday_of_month
 			line.append(
 				_('On the {}{} ').format(
-					unicode(number),
+					six.text_type(number),
 					get_numeric_extension(number),
 				)
 			)
@@ -109,7 +112,7 @@ def format_event_schedule_line(values):
 			line.append(u' ')
 			line.append(_('every '))
 			if recurs_every > 1:
-				line.append(unicode(recurs_every))
+				line.append(six.text_type(recurs_every))
 				line.append(get_numeric_extension(recurs_every))
 				line.append(u' ')
 
@@ -303,9 +306,9 @@ def getEventScheduleValues(checkDate, checkInteger, checkID, checkLength, checkA
 		vals = {x: pyrequest.POST.get(prefix + x) for x in fields}
 
 		if 'NEW' in sched:
-			sched_no = unicode(sched_no) + ' ' + _('(new)')
+			sched_no = six.text_type(sched_no) + ' ' + _('(new)')
 		else:
-			sched_no = unicode(sched_no)
+			sched_no = six.text_type(sched_no)
 
 		entry = getEventScheduleEntryValues(sched_no, sched, vals, checkDate, checkInteger, checkID, checkLength, checkAddValidationError)
 		if not entry:
@@ -319,15 +322,15 @@ def getEventScheduleValues(checkDate, checkInteger, checkID, checkLength, checkA
 def convertEventScheduleValuesToXML(schedules):
 	def escape_for_xml(value):
 		if isinstance(value, bool):
-			return unicode(int(value))
+			return six.text_type(int(value))
 
 		if isinstance(value, int):
-			return unicode(value)
+			return six.text_type(value)
 
 		if isinstance(value, (datetime, time, date)):
 			return value.isoformat()
 
-		return cgi.escape(unicode(value), True)
+		return cgiescape(six.text_type(value), True)
 
 	xml_values = []
 	for sched_id, values in schedules:

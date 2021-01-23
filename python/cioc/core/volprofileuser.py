@@ -15,7 +15,9 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 from pyramid.decorator import reify
+import six
 
 
 class VolProfileUser(object):
@@ -100,10 +102,10 @@ def get_auth_principal(request):
 
 
 def remember(request, principal, **kw):
-	request.session[_userid_key] = unicode(principal)
+	request.session[_userid_key] = six.text_type(principal)
 	login_key = kw.get('login_key')
 	if login_key:
-		request.session[_login_key] = unicode(login_key)
+		request.session[_login_key] = six.text_type(login_key)
 	return []
 
 

@@ -20,6 +20,7 @@
 <%!
 from markupsafe import Markup, escape
 from cioc.core import constants as const
+import six
 %>
 
 <%def name="makeSubjLink(subj, show_with=False)" filter="Markup" buffered="True"><a href="${request.passvars.route_path('admin_thesaurus', action='edit', _query=[('SubjID',subj.Subj_ID)])}" ${'class="Alert"' if subj.Inactive else '' |n}>${subj.SubjectTerm}</a>${'' if not (show_with and subj.UsedWith) else ' ' + Markup(_('(with <em>%s</em>)')) % subj.UsedWith}</%def>
@@ -244,7 +245,7 @@ ${self.makeMgmtInfo(usage)}
 <%def name="subject_selector(field, subjs)">
 	${renderer.errorlist(field + "_ID")}
 	<div id="${field}_existing_add_container">
-	%for desc in (x for x in other_term_descs if unicode(x.Subj_ID) in subjs):
+	%for desc in (x for x in other_term_descs if six.text_type(x.Subj_ID) in subjs):
 		${renderer.ms_checkbox(field + "_ID", desc.Subj_ID, label=makeSubjLink(desc))}
 	%endfor
 	</div>
@@ -258,7 +259,7 @@ ${self.makeMgmtInfo(usage)}
 </%def>
 	
 <%def name="subject_list(subjs)">
-	${escape(', ').join(makeSubjLink(x) for x in other_term_descs if unicode(x.Subj_ID) in subjs)}
+	${escape(', ').join(makeSubjLink(x) for x in other_term_descs if six.text_type(x.Subj_ID) in subjs)}
 </%def>
 </form>
 </div>

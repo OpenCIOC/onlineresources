@@ -15,6 +15,7 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 import zipfile
 import tempfile
 import logging
@@ -25,6 +26,8 @@ from pyramid.view import view_config
 from cioc.core import i18n
 from cioc.core.webobfiletool import FileIterator
 from cioc.web.cic import viewbase
+from six.moves import map
+import six
 
 log = logging.getLogger(__name__)
 
@@ -52,7 +55,7 @@ class VOLExport(viewbase.CicViewBase):
 		with request.connmgr.get_connection('admin') as conn:
 			cursor = conn.execute(sql)
 
-			data.extend(u''.join([u'<RECORD VNUM="', unicode(x.VNUM), u'" RECORD_OWNER="', unicode(x.RECORD_OWNER), u'" HAS_ENGLISH="', unicode(x.HAS_ENGLISH), u'" HAS_FRENCH="', unicode(x.HAS_FRENCH), u'">'] + map(unicode, x[7:]) + [u'</RECORD>']).encode('utf8') for x in cursor.fetchall())
+			data.extend(u''.join([u'<RECORD VNUM="', six.text_type(x.VNUM), u'" RECORD_OWNER="', six.text_type(x.RECORD_OWNER), u'" HAS_ENGLISH="', six.text_type(x.HAS_ENGLISH), u'" HAS_FRENCH="', six.text_type(x.HAS_FRENCH), u'">'] + list(map(six.text_type, x[7:])) + [u'</RECORD>']).encode('utf8') for x in cursor.fetchall())
 
 			cursor.close()
 

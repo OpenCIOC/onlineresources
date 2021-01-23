@@ -19,6 +19,7 @@
 <%inherit file="cioc.web:templates/master.mak" />
 <%! 
 from markupsafe import Markup
+import six
 %>
 <% 
 makeLink = request.passvars.makeLink 
@@ -150,14 +151,14 @@ jQuery(function($) {
 
 %if list_type.Usage:
 	<% 
-		usage = list_type.Usage.get(unicode(renderer.value(prefix + (list_type.ID or list_type.NameField))))
+		usage = list_type.Usage.get(six.text_type(renderer.value(prefix + (list_type.ID or list_type.NameField))))
 		usage1 = getattr(usage, 'Usage1', None)
 		usage2 = getattr(usage, 'Usage2', None)
 	%>
 	<td>
 %if usage1:
 	${'' if not list_type.SearchLinkTitle1 else _(list_type.SearchLinkTitle1)} 
-		<a href="${makeLink(*list_type.SearchLink1).replace('IDIDID', unicode(itemid).replace("'", "''"))}"><img src="${request.static_url('cioc:images/zoom.gif')}" width="17", height="14", border="0", title="${_('Usage: %d') % usage1}"></a>
+		<a href="${makeLink(*list_type.SearchLink1).replace('IDIDID', six.text_type(itemid).replace("'", "''"))}"><img src="${request.static_url('cioc:images/zoom.gif')}" width="17", height="14", border="0", title="${_('Usage: %d') % usage1}"></a>
 	
 	%endif
 	%if usage1 and usage2:
@@ -165,7 +166,7 @@ jQuery(function($) {
 	%endif
 	%if usage2:
 	${'' if not list_type.SearchLinkTitle2 else _(list_type.SearchLinkTitle2)} 
-		<a href="${makeLink(*list_type.SearchLink2).replace('IDIDID', unicode(itemid).replace("'", "''"))}"><img src="${request.static_url('cioc:images/zoom.gif')}" width="17", height="14", border="0", title="${_('Usage: %d') % usage2}"></a>
+		<a href="${makeLink(*list_type.SearchLink2).replace('IDIDID', six.text_type(itemid).replace("'", "''"))}"><img src="${request.static_url('cioc:images/zoom.gif')}" width="17", height="14", border="0", title="${_('Usage: %d') % usage2}"></a>
 	
 	%endif
 	</td>

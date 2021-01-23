@@ -15,6 +15,7 @@
 # =========================================================================================
 
 
+from __future__ import absolute_import
 from pyramid import testing, url
 
 from cioc.core import syslanguage

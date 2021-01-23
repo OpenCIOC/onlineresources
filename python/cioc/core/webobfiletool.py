@@ -21,13 +21,17 @@ class FileIterable(object):
 		self.filename = filename
 		self.start = start
 		self.stop = stop
+
 	def __iter__(self):
 		return FileIterator(open(self.filename, 'rb'), self.start, self.stop)
+
 	def app_iter_range(self, start, stop):
 		return self.__class__(self.filename, start, stop)
 
+
 class FileIterator(object):
 	chunk_size = 4096
+
 	def __init__(self, fileobj, start=None, stop=None):
 		self.fileobj = fileobj
 		if start:
@@ -36,9 +40,11 @@ class FileIterator(object):
 			self.length = stop - start
 		else:
 			self.length = None
+
 	def __iter__(self):
 		return self
-	def next(self):
+
+	def __next__(self):
 		if self.length is not None and self.length <= 0:
 			self.fileobj.close()
 			raise StopIteration
@@ -53,3 +59,4 @@ class FileIterator(object):
 				chunk = chunk[:self.length]
 		return chunk
 
+	next = __next__
