@@ -150,6 +150,12 @@ def parse_args(argv):
 	args = parser.parse_args(argv)
 	if args.config_prefix and not args.config_prefix.endswith('.'):
 		args.config_prefix += '.'
+	try:
+		args.config = config.get_config(args.configfile, const._app_name)
+	except Exception:
+		sys.stderr.write('ERROR: Could not process config file:\n')
+		sys.stderr.write(traceback.format_exc())
+		return None
 
 	return args
 
@@ -169,18 +175,29 @@ def stream_download(dest_file, url, **kwargs):
 	print('downloaded', size, 'bytes')
 
 
-def upload_num_report(url, records_sent, counts, field, dest_file, **kwargs):
+def reupload_num_report(url, filename, field, **kwargs):
+	data = None
+	with open(filename, 'rb') as f:
+		data = f.read()
+
+	upload_num_report_json_doc(url, data, field, **kwargs)
+
+
+def upload_num_report_json_doc(url, data, field, **kwargs):
 	kwargs.pop('stream', None)
-
-	data = json.dumps({'counts': counts, 'sent': records_sent})
-	with open(os.path.splitext(dest_file)[0] + '_counts.json', 'w') as f:
-		f.write(data)
-
 	headers = {'content-type': 'application/json'}
 	kwargs['params']['Field'] = field
 
 	r = requests.post(url, data=data, headers=headers, **kwargs)
 	r.raise_for_status()
+
+
+def upload_num_report(url, records_sent, counts, field, dest_file, **kwargs):
+	data = json.dumps({'counts': counts, 'sent': records_sent})
+	with open(os.path.splitext(dest_file)[0] + '_counts.json', 'w') as f:
+		f.write(data)
+
+	upload_num_report_json_doc(url, data, field, **kwargs)
 
 
 def remove_exclusions(reader_to_exclude_from, url, args, **kwargs):
@@ -553,11 +570,7 @@ def process_language(args, lang):
 def main(argv):
 	args = parse_args(argv)
 	retval = 0
-	try:
-		args.config = config.get_config(args.configfile, const._app_name)
-	except Exception:
-		sys.stderr.write('ERROR: Could not process config file:\n')
-		sys.stderr.write(traceback.format_exc())
+	if not args:
 		return 1
 
 	args.filename_prefix = get_config_item(args, 'airs_export_filename_prefix', '')
