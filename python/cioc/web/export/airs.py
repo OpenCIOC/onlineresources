@@ -195,11 +195,12 @@ class AIRSExportUpdateCount(viewbase.CicViewBase):
 		del model_state.schema.fields['IncludeDeleted']
 		del model_state.schema.fields['IncludeSiteAgency']
 
-		if not model_state.validate():
+		if not model_state.validate(params=request.params):
 			if model_state.is_error('Field'):
 				msg = u'Invalid Field'
 			else:
-				msg = u"An unknown error occurred."
+				msg = u"An unknown error occurred:\n"
+				msg += "\n".join(unicode(x) for x in model_state.renderer.all_errors())
 
 			return make_internal_server_error(msg)
 
