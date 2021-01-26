@@ -151,3 +151,8 @@ class CiocRequest(CiocRequestMixin, Request):
 
 		self.response.headerlist.append(
 			('Set-Cookie', cookie.output(header='')))
+
+	def current_route_url(self, *elements, **kw):
+		if '_query' not in kw:
+			kw['_query'] = {}
+		return super(CiocRequest, self).current_route_url(*elements, **kw)
