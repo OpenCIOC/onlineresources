@@ -57,8 +57,10 @@ class UTF8CSVWriter(object):
 		self.writer = csv.writer(f, dialect=dialect, **kwds)
 
 	def writerow(self, row):
-		self.writer.writerow([s.encode("utf-8") for s in row])
-		# Fetch UTF-8 output from the queue ...
+		if six.PY2:
+			row = [s.encode("utf-8") for s in row]
+
+		self.writer.writerow(row)
 
 	def writerows(self, rows):
 		for row in rows:
@@ -66,11 +68,14 @@ class UTF8CSVWriter(object):
 
 
 def write_csv_to_zip(zip, data, fname, **kwargs):
-	csvfile = tempfile.TemporaryFile()
+	if six.PY3:
+		csvfile = tempfile.TemporaryFile('w+', encoding='utf-8-sig', newline='')
+	else:
+		csvfile = tempfile.TemporaryFile()
 
-	# required to have all spreadsheet programs
-	# understand Unicode
-	csvfile.write(codecs.BOM_UTF8)
+		# required to have all spreadsheet programs
+		# understand Unicode
+		csvfile.write(codecs.BOM_UTF8)
 
 	csvwriter = UTF8CSVWriter(csvfile, **kwargs)
 

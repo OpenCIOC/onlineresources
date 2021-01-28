@@ -363,7 +363,7 @@ class CsvFileWriter(object):
 		self.headings = headings
 
 	def __enter__(self):
-		self.fd = tempfile.NamedTemporaryFile(suffix='.csv', dir=self.target_dir, delete=False)
+		self.fd = tempfile.NamedTemporaryFile('w', encoding='utf-8', suffix='.csv', dir=self.target_dir, delete=False)
 		self.full_name = self.fd.name
 		return self
 
