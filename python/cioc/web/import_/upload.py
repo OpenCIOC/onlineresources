@@ -248,7 +248,8 @@ def _handle_record(self, element, conn, EFID, dm, id_column='NUM'):
 		deletion_date_e = deletion_date.get('V')
 		deletion_date_f = deletion_date.get('VF')
 
-	xml = etree.tostring(element).replace('xmlns="urn:ciocshare-schema" ', '', 1).replace('xmlns="urn:ciocshare-schema-vol" ', '', 1)
+	xml = etree.tostring(element).replace(b'xmlns="urn:ciocshare-schema" ', b'', 1).replace(b'xmlns="urn:ciocshare-schema-vol" ', b'', 1)
+	xml = xml.decode('utf-8')
 
 	if not self.made_field_list:
 		cursor = conn.cursor()

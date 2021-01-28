@@ -5,7 +5,7 @@
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+#	   http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,13 +25,27 @@ from email.utils import parseaddr, formataddr
 from markupsafe import Markup, escape_silent
 from marrow.mailer import Mailer, Message
 from marrow.mailer.exc import DeliveryException
+from concurrent.futures import ThreadPoolExecutor
+from marrow.mailer.manager.dynamic import DynamicManager, ScalingPoolExecutor
 import six
-
-DeliveryException
 
 # this app
 from cioc.core.i18n import gettext as _
 from cioc.core import constants as const
+
+
+class ScalingPoolExecutorHotFix(ScalingPoolExecutor):
+	def __init__(self, workers, divisor, timeout):
+		super().__init__(workers, divisor, timeout)
+		ThreadPoolExecutor.__init__(self)
+
+
+class DynamicManagerHotFix(DynamicManager):
+	Executor = ScalingPoolExecutorHotFix
+
+
+DeliveryException
+
 
 _mailer = None
 _last_change = None
@@ -67,9 +81,14 @@ def _get_mailer(request):
 		}
 		# print transport['host']
 		transport = {k: v for k, v in six.iteritems(transport) if v}
+
+		manager = request.config.get('mailer.manager', 'immediate')
+		if six.PY3 and manager == 'dynamic':
+			manager = DynamicManagerHotFix
+
 		_mailer = Mailer({
 			'transport': transport,
-			'manager': {'use': request.config.get('mailer.manager', 'immediate')}
+			'manager': {'use': manager}
 		})
 		_mailer.start()
 

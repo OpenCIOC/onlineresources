@@ -275,9 +275,12 @@ class fakerequest(object):
 
 
 def email_log(args, outputstream, is_error, to=None):
-	author = get_config_item(args, 'o211_import_notify_from', 'admin@cioc.ca')
-	to = [x.strip() for x in (to or get_config_item(args, 'o211_import_notify_emails', 'admin@cioc.ca')).split(',')]
-	email.send_email(fakerequest(args.config), author, to, 'Import from iCarol%s' % (' -- ERRORS!' if is_error else ''), outputstream.getvalue().replace('\r', '').replace('\n', '\r\n'))
+	try:
+		author = get_config_item(args, 'o211_import_notify_from', 'admin@cioc.ca')
+		to = [x.strip() for x in (to or get_config_item(args, 'o211_import_notify_emails', 'admin@cioc.ca')).split(',')]
+		email.send_email(fakerequest(args.config), author, to, 'Import from iCarol%s' % (' -- ERRORS!' if is_error else ''), outputstream.getvalue().replace('\r', '').replace('\n', '\r\n'))
+	except Exception as e:
+		raise Exception('unable to send email log: {},{}'.format(outputstream.getvalue(), six.text_type(e)), e)
 
 
 def get_record_list(args, modifiedSince=None, lang='en'):
@@ -363,7 +366,10 @@ class CsvFileWriter(object):
 		self.headings = headings
 
 	def __enter__(self):
-		self.fd = tempfile.NamedTemporaryFile('w', encoding='utf-8', suffix='.csv', dir=self.target_dir, delete=False)
+		if six.PY3:
+			self.fd = tempfile.NamedTemporaryFile('w', encoding='utf-8', suffix='.csv', dir=self.target_dir, delete=False)
+		else:
+			self.fd = tempfile.NamedTemporaryFile(suffix='.csv', dir=self.target_dir, delete=False)
 		self.full_name = self.fd.name
 		return self
 
@@ -539,7 +545,7 @@ def generate_and_upload_import(context):
 					)
 
 				total_import_count += total_inserted
-				print ("Import Complete for Member %s. %s records imported." % (member_name, total_inserted), file=stdout)
+				print("Import Complete for Member %s. %s records imported." % (member_name, total_inserted), file=stdout)
 				if error_log:
 					print("A problem was encountered validating input for Member %s, see below." % (member_name,), file=stderr)
 
