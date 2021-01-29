@@ -77,10 +77,10 @@ def _get_mailer(request):
 			'username': os.environ.get('CIOC_MAIL_USERNAME'),
 			'password': os.environ.get('CIOC_MAIL_PASSWORD'),
 			'port': os.environ.get('CIOC_MAIL_PORT'),
-			'tls': 'ssl' if os.environ.get('CIOC_MAIL_USE_SSL') else None,
+			'tls': 'ssl' if os.environ.get('CIOC_MAIL_USE_SSL') else False,
 		}
 		# print transport['host']
-		transport = {k: v for k, v in six.iteritems(transport) if v}
+		transport = {k: v for k, v in six.iteritems(transport) if v is not None}
 
 		manager = request.config.get('mailer.manager', 'immediate')
 		if six.PY3 and manager == 'dynamic':

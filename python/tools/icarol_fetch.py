@@ -261,6 +261,7 @@ def pager(iterable, page_size=10):
 class fakerequest(object):
 	def __init__(self, config):
 		self.config = config
+		config['mailer.manager'] = 'immediate'
 
 	class dboptions(object):
 		TrainingMode = False
