@@ -20,6 +20,7 @@
 def initialize_python(app_dir):
     #import win32traceutil
 	import os, sys
+	sys.dont_write_bytecode = True
 
     # This will be driven by the python version that is registered for activescript
 	# NOTE: also update python/wsgisvc.py

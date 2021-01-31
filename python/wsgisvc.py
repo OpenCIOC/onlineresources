@@ -155,6 +155,7 @@ class PasteWinService(win32serviceutil.ServiceFramework):
 		if self.ss.getVirtualEnv():
 			activate_virtualenv(self.ss.getVirtualEnv())
 
+		sys.dont_write_bytecode = True
 		os.chdir(self.ss.getCfgFileDir())
 		sys.path.append(self.ss.getCfgFileDir())
 
