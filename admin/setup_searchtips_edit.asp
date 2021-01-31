@@ -212,7 +212,7 @@ End If
 </table>
 </form>
 <%= makeJQueryScriptTags() %>
-<script src='//cdn.tinymce.com/4/tinymce.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.6.2/tinymce.min.js" integrity="sha512-sOO7yng64iQzv/uLE8sCEhca7yet+D6vPGDEdXCqit1elBUAJD1jYIYqz0ov9HMd/k30e4UVFAovmSG92E995A==" crossorigin="anonymous"></script>
 <script type="text/javascript">
 tinymce.init({
 	selector: '#PageText',
