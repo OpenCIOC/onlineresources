@@ -525,8 +525,8 @@ SET NOCOUNT OFF
 			if user_cic:
 				params.append(user_cic.ViewType)
 
-			log.debug('SQL %s', record_sql)
-			log.debug('Params %s', params)
+			#log.debug('SQL %s', record_sql)
+			#log.debug('Params %s', params)
 
 			try:
 				cursor = conn.execute(record_sql, params)
@@ -687,10 +687,12 @@ SET NOCOUNT OFF
 				if lat and lng and googlemaps.hasGoogleMapsAPI(request):
 					maps_key = googlemaps.getGoogleMapsKeyArg(request)
 					map_canvas[:] = []
-					map_canvas.tag = 'img'
-					map_canvas.attrib['src'] = 'https://maps.googleapis.com/maps/api/staticmap?zoom=13&size=300x300&center=%s,%s&markers=color:red%%7Clabel:A%%7C%s,%s&%s' % (lat, lng, lat, lng, maps_key)
-					map_canvas.attrib['class'] = 'DetailsMapCanvas'
-					map_canvas.attrib['style'] = 'float: right;'
+					# Disable static map printing because we need to sign map links
+					if False:
+						map_canvas.tag = 'img'
+						map_canvas.attrib['src'] = 'https://maps.googleapis.com/maps/api/staticmap?zoom=13&size=300x300&center=%s,%s&markers=color:red%%7Clabel:A%%7C%s,%s&%s' % (lat, lng, lat, lng, maps_key)
+						map_canvas.attrib['class'] = 'DetailsMapCanvas'
+						map_canvas.attrib['style'] = 'float: right;'
 
 			doctree = document.getroottree()
 			result = html.tostring(doctree, doctype=doctree.docinfo.doctype)

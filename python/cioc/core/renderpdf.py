@@ -15,14 +15,17 @@
 # =========================================================================================
 
 from __future__ import absolute_import
+import six
 import pdfkit
 
 
 def render_to_pdf(request, html, footer_file):
 	wkhtmltopdfpath = request.config.get('wkhtmltopdfpath', r'c:\Program Files (x86)\wkhtmltopdf\bin\wkhtmltopdf.exe')
 	config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdfpath)
+	if isinstance(html, six.binary_type):
+		html = html.decode('utf-8')
 	return pdfkit.from_string(html, False, configuration=config, options={
 		'footer-html': footer_file, 'margin-bottom': request.viewdata.dom.PDFBottomMargin,
 		'page-size': 'letter', 'disable-javascript': None, 'print-media-type': None,
-		'quiet': None, 'load-error-handling': 'ignore'
+		'quiet': None, 'load-error-handling': 'ignore', 'load-media-error-handling': 'ignore'
 	})
