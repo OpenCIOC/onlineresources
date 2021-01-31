@@ -5,7 +5,7 @@
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+#  http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
@@ -59,21 +59,42 @@ class DEFAULT(object):
 	pass
 
 
+def update_environ(target, extra):
+	files = os.environ.get(target, '').split()
+	os.environ[target] = ' '.join(files + [extra])
+
+
 def get_config_item(args, key, default=DEFAULT):
 	config_prefix = args.config_prefix
 	config = args.config
 	if default is DEFAULT:
-		return config.get(config_prefix + key, config[key])
+		try:
+			return config[config_prefix + key]
+		except KeyError:
+			return config[key]
 
 	return args.config.get(config_prefix + key, config.get(key, default))
 
+
+def get_config_dict(args, key):
+	""" Return a dictionary of values based on a prefix from the config"""
+	config_prefix = args.config_prefix
+	config = args.config
+
+	key_prefix = key + '.'
+	
+	result =  {k[len(key_prefix):]: v for k, v in config.items() if k.startswith(key_prefix)}
+	key_prefix = config_prefix + key_prefix
+	result.update((k[len(key_prefix):],v) for k, v in config.items() if k.startswith(key_prefix))
+
+	return result
 
 def parse_args(argv):
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--config', dest='configfile', action='store',
 						default=const._config_file)
 	parser.add_argument('url', action='store')
-	parser.add_argument('dest', action='store')
+	parser.add_argument('dest', action='store', default=None, nargs='?')
 	parser.add_argument('--file', dest='file', action='store', default=None)
 	parser.add_argument('--email', dest='email', action='store_const', const=True, default=False)
 	parser.add_argument('--nosslverify', dest='nosslverify', action='store_const', const=True, default=False)
@@ -82,6 +103,16 @@ def parse_args(argv):
 	args = parser.parse_args(argv)
 	if args.config_prefix and not args.config_prefix.endswith('.'):
 		args.config_prefix += '.'
+
+	try:
+		args.config = config.get_config(args.configfile, const._app_name)
+	except Exception:
+		sys.stderr.write('ERROR: Could not process config file:\n')
+		sys.stderr.write(traceback.format_exc())
+		raise
+
+	if args.dest is None:
+		args.dest = get_config_item(args, 'csv_export_dest')
 
 	return args
 
@@ -98,6 +129,7 @@ def stream_download(dest_file, url, **kwargs):
 			size += len(chunk)
 			fd.write(chunk)
 
+	update_environ('ALLEXPORTFILES', dest_file)
 	print('downloaded', size, 'bytes')
 
 
@@ -171,18 +203,14 @@ def email_log(args, outputstream, is_error, success_email, error_email):
 	name = get_config_item(args, 'csv_export_title', '')
 	if name:
 		name = ' ' + name
+	if not to:
+		return
 	email.send_email(fakerequest(args.config), author, to, 'Automated CSV Export%s%s' % (name, ' -- ERRORS!' if is_error else ''), outputstream.getvalue())
 
 
 def main(argv):
 	args = parse_args(argv)
 	retval = 0
-	try:
-		args.config = config.get_config(args.configfile, const._app_name)
-	except Exception:
-		sys.stderr.write('ERROR: Could not process config file:\n')
-		sys.stderr.write(traceback.format_exc())
-		return 1
 
 	success_email = get_config_item(args, 'csv_export_notify_success', None)
 	error_email = get_config_item(args, 'csv_export_notify_error', None)
@@ -221,16 +249,18 @@ def main(argv):
 	except requests.HTTPError:
 		pass
 
-	except Exception as e:
+	except Exception:
 		sys.stderr.write('ERROR: Something went wrong generating the CSV export:\n')
 		sys.stderr.write(traceback.format_exc())
 		retval = 1
 
+	if after_cmd:
+		env = dict(os.environ)
+		env.update(get_config_dict(args, 'csv_export_run_after_cmd'))
+		subprocess.call(after_cmd, shell=True, env=env)
+
 	if args.email:
 		email_log(args, sys.stdout, sys.stderr.is_dirty(), success_email, error_email)
-
-	if after_cmd:
-		subprocess.call(after_cmd, shell=True)
 
 	return retval
 
