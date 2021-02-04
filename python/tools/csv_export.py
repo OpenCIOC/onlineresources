@@ -257,7 +257,12 @@ def main(argv):
 	if after_cmd:
 		env = dict(os.environ)
 		env.update(get_config_dict(args, 'csv_export_run_after_cmd'))
-		subprocess.call(after_cmd, shell=True, env=env)
+		p = subprocess.Popen(after_cmd, shell=True, env=env, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+		stdoutdata, stderrdata = p.communicate()
+		print(stdoutdata)
+		print(stderrdata)
+		if p.returncode:
+			print("Post processing command returned an error result", p.returncode, file=sys.stderr)
 
 	if args.email:
 		email_log(args, sys.stdout, sys.stderr.is_dirty(), success_email, error_email)
