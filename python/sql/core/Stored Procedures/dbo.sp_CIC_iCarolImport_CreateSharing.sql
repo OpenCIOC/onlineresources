@@ -106,6 +106,9 @@ SELECT CAST((SELECT (
 				WHERE f.SeniorWorkerName IS NOT NULL OR f.SeniorWorkerTitle IS NOT NULL OR f.SeniorWorkerPhoneNumber IS NOT NULL OR f.SeniorWorkerEmailAddress IS NOT NULL
 			 FOR XML PATH('CONTACT'), TYPE)
 		 FOR XML PATH('EXEC_1'),TYPE),
+		 -- MadeInactiveOn comes in as an iso formated datetime but with a space instead of a T in between the date and time parts
+		(SELECT 'ICAROLMADEINACTIVEON' AS [@FLD], CASE WHEN a.AgencyStatus = 'Inactive' THEN REPLACE(a.MadeInactiveOn, ' ', 'T') ELSE NULL END AS [@V] FOR XML PATH('EXTRA_DATE'), TYPE),
+		(SELECT 'ICAROLAGENCYSTATUS' AS [@FLD], CASE WHEN a.AgencyStatus = 'Active' THEN 'ACTIVE' WHEN a.AgencyStatus = 'Active, but do not refer' THEN 'DO_NOT_REFER' WHEN a.AgencyStatus = 'Inactive' THEN 'INACTIVE' ELSE a.AgencyStatus END AS [@CD] FOR XML PATH('EXTRA_DROPDOWN'), TYPE),  
 		(SELECT a.PhoneFax AS [@V], f.PhoneFax AS [@VF] FOR XML PATH('FAX'), TYPE),
 		(SELECT a.FeeStructureSource AS [@N], f.FeeStructureSource AS [@NF] FOR XML PATH('FEES'), TYPE),
 		(SELECT
@@ -143,7 +146,7 @@ SELECT CAST((SELECT (
 			 a.MailingAddress2 AS [@LN2],
 			 a.MailingCity AS [@CTY],
 			 a.MailingStateProvince AS [@PRV],
-			 CASE WHEN a.MailingPostalCode LIKE '[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]' THEN LEFT(a.MailingPostalCode,3) + ' ' + RIGHT(a.MailingPostalCode, 3) ELSE a.MailingPostalCode END AS [@PC],
+			 CASE WHEN a.MailingPostalCode LIKE '[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]' THEN UPPER(LEFT(a.MailingPostalCode,3) + ' ' + RIGHT(a.MailingPostalCode, 3)) ELSE UPPER(a.MailingPostalCode) END AS [@PC],
 			 a.MailingCountry AS [@CTRY],
 
 			 f.MailingAddress1 AS [@LN1F],
@@ -155,7 +158,10 @@ SELECT CAST((SELECT (
 			 f.MailingCountry AS [@CTRYF]
 			FOR XML PATH('MAIL_ADDRESS'), TYPE
 		),
-		(SELECT CASE WHEN COALESCE(a.ExcludeFromWebsite, 'No') = 'Yes' THEN 1 ELSE 0 END AS [@V], CASE WHEN COALESCE(f.ExcludeFromWebsite, 'No') = 'Yes' THEN 1 ELSE 0 END AS [@VF] FOR XML PATH('NON_PUBLIC'), TYPE),
+		(SELECT 
+			CASE WHEN COALESCE(a.ExcludeFromWebsite, 'No') = 'Yes' OR COALESCE(a.ExcludeFromDirectory, 'No') = 'Yes' OR COALESCE(a.AgencyStatus, 'Active') = 'Inactive' THEN 1 ELSE 0 END AS [@V],
+			CASE WHEN COALESCE(f.ExcludeFromWebsite, 'No') = 'Yes' OR COALESCE(f.ExcludeFromDirectory, 'No') = 'Yes' OR COALESCE(a.AgencyStatus, 'Active') = 'Inactive' THEN 1 ELSE 0 END AS [@VF] 
+			FOR XML PATH('NON_PUBLIC'), TYPE),
 		(SELECT
 			 (SELECT STUFF((SELECT '; ' + NumberValue FROM (
 
@@ -206,7 +212,7 @@ SELECT CAST((SELECT (
 			 a.PhysicalAddress2 AS [@LN2],
 			 a.PhysicalCity AS [@CTY],
 			 a.PhysicalStateProvince AS [@PRV],
-			 CASE WHEN a.PhysicalPostalCode LIKE '[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]' THEN LEFT(a.PhysicalPostalCode,3) + ' ' + RIGHT(a.PhysicalPostalCode, 3) ELSE a.PhysicalPostalCode END AS [@PC],
+			 CASE WHEN a.PhysicalPostalCode LIKE '[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]' THEN UPPER(LEFT(a.PhysicalPostalCode,3) + ' ' + RIGHT(a.PhysicalPostalCode, 3)) ELSE UPPER(a.PhysicalPostalCode) END AS [@PC],
 			 a.PhysicalCountry AS [@CTRY],
 
 			 f.PhysicalAddress1 AS [@LN1F],
