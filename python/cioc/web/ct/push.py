@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
 #import elementtree.ElementTree as ET
-from six.moves import cStringIO as StringIO
+from six import BytesIO as StringIO
 
 from pyramid.view import view_config
 import requests
