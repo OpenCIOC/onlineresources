@@ -163,9 +163,10 @@ class CiocFormRenderer(FormRenderer):
 	def text(self, name, value=None, id=None, **attrs):
 		kw = {'maxlength': 200, 'size': const.TEXT_SIZE}
 		kw.update(attrs)
-		kw['size'] = min((kw['maxlength']+1, kw['size']))
+		if kw['size'] is not None:
+			kw['size'] = min((kw['maxlength'] + 1, kw['size']))
 		return FormRenderer.text(self, name, value, self._fix_id(id or name), **kw)
-	
+
 	def proto_url(self, name, value=None, id=None, **attrs):
 		kw = {
 			'type': 'text', 'maxlength': 150, 'size': const.TEXT_SIZE - 5,
@@ -195,7 +196,8 @@ class CiocFormRenderer(FormRenderer):
 	def colour(self, name, value=None, id=None, **attrs):
 		kw = {'maxlength': 50, 'size': 20}
 		kw.update(attrs)
-		kw['size'] = min((kw['maxlength'], kw['size']))
+		if kw['size'] is not None:
+			kw['size'] = min((kw['maxlength'], kw['size']))
 		kw['class_'] = self._fix_class(attrs, 'colour')
 
 		id = id or name
@@ -209,7 +211,8 @@ class CiocFormRenderer(FormRenderer):
 	def date(self, name, value=None, id=None, **attrs):
 		kw = {'maxlength': 200, 'size': const.DATE_TEXT_SIZE}
 		kw.update(attrs)
-		kw['size'] = min((kw['maxlength'], kw['size']))
+		if kw['size'] is not None:
+			kw['size'] = min((kw['maxlength'], kw['size']))
 
 		kw['class_'] = self._fix_class(attrs, 'DatePicker')
 		kw['id'] = self._fix_id(id or name)
