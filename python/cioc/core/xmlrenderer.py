@@ -84,7 +84,7 @@ class Marshaller:
 
 		elif isinstance(value, bool):
 			self.dump_bool(value, write)
-		elif isinstance(value, datetime):
+		elif isinstance(value, datetime.datetime):
 			self.dump_datetime(value, write)
 		else:
 			self.dump_default(value, write)
