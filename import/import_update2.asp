@@ -5429,8 +5429,8 @@ End If
 
 strSQL = strSQL & " ORDER BY ied.ER_ID"
 
-Response.Write("<pre>" & strSQL & "</pre>")
-Response.Flush()
+'Response.Write("<pre>" & strSQL & "</pre>")
+'Response.Flush()
 
 With cmdListImport
 	.ActiveConnection = getCurrentAdminCnn()

@@ -147,7 +147,7 @@ SELECT CAST((SELECT (
 			 a.MailingCity AS [@CTY],
 			 a.MailingStateProvince AS [@PRV],
 			 CASE WHEN a.MailingPostalCode LIKE '[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]' THEN UPPER(LEFT(a.MailingPostalCode,3) + ' ' + RIGHT(a.MailingPostalCode, 3)) ELSE UPPER(a.MailingPostalCode) END AS [@PC],
-			 a.MailingCountry AS [@CTRY],
+			 CASE WHEN COALESCE(a.MailingAddress1, a.MailingAddress2, a.MailingCity, a.MailingStateProvince, a.MailingPostalCode) IS NOT NULL THEN a.MailingCountry ELSE NULL END AS [@CTRY],
 
 			 f.MailingAddress1 AS [@LN1F],
 			 f.MailingAddress2 AS [@LN2F],
@@ -155,7 +155,7 @@ SELECT CAST((SELECT (
 			 f.MailingStateProvince AS [@PRVF],
 			 -- NOTE: Postal Code is shared
 			 -- f.MailingPostalCode AS [@PC],
-			 f.MailingCountry AS [@CTRYF]
+			 CASE WHEN COALESCE(f.MailingAddress1, f.MailingAddress2, f.MailingCity, f.MailingStateProvince, a.MailingPostalCode) IS NOT NULL THEN f.MailingCountry ELSE NULL END AS [@CTRYF]
 			FOR XML PATH('MAIL_ADDRESS'), TYPE
 		),
 		(SELECT 
@@ -213,7 +213,7 @@ SELECT CAST((SELECT (
 			 a.PhysicalCity AS [@CTY],
 			 a.PhysicalStateProvince AS [@PRV],
 			 CASE WHEN a.PhysicalPostalCode LIKE '[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]' THEN UPPER(LEFT(a.PhysicalPostalCode,3) + ' ' + RIGHT(a.PhysicalPostalCode, 3)) ELSE UPPER(a.PhysicalPostalCode) END AS [@PC],
-			 a.PhysicalCountry AS [@CTRY],
+			 CASE WHEN COALESCE(a.PhysicalAddress1, a.PhysicalAddress2, a.PhysicalCity, a.PhysicalStateProvince, a.PhysicalPostalCode ) IS NOT NULL THEN a.PhysicalCountry ELSE NULL END AS [@CTRY],
 
 			 f.PhysicalAddress1 AS [@LN1F],
 			 f.PhysicalAddress2 AS [@LN2F],
@@ -222,7 +222,7 @@ SELECT CAST((SELECT (
 
 			 -- Only one Postal Code Value Allowed, using English
 			 -- f.PhysicalPostalCode AS [@PC],
-			 f.PhysicalCountry AS [@CTRYF]
+			 CASE WHEN COALESCE(f.PhysicalAddress1, f.PhysicalAddress2, f.PhysicalCity, f.PhysicalStateProvince, f.PhysicalPostalCode ) IS NOT NULL THEN f.PhysicalCountry ELSE NULL END AS [@CTRYF]
 			FOR XML PATH('SITE_ADDRESS'), TYPE
 		),
 		(SELECT

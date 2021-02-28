@@ -69,12 +69,14 @@ Call makePageHeader(TXT_IMPORT_RECORD_DATA, TXT_IMPORT_RECORD_DATA, True, False,
 
 Dim cmdListImportData, _
 	rsListImportData, _
+	bIsIcarolImport, _
 	intRecordCount, _
 	fldERID, _
 	fldNUM, _
 	fldOWNER, _
 	fldREPORT, _
-	fldCANRETRY
+	fldCANRETRY, _
+	fldCANRESCHED 
 
 Dim intError
 intError = 0
@@ -98,6 +100,7 @@ With rsListImportData
 
 	If Not .EOF Then
 		intError = .Fields("Error")
+		bIsIcarolImport = .FIelds("IsIcarolImport")
 		If intError <> 0 Then
 			Call handleError(Nz(.Fields("ErrMsg"),TXT_UNKNOWN_ERROR_OCCURED),vbNullString,vbNullString)
 		End If
@@ -119,6 +122,7 @@ If intError = 0 Then
 			Set fldOWNER = .Fields("OWNER")
 			Set fldREPORT = .Fields("REPORT")
 			Set fldCANRETRY = .Fields("CAN_RETRY")
+			Set fldCANRESCHED = .Fields("CAN_ICAROL_RESCHED")
 %>
 <table class="BasicBorder cell-padding-2">
 <tr>
@@ -126,6 +130,9 @@ If intError = 0 Then
 	<th><%=TXT_ORG_NAMES%></th>
 	<th><%=TXT_RECORD_OWNER%></th>
 	<th><%=TXT_CAN_RETRY%></th>
+	<% If bIsIcarolImport Then %>
+	<th><%=TXT_CAN_RESCHEDULE%></th>
+	<% End If %>
 	<th><%=TXT_IMPORT_REPORT%></th>
 </tr>
 <%
@@ -147,6 +154,13 @@ If intError = 0 Then
 %>
 	<td><%=fldOWNER%></td>
 	<td><%=StringIf(fldCANRETRY, TXT_CAN_RETRY)%></td>
+	<% If bIsIcarolImport Then %>
+	<td>
+		<% If fldCANRESCHED Then %>
+		<a href="<%= makeLink("import_reschedule.asp", "EFID=" & intEFID & "&ERID=" & fldERID.Value, vbNullString ) %>"><%= TXT_RESCHEDULE %></a>
+		<% End If %>
+	</td>
+	<% End If %>
 	<td><%=IIf(Nl(fldREPORT),TXT_NO_ISSUES,"<span class=""Alert"">" & fldREPORT & "</span>")%></td>
 </tr>
 <%

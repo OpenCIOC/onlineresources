@@ -5,7 +5,7 @@ GO
 
 CREATE PROCEDURE [dbo].[sp_CIC_ImportEntry_Report_l]
 	@ViewType int,
-	@EF_ID int
+	@EF_ID INT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
@@ -18,10 +18,12 @@ SET NOCOUNT ON
 */
 
 DECLARE @Error int,
-		@ErrMsg nvarchar(500)
+		@ErrMsg nvarchar(500),
+		@IsIcarolImport bit
 
 SET @Error = 0
 SET @ErrMsg = NULL
+SET @IsIcarolImport = 0
 
 DECLARE	@MemberObjectName nvarchar(100),
 		@ViewObjectName nvarchar(100)
@@ -49,9 +51,12 @@ END ELSE IF EXISTS(SELECT * FROM CIC_ImportEntry WHERE EF_ID=@EF_ID AND MemberID
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL)
 END
 
-SELECT @Error AS Error, @ErrMsg AS ErrMsg
+SELECT @IsIcarolImport = CASE WHEN SourceDbCode = 'ICAROL' THEN 1 ELSE 0 END FROM dbo.CIC_ImportEntry WHERE EF_ID=@EF_ID
+
+SELECT @Error AS Error, @ErrMsg AS ErrMsg, @IsIcarolImport AS IsIcarolImport
 
 IF @Error = 0 BEGIN
+
 	SELECT	ied.ER_ID,
 			ied.NUM,
 			ied.EXTERNAL_ID,
@@ -59,7 +64,8 @@ IF @Error = 0 BEGIN
 			ied.REPORT,
 			CAST(CASE WHEN DATA IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS CAN_RETRY,
 			dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL,
-			dbo.fn_CIC_RecordInView(bt.NUM,@ViewType,@@LANGID,0,GETDATE()) AS CAN_SEE
+			dbo.fn_CIC_RecordInView(bt.NUM,@ViewType,@@LANGID,0,GETDATE()) AS CAN_SEE,
+			CAST(CASE WHEN DATA IS NOT NULL AND @IsIcarolImport=1 THEN 1 ELSE 0 END AS BIT) AS CAN_ICAROL_RESCHED
 		FROM CIC_ImportEntry_Data ied
 		LEFT JOIN GBL_BaseTable bt
 			ON ied.NUM=bt.NUM

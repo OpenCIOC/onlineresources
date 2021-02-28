@@ -20,12 +20,15 @@
 <%
 Dim TXT_ADD_PROFILE_FAILED, _
 	TXT_ALL_RECORDS, _
+	TXT_AND_WILL_BE_TOMORROW, _
 	TXT_ARCHIVE_DATASET, _
 	TXT_ARCHIVE, _
 	TXT_ARCHIVED, _
 	TXT_ARE_YOU_SURE_ARCHIVE, _
 	TXT_ARE_YOU_SURE_UNARCHIVE, _
+	TXT_ARE_YOU_SURE_RESCHEDULE, _
 	TXT_CAN_BE_RETRIED, _
+	TXT_CAN_RESCHEDULE, _
 	TXT_CAN_RETRY, _
 	TXT_CANCEL_QUEUE, _
 	TXT_CANNOT_IMPORT, _
@@ -84,12 +87,17 @@ Dim TXT_ADD_PROFILE_FAILED, _
 	TXT_PUBLICATION_LIST, _
 	TXT_QUEUE_ALL, _
 	TXT_QUEUE_RECORDS_FOR_LATER, _
+	TXT_RECORD_WAS_SUCCESSFULLY, _
+	TXT_RECORD_WAS_NOT, _
 	TXT_RECORDS_IMPORTED, _
 	TXT_RECORDS_OWNED_BY_OTHERS, _
 	TXT_RECORDS_THAT_DONT_MATCH, _
 	TXT_RECORDS_THAT_MATCH, _
 	TXT_RECORDS_TO_IMPORT, _
 	TXT_RECORDS_TO_RETRY, _
+	TXT_RESCHEDULE, _
+	TXT_RESCHEDULED, _
+	TXT_RESCHEDULE_RECORD, _
 	TXT_RETRY_FAILED_RECORDS, _
 	TXT_RETURN_TO_IMPORT, _
 	TXT_RETURN_TO_LIST, _
@@ -130,6 +138,7 @@ Sub setTxtImport()
 		Case CULTURE_ENGLISH_CANADIAN
 			TXT_ADD_PROFILE_FAILED = "Add Privacy Profile failed"
 			TXT_ALL_RECORDS = "All Records"
+			TXT_AND_WILL_BE_TOMORROW = " and will be in a new import tomorrow."
 			TXT_ARCHIVE_DATASET = "Archive Dataset"
 			TXT_ARCHIVE = "Archive"
 			TXT_ARCHIVED = "Archived"
@@ -137,7 +146,10 @@ Sub setTxtImport()
 				"<br>Use your back button to return to the form if you do not want to archive."
 			TXT_ARE_YOU_SURE_UNARCHIVE = "Are you sure you want to unarchive this item?" & _
 				"<br>Use your back button to return to the form if you do not want to unarchive."
+			TXT_ARE_YOU_SURE_RESCHEDULE = "Are you sure you want to reschedule an import of this record?" & _
+				"<br>Use your back button to return to the form if you do not want to reschedule."
 			TXT_CAN_BE_RETRIED = "can be retried."
+			TXT_CAN_RESCHEDULE = "Can Reschedule"
 			TXT_CAN_RETRY = "Can Retry"
 			TXT_CANCEL_QUEUE = "Cancel Queue"
 			TXT_CANNOT_IMPORT = "Cannot Import"
@@ -196,12 +208,17 @@ Sub setTxtImport()
 			TXT_PUBLICATION_LIST = "Publication List"
 			TXT_QUEUE_ALL = "Queue All"
 			TXT_QUEUE_RECORDS_FOR_LATER = "Queue records for later import"
+			TXT_RECORD_WAS_SUCCESSFULLY = "The record was successfully "
+			TXT_RECORD_WAS_NOT = "The records was not "
 			TXT_RECORDS_IMPORTED = " records in this dataset that have been imported."
 			TXT_RECORDS_OWNED_BY_OTHERS = " records in this dataset that correspond to existing records owned by other CIOC Members in this database. You cannot import these records."
 			TXT_RECORDS_THAT_DONT_MATCH = " records in this dataset that do not match existing records."
 			TXT_RECORDS_THAT_MATCH = " records in this dataset that correspond to existing records."
 			TXT_RECORDS_TO_IMPORT = " records to import."
 			TXT_RECORDS_TO_RETRY = "records to retry."
+			TXT_RESCHEDULE = "Reschedule"
+			TXT_RESCHEDULED = "Rescheduled"
+			TXT_RESCHEDULE_RECORD = "Reschedule Record Import"
 			TXT_RETRY_FAILED_RECORDS = "Retry records from previous run that reported issues"
 			TXT_RETURN_TO_LIST = "Return to Record List"
 			TXT_RETURN_TO_IMPORT = "Return to Import Menu"
@@ -241,6 +258,7 @@ Sub setTxtImport()
 		Case CULTURE_FRENCH_CANADIAN
 			TXT_ADD_PROFILE_FAILED = "L'ajout du Profil de confidentialité a échoué."
 			TXT_ALL_RECORDS = "Tous les dossiers"
+			TXT_AND_WILL_BE_TOMORROW = "TRANSLATE_FR --  and will be in a new import tomorrow."
 			TXT_ARCHIVE_DATASET = "TRANSLATE_FR -- Archive Dataset"
 			TXT_ARCHIVE = "TRANSLATE_FR -- Archive"
 			TXT_ARCHIVED = "TRANSLATE_FR -- Archived"
@@ -248,7 +266,10 @@ Sub setTxtImport()
 				"<br>Use your back button to return to the form if you do not want to archive."
 			TXT_ARE_YOU_SURE_UNARCHIVE = "TRANSLATE_FR -- Are you sure you want to unarchive this item?" & _
 				"<br>Use your back button to return to the form if you do not want to unarchive."
+			TXT_ARE_YOU_SURE_RESCHEDULE = "TRANSLATE_FR -- Are you sure you want to reschedule an import of this record?" & _
+				"<br>Use your back button to return to the form if you do not want to reschedule."
 			TXT_CAN_BE_RETRIED = "TRANSLATE_FR -- can be retried."
+			TXT_CAN_RESCHEDULE = "TRANSLATE_FR -- Can Reschedule"
 			TXT_CAN_RETRY = "TRANSLATE_FR -- Can Retry"
 			TXT_CANCEL_QUEUE = "Annuler la file d'attente"
 			TXT_CANNOT_IMPORT = "Impossible d'importer"
@@ -307,12 +328,17 @@ Sub setTxtImport()
 			TXT_PUBLICATION_LIST = "Liste des publications"
 			TXT_QUEUE_ALL = "Mettre tous les dossiers dans la file d'attente"
 			TXT_QUEUE_RECORDS_FOR_LATER = "Mettre les dossiers dans la file d'attente et les importer plus tard"
+			TXT_RECORD_WAS_SUCCESSFULLY = "TRANSLATE_FR -- The record was successfully "
+			TXT_RECORD_WAS_NOT = "TRANSLATE_FR -- The records was not "
 			TXT_RECORDS_IMPORTED = " dossiers dans cet ensemble de données qui ont été importés."
 			TXT_RECORDS_OWNED_BY_OTHERS = " dossiers dans cet ensemble de données qui correspondent à des dossiers existants appartenant à d'autres membres CIOC dans cette base de données. Vous ne pouvez pas importer ces dossiers."
 			TXT_RECORDS_THAT_DONT_MATCH = " dossiers dans cet ensemble de données qui ne concordent pas avec des dossiers existants."
 			TXT_RECORDS_THAT_MATCH = " dossiers dans cet ensemble de données qui concordent avec des dossiers existants."
 			TXT_RECORDS_TO_IMPORT = " dossiers à importer."
 			TXT_RECORDS_TO_RETRY = "TRANSLATE_FR -- records to retry."
+			TXT_RESCHEDULE = "TRANSLATE_FR -- Reschedule"
+			TXT_RESCHEDULED = "TRANSLATE_FR -- Rescheduled"
+			TXT_RESCHEDULE_RECORD = "TRANSLATE_FR -- Reschedule Record Import"
 			TXT_RETRY_FAILED_RECORDS = "TRANSLATE_FR -- Retry records from previous run that reported issues"
 			TXT_RETURN_TO_LIST = "Retourner à la liste des dossiers"
 			TXT_RETURN_TO_IMPORT = "Retourner au menu de l'importation"
