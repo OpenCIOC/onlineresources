@@ -53,7 +53,7 @@ End Function
 
 Function textToHTML(strText)
 	If Not Nl(strText) Then
-		If Not reEquals(strText,"(<br>)|(<br ?/>)|(<p>)|(<a\s+href)|(<b>)|(<strong>)|(<i>)|(<em>)|(<li>)|(<img\s+)|(<table\s+)|(&nbsp;)|(&amp;)|(h[1-6]>)|(<span[\s>])|(<div[\s>])",True,False,False,False) Then
+		If Not reEquals(strText,"(<br>)|(<br ?/>)|(<p>)|(<a\s+href)|(<b>)|(<strong>)|(<i>)|(<em>)|(<li>)|(<img\s+)|(<table\s+)|(<table>)|(&nbsp;)|(&amp;)|(h[1-6]>)|(<span[\s>])|(<div[\s>])",True,False,False,False) Then
 			textToHTML = Replace(Replace(Replace(Server.HTMLEncode(strText),vbCrLf,"&nbsp;<br>"),vbLf,"&nbsp;<br>"),vbCr,"&nbsp;<br>")
 		ElseIf Not reEquals(strText,"(<br>)|(<br ?/>)|(<p>)",True,False,False,False) Then
 			textToHTML = Replace(Replace(Replace(strText,vbCrLf,"&nbsp;<br>"),vbLf,"&nbsp;<br>"),vbCr,"&nbsp;<br>")
