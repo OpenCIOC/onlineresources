@@ -1,0 +1,86 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_CIC_SRCH_PubTax_u]
+	@NUM VARCHAR(9) = NULL,
+	@TOP int = NULL OUTPUT
+WITH EXECUTE AS CALLER
+AS
+SET NOCOUNT ON
+
+DECLARE @SQL NVARCHAR(MAX),
+		@GHIDs NVARCHAR(MAX),
+		@UpdateGUID UNIQUEIDENTIFIER
+
+
+SET @UpdateGUID = NEWID()
+
+IF @TOP IS NULL OR @TOP < 1 OR @NUM IS NOT NULL BEGIN
+	UPDATE pr
+		SET GHTaxCache_u = @UpdateGUID
+	FROM CIC_BT_PB pr
+	WHERE EXISTS(SELECT * FROM dbo.CIC_BaseTable WHERE SRCH_PubTax_U=1)
+		AND EXISTS(SELECT * FROM CIC_GeneralHeading gh WHERE pr.PB_ID=gh.PB_ID AND gh.Used IS NULL AND gh.TaxonomyWhereClause IS NOT NULL)
+		AND (@NUM IS NULL OR @NUM=pr.NUM)
+
+END ELSE BEGIN
+	UPDATE pr
+		SET GHTaxCache_u = @UpdateGUID
+	FROM CIC_BT_PB pr
+	WHERE pr.NUM IN (SELECT TOP (@TOP) NUM FROM dbo.CIC_BaseTable WHERE SRCH_PubTax_U=1)
+		AND EXISTS(SELECT * FROM CIC_GeneralHeading gh WHERE pr.PB_ID=gh.PB_ID AND gh.Used IS NULL AND gh.TaxonomyWhereClause IS NOT NULL)
+END
+
+SELECT @GHIDs = COALESCE(@GHIDs + ',','') + CAST(gh.GH_ID AS VARCHAR)
+	FROM CIC_GeneralHeading gh
+	WHERE EXISTS(SELECT * FROM CIC_BT_PB pb WHERE gh.PB_ID=pb.PB_ID AND pb.GHTaxCache_u=@UpdateGUID)
+		AND gh.Used IS NULL AND gh.TaxonomyWhereClause IS NOT NULL
+
+SELECT @SQL = STUFF((SELECT N' INSERT INTO @TmpGHID (GH_ID, BT_PB_ID, NUM_Cache) SELECT ' + CAST(gh.GH_ID AS VARCHAR) + ' AS GH_ID, pb.BT_PB_ID, pb.NUM AS NUM_Cache FROM GBL_BaseTable bt INNER JOIN CIC_BT_PB pb ON bt.NUM=pb.NUM AND pb.PB_ID=' + CAST(gh.PB_ID AS VARCHAR) + ' WHERE pb.GHTaxCache_u=@UpdateGUID AND (' + gh.TaxonomyWhereClause + ')'
+	FROM CIC_GeneralHeading gh
+	WHERE EXISTS(SELECT * FROM CIC_BT_PB pb WHERE gh.PB_ID=pb.PB_ID AND pb.GHTaxCache_u=@UpdateGUID)
+		AND gh.Used IS NULL
+	FOR XML PATH(N'')), 1, 1, N'')
+
+IF @SQL IS NOT NULL AND @SQL <> '' BEGIN
+	SET @SQL = '
+	
+	DECLARE @TmpGHID TABLE (
+		GH_ID int NOT NULL,
+		BT_PB_ID int NOT NULL,
+		NUM_Cache varchar(8) NOT NULL
+	)
+	
+	' + @SQL + '
+	
+	MERGE INTO CIC_BT_PB_GH dst
+		USING @TmpGHID src
+			ON dst.BT_PB_ID=src.BT_PB_ID AND dst.GH_ID=src.GH_ID
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (BT_PB_ID, GH_ID, NUM_Cache)
+				VALUES (src.BT_PB_ID, src.GH_ID, src.NUM_Cache)
+		WHEN NOT MATCHED BY SOURCE AND dst.GH_ID IN (' + @GHIDs + ')
+				AND EXISTS(SELECT * FROM CIC_BT_PB pb WHERE GHTaxCache_u=@UpdateGUID AND pb.BT_PB_ID=dst.BT_PB_ID) THEN
+			DELETE
+			;
+	'
+	
+	EXEC sp_executesql @SQL, N'@UpdateGUID uniqueidentifier', @UpdateGUID=@UpdateGUID
+	
+END
+
+UPDATE cbt SET cbt.SRCH_PubTax_U = 0
+FROM dbo.CIC_BaseTable cbt
+WHERE EXISTS(SELECT * FROM CIC_BT_PB pb WHERE pb.NUM=cbt.NUM AND pb.GHTaxCache_u=@UpdateGUID)
+
+IF @NUM IS NOT NULL BEGIN
+	SELECT @TOP = COUNT(*) FROM dbo.CIC_BaseTable WHERE SRCH_PubTax_U=1
+END
+
+SET NOCOUNT OFF
+
+GO
+GRANT EXECUTE ON  [dbo].[sp_CIC_SRCH_PubTax_u] TO [cioc_login_role]
+GO

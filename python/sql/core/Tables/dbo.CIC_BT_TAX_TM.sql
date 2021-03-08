@@ -25,7 +25,6 @@ SET NOCOUNT OFF
 GO
 EXEC sp_settriggerorder N'[dbo].[tr_CIC_BT_TAX_TM_d]', 'last', 'delete', null
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -63,27 +62,31 @@ UPDATE cbtd
 		OR EXISTS(SELECT * FROM Deleted d WHERE d.BT_TAX_ID=pr.BT_TAX_ID))
 		AND cbtd.SRCH_Taxonomy_U = 0
 		
+		/*
 DECLARE @SQL nvarchar(max),
 		@GHIDs nvarchar(max),
 		@UpdateGUID uniqueidentifier
 
+
 SET @UpdateGUID = NEWID()
+*/
 
-UPDATE pr
-	SET GHTaxCache_u = @UpdateGUID
-FROM CIC_BT_PB pr
-WHERE (
-		EXISTS(SELECT * FROM inserted i INNER JOIN CIC_BT_TAX prt ON prt.BT_TAX_ID=i.BT_TAX_ID WHERE pr.NUM=prt.NUM)
-		OR EXISTS(SELECT * FROM deleted d INNER JOIN CIC_BT_TAX prt ON prt.BT_TAX_ID=d.BT_TAX_ID WHERE pr.NUM=prt.NUM)
-	)
-	AND EXISTS(SELECT * FROM CIC_GeneralHeading gh WHERE pr.PB_ID=gh.PB_ID AND gh.Used IS NULL)
+UPDATE cbt SET cbt.SRCH_PubTax_U = 1
+	FROM dbo.CIC_BaseTable cbt
+	INNER JOIN dbo.CIC_BT_TAX pr
+		ON cbt.NUM=pr.NUM
+	WHERE (EXISTS(SELECT * FROM Inserted i WHERE i.BT_TAX_ID=pr.BT_TAX_ID)
+		OR EXISTS(SELECT * FROM Deleted d WHERE d.BT_TAX_ID=pr.BT_TAX_ID))
+		AND cbt.SRCH_PubTax_U = 0
+		AND EXISTS(SELECT * FROM CIC_BT_PB pb INNER JOIN dbo.CIC_GeneralHeading gh ON pb.PB_ID=gh.PB_ID WHERE pb.NUM=pr.NUM AND gh.Used IS NULL AND gh.TaxonomyWhereClause IS NOT NULL)
 
-	SELECT @GHIDs = COALESCE(@GHIDs + ',','') + CAST(gh.GH_ID AS varchar)
+		/*
+	SELECT @GHIDs = COALESCE(@GHIDs + ',','') + CAST(gh.GH_ID AS VARCHAR)
 		FROM CIC_GeneralHeading gh
 		WHERE EXISTS(SELECT * FROM CIC_BT_PB pb WHERE gh.PB_ID=pb.PB_ID AND pb.GHTaxCache_u=@UpdateGUID)
 			AND gh.Used IS NULL AND gh.TaxonomyWhereClause IS NOT NULL
 
-	SELECT @SQL = STUFF((SELECT N' INSERT INTO @TmpGHID (GH_ID, BT_PB_ID, NUM_Cache) SELECT ' + CAST(gh.GH_ID AS varchar) + ' AS GH_ID, pb.BT_PB_ID, pb.NUM AS NUM_Cache FROM GBL_BaseTable bt INNER JOIN CIC_BT_PB pb ON bt.NUM=pb.NUM AND pb.PB_ID=' + CAST(gh.PB_ID AS varchar) + ' WHERE pb.GHTaxCache_u=@UpdateGUID AND (' + gh.TaxonomyWhereClause + ')'
+	SELECT @SQL = STUFF((SELECT N' INSERT INTO @TmpGHID (GH_ID, BT_PB_ID, NUM_Cache) SELECT ' + CAST(gh.GH_ID AS VARCHAR) + ' AS GH_ID, pb.BT_PB_ID, pb.NUM AS NUM_Cache FROM GBL_BaseTable bt INNER JOIN CIC_BT_PB pb ON bt.NUM=pb.NUM AND pb.PB_ID=' + CAST(gh.PB_ID AS VARCHAR) + ' WHERE pb.GHTaxCache_u=@UpdateGUID AND (' + gh.TaxonomyWhereClause + ')'
 		FROM CIC_GeneralHeading gh
 		WHERE EXISTS(SELECT * FROM CIC_BT_PB pb WHERE gh.PB_ID=pb.PB_ID AND pb.GHTaxCache_u=@UpdateGUID)
 			AND gh.Used IS NULL
@@ -115,6 +118,7 @@ IF @SQL IS NOT NULL AND @SQL <> '' BEGIN
 	EXEC sp_executesql @SQL, N'@UpdateGUID uniqueidentifier', @UpdateGUID=@UpdateGUID
 	
 END
+	*/
 
 SET NOCOUNT OFF
 
