@@ -586,7 +586,7 @@ If Not bError Then
 										"END"
 								Next
 								strSQL = strSQL & vbCrLf & "EXEC sp_CIC_SRCH_TAX_u NULL" & vbCrLf & _
-										"EXEC sp_CIC_SRCH_PubTax_u NULL, NULL" vbCrLf & _
+										"EXEC sp_CIC_SRCH_PubTax_u NULL, NULL" & vbCrLf & _
 										"SET NOCOUNT OFF"
 							Case "D"
 								Select Case Request("LinkOption")
@@ -616,7 +616,7 @@ If Not bError Then
 											strSQL = strSQL & _
 											"		AND NOT EXISTS(SELECT * FROM CIC_BT_TAX_TM tlt WHERE tlt.BT_TAX_ID=tl.BT_TAX_ID AND tlt.Code NOT IN (" & strQCode & "))" & vbCrLf & _
 											"EXEC sp_CIC_SRCH_TAX_u NULL" & vbCrLf & _
-											"EXEC sp_CIC_SRCH_PubTax_u NULL, NULL" vbCrLf & _
+											"EXEC sp_CIC_SRCH_PubTax_u NULL, NULL" & vbCrLf & _
 											"SET NOCOUNT OFF"
 									'Delete the Term from the link, even if there are other Terms.
 									'If this is the only Term, the link will be automatically deleted by Triggers.
