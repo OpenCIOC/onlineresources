@@ -644,7 +644,7 @@ If Not bError Then
 											Next
 											strSQL = strSQL & _
 											"EXEC sp_CIC_SRCH_TAX_u NULL" & vbCrLf & _
-											"EXEC sp_CIC_SRCH_PubTax_u NULL, NULL" vbCrLf & _
+											"EXEC sp_CIC_SRCH_PubTax_u NULL, NULL" & vbCrLf & _
 											"SET NOCOUNT OFF"
 									'Delete any link containing the Term in its entirety (including other terms linked with this Term)
 									Case "L"
@@ -671,7 +671,7 @@ If Not bError Then
 											Next
 											strSQL = strSQL & _
 											"EXEC sp_CIC_SRCH_TAX_u NULL" & vbCrLf & _
-											"EXEC sp_CIC_SRCH_PubTax_u NULL, NULL" vbCrLf & _
+											"EXEC sp_CIC_SRCH_PubTax_u NULL, NULL" & vbCrLf & _
 											"SET NOCOUNT OFF"
 								End Select
 							Case "DXXX"
