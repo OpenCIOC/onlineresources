@@ -55,16 +55,14 @@ def get_git_blame(filename):
 		raise SubProcException("Can't find git executable", -1)
 
 	proc = subprocess.Popen([git, 'blame', '-p', '-L', '1,1', filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	#proc = subprocess.Popen([git, '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	output = proc.communicate()
+	output = [x.decode('ascii') for x in proc.communicate()]
 
 	if proc.returncode:
 		log.debug(output)
 		raise SubProcException('Result Failed: \n' + output[1].join('\n'), proc.returncode)
 
-	#blame = output
 	lines = output[0].split('\n')
-	return dict(x for x in (l.strip().split(' ', 1) for l in lines[1:-2]) if len(x) == 2)
+	return dict(x for x in (n.strip().split(' ', 1) for n in lines[1:-2]) if len(x) == 2)
 
 
 def get_help_content(request, strHelpFileName):
