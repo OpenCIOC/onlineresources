@@ -67,7 +67,7 @@ SELECT CAST((SELECT (
 				FROM (
 				SELECT areas.ItemID AS TotalItemID, ROW_NUMBER() OVER (PARTITION BY areas.ItemID ORDER BY (SELECT 1)) AS cm_level, levels.* 
 				FROM dbo.fn_GBL_ParseVarCharIDList(a.Coverage, ';') AS areas
-				CROSS APPLY dbo.fn_GBL_ParseVarCharIDList(areas.ItemID, ' - ') AS levels
+				CROSS APPLY dbo.fn_GBL_ParseVarCharIDList2(areas.ItemID, ' - ') AS levels
 				) AS t
 			) AS i
 			LEFT JOIN CommunityRepo_2012_11.dbo.External_Community c
