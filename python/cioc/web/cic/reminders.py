@@ -441,9 +441,8 @@ class ReminderView(viewbase.ViewBase):
 
 		if request.params.get('json_api'):
 			namespace['extra_values'] = [('json_api', 'on')]
-		# XXX update to new #error_page syntax in Pyramid 1.4
 		# http://docs.pylonsproject.org/projects/pyramid/en/1.4-branch/whatsnew-1.4.html#partial-mako-and-chameleon-template-renderings
-		return {'success': True, 'form': render('cioc.web:templates/confirmdelete.mak', ('error_page', namespace), request=request)}
+		return {'success': True, 'form': render('cioc.web:templates/confirmdelete#error_page.mak', namespace, request=request)}
 
 	@view_config(request_method='POST', match_param='action=delete', renderer=templateprefix + 'edit.mak')
 	def delete_confirm(self):
