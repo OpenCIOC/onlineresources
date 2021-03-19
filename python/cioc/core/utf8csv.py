@@ -20,6 +20,8 @@ import csv
 import codecs
 import tempfile
 import six
+import io
+import shutil
 
 
 class SQLServerBulkDialect(csv.Dialect):
@@ -68,11 +70,11 @@ class UTF8CSVWriter(object):
 
 
 def write_csv_to_zip(zip, data, fname, **kwargs):
+	csvfile = rawfile = tempfile.TemporaryFile()
 	if six.PY3:
-		csvfile = tempfile.TemporaryFile('w+', encoding='utf-8-sig', newline='')
-	else:
-		csvfile = tempfile.TemporaryFile()
+		csvfile = io.TextIOWrapper(rawfile, encoding='utf-8-sig', newline='')
 
+	else:
 		# required to have all spreadsheet programs
 		# understand Unicode
 		csvfile.write(codecs.BOM_UTF8)
@@ -80,7 +82,12 @@ def write_csv_to_zip(zip, data, fname, **kwargs):
 	csvwriter = UTF8CSVWriter(csvfile, **kwargs)
 
 	csvwriter.writerows(data)
+	if six.PY3:
+		csvfile.flush()
 
 	csvfile.seek(0)
-	zip.writebuffer(csvfile, fname)
+	rawfile.seek(0)
+	zip.writebuffer(rawfile, fname)
+
 	csvfile.close()
+	rawfile.close()
