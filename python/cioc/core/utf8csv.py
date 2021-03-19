@@ -21,7 +21,6 @@ import codecs
 import tempfile
 import six
 import io
-import shutil
 
 
 class SQLServerBulkDialect(csv.Dialect):
@@ -30,6 +29,13 @@ class SQLServerBulkDialect(csv.Dialect):
 	skipinitialspace = False
 	escapechar = None
 	quoting = csv.QUOTE_NONE
+
+
+def open_csv_reader(f, encoding='utf-8-sig', *args, **kwargs):
+	if six.PY3:
+		return csv.reader(io.TextIOWrapper(f, encoding=encoding, newline=''), *args, **kwargs)
+
+	return UTF8Reader(f, *args, **kwargs)
 
 
 class UTF8Reader(object):
@@ -47,6 +53,8 @@ class UTF8Reader(object):
 
 	def __iter__(self):
 		return self
+
+	__next__ = next
 
 
 class UTF8CSVWriter(object):

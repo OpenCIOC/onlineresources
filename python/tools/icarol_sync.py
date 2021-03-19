@@ -33,9 +33,7 @@ from six.moves.urllib.parse import urljoin
 from zipfile import ZipFile
 import zipfile
 from six.moves import map
-
-CREATE_NO_WINDOW = 0x08000000
-creationflags = 0
+import six
 
 import requests
 from lxml import etree
@@ -46,7 +44,10 @@ except ImportError:
 	sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from cioc.core import constants as const, config, email, bufferedzip
-from cioc.core.utf8csv import UTF8Reader, write_csv_to_zip
+from cioc.core.utf8csv import open_csv_reader, write_csv_to_zip
+
+CREATE_NO_WINDOW = 0x08000000
+creationflags = 0
 
 
 class FileWriteDetector(object):
@@ -209,7 +210,7 @@ def remove_exclusions(reader_to_exclude_from, url, args, **kwargs):
 
 		fd.seek(0)
 		csv_file = open_zipfile(fd)
-		reader = UTF8Reader(csv_file)
+		reader = open_csv_reader(csv_file)
 		next(reader)
 		exclusion_set = set((x[0] for x in reader))
 
@@ -244,14 +245,14 @@ def calculate_deletion_list(lang, url, args, **kwargs):
 		previous_filenames.sort(key=lambda x: x[start:end])
 
 		csv_file = open_zipfile(previous_filenames[-1])
-		reader = UTF8Reader(csv_file)
+		reader = open_csv_reader(csv_file)
 		next(reader)
 		previous = set(remove_exclusions(reader, url, args, **kwargs))
 		previous_count = len(previous)
 
 		csv_file.close()
 		csv_file = open_zipfile(dest_file)
-		reader = UTF8Reader(csv_file)
+		reader = open_csv_reader(csv_file)
 		header = next(reader)
 
 		current_records = list(map(tuple, reader))
@@ -278,7 +279,7 @@ def calculate_deletion_list(lang, url, args, **kwargs):
 
 	else:
 		csv_file = open_zipfile(dest_file)
-		reader = UTF8Reader(csv_file)
+		reader = open_csv_reader(csv_file)
 		header = next(reader)
 		record_counts = Counter(x[0] for x in reader)
 		csv_file.close()
@@ -481,9 +482,12 @@ def output_error_log(args, error_log):
 
 
 def email_log(args, outputstream, report, validation_errors, is_error):
-	author = get_config_item(args, 'airs_export_notify_from', 'admin@cioc.ca')
-	to = [x.strip() for x in get_config_item(args, 'airs_export_notify_emails', 'admin@cioc.ca').split(',')]
-	email.send_email(fakerequest(args.config), author, to, 'AIRS Export to iCarol%s' % (' -- Review Required!' if validation_errors else (' -- ERRORS!' if is_error else '')), '\n\n'.join((report, outputstream.getvalue())))
+	try:
+		author = get_config_item(args, 'airs_export_notify_from', 'admin@cioc.ca')
+		to = [x.strip() for x in get_config_item(args, 'airs_export_notify_emails', 'admin@cioc.ca').split(',')]
+		email.send_email(fakerequest(args.config), author, to, 'AIRS Export to iCarol%s' % (' -- Review Required!' if validation_errors else (' -- ERRORS!' if is_error else '')), '\n\n'.join((report, outputstream.getvalue())))
+	except Exception as e:
+		raise Exception('unable to send email log: {},{}'.format(outputstream.getvalue(), six.text_type(e)), e)
 
 
 def generate_report(args, counts):
