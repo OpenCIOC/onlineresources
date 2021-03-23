@@ -236,8 +236,8 @@ class AIRSExportUpdateCount(viewbase.CicViewBase):
 				request.viewdata.cic.ViewType,
 				field,
 				datefield,
-				ET.tostring(counts, 'utf-8'),
-				ET.tostring(sent, 'utf-8'),
+				ET.tostring(counts, encoding='unicode'),
+				ET.tostring(sent, encoding='unicode'),
 			)
 			result = cursor.fetchone()
 			if result.Return:
