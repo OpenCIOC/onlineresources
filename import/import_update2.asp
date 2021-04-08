@@ -4326,8 +4326,7 @@ Sub processTaxonomyC()
 			IIf(Nl(strLinkList),vbNullString," OR (BT_TAX_ID IN (" & strLinkList & "))") & _
 			")" & vbCrLf & _
 			"END" & vbCrLf & _
-			"EXEC dbo.sp_CIC_SRCH_TAX_u" & vbCrLf & _
-			"EXEC dbo.sp_CIC_SRCH_PubTax_u " & strQNUM & ", NULL"
+			"EXEC dbo.sp_CIC_SRCH_TAX_u" 
 		.Execute
 	End With
 End Sub

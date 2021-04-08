@@ -66,7 +66,7 @@ SELECT CAST((SELECT (
 				 REPLACE(REPLACE(REPLACE(REPLACE(FIRST_VALUE(cm_level) OVER (PARTITION BY t.TotalItemID ORDER BY cm_level DESC), 1, 'State'), 2, 'County'), 3, 'City'), '4', 'Community') AS cm_level
 				FROM (
 				SELECT areas.ItemID AS TotalItemID, ROW_NUMBER() OVER (PARTITION BY areas.ItemID ORDER BY (SELECT 1)) AS cm_level, levels.* 
-				FROM dbo.fn_GBL_ParseVarCharIDList(a.Coverage, ';') AS areas
+				FROM (SELECT DISTINCT ItemID FROM dbo.fn_GBL_ParseVarCharIDList(a.Coverage, ';')) AS areas
 				CROSS APPLY dbo.fn_GBL_ParseVarCharIDList2(areas.ItemID, ' - ') AS levels
 				) AS t
 			) AS i
@@ -325,7 +325,7 @@ SELECT CAST((SELECT (
 			CASE WHEN f.PhoneTollFree  IS NOT NULL AND f.PhoneTollFreeDescription  IS NOT NULL THEN f.PhoneTollFreeDescription + ': ' ELSE '' END + f.PhoneTollFree AS [@VF]
 		 FOR XML PATH('TOLL_FREE_PHONE'), TYPE),
 		(SELECT REPLACE(a.LastVerifiedOn, ' ', 'T') AS [@V], REPLACE(a.LastVerifiedOn, ' ', 'T') AS [@VF] FOR XML PATH('UPDATE_DATE'), TYPE),
-		(SELECT a.LastVerificationApprovedBy AS [@V], a.LastVerificationApprovedBy AS [@VF] FOR XML PATH('UPDATED_BY'), TYPE),
+		(SELECT NULLIF(a.LastVerificationApprovedBy, 'Unspecified Unspecified') AS [@V], NULLIF(a.LastVerificationApprovedBy, 'Unspecified Unspecified') AS [@VF] FOR XML PATH('UPDATED_BY'), TYPE),
 		(SELECT REPLACE(REPLACE(a.WebsiteAddress, 'https://', ''), 'http://', '') AS [@V], REPLACE(REPLACE(a.WebsiteAddress, 'https://', ''), 'http://', '') AS [@VF] FOR XML PATH('WWW_ADDRESS'), TYPE)
 	
 	FOR XML PATH('RECORD'), TYPE)) as nvarchar(MAX)) AS record

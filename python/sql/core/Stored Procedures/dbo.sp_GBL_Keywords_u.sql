@@ -77,6 +77,9 @@ WHEN NOT MATCHED BY SOURCE AND dst.KeywordType='S' THEN
 	;
 
 
+-- EXPERIMENTAL Handle Taxonomy publication code updating here.
+EXEC dbo.sp_CIC_SRCH_PubTax_u NULL, NULL
+
 SET NOCOUNT OFF
 
 

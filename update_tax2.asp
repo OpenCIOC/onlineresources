@@ -174,8 +174,7 @@ With cmdUpdateTaxonomyD
 			"DELETE tl FROM CIC_BT_TAX tl WHERE NUM=" & QsNl(strNUM) & _
 			IIf(Nl(strLinkList),vbNullString," AND (BT_TAX_ID NOT IN (" & strLinkList & "))") & _
 			"END" & vbCrLf & _
-			"EXEC sp_CIC_SRCH_TAX_u NULL" & vbCrLf & _
-			"EXEC sp_CIC_SRCH_PubTax_u " & QsNl(strNUM) & ", NULL"
+			"EXEC sp_CIC_SRCH_TAX_u NULL"
 	.Execute
 End With
 
