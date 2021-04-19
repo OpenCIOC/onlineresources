@@ -102,13 +102,13 @@ class UpdatePubs(CicViewBase):
 					if value:
 						ET.SubElement(desc, name).text = value
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			root = ET.Element('HEADINGS')
 			for heading in (form_data['GHID'] or []):
 				ET.SubElement(root, 'GHID').text = six.text_type(heading)
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			args.append(user.User_ID)
 			args.append(request.viewdata.cic.ViewType)

@@ -134,7 +134,7 @@ class NaicsExclusion(viewbase.AdminViewBase):
 					for usecode in value or []:
 						ET.SubElement(usecodes, 'UseCode').text = six.text_type(usecode)
 
-			args = [Code, user.Mod, ET.tostring(root)]
+			args = [Code, user.Mod, ET.tostring(root, encoding='unicode')]
 
 			#raise Exception
 			with request.connmgr.get_connection('admin') as conn:

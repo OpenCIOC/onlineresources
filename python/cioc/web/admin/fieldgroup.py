@@ -169,7 +169,7 @@ class FieldGroup(viewbase.AdminViewBase):
 							if value:
 								ET.SubElement(desc, key).text = value
 
-			args = [ViewType, user.Mod, request.dboptions.MemberID, user.Agency, ET.tostring(root)]
+			args = [ViewType, user.Mod, request.dboptions.MemberID, user.Agency, ET.tostring(root, encoding='unicode')]
 
 			#raise Exception
 			with request.connmgr.get_connection('admin') as conn:

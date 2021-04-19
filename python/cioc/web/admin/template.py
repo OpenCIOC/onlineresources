@@ -260,7 +260,7 @@ class Template(AdminViewBase):
 					if value:
 						ET.SubElement(desc, name).text = six.text_type(value)
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			root = ET.Element('MENUS')
 			for menu_type, data in six.iteritems(model_state.form.data['menus']):
@@ -281,7 +281,7 @@ class Template(AdminViewBase):
 							if value:
 								ET.SubElement(menu, name).text = six.text_type(value)
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			with request.connmgr.get_connection('admin') as conn:
 				sql = '''

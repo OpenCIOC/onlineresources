@@ -147,7 +147,7 @@ class TemplateLayout(viewbase.AdminViewBase):
 					if value:
 						ET.SubElement(desc, name).text = value
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			with request.connmgr.get_connection('admin') as conn:
 				sql = '''

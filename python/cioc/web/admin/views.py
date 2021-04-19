@@ -494,14 +494,14 @@ class View(viewbase.AdminViewBase):
 					for pub in form_data['PUB_ID']:
 						ET.SubElement(root, "PBID").text = six.text_type(pub)
 
-				args.append(ET.tostring(root))
+				args.append(ET.tostring(root, encoding='unicode'))
 				argnames.append('Publications')
 
 				root = ET.Element('PubIDs')
 				for pub in form_data['ADDPUB_ID']:
 					ET.SubElement(root, "PBID").text = six.text_type(pub)
 
-				args.append(ET.tostring(root))
+				args.append(ET.tostring(root, encoding='unicode'))
 				argnames.append('AddPublications')
 
 			root = ET.Element('DESCS')
@@ -516,19 +516,19 @@ class View(viewbase.AdminViewBase):
 					if value:
 						ET.SubElement(desc, name).text = six.text_type(value)
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			root = ET.Element('VIEWS')
 			for view_type in form_data['Views']:
 				ET.SubElement(root, 'VIEW').text = six.text_type(view_type)
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			root = ET.Element('AdvSearchCheckLists')
 			for field in form_data['AdvSearchCheckLists']:
 				ET.SubElement(root, "Chk").text = six.text_type(field)
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			args.append(",".join(str(x) for x in dopts['FieldIDs']))
 
@@ -1223,7 +1223,7 @@ class View(viewbase.AdminViewBase):
 					if value:
 						ET.SubElement(desc, name).text = value
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			sql = '''
 				DECLARE @ErrMsg as nvarchar(500),

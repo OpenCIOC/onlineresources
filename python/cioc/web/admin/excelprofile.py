@@ -136,7 +136,7 @@ class ExcelProfile(AdminViewBase):
 					if value:
 						ET.SubElement(desc, name).text = value
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			root = ET.Element('VIEWS')
 			for view_type in model_state.form.data['Views']:
@@ -144,7 +144,7 @@ class ExcelProfile(AdminViewBase):
 
 			#raise Exception
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			root = ET.Element('FIELDS')
 			for field in model_state.form.data['Fields']:
@@ -154,7 +154,7 @@ class ExcelProfile(AdminViewBase):
 						if value is not None:
 							ET.SubElement(field_el, name).text = six.text_type(value)
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			with request.connmgr.get_connection('admin') as conn:
 				sql = '''

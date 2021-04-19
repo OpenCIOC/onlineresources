@@ -154,7 +154,7 @@ class FieldRadio(viewbase.AdminViewBase):
 
 
 
-			args = [user.Mod, ET.tostring(root)]
+			args = [user.Mod, ET.tostring(root, encoding='unicode')]
 
 			#raise Exception
 			with request.connmgr.get_connection('admin') as conn:

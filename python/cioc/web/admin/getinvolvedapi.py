@@ -128,7 +128,7 @@ class GetInvolvedAPI(viewbase.AdminViewBase):
 					if val:
 						ET.SubElement(el, key).text = six.text_type(val)
 
-			args = [request.dboptions.MemberID, ET.tostring(agencies), ET.tostring(interests), ET.tostring(skills)]
+			args = [request.dboptions.MemberID, ET.tostring(agencies, encoding='unicode'), ET.tostring(interests, encoding='unicode'), ET.tostring(skills, encoding='unicode')]
 
 			with request.connmgr.get_connection('admin') as conn:
 				sql = '''

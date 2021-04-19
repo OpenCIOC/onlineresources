@@ -94,7 +94,7 @@ class DomainMapView(viewbase.AdminViewBase):
 					if val:
 						ET.SubElement(el, key).text = six.text_type(val)
 
-			args = [request.dboptions.MemberID, user.Mod, user.cic.SuperUser, user.vol.SuperUser, ET.tostring(domains)]
+			args = [request.dboptions.MemberID, user.Mod, user.cic.SuperUser, user.vol.SuperUser, ET.tostring(domains, encoding='unicode')]
 
 			with request.connmgr.get_connection('admin') as conn:
 				sql = '''

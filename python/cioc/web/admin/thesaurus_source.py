@@ -137,7 +137,7 @@ class ThesaurusSource(AdminViewBase):
 						ET.SubElement(desc, 'SourceName').text = six.text_type(value)
 
 
-			args = [user.Mod, ET.tostring(root)]
+			args = [user.Mod, ET.tostring(root, encoding='unicode')]
 
 			#raise Exception
 			with request.connmgr.get_connection('admin') as conn:

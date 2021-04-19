@@ -318,21 +318,21 @@ class SharingProfile(AdminViewBase):
 					if value:
 						ET.SubElement(desc, name).text = value
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 			kwnames.append('Descriptions')
 
 			root = ET.Element('VIEWS')
 			for view_type in model_state.value('profile.Views') or []:
 				ET.SubElement(root, 'VIEW').text = six.text_type(view_type)
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 			kwnames.append('Views')
 
 			root = ET.Element('FIELDS')
 			for field in model_state.value('profile.Fields') or []:
 				ET.SubElement(root, "FIELD").text = six.text_type(field)
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 			kwnames.append('Fields')
 
 			args.append(','.join(model_state.value('profile.EditLangs') or []) or None)

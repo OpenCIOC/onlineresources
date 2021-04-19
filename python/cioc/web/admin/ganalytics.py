@@ -92,7 +92,7 @@ class GoogleAnalyticsView(viewbase.AdminViewBase):
 					if val:
 						ET.SubElement(el, key).text = six.text_type(val)
 
-			args = [request.dboptions.MemberID, user.Mod, ET.tostring(domains)]
+			args = [request.dboptions.MemberID, user.Mod, ET.tostring(domains, encoding='unicode')]
 
 			with request.connmgr.get_connection('admin') as conn:
 				sql = '''

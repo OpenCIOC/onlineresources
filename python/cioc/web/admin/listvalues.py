@@ -203,9 +203,9 @@ class ListValues(viewbase.AdminViewBase):
 						ET.SubElement(list_el, key).text = six.text_type(value)
 
 			if list_type.HasModified:
-				args = [user.Mod, ET.tostring(root)]
+				args = [user.Mod, ET.tostring(root, encoding='unicode')]
 			else:
-				args = [ET.tostring(root)]
+				args = [ET.tostring(root, encoding='unicode')]
 
 			with request.connmgr.get_connection('admin') as conn:
 				sql = '''

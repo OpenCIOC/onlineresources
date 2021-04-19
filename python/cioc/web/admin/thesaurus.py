@@ -192,7 +192,7 @@ class Thesaurus(AdminViewBase):
 						if value:
 							ET.SubElement(desc, name).text = value
 
-				args.append(ET.tostring(root))
+				args.append(ET.tostring(root, encoding='unicode'))
 				kwargs.append('Descriptions')
 
 				for field in ['UseSubj_ID', 'BroaderSubj_ID', 'RelatedSubj_ID']:
@@ -200,7 +200,7 @@ class Thesaurus(AdminViewBase):
 					for value in form_data[field] or []:
 						ET.SubElement(root, "SUBJ").text = six.text_type(value)
 
-					args.append(ET.tostring(root))
+					args.append(ET.tostring(root, encoding='unicode'))
 
 				kwargs.extend(['UseSubj', 'BroaderSubj', 'RelatedSubj'])
 

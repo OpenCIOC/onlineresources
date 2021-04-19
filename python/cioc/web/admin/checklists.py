@@ -424,7 +424,7 @@ class Checklists(viewbase.AdminViewBase):
 							if value:
 								ET.SubElement(desc, key).text = value
 
-			args = [request.dboptions.MemberID, user.Mod, ET.tostring(root)]
+			args = [request.dboptions.MemberID, user.Mod, ET.tostring(root, encoding='unicode')]
 
 			with request.connmgr.get_connection('admin') as conn:
 				sql = chk_type.UpdateSQL(shared_values)

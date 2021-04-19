@@ -248,8 +248,7 @@ def _handle_record(self, element, conn, EFID, dm, id_column='NUM'):
 		deletion_date_e = deletion_date.get('V')
 		deletion_date_f = deletion_date.get('VF')
 
-	xml = etree.tostring(element).replace(b'xmlns="urn:ciocshare-schema" ', b'', 1).replace(b'xmlns="urn:ciocshare-schema-vol" ', b'', 1)
-	xml = xml.decode('utf-8')
+	xml = etree.tostring(element, encoding='unicode').replace('xmlns="urn:ciocshare-schema" ', '', 1).replace('xmlns="urn:ciocshare-schema-vol" ', '', 1)
 
 	if not self.made_field_list:
 		cursor = conn.cursor()
@@ -307,7 +306,7 @@ def _privacy_profile_name_xml(element):
 		etree.SubElement(desc, 'Culture').text = culture
 		etree.SubElement(desc, 'ProfileName').text = val
 
-	return etree.tostring(root)
+	return etree.tostring(root, encoding='unicode')
 
 
 def _handle_privacy_profile_list(self, element, conn, EFID, dm):

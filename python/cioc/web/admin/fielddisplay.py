@@ -145,7 +145,7 @@ class FieldDisplay(viewbase.AdminViewBase):
 				user.Mod, request.dboptions.MemberID,
 				(domain.id == const.DM_CIC and user.cic.SuperUserGlobal) or
 				(domain.id == const.DM_VOL and user.vol.SuperUserGlobal),
-				ET.tostring(root)]
+				ET.tostring(root, encoding='unicode')]
 
 			sql = '''
 			DECLARE @ErrMsg as nvarchar(500),

@@ -76,7 +76,7 @@ class OfflineTools(viewbase.AdminViewBase):
 					ET.SubElement(root, 'MachineSL', MachineID=machine_id, SL_ID=six.text_type(sl))
 
 			
-			args = [user.Agency, ET.tostring(root)]
+			args = [user.Agency, ET.tostring(root, encoding='unicode')]
 
 			with request.connmgr.get_connection('admin') as conn:
 				sql = '''

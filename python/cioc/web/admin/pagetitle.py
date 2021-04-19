@@ -101,7 +101,7 @@ class PageTitle(viewbase.AdminViewBase):
 					if value:
 						ET.SubElement(desc, name).text = value
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			#xml = args[-1]
 			#raise Exception

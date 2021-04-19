@@ -191,7 +191,7 @@ class GeneralHeading(CicViewBase):
 					if value:
 						ET.SubElement(desc, name).text = value
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 			kwargs.append('Descriptions')
 
 			root = ET.Element('HEADINGS')
@@ -199,7 +199,7 @@ class GeneralHeading(CicViewBase):
 			for value in form_data['RelatedHeadings'] or []:
 				desc = ET.SubElement(root, 'HEADING').text = six.text_type(value)
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 			kwargs.append('RelatedHeadings')
 
 			if tax_heading:
@@ -210,7 +210,7 @@ class GeneralHeading(CicViewBase):
 						for code in link['Code']:
 							ET.SubElement(link_el, 'code').text = code
 
-					args.append(ET.tostring(root))
+					args.append(ET.tostring(root, encoding='unicode'))
 					kwargs.append(code_type)
 
 			kwargstr = ', '.join(x.join(('@', '=?')) for x in kwargs)

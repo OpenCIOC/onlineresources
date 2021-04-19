@@ -120,7 +120,7 @@ class NaicsExample(viewbase.AdminViewBase):
 					if value is not None:
 						ET.SubElement(example_el, key).text = six.text_type(value)
 
-			args = [Code, user.Mod, ET.tostring(root)]
+			args = [Code, user.Mod, ET.tostring(root, encoding='unicode')]
 
 			#raise Exception
 			with request.connmgr.get_connection('admin') as conn:

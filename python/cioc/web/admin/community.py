@@ -173,7 +173,7 @@ class Community(viewbase.AdminViewBase):
 					if value:
 						ET.SubElement(desc, name).text = value
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			root = ET.Element('NAMES')
 
@@ -187,14 +187,14 @@ class Community(viewbase.AdminViewBase):
 				ET.SubElement(desc, 'Culture').text = name['Culture']
 				ET.SubElement(desc, 'AltName').text = name['AltName']
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			if is_alt_area:
 				root = ET.Element('ALTAREAS')
 				for area in data.get('alt_areas') or []:
 					ET.SubElement(root, 'CM_ID').text = six.text_type(area)
 
-				args.append(ET.tostring(root))
+				args.append(ET.tostring(root, encoding='unicode'))
 
 			else:
 				args.append(None)
@@ -203,7 +203,7 @@ class Community(viewbase.AdminViewBase):
 			for culture in shown_cultures:
 				ET.SubElement(root, 'Culture').text = culture
 
-			args.append(ET.tostring(root))
+			args.append(ET.tostring(root, encoding='unicode'))
 
 			sql = '''
 				DECLARE @ErrMsg as nvarchar(500),
