@@ -151,6 +151,9 @@ While objTopCount.Value > 0
 	Set rsUpdateTaxSrch = rsUpdateTaxSrch.NextRecordset
 Wend
 
+Response.Write(". ")
+Response.Flush()
+
 With cmdUpdateTaxSrch
 	.CommandText = "dbo.sp_CIC_SRCH_PubTax_u"
 	objTopCount.Value = 200
@@ -169,25 +172,7 @@ Wend
 
 Response.Write(". ")
 Response.Flush()
-Dim cmdUpdateTaxSrch, rsUpdateTaxSrch, objTopCount
-Set cmdUpdateTaxSrch = Server.CreateObject("ADODB.Command")
-With cmdUpdateTaxSrch
-	.ActiveConnection = getCurrentAdminCnn()
-	.CommandText = "dbo.sp_CIC_SRCH_TAX_u"
-	.CommandType = adCmdStoredProc
-	.CommandTimeout = 0
-	.Prepared = True
-	Set objTopCount = .CreateParameter("@TOP", adInteger, adParamInputOutput, 4, 200)
-	.Parameters.Append objTopCount
-End With
 
-While objTopCount.Value > 0
-	Response.Write(". ")
-	Response.Flush()
-	objTopCount.Value = 500
-	Set rsUpdateTaxSrch = cmdUpdateTaxSrch.Execute
-	Set rsUpdateTaxSrch = rsUpdateTaxSrch.NextRecordset
-Wend
 With cmdUpdateTaxonomy
 	.CommandText = "dbo.sp_TAX_UPDATER_9"
 	.Execute
