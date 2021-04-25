@@ -561,7 +561,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Agency' THEN
 		'AGENCY',
 		src.DELETION_DATE
 	)
-
+OPTION (ROBUST PLAN)
 	;
 
 
@@ -771,7 +771,7 @@ WHEN MATCHED AND src.SYNC_DATE > dst.DATE_MODIFIED THEN
 		[TaxonomyLevelName]=src.[TaxonomyLevelName],
 		[ParentAgency]=src.[ParentAgency],
 		[ParentAgencyNum]=src.[ParentAgencyNum],
-		[RECORD_OWNER]=src.[RECORD_OWNER],
+		[RECORD_OWNER]=LEFT(src.[RECORD_OWNER], 3),
 		[UniqueIDPriorSystem]=src.[UniqueIDPriorSystem],
 		[MailingAttentionName]=src.[MailingAttentionName],
 		[MailingAddress1]=src.[MailingAddress1],
@@ -1146,7 +1146,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='ProgramAtSite' THEN
 		src.[TaxonomyLevelName],
 		src.[ParentAgency],
 		src.[ParentAgencyNum],
-		src.[RECORD_OWNER],
+		LEFT(src.[RECORD_OWNER], 3),
 		src.[UniqueIDPriorSystem],
 		src.[MailingAttentionName],
 		src.[MailingAddress1],
@@ -1535,7 +1535,7 @@ WHEN MATCHED AND src.SYNC_DATE > dst.DATE_MODIFIED THEN
 		[TaxonomyLevelName]=src.[TaxonomyLevelName],
 		[ParentAgency]=src.[ParentAgency],
 		[ParentAgencyNum]=src.[ParentAgencyNum],
-		[RECORD_OWNER]=src.[RECORD_OWNER],
+		[RECORD_OWNER]=LEFT(src.[RECORD_OWNER], 3),
 		[UniqueIDPriorSystem]=src.[UniqueIDPriorSystem],
 		[MailingAttentionName]=src.[MailingAttentionName],
 		[MailingAddress1]=src.[MailingAddress1],
@@ -1904,7 +1904,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Site' THEN
 		src.[TaxonomyLevelName],
 		src.[ParentAgency],
 		src.[ParentAgencyNum],
-		src.[RECORD_OWNER],
+		LEFT(src.[RECORD_OWNER], 3),
 		src.[UniqueIDPriorSystem],
 		src.[MailingAttentionName],
 		src.[MailingAddress1],
