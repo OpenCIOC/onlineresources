@@ -138,6 +138,11 @@ SELECT CAST((SELECT (
 		 FOR XML PATH ('INTERNAL_MEMO'), TYPE),
 		(SELECT COALESCE(a.LanguagesOffered, a.LanguagesOfferedList) AS [@N], COALESCE(f.LanguagesOffered, f.LanguagesOfferedList) AS [@NF] FOR XML PATH('LANGUAGES'), TYPE),
 		(SELECT COALESCE(a.[Custom_Legal Name], a.[OfficialName]) AS [@V], COALESCE(f.[Custom_Legal Name], f.[OfficialName]) AS [@VF] FOR XML PATH('LEGAL_ORG'), TYPE),
+		(SELECT
+			CASE WHEN a.PhysicalAddressIsPrivate = 'Yes' THEN NULL ELSE a.PhysicalCity END AS [@V],
+			CASE WHEN f.PhysicalAddressIsPrivate = 'Yes' THEN NULL ELSE f.PhysicalCity END AS [@VF],
+			a.PhysicalStateProvince AS [@PRV], a.PhysicalCountry AS [@CTRY]
+			FOR XML PATH('LOCATED_IN_CM'),TYPE),
 		(SELECT a.LOCATION_DESCRIPTION AS [@V], f.LOCATION_DESCRIPTION AS [@VF] FOR XML PATH('LOCATION_DESCRIPTION'), TYPE),
 		(SELECT a.LOCATION_NAME AS [@V], f.LOCATION_NAME AS [@VF] FOR XML PATH('LOCATION_NAME'), TYPE),
 		(SELECT DISTINCT irr.ResourceAgencyNum AS [@V] FROM dbo.CIC_iCarolImportRollup irr WHERE a.TaxonomyLevelName = 'Site' AND irr.ConnectsToSiteNum=a.ResourceAgencyNum AND irr.TaxonomyLevelName='ProgramAtSite' AND irr.DELETION_DATE IS NULL FOR XML PATH('SERVICE_NUM'), ROOT('LOCATION_SERVICES'), TYPE),
