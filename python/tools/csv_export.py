@@ -149,7 +149,7 @@ def download_url_fetch(urls):
 
 
 def data_paramter(args):
-	return [
+	data = [
 		('API', 'on'),
 		('ExportType', '3'),
 		('ExcelFormat', 'C'),
@@ -157,6 +157,12 @@ def data_paramter(args):
 		('PBID', get_config_item(args, 'csv_export_publications', '')),
 		('ExcelProfileID', get_config_item(args, 'csv_export_profile'))
 	]
+
+	ln = get_config_item(args, 'csv_export_lang', None)
+	if ln:
+		data.append(('Ln', ln))
+
+	return data
 
 
 def download_kwargs(args):
