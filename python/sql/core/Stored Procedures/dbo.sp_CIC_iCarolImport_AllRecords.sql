@@ -85,14 +85,22 @@ LEFT JOIN dbo.CIC_iCarolImportAllRecords ar
 	ON ii.ResourceAgencyNum=ar.ResourceAgencyNum AND ii.LangID=ar.LangID
 WHERE ar.ResourceAgencyNum IS NULL AND ii.LANGID=@@LANGID AND ii.DELETION_DATE IS NULL
 
+UPDATE ir SET ir.DELETION_DATE=GETDATE()
+FROM dbo.CIC_iCarolImportRollup ir
+LEFT JOIN dbo.CIC_iCarolImport ii
+	ON ii.ResourceAgencyNum=ir.ResourceAgencyNum AND ii.LangID=ir.LangID
+WHERE ii.ResourceAgencyNum IS NULL
+
+DELETE ir FROM dbo.CIC_iCarolImportRollup AS ir
+-- We flagged a deltion and either created an import file with that deletion date or never created an import file ever
+WHERE ir.DELETION_DATE IS NOT NULL AND (ir.DATE_IMPORTED IS NULL OR ir.DATE_IMPORTED > ir.DELETION_DATE)
+
 DELETE ii 
 FROM dbo.CIC_iCarolImport ii
 LEFT JOIN dbo.CIC_iCarolImportRollup ir
 	ON ii.ResourceAgencyNum=ir.ResourceAgencyNum AND ii.LangID=ir.LangID
-WHERE ii.DELETION_DATE IS NOT NULL AND (ir.ResourceAgencyNum IS NULL OR (ir.DELETION_DATE IS NOT NULL AND ir.DATE_IMPORTED > ir.DELETION_DATE))
-
-DELETE ir FROM dbo.CIC_iCarolImportRollup AS ir
-WHERE ir.DELETION_DATE IS NOT NULL AND ir.DATE_IMPORTED > ir.DELETION_DATE
+-- Flagged for deletion and rollup condition is already cleared (see statement above)
+WHERE ii.DELETION_DATE IS NOT NULL AND ir.ResourceAgencyNum IS NULL
 
 SELECT a.*
 FROM dbo.CIC_iCarolImportAllRecords a 
