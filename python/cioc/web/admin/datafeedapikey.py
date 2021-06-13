@@ -122,30 +122,29 @@ class DataFeedApiKeyView(viewbase.AdminViewBase):
 			else:
 				sql_method = 'u @FeedAPIKey'
 
-			if request.params.get('Update') == 'Submit Updates':
-				with request.connmgr.get_connection('admin') as conn:
-					sql = '''
-					DECLARE @ErrMsg as nvarchar(500),
-						@RC as int,
-						@FeedAPIKey uniqueidentifier
-					SET @FeedAPIKey = ?
+			with request.connmgr.get_connection('admin') as conn:
+				sql = '''
+				DECLARE @ErrMsg as nvarchar(500),
+					@RC as int,
+					@FeedAPIKey uniqueidentifier
+				SET @FeedAPIKey = ?
 
-					EXECUTE @RC = dbo.sp_GBL_FeedAPIKey_%s, ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+				EXECUTE @RC = dbo.sp_GBL_FeedAPIKey_%s, ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-					SELECT @RC as [Return], @ErrMsg AS ErrMsg, @FeedAPIKey AS FeedAPIKey
-					''' % sql_method
-					result = conn.execute(sql, args).fetchone()
-					log.debug('Result: %s %s', result.Return, result.ErrMsg)
-					if not result.Return:
-						if is_add:
-							msg = _('API Key Added', request)
-						else:
-							msg = _('API Key Updated', request)
+				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @FeedAPIKey AS FeedAPIKey
+				''' % sql_method
+				result = conn.execute(sql, args).fetchone()
+				log.debug('Result: %s %s', result.Return, result.ErrMsg)
+				if not result.Return:
+					if is_add:
+						msg = _('API Key Added', request)
+					else:
+						msg = _('API Key Updated', request)
 
-						log.debug('Redirect')
-						self._go_to_route('admin_datafeedapikey', action='edit', _query=[('InfoMsg', msg), ('FeedAPIKey', result.FeedAPIKey)])
+					log.debug('Redirect')
+					self._go_to_route('admin_datafeedapikey', action='edit', _query=[('InfoMsg', msg), ('FeedAPIKey', result.FeedAPIKey)])
 
-					ErrMsg = result.ErrMsg
+				ErrMsg = result.ErrMsg
 
 		edit_info = self._get_edit_info(is_add, FeedAPIKey)
 		edit_info['ErrMsg'] = ErrMsg
