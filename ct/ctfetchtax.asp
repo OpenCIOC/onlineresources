@@ -17,8 +17,8 @@
 '  limitations under the License.
 ' =========================================================================================
 '
-' Purpose:		Generate XML File for Resource Type Registration Request from Client Tracker
-'				Conforms to Client Tracker Schema registration.xsd
+' Purpose:		Generate XML File for Record Info Request from Client Tracker
+'				Conforms to Client Tracker Schema resourceinfo.xsd
 '
 '
 %>
@@ -47,35 +47,80 @@ Call setPageInfo(False, DM_CIC, DM_CIC, "../", "ct/", vbNullString)
 <% 'End Base includes %>
 <!--#include file="../text/txtClientTracker.asp" -->
 <!--#include file="../includes/search/incMyList.asp" -->
+<!--#include file="../includes/core/incFormat.asp" -->
 
 <%
 'Set response type headers
 Response.ContentType = "application/xml"
 Response.CacheControl = "Private"
 Response.Expires=-1
-
-Call run_response_callbacks()
 %>
 <%
+Dim strNUMs
+strNUMs = UCase(Request("IDList"))
+
+Call run_response_callbacks()
+
 If Not ctClientCanMakeRequest() Then
 %>
 <response xmlns="http://clienttracker.cioc.ca/schema/">
 	<error><%=TXT_CT_ACCESS_DENIED%></error>
 </response>
 <%
+ElseIf Nl(strNUMs) Then
+%>
+<response xmlns="https://clienttracker.cioc.ca/schema/">
+	<error><%=TXT_NO_RECORD_CHOSEN%></error>
+</response>
+<%
+ElseIf Not IsNumList(strNUMs) Then
+%>
+<response xmlns="http://clienttracker.cioc.ca/schema/">
+	<error><%=TXT_NO_RECORD_EXISTS_ID & Server.HTMLEncode(strNUM)%></error>
+</response>
+<%
+Else
+
+Dim cmdOrg, rsOrg
+Set cmdOrg = Server.CreateObject("ADODB.Command")
+With cmdOrg
+	.ActiveConnection = getCurrentCICBasicCnn()
+	.CommandType = adCmdStoredProc
+	.CommandText = "sp_CIC_NUMTaxonomy_ct_l"
+	.CommandTimeout = 0
+	.Parameters.Append .CreateParameter("@NUMS", adLongVarChar, adParamInput, -1, strNUMs)
+	Set rsOrg = .Execute
+End With
+
+If Not rsOrg.EOF Then
+%>
+<response xmlns="http://clienttracker.cioc.ca/schema/">
+	<taxonomy>
+<%
+With rsOrg
+Dim fCodes, fTerms
+Set fCodes = .Fields("Codes")
+Set fTerms = .Fields("Terms")
+While Not .EOF
+%>
+		<entry code="<%=XMLEncode(fCodes.Value)%>" term="<%=XMLEncode(fTerms.Value)%>" />
+<%
+	.MoveNext
+Wend
+End With
+%>
+	</taxonomy>
+</response>
+<%
 Else
 %>
 <response xmlns="http://clienttracker.cioc.ca/schema/">
-	<resourceType>
-		<name><%=XMLEncode(g_strDatabaseNameCIC)%></name>
-		<launchURL><%=XMLEncode(IIf(g_bSSL, "https://", "http://") & Request.ServerVariables("HTTP_HOST") & Left(Request.ServerVariables("PATH_INFO"),Len(Request.ServerVariables("PATH_INFO"))-Len(ps_strThisPage)) & makeLink("ctlaunch.asp","ctid=[CTID]&login=[LOGIN]&key=[KEY]",vbNullString))%></launchURL>
-		<resourceInfoURL><%=XMLEncode(IIf(g_bSSL, "https://", "http://") & Request.ServerVariables("HTTP_HOST") & Left(Request.ServerVariables("PATH_INFO"),Len(Request.ServerVariables("PATH_INFO"))-Len(ps_strThisPage)) & makeLink("ctfetch.asp","num=[ID]",vbNullString))%></resourceInfoURL>
-		<resourceSummaryURL><%=XMLEncode(IIf(g_bSSL, "https://", "http://") & Request.ServerVariables("HTTP_HOST") & Left(Request.ServerVariables("PATH_INFO"),Len(Request.ServerVariables("PATH_INFO"))-Len(ps_strThisPageFull)) & makeLink("printlist.asp","IDList=[IDS]",vbNullString))%></resourceSummaryURL>
-		<resourceEmailURL><%=XMLEncode(IIf(g_bSSL, "https://", "http://") & Request.ServerVariables("HTTP_HOST") & Left(Request.ServerVariables("PATH_INFO"),Len(Request.ServerVariables("PATH_INFO"))-Len(ps_strThisPageFull)) & makeLink("recordlist","IDList=[IDS]",vbNullString))%></resourceEmailURL>
-		<resourceTaxonomyInfoURL><%=XMLEncode(IIf(g_bSSL, "https://", "http://") & Request.ServerVariables("HTTP_HOST") & Left(Request.ServerVariables("PATH_INFO"),Len(Request.ServerVariables("PATH_INFO"))-Len(ps_strThisPage)) & makeLink("ctfetchtax.asp","IDList=[IDS]",vbNullString))%></resourceTaxonomyInfoURL>
-	</resourceType>
+	<error><%=TXT_NO_RECORD_EXISTS_ID & Server.HTMLEncode(strNUM)%></error>
 </response>
 <%
 End If
+
+End If
 %>
+
 <!--#include file="../includes/core/incClose.asp" -->
