@@ -15,7 +15,6 @@ CREATE TABLE [dbo].[CIC_iCarolImportRollup]
 [ParentAgency] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [ParentAgencyNum] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [RecordOwner] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[UniqueIDPriorSystem] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [MailingAttentionName] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [MailingAddress1] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [MailingAddress2] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -190,10 +189,13 @@ CREATE TABLE [dbo].[CIC_iCarolImportRollup]
 [SERVICE_NAME_LEVEL_2] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [DESCRIPTION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Custom_Minimum Age] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
-[Custom_Maximum Age] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+[Custom_Maximum Age] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[UniqueIDPriorSystem] [nvarchar] (8) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_iCarolImportRollup] ADD CONSTRAINT [PK_CIC_iCarolImportRollup] PRIMARY KEY CLUSTERED  ([ResourceAgencyNum], [LangID]) ON [PRIMARY]
 GO
 CREATE NONCLUSTERED INDEX [IX_CIC_iCarolImportRollup] ON [dbo].[CIC_iCarolImportRollup] ([ConnectsToProgramNum], [TaxonomyLevelName], [ResourceAgencyNum]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_CIC_iCarolImportRollup_UniqueIDPriorSystem] ON [dbo].[CIC_iCarolImportRollup] ([UniqueIDPriorSystem]) ON [PRIMARY]
 GO
