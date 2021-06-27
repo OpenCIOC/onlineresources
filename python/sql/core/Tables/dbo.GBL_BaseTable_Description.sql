@@ -547,7 +547,7 @@ GRANT UPDATE ON  [dbo].[GBL_BaseTable_Description] TO [cioc_login_role]
 GO
 GRANT SELECT ON  [dbo].[GBL_BaseTable_Description] TO [cioc_vol_search_role]
 GO
-CREATE FULLTEXT INDEX ON [dbo].[GBL_BaseTable_Description] KEY INDEX [PK_GBL_BaseTable_Description] ON [GBLRecord]
+CREATE FULLTEXT INDEX ON [dbo].[GBL_BaseTable_Description] KEY INDEX [PK_GBL_BaseTable_Description] ON [GBLRecord] WITH STOPLIST [CIOC_DEFAULT_STOPLIST]
 GO
 ALTER FULLTEXT INDEX ON [dbo].[GBL_BaseTable_Description] ADD ([ORG_LEVEL_1] LANGUAGE 0)
 GO

@@ -5,7 +5,7 @@ CREATE TABLE [dbo].[THS_Subject_Name]
 [LangID] [smallint] NOT NULL,
 [Name] [nvarchar] (200) COLLATE Latin1_General_100_CI_AI NOT NULL,
 [Notes] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -58,7 +58,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_THS_Subject_Name] ON [dbo].[THS_Subject_Nam
 GO
 CREATE STATISTICS [_dta_stat_144719568_3_1] ON [dbo].[THS_Subject_Name] ([LangID], [TermLangID])
 GO
-CREATE STATISTICS [_dta_stat_144719568_4_3_1] ON [dbo].[THS_Subject_Name] ([LangID], [TermLangID], [Name])
+CREATE STATISTICS [_dta_stat_144719568_4_3_1] ON [dbo].[THS_Subject_Name] ([Name], [LangID], [TermLangID])
 GO
 CREATE STATISTICS [_dta_stat_144719568_2_3_1_4] ON [dbo].[THS_Subject_Name] ([Subj_ID], [LangID], [TermLangID], [Name])
 GO
@@ -73,9 +73,13 @@ GO
 ALTER TABLE [dbo].[THS_Subject_Name] ADD CONSTRAINT [FK_THS_Subject_Name_THS_Subject] FOREIGN KEY ([Subj_ID]) REFERENCES [dbo].[THS_Subject] ([Subj_ID]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
 GRANT SELECT ON  [dbo].[THS_Subject_Name] TO [cioc_cic_search_role]
-GRANT SELECT ON  [dbo].[THS_Subject_Name] TO [cioc_login_role]
-GRANT INSERT ON  [dbo].[THS_Subject_Name] TO [cioc_login_role]
+GO
 GRANT DELETE ON  [dbo].[THS_Subject_Name] TO [cioc_login_role]
+GO
+GRANT INSERT ON  [dbo].[THS_Subject_Name] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[THS_Subject_Name] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[THS_Subject_Name] TO [cioc_login_role]
 GO
 CREATE FULLTEXT INDEX ON [dbo].[THS_Subject_Name] KEY INDEX [PK_THS_Subject_Name] ON [Thesaurus] WITH STOPLIST [CIOC_DEFAULT_STOPLIST]

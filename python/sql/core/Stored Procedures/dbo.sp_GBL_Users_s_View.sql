@@ -293,20 +293,21 @@ SELECT Culture, LanguageName, sln.LangID
 WHERE vwd.ViewType=@CurrentIDVOL
 	AND sln.Active=1
 
-SELECT DISTINCT msg.PageMsgID, PageMsg, VisiblePrintMode
-	FROM GBL_PageMsg msg
-	INNER JOIN GBL_PageMsg_PageInfo mpg
+SELECT DISTINCT msg.PageMsgID, msg.PageMsg, msg.VisiblePrintMode, msg.DisplayOrder
+	FROM dbo.GBL_PageMsg msg
+	INNER JOIN dbo.GBL_PageMsg_PageInfo mpg
 		ON msg.PageMsgID=mpg.PageMsgID
-	INNER JOIN GBL_PageInfo pg
+	INNER JOIN dbo.GBL_PageInfo pg
 		ON mpg.PageName=pg.PageName
-	LEFT JOIN (SELECT PageMsgID FROM CIC_View_PageMsg WHERE ViewType=@CurrentIDCIC) cvm
+	LEFT JOIN (SELECT PageMsgID FROM dbo.CIC_View_PageMsg WHERE ViewType=@CurrentIDCIC) cvm
 		ON msg.PageMsgID=cvm.PageMsgID
-	LEFT JOIN (SELECT PageMsgID FROM VOL_View_PageMsg WHERE ViewType=@CurrentIDVOL) vvm
+	LEFT JOIN (SELECT PageMsgID FROM dbo.VOL_View_PageMsg WHERE ViewType=@CurrentIDVOL) vvm
 		ON msg.PageMsgID=vvm.PageMsgID
 WHERE @PageName LIKE pg.PageName
 	AND ((pg.CIC=1 AND cvm.PageMsgID IS NOT NULL) OR (pg.VOL=1 AND vvm.PageMsgID IS NOT NULL))
 	AND msg.LangID=@LangID
 	AND (msg.LoginOnly=0 OR	@User_ID IS NOT NULL)
+ORDER BY msg.DisplayOrder
 
 RETURN @Error
 	

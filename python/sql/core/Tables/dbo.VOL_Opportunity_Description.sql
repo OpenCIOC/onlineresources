@@ -63,7 +63,7 @@ ALTER TABLE [dbo].[VOL_Opportunity_Description] ADD CONSTRAINT [IX_VOL_Opportuni
 
 CREATE NONCLUSTERED INDEX [IX_VOL_Opportunity_Description_VNUMDELETIONDATE] ON [dbo].[VOL_Opportunity_Description] ([VNUM], [DELETION_DATE]) ON [PRIMARY]
 
-CREATE FULLTEXT INDEX ON [dbo].[VOL_Opportunity_Description] KEY INDEX [PK_VOL_Opportunity_Description] ON [VOLRecord]
+CREATE FULLTEXT INDEX ON [dbo].[VOL_Opportunity_Description] KEY INDEX [PK_VOL_Opportunity_Description] ON [VOLRecord] WITH STOPLIST [CIOC_DEFAULT_STOPLIST]
 GO
 
 ALTER FULLTEXT INDEX ON [dbo].[VOL_Opportunity_Description] ENABLE
