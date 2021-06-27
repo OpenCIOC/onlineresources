@@ -76,7 +76,7 @@ ElseIf Nl(strNUMs) Then
 ElseIf Not IsNumList(strNUMs) Then
 %>
 <response xmlns="http://clienttracker.cioc.ca/schema/">
-	<error><%=TXT_NO_RECORD_EXISTS_ID & Server.HTMLEncode(strNUM)%></error>
+	<error><%=TXT_NO_RECORD_EXISTS_ID & Server.HTMLEncode(strNUMs)%></error>
 </response>
 <%
 Else
@@ -115,7 +115,7 @@ End With
 Else
 %>
 <response xmlns="http://clienttracker.cioc.ca/schema/">
-	<error><%=TXT_NO_RECORD_EXISTS_ID & Server.HTMLEncode(strNUM)%></error>
+	<error><%=TXT_NO_RECORD_EXISTS_ID & Server.HTMLEncode(strNUMs)%></error>
 </response>
 <%
 End If
