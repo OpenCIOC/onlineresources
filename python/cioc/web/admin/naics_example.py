@@ -179,7 +179,7 @@ class NaicsExample(viewbase.AdminViewBase):
 		try:
 			Code = validator.to_python(request.params.get('Code'))
 		except validators.Invalid as e:
-			self._error_page(_('Invalid NAICS Code:', request) + e.message )
+			self._error_page(_('Invalid NAICS Code:', request) + e.msg )
 
 		return Code
 

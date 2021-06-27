@@ -216,7 +216,7 @@ def process_import(filename, xmlfile, member_id, domain, domain_str, user_mod, d
 
 				element.clear()
 		except etree.XMLSyntaxError as e:
-			error_log.append((None, e.message))
+			error_log.append((None, e.args[0]))
 
 		root = None
 		element = None

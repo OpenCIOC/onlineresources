@@ -152,7 +152,7 @@ class GeneralHeading(CicViewBase):
 		try:
 			PB_ID = validator.to_python(request.POST.get('PB_ID'))
 		except validators.Invalid as e:
-			self._error_page(_('Publication ID:', request) + e.message)
+			self._error_page(_('Publication ID:', request) + e.msg)
 
 		if user.cic.LimitedView and PB_ID and user.cic.PB_ID != PB_ID:
 			self._security_failure()

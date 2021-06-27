@@ -145,7 +145,7 @@ class CommunityUpload(AdminViewBase):
 				sqlargs = self.get_sql_args(data, community_doc)
 
 		except etree.XMLSyntaxError as e:
-			error_log.append(e.message)
+			error_log.append(e.args[0])
 
 		finally:
 			community_doc = None

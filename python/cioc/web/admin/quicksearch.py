@@ -285,6 +285,6 @@ class QuickSearch(viewbase.AdminViewBase):
 		try:
 			ViewType = validator.to_python(request.params.get('ViewType'))
 		except validators.Invalid as e:
-			self._error_page(_('Invalid View Type: ', request) + e.message)
+			self._error_page(_('Invalid View Type: ', request) + e.msg)
 
 		return ViewType, domain

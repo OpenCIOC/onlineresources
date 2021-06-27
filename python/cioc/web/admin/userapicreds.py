@@ -60,7 +60,7 @@ class AdminUserApiCredsContext(RequireSSLRootFactory):
 			user_id = validators.IDValidator().to_python(user_id)
 		except validators.Invalid as error:
 			error_page(
-				request, _('Invalid User_ID: %s') % error.message,
+				request, _('Invalid User_ID: %s') % error.msg,
 				const.DM_GLOBAL, const.DM_GLOBAL, _('User API Credentials'))
 
 		if user_id == self.request.user.User_ID:
