@@ -41,10 +41,6 @@ import isodate
 from six.moves import map
 import six
 
-CREATE_NO_WINDOW = 0x08000000
-creationflags = 0
-
-
 import requests
 
 try:
@@ -59,6 +55,10 @@ from cioc.core import syslanguage
 from cioc.core.utf8csv import UTF8CSVWriter, SQLServerBulkDialect
 from cioc.core.connection import ConnectionError
 from cioc.web.import_.upload import process_import
+
+
+CREATE_NO_WINDOW = 0x08000000
+creationflags = 0
 
 
 invalid_xml_chars = re.compile(u'[\x00-\x08\x0c\x0e-\x19]')
@@ -331,7 +331,7 @@ def get_records(args, id, lang='en'):
 	if args.test:
 		print('requested {} records in {}s'.format(len(id), duration))
 	response.raise_for_status()
-	tmp = {x['ResourceAgencyNum']: x for x in response.json(object_pairs_hook=OrderedDict)}
+	tmp = {x['ResourceAgencyNum']: x for x in json.loads(response.text.encode('latin1').decode('utf-8'), object_pairs_hook=OrderedDict)}
 	result = [tmp[x] for x in id]
 	return result
 
