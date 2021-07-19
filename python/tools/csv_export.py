@@ -82,12 +82,13 @@ def get_config_dict(args, key):
 	config = args.config
 
 	key_prefix = key + '.'
-	
-	result =  {k[len(key_prefix):]: v for k, v in config.items() if k.startswith(key_prefix)}
+
+	result = {k[len(key_prefix):]: v for k, v in config.items() if k.startswith(key_prefix)}
 	key_prefix = config_prefix + key_prefix
-	result.update((k[len(key_prefix):],v) for k, v in config.items() if k.startswith(key_prefix))
+	result.update((k[len(key_prefix):], v) for k, v in config.items() if k.startswith(key_prefix))
 
 	return result
+
 
 def parse_args(argv):
 	parser = argparse.ArgumentParser()
@@ -97,6 +98,7 @@ def parse_args(argv):
 	parser.add_argument('dest', action='store', default=None, nargs='?')
 	parser.add_argument('--file', dest='file', action='store', default=None)
 	parser.add_argument('--email', dest='email', action='store_const', const=True, default=False)
+	parser.add_argument('--verbose', dest='verbose', action='store_const', const=True, default=False)
 	parser.add_argument('--nosslverify', dest='nosslverify', action='store_const', const=True, default=False)
 	parser.add_argument('--config-prefix', dest='config_prefix', action='store', default='')
 
@@ -130,7 +132,7 @@ def stream_download(dest_file, url, **kwargs):
 			fd.write(chunk)
 
 	update_environ('ALLEXPORTFILES', dest_file)
-	print('downloaded', size, 'bytes')
+	print('downloaded', size, 'bytes to ', dest_file)
 
 
 def download_content(url, data, **kwargs):
@@ -263,10 +265,15 @@ def main(argv):
 	if after_cmd:
 		env = dict(os.environ)
 		env.update(get_config_dict(args, 'csv_export_run_after_cmd'))
+		if args.verbose:
+			print('running after_cmd:', after_cmd)
+			print('ALLEXPORTFILES=', os.environ.get('ALLEXPORTFILES'))
 		p = subprocess.Popen(after_cmd, shell=True, env=env, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 		stdoutdata, stderrdata = p.communicate()
-		print(stdoutdata)
-		print(stderrdata)
+		if stdoutdata:
+			print('post_cmd stdout:\n', stdoutdata.decode('latin1'))
+		if stderrdata:
+			print('post_cmd stderr:\n', stderrdata.decode('latin1'))
 		if p.returncode:
 			print("Post processing command returned an error result", p.returncode, file=sys.stderr)
 
