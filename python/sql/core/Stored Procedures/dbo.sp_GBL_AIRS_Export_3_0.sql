@@ -4,6 +4,7 @@ SET ANSI_NULLS ON
 GO
 
 
+
 CREATE PROCEDURE [dbo].[sp_GBL_AIRS_Export_3_0] (
 	@ViewType [INT],
 	@LangID [SMALLINT],
@@ -20,12 +21,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked by: KL
-	Checked on: 03-May-2019
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE 	@Error	int
 SET @Error = 0
 
@@ -40,7 +35,7 @@ SELECT	@MemberID = MemberID,
 		@CanSeeDeleted = CASE WHEN CanSeeDeleted=0 OR @IncludeDeleted=0 THEN 0 ELSE 1 END,
 		@HidePastDueBy = HidePastDueBy,
 		@PB_ID=PB_ID
-FROM CIC_View
+FROM dbo.CIC_View
 WHERE ViewType=@ViewType
 
 DECLARE @SiteCityTable table (
@@ -77,25 +72,25 @@ UPDATE @SiteCityTable
 
 DECLARE @DST_ID int
 IF @DistCode IS NOT NULL BEGIN
-	SELECT @DST_ID=DST_ID FROM CIC_Distribution WHERE DistCode=@DistCode
+	SELECT @DST_ID=DST_ID FROM dbo.CIC_Distribution WHERE DistCode=@DistCode
 	SET @DST_ID=ISNULL(@DST_ID,-1)
 END
 
 IF @PubCodeSynch=1 BEGIN
 	DECLARE @CodeMatch nvarchar(20)
-	SET @CodeMatch = REPLACE((SELECT DistCode FROM CIC_Distribution WHERE DST_ID=@DST_ID),'AIRSEXPORT-','')
+	SET @CodeMatch = REPLACE((SELECT DistCode FROM dbo.CIC_Distribution WHERE DST_ID=@DST_ID),'AIRSEXPORT-','')
 
 	IF LEN(@CodeMatch) > 2 BEGIN
-		MERGE INTO CIC_BT_DST dst
-		USING (SELECT DISTINCT NUM
-			FROM CIC_BT_PB pr
-			INNER JOIN CIC_Publication pb
+		MERGE INTO dbo.CIC_BT_DST dst
+		USING (SELECT DISTINCT pr.NUM
+			FROM dbo.CIC_BT_PB pr
+			INNER JOIN dbo.CIC_Publication pb
 				ON pr.PB_ID=pb.PB_ID
 					AND pb.PubCode LIKE @CodeMatch + '%'
 			WHERE NOT EXISTS(
 				SELECT *
-				FROM CIC_BT_PB pr2
-				INNER JOIN CIC_Publication pb2
+				FROM dbo.CIC_BT_PB pr2
+				INNER JOIN dbo.CIC_Publication pb2
 					ON pr2.PB_ID=pb2.PB_ID
 						AND pb2.PubCode LIKE 'EX-' + @CodeMatch + '%'
 				WHERE pr2.NUM=pr.NUM
@@ -114,25 +109,25 @@ DECLARE @ADD_TO_BT_LOCATION_SERVICE table ( NUM varchar(8) PRIMARY KEY )
 INSERT INTO @ADD_TO_BT_LOCATION_SERVICE
 		(NUM)
 SELECT bt.NUM
-FROM GBL_BaseTable bt
+FROM dbo.GBL_BaseTable bt
 WHERE ORG_NUM='ZZZ00001'
-	AND EXISTS(SELECT * FROM GBL_BT_OLS pr INNER JOIN GBL_OrgLocationService ols ON pr.OLS_ID=ols.OLS_ID AND ols.Code='TOPIC' WHERE pr.NUM=bt.NUM)
-	AND NOT EXISTS(SELECT * FROM GBL_BT_LOCATION_SERVICE WHERE SERVICE_NUM=bt.NUM)
+	AND EXISTS(SELECT * FROM dbo.GBL_BT_OLS pr INNER JOIN dbo.GBL_OrgLocationService ols ON pr.OLS_ID=ols.OLS_ID AND ols.Code='TOPIC' WHERE pr.NUM=bt.NUM)
+	AND NOT EXISTS(SELECT * FROM dbo.GBL_BT_LOCATION_SERVICE WHERE SERVICE_NUM=bt.NUM)
 
 UPDATE dbo.GBL_BaseTable SET DISPLAY_LOCATION_NAME=0 WHERE DISPLAY_LOCATION_NAME=1 AND EXISTS(SELECT * FROM @ADD_TO_BT_LOCATION_SERVICE WHERE NUM=GBL_BaseTable.NUM)
 
-INSERT INTO GBL_BT_LOCATION_SERVICE (LOCATION_NUM, SERVICE_NUM)
+INSERT INTO dbo.GBL_BT_LOCATION_SERVICE (LOCATION_NUM, SERVICE_NUM)
 SELECT 'ZZZ00002', bt.NUM
 FROM @ADD_TO_BT_LOCATION_SERVICE bt
 
-DECLARE @nLine nvarchar(2),
+DECLARE @nLine char(2),
 		@nLine10 char(1)
 
 SET @nLine = CHAR(13) + CHAR(10)
 SET @nLine10 = CHAR(10)
 
 SELECT
-	(SELECT TOP 1 MemberNameCIC FROM STP_Member_Description WHERE MemberID=@MemberID ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID) AS "SourceEntity",
+	(SELECT TOP 1 MemberNameCIC FROM dbo.STP_Member_Description WHERE MemberID=@MemberID ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID) AS "SourceEntity",
 	CONVERT(varchar,GETDATE(),126) AS "OriginTimestamp",
 	'CIOC' AS "SoftwareVendor",
 	'3.6.2' AS "SoftwareVersion",
@@ -169,8 +164,8 @@ SELECT
 	
 	-- AGENCY DESCRIPTION
 	ISNULL(ISNULL(
-		CASE WHEN btd.ORG_DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN btd.ORG_DESCRIPTION ELSE REPLACE(btd.ORG_DESCRIPTION,@nLine10,@nLine10 + '<br>') END,
-		CASE WHEN btd.DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN btd.DESCRIPTION ELSE REPLACE(btd.DESCRIPTION,@nLine10,@nLine10 + '<br>') END),
+		CASE WHEN btd.ORG_DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.ORG_DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.ORG_DESCRIPTION,@nLine10,@nLine10 + '<br />') END,
+		CASE WHEN btd.DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.DESCRIPTION,@nLine10,@nLine10 + '<br />') END),
 		'Agency') AS AgencyDescription,
 	
 	-- AKA NAMES
@@ -179,13 +174,13 @@ SELECT
 				ao.ALT_ORG AS Name,
 				'false' AS Confidential,
 				NULL AS Description
-			FROM GBL_BT_ALTORG ao
+			FROM dbo.GBL_BT_ALTORG ao
 			WHERE ao.NUM=bt.NUM AND ao.LangID=btd.LangID
 		UNION SELECT
 				fo.FORMER_ORG AS Name,
 				'false' AS Confidential,
 				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LabelLangOverride) + fo.DATE_OF_CHANGE,'') AS Description
-			FROM GBL_BT_FORMERORG fo
+			FROM dbo.GBL_BT_FORMERORG fo
 			WHERE fo.NUM=bt.NUM AND fo.LangID=btd.LangID
 		UNION SELECT
 				btd.LEGAL_ORG COLLATE Latin1_General_100_CS_AS AS Name,
@@ -219,8 +214,8 @@ SELECT
 	-- AGENCY LOCATION > PHYSICAL ADDRESS
 		(SELECT
 				CASE WHEN EXISTS(SELECT *
-					FROM GBL_PrivacyProfile_Fld pvf
-					INNER JOIN GBL_FieldOption fo
+					FROM dbo.GBL_PrivacyProfile_Fld pvf
+					INNER JOIN dbo.GBL_FieldOption fo
 						ON pvf.FieldID=fo.FieldID AND fo.FieldName='SITE_ADDRESS'
 					WHERE pvf.ProfileID=bt.PRIVACY_PROFILE)
 					THEN 'true' ELSE 'false' END AS "@Confidential",
@@ -230,7 +225,7 @@ SELECT
 				COALESCE(
 					(SELECT EXPORT_CITY FROM @SiteCityTable WHERE SITE_CITY=btd.SITE_CITY),
 					btd.SITE_CITY,
-					(SELECT AreaName
+					(SELECT excm.AreaName
 						FROM dbo.GBL_Community_External_Map cmap
 						INNER JOIN dbo.GBL_Community_External_Community excm
 							ON excm.EXT_ID = cmap.MapOneEXTID AND excm.SystemCode='ONTARIO211'
@@ -247,8 +242,8 @@ SELECT
 	-- AGENCY LOCATION > MAILING ADDRESS
 		(SELECT
 				CASE WHEN EXISTS(SELECT *
-					FROM GBL_PrivacyProfile_Fld pvf
-					INNER JOIN GBL_FieldOption fo
+					FROM dbo.GBL_PrivacyProfile_Fld pvf
+					INNER JOIN dbo.GBL_FieldOption fo
 						ON pvf.FieldID=fo.FieldID AND fo.FieldName='MAIL_ADDRESS'
 					WHERE pvf.ProfileID=bt.PRIVACY_PROFILE)
 					THEN 'true' ELSE 'false' END AS "@Confidential",
@@ -273,7 +268,7 @@ SELECT
 	-- AGENCY LOCATION > LOCATED IN COMMUNITY
 		(SELECT
 			excm.AIRSExportType AS 'LocatedInCommunity/@Type',
-			AreaName AS LocatedInCommunity
+			excm.AreaName AS LocatedInCommunity
 			FROM dbo.GBL_Community_External_Map cmap
 			INNER JOIN dbo.GBL_Community_External_Community excm
 				ON excm.EXT_ID = cmap.MapOneEXTID AND excm.SystemCode='ONTARIO211'
@@ -356,8 +351,8 @@ SELECT
 	(SELECT
 	-- CONTACT > TYPE
 		(SELECT ISNULL(FieldDisplay,FieldName)
-			FROM GBL_FieldOption fo
-			LEFT JOIN GBL_FieldOption_Description fod
+			FROM dbo.GBL_FieldOption fo
+			LEFT JOIN dbo.GBL_FieldOption_Description fod
 				ON fo.FieldID=fod.FieldID AND fod.LangID=@LabelLangOverride
 			WHERE fo.FieldName=c.GblContactType) AS "@Type",
 	
@@ -424,7 +419,7 @@ SELECT
 			WHERE c.CMP_Fax IS NOT NULL
 			FOR XML PATH('Phone'), TYPE)
 			
-		FROM GBL_Contact c
+		FROM dbo.GBL_Contact c
 		WHERE c.GblNUM=bt.NUM AND c.LangID=btd.LangID
 			AND c.CMP_Name IS NOT NULL
 			AND c.GblContactType IN ('EXEC_1','EXEC_2')
@@ -463,7 +458,7 @@ SELECT
 		) AS Name,
 				
 	-- SITE > SITE DESCRIPTION
-		ISNULL(CASE WHEN slbtd.LOCATION_DESCRIPTION LIKE '%<br>%' OR slbtd.LOCATION_DESCRIPTION LIKE '%<p>%' THEN slbtd.LOCATION_DESCRIPTION ELSE REPLACE(slbtd.LOCATION_DESCRIPTION,@nLine10,@nLine10 + '<br>') END,
+		ISNULL(CASE WHEN slbtd.LOCATION_DESCRIPTION LIKE '%<br>%' OR slbtd.LOCATION_DESCRIPTION LIKE '%<p>%' THEN REPLACE(slbtd.LOCATION_DESCRIPTION,'<br>','<br />') ELSE REPLACE(slbtd.LOCATION_DESCRIPTION,@nLine10,@nLine10 + '<br />') END,
 			btd.ORG_LEVEL_1 + ' ' + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Site Location',@LangID) + CASE WHEN slbtd.LOCATION_NAME IS NOT NULL THEN cioc_shared.dbo.fn_SHR_STP_ObjectName(': ') + slbtd.LOCATION_NAME ELSE '' END) AS SiteDescription,
 			
 	-- SITE > AKA NAMES
@@ -472,16 +467,16 @@ SELECT
 					ao.ALT_ORG AS Name,
 					'false' AS Confidential,
 					NULL AS Description
-				FROM GBL_BT_ALTORG ao
+				FROM dbo.GBL_BT_ALTORG ao
 				WHERE ao.NUM=slbtd.NUM AND ao.LangID=slbtd.LangID
-					AND NOT EXISTS(SELECT * FROM GBL_BT_ALTORG oao WHERE oao.NUM=slbt.ORG_NUM AND oao.LangID=ao.LangID AND oao.ALT_ORG=ao.ALT_ORG)
+					AND NOT EXISTS(SELECT * FROM dbo.GBL_BT_ALTORG oao WHERE oao.NUM=slbt.ORG_NUM AND oao.LangID=ao.LangID AND oao.ALT_ORG=ao.ALT_ORG)
 			UNION SELECT
 					fo.FORMER_ORG AS Name,
 					'false' AS Confidential,
 					cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LabelLangOverride) + fo.DATE_OF_CHANGE,'') AS Description
-				FROM GBL_BT_FORMERORG fo
+				FROM dbo.GBL_BT_FORMERORG fo
 				WHERE fo.NUM=slbtd.NUM AND fo.LangID=slbtd.LangID
-					AND NOT EXISTS(SELECT * FROM GBL_BT_FORMERORG ofo WHERE ofo.NUM=slbt.ORG_NUM AND ofo.LangID=fo.LangID AND ofo.FORMER_ORG=fo.FORMER_ORG)
+					AND NOT EXISTS(SELECT * FROM dbo.GBL_BT_FORMERORG ofo WHERE ofo.NUM=slbt.ORG_NUM AND ofo.LangID=fo.LangID AND ofo.FORMER_ORG=fo.FORMER_ORG)
 			UNION SELECT
 					slbtd.LEGAL_ORG COLLATE Latin1_General_100_CS_AS AS Name,
 					'false' AS Confidential,
@@ -514,8 +509,8 @@ SELECT
 	-- SITE > PHYSICAL ADDRESS
 		(SELECT
 				CASE WHEN EXISTS(SELECT *
-					FROM GBL_PrivacyProfile_Fld pvf
-					INNER JOIN GBL_FieldOption fo
+					FROM dbo.GBL_PrivacyProfile_Fld pvf
+					INNER JOIN dbo.GBL_FieldOption fo
 						ON pvf.FieldID=fo.FieldID AND fo.FieldName='SITE_ADDRESS'
 					WHERE pvf.ProfileID=slbt.PRIVACY_PROFILE)
 					THEN 'true' ELSE 'false' END AS "@Confidential",
@@ -525,7 +520,7 @@ SELECT
 				COALESCE(
 					(SELECT EXPORT_CITY FROM @SiteCityTable WHERE SITE_CITY=slbtd.SITE_CITY),
 					slbtd.SITE_CITY,
-					(SELECT AreaName
+					(SELECT excm.AreaName
 						FROM dbo.GBL_Community_External_Map cmap
 						INNER JOIN dbo.GBL_Community_External_Community excm
 							ON excm.EXT_ID = cmap.MapOneEXTID AND excm.SystemCode='ONTARIO211'
@@ -543,8 +538,8 @@ SELECT
 	-- SITE > MAIL ADDRESS
 		(SELECT
 				CASE WHEN EXISTS(SELECT *
-					FROM GBL_PrivacyProfile_Fld pvf
-					INNER JOIN GBL_FieldOption fo
+					FROM dbo.GBL_PrivacyProfile_Fld pvf
+					INNER JOIN dbo.GBL_FieldOption fo
 						ON pvf.FieldID=fo.FieldID AND fo.FieldName='MAIL_ADDRESS'
 					WHERE pvf.ProfileID=slbt.PRIVACY_PROFILE)
 					THEN 'true' ELSE 'false' END AS "@Confidential",
@@ -635,8 +630,8 @@ SELECT
 
 	-- SITE > CONTACT > TYPE
 			(SELECT ISNULL(FieldDisplay,FieldName)
-				FROM GBL_FieldOption fo
-				LEFT JOIN GBL_FieldOption_Description fod
+				FROM dbo.GBL_FieldOption fo
+				LEFT JOIN dbo.GBL_FieldOption_Description fod
 					ON fo.FieldID=fod.FieldID AND fod.LangID=@LabelLangOverride
 				WHERE fo.FieldName=c.GblContactType) AS "@Type",
 
@@ -703,7 +698,7 @@ SELECT
 				WHERE c.CMP_Fax IS NOT NULL
 				FOR XML PATH('Phone'), TYPE)
 
-			FROM GBL_Contact c
+			FROM dbo.GBL_Contact c
 			WHERE c.GblNUM=slbtd.NUM AND c.LangID=slbtd.LangID
 				AND c.CMP_Name IS NOT NULL
 				AND c.GblContactType IN ('CONTACT_1','CONTACT_2')
@@ -734,13 +729,13 @@ SELECT
 								ELSE CASE WHEN EXISTS(SELECT * FROM dbo.CIC_BT_LN_LND prlnd WHERE prlnd.BT_LN_ID=lpr.BT_LN_ID)
 								THEN ', ' ELSE '' END + lprn.Notes END
 						END AS Notes
-					FROM CIC_BT_LN lpr
-					LEFT JOIN CIC_BT_LN_Notes lprn
+					FROM dbo.CIC_BT_LN lpr
+					LEFT JOIN dbo.CIC_BT_LN_Notes lprn
 						ON lpr.BT_LN_ID=lprn.BT_LN_ID AND lprn.LangID=slbtd.LangID
-					INNER JOIN GBL_Language ln
+					INNER JOIN dbo.GBL_Language ln
 						ON lpr.LN_ID=ln.LN_ID
-					INNER JOIN GBL_Language_Name lnn
-						ON ln.LN_ID=lnn.LN_ID AND lnn.LangID=(SELECT TOP 1 LangID FROM GBL_Language_Name WHERE LN_ID=lnn.LN_ID ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID)
+					INNER JOIN dbo.GBL_Language_Name lnn
+						ON ln.LN_ID=lnn.LN_ID AND lnn.LangID=(SELECT TOP 1 LangID FROM dbo.GBL_Language_Name WHERE LN_ID=lnn.LN_ID ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID)
 					WHERE lpr.NUM=slbtd.NUM
 				UNION SELECT
 					cioc_shared.dbo.fn_SHR_STP_ObjectName('Other') AS Name,
@@ -797,7 +792,7 @@ SELECT
 			svbtd.NUM AS [Key],
 			
 	-- SITE > SERVICE > DESCRIPTION
-			CASE WHEN svbtd.DESCRIPTION LIKE '%<br>%' OR svbtd.DESCRIPTION LIKE '%<p>%' THEN svbtd.DESCRIPTION ELSE REPLACE(svbtd.DESCRIPTION,@nLine10,@nLine10 + '<br>') END AS Description,
+			CASE WHEN svbtd.DESCRIPTION LIKE '%<br>%' OR svbtd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(svbtd.DESCRIPTION,'<br>','<br />') ELSE REPLACE(svbtd.DESCRIPTION,@nLine10,@nLine10 + '<br />') END AS Description,
 			
 	-- SITE > SERVICE > AKA NAMES
 	(SELECT aka.Name, aka.Confidential, aka.Description FROM
@@ -805,13 +800,13 @@ SELECT
 				ao.ALT_ORG AS Name,
 				'false' AS Confidential,
 				NULL AS Description
-			FROM GBL_BT_ALTORG ao
+			FROM dbo.GBL_BT_ALTORG ao
 			WHERE ao.NUM=svbt.NUM AND ao.LangID=svbtd.LangID
 		UNION SELECT
 				fo.FORMER_ORG AS Name,
 				'false' AS Confidential,
 				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LabelLangOverride) + fo.DATE_OF_CHANGE,'') AS Description
-			FROM GBL_BT_FORMERORG fo
+			FROM dbo.GBL_BT_FORMERORG fo
 			WHERE fo.NUM=svbt.NUM AND fo.LangID=svbtd.LangID
 		UNION SELECT
 				svbtd.LEGAL_ORG COLLATE Latin1_General_100_CS_AS AS Name,
@@ -906,8 +901,8 @@ SELECT
 
 	-- SITE > SERVICE > CONTACT > TYPE
 			(SELECT ISNULL(FieldDisplay,FieldName)
-				FROM GBL_FieldOption fo
-				LEFT JOIN GBL_FieldOption_Description fod
+				FROM dbo.GBL_FieldOption fo
+				LEFT JOIN dbo.GBL_FieldOption_Description fod
 					ON fo.FieldID=fod.FieldID AND fod.LangID=@LabelLangOverride	 
 				WHERE fo.FieldName=c.GblContactType) AS "@Type",
 
@@ -974,7 +969,7 @@ SELECT
 				WHERE c.CMP_Fax IS NOT NULL
 				FOR XML PATH('Phone'), TYPE)
 
-			FROM GBL_Contact c
+			FROM dbo.GBL_Contact c
 			WHERE c.GblNUM=svbtd.NUM AND c.LangID=svbtd.LangID
 				AND c.CMP_Name IS NOT NULL
 				AND c.GblContactType IN ('CONTACT_1','CONTACT_2')
@@ -989,20 +984,20 @@ SELECT
 				WHERE svcbtd.HOURS IS NOT NULL OR svcbtd.DATES IS NOT NULL FOR XML PATH(''), TYPE) AS TimeOpen,
 			
 	-- SITE > SERVICE > TAXONOMY
-			(SELECT (SELECT Code FROM CIC_BT_TAX_TM WHERE BT_TAX_ID=tax.BT_TAX_ID FOR XML PATH(''), TYPE)
-				FROM CIC_BT_TAX tax
+			(SELECT (SELECT Code FROM dbo.CIC_BT_TAX_TM WHERE BT_TAX_ID=tax.BT_TAX_ID FOR XML PATH(''), TYPE)
+				FROM dbo.CIC_BT_TAX tax
 				WHERE tax.NUM=svbt.NUM
 				FOR XML PATH('Taxonomy'), TYPE),
 			(SELECT
 				'Z' AS Code
-				WHERE NOT EXISTS(SELECT * FROM CIC_BT_TAX tax WHERE tax.NUM=svbt.NUM)
+				WHERE NOT EXISTS(SELECT * FROM dbo.CIC_BT_TAX tax WHERE tax.NUM=svbt.NUM)
 				FOR XML PATH('Taxonomy'), TYPE),
 				
 	-- SITE > SERVICE > LANGUAGES
 			(SELECT Name, Notes
 				FROM (SELECT
 							lnn.Name,
-							CASE WHEN lprn.Notes IS NULL AND NOT EXISTS(SELECT * FROM CIC_BT_LN_LND WHERE BT_LN_ID=lpr.BT_LN_ID) THEN NULL ELSE
+							CASE WHEN lprn.Notes IS NULL AND NOT EXISTS(SELECT * FROM dbo.CIC_BT_LN_LND WHERE BT_LN_ID=lpr.BT_LN_ID) THEN NULL ELSE
 								ISNULL((SELECT STUFF((SELECT ', ' + ISNULL(lndn.Name,lnd.Code)
 									FROM dbo.CIC_BT_LN_LND prlnd
 									INNER JOIN dbo.GBL_Language_Details lnd
@@ -1015,13 +1010,13 @@ SELECT
 									ELSE CASE WHEN EXISTS(SELECT * FROM dbo.CIC_BT_LN_LND prlnd WHERE prlnd.BT_LN_ID=lpr.BT_LN_ID)
 									THEN ', ' ELSE '' END + lprn.Notes END
 							END AS Notes
-						FROM CIC_BT_LN lpr
-						LEFT JOIN CIC_BT_LN_Notes lprn
+						FROM dbo.CIC_BT_LN lpr
+						LEFT JOIN dbo.CIC_BT_LN_Notes lprn
 							ON lpr.BT_LN_ID=lprn.BT_LN_ID AND lprn.LangID=svbtd.LangID
-						INNER JOIN GBL_Language ln
+						INNER JOIN dbo.GBL_Language ln
 							ON lpr.LN_ID=ln.LN_ID
-						INNER JOIN GBL_Language_Name lnn
-							ON ln.LN_ID=lnn.LN_ID AND lnn.LangID=(SELECT TOP 1 LangID FROM GBL_Language_Name WHERE LN_ID=lnn.LN_ID ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID)
+						INNER JOIN dbo.GBL_Language_Name lnn
+							ON ln.LN_ID=lnn.LN_ID AND lnn.LangID=(SELECT TOP 1 LangID FROM dbo.GBL_Language_Name WHERE LN_ID=lnn.LN_ID ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID)
 						WHERE lpr.NUM=svbt.NUM
 					UNION SELECT
 						cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Other',@LangID) AS Name,
@@ -1037,12 +1032,12 @@ SELECT
 					(SELECT
 						CAST(N'<' + excm.AIRSExportType + N'>' + (SELECT excm.AreaName AS [text()] FOR XML PATH('')) + N'</' + excm.AIRSExportType + N'>' AS XML) AS [node()]
 						FROM (SELECT DISTINCT excm.AIRSExportType, excm.AreaName, cmat.[Order]
-							FROM CIC_BT_CM cpr
-							INNER JOIN GBL_Community cm
+							FROM dbo.CIC_BT_CM cpr
+							INNER JOIN dbo.GBL_Community cm
 								ON cpr.CM_ID=cm.CM_ID
-							INNER JOIN GBL_Community_External_Map_All map
+							INNER JOIN dbo.GBL_Community_External_Map_All map
 								ON cm.CM_ID=map.CM_ID AND map.SystemCode = 'ONTARIO211'
-							INNER JOIN GBL_Community_External_Community excm
+							INNER JOIN dbo.GBL_Community_External_Community excm
 								ON excm.EXT_ID=map.EXT_ID
 							LEFT JOIN dbo.GBL_Community_AIRSType cmat
 								ON cmat.AIRSExportType = excm.AIRSExportType
@@ -1136,28 +1131,28 @@ SELECT
 					AND (@CanSeeNonPublic=1 OR svbtd.NON_PUBLIC=0)
 					AND (svbtd.DELETION_DATE IS NULL OR svbtd.DELETION_DATE > GETDATE())
 					AND (@HidePastDueBy IS NULL OR (svbtd.UPDATE_SCHEDULE IS NOT NULL AND (DATEDIFF(d,svbtd.UPDATE_SCHEDULE,GETDATE()) < @HidePastDueBy)))
-			LEFT JOIN CIC_BaseTable svcbt
+			LEFT JOIN dbo.CIC_BaseTable svcbt
 				ON svbt.NUM = svcbt.NUM
-			LEFT JOIN CIC_BaseTable_Description svcbtd
+			LEFT JOIN dbo.CIC_BaseTable_Description svcbtd
 				ON svcbt.NUM=svcbtd.NUM AND svcbtd.LangID=svbtd.LangID
 			WHERE (@PB_ID IS NULL OR EXISTS(SELECT * FROM CIC_BT_PB WHERE NUM=slbt.NUM AND PB_ID=@PB_ID))
 				AND (svbt.MemberID=@MemberID
 						OR EXISTS(SELECT *
-							FROM GBL_BT_SharingProfile pr
-							INNER JOIN GBL_SharingProfile shp
+							FROM dbo.GBL_BT_SharingProfile pr
+							INNER JOIN dbo.GBL_SharingProfile shp
 								ON pr.ProfileID=shp.ProfileID
 									AND shp.Active=1
 									AND (
 										shp.CanUseAnyView=1
-										OR EXISTS(SELECT * FROM GBL_SharingProfile_CIC_View WHERE ProfileID=shp.ProfileID AND ViewType=@ViewType)
+										OR EXISTS(SELECT * FROM dbo.GBL_SharingProfile_CIC_View WHERE ProfileID=shp.ProfileID AND ViewType=@ViewType)
 									)
 							WHERE NUM=svbt.NUM AND ShareMemberID_Cache=@MemberID)
 					)
-				AND (EXISTS(SELECT * FROM GBL_BT_LOCATION_SERVICE WHERE LOCATION_NUM=slbt.NUM AND SERVICE_NUM=svbt.NUM))
-				AND EXISTS(SELECT * FROM GBL_BT_OLS spr INNER JOIN GBL_OrgLocationService sols ON spr.OLS_ID=sols.OLS_ID AND sols.Code IN ('SERVICE','TOPIC') WHERE spr.NUM=svbt.NUM)
+				AND (EXISTS(SELECT * FROM dbo.GBL_BT_LOCATION_SERVICE WHERE LOCATION_NUM=slbt.NUM AND SERVICE_NUM=svbt.NUM))
+				AND EXISTS(SELECT * FROM dbo.GBL_BT_OLS spr INNER JOIN dbo.GBL_OrgLocationService sols ON spr.OLS_ID=sols.OLS_ID AND sols.Code IN ('SERVICE','TOPIC') WHERE spr.NUM=svbt.NUM)
 				AND (
 					@DST_ID IS NULL
-					OR EXISTS(SELECT * FROM CIC_BT_DST WHERE DST_ID=@DST_ID AND NUM=svbt.NUM)
+					OR EXISTS(SELECT * FROM dbo.CIC_BT_DST WHERE DST_ID=@DST_ID AND NUM=svbt.NUM)
 				)
 		FOR XML PATH('SiteService'), TYPE
 		),
@@ -1198,7 +1193,7 @@ SELECT
 			svbtd.NUM AS [Key],
 			
 	-- SITE > SERVICE > DESCRIPTION
-			CASE WHEN svbtd.DESCRIPTION LIKE '%<br>%' OR svbtd.DESCRIPTION LIKE '%<p>%' THEN svbtd.DESCRIPTION ELSE REPLACE(svbtd.DESCRIPTION,@nLine10,@nLine10 + '<br>') END AS Description,
+			CASE WHEN svbtd.DESCRIPTION LIKE '%<br>%' OR svbtd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(svbtd.DESCRIPTION,'<br>','<br />') ELSE REPLACE(svbtd.DESCRIPTION,@nLine10,@nLine10 + '<br />') END AS Description,
 			
 	-- SITE > SERVICE > AKA NAMES
 	(SELECT aka.Name, aka.Confidential, aka.Description FROM
@@ -1206,13 +1201,13 @@ SELECT
 				ao.ALT_ORG AS Name,
 				'false' AS Confidential,
 				NULL AS Description
-			FROM GBL_BT_ALTORG ao
+			FROM dbo.GBL_BT_ALTORG ao
 			WHERE ao.NUM=svbt.NUM AND ao.LangID=svbtd.LangID
 		UNION SELECT
 				fo.FORMER_ORG AS Name,
 				'false' AS Confidential,
 				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Former Name',@LabelLangOverride) + ISNULL(cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',@LabelLangOverride) + fo.DATE_OF_CHANGE,'') AS Description
-			FROM GBL_BT_FORMERORG fo
+			FROM dbo.GBL_BT_FORMERORG fo
 			WHERE fo.NUM=svbt.NUM AND fo.LangID=svbtd.LangID
 		UNION SELECT
 				svbtd.LEGAL_ORG COLLATE Latin1_General_100_CS_AS AS Name,
@@ -1307,8 +1302,8 @@ SELECT
 
 	-- SITE > SERVICE > CONTACT > TYPE
 			(SELECT ISNULL(FieldDisplay,FieldName)
-				FROM GBL_FieldOption fo
-				LEFT JOIN GBL_FieldOption_Description fod
+				FROM dbo.GBL_FieldOption fo
+				LEFT JOIN dbo.GBL_FieldOption_Description fod
 					ON fo.FieldID=fod.FieldID AND fod.LangID=@LabelLangOverride
 				WHERE fo.FieldName=c.GblContactType) AS "@Type",
 
@@ -1390,20 +1385,20 @@ SELECT
 				WHERE svcbtd.HOURS IS NOT NULL OR svcbtd.DATES IS NOT NULL FOR XML PATH(''), TYPE) AS TimeOpen,
 			
 	-- SITE > SERVICE > TAXONOMY
-			(SELECT (SELECT Code FROM CIC_BT_TAX_TM WHERE BT_TAX_ID=tax.BT_TAX_ID FOR XML PATH(''), TYPE)
-				FROM CIC_BT_TAX tax
+			(SELECT (SELECT Code FROM dbo.CIC_BT_TAX_TM WHERE BT_TAX_ID=tax.BT_TAX_ID FOR XML PATH(''), TYPE)
+				FROM dbo.CIC_BT_TAX tax
 				WHERE tax.NUM=svbt.NUM
 				FOR XML PATH('Taxonomy'), TYPE),
 			(SELECT
 				'Z' AS Code
-				WHERE NOT EXISTS(SELECT * FROM CIC_BT_TAX tax WHERE tax.NUM=svbt.NUM)
+				WHERE NOT EXISTS(SELECT * FROM dbo.CIC_BT_TAX tax WHERE tax.NUM=svbt.NUM)
 				FOR XML PATH('Taxonomy'), TYPE),
 				
 	-- SITE > SERVICE > LANGUAGES
 			(SELECT Name, Notes
 				FROM (SELECT
 							lnn.Name,
-							CASE WHEN lprn.Notes IS NULL AND NOT EXISTS(SELECT * FROM CIC_BT_LN_LND WHERE BT_LN_ID=lpr.BT_LN_ID) THEN NULL ELSE
+							CASE WHEN lprn.Notes IS NULL AND NOT EXISTS(SELECT * FROM dbo.CIC_BT_LN_LND WHERE BT_LN_ID=lpr.BT_LN_ID) THEN NULL ELSE
 								ISNULL((SELECT STUFF((SELECT ', ' + ISNULL(lndn.Name,lnd.Code)
 									FROM dbo.CIC_BT_LN_LND prlnd
 									INNER JOIN dbo.GBL_Language_Details lnd
@@ -1416,13 +1411,13 @@ SELECT
 									ELSE CASE WHEN EXISTS(SELECT * FROM dbo.CIC_BT_LN_LND prlnd WHERE prlnd.BT_LN_ID=lpr.BT_LN_ID)
 									THEN ', ' ELSE '' END + lprn.Notes END
 							END AS Notes
-						FROM CIC_BT_LN lpr
-						LEFT JOIN CIC_BT_LN_Notes lprn
+						FROM dbo.CIC_BT_LN lpr
+						LEFT JOIN dbo.CIC_BT_LN_Notes lprn
 							ON lpr.BT_LN_ID=lprn.BT_LN_ID AND lprn.LangID=svbtd.LangID
-						INNER JOIN GBL_Language ln
+						INNER JOIN dbo.GBL_Language ln
 							ON lpr.LN_ID=ln.LN_ID
-						INNER JOIN GBL_Language_Name lnn
-							ON ln.LN_ID=lnn.LN_ID AND lnn.LangID=(SELECT TOP 1 LangID FROM GBL_Language_Name WHERE LN_ID=lnn.LN_ID ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID)
+						INNER JOIN dbo.GBL_Language_Name lnn
+							ON ln.LN_ID=lnn.LN_ID AND lnn.LangID=(SELECT TOP 1 LangID FROM dbo.GBL_Language_Name WHERE LN_ID=lnn.LN_ID ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID)
 						WHERE lpr.NUM=svbt.NUM
 					UNION SELECT
 						cioc_shared.dbo.fn_SHR_STP_ObjectName('Other') AS Name,
@@ -1438,12 +1433,12 @@ SELECT
 					(SELECT
 						CAST(N'<' + excm.AIRSExportType + N'>' + (SELECT excm.AreaName AS [text()] FOR XML PATH('')) + N'</' + excm.AIRSExportType + N'>' AS XML) AS [node()]
 						FROM (SELECT DISTINCT excm.AIRSExportType, excm.AreaName, cmat.[Order]
-							FROM CIC_BT_CM cpr
-							INNER JOIN GBL_Community cm
+							FROM dbo.CIC_BT_CM cpr
+							INNER JOIN dbo.GBL_Community cm
 								ON cpr.CM_ID=cm.CM_ID
-							INNER JOIN GBL_Community_External_Map_All map
+							INNER JOIN dbo.GBL_Community_External_Map_All map
 								ON cm.CM_ID=map.CM_ID AND map.SystemCode = 'ONTARIO211'
-							INNER JOIN GBL_Community_External_Community excm
+							INNER JOIN dbo.GBL_Community_External_Community excm
 								ON excm.EXT_ID=map.EXT_ID
 							LEFT JOIN dbo.GBL_Community_AIRSType cmat
 								ON cmat.AIRSExportType = excm.AIRSExportType
@@ -1531,34 +1526,34 @@ SELECT
 		WHERE pr.NUM LIKE svbt.NUM
 		FOR XML PATH('Distribution'), TYPE)
 				
-			FROM GBL_BaseTable svbt
-			INNER JOIN GBL_BaseTable_Description svbtd
+			FROM dbo.GBL_BaseTable svbt
+			INNER JOIN dbo.GBL_BaseTable_Description svbtd
 				ON svbt.NUM=svbtd.NUM AND svbtd.LangID=@LangID
 					AND (@CanSeeNonPublic=1 OR svbtd.NON_PUBLIC=0)
 					AND (svbtd.DELETION_DATE IS NULL OR svbtd.DELETION_DATE > GETDATE())
 					AND (@HidePastDueBy IS NULL OR (svbtd.UPDATE_SCHEDULE IS NOT NULL AND (DATEDIFF(d,svbtd.UPDATE_SCHEDULE,GETDATE()) < @HidePastDueBy)))
-			LEFT JOIN CIC_BaseTable svcbt
+			LEFT JOIN dbo.CIC_BaseTable svcbt
 				ON svbt.NUM = svcbt.NUM
-			LEFT JOIN CIC_BaseTable_Description svcbtd
+			LEFT JOIN dbo.CIC_BaseTable_Description svcbtd
 				ON svcbt.NUM=svcbtd.NUM AND svcbtd.LangID=svbtd.LangID
-			WHERE (@PB_ID IS NULL OR EXISTS(SELECT * FROM CIC_BT_PB WHERE NUM=slbt.NUM AND PB_ID=@PB_ID))
+			WHERE (@PB_ID IS NULL OR EXISTS(SELECT * FROM dbo.CIC_BT_PB WHERE NUM=slbt.NUM AND PB_ID=@PB_ID))
 				AND (svbt.MemberID=@MemberID
 						OR EXISTS(SELECT *
-							FROM GBL_BT_SharingProfile pr
-							INNER JOIN GBL_SharingProfile shp
+							FROM dbo.GBL_BT_SharingProfile pr
+							INNER JOIN dbo.GBL_SharingProfile shp
 								ON pr.ProfileID=shp.ProfileID
 									AND shp.Active=1
 									AND (
 										shp.CanUseAnyView=1
-										OR EXISTS(SELECT * FROM GBL_SharingProfile_CIC_View WHERE ProfileID=shp.ProfileID AND ViewType=@ViewType)
+										OR EXISTS(SELECT * FROM dbo.GBL_SharingProfile_CIC_View WHERE ProfileID=shp.ProfileID AND ViewType=@ViewType)
 									)
-							WHERE NUM=svbt.NUM AND ShareMemberID_Cache=@MemberID)
+							WHERE pr.NUM=svbt.NUM AND pr.ShareMemberID_Cache=@MemberID)
 					)
 				AND (slbt.NUM=svbt.NUM)
-				AND EXISTS(SELECT * FROM GBL_BT_OLS spr INNER JOIN GBL_OrgLocationService sols ON spr.OLS_ID=sols.OLS_ID AND sols.Code IN ('SERVICE','TOPIC') WHERE spr.NUM=svbt.NUM)
+				AND EXISTS(SELECT * FROM dbo.GBL_BT_OLS spr INNER JOIN dbo.GBL_OrgLocationService sols ON spr.OLS_ID=sols.OLS_ID AND sols.Code IN ('SERVICE','TOPIC') WHERE spr.NUM=svbt.NUM)
 				AND (
 					@DST_ID IS NULL
-					OR EXISTS(SELECT * FROM CIC_BT_DST WHERE DST_ID=@DST_ID AND NUM=svbt.NUM)
+					OR EXISTS(SELECT * FROM dbo.CIC_BT_DST WHERE DST_ID=@DST_ID AND NUM=svbt.NUM)
 				)
 		FOR XML PATH('SiteService'), TYPE
 		),
@@ -1618,7 +1613,7 @@ SELECT
 	-- SITE > LOCATED IN COMMUNITY
 		(SELECT
 				excm.AIRSExportType AS 'LocatedInCommunity/@Type',
-				AreaName AS LocatedInCommunity
+				excm.AreaName AS LocatedInCommunity
 				FROM dbo.GBL_Community_External_Map cmap
 				INNER JOIN dbo.GBL_Community_External_Community excm
 					ON excm.EXT_ID = cmap.MapOneEXTID AND excm.SystemCode='ONTARIO211'
@@ -1642,17 +1637,17 @@ SELECT
 		WHERE pr.NUM LIKE slbt.NUM
 		FOR XML PATH('Distribution'), TYPE)
 
-		FROM GBL_BaseTable slbt
-		LEFT JOIN GBL_BaseTable_Description slbtd
+		FROM dbo.GBL_BaseTable slbt
+		LEFT JOIN dbo.GBL_BaseTable_Description slbtd
 			ON (
 				slbtd.LangID=@LangID
 				OR (
 					@AutoIncludeSiteAgency=1
-					AND slbtd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=slbtd.NUM ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID)
+					AND slbtd.LangID=(SELECT TOP 1 LangID FROM dbo.GBL_BaseTable_Description WHERE NUM=slbtd.NUM ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID)
 					AND EXISTS(SELECT * FROM dbo.GBL_BT_LOCATION_SERVICE btl INNER JOIN dbo.GBL_BaseTable_Description btdl ON btdl.NUM = btl.SERVICE_NUM AND btdl.LangID=@LangID WHERE btl.LOCATION_NUM=slbtd.NUM)
 					)
 				)
-				AND slbtd.NUM = CASE WHEN EXISTS(SELECT * FROM GBL_BT_OLS lpr INNER JOIN GBL_OrgLocationService lols ON lpr.OLS_ID=lols.OLS_ID AND lols.Code='SITE' WHERE lpr.NUM=slbt.NUM) THEN slbt.NUM ELSE 'ZZZ00002' END
+				AND slbtd.NUM = CASE WHEN EXISTS(SELECT * FROM dbo.GBL_BT_OLS lpr INNER JOIN dbo.GBL_OrgLocationService lols ON lpr.OLS_ID=lols.OLS_ID AND lols.Code='SITE' WHERE lpr.NUM=slbt.NUM) THEN slbt.NUM ELSE 'ZZZ00002' END
 				AND (
 						(
 							(@CanSeeNonPublic=1 OR slbtd.NON_PUBLIC=0)
@@ -1662,37 +1657,37 @@ SELECT
 							slbtd.NUM='ZZZ00002'
 						)
 					)
-		LEFT JOIN CIC_BaseTable cslbt
+		LEFT JOIN dbo.CIC_BaseTable cslbt
 			ON slbtd.NUM=cslbt.NUM
-		LEFT JOIN CIC_BaseTable_Description slcbtd
+		LEFT JOIN dbo.CIC_BaseTable_Description slcbtd
 			ON cslbt.NUM=slcbtd.NUM AND slcbtd.LangID=slbtd.LangID
 		WHERE slbtd.NUM IS NOT NULL
-			AND (@PB_ID IS NULL OR EXISTS(SELECT * FROM CIC_BT_PB WHERE NUM=slbt.NUM AND PB_ID=@PB_ID))
+			AND (@PB_ID IS NULL OR EXISTS(SELECT * FROM dbo.CIC_BT_PB WHERE NUM=slbt.NUM AND PB_ID=@PB_ID))
 			AND (slbt.MemberID=@MemberID
 					OR EXISTS(SELECT *
-						FROM GBL_BT_SharingProfile pr
-						INNER JOIN GBL_SharingProfile shp
+						FROM dbo.GBL_BT_SharingProfile pr
+						INNER JOIN dbo.GBL_SharingProfile shp
 							ON pr.ProfileID=shp.ProfileID
 								AND shp.Active=1
 								AND (
 									shp.CanUseAnyView=1
-									OR EXISTS(SELECT * FROM GBL_SharingProfile_CIC_View WHERE ProfileID=shp.ProfileID AND ViewType=@ViewType)
+									OR EXISTS(SELECT * FROM dbo.GBL_SharingProfile_CIC_View WHERE ProfileID=shp.ProfileID AND ViewType=@ViewType)
 								)
-						WHERE NUM=slbt.NUM AND ShareMemberID_Cache=@MemberID)
+						WHERE pr.NUM=slbt.NUM AND pr.ShareMemberID_Cache=@MemberID)
 				)
 			AND (slbt.NUM=bt.NUM OR slbt.ORG_NUM=bt.NUM)
 			AND (
-				EXISTS(SELECT * FROM GBL_BT_OLS lpr INNER JOIN GBL_OrgLocationService lols ON lpr.OLS_ID=lols.OLS_ID AND lols.Code='SITE' WHERE lpr.NUM=slbt.NUM)
+				EXISTS(SELECT * FROM dbo.GBL_BT_OLS lpr INNER JOIN dbo.GBL_OrgLocationService lols ON lpr.OLS_ID=lols.OLS_ID AND lols.Code='SITE' WHERE lpr.NUM=slbt.NUM)
 				OR (
-					NOT EXISTS(SELECT * FROM GBL_BT_OLS lpr INNER JOIN GBL_OrgLocationService lols ON lpr.OLS_ID=lols.OLS_ID AND lols.Code='SITE' WHERE lpr.NUM=slbt.NUM)
-					AND NOT EXISTS(SELECT * FROM GBL_BT_LOCATION_SERVICE WHERE SERVICE_NUM=slbt.NUM)
-					AND EXISTS(SELECT * FROM GBL_BT_OLS lpr INNER JOIN GBL_OrgLocationService lols ON lpr.OLS_ID=lols.OLS_ID AND lols.Code IN ('SERVICE','TOPIC') WHERE lpr.NUM=slbt.NUM)
+					NOT EXISTS(SELECT * FROM dbo.GBL_BT_OLS lpr INNER JOIN dbo.GBL_OrgLocationService lols ON lpr.OLS_ID=lols.OLS_ID AND lols.Code='SITE' WHERE lpr.NUM=slbt.NUM)
+					AND NOT EXISTS(SELECT * FROM dbo.GBL_BT_LOCATION_SERVICE WHERE SERVICE_NUM=slbt.NUM)
+					AND EXISTS(SELECT * FROM dbo.GBL_BT_OLS lpr INNER JOIN dbo.GBL_OrgLocationService lols ON lpr.OLS_ID=lols.OLS_ID AND lols.Code IN ('SERVICE','TOPIC') WHERE lpr.NUM=slbt.NUM)
 				)
 			)
 			AND (
 				@DST_ID IS NULL
-				OR EXISTS(SELECT * FROM CIC_BT_DST WHERE DST_ID=@DST_ID AND NUM=slbt.NUM)
-				OR (@AutoIncludeSiteAgency=1 AND EXISTS(SELECT * FROM GBL_BT_LOCATION_SERVICE ls WHERE ls.LOCATION_NUM=slbt.NUM AND EXISTS(SELECT * FROM CIC_BT_DST WHERE DST_ID=@DST_ID AND NUM=ls.SERVICE_NUM)))
+				OR EXISTS(SELECT * FROM dbo.CIC_BT_DST WHERE DST_ID=@DST_ID AND NUM=slbt.NUM)
+				OR (@AutoIncludeSiteAgency=1 AND EXISTS(SELECT * FROM dbo.GBL_BT_LOCATION_SERVICE ls WHERE ls.LOCATION_NUM=slbt.NUM AND EXISTS(SELECT * FROM dbo.CIC_BT_DST WHERE DST_ID=@DST_ID AND NUM=ls.SERVICE_NUM)))
 			)
 	FOR XML PATH('Site'), TYPE
 	),
@@ -1758,14 +1753,14 @@ SELECT
 	FOR XML PATH('Agency')
 )
 				
-FROM GBL_BaseTable bt
-	INNER JOIN GBL_BaseTable_Description btd
+FROM dbo.GBL_BaseTable bt
+	INNER JOIN dbo.GBL_BaseTable_Description btd
 		ON bt.NUM=btd.NUM
 			AND (
 				btd.LangID=@LangID 
 				OR (
 					@AutoIncludeSiteAgency=1
-					AND btd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=btd.NUM ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID)
+					AND btd.LangID=(SELECT TOP 1 LangID FROM dbo.GBL_BaseTable_Description WHERE NUM=btd.NUM ORDER BY CASE WHEN LangID=@LangID THEN 0 ELSE 1 END, LangID)
 					AND EXISTS(SELECT * FROM dbo.GBL_BaseTable btl INNER JOIN dbo.GBL_BaseTable_Description btdl ON btdl.NUM = btl.NUM AND btdl.LangID=@LangID WHERE btl.ORG_NUM=bt.NUM)
 					)
 				)
@@ -1778,41 +1773,41 @@ FROM GBL_BaseTable bt
 					AND @AutoIncludeSiteAgency=1
 					AND (
 						@DST_ID IS NULL
-						OR EXISTS(SELECT * FROM GBL_BaseTable slbt INNER JOIN GBL_BaseTable_Description slbtd ON slbt.NUM=slbtd.NUM AND slbtd.LangID=@LangID AND slbtd.DELETION_DATE IS NULL WHERE ORG_NUM=bt.NUM
-							AND EXISTS(SELECT * FROM CIC_BT_DST WHERE DST_ID=@DST_ID AND NUM=slbt.NUM)
+						OR EXISTS(SELECT * FROM dbo.GBL_BaseTable slbt INNER JOIN dbo.GBL_BaseTable_Description slbtd ON slbt.NUM=slbtd.NUM AND slbtd.LangID=@LangID AND slbtd.DELETION_DATE IS NULL WHERE slbt.ORG_NUM=bt.NUM
+							AND EXISTS(SELECT * FROM dbo.CIC_BT_DST WHERE DST_ID=@DST_ID AND NUM=slbt.NUM)
 						)
 					)
 				)
 			)
 			AND (@HidePastDueBy IS NULL OR (btd.UPDATE_SCHEDULE IS NOT NULL AND (DATEDIFF(d,btd.UPDATE_SCHEDULE,GETDATE()) < @HidePastDueBy)))
-	LEFT JOIN CIC_BaseTable cbt
+	LEFT JOIN dbo.CIC_BaseTable cbt
 		ON bt.NUM = cbt.NUM
-	LEFT JOIN CIC_BaseTable_Description cbtd
+	LEFT JOIN dbo.CIC_BaseTable_Description cbtd
 		ON cbt.NUM=cbtd.NUM AND cbtd.LangID=btd.LangID
-WHERE (@PB_ID IS NULL OR EXISTS(SELECT * FROM CIC_BT_PB WHERE NUM=bt.NUM AND PB_ID=@PB_ID))
+WHERE (@PB_ID IS NULL OR EXISTS(SELECT * FROM dbo.CIC_BT_PB WHERE NUM=bt.NUM AND PB_ID=@PB_ID))
 	AND (bt.MemberID=@MemberID
 			OR EXISTS(SELECT *
-				FROM GBL_BT_SharingProfile pr
-				INNER JOIN GBL_SharingProfile shp
+				FROM dbo.GBL_BT_SharingProfile pr
+				INNER JOIN dbo.GBL_SharingProfile shp
 					ON pr.ProfileID=shp.ProfileID
 						AND shp.Active=1
 						AND (
 							shp.CanUseAnyView=1
-							OR EXISTS(SELECT * FROM GBL_SharingProfile_CIC_View WHERE ProfileID=shp.ProfileID AND ViewType=@ViewType)
+							OR EXISTS(SELECT * FROM dbo.GBL_SharingProfile_CIC_View WHERE ProfileID=shp.ProfileID AND ViewType=@ViewType)
 						)
-				WHERE NUM=bt.NUM AND ShareMemberID_Cache=@MemberID)
+				WHERE pr.NUM=bt.NUM AND pr.ShareMemberID_Cache=@MemberID)
 		)
-	AND EXISTS(SELECT * FROM GBL_BT_OLS pr INNER JOIN GBL_OrgLocationService ols ON pr.OLS_ID=ols.OLS_ID AND ols.Code='AGENCY' WHERE pr.NUM=bt.NUM)
+	AND EXISTS(SELECT * FROM dbo.GBL_BT_OLS pr INNER JOIN dbo.GBL_OrgLocationService ols ON pr.OLS_ID=ols.OLS_ID AND ols.Code='AGENCY' WHERE pr.NUM=bt.NUM)
 	AND (
 		@DST_ID IS NULL
-		OR EXISTS(SELECT * FROM CIC_BT_DST WHERE DST_ID=@DST_ID AND NUM=bt.NUM)
-		OR (@AutoIncludeSiteAgency=1 AND EXISTS(SELECT * FROM GBL_BaseTable slbt WHERE ORG_NUM=bt.NUM AND EXISTS(SELECT * FROM CIC_BT_DST WHERE DST_ID=@DST_ID AND NUM=slbt.NUM)))
+		OR EXISTS(SELECT * FROM dbo.CIC_BT_DST WHERE DST_ID=@DST_ID AND NUM=bt.NUM)
+		OR (@AutoIncludeSiteAgency=1 AND EXISTS(SELECT * FROM dbo.GBL_BaseTable slbt WHERE ORG_NUM=bt.NUM AND EXISTS(SELECT * FROM dbo.CIC_BT_DST WHERE DST_ID=@DST_ID AND NUM=slbt.NUM)))
 	)
 	AND (
 		@PartialDate IS NULL
 		OR EXISTS(
 		SELECT *
-			FROM GBL_BaseTable btx
+			FROM dbo.GBL_BaseTable btx
 			INNER JOIN dbo.CIC_BaseTable cbtx ON cbtx.NUM = btx.NUM
 			INNER JOIN dbo.GBL_BaseTable_Description btdx ON btdx.NUM = btx.NUM AND (btdx.LangID=@LangID OR @AnyLanguageChange=1)
 			LEFT JOIN dbo.CIC_BT_DST dst ON dst.NUM=btx.NUM AND dst.DST_ID=@DST_ID

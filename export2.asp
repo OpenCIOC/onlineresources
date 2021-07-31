@@ -44,6 +44,34 @@ Call setPageInfo(False, DM_CIC, DM_CIC, vbNullString, vbNullString, vbNullString
 <% 'End Base includes %>
 <!--#include file="text/txtExport.asp" -->
 <!--#include file="includes/core/incFormat.asp" -->
+<script language="python" runat="server">
+from lxml import etree
+def convert_line1_line_2(xmlstr):
+	root = etree.fromstring(xmlstr)
+	attrib = root.attrib
+	line_1 = attrib.pop('LN1', None)
+	line_2 = attrib.pop('LN2', None)
+	line_1f = attrib.pop('LN1F', None)
+	line_2f = attrib.pop('LN2F', None)
+	if not (line_1 or line_2 or line_1f or line_2f):
+		return xmlstr
+
+	if line_1 and line_2:
+		attrib['BLD'] = line_1
+		attrib['ST'] = line_2
+	elif line_1 or line_2:
+		attrib['ST'] = line_1 or line_2
+
+	if line_1f and line_2f:
+		attrib['BLDF'] = line_1f
+		attrib['STF'] = line_2f
+	elif line_1f or line_2f:
+		attrib['STF'] = line_1f or line_2f
+
+
+	return etree.tostring(root, encoding='unicode')
+
+</script>
 <%
 
 Const XML_EXPORT_V2 = 1
@@ -230,6 +258,7 @@ Sub getExportProfileData(bSharingFormat)
 
 		With rsProfile
 			bIncludePrivacyProfiles = .Fields("IncludePrivacyProfiles")
+			bConvertLine1Line2Addresses = .Fields("ConvertLine1Line2Addresses")
 			bExportEn = .Fields("ExportEn")
 			bExportFr = .Fields("ExportFr")
 			strSourceDbNameEn = .Fields("SourceDbNameEn")
@@ -372,6 +401,7 @@ bError = False
 Dim	bProfilePub, _
 	bProfileDist, _
 	bIncludePrivacyProfiles, _
+	bConvertLine1Line2Addresses, _
 	bIncludeSourceDb, _
 	bExportEn, _
 	bExportFr, _
@@ -717,6 +747,9 @@ If Not bError Then
 								If bIncludePrivacyProfiles Or Nl(intPrivacyProfile) Or Not dicProfileFields.Exists(fld.Name) Then
 									strOutputVal = Nz(fld.Value,vbNullString)
 									strOutputVal = Replace(Replace(strOutputVal, vbCr, vbNullString), vbLf, vbCrLf)
+									If bConvertLine1Line2Addresses And (fld.Name = "SITE_ADDRESS" Or fld.Name = "MAIL_ADDRESS") Then
+										strOutputVal = convert_line1_line_2(strOutputVal)
+									End If
 									strmOutput.WriteText strOutputVal, adWriteChar
 								End If
 							End If

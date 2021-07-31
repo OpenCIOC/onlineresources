@@ -9,6 +9,7 @@ CREATE PROCEDURE [dbo].[sp_CIC_ExportProfile_u]
 	@MemberID [int],
 	@SubmitChangesToAccessURL [varchar](200),
 	@IncludePrivacyProfiles [bit],
+	@ConvertLine1Line2Addresses [BIT],
 	@InViews [varchar](max),
 	@Descriptions [xml],
 	@ErrMsg [nvarchar](500) OUTPUT
@@ -139,7 +140,8 @@ IF @Error = 0 BEGIN
 	SET	MODIFIED_DATE				= GETDATE(),
 		MODIFIED_BY					= @MODIFIED_BY,
 		SubmitChangesToAccessURL	= @SubmitChangesToAccessURL,
-		IncludePrivacyProfiles		= @IncludePrivacyProfiles
+		IncludePrivacyProfiles		= @IncludePrivacyProfiles,
+		ConvertLine1Line2Addresses  = @ConvertLine1Line2Addresses
 	WHERE ProfileID = @ProfileID
 	EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @ProfileObjectName, @ErrMsg
 

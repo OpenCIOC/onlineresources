@@ -76,6 +76,7 @@ Dim	strCreatedDate, _
 	strProfileName, _
 	strSubmitChangesToAccessURL, _
 	bIncludePrivacyProfiles, _
+	bConvertLine1Line2Addresses, _
 	strValue, _
 	strCulture, _
 	intFieldCount, _
@@ -115,6 +116,7 @@ With rsProfile
 		strProfileName = Nz(.Fields("ProfileName"),TXT_UNKNOWN)
 		strSubmitChangesToAccessURL = .Fields("SubmitChangesToAccessURL")
 		bIncludePrivacyProfiles = .Fields("IncludePrivacyProfiles")
+		bConvertLine1Line2Addresses = .Fields("ConvertLine1Line2Addresses")
 		intFieldCount = .Fields("FieldCount")
 		intDistCount = .Fields("DistCount")
 		intPubCount = .Fields("PubCount")
@@ -322,6 +324,11 @@ Call closeViewListRst()
 	<td class="FieldLabelLeft"><%=TXT_PRIVACY_PROFILES%></td>
 	<td><label for="export_privacy"><input id="export_privacy" type="radio" name="IncludePrivacyProfiles" value="on"<%=Checked(bIncludePrivacyProfiles)%>> <%=TXT_PRIVACY_PROFILE_EXPORT%></label>
 	<br><label for="skip_private_fields"><input id="skip_private_fields" type="radio" name="IncludePrivacyProfiles" value=""<%=Checked(Not bIncludePrivacyProfiles)%>> <%=TXT_PRIVACY_PROFILE_SKIP%></label></td>
+</tr>
+<tr>
+	<td class="FieldLabelLeft"><%=TXT_LINE1_LINE2_HANDLING%></td>
+	<td><label for="convert_line1_line2"><input id="convert_line1_line2" type="checkbox" name="ConvertLine1Line2Addresses" value="on"<%=Checked(bConvertLine1Line2Addresses)%>> <%=TXT_CONVERT_LINE1_LINE2_ADDRESSES_FOR_COMPATIBILITY%></label>
+	</td>
 </tr>
 <tr>
 	<td class="FieldLabelLeft"><%=TXT_IN_VIEWS%></td>

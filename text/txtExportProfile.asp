@@ -20,6 +20,7 @@
 <%
 Dim TXT_ADD_PUB_CODE_FAILED, _
 	TXT_CHOOSE_PUBLICATION, _
+	TXT_CONVERT_LINE1_LINE2_ADDRESSES_FOR_COMPATIBILITY, _
 	TXT_DB_NAME, _
 	TXT_DB_URL, _
 	TXT_DIST_LIST_NOT_UPDATED, _
@@ -33,6 +34,7 @@ Dim TXT_ADD_PUB_CODE_FAILED, _
 	TXT_INCLUDE_HEADINGS, _
 	TXT_INCLUDE_HEADINGS_NO_HTML, _
 	TXT_INST_EXPORT_IN_LANGUAGES, _
+	TXT_LINE1_LINE2_HANDLING, _
 	TXT_MANAGE_DISTRIBUTIONS, _
 	TXT_MANAGE_DISTS_TITLE, _
 	TXT_MANAGE_FIELDS_TITLE, _
@@ -51,6 +53,7 @@ Sub setTxtExportProfile()
 		Case CULTURE_FRENCH_CANADIAN
 			TXT_ADD_PUB_CODE_FAILED = "L'ajout du code de publication a échoué."
 			TXT_CHOOSE_PUBLICATION = "Veuillez sélectionner une publication dans la liste ci-dessous."
+			TXT_CONVERT_LINE1_LINE2_ADDRESSES_FOR_COMPATIBILITY = "TRANSLATE_FR -- Convert Line 1/Line 2 addresses for compatibility"
 			TXT_DB_NAME = "Nom de la base de données"
 			TXT_DB_URL = "URL de la base de données"
 			TXT_DIST_LIST_NOT_UPDATED = "La mise à jour de la liste des codes de distribution a échoué" & TXT_COLON
@@ -64,6 +67,7 @@ Sub setTxtExportProfile()
 			TXT_INCLUDE_HEADINGS = "Inclure<br>les en-têtes"
 			TXT_INCLUDE_HEADINGS_NO_HTML = "Inclure les en-têtes"
 			TXT_INST_EXPORT_IN_LANGUAGES = "Exporter les données dans les langues suivantes" & TXT_COLON
+			TXT_LINE1_LINE2_HANDLING = "TRANSLATE_FR -- Line 1/Line 2 Address Handling"
 			TXT_MANAGE_DISTRIBUTIONS = "Gérer les distributions"
 			TXT_MANAGE_DISTS_TITLE = "Gérer les codes de distribution pour l'exportation"
 			TXT_MANAGE_FIELDS_TITLE = "Gérer les champs d'exportation"
@@ -79,6 +83,7 @@ Sub setTxtExportProfile()
 		Case Else
 			TXT_ADD_PUB_CODE_FAILED = "Add Publication Code Failed"
 			TXT_CHOOSE_PUBLICATION = "Choose a Publication from the list below"
+			TXT_CONVERT_LINE1_LINE2_ADDRESSES_FOR_COMPATIBILITY = "Convert Line 1/Line 2 addresses for compatibility"
 			TXT_DB_NAME = "Database Name"
 			TXT_DB_URL = "Database URL"
 			TXT_DIST_LIST_NOT_UPDATED = "The Distribution Code list was not updated" & TXT_COLON
@@ -92,6 +97,7 @@ Sub setTxtExportProfile()
 			TXT_INCLUDE_HEADINGS = "Include<br>Headings"
 			TXT_INCLUDE_HEADINGS_NO_HTML = "Include Headings"
 			TXT_INST_EXPORT_IN_LANGUAGES = "Export data in the following languages" & TXT_COLON
+			TXT_LINE1_LINE2_HANDLING = "Line 1/Line 2 Address Handling"
 			TXT_MANAGE_DISTRIBUTIONS = "Manage Distributions"
 			TXT_MANAGE_DISTS_TITLE = "Manage Export Distribution Codes"
 			TXT_MANAGE_FIELDS_TITLE = "Manage Export Fields"

@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -150,6 +149,7 @@ SET @FieldList = 'NUM,RECORD_OWNER' + CASE WHEN @FieldList IS NULL THEN '' ELSE 
 
 SELECT	IncludePrivacyProfiles,
 		SubmitChangesToAccessURL,
+		ep.ConvertLine1Line2Addresses,
 		dbo.fn_CIC_ExportProfile_SSL_Source(SubmitChangesToAccessURL) AS SubmitChangesToAccessProtocol,
 		@FieldList AS FieldList,
 		CAST(CASE WHEN epne.ProfileID IS NULL THEN 0 ELSE 1 END AS bit) AS ExportEn,

@@ -122,6 +122,7 @@ Else
 				strSourceDbName, _
 				strSourceDbURL, _
 				bIncludePrivacyProfiles, _
+				bConvertLine1Line2Addresses, _
 				strSubmitChangesToAccessURL, _
 				strInViews, _
 				strDescriptions, _
@@ -132,6 +133,7 @@ Else
 				bGotName
 
 			bIncludePrivacyProfiles = Not Nl(Trim(Request("IncludePrivacyProfiles")))
+			bConvertLine1Line2Addresses = Not Nl(Trim(Request("ConvertLine1Line2Addresses")))
 			strSubmitChangesToAccessURL = Nz(Request("SubmitChangesToAccessURL"),Null)
 
 			strDescriptions = vbNullString
@@ -204,6 +206,7 @@ Else
 					.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
 					.Parameters.Append .CreateParameter("@SubmitChangesToAccessURL", adVarChar, adParamInput, 200, strSubmitChangesToAccessURL)
 					.Parameters.Append .CreateParameter("@IncludePrivacyProfiles", adBoolean, adParamInput, 1, bIncludePrivacyProfiles)
+					.Parameters.Append .CreateParameter("@ConvertLine1Line2Addresses", adBoolean, adParamInput, 1, bConvertLine1Line2Addresses)
 					.Parameters.Append .CreateParameter("@InViews", adLongVarChar, adParamInput, -1, strInViews)
 					.Parameters.Append .CreateParameter("@Descriptions", adVarWChar, adParamInput, -1, strDescriptions)
 				Case ACTION_DELETE

@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -122,7 +121,8 @@ END ELSE BEGIN
 			MODIFIED_BY,
 			MemberID,
 			SubmitChangesToAccessURL,
-			IncludePrivacyProfiles
+			IncludePrivacyProfiles,
+			ConvertLine1Line2Addresses
 		)
 		SELECT
 			GETDATE(),
@@ -131,7 +131,8 @@ END ELSE BEGIN
 			@MODIFIED_BY,
 			@MemberID,
 			SubmitChangesToAccessURL,
-			IncludePrivacyProfiles
+			IncludePrivacyProfiles,
+			ConvertLine1Line2Addresses
 		FROM CIC_ExportProfile
 		WHERE ProfileID = @CopyProfileID
 		

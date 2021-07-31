@@ -11,6 +11,7 @@ GO
 
 
 
+
 CREATE VIEW [dbo].[CIC_SHARE_VIEW]
 AS
 
@@ -457,6 +458,10 @@ MAIL_ADDRESS = (
 	SELECT 
 		bte.MAIL_CARE_OF "@CO",
 		btf.MAIL_CARE_OF "@COF",
+		bte.MAIL_LINE_1 "@LN1",
+		btf.MAIL_LINE_1 "@LN1F",
+		bte.MAIL_LINE_2 "@LN2",
+		btf.MAIL_LINE_2 "@LN2F",
 		bte.MAIL_BOX_TYPE "@BXTP",
 		btf.MAIL_BOX_TYPE "@BXTPF",
 		bte.MAIL_PO_BOX "@BOX",
@@ -722,6 +727,10 @@ SCHOOLS_IN_AREA = (
 	),
 SITE_ADDRESS = (
 	SELECT 
+		bte.SITE_LINE_1 "@LN1",
+		btf.SITE_LINE_1 "@LN1F",
+		bte.SITE_LINE_2 "@LN2",
+		btf.SITE_LINE_2 "@LN2F",
 		bte.SITE_BUILDING "@BLD",
 		btf.SITE_BUILDING "@BLDF",
 		bte.SITE_STREET_NUMBER "@STNUM",
