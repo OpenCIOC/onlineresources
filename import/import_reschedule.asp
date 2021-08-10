@@ -52,20 +52,20 @@ End If
 Dim bConfirmed
 bConfirmed = Request("Confirmed") = "on"
 
-Dim intERID, strEFID
-intERID = Request("ERID")
+Dim strERIDList, strEFID
+strERIDList = Request("ERID")
 strEFID = Request("EFID")
 
-If Nl(intERID) Then
+If Nl(strERIDList) Then
 	Call makePageHeader(TXT_RESCHEDULE_RECORD, TXT_RESCHEDULE_RECORD, True, False, True, True)
 	Call handleError(TXT_NO_RECORD_CHOSEN, vbNullString, vbNullString)
 	Call makePageFooter(False)
-ElseIf Not IsIDType(intERID) Then
+ElseIf Not IsIDList(strERIDList) Then
 	Call makePageHeader(TXT_RESCHEDULE_RECORD, TXT_RESCHEDULE_RECORD, True, False, True, True)
-	Call handleError(TXT_INVALID_ID & Server.HTMLEncode(intERID) & ".", vbNullString, vbNullString)
+	Call handleError(TXT_INVALID_ID & Server.HTMLEncode(strERIDList) & ".", vbNullString, vbNullString)
 	Call makePageFooter(False)
 Else
-	intERID = CLng(intERID)
+	strERIDList = strERIDList
 
 If Not bConfirmed Then
 	Call makePageHeader(TXT_RESCHEDULE_RECORD, TXT_RESCHEDULE_RECORD, True, False, True, True)
@@ -73,7 +73,7 @@ If Not bConfirmed Then
 <p><span class="AlertBubble"><%=TXT_ARE_YOU_SURE_RESCHEDULE%></span></p>
 <form action="<%=ps_strThisPage%>" method="post">
 <%=g_strCacheFormVals%>
-<input type="hidden" name="ERID" value="<%=intERID%>">
+<input type="hidden" name="ERID" value="<%=strERIDList%>">
 <input type="hidden" name="EFID" value="<%=strEFID%>">
 <input type="hidden" name="Confirmed" value="on">
 <input type="submit" name="Submit" value="<%=TXT_RESCHEDULE%>">
@@ -95,7 +95,7 @@ Else
 		Set objReturn = .CreateParameter("@RETURN_VALUE", adInteger, adParamReturnValue, 4)
 		.Parameters.Append objReturn
 		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
-		.Parameters.Append .CreateParameter("@EF_ID", adInteger, adParamInput, 4, intERID)
+		.Parameters.Append .CreateParameter("@ER_ID_List", adLongVarChar, adParamInput, -1, strERIDList)
 		Set objErrMsg = .CreateParameter("@ErrMsg", adVarWChar, adParamOutput, 500)
 		.Parameters.Append objErrMsg
 	End With

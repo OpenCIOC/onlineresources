@@ -96,6 +96,7 @@ Dim TXT_ADD_PROFILE_FAILED, _
 	TXT_RECORDS_TO_IMPORT, _
 	TXT_RECORDS_TO_RETRY, _
 	TXT_RESCHEDULE, _
+	TXT_RESCHEDULE_ALL, _
 	TXT_RESCHEDULED, _
 	TXT_RESCHEDULE_RECORD, _
 	TXT_RETRY_FAILED_RECORDS, _
@@ -146,7 +147,7 @@ Sub setTxtImport()
 				"<br>Use your back button to return to the form if you do not want to archive."
 			TXT_ARE_YOU_SURE_UNARCHIVE = "Are you sure you want to unarchive this item?" & _
 				"<br>Use your back button to return to the form if you do not want to unarchive."
-			TXT_ARE_YOU_SURE_RESCHEDULE = "Are you sure you want to reschedule an import of this record?" & _
+			TXT_ARE_YOU_SURE_RESCHEDULE = "Are you sure you want to reschedule an import of these records?" & _
 				"<br>Use your back button to return to the form if you do not want to reschedule."
 			TXT_CAN_BE_RETRIED = "can be retried."
 			TXT_CAN_RESCHEDULE = "Can Reschedule"
@@ -217,6 +218,7 @@ Sub setTxtImport()
 			TXT_RECORDS_TO_IMPORT = " records to import."
 			TXT_RECORDS_TO_RETRY = "records to retry."
 			TXT_RESCHEDULE = "Reschedule"
+			TXT_RESCHEDULE_ALL = "Reschedule All Possible"
 			TXT_RESCHEDULED = "Rescheduled"
 			TXT_RESCHEDULE_RECORD = "Reschedule Record Import"
 			TXT_RETRY_FAILED_RECORDS = "Retry records from previous run that reported issues"
@@ -266,7 +268,7 @@ Sub setTxtImport()
 				"<br>Use your back button to return to the form if you do not want to archive."
 			TXT_ARE_YOU_SURE_UNARCHIVE = "TRANSLATE_FR -- Are you sure you want to unarchive this item?" & _
 				"<br>Use your back button to return to the form if you do not want to unarchive."
-			TXT_ARE_YOU_SURE_RESCHEDULE = "TRANSLATE_FR -- Are you sure you want to reschedule an import of this record?" & _
+			TXT_ARE_YOU_SURE_RESCHEDULE = "TRANSLATE_FR -- Are you sure you want to reschedule an import of these records?" & _
 				"<br>Use your back button to return to the form if you do not want to reschedule."
 			TXT_CAN_BE_RETRIED = "TRANSLATE_FR -- can be retried."
 			TXT_CAN_RESCHEDULE = "TRANSLATE_FR -- Can Reschedule"
@@ -337,6 +339,7 @@ Sub setTxtImport()
 			TXT_RECORDS_TO_IMPORT = " dossiers à importer."
 			TXT_RECORDS_TO_RETRY = "TRANSLATE_FR -- records to retry."
 			TXT_RESCHEDULE = "TRANSLATE_FR -- Reschedule"
+			TXT_RESCHEDULE_ALL = "TRANSLATE_FR -- Reschedule All Possible"
 			TXT_RESCHEDULED = "TRANSLATE_FR -- Rescheduled"
 			TXT_RESCHEDULE_RECORD = "TRANSLATE_FR -- Reschedule Record Import"
 			TXT_RETRY_FAILED_RECORDS = "TRANSLATE_FR -- Retry records from previous run that reported issues"

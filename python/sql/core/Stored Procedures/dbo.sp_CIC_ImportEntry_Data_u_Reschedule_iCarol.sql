@@ -6,7 +6,7 @@ GO
 
 CREATE PROCEDURE [dbo].[sp_CIC_ImportEntry_Data_u_Reschedule_iCarol]
 	@MemberID INT,
-	@ER_ID INT,
+	@ER_ID_List VARCHAR(MAX),
 	@ErrMsg NVARCHAR(500) OUTPUT
 WITH EXECUTE AS CALLER
 AS
@@ -31,10 +31,6 @@ END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS VARCHAR), @MemberObjectName)
 	SET @MemberID = NULL
--- Import Entry belongs to Member ?
-END ELSE IF EXISTS(SELECT * FROM CIC_ImportEntry_Data ied INNER JOIN CIC_ImportEntry ie ON ied.EF_ID=ie.EF_ID WHERE ied.ER_ID=@ER_ID AND MemberID<>@MemberID) BEGIN
-	SET @Error = 8 -- Security Failure
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL)
 END
 
 SELECT @Error AS Error, @ErrMsg AS ErrMsg
@@ -47,7 +43,9 @@ IF @Error=0 BEGIN
 		ON ir.ResourceAgencyNum=ied.EXTERNAL_ID
 	INNER JOIN dbo.CIC_ImportEntry ie
 		ON ie.EF_ID = ied.EF_ID
-	WHERE ied.ER_ID=@ER_ID AND ie.SourceDbCode='ICAROL'
+	INNER JOIN dbo.fn_GBL_ParseIntIDList(@ER_ID_List, ',') l
+		ON ied.ER_ID=l.ItemID
+	WHERE ie.SourceDbCode='ICAROL' AND ie.MemberID=@MemberID
 END
 
 SET NOCOUNT OFF

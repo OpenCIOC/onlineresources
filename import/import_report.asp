@@ -76,10 +76,16 @@ Dim cmdListImportData, _
 	fldOWNER, _
 	fldREPORT, _
 	fldCANRETRY, _
-	fldCANRESCHED 
+	fldCANRESCHED, _
+	strReschedList, _
+	strReschedListSep
+
 
 Dim intError
 intError = 0
+
+strReschedList = vbNullString
+strReschedListSep = vbNullString
 
 Set cmdListImportData = Server.CreateObject("ADODB.Command")
 Set rsListImportData = Server.CreateObject("ADODB.Recordset")
@@ -112,8 +118,20 @@ If intError = 0 Then
 
 	With rsListImportData
 		intRecordCount = .RecordCount
-%>
-<p>[ <a href="<%=makeLinkB("import.asp")%>"><%=TXT_RETURN_TO_IMPORT%></a> ]</p>
+		if intRecordCount > 0 and bIsIcarolImport Then
+			Set fldCANRESCHED = .Fields("CAN_ICAROL_RESCHED")
+			Set fldERID = .Fields("ER_ID")
+			While Not .EOF
+				If fldCANRESCHED Then
+					strReschedList = strReschedList & strReschedListSep & fldERID.Value
+					strReschedListSep = ","
+				End If
+				.MoveNext
+			Wend
+			.MoveFirst
+		End If
+
+%><p>[ <a href="<%=makeLinkB("import.asp")%>"><%=TXT_RETURN_TO_IMPORT%></a><%If Not Nl(strReschedList) Then %> | <a href="<%= makeLink("import_reschedule.asp", "EFID=" & intEFID & "&ERID=" & strReschedList, vbNullString ) %>"><%= TXT_RESCHEDULE_ALL %></a><%End If%> ]</p>
 <p><%=TXT_THERE_ARE%> <strong><%=intRecordCount%></strong> <%=TXT_RECORDS_IMPORTED & " " & TXT_REVIEW_LIST_BELOW%></p>
 <%
 		If intRecordCount > 0 Then
@@ -169,6 +187,7 @@ If intError = 0 Then
 %>
 </table>
 <%
+
 		End If
 	End With
 End If
