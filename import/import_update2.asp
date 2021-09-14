@@ -5949,6 +5949,9 @@ While Not .EOF
 
 			If Not Nl(strReport) Then
 				fldREPORT.Value = strReport
+			ElseIf Not Nl(fldREPORT.Value) Then
+				' strReport is Null and fldREPORT.Value Is not Null. This is a retry
+				fldREPORT.Value = Null
 			End If
 
 			If Not bIsError Then
