@@ -276,7 +276,7 @@ class LayoutSearch(object):
 					row = group[0]
 					quicklist_split.append({'IDTYPE': 'GHID', 'ID': row.GroupID, 'IDLIST': ','.join(str(row.GH_ID) for row in group), 'NAME': row.Group, 'ICON': make_icon_html(None, row.IconNameFullGroup, False, 'heading-icon'), 'HEADINGS': sub_heading, 'CLEAR_CLASS': quick_list_clear_visible(group_row)})
 		else:
-			quicklist_split = [{'IDTYPE': 'PBID', 'ID': row.PB_ID, 'NAME': row.PubName or row.PubCode, 'ICON': None, 'HEADINGS': None,  'CLEAR_CLASS': quick_list_clear_visible(i)} for i, row in enumerate(self.quicklist)]
+			quicklist_split = [{'IDTYPE': 'PBID', 'ID': row.PB_ID, 'NAME': row.PubName or row.PubCode, 'ICON': None, 'HEADINGS': None,  'CLEAR_CLASS': quick_list_clear_visible(i)} for i, row in enumerate(self.quicklist or [])]
 
 		namespace = {
 			'TOGGLE_NAV_TITLE': gettext('Toggle navigation', request),

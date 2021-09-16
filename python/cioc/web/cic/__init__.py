@@ -25,7 +25,7 @@ from cioc.core.rootfactories import BasicRootFactory
 def includeme(config):
 	urlprefix = '/'
 
-	factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
+	gbl_factory = factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
 	config.add_route('cic_basic_search', urlprefix, factory=factory)
 
 	factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
@@ -33,7 +33,7 @@ def includeme(config):
 
 	config.add_route('download', urlprefix + 'downloads/{filename}', factory='cioc.web.cic.download.DownloadRootFactory')
 
-	config.add_route('cic_details', urlprefix + 'record/{num:[A-Z]{3}\d{4,5}}', factory=factory)
+	config.add_route('cic_details', urlprefix + 'record/{num:[A-Z]{3}\d{4,5}}', factory=gbl_factory)
 	config.add_route(
 		'cic_pdf_details', urlprefix + 'record/{num:[A-Z]{3}\d{4,5}}/pdf',
 		factory=partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC, force_print_mode=True))
