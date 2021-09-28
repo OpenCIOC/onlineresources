@@ -63,7 +63,7 @@ SELECT CAST((SELECT (
 			CASE WHEN f.CoverageArea IS NOT NULL THEN 1 ELSE NULL END AS [@ODNF],
 			(SELECT COALESCE(cmn.Name,i.AreaName) AS [@V], i.Prov AS [@PRV] FROM (
 				SELECT DISTINCT FIRST_VALUE(ItemID) OVER (PARTITION BY t.TotalItemID ORDER BY t.cm_level DESC) AS AreaName, FIRST_VALUE(ItemID) OVER (PARTITION BY t.TotalItemID ORDER BY t.cm_level) AS Prov,
-				 REPLACE(REPLACE(REPLACE(REPLACE(FIRST_VALUE(cm_level) OVER (PARTITION BY t.TotalItemID ORDER BY cm_level DESC), 1, 'State'), 2, 'County'), 3, 'City'), '4', 'Community') AS cm_level
+				 REPLACE(REPLACE(REPLACE(REPLACE(FIRST_VALUE(cm_level) OVER (PARTITION BY t.TotalItemID ORDER BY cm_level DESC), 1, 'State'), 2, 'County'), 3, 'City'), 4, 'Community') AS cm_level
 				FROM (
 				SELECT areas.ItemID AS TotalItemID, ROW_NUMBER() OVER (PARTITION BY areas.ItemID ORDER BY (SELECT 1)) AS cm_level, levels.* 
 				FROM (SELECT DISTINCT ItemID FROM dbo.fn_GBL_ParseVarCharIDList(a.Coverage, ';')) AS areas
@@ -138,10 +138,14 @@ SELECT CAST((SELECT (
 		 FOR XML PATH ('INTERNAL_MEMO'), TYPE),
 		(SELECT COALESCE(a.LanguagesOffered, a.LanguagesOfferedList) AS [@N], COALESCE(f.LanguagesOffered, f.LanguagesOfferedList) AS [@NF] FOR XML PATH('LANGUAGES'), TYPE),
 		(SELECT COALESCE(a.[Custom_Legal Name], a.[OfficialName]) AS [@V], COALESCE(f.[Custom_Legal Name], f.[OfficialName]) AS [@VF] FOR XML PATH('LEGAL_ORG'), TYPE),
-		(SELECT
-			CASE WHEN a.PhysicalAddressIsPrivate = 'Yes' THEN NULL ELSE a.PhysicalCity END AS [@V],
-			CASE WHEN f.PhysicalAddressIsPrivate = 'Yes' THEN NULL ELSE f.PhysicalCity END AS [@VF],
-			a.PhysicalStateProvince AS [@PRV], a.PhysicalCountry AS [@CTRY]
+		(SELECT TOP(1)
+				CASE WHEN a.PhysicalAddressIsPrivate = 'Yes' THEN NULL ELSE (CASE WHEN c.CM_ID IS NOT NULL THEN (SELECT TOP(1) cmn.Name FROM CommunityRepo_2012_11.dbo.Community_Name cmn WHERE cmn.CM_ID = c.CM_ID AND cmn.LangID=0) ELSE i.PhysicalCity END) END AS [@V],
+				CASE WHEN a.PhysicalAddressIsPrivate = 'Yes' THEN NULL ELSE (CASE WHEN c.CM_ID IS NOT NULL THEN (SELECT TOP(1) cmn.Name FROM CommunityRepo_2012_11.dbo.Community_Name cmn WHERE cmn.CM_ID = c.CM_ID AND cmn.LangID=2) ELSE i.PhysicalCity END) END AS [@VF],
+				i.PhysicalStateProvince AS [@PRV], i.PhysicalCountry AS [@CTRY]
+			FROM (VALUES(a.PhysicalCity,  a.PhysicalStateProvince, a.PhysicalCountry)) AS i(PhysicalCity, PhysicalStateProvince, PhysicalCountry)
+			LEFT JOIN CommunityRepo_2012_11.dbo.External_Community AS c
+				ON i.PhysicalCity=c.AreaName COLLATE Latin1_General_100_CI_AI  AND c.SystemCode='ICAROLSTD' AND EXISTS(SELECT * FROM CommunityRepo_2012_11.dbo.ProvinceState WHERE ProvID=c.provincestate AND NameOrCode=i.PhysicalStateProvince)
+			ORDER BY CASE WHEN c.AIRSExportType = 'Community' THEN 1 WHEN c.AIRSExportType = 'City' THEN 2 WHEN c.AIRSExportType = 'County' THEN 3 WHEN c.AIRSExportType = 'State' THEN 4 ELSE 5 END
 			FOR XML PATH('LOCATED_IN_CM'),TYPE),
 		(SELECT a.LOCATION_DESCRIPTION AS [@V], f.LOCATION_DESCRIPTION AS [@VF] FOR XML PATH('LOCATION_DESCRIPTION'), TYPE),
 		(SELECT a.LOCATION_NAME AS [@V], f.LOCATION_NAME AS [@VF] FOR XML PATH('LOCATION_NAME'), TYPE),
