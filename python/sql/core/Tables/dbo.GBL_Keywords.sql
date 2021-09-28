@@ -23,7 +23,7 @@ GRANT SELECT ON  [dbo].[GBL_Keywords] TO [cioc_cic_search_role]
 GRANT SELECT ON  [dbo].[GBL_Keywords] TO [cioc_login_role]
 GRANT SELECT ON  [dbo].[GBL_Keywords] TO [cioc_vol_search_role]
 GO
-CREATE FULLTEXT INDEX ON [dbo].[GBL_Keywords] KEY INDEX [PK_GBL_Keywords] ON [GBLRecord] WITH STOPLIST OFF
+CREATE FULLTEXT INDEX ON [dbo].[GBL_Keywords] KEY INDEX [PK_GBL_Keywords] ON [GBLRecord] WITH STOPLIST [CIOC_DEFAULT_STOPLIST]
 GO
 
 ALTER FULLTEXT INDEX ON [dbo].[GBL_Keywords] ADD ([Name] LANGUAGE 0)
