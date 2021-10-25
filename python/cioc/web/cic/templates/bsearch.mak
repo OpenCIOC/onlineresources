@@ -278,9 +278,9 @@ ${request.passvars.cached_form_vals}
 </div>
 %endif
 
-%if search_info.BSrchWWW or search_info.BSrchVOL:
+%if search_info.BSrchWWW or (search_info.BSrchVOL and request.dboptions.UseVOL):
 <div class="form-group">
-	<label for="STerms" class="control-label col-sm-3">${_('Limit To')}</label>
+	<label class="control-label col-sm-3">${_('Limit To')}</label>
 	<div class="col-sm-9 inline-checkbox-list">
 		%if search_info.BSrchWWW:
 		<label for="HasURL"><input type="checkbox" name="HasURL" id="HasURL" class="checkbox-inline">${request.viewdata.cic.OrganizationsWithWWW or _("Organizations with Website")}</label>
