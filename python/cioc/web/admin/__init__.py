@@ -122,6 +122,9 @@ def includeme(config):
 	config.add_route('admin_socialmedia_index', urlprefix + 'socialmedia')
 	config.add_route('admin_socialmedia', urlprefix + 'socialmedia/{action}')
 
+	# /admin/sysinfo
+	config.add_route('admin_sysinfo', urlprefix + 'sysinfo')
+
 	# /admin/template/*
 	config.add_route('admin_template_index', urlprefix + 'template')
 	config.add_route('admin_template', urlprefix + 'template/{action}')
