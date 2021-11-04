@@ -63,7 +63,7 @@ class RecentSearches(object):
 
 		else:
 			self.lru.appendleft(key)
-			for dkey in self.items.keys():
+			for dkey in list(self.items.keys()):
 				if dkey not in self.lru:
 					del self.items[dkey]
 

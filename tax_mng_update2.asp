@@ -162,7 +162,7 @@ With cmdUpdateTaxSrch
 	.Parameters.Append objTopCount
 End With
 
-While objTopCount.Value > 0
+While objTopCount.Value > 100
 	Response.Write(". ")
 	Response.Flush()
 	objTopCount.Value = 500
