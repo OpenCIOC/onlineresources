@@ -27,7 +27,7 @@ envname = 'ciocenv4py3'
 if len(sys.argv) == 3:
 	envname = sys.argv[2]
 
-this_dir_name = os.path.dirname(__file__)
+this_dir_name = os.path.abspath(os.path.dirname(__file__))
 os.chdir(this_dir_name)
 
 app_path = os.path.abspath(os.path.join(this_dir_name, '..'))
