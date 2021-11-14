@@ -18,11 +18,16 @@
 
 <script language="python" runat="server">
 def initialize_python(app_dir):
-    #import win32traceutil
+	#import win32traceutil
 	import os, sys
 	sys.dont_write_bytecode = True
 
-    # This will be driven by the python version that is registered for activescript
+	if sys.version_info[0] == 3:
+		# required to find some DLLs that extentions need
+		os.add_dll_directory(os.path.join(sys.prefix, 'DLLs'))
+		os.add_dll_directory(sys.prefix)
+
+	# This will be driven by the python version that is registered for activescript
 	# NOTE: also update python/wsgisvc.py
 	env = 'ciocenv4py2'
 	if sys.version_info[0] == 3:
