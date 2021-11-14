@@ -152,6 +152,10 @@ class PasteWinService(win32serviceutil.ServiceFramework):
 		self.stop_event = win32event.CreateEvent(None, 0, 0, None)
 
 	def SvcDoRun(self):
+		# required to find some DLLs that extentions need
+		os.add_dll_directory(os.path.join(sys.prefix, 'DLLs'))
+		os.add_dll_directory(sys.prefix)
+
 		if self.ss.getVirtualEnv():
 			activate_virtualenv(self.ss.getVirtualEnv())
 
