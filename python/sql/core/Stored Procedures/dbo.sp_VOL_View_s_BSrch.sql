@@ -48,6 +48,7 @@ SELECT	BSrchAutoComplete,
 		KeywordSearchGlyph,
 		OtherSearchTitle,
 		OtherSearchGlyph,
+		OtherSearchMessage,
 		HighlightOpportunity
 	FROM VOL_View vw
 	LEFT JOIN VOL_View_Description vwd

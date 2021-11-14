@@ -231,6 +231,7 @@ class ViewDescriptionSchema(Schema):
 
 	OtherSearchTitle = ciocvalidators.UnicodeString(max=100)
 	OtherSearchGlyph = ciocvalidators.String(max=30)
+	OtherSearchMessage = ciocvalidators.UnicodeString()
 
 	KeywordSearchTitle = ciocvalidators.UnicodeString(max=100)
 	KeywordSearchGlyph = ciocvalidators.String(max=30)

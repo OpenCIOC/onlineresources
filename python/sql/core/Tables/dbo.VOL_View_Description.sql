@@ -39,46 +39,29 @@ CREATE TABLE [dbo].[VOL_View_Description]
 [HighlightOpportunity] [varchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
 [GoogleTranslateDisclaimer] [nvarchar] (1000) COLLATE Latin1_General_100_CI_AI NULL,
 [TagLine] [nvarchar] (300) COLLATE Latin1_General_100_CI_AI NULL,
-[NoResultsMsg] [nvarchar] (2000) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-ALTER TABLE [dbo].[VOL_View_Description] ADD 
-CONSTRAINT [PK_VOL_View_Description] PRIMARY KEY CLUSTERED  ([ViewType], [LangID]) ON [PRIMARY]
+[NoResultsMsg] [nvarchar] (2000) COLLATE Latin1_General_100_CI_AI NULL,
+[OtherSearchMessage] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_View_Description] ADD CONSTRAINT [PK_VOL_View_Description] PRIMARY KEY CLUSTERED ([ViewType], [LangID]) ON [PRIMARY]
+GO
 CREATE NONCLUSTERED INDEX [IX_VOL_View_Description_ViewTypeInclLangID] ON [dbo].[VOL_View_Description] ([ViewType]) INCLUDE ([LangID]) ON [PRIMARY]
-
+GO
 CREATE UNIQUE NONCLUSTERED INDEX [IX_VOL_View_Description_ViewTypeLangIDInclName] ON [dbo].[VOL_View_Description] ([ViewType], [LangID]) INCLUDE ([ViewName]) ON [PRIMARY]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 GO
-
 ALTER TABLE [dbo].[VOL_View_Description] ADD CONSTRAINT [FK_VOL_View_Description_GBL_InclusionPolicy] FOREIGN KEY ([InclusionPolicy]) REFERENCES [dbo].[GBL_InclusionPolicy] ([InclusionPolicyID]) ON DELETE SET NULL ON UPDATE CASCADE
-GO
-ALTER TABLE [dbo].[VOL_View_Description] ADD CONSTRAINT [FK_VOL_View_Description_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
 GO
 ALTER TABLE [dbo].[VOL_View_Description] ADD CONSTRAINT [FK_VOL_View_Description_GBL_SearchTips] FOREIGN KEY ([SearchTips]) REFERENCES [dbo].[GBL_SearchTips] ([SearchTipsID]) ON DELETE SET NULL
 GO
+ALTER TABLE [dbo].[VOL_View_Description] ADD CONSTRAINT [FK_VOL_View_Description_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
+GO
 ALTER TABLE [dbo].[VOL_View_Description] ADD CONSTRAINT [FK_VOL_View_Description_VOL_View] FOREIGN KEY ([ViewType]) REFERENCES [dbo].[VOL_View] ([ViewType]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
-GRANT SELECT ON  [dbo].[VOL_View_Description] TO [cioc_login_role]
 GRANT INSERT ON  [dbo].[VOL_View_Description] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[VOL_View_Description] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[VOL_View_Description] TO [cioc_login_role]
+GO
 GRANT SELECT ON  [dbo].[VOL_View_Description] TO [cioc_vol_search_role]
 GO

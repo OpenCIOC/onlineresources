@@ -349,6 +349,7 @@ class LayoutSearch(object):
 			'SEARCH_KEYWORD_GLYPH': search_info.KeywordSearchGlyph or 'search',
 			'SEARCH_OTHER_TITLE': search_info.OtherSearchTitle or gettext('Explore', request),
 			'SEARCH_OTHER_GLYPH': search_info.OtherSearchGlyph or 'hand-right',
+			'SEARCH_OTHER_MESSAGE': search_info.OtherSearchMessage,
 
 			'SEARCH_MENU': not not (search_info.MenuMessage or user or self.menu_items_custom),
 			'SEARCH_MENU_ITEMS': search_menu_items,

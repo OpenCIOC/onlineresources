@@ -1397,7 +1397,7 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 
 		${make_message_options('KeywordSearch','Basic Search Keyword',_('The panel containing the Keyword Search'),message=False)}
 
-		${make_message_options('OtherSearch','Basic Search Other',_('Additional multi-purpose panel available in some layouts'),message=False)}
+		${make_message_options('OtherSearch','Basic Search Other',_('Additional multi-purpose panel available in some layouts'))}
 
 		${make_message_options('SearchLeft','Basic Search Left',_('Custom HTML to appear in the left area of the Basic Search page.'))}
 

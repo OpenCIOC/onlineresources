@@ -57,6 +57,7 @@ SELECT	SrchCommunityDefault,
 		KeywordSearchGlyph,
 		OtherSearchTitle,
 		OtherSearchGlyph,
+		OtherSearchMessage,
 		QuickSearchTitle,
 		QuickSearchGlyph
 	FROM CIC_View vw
