@@ -307,8 +307,7 @@ def l_setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart
 			return
 
 		if '/details.asp' in url:
-			from urlparse import urlparse, urlunparse, parse_qsl
-			from urllib import urlencode
+			from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
 			parsed = urlparse(url)
 			skip = 'VNUM' if '/volunteer/' in url else 'NUM'
 			parsed_qs = parse_qsl(parsed.query, True)

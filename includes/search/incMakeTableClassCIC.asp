@@ -30,8 +30,7 @@ import lxml.html
 from cioc.core import gtranslate
 
 def results_page_link():
-	from urlparse import parse_qsl
-	from urllib import urlencode
+	from urllib.parse import parse_qsl, urlencode
 	qs = pyrequest.query_string
 
 	parsed_qs = parse_qsl(qs, True)
