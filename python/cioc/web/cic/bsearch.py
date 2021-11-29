@@ -169,7 +169,7 @@ class LayoutSearch(object):
 				icon = u'<span class="glyphicon glyphicon-export" aria-hidden="true"></span> '
 				search_menu_items.append((makeLink('export.asp'), icon + _('Export')))
 
-			if dboptions.UseCIC and cic_user.ImportPermission:
+			if cic_user.ImportPermission:
 				icon = u'<span class="glyphicon glyphicon-import" aria-hidden="true"></span> '
 				search_menu_items.append((makeLink('import/import.asp', {'DM': const.DM_CIC}), icon + _('Import')))
 

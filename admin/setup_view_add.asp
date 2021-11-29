@@ -52,13 +52,13 @@ End If
 
 Select Case intDomain
 	Case DM_CIC
-		If Not user_bSuperUserCIC Or (Not g_bUseCIC And user_bSuperUserVOL) Then
+		If Not (user_bSuperUserCIC Or (Not g_bUseCIC And user_bSuperUserVOL)) Then
 			Call securityFailure()
 		End If
 		strType = TXT_CIC
 		strStoredProcName = "dbo.sp_CIC_View_i"
 	Case DM_VOL
-		If Not user_bSuperUserVOL And g_bUseVOL Then
+		If Not (user_bSuperUserVOL And g_bUseVOL) Then
 			Call securityFailure()
 		End If
 		strType = TXT_VOLUNTEER

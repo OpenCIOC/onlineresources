@@ -46,7 +46,7 @@ Call setPageInfo(True, DM_GLOBAL, DM_GLOBAL, "../", "admin/", vbNullString)
 <!--#include file="../text/txtView.asp" -->
 <!--#include file="../includes/core/incFormat.asp" -->
 <%
-If Not user_bSuperUserCIC Or (Not g_bUseCIC And user_bSuperUserVOL) Then
+If Not (user_bSuperUserCIC Or (Not g_bUseCIC And user_bSuperUserVOL)) Then
 	Call securityFailure()
 End If
 

@@ -25,7 +25,7 @@ def includeme(config):
 	urlprefix = '/import/'
 
 	# /import/upload
-	factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
+	factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
 	config.add_route('import_upload', urlprefix + 'upload', factory=factory)
 
 	config.add_route('import_community_map', urlprefix + 'externalcommunities')

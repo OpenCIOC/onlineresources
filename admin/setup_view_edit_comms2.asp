@@ -48,7 +48,7 @@ Call setPageInfo(True, DM_GLOBAL, DM_GLOBAL, "../", "admin/", vbNullString)
 <%
 'On Error Resume Next
 
-If Not user_bSuperUserCIC Or (Not g_bUseCIC And user_bSuperUserVOL) Then
+If Not (user_bSuperUserCIC Or (Not g_bUseCIC And user_bSuperUserVOL)) Then
 	Call securityFailure()
 End If
 

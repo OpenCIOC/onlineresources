@@ -34,7 +34,7 @@
 <!--#include file="../includes/core/incSetup.asp" -->
 <%
 ' setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart, strFocus)
-Call setPageInfo(True, DM_CIC, DM_CIC, "../", "import/", vbNullString)
+Call setPageInfo(True, DM_GLOBAL, DM_CIC, "../", "import/", vbNullString)
 %>
 <!--#include file="../includes/core/incCrypto.asp" -->
 <!--#include file="../includes/core/incSecurity.asp" -->
