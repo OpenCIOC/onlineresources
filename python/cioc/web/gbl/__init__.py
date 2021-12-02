@@ -52,3 +52,7 @@ def includeme(config):
 	# /iconlist
 	factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_GLOBAL)
 	config.add_route('gbl_iconlist', urlprefix + 'iconlist')
+
+	# /go
+	factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_GLOBAL)
+	config.add_route('gbl_go', urlprefix + 'go/{slug}')
