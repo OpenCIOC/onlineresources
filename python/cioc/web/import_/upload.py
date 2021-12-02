@@ -146,7 +146,7 @@ class UploadBase(viewbase.ViewBase):
 
 		error_log, total_inserted = process_import(
 			filename, xmlfile, request.dboptions.MemberID,
-			request.pageinfo.Domain, request.pageinfo.DbAreaS, user.Mod,
+			request.pageinfo.DbArea, request.pageinfo.DbAreaS, user.Mod,
 			data.get('DisplayName'), request.connmgr, lambda x: _(x, request))
 		xmlfile.close()
 
