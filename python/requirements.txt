@@ -36,7 +36,7 @@ ipaddress==1.0.6
 pyramid_redis_sessions==1.0.1
 dogpile.cache==0.6.5
 dogpile_backend_redis_advanced==0.2.2
-lxml==4.5.2
+lxml==4.6.5
 pyramid_debugtoolbar==2.2
 adodbapi==2.6.2.0
 pdfkit==0.6.1
