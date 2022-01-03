@@ -333,7 +333,9 @@ SELECT CAST((SELECT (
 			CASE WHEN a.PhoneTollFreeIsPrivate = 'True' THEN NULL ELSE CASE WHEN a.PhoneTollFree  IS NOT NULL AND a.PhoneTollFreeDescription  IS NOT NULL THEN a.PhoneTollFreeDescription + ': ' ELSE '' END + a.PhoneTollFree END AS [@V],
 			CASE WHEN f.PhoneTollFreeIsPrivate = 'True' THEN NULL ELSE CASE WHEN f.PhoneTollFree  IS NOT NULL AND f.PhoneTollFreeDescription  IS NOT NULL THEN f.PhoneTollFreeDescription + ': ' ELSE '' END + f.PhoneTollFree END AS [@VF]
 		 FOR XML PATH('TOLL_FREE_PHONE'), TYPE),
-		(SELECT REPLACE(a.LastVerifiedOn, ' ', 'T') AS [@V], REPLACE(a.LastVerifiedOn, ' ', 'T') AS [@VF] FOR XML PATH('UPDATE_DATE'), TYPE),
+		(SELECT REPLACE(a.LastVerifiedOn, ' ', 'T') AS [@V], REPLACE(f.LastVerifiedOn, ' ', 'T') AS [@VF] FOR XML PATH('UPDATE_DATE'), TYPE),
+		(SELECT cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(DATEADD(year, 1, REPLACE(a.LastVerifiedOn, ' ', 'T'))) AS [@V],
+			cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(DATEADD(YEAR, 1, REPLACE(f.LastVerifiedOn, ' ', 'T'))) AS [@VF] FOR XML PATH('UPDATE_SCHEDULE'), TYPE),
 		(SELECT NULLIF(a.LastVerificationApprovedBy, 'Unspecified Unspecified') AS [@V], NULLIF(a.LastVerificationApprovedBy, 'Unspecified Unspecified') AS [@VF] FOR XML PATH('UPDATED_BY'), TYPE),
 		(SELECT REPLACE(REPLACE(a.WebsiteAddress, 'https://', ''), 'http://', '') AS [@V], REPLACE(REPLACE(a.WebsiteAddress, 'https://', ''), 'http://', '') AS [@VF] FOR XML PATH('WWW_ADDRESS'), TYPE)
 	
