@@ -51,7 +51,7 @@ If Not (user_bCanAccessProfiles And g_bUseVolunteerProfiles) Then
 	Call securityFailure()
 End If
 
-Call addScript(ps_strPathToStart & "scripts/formPrintMode.js", "text/javascript")
+Call addScript(ps_strPathToStart & makeAssetVer("scripts/formPrintMode.js"), "text/javascript")
 
 Call makePageHeader(TXT_VOL_PROFILE_SUMMARY, TXT_VOL_PROFILE_SUMMARY, True, True, True, True)
 

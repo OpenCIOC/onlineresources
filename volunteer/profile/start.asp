@@ -110,7 +110,7 @@ For Each objField in rsProfileInfo.Fields
 	dicBasicInfo(objField.Name) = objField.Value
 Next
 
-Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""" & ps_strPathToStart & "styles/taxonomy.css""/>")
+Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""" & ps_strPathToStart & makeAssetVer("styles/taxonomy.css") & """/>")
 Call makePageHeader(TXT_VOLUNTEER_PROFILE, TXT_VOLUNTEER_PROFILE, True, True, True, True)
 %>
 <h2><%= TXT_WELCOME & " " & dicBasicInfo("FirstName") & " " & dicBasicInfo("LastName")%>! <a class="btn btn-default" role="button" href="<%=makeLink("logout.asp", strSearchArgs, vbNullString)%>"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> <strong><%=TXT_LOGOUT%></strong></a></h2>

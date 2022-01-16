@@ -54,10 +54,10 @@ bInlineMode = Not Nl(Trim(Request("InlineMode")))
 
 
 If Not bInlineMode Then
-Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""" & ps_strPathToStart & "styles/taxonomy.css""/>")
+Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""" & ps_strPathToStart & makeAssetVer("styles/taxonomy.css") & """/>")
 Else
 %>
-<link href="<%=ps_strPathToStart%>styles/taxonomy.css" rel="stylesheet" type="text/css">
+<link href="<%=ps_strPathToStart & makeAssetVer("styles/taxonomy.css")%>" rel="stylesheet" type="text/css">
 <%
 End If
 

@@ -52,7 +52,7 @@ If Not user_bCanManageReferrals Then
 	Call securityFailure()
 End If
 
-Call addScript(ps_strPathToStart & "scripts/formNewWindow.js", "text/javascript")
+Call addScript(ps_strPathToStart & makeAssetVer("scripts/formNewWindow.js"), "text/javascript")
 
 Call makePageHeader(TXT_VOLUNTEER_REFERRALS, TXT_VOLUNTEER_REFERRALS, True, False, True, True)
 %>

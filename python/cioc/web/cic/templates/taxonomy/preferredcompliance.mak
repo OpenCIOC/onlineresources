@@ -20,7 +20,7 @@
 <%inherit file="cioc.web:templates/master.mak" />
 
 <%def name="headerextra()">
-<link rel="stylesheet" type="text/css" href="${request.pageinfo.PathToStart}styles/taxonomy.css"/>
+<link rel="stylesheet" type="text/css" href="${request.pageinfo.PathToStart}${request.assetmgr.makeAssetVer('styles/taxonomy.css')}"/>
 </%def>
 
 <%

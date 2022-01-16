@@ -142,7 +142,7 @@ End Function
 
 
 'Add Taxonomy Style Sheet
-Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""" & ps_strPathToStart & "styles/taxonomy.css""/>")
+Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""" & ps_strPathToStart & makeAssetVer("styles/taxonomy.css") & """/>")
 
 'Add script to initialize image and language constants.
 Call addToHeader("<script type='text/javascript'>" & vbCrLf & _
@@ -154,8 +154,8 @@ Call addToHeader("<script type='text/javascript'>" & vbCrLf & _
 	"</script>")
 
 'Add scripts for adding terms to the Build List and Search Lists
-Call addScript(ps_strPathToStart & "scripts/taxBuildList.js", "text/javascript")
-Call addScript(ps_strPathToStart & "scripts/taxAdvSearch.js", "text/javascript")
+Call addToHeader(JSVerScriptTag("scripts/taxBuildList.js"))
+Call addToHeader(JSVerScriptTag("scripts/taxAdvSearch.js"))
 
 'If we are editing an existing search, fetch the existing Search parameters
 Dim strTMC, _

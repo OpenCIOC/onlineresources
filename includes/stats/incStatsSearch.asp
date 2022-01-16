@@ -18,7 +18,7 @@
 %>
 
 <%
-Call addScript(ps_strPathToStart & "scripts/formPrintMode.js", "text/javascript")
+Call addScript(ps_strPathToStart & makeAssetVer("scripts/formPrintMode.js"), "text/javascript")
 
 Call makePageHeader(TXT_STATS, TXT_STATS, True, True, True, True)
 If user_intCanViewStatsDOM > STATS_NONE Then

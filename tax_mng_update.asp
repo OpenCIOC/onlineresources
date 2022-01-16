@@ -50,7 +50,7 @@ Call setPageInfo(True, DM_CIC, DM_CIC, vbNullString, vbNullString, vbNullString)
 <%
 Server.ScriptTimeOut = 2400
 
-Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""" & ps_strPathToStart & "styles/taxonomy.css""/>")
+Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""" & ps_strPathToStart & makeAssetVer("styles/taxonomy.css") & """/>")
 
 'Ensure user has super user privileges
 If Not user_bSuperUserCIC Or Not g_bUseTaxonomy Then

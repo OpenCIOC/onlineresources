@@ -28,41 +28,63 @@ import cioc.core.constants as const
 _version_file = os.path.join(os.path.dirname(__file__), 'assetversions.json')
 _last_load = None
 _assetversions = None
+_assetversions_other = None
 
 
 def _get_asset_versions():
-	global _last_load, _assetversions
+	global _last_load, _assetversions, _assetversions_other, _scripts_dir
 	mtime = os.stat(_version_file).st_mtime
 	if not _last_load or _last_load < mtime:
 		_last_load = mtime
 		_assetversions = json.load(open(_version_file, 'r'))
+		_assetversions_other = {}
 
-	return _assetversions
+	return _assetversions, _assetversions_other
 
 
 class AssetManager(object):
 	def __init__(self, request):
 		self.request = request
-		self.assetversions = _get_asset_versions()
+		self.assetversions, self.assetversions_other = _get_asset_versions()
 		self.scripts_included = set()
 
 	def makeAssetVer(self, script_name):
-		if self.request.params.get('Debug') or script_name not in self.assetversions:
-			return script_name
+		minified = self.request.params.get('Debug') is not None
+		version_slug = self.assetversions.get(script_name)
+
+		if version_slug is None:
+			minified = False
+			try:
+				version_slug = self.assetversions_other[script_name]
+			except KeyError:
+				version_slug = self._check_non_minified(script_name)
+
+			if version_slug is None:
+				return script_name
 
 		parts = script_name.split('.')
 
 		additions = [parts[-2]]
-		if script_name.endswith('.js'):
+		if minified and script_name.endswith('.js'):
 			additions.append('.min')
 
 		if self.request.passvars.record_root:
 			additions.append('_v')
-			additions.append(self.assetversions[script_name])
+			additions.append(version_slug)
 
 		parts[-2] = ''.join(additions)
 
 		return '.'.join(parts)
+
+	def _check_non_minified(self, script_name):
+		mtime = None
+		try:
+			mtime = str(int(os.stat(os.path.join(const._app_path, script_name)).st_mtime))
+			self.assetversions_other[script_name] = mtime
+		except OSError:
+			self.assetversions_other[script_name] = None
+
+		return mtime
 
 	def JSVerScriptTagSingleton(self, script_name):
 		if script_name not in self.scripts_included:

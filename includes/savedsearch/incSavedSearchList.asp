@@ -20,7 +20,7 @@
 %>
 
 <%
-Call addScript(ps_strPathToStart & "scripts/savedSearchInfo.js", "text/javascript")
+Call addScript(ps_strPathToStart & makeAssetVer("scripts/savedSearchInfo.js"), "text/javascript")
 
 Dim cmdListSearch, rsSearchComm, rsListSearch, rsListSharedSearch
 

@@ -52,7 +52,7 @@ If strActionType = "U" And g_bNoEmail Then
 End If
 
 If strActionType = "G" Then
-	Call addScript(ps_strPathToStart & "scripts/formPrintMode.js", "text/javascript")
+	Call addScript(ps_strPathToStart & makeAssetVer("scripts/formPrintMode.js"), "text/javascript")
 End If
 
 If strActionType = "N" Then

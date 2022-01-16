@@ -82,7 +82,7 @@ Call setPageInfo(True, DM_CIC, DM_CIC, vbNullString, vbNullString, vbNullString)
 'Initialize the predifined links to Taxonomy Icons (regular HTML mode)
 Call setIcons(False)
 
-Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""" & ps_strPathToStart & "styles/taxonomy.css""/>")
+Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""" & ps_strPathToStart & makeAssetVer("styles/taxonomy.css") &  """/>")
 
 'Ensure the Taxonomy is available in this View
 If Not g_bUseTaxonomyView Then

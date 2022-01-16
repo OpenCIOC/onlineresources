@@ -54,7 +54,7 @@ If Not user_bCanManageUsers Then
 	Call securityFailure()
 End If
 
-Call addScript(ps_strPathToStart & "scripts/formPrintMode.js", "text/javascript")
+Call addScript(ps_strPathToStart & makeAssetVer("scripts/formPrintMode.js"), "text/javascript")
 
 Call makePageHeader(TXT_MANAGE_USERS, TXT_MANAGE_USERS, True, True, True, True)
 

@@ -168,7 +168,7 @@ Else
 	Set rsListSelected = rsListSelected.NextRecordset
 
 	'Add Taxonomy Style Sheet
-	Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""" & ps_strPathToStart & "styles/taxonomy.css""/>")
+	Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""" & ps_strPathToStart & makeAssetVer("styles/taxonomy.css") & """/>")
 	
 	'Add script to initialize image and language constants.
 	Call addToHeader("<script type='text/javascript'>" & vbCrLf & _
@@ -180,9 +180,9 @@ Else
 		"</script>")
 	
 	'Add scripts for adding terms to the Build List and Search Lists
-	Call addScript(ps_strPathToStart & "scripts/taxBuildList.js", "text/javascript")
-	Call addScript(ps_strPathToStart & "scripts/taxIndex.js", "text/javascript")
-	Call addScript(ps_strPathToStart & "scripts/displayField.js", "text/javascript")
+	Call addScript(ps_strPathToStart & makeAssetVer("scripts/taxBuildList.js"), "text/javascript")
+	Call addScript(ps_strPathToStart & makeAssetVer("scripts/taxIndex.js"), "text/javascript")
+	Call addScript(ps_strPathToStart & makeAssetVer("scripts/displayField.js"), "text/javascript")
 	
 	'Add script to allow for display of existing Term indexing for this record
 	Call addToHeader("<script type='text/javascript'>" & getInitScript(rsListSelected) & "</script>")

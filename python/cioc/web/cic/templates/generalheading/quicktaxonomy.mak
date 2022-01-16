@@ -28,7 +28,7 @@ makeLink = request.passvars.makeLink
 route_path = request.passvars.route_path
 %>
 <%def name="headerextra()">
-<link rel="stylesheet" type="text/css" href="${request.pageinfo.PathToStart}styles/taxonomy.css"/>
+<link rel="stylesheet" type="text/css" href="${request.pageinfo.PathToStart}${request.assetmgr.makeAssetVer('styles/taxonomy.css')}"/>
 </%def>
 
 <p style="font-weight:bold">[ <a href="${request.passvars.route_path('cic_publication_index')}">${_('Return to Publications')}</a> | <a href="${request.passvars.route_path('cic_publication', action='edit', _query=[('PB_ID', PB_ID)])}">${_('Return to Publication: %s') % pubcode}</a> ]</p>

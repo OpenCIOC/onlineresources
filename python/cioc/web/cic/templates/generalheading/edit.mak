@@ -26,7 +26,7 @@ from webhelpers2.html import tags
 
 <%def name="headerextra()">
 %if request.params.get('TaxonomyHeading') or (generalheading and generalheading.Used is None):
-<link rel="stylesheet" type="text/css" href="${request.pageinfo.PathToStart}styles/taxonomy.css"/>
+<link rel="stylesheet" type="text/css" href="${request.pageinfo.PathToStart}${request.assetmgr.makeAssetVer('styles/taxonomy.css')}"/>
 %endif
 </%def>
 
