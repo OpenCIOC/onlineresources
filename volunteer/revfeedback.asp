@@ -546,7 +546,7 @@ End With
 '***************************************
 ' New Record Suggestions (Other)
 '***************************************
-strFeedbackSQL = "SELECT fb.FB_ID, fb.SUBMIT_DATE, sl.Culture, sl.LanguageName AS LanguageName," & _
+strFeedbackSQL = "SELECT fb.FB_ID, fb.SUBMIT_DATE, fb.FEEDBACK_OWNER, sl.Culture, sl.LanguageName AS LanguageName," & _
 	"""SUBMITTED_BY"" = CASE WHEN u.User_ID IS NULL THEN CASE WHEN fb.SOURCE_NAME IS NULL THEN '[" & TXT_UNKNOWN & "]' ELSE fb.SOURCE_NAME END ELSE u.FirstName + ' ' + u.LastName + ' (' + u.Agency + ')' END, " & _
 	"dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL_FB," & _
 	"fb.POSITION_TITLE, CASE WHEN fb.NUM IS NULL THEN fb.ORG_NAME ELSE NULL END AS ORG_NAME" & vbCrLf & _
@@ -566,6 +566,8 @@ Select Case Request("Sort")
 		strFeedbackSQL = strFeedbackSQL & " ORDER BY fb.POSITION_TITLE, fb.SUBMIT_DATE DESC"
 	Case "O"
 		strFeedbackSQL = strFeedbackSQL & FB_BTD_ORG_SORT
+	Case "R"
+		strFeedbackSQL = strFeedbackSQL & " ORDER BY fb.FEEDBACK_OWNER, fb.SUBMIT_DATE"
 	Case "S"
 		strFeedbackSQL = strFeedbackSQL & " ORDER BY SUBMITTED_BY, fb.SUBMIT_DATE DESC"
 	Case Else
@@ -609,6 +611,7 @@ With rsFb
 <%End If%>
 	<th><a href="<%=makeLink(ps_strThisPage,"Sort=P",vbNullString)%>" class="RevTitleText"><%=TXT_POSITION_TITLE%></a></th>
 	<th><a href="<%=makeLink(ps_strThisPage,"Sort=O",vbNullString)%>" class="RevTitleText"><%=TXT_ORG_NAMES%></a></th>
+	<th><a href="<%=makeLink(ps_strThisPage,"Sort=R",vbNullString)%>" class="RevTitleText"><%=TXT_RECORD_OWNER%></a></th>
 	<th><a href="<%=makeLink(ps_strThisPage,"Sort=S",vbNullString)%>" class="RevTitleText"><%=TXT_SUBMITTED_BY%></a></th>
 	<th><a href="<%=makeLink(ps_strThisPage,"Sort=D",vbNullString)%>" class="RevTitleText"><%=TXT_DATE_SUBMITTED%></a></th>
 <%	If user_bAddVOL Or user_bSuperUserVOL Then%>
@@ -636,6 +639,7 @@ With rsFb
 <%			End If%>
 	<td><%=IIf(Nl(.Fields("POSITION_TITLE")),"[Not Specified]",.Fields("POSITION_TITLE"))%></td>
 	<td><%=strOrgName%></td>
+	<td><%=.Fields("FEEDBACK_OWNER")%></td>
 	<td align="right"><%=.Fields("SUBMITTED_BY")%></td>
 	<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
 <%
