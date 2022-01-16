@@ -49,7 +49,8 @@ function clearLists() {
 	clearLinkList('Any');
 }
 
-function submitForm(actionType) {
+function submitForm(actionType, new_window) {
+	document.Search.target = new_window ? '_blank' : ''
 	if (actionType == "AdvancedSearch") {
 		document.Search.action = "advsrch.asp";
 	} else {

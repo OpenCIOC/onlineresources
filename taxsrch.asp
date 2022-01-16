@@ -242,8 +242,10 @@ If Not bEmptyCommTable Then
 End If
 %>
 	<p><a href="#javascript" class="ButtonLink" onClick="submitForm('SearchResults')"><%=TXT_SEARCH%></a>
+	<a href="#javascript" class="ButtonLink" onClick="submitForm('SearchResults', true)"><%=TXT_SEARCH & " " & TXT_NEW_WINDOW%></a>
 	<a href="#javascript" class="ButtonLink" onClick="submitForm('AdvancedSearch')"><%=TXT_ADD_CRITERIA%></a>
-	<a href="#javascript" class="ButtonLink" onClick="clearLists()"><%=TXT_CLEAR_FORM%></a></p>
+	<a href="#javascript" class="ButtonLink" onClick="submitForm('AdvancedSearch', true)"><%=TXT_ADD_CRITERIA & " " & TXT_NEW_WINDOW%></a>
+	<a href="#javascript" class="ButtonLink" onClick="clearLists()"><%=TXT_CLEAR_FORM%></a>
 	<%If Not (Nl(strTMC) And Nl(strATMC) And Not bTMCRestricted) Then%><a href="#javascript" class="ButtonLink" onClick="resetForm()"><%=TXT_RESET_FORM%></a><%End If%>
 	</td>
 </tr>
