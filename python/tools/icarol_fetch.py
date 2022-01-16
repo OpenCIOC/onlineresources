@@ -431,19 +431,36 @@ def push_all_records(conext, lang, all_records):
 	EXEC sp_CIC_iCarolImport_AllRecords ?
 	'''
 	with get_bulk_connection(language=lang.sql_language) as conn:
-		records = push_bulk(conext, conn, sql, AllRecordsFieldOrder, all_records).fetchall()
-
-	return records
+		cursor = push_bulk(conext, conn, sql, AllRecordsFieldOrder, all_records)
+		stats = cursor.fetchall()
+		cursor.nextset()
+		results = cursor.fetchall()
+		return stats, results
 
 
 def fetch_from_o211(context, lang):
 	all_records = get_record_list(context.args, 'any', lang.language_name)
-	records = push_all_records(context, lang, all_records)
+	stats, records = push_all_records(context, lang, all_records)
 	if context.args.test:
 		records.sort(key=lambda x: x['UpdatedOn'])
 		records = records[-60:]
 		pprint.pprint(records)
 		return
+
+	for row in stats:
+		if row.resurrected:
+			action = f'resurrected from {row.tbl} which were deleted on {row.days_deleted}'
+		elif row.op == 'mark':
+			action = f'marked for deletion from {row.tbl} with deletion days on {row.days_deleted}'
+		elif row.op == 'purge':
+			action = f'purged from {row.tbl}'
+		else:
+			action = f'unexpected action: op={row.op}, tbl={row.tbl}, resurected={row.resurected}, days_deleted={row.days_deleted}'
+
+		if row.days_imported:
+			action = f'{action}. records last imported on {row.days_imported}'
+
+		print(f'{row.num_records} records were {action}')
 
 	queue = Queue(maxsize=2)
 	thread = Thread(target=push_to_database, args=(context, lang, queue))

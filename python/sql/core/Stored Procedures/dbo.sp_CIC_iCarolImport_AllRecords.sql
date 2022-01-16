@@ -79,29 +79,66 @@ WHEN NOT MATCHED BY SOURCE AND dst.LangID=@@LANGID THEN
 
 	;
 
-UPDATE ii SET ii.DELETION_DATE=GETDATE()
+DECLARE @changes TABLE(
+    op NVARCHAR(50) NOT NULL,
+	tbl nvarchar(50) NOT NULL,
+	ResourceAgencyNum nvarchar(20) NOT NULL,
+	resurrected BIT NOT null,
+	DELETION_DAY VARCHAR(10) NULL,
+	DAY_IMPORTED VARCHAR(10) NULL
+)
+
+UPDATE ii SET ii.DELETION_DATE=CASE WHEN ar.ResourceAgencyNum IS NULL THEN GETDATE() ELSE NULL END
+	OUTPUT 'mark', 'base', inserted.ResourceAgencyNum, CASE WHEN inserted.deletion_date IS NULL THEN 1 ELSE 0 END, CONVERT(VARCHAR(10), COALESCE(inserted.DELETION_DATE, deleted.deletion_date), 23), NULL INTO @changes
 FROM dbo.CIC_iCarolImport ii
 LEFT JOIN dbo.CIC_iCarolImportAllRecords ar
 	ON ii.ResourceAgencyNum=ar.ResourceAgencyNum AND ii.LangID=ar.LangID
-WHERE ar.ResourceAgencyNum IS NULL AND ii.LANGID=@@LANGID AND ii.DELETION_DATE IS NULL
+WHERE ii.LangID=@@LANGID AND ((ar.ResourceAgencyNum IS NULL AND ii.DELETION_DATE IS NULL) OR (ar.ResourceAgencyNum IS NOT NULL AND ii.DELETION_DATE IS NOT NULL))
 
-UPDATE ir SET ir.DELETION_DATE=GETDATE()
+UPDATE ir SET ir.DELETION_DATE=CASE WHEN ii.ResourceAgencyNum IS NULL THEN GETDATE() ELSE NULL END
+	OUTPUT 'mark', 'rollup', inserted.ResourceAgencyNum, CASE WHEN inserted.deletion_date IS NULL THEN 1 ELSE 0 END, CONVERT(VARCHAR(10), COALESCE(inserted.DELETION_DATE, deleted.deletion_date), 23), CONVERT(VARCHAR(10), deleted.DATE_IMPORTED, 23) INTO @changes
 FROM dbo.CIC_iCarolImportRollup ir
 LEFT JOIN dbo.CIC_iCarolImport ii
 	ON ii.ResourceAgencyNum=ir.ResourceAgencyNum AND ii.LangID=ir.LangID
-WHERE ii.ResourceAgencyNum IS NULL
+WHERE ir.LangID=@@LANGID AND ((ii.ResourceAgencyNum IS NULL AND ir.DELETION_DATE IS NULL) OR (ii.ResourceAgencyNum IS NOT NULL AND ir.DELETION_DATE IS NOT NULL))
 
-DELETE ir FROM dbo.CIC_iCarolImportRollup AS ir
+DELETE ir
+	OUTPUT 'purge', 'rollup', deleted.ResourceAgencyNum, 0, CONVERT(VARCHAR(10), deleted.deletion_date, 23), CONVERT(VARCHAR(10), deleted.DATE_IMPORTED, 23) INTO @changes
+FROM dbo.CIC_iCarolImportRollup AS ir
 -- We flagged a deltion and either created an import file with that deletion date or never created an import file ever
-WHERE ir.DELETION_DATE IS NOT NULL AND (ir.DATE_IMPORTED IS NULL OR ir.DATE_IMPORTED > ir.DELETION_DATE)
+WHERE ir.LangiD=@@LANGID AND ir.DELETION_DATE IS NOT NULL AND (ir.DATE_IMPORTED IS NULL OR ir.DATE_IMPORTED > ir.DELETION_DATE)
 
 DELETE ii 
+	OUTPUT 'purge', 'base', deleted.ResourceAgencyNum, 0, CONVERT(VARCHAR(10), deleted.deletion_date, 23), NULL INTO @changes
 FROM dbo.CIC_iCarolImport ii
 LEFT JOIN dbo.CIC_iCarolImportRollup ir
 	ON ii.ResourceAgencyNum=ir.ResourceAgencyNum AND ii.LangID=ir.LangID
 -- Flagged for deletion and rollup condition is already cleared (see statement above)
-WHERE ii.DELETION_DATE IS NOT NULL AND ir.ResourceAgencyNum IS NULL
+WHERE ii.LangID=@@LANGID AND ii.DELETION_DATE IS NOT NULL AND ir.ResourceAgencyNum IS NULL
 
+/*
+DECLARE @changesummary TABLE (
+	op NVARCHAR(50) NOT NULL,
+    tbl nvarchar(50) NOT NULL,
+    resurrect BIT NOT NULL,
+	DAY_IMPORTED VARCHAR(10) NULL
+)
+
+INSERT INTO @changesummary
+*/
+
+;WITH Pregrouped AS (
+	SELECT COUNT(*) AS num_records, op, tbl, resurrected, DELETION_DAY, DAY_IMPORTED
+	FROM @changes
+	GROUP BY  op, tbl, resurrected, DELETION_DAY, DAY_IMPORTED
+)
+SELECT SUM(num_records) AS num_records, op, tbl, resurrected,
+	days_deleted=STUFF((SELECT ', ' + ISNULL(xt.DELETION_DAY, 'NULL') AS [text()] FROM Pregrouped xt WHERE xt.op=t.op AND xt.tbl=t.tbl AND xt.resurrected=t.resurrected FOR XML PATH('')), 1 , 2, ''),
+	days_imported = STUFF((SELECT ', ' + ISNULL(xt.DAY_IMPORTED, 'NULL') AS [text()] FROM Pregrouped xt WHERE xt.op=t.op AND xt.tbl=t.tbl AND xt.resurrected=t.resurrected FOR XML PATH('')), 1 , 2, '')
+FROM Pregrouped AS t
+GROUP BY op, tbl, resurrected
+
+;
 SELECT a.*
 FROM dbo.CIC_iCarolImportAllRecords a 
 LEFT JOIN dbo.CIC_iCarolImport i
