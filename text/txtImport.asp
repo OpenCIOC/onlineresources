@@ -95,6 +95,8 @@ Dim TXT_ADD_PROFILE_FAILED, _
 	TXT_RECORDS_THAT_MATCH, _
 	TXT_RECORDS_TO_IMPORT, _
 	TXT_RECORDS_TO_RETRY, _
+	TXT_RECORDS_WHERE_DELETED, _
+	TXT_RECORDS_WHERE_NON_PUBLIC, _
 	TXT_RESCHEDULE, _
 	TXT_RESCHEDULE_ALL, _
 	TXT_RESCHEDULED, _
@@ -112,6 +114,7 @@ Dim TXT_ADD_PROFILE_FAILED, _
 	TXT_SOURCE_DATABASE, _
 	TXT_SOURCE_DATABASE_CODE, _
 	TXT_TAXONOMY_INDEXING_DOES_NOT_MATCH, _
+	TXT_THIS_DATASET_INCLUDES, _
 	TXT_TO_IMPORT_SELECT, _
 	TXT_TO_LIMIT, _
 	TXT_UNABLE_LIST_FIELDS, _
@@ -217,6 +220,8 @@ Sub setTxtImport()
 			TXT_RECORDS_THAT_MATCH = " records in this dataset that correspond to existing records."
 			TXT_RECORDS_TO_IMPORT = " records to import."
 			TXT_RECORDS_TO_RETRY = "records to retry."
+			TXT_RECORDS_WHERE_DELETED = " records where at least one language is marked for deletion."
+			TXT_RECORDS_WHERE_NON_PUBLIC = " records where at least one language is marked non-public."
 			TXT_RESCHEDULE = "Reschedule"
 			TXT_RESCHEDULE_ALL = "Reschedule All Possible"
 			TXT_RESCHEDULED = "Rescheduled"
@@ -234,6 +239,7 @@ Sub setTxtImport()
 			TXT_SOURCE_DATABASE = "Source Database"
 			TXT_SOURCE_DATABASE_CODE = "Source Database Code"
 			TXT_TAXONOMY_INDEXING_DOES_NOT_MATCH = "Taxonomy Indexing does not allow a match for the Heading(s)" & TXT_COLON
+			TXT_THIS_DATASET_INCLUDES = "This dataset includes "
 			TXT_TO_IMPORT_SELECT = "To import these records into the database, select from the options below."
 			TXT_TO_LIMIT = "You may wish to limit the number of records imported at one time for performance reasons." & _
 				"<br>If you specify a number (X) in the box below, only the first X records will be imported." & _
@@ -338,6 +344,8 @@ Sub setTxtImport()
 			TXT_RECORDS_THAT_MATCH = " dossiers dans cet ensemble de données qui concordent avec des dossiers existants."
 			TXT_RECORDS_TO_IMPORT = " dossiers à importer."
 			TXT_RECORDS_TO_RETRY = "TRANSLATE_FR -- records to retry."
+			TXT_RECORDS_WHERE_DELETED = "TRANSLATE_FR --  records where at least one language is marked for deletion."
+			TXT_RECORDS_WHERE_NON_PUBLIC = "TRANSLATE_FR --  records where at least one language is marked non-public."
 			TXT_RESCHEDULE = "TRANSLATE_FR -- Reschedule"
 			TXT_RESCHEDULE_ALL = "TRANSLATE_FR -- Reschedule All Possible"
 			TXT_RESCHEDULED = "TRANSLATE_FR -- Rescheduled"
@@ -355,6 +363,7 @@ Sub setTxtImport()
 			TXT_SOURCE_DATABASE = "Base de données source"
 			TXT_SOURCE_DATABASE_CODE = "TRANSLATE_FR -- Source Database Code"
 			TXT_TAXONOMY_INDEXING_DOES_NOT_MATCH = "L'indexation taxonomique ne permet pas de correspondance avec les en-têtes" & TXT_COLON
+			TXT_THIS_DATASET_INCLUDES = "TRANSLATE_FR -- This dataset includes "
 			TXT_TO_IMPORT_SELECT = "Pour importer ces dossiers dans la base de données, choisir parmi les options ci-dessous."
 			TXT_TO_LIMIT = "Par souci d'efficacité, vous pourriez vouloir limiter le nombre de dossiers à importer à la fois." & _
 				"<br>En sélectionnant un nombre (X) dans la case ci-dessous, seul les X premiers dossiers seront importés." & _

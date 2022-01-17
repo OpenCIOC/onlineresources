@@ -70,6 +70,7 @@ Dim TXT_ACTION, _
 	TXT_NONE_SELECTED, _
 	TXT_NO, _
 	TXT_NO_VALUES_AVAILABLE, _
+	TXT_NON_PUBLIC, _
 	TXT_NOT_FOUND, _
 	TXT_NOTES, _
 	TXT_OF, _
@@ -179,6 +180,7 @@ Sub setTxtGeneral()
 			TXT_NO = "Non"
 			TXT_NONE_SELECTED = "Aucun objet sélectionné"
 			TXT_NO_VALUES_AVAILABLE = "<em>Il n'y a pas de valeur disponible.</em>"
+			TXT_NON_PUBLIC = "Interne"
 			TXT_NOT_FOUND = "Introuvable"
 			TXT_NOTES = "Notes"
 			TXT_OF = " de "
@@ -282,6 +284,7 @@ Sub setTxtGeneral()
 			TXT_NO = "No"
 			TXT_NONE_SELECTED = "None Selected"
 			TXT_NO_VALUES_AVAILABLE = "<em>There are no values available</em>"
+			TXT_NON_PUBLIC = "Non-Public"
 			TXT_NOT_FOUND = "Not Found"
 			TXT_NOTES = "Notes"
 			TXT_OF = " of "

@@ -37,7 +37,6 @@ Dim	TXT_ALL_AGENCIES, _
 	TXT_LANGUAGES, _
 	TXT_LOWEST_UNUSED_FOR, _
 	TXT_NO_FIELDS_TO_COPY, _
-	TXT_NON_PUBLIC, _
 	TXT_NOT_A_VALID_LANGUAGE, _
 	TXT_RECORD_WAS_NOT_CREATED, _
 	TXT_REQUIRED_FIELDS_EMPTY, _
@@ -70,7 +69,6 @@ Sub setTxtEntryForm()
 			TXT_LANGUAGES = "Languages"
 			TXT_LOWEST_UNUSED_FOR = "Lowest Unused for "
 			TXT_NO_FIELDS_TO_COPY = "There are no fields available to copy."
-			TXT_NON_PUBLIC = "Non-Public"
 			TXT_NOT_A_VALID_LANGUAGE = "You may not create a new record with the requested language" & TXT_COLON
 			TXT_RECORD_WAS_NOT_CREATED = "The record was not created"
 			TXT_REQUIRED_FIELDS_EMPTY = "A required field is empty."
@@ -100,7 +98,6 @@ Sub setTxtEntryForm()
 			TXT_LANGUAGES = "Langues"
 			TXT_LOWEST_UNUSED_FOR = "Numéro le plus bas non utilisé pour "
 			TXT_NO_FIELDS_TO_COPY = "Il n'y a pas de champs disponibles pour copier."
-			TXT_NON_PUBLIC = "Interne"
 			TXT_NOT_A_VALID_LANGUAGE = "Il est possible que vous ne puissiez pas créer de nouveau dossier dans la langue requise" & TXT_COLON
 			TXT_RECORD_WAS_NOT_CREATED = "Le dossier n'a pas été créé"
 			TXT_REQUIRED_FIELDS_EMPTY = "Un champ obligatoire est vide."

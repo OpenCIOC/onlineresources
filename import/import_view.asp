@@ -489,7 +489,7 @@ Else
 <h2><%=TXT_RECORD_NUM & " "%>
 	<%=rsListImport.Fields("NUM") & StringIf(Not Nl(rsListImport.Fields("EXTERNAL_ID"))," (" & rsListImport.Fields("EXTERNAL_ID") & ")")%></h2>
 <p><strong><%=TXT_RECORD_OWNER & TXT_COLON%></strong> <%=rsListImport.Fields("OWNER")%></p>
-<p><strong><%=TXT_LANGUAGE & TXT_COLON%></strong> <%=rsListImport.Fields("LANGUAGES")%></p>
+<p><strong><%=TXT_LANGUAGE & TXT_COLON%></strong> <%=Replace(Replace(rsListImport.Fields("LANGUAGES"), "[DELETED]", TXT_DELETED), "[NON_PUBLIC]", TXT_NON_PUBLIC)%></p>
 <%
 	Dim xmlDoc, xmlNode
 	Set xmlDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")

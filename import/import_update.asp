@@ -95,7 +95,9 @@ Call makePageHeader(TXT_IMPORT_RECORD_DATA, TXT_IMPORT_RECORD_DATA, True, False,
 Dim cmdImportData, _
 	rsImportData, _
 	intImportDataCount, _
-	intImportRetryCount
+	intImportRetryCount, _
+	intImportDeletionCount, _
+	intImportNonPublicCount
 
 Dim intError
 intError = 0
@@ -129,6 +131,8 @@ If intError = 0 Then
 	Set rsImportData = rsImportData.NextRecordset
 	intImportDataCount = rsImportData.Fields("RecordCount")
 	intImportRetryCount = rsImportData.Fields("RetryRecordCount")
+	intImportDeletionCount = rsImportData.Fields("Deletions")
+	intImportNonPublicCount = rsImportData.Fields("NonPublics")
 
 %>
 <p>[ <a href="<%=makeLinkB("import.asp")%>"><%=TXT_RETURN_TO_IMPORT%></a> ]</p>
@@ -144,7 +148,6 @@ End Select
 If intImportRetryCount > 0 Then
 %> <%=TXT_THERE_ARE%> <strong><%=intImportRetryCount%></strong> <%= TXT_RECORDS_TO_RETRY %><%
 End If
-
 If intImportDataCount + intImportRetryCount > 0 Then
 %> [ <a href="<%=makeLink("import_update_list.asp","EFID=" & intEFID & "&DataSet=" & intDataSet,vbNullString)%>"><%=TXT_VIEW_DATA%></a> ]<%
 End If
@@ -152,6 +155,16 @@ End If
 
 <%
 If intImportDataCount + intImportRetryCount > 0 Then
+If intImportDeletionCount > 0 Then
+%>
+<p><%=TXT_THIS_DATASET_INCLUDES%> <%= intImportDeletionCount %></strong> <%=TXT_RECORDS_WHERE_DELETED%></p>
+<%
+End If
+If intImportNonPublicCount > 0 Then
+%>
+<p><%=TXT_THIS_DATASET_INCLUDES%> <strong><%= intImportNonPublicCount %></strong> <%=TXT_RECORDS_WHERE_NON_PUBLIC%></p>
+<%
+End If
 %>
 <p><%=TXT_TO_IMPORT_SELECT%></p>
 <h1><%=TXT_IMPORT_OPTIONS%></h1>

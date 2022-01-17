@@ -55,8 +55,16 @@ END
 SELECT @Error AS Error, @ErrMsg AS ErrMsg
 
 IF @Error = 0 BEGIN
-	SELECT SUM(CASE WHEN ied.IMPORTED=0 THEN 1 ELSE 0 END) AS RecordCount, SUM(CAST(ied.IMPORTED AS INT)) AS RetryRecordCount
+	;WITH HasDeletes AS (
+		SELECT ER_ID, MAX(CASE WHEN iedl.DELETION_DATE IS NOT NULL THEN 1 ELSE 0 END) AS Deletions, MAX(CAST(iedl.NON_PUBLIC AS INT)) AS NonPublics
+		FROM dbo.CIC_ImportEntry_Data_Language iedl
+		WHERE EXISTS(SELECT * FROM CIC_ImportEntry_Data ied WHERE ied.EF_ID=@EF_ID AND iedl.ER_ID=ied.ER_ID)
+		GROUP BY ER_ID
+	)
+	SELECT SUM(CASE WHEN ied.IMPORTED=0 THEN 1 ELSE 0 END) AS RecordCount, SUM(CAST(ied.IMPORTED AS INT)) AS RetryRecordCount, SUM(hd.Deletions) AS Deletions, SUM(hd.NonPublics) AS NonPublics
 		FROM CIC_ImportEntry_Data ied
+		INNER JOIN HasDeletes hd
+			ON hd.ER_ID=ied.ER_ID
 		LEFT JOIN GBL_BaseTable bt
 			ON ied.NUM=bt.NUM
 	WHERE ied.EF_ID=@EF_ID

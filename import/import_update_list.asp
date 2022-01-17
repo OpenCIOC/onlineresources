@@ -202,7 +202,7 @@ With rsListImportData
 		End If
 %>
 	<td><%=fldOWNER.Value%></td>
-	<td><%=fldLANGUAGES.Value%></td>
+	<td><%=Replace(Replace(fldLANGUAGES.Value, "[DELETED]", TXT_DELETED), "[NON_PUBLIC]", TXT_NON_PUBLIC)%></td>
 <%If intDataSet <> DATASET_ADD Then%>
 	<td><%=StringIf(fldIMPORTED,TXT_CAN_RETRY)%></td>
 <% End If%>

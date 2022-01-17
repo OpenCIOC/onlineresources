@@ -18,7 +18,10 @@ BEGIN
 
 DECLARE	@returnStr	varchar(max)
 
-SELECT @returnStr =  COALESCE(@returnStr + ' ; ','') + LanguageName
+SELECT @returnStr =  COALESCE(@returnStr + ' ','') + '<div class="text-nowrap">' + /*CASE WHEN iedl.DELETION_DATE IS NOT NULL THEN ' alert alert-danger">' ELSE '">' END + */ sln.LanguageName
+														+ CASE WHEN iedl.DELETION_DATE IS NOT NULL THEN ' <span class="glyphicon glyphicon-remove" title="[DELETED]" aria-hidden="true"></span><span class="sr-only">[DELETED]</span>' ELSE '' END 
+														+ CASE WHEN iedl.NON_PUBLIC=1 THEN ' <span class="glyphicon glyphicon-lock" title="[NON_PUBLIC]" aria-hidden="true"></span><span class="sr-only">[NON_PUBLIC]</span>' ELSE '' END
+														+ '</div>'
 	FROM CIC_ImportEntry_Data_Language iedl
 	INNER JOIN STP_Language sln
 		ON iedl.LangID=sln.LangID
