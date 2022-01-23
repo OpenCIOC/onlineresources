@@ -81,7 +81,9 @@
 										[ENDIF:HAS_COMMUNITY_SEARCH]
 										<div class="form-group">
 											[KEYWORD_SEARCH_BOX]
-											[KEYWORD_SEARCH_IN]
+											<div id="keyword-search-in">
+												[KEYWORD_SEARCH_IN]
+											</div>
 										</div>
 										[IF:HAS_COMMUNITY_SEARCH]
 									</div>
@@ -116,221 +118,224 @@
 
 	[IF:QUICKLIST]
 	[IFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
-<div class="row search-panels">
-	<div class="col-xs-12 col-md-8">
+	<div class="row search-panels">
+		<div class="col-xs-12 col-md-8">
 	[ENDIFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
-	<div class="panel panel-default">
-		<div class="panel-heading"><h2><span class="glyphicon glyphicon-[SEARCH_OTHER_GLYPH]" aria-hidden="true"></span> [SEARCH_OTHER_TITLE]</h2></div>
-		<div class="panel-body">
-			[SEARCH_FORM_START]
-			[IF:HAS_COMMUNITY_SEARCH]
-			<div class="form-group">
-				[FN:COMMUNITY_SEARCH]_2[ENDFN:COMMUNITY_SEARCH]
-			</div>
-			[ENDIF:HAS_COMMUNITY_SEARCH]
-			<div class="heading-search-box">
-				<div class="row">
-					[FOR:QUICKLIST]
-					<div class="[QUICKLIST_COL_CLASS]">
-						[IFNOT:HEADINGS]
-						<div class="panel-group">
-							<div class="panel panel-active">
-								<div class="panel-heading">
-									<h4 class="panel-title">
-										<button type="submit" name="[IDTYPE]" value="[ID]">
-											<div class="table no-margin-bottom">
-												<div class="table-row">
-													[IF:ICON]
-													<div class="table-cell icon-cell heading-list-icon vertical-center">
-														[ICON]
+			<div class="panel panel-default">
+				<div class="panel-heading"><h2><span class="glyphicon glyphicon-[SEARCH_OTHER_GLYPH]" aria-hidden="true"></span> [SEARCH_OTHER_TITLE]</h2></div>
+				<div class="panel-body">
+					<div id="search-other-message">
+						[SEARCH_OTHER_MESSAGE]
+					</div>
+					[SEARCH_FORM_START]
+					[IF:HAS_COMMUNITY_SEARCH]
+					<div class="form-group">
+						[FN:COMMUNITY_SEARCH]_2[ENDFN:COMMUNITY_SEARCH]
+					</div>
+					[ENDIF:HAS_COMMUNITY_SEARCH]
+					<div class="heading-search-box">
+						<div class="row">
+							[FOR:QUICKLIST]
+							<div class="[QUICKLIST_COL_CLASS]">
+								[IFNOT:HEADINGS]
+								<div class="panel-group">
+									<div class="panel panel-active">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<button type="submit" name="[IDTYPE]" value="[ID]">
+													<div class="table no-margin-bottom">
+														<div class="table-row">
+															[IF:ICON]
+															<div class="table-cell icon-cell heading-list-icon vertical-center">
+																[ICON]
+															</div>
+															[ENDIF:ICON]
+															<div class="table-cell heading-list-name vertical-center">
+																[NAME]
+															</div>
+														</div>
 													</div>
-													[ENDIF:ICON]
-													<div class="table-cell heading-list-name vertical-center">
-														[NAME]
-													</div>
-												</div>
-											</div>
-										</button>
-									</h4>
-								</div>
-							</div>
-						</div>
-						[ENDIFNOT:HEADINGS]
-						[IF:HEADINGS]
-						<div class="panel-group" id="collapseheading[ID]" role="tablist">
-							<div class="panel panel-active">
-								<div class="panel-heading">
-									<h4 class="panel-title">
-										<a class="accordion-toggle" data-toggle="collapse" data-parent="#collapseheading[ID]" href="#collapseheadingsub[ID]" aria-expanded="true" role="button">
-											<div class="table no-margin-bottom">
-												<div class="table-row">
-													[IF:ICON]
-													<div class="table-cell icon-cell heading-list-icon vertical-center">
-														[ICON]
-													</div>
-													[ENDIF:ICON]
-													<div class="table-cell heading-list-name vertical-center">
-														[NAME]
-													</div>
-												</div>
-											</div>
-										</a>
-									</h4>
-								</div>
-								<div class="panel-collapse collapse" id="collapseheadingsub[ID]" aria-labelledby="#collapseheading[ID]" role="tabpanel" aria-expanded="true">
-									<div class="list-group">
-										[IF:QUICKLIST_SEARCH_GROUPS]
-										<button type="submit" name="[IDTYPE]" value="[IDLIST]" class="list-group-item">
-											<span class="heading-search-all">[SEARCH_ALL_TITLE]</span>
-										</button>
-										[ENDIF:QUICKLIST_SEARCH_GROUPS]
-										[FOR:HEADINGS]
-										<button type="submit" name="[IDTYPE]" value="[ID]" class="list-group-item">
-											[IF:ICON]<span class="heading-list-icon">[ICON]</span>[ENDIF:ICON]
-											[NAME]
-										</button>
-										[ENDFOR:HEADINGS]
+												</button>
+											</h4>
+										</div>
 									</div>
 								</div>
+								[ENDIFNOT:HEADINGS]
+								[IF:HEADINGS]
+								<div class="panel-group" id="collapseheading[ID]" role="tablist">
+									<div class="panel panel-active">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a class="accordion-toggle" data-toggle="collapse" data-parent="#collapseheading[ID]" href="#collapseheadingsub[ID]" aria-expanded="true" role="button">
+													<div class="table no-margin-bottom">
+														<div class="table-row">
+															[IF:ICON]
+															<div class="table-cell icon-cell heading-list-icon vertical-center">
+																[ICON]
+															</div>
+															[ENDIF:ICON]
+															<div class="table-cell heading-list-name vertical-center">
+																[NAME]
+															</div>
+														</div>
+													</div>
+												</a>
+											</h4>
+										</div>
+										<div class="panel-collapse collapse" id="collapseheadingsub[ID]" aria-labelledby="#collapseheading[ID]" role="tabpanel" aria-expanded="true">
+											<div class="list-group">
+												[IF:QUICKLIST_SEARCH_GROUPS]
+												<button type="submit" name="[IDTYPE]" value="[IDLIST]" class="list-group-item">
+													<span class="heading-search-all">[SEARCH_ALL_TITLE]</span>
+												</button>
+												[ENDIF:QUICKLIST_SEARCH_GROUPS]
+												[FOR:HEADINGS]
+												<button type="submit" name="[IDTYPE]" value="[ID]" class="list-group-item">
+													[IF:ICON]<span class="heading-list-icon">[ICON]</span>[ENDIF:ICON]
+													[NAME]
+												</button>
+												[ENDFOR:HEADINGS]
+											</div>
+										</div>
+									</div>
+								</div>
+								[ENDIF:HEADINGS]
 							</div>
+							[IF:CLEAR_CLASS]
+							<div class="clearfix [CLEAR_CLASS]"></div>
+							[ENDIF:CLEAR_CLASS]
+							[ENDFOR:QUICKLIST]
 						</div>
-						[ENDIF:HEADINGS]
 					</div>
-					[IF:CLEAR_CLASS]
-					<div class="clearfix [CLEAR_CLASS]"></div>
-					[ENDIF:CLEAR_CLASS]
-					[ENDFOR:QUICKLIST]
+					</form>
+				</div>
+		[IFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
+			</div>
+		</div>
+		[ENDIFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
+		[ENDIF:QUICKLIST]
+
+		[IFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
+		[IF:QUICKLIST]
+		<div class="col-xs-12 col-md-4">
+		[ENDIF:QUICKLIST]
+			[IF:SEARCH_LEFT_CONTENT]
+			<div id="search-left-panel" class="panel panel-default panel-bc">
+				[IF:SEARCH_LEFT_TITLE]
+				<div class="panel-heading"><h2>[IF:SEARCH_LEFT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_LEFT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_LEFT_GLYPH][SEARCH_LEFT_TITLE]</h2></div>
+				[ENDIF:SEARCH_LEFT_TITLE]
+				<div class="panel-body panel-body-nofooter">
+					[SEARCH_LEFT_CONTENT]
 				</div>
 			</div>
-			</form>
+			[ENDIF:SEARCH_LEFT_CONTENT]
+
+			[IF:SEARCH_RIGHT_CONTENT]
+			<div id="search-right-panel" class="panel panel-default panel-bc">
+				[IF:SEARCH_RIGHT_TITLE]
+				<div class="panel-heading"><h2>[IF:SEARCH_RIGHT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_RIGHT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_RIGHT_GLYPH][SEARCH_RIGHT_TITLE]</h2></div>
+				[ENDIF:SEARCH_RIGHT_TITLE]
+				<div class="panel-body panel-body-nofooter">
+					[SEARCH_RIGHT_CONTENT]
+				</div>
+			</div>
+			[ENDIF:SEARCH_RIGHT_CONTENT]
+		[IF:QUICKLIST]
 		</div>
-	</div>
-	[IFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
-	</div>
+		[ENDIF:QUICKLIST]
+	</div>	
 	[ENDIFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
-	[ENDIF:QUICKLIST]
-
-	[IFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
-	[IF:QUICKLIST]
-	<div class="col-xs-12 col-md-4">
-	[ENDIF:QUICKLIST]
-	[IF:SEARCH_LEFT_CONTENT]
-		<div id="search-left-panel" class="panel panel-default panel-bc">
-			[IF:SEARCH_LEFT_TITLE]
-			<div class="panel-heading"><h2>[IF:SEARCH_LEFT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_LEFT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_LEFT_GLYPH][SEARCH_LEFT_TITLE]</h2></div>
-			[ENDIF:SEARCH_LEFT_TITLE]
-			<div class="panel-body panel-body-nofooter">
-				[SEARCH_LEFT_CONTENT]
-			</div>
-		</div>
-	[ENDIF:SEARCH_LEFT_CONTENT]
-
-	[IF:SEARCH_RIGHT_CONTENT]
-		<div id="search-right-panel" class="panel panel-default panel-bc">
-			[IF:SEARCH_RIGHT_TITLE]
-			<div class="panel-heading"><h2>[IF:SEARCH_RIGHT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_RIGHT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_RIGHT_GLYPH][SEARCH_RIGHT_TITLE]</h2></div>
-			[ENDIF:SEARCH_RIGHT_TITLE]
-			<div class="panel-body panel-body-nofooter">
-				[SEARCH_RIGHT_CONTENT]
-			</div>
-		</div>
-	[ENDIF:SEARCH_RIGHT_CONTENT]
-	[IF:QUICKLIST]
-	</div>
-</div>
-	[ENDIF:QUICKLIST]
-	[ENDIFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
-
-	[IF:BROWSE]
-<div class="row search-panels">
-	<div class="col-xs-12[IFANY:NUM_SEARCH,VOLUNTEER_ORG_URL] col-md-8[ENDIFANY:NUM_SEARCH,VOLUNTEER_ORG_URL]" id="browse">
-		[IF:BROWSE_ORG_ITEMS]
-		<div id="browse-org-panel" class="panel panel-default panel-bc">
-			<div class="panel-heading">
-				<h2><span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span> [BROWSE_ORG_TITLE]</h2>
-			</div>
-			<div class="panel-body panel-body-nofooter">
-				<div id="browse-by-org" class="browse-by-large">
-					[FOR:BROWSE_ORG_ITEMS]
-					<a href="[LINK]"><div class="browse-by-item">[DISPLAY]</div></a>
-					[ENDFOR:BROWSE_ORG_ITEMS]
-				</div>
-			</div>
-		</div>
-		[ENDIF:BROWSE_ORG_ITEMS]
-
-		[IF:BROWSE_SUBJ_ITEMS]
-		<div id="browse-subject-panel" class="panel panel-default panel-bc">
-			<div class="panel-heading">
-				<h2><span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span> [BROWSE_SUBJ_TITLE]</h2>
-			</div>
-			<div class="panel-body panel-body-nofooter">
-				<div id="browse-by-subject" class="browse-by-large">
-					[FOR:BROWSE_SUBJ_ITEMS]
-					<a href="[LINK]"><div class="browse-by-item">[DISPLAY]</div></a>
-					[ENDFOR:BROWSE_SUBJ_ITEMS]
-				</div>
-			</div>
-		</div>
-		[ENDIF:BROWSE_SUBJ_ITEMS]
-	</div>
-
-	[IFANY:NUM_SEARCH,VOLUNTEER_ORG_URL]
-	<div class="col-xs-12 col-md-4">
-		[IF:VOLUNTEER_ORG_URL]
-		<div class="panel panel-default panel-bc">
-			<div id="org-opps-panel" class="panel-body panel-body-nofooter browse-by-large">
-				<a href="[VOLUNTEER_ORG_URL]">
-					<div class="browse-by-item">
-						<i class="fa fa-users pull-left"></i>
-						[ORGS_WITH_OPS]
-					</div>
-				</a>
-			</div>
-		</div>
-		[ENDIF:VOLUNTEER_ORG_URL]
-		[IF:NUM_SEARCH]
-		<div id="num-search-panel" class="panel panel-default panel-bc">
-			<div class="panel-heading"><h2><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> [RECORD_NUMBER]</h2></div>
-			<div class="panel-body panel-body-nofooter">
-				[SEARCH_FORM_START]
-				<div class="table search-table no-line-below">
-					<div class="table-row form-group">
-						<div class="table-cell table-cell-100">
-							[NUM_SEARCH]
-						</div>
-						<div class="table-cell search-button-wrapper">
-							<button class="btn btn-default CIOC_search_button" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> [SEARCH]</button>
-						</div>
-					</div>
-				</div>
-				</form>
-			</div>
-		</div>
-		[ENDIF:NUM_SEARCH]
-	</div>
-	[ENDIFANY:NUM_SEARCH,VOLUNTEER_ORG_URL]
-</div>
-	[ENDIF:BROWSE]
 
 	[IF:SEARCH_CENTRE_CONTENT]
-<div class="panel panel-default panel-bc">
-	[IF:SEARCH_CENTRE_TITLE]
-	<div class="panel-heading"><h2>[IF:SEARCH_CENTRE_GLYPH]<span class="glyphicon glyphicon-[SEARCH_CENTRE_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_CENTRE_GLYPH][SEARCH_CENTRE_TITLE]</h2></div>
-	[ENDIF:SEARCH_CENTRE_TITLE]
-	<div class="panel-body panel-body-nofooter">
-		[SEARCH_CENTRE_CONTENT]
-	</div>
-</div>
-	[ENDIF:SEARCH_CENTRE_CONTENT]
-
-	[IF:SERVICE_CATEGORY]
-<div id="service-category-panel" class="panel panel-default">
-	<div class="panel-body panel-body-nofooter">
-		<div id="service-category">
-			[SERVICE_CATEGORY_LIST]
+	<div class="panel panel-default">
+		[IF:SEARCH_CENTRE_TITLE]
+		<div class="panel-heading"><h2>[IF:SEARCH_CENTRE_GLYPH]<span class="glyphicon glyphicon-[SEARCH_CENTRE_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_CENTRE_GLYPH][SEARCH_CENTRE_TITLE]</h2></div>
+		[ENDIF:SEARCH_CENTRE_TITLE]
+		<div class="panel-body panel-body-nofooter">
+			[SEARCH_CENTRE_CONTENT]
 		</div>
 	</div>
-</div>
+	[ENDIF:SEARCH_CENTRE_CONTENT]
+
+	[IF:BROWSE]
+	<div class="row search-panels">
+		<div class="col-xs-12[IFANY:NUM_SEARCH,VOLUNTEER_ORG_URL] col-md-8[ENDIFANY:NUM_SEARCH,VOLUNTEER_ORG_URL]" id="browse">
+			[IF:BROWSE_ORG_ITEMS]
+			<div id="browse-org-panel" class="panel panel-default panel-bc">
+				<div class="panel-heading">
+					<h2><span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span> [BROWSE_ORG_TITLE]</h2>
+				</div>
+				<div class="panel-body panel-body-nofooter">
+					<div id="browse-by-org" class="browse-by-large">
+						[FOR:BROWSE_ORG_ITEMS]
+						<a href="[LINK]"><div class="browse-by-item">[DISPLAY]</div></a>
+						[ENDFOR:BROWSE_ORG_ITEMS]
+					</div>
+				</div>
+			</div>
+			[ENDIF:BROWSE_ORG_ITEMS]
+
+			[IF:BROWSE_SUBJ_ITEMS]
+			<div id="browse-subject-panel" class="panel panel-default">
+				<div class="panel-heading">
+					<h2><span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span> [BROWSE_SUBJ_TITLE]</h2>
+				</div>
+				<div class="panel-body panel-body-nofooter">
+					<div id="browse-by-subject" class="browse-by-large">
+						[FOR:BROWSE_SUBJ_ITEMS]
+						<a href="[LINK]"><div class="browse-by-item">[DISPLAY]</div></a>
+						[ENDFOR:BROWSE_SUBJ_ITEMS]
+					</div>
+				</div>
+			</div>
+			[ENDIF:BROWSE_SUBJ_ITEMS]
+		</div>
+
+		[IFANY:NUM_SEARCH,VOLUNTEER_ORG_URL]
+		<div class="col-xs-12 col-md-4">
+			[IF:VOLUNTEER_ORG_URL]
+			<div class="panel panel-default panel-bc">
+				<div id="org-opps-panel" class="panel-body panel-body-nofooter browse-by-large">
+					<a href="[VOLUNTEER_ORG_URL]">
+						<div class="browse-by-item">
+							<i class="fa fa-users pull-left"></i>
+							[ORGS_WITH_OPS]
+						</div>
+					</a>
+				</div>
+			</div>
+			[ENDIF:VOLUNTEER_ORG_URL]
+			[IF:NUM_SEARCH]
+			<div id="num-search-panel" class="panel panel-default panel-bc">
+				<div class="panel-heading"><h2><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> [RECORD_NUMBER]</h2></div>
+				<div class="panel-body panel-body-nofooter">
+					[SEARCH_FORM_START]
+					<div class="table search-table no-line-below">
+						<div class="table-row form-group">
+							<div class="table-cell table-cell-100">
+								[NUM_SEARCH]
+							</div>
+							<div class="table-cell search-button-wrapper">
+								<button class="btn btn-default CIOC_search_button" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> [SEARCH]</button>
+							</div>
+						</div>
+					</div>
+					</form>
+				</div>
+			</div>
+			[ENDIF:NUM_SEARCH]
+		</div>
+		[ENDIFANY:NUM_SEARCH,VOLUNTEER_ORG_URL]
+	</div>
+	[ENDIF:BROWSE]
+
+	[IF:SERVICE_CATEGORY]
+	<div id="service-category-panel" class="panel panel-default">
+		<div class="panel-body panel-body-nofooter">
+			<div id="service-category">
+				[SERVICE_CATEGORY_LIST]
+			</div>
+		</div>
+	</div>
 	[ENDIF:SERVICE_CATEGORY]
 </div>

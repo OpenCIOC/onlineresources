@@ -65,6 +65,10 @@ If Not bInlineMode Then
 Call makePageHeader(TXT_BROWSE_BY_SERVICE_CATEGORY, TXT_BROWSE_BY_SERVICE_CATEGORY, True, False, True, True)
 End If
 
+If Not g_bPrintMode Then
+	Response.Write(render_gtranslate_ui())
+End If
+
 Dim strCode, _
 	bRelated
 
