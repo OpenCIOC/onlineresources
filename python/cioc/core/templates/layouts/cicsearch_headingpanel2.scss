@@ -82,6 +82,14 @@
 	}
 }
 
+#search-other-message {
+	margin-bottom: $line-height-computed/2;
+}
+
+#CIOC_cicsearch_keyword, #CIOC_cicsearch_keyword .form-group {
+	margin-bottom: 0;
+}
+
 #org-opps-panel {
 	.fa {
 		padding-top: 0.1em;
