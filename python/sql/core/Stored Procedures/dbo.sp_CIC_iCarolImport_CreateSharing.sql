@@ -88,6 +88,7 @@ SELECT CAST((SELECT (
 			WHERE COALESCE(f.MainContactIsPrivate, 'No') = 'No' AND (f.MainContactName IS NOT NULL OR f.MainContactTitle IS NOT NULL OR f.MainContactPhoneNumber IS NOT NULL OR f.MainContactEmailAddress IS NOT NULL)
 			FOR XML PATH('CONTACT'), TYPE)
 		FOR XML PATH('CONTACT_1') ,TYPE),
+		(SELECT NULL FOR XML PATH('CONTACT_2') ,TYPE),
 		(SELECT
 			 CASE WHEN a.PhoneNumberHotlineIsPrivate = 'True' THEN NULL ELSE CASE WHEN a.PhoneNumberHotline IS NOT NULL AND a.PhoneNumberHotlineDescription  IS NOT NULL THEN a.PhoneNumberHotlineDescription + ': ' ELSE '' END + a.PhoneNumberHotline END AS [@V],
 			 CASE WHEN f.PhoneNumberHotlineIsPrivate = 'True' THEN NULL ELSE CASE WHEN f.PhoneNumberHotline IS NOT NULL AND f.PhoneNumberHotlineDescription  IS NOT NULL THEN f.PhoneNumberHotlineDescription + ': ' ELSE '' END + f.PhoneNumberHotline END AS [@VF]
@@ -106,6 +107,7 @@ SELECT CAST((SELECT (
 				WHERE  COALESCE(f.SeniorWorkerIsPrivate, 'No') = 'No' AND (f.SeniorWorkerName IS NOT NULL OR f.SeniorWorkerTitle IS NOT NULL OR f.SeniorWorkerPhoneNumber IS NOT NULL OR f.SeniorWorkerEmailAddress IS NOT NULL)
 			 FOR XML PATH('CONTACT'), TYPE)
 		 FOR XML PATH('EXEC_1'),TYPE),
+		 (SELECT NULL FOR XML PATH('EXEC_2') ,TYPE),
 		 -- MadeInactiveOn comes in as an iso formated datetime but with a space instead of a T in between the date and time parts
 		(SELECT 'ICAROLMADEINACTIVEON' AS [@FLD], CASE WHEN a.AgencyStatus = 'Inactive' THEN REPLACE(a.MadeInactiveOn, ' ', 'T') ELSE NULL END AS [@V] FOR XML PATH('EXTRA_DATE'), TYPE),
 		(SELECT 'ICAROLAGENCYSTATUS' AS [@FLD], CASE WHEN a.AgencyStatus = 'Active' THEN 'ACTIVE' WHEN a.AgencyStatus = 'Active, but do not refer' THEN 'DO_NOT_REFER' WHEN a.AgencyStatus = 'Inactive' THEN 'INACTIVE' ELSE a.AgencyStatus END AS [@CD] FOR XML PATH('EXTRA_DROPDOWN'), TYPE),  
@@ -173,40 +175,40 @@ SELECT CAST((SELECT (
 			FOR XML PATH('NON_PUBLIC'), TYPE),
 		(SELECT
 			 (SELECT STUFF((SELECT '; ' + NumberValue FROM (
-
-			SELECT CASE WHEN a.PhoneNumberBusinessLineIsPrivate = 'True' THEN NULL ELSE CASE WHEN a.PhoneNumberBusinessLine  IS NOT NULL AND a.PhoneNumberBusinessLineDescription  IS NOT NULL THEN a.PhoneNumberBusinessLineDescription + ': ' ELSE '' END + a.PhoneNumberBusinessLine END AS NumberValue
-			UNION ALL SELECT 
-				CASE WHEN PhoneIsPrivate = 'True' THEN NULL ELSE CASE WHEN PhoneNumber IS NOT NULL AND PhoneName IS NOT NULL THEN PhoneName + ': ' ELSE '' END + PhoneNumber END AS NumberValue
+				SELECT CASE WHEN PhoneNumber IS NOT NULL AND PhoneName IS NOT NULL AND PhoneName <> 'Office' THEN PhoneName + ': ' ELSE '' END + PhoneNumber AS NumberValue, PhoneName, Preference
 				FROM (
-					VALUES 
-						(a.Phone1Number, a.Phone1Name, COALESCE(a.Phone1IsPrivate, 'False')),
-						(a.Phone2Number, a.Phone2Name, COALESCE(a.Phone2IsPrivate, 'False')),
-						(a.Phone3Number, a.Phone3Name, COALESCE(a.Phone3IsPrivate, 'False')),
-						(a.Phone4Number, a.Phone4Name, COALESCE(a.Phone4IsPrivate, 'False')),
-						(a.Phone5Number, a.Phone5Name, COALESCE(a.Phone5IsPrivate, 'False')),
-						(a.PhoneNumberOutOfArea, a.PhoneNumberOutOfAreaDescription, COALESCE(a.PhoneNumberOutOfAreaIsPrivate, 'False'))
-					) AS cte (PhoneNumber, PhoneName, PhoneIsPrivate)
-					WHERE cte.PhoneNumber IS NOT NULL
-				) AS i FOR XML PATH(''),TYPE).value('.', 'nvarchar(max)'), 1, 2, '')
-			
+				   SELECT Preference, PhoneNumber, PhoneName, PhoneIsPrivate, ROW_NUMBER() OVER (PARTITION BY PhoneNumber ORDER BY CASE WHEN PhoneName = 'Office' THEN 0 ELSE 1 END, Preference) AS RowNumber
+						FROM (
+						VALUES 
+							(0, a.PhoneNumberBusinessLine, a.PhoneNumberBusinessLineDescription, COALESCE(a.PhoneNumberBusinessLineIsPrivate, 'False')),
+							(1, a.Phone1Number, a.Phone1Name, COALESCE(a.Phone1IsPrivate, 'False')),
+							(2, a.Phone2Number, a.Phone2Name, COALESCE(a.Phone2IsPrivate, 'False')),
+							(3, a.Phone3Number, a.Phone3Name, COALESCE(a.Phone3IsPrivate, 'False')),
+							(4, a.Phone4Number, a.Phone4Name, COALESCE(a.Phone4IsPrivate, 'False')),
+							(5, a.Phone5Number, a.Phone5Name, COALESCE(a.Phone5IsPrivate, 'False')),
+							(6, a.PhoneNumberOutOfArea, a.PhoneNumberOutOfAreaDescription, COALESCE(a.PhoneNumberOutOfAreaIsPrivate, 'False'))
+						) AS cte (Preference, PhoneNumber, PhoneName, PhoneIsPrivate)
+						WHERE cte.PhoneNumber IS NOT NULL AND PhoneIsPrivate <> 'True'
+					) AS g  WHERE g.RowNumber=1
+				) AS i ORDER BY CASE WHEN PhoneName = 'Office' THEN 0 ELSE 1 END, Preference FOR XML PATH(''),TYPE).value('.', 'nvarchar(max)'), 1, 2, '')		
 			 ) AS [@V],
 			 (SELECT STUFF((SELECT '; ' + NumberValue FROM (
-
-			SELECT CASE WHEN f.PhoneNumberBusinessLineIsPrivate = 'True' THEN NULL ELSE CASE WHEN f.PhoneNumberBusinessLine  IS NOT NULL AND f.PhoneNumberBusinessLineDescription  IS NOT NULL THEN f.PhoneNumberBusinessLineDescription + ': ' ELSE '' END + f.PhoneNumberBusinessLine END AS NumberValue
-			UNION ALL SELECT 
-				CASE WHEN PhoneIsPrivate = 'True' THEN NULL ELSE CASE WHEN PhoneNumber IS NOT NULL AND PhoneName IS NOT NULL THEN PhoneName + ': ' ELSE '' END + PhoneNumber END AS NumberValue
+				SELECT CASE WHEN PhoneNumber IS NOT NULL AND PhoneName IS NOT NULL AND PhoneName <> 'Office' THEN PhoneName + ': ' ELSE '' END + PhoneNumber AS NumberValue, PhoneName, Preference
 				FROM (
-					VALUES 
-						(f.Phone1Number, f.Phone1Name, COALESCE(f.Phone1IsPrivate, 'False')),
-						(f.Phone2Number, f.Phone2Name, COALESCE(f.Phone2IsPrivate, 'False')),
-						(f.Phone3Number, f.Phone3Name, COALESCE(f.Phone3IsPrivate, 'False')),
-						(f.Phone4Number, f.Phone4Name, COALESCE(f.Phone4IsPrivate, 'False')),
-						(f.Phone5Number, f.Phone5Name, COALESCE(f.Phone5IsPrivate, 'False')),
-						(f.PhoneNumberOutOfArea, f.PhoneNumberOutOfAreaDescription, COALESCE(f.PhoneNumberOutOfAreaIsPrivate, 'False'))
-					) AS cte (PhoneNumber, PhoneName, PhoneIsPrivate)
-					WHERE cte.PhoneNumber IS NOT NULL
-				) AS i FOR XML PATH(''),TYPE).value('.', 'nvarchar(max)') , 1, 2, '')
-			
+				   SELECT Preference, PhoneNumber, PhoneName, PhoneIsPrivate, ROW_NUMBER() OVER (PARTITION BY PhoneNumber ORDER BY CASE WHEN PhoneName = 'Office' THEN 0 ELSE 1 END, Preference) AS RowNumber
+						FROM (
+						VALUES 
+							(0, f.PhoneNumberBusinessLine, f.PhoneNumberBusinessLineDescription, COALESCE(f.PhoneNumberBusinessLineIsPrivate, 'False')),
+							(1, f.Phone1Number, f.Phone1Name, COALESCE(f.Phone1IsPrivate, 'False')),
+							(2, f.Phone2Number, f.Phone2Name, COALESCE(f.Phone2IsPrivate, 'False')),
+							(3, f.Phone3Number, f.Phone3Name, COALESCE(f.Phone3IsPrivate, 'False')),
+							(4, f.Phone4Number, f.Phone4Name, COALESCE(f.Phone4IsPrivate, 'False')),
+							(5, f.Phone5Number, f.Phone5Name, COALESCE(f.Phone5IsPrivate, 'False')),
+							(6, f.PhoneNumberOutOfArea, f.PhoneNumberOutOfAreaDescription, COALESCE(f.PhoneNumberOutOfAreaIsPrivate, 'False'))
+						) AS cte (Preference, PhoneNumber, PhoneName, PhoneIsPrivate)
+						WHERE cte.PhoneNumber IS NOT NULL AND PhoneIsPrivate <> 'True'
+					) AS g  WHERE g.RowNumber=1
+				) AS i ORDER BY CASE WHEN PhoneName = 'Office' THEN 0 ELSE 1 END, Preference FOR XML PATH(''),TYPE).value('.', 'nvarchar(max)'), 1, 2, '')		
 			 ) AS [@VF]
 		  FOR XML PATH('OFFICE_PHONE'), TYPE),
 		(SELECT a.ORG_DESCRIPTION AS [@V], f.ORG_DESCRIPTION AS [@VF] FOR XML PATH('ORG_DESCRIPTION'), TYPE),

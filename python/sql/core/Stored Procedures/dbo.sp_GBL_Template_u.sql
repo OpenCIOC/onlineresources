@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -663,12 +662,12 @@ IF @Error = 0 BEGIN
 			footerGroup1	= nt.footerGroup1,
 			footerGroup2	= nt.footerGroup2,
 			footerGroup3	= nt.footerGroup3,
-			cicsearchGroup1	= nt.cicsearchGroup1,
-			cicsearchGroup2	= nt.cicsearchGroup2,
-			cicsearchGroup3	= nt.cicsearchGroup3,
-			volsearchGroup1	= nt.volsearchGroup1,
-			volsearchGroup2	= nt.volsearchGroup2,
-			volsearchGroup3	= nt.volsearchGroup3,
+			cicsearchGroup1	= CASE WHEN @UseCIC = 1 THEN nt.cicsearchGroup1 ELSE tld.cicsearchGroup1 END,
+			cicsearchGroup2	= CASE WHEN @UseCIC = 1 THEN nt.cicsearchGroup2 ELSE tld.cicsearchGroup2 END,
+			cicsearchGroup3	= CASE WHEN @UseCIC = 1 THEN nt.cicsearchGroup3 ELSE tld.cicsearchGroup3 END,
+			volsearchGroup1	= CASE WHEN @UseVOL = 1 THEN nt.volsearchGroup1 ELSE tld.volsearchGroup1 END,
+			volsearchGroup2	= CASE WHEN @UseVOL = 1 THEN nt.volsearchGroup2 ELSE tld.volsearchGroup2 END,
+			volsearchGroup3	= CASE WHEN @UseVOL = 1 THEN nt.volsearchGroup3 ELSE tld.volsearchGroup3 END,
 			Agency			= nt.Agency,
 			Address			= nt.Address,
 			Phone			= nt.Phone,
@@ -775,7 +774,7 @@ IF @Error = 0 BEGIN
 		DELETE tmi
 		FROM GBL_Template_Menu tmi
 		WHERE tmi.Template_ID=@Template_ID
-			AND NOT EXISTS(SELECT * FROM @MenuTable nt WHERE tmi.MenuID=nt.MenuID)
+			AND NOT EXISTS(SELECT * FROM @MenuTable nt WHERE tmi.MenuID=nt.MenuID) AND NOT (tmi.MenuType = 'volsearch' AND @UseVOL=0) AND NOT (tmi.MenuType = 'cicsearch' AND @UseCIC=0)
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @DesignTemplateObjectName, @ErrMsg
 		
 		UPDATE tmi SET
@@ -786,7 +785,7 @@ IF @Error = 0 BEGIN
 		FROM GBL_Template_Menu tmi
 		INNER JOIN @MenuTable nt
 			ON tmi.MenuID=nt.MenuID
-		WHERE tmi.Template_ID=@Template_ID
+		WHERE tmi.Template_ID=@Template_ID AND NOT (tmi.MenuType = 'volsearch' AND @UseVOL=0) AND NOT (tmi.MenuType = 'cicsearch' AND @UseCIC=0)
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @DesignTemplateObjectName, @ErrMsg
 		
 		INSERT INTO GBL_Template_Menu (
@@ -806,7 +805,7 @@ IF @Error = 0 BEGIN
 			DisplayOrder,
 			MenuGroup
 		FROM @MenuTable nt
-		WHERE nt.MenuID IS NULL
+		WHERE nt.MenuID IS NULL AND NOT (nt.MenuType = 'volsearch' AND @UseVOL=0) AND NOT (nt.MenuType = 'cicsearch' AND @UseCIC=0)
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @DesignTemplateObjectName, @ErrMsg
 	END
 END

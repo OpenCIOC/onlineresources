@@ -14,7 +14,7 @@ SET @Error = 0
 MERGE INTO dbo.CIC_iCarolImportRollup dst
 USING dbo.CIC_iCarolImport AS src
 ON src.ResourceAgencyNum=dst.ResourceAgencyNum AND src.LangID=dst.LangID AND src.TaxonomyLevelName = 'Agency'
-WHEN MATCHED AND src.SYNC_DATE > dst.DATE_MODIFIED THEN 
+WHEN MATCHED AND (src.SYNC_DATE > dst.DATE_MODIFIED)  THEN 
 	UPDATE SET 
 		[PublicName]=src.[PublicName],
 		[AlternateName]=src.[AlternateName],
@@ -1331,15 +1331,7 @@ OPTION (ROBUST PLAN)
 MERGE INTO dbo.CIC_iCarolImportRollup dst
 USING (
 SELECT 
-		(
-			SELECT MAX(SYNC_DATE)
-			FROM (
-				(SELECT SYNC_DATE FROM ( VALUES (s.SYNC_DATE),(a.SYNC_DATE) ) AS i(SYNC_DATE)
-				UNION SELECT ISNULL(irr.DELETION_DATE, irr.DATE_MODIFIED) AS SYNC_DATE
-				FROM  dbo.CIC_iCarolImportRollup irr WHERE irr.ConnectsToSiteNum=s.ResourceAgencyNum AND irr.TaxonomyLevelName='ProgramAtSite'
-				)
-			) AS s
-		) AS SYNC_DATE,
+		(SELECT MAX(SYNC_DATE) FROM (VALUES (s.SYNC_DATE), (a.SYNC_DATE)) AS i(SYNC_DATE)) AS SYNC_DATE,
 		COALESCE(s.[ResourceAgencyNum], a.[ResourceAgencyNum]) AS [ResourceAgencyNum],
 		COALESCE(s.[LangID], a.[LangID]) AS [LangID],
 		COALESCE(s.[PublicName], a.[PublicName]) AS [PublicName],
