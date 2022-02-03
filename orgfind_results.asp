@@ -51,7 +51,8 @@ Call makePageHeader(TXT_ORG_FINDER, TXT_ORG_FINDER, False, False, True, False)
 <%
 'On Error Resume Next
 
-Dim strSTerms
+Dim strSTerms, _
+	strNUM
 strSTerms = Trim(Request("OrgSrch"))
 
 Dim strJoinedSTerms, _
@@ -63,24 +64,29 @@ Dim strJoinedSTerms, _
 	displaySTerms()
 
 If Not Nl(strSTerms) Then
-	Call makeSearchString( _
-		strSTerms, _
-		singleSTerms, _
-		quotedSTerms, _
-		exactSTerms, _
-		displaySTerms, _
-		False _
-	)
-	strJoinedSTerms = Join(singleSTerms,AND_CON)
-	strJoinedQSTerms = Join(quotedSTerms,AND_CON)
-	strDisplaySTerms = Join(displaySTerms," " & TXT_AND & " ")
+	If IsNUMType(strSTerms) Then
+		strNUM = strSTerms
+		strDisplaySTerms = strNUM
+	Else
+		Call makeSearchString( _
+			strSTerms, _
+			singleSTerms, _
+			quotedSTerms, _
+			exactSTerms, _
+			displaySTerms, _
+			False _
+		)
+		strJoinedSTerms = Join(singleSTerms,AND_CON)
+		strJoinedQSTerms = Join(quotedSTerms,AND_CON)
+		strDisplaySTerms = Join(displaySTerms," " & TXT_AND & " ")
+	End If
 Else
 	ReDim singleSTerms(-1)
 	ReDim quotedSTerms(-1)
 	ReDim exactSTerms(-1)
 End If
 
-If Nl(strJoinedSTerms) And Nl(strJoinedQSTerms) Then
+If Nl(strJoinedSTerms) And Nl(strJoinedQSTerms) And Nl(strNUM) Then
 %>
 <p><%=TXT_NOTHING_TO_SEARCH%></p>
 <%
@@ -88,9 +94,10 @@ Else
 	Dim strSQL, _
 		strAlertColumn
 		
-	strSQL = "SELECT bt.NUM," & _
+	strSQL = "SELECT bt.NUM,bt.MemberID," & _
 		"dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL," & _
-		"btd.CMP_LocatedIn AS LOCATED_IN_CM"
+		"btd.CMP_LocatedIn AS LOCATED_IN_CM," & _
+		"dbo.fn_GBL_NUMToOrgLocationService(bt.NUM) AS OLS"
 	
 	If g_bAlertColumnVOL Then
 		strSQL = strSQL & _
@@ -107,8 +114,8 @@ Else
 			",CASE WHEN EXISTS(SELECT * FROM CIC_BT_PB pbr INNER JOIN CIC_Feedback_Publication pf ON pbr.BT_PB_ID=pf.BT_PB_ID WHERE pbr.NUM=bt.NUM) " & _
 				"THEN 1 ELSE 0 END AS HAS_PUB_FEEDBACK" & _
 			",CASE WHEN EXISTS(SELECT * FROM VOL_Opportunity vo INNER JOIN VOL_Opportunity_Description vod ON vo.VNUM=vod.VNUM WHERE vo.NUM=bt.NUM " & _
-				" AND " & g_strWhereClauseVOLNoDel & ") " &_
-				"THEN 1 ELSE 0 END AS HAS_VOL_OPPS"
+				" AND " & g_strWhereClauseVOLNoDel & ") " & _
+				"THEN 1 ELSE 0 END AS HAS_VOL_OPPS" & vbCrLf
 	End If
 	
 	strSQL = strSQL & " FROM GBL_BaseTable bt" & vbCrLf & _
@@ -116,16 +123,21 @@ Else
 		"LEFT JOIN CIC_BaseTable cbt ON bt.NUM=cbt.NUM" & vbCrLf & _
 		"LEFT JOIN CIC_BaseTable_Description cbtd ON cbt.NUM=cbtd.NUM AND cbtd.LangID=@@LANGID" & vbCrLf & _
 		"WHERE "
-	
-	If Not Nl(strJoinedSTerms) Then
-		strSQL = strSQL & "CONTAINS(btd.SRCH_Org,'" & strJoinedSTerms & "',LANGUAGE '" & g_objCurrentLang.LanguageAlias & "')" & vbCrLf	
-	End If
-	If Not Nl(strJoinedQSTerms) Then
-		strSQL = strSQL & StringIf(Not Nl(strJoinedSTerms),AND_CON) & "CONTAINS(btd.SRCH_Org,'" & strJoinedQSTerms & "')" & vbCrLf	
+
+	If Not Nl(strNUM) Then
+		strSQL = strSQL & "bt.NUM=" & QsNl(strNUM)
+	Else
+		If Not Nl(strJoinedSTerms) Then
+			strSQL = strSQL & "CONTAINS(btd.SRCH_Org,'" & strJoinedSTerms & "',LANGUAGE '" & g_objCurrentLang.LanguageAlias & "')" & vbCrLf	
+		End If
+		If Not Nl(strJoinedQSTerms) Then
+			strSQL = strSQL & StringIf(Not Nl(strJoinedSTerms),AND_CON) & "CONTAINS(btd.SRCH_Org,'" & strJoinedQSTerms & "')" & vbCrLf	
+		End If
 	End If
 	
 	strSQL = strSQL & IIf(Not Nl(g_strWhereClauseCIC), AND_CON & g_strWhereClauseCIC & vbCrLf, vbNullString) & _
-		"ORDER BY ISNULL(btd.SORT_AS,btd.ORG_LEVEL_1), btd.ORG_LEVEL_2, btd.ORG_LEVEL_3, btd.ORG_LEVEL_4, btd.ORG_LEVEL_5," & vbCrLf & _
+		"ORDER BY CASE WHEN bt.MemberID=" & g_intMemberID & " THEN 0 ELSE 1 END, " & _
+		"ISNULL(btd.SORT_AS,btd.ORG_LEVEL_1), btd.ORG_LEVEL_2, btd.ORG_LEVEL_3, btd.ORG_LEVEL_4, btd.ORG_LEVEL_5," & vbCrLf & _
 		"	STUFF(" & vbCrLf & _
 		"		CASE WHEN EXISTS(SELECT * FROM GBL_BT_OLS pr INNER JOIN GBL_OrgLocationService ols ON pr.OLS_ID=ols.OLS_ID AND ols.Code IN ('AGENCY') WHERE pr.NUM=btd.NUM)" & vbCrLf & _
 		"			THEN NULL" & vbCrLf & _
@@ -160,13 +172,16 @@ Else
 <%
 			If Not .EOF Then
 %>
-<table class="BasicBorder cell-padding-2">
-<tr>
-	<%If g_bAlertColumnVOL Then%><th width="5" class="RevTitleBox">&nbsp;</th><%End If%>
-	<th class="RevTitleBox"><%=TXT_RECORD_NUM%></th>
-	<th class="RevTitleBox"><%=TXT_NAME%></th>
-	<th class="RevTitleBox"><%=TXT_LOCATED_IN%></th>
-</tr>
+<table class="BasicBorder cell-padding-2 table-striped">
+	<thead>
+		<tr>
+			<%If g_bAlertColumnVOL Then%><th width="5" class="RevTitleBox">&nbsp;</th><%End If%>
+			<th class="RevTitleBox"><%=TXT_RECORD_NUM%></th>
+			<th class="RevTitleBox"><%=TXT_NAME%></th>
+			<th class="RevTitleBox"><%=TXT_LOCATED_IN%></th>
+		</tr>
+	</thead>
+	<tbody>
 <%
 				While Not .EOF
 					strAlertColumn = vbNullString
@@ -197,16 +212,21 @@ Else
 					End If
 
 %>
-<tr>
-	<%If g_bAlertColumnVOL Then%><td width="5"<%If .Fields("NON_PUBLIC") Then%> class="AlertBox"<%End If%>><%=strAlertColumn%></td><%End If%>
-	<td><%=.Fields("NUM")%></td>
-	<td><%=.Fields("ORG_NAME_FULL")%></td>
-	<td><%=.Fields("LOCATED_IN_CM")%></td>
-</tr>
+		<tr>
+			<%If g_bAlertColumnVOL Then%><td width="5"<%If .Fields("NON_PUBLIC") Then%> class="AlertBox"<%End If%>><%=strAlertColumn%></td><%End If%>
+			<td style="<%=IIf(.Fields("MemberID")=g_intMemberID,"font-weight:bold;","font-style:italic;")%>"><%=.Fields("NUM")%></td>
+			<td><a href="<%=makeDetailsLink(.Fields("NUM"),vbNullString,vbNullString)%>" target="_blank"><%=.Fields("ORG_NAME_FULL")%></a>
+			<%If Not Nl(.Fields("OLS")) Then%>
+				<span style="font-size:smaller; font-style:italic; white-space:nowrap;">(<%=.Fields("OLS")%>)</span>
+			<%End If%>
+			</td>
+			<td><%=.Fields("LOCATED_IN_CM")%></td>
+		</tr>
 <%
 					.MoveNext
 				Wend
 %>
+	</tbody>
 </table>
 <%
 			End If
