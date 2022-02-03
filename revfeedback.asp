@@ -193,12 +193,12 @@ With rsFb
 				<div style="font-size:small; font-style:italic;"><%=fldAccessURL.Value%></div></td>
 			<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
 			<td class="container-action-list">
-				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & fldFBID,vbNullString)%>"><i class="fa fa-search" aria-hidden="true"></i> <%=TXT_VIEW_FEEDBACK%></a>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & fldFBID,vbNullString)%>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <%=TXT_VIEW_FEEDBACK%></a>
 <%			If .Fields("CAN_UPDATE") = 1 Then%>
-				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","NUM=" & fldNUM & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><i class="fa fa-file-text-o" aria-hidden="true"></i> <%=TXT_UPDATE%></a>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","NUM=" & fldNUM & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> <%=TXT_UPDATE%></a>
 <%			End If
 			If user_bCanDeleteRecordCIC And .Fields("CAN_UPDATE") = 1 And (.Fields("MemberID")=g_intMemberID Or .Fields("FB_MemberID")=g_intMemberID) Then%>
-				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & fldFBID,vbNullString)%>"><i class="fa fa-trash" aria-hidden="true"></i> <%=TXT_DELETE%></a>
+				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & fldFBID,vbNullString)%>"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> <%=TXT_DELETE%></a>
 <%			End If%>
 			</td>
 		</tr>
@@ -302,10 +302,10 @@ With rsFb
 			<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
 <%				If (user_bAddCIC Or user_bSuperUserCIC) Then%>
 			<td class="container-action-list">
-				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & fldFBID,vbNullString)%>"><i class="fa fa-search" aria-hidden="true"></i> <%=TXT_VIEW_FEEDBACK%></a>
-				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","FBID=" & fldFBID & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><i class="fa fa-file-text-o" aria-hidden="true"></i> <%=TXT_CREATE_RECORD%></a>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & fldFBID,vbNullString)%>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <%=TXT_VIEW_FEEDBACK%></a>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","FBID=" & fldFBID & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> <%=TXT_CREATE_RECORD%></a>
 <%					If user_bSuperUserCIC Or user_bCanDeleteRecordCIC Then%>
-				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & fldFBID,vbNullString)%>"><i class="fa fa-trash" aria-hidden="true"></i> <%=TXT_DELETE%></a>
+				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & fldFBID,vbNullString)%>"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> <%=TXT_DELETE%></a>
 <%					End If%>
 			</td>
 <%				End If%>
@@ -423,10 +423,10 @@ With rsFb
 			<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
 <%			If (user_bAddCIC Or user_bSuperUserCIC) Then%>
 			<td class="container-action-list">
-				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & fldFBID,vbNullString)%>"><i class="fa fa-search" aria-hidden="true"></i> <%=TXT_VIEW_FEEDBACK%></a>
-				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","FBID=" & fldFBID & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><i class="fa fa-file-text-o" aria-hidden="true"></i> <%=TXT_CREATE_RECORD%></a>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & fldFBID,vbNullString)%>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <%=TXT_VIEW_FEEDBACK%></a>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","FBID=" & fldFBID & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> <%=TXT_CREATE_RECORD%></a>
 <%				If user_bSuperUserCIC Then%>
-				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & fldFBID,vbNullString)%>"><i class="fa fa-trash" aria-hidden="true"></i> <%=TXT_DELETE%></a>
+				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & fldFBID,vbNullString)%>"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> <%=TXT_DELETE%></a>
 <%				End If%>
 			</td>
 <%			End If%>
@@ -535,12 +535,12 @@ With rsFb
 				<div style="font-size:small; font-style:italic;"><%=fldAccessURL.Value%></div></td>
 			<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
 			<td>
-				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","PBFBID=" & .Fields("PB_FB_ID"),vbNullString)%>"><i class="fa fa-search" aria-hidden="true"></i> <%=TXT_VIEW_FEEDBACK%></a>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","PBFBID=" & .Fields("PB_FB_ID"),vbNullString)%>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <%=TXT_VIEW_FEEDBACK%></a>
 <%			If (user_intCanUpdatePubs <> UPDATE_NONE And (Not user_bLimitedViewCIC Or user_intPBID = .Fields("PB_ID"))) Then%>
-				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("updatepubs/edit", "NUM=" & .Fields("NUM") & "&BTPBID=" & .Fields("BT_PB_ID"), vbNullString)%>"><i class="fa fa-file-text-o" aria-hidden="true"></i> <%=TXT_UPDATE%></a>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("updatepubs/edit", "NUM=" & .Fields("NUM") & "&BTPBID=" & .Fields("BT_PB_ID"), vbNullString)%>"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> <%=TXT_UPDATE%></a>
 <%			End If
 			If (user_bCanDeleteRecordCIC) And (.Fields("MemberID")=g_intMemberID Or .Fields("FB_MemberID")=g_intMemberID) Then%>
-				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","PBFBID=" & .Fields("PB_FB_ID"),vbNullString)%>"><i class="fa fa-trash" aria-hidden="true"></i> <%=TXT_DELETE%></a>
+				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","PBFBID=" & .Fields("PB_FB_ID"),vbNullString)%>"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> <%=TXT_DELETE%></a>
 <%			End If%>
 			</td>		
 		</tr>
@@ -659,12 +659,12 @@ With rsFb
 				<div style="font-size:small; font-style:italic;"><%=fldAccessURL.Value%></div></td>
 			<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
 			<td class="container-action-list">
-				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & fldFBID,vbNullString)%>"><i class="fa fa-search" aria-hidden="true"></i> <%=TXT_VIEW_FEEDBACK%></a>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & fldFBID,vbNullString)%>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <%=TXT_VIEW_FEEDBACK%></a>
 <%			If .Fields("CAN_UPDATE") = 1 Then%>
-				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","NUM=" & fldNUM & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><i class="fa fa-file-text-o" aria-hidden="true"></i> <%=TXT_UPDATE%></a>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","NUM=" & fldNUM & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> <%=TXT_UPDATE%></a>
 <%			End If
 				If user_bSuperUserCIC And (.Fields("MemberID")=g_intMemberID Or .Fields("FB_MemberID")=g_intMemberID) Then%>
-				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & fldFBID,vbNullString)%>"><i class="fa fa-trash" aria-hidden="true"></i> <%=TXT_DELETE%></a>
+				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & fldFBID,vbNullString)%>"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> <%=TXT_DELETE%></a>
 <%			End If%>
 			</td>
 		</tr>
@@ -777,10 +777,10 @@ With rsFb
 					If (user_bAddCIC Or user_bSuperUserCIC) Then
 		%>
 			<td class="container-action-list">
-				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & fldFBID,vbNullString)%>"><i class="fa fa-search" aria-hidden="true"></i> <%=TXT_VIEW_FEEDBACK%></a>
-				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","FBID=" & fldFBID & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><i class="fa fa-file-text-o" aria-hidden="true"></i> <%=TXT_CREATE_RECORD%></a><%
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & fldFBID,vbNullString)%>"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <%=TXT_VIEW_FEEDBACK%></a>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","FBID=" & fldFBID & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> <%=TXT_CREATE_RECORD%></a><%
 						If user_bSuperUserCIC Then%>
-				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & fldFBID,vbNullString)%>"><i class="fa fa-trash" aria-hidden="true"></i> <%=TXT_DELETE%></a><%
+				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & fldFBID,vbNullString)%>"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> <%=TXT_DELETE%></a><%
 						End If%>
 			</td>
 		<%
