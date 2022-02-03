@@ -1161,7 +1161,7 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 						%elif domain.id == const.DM_VOL:
 						<div class="checkbox">
 							${renderer.errorlist("item.ASrchOSSD")}
-							${renderer.checkbox("item.ASrchOSSD", label=_('OSSD Volunteer Component'))}
+							${renderer.checkbox("item.ASrchOSSD", label=_('Diploma Requirements'))}
 						</div>
 						%endif
 					</div>

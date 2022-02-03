@@ -6594,7 +6594,7 @@ msgid "Number of Employees"
 msgstr "Nombre d'employés"
 
 #: cioc/web/admin/templates/views/edit.mak:1160
-msgid "OSSD Volunteer Component"
+msgid "Diploma Requirements"
 msgstr "Élément Bénévolat DESO"
 
 #: cioc/web/admin/templates/views/edit.mak:1167

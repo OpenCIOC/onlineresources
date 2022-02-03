@@ -63,6 +63,17 @@
 	margin-bottom: 0;
 }
 
+.btn-action-list {
+    padding: 0.1em 0.3em;
+    margin-bottom: 0.1em;
+}
+
+@media (min-width: 768px) {
+    .container-action-list {
+        min-width: 188px;
+    }
+}
+
 .Info {
 	font-weight: bold;
 }

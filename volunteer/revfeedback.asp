@@ -59,20 +59,13 @@ If Not (user_bFeedbackAlertVOL _
 End If
 
 Call makePageHeader(TXT_REVIEW_FEEDBACK & " (" & TXT_VOLUNTEER & ")", TXT_REVIEW_FEEDBACK & " (" & TXT_VOLUNTEER & ")", True, False, True, True)
-%>
-<ul>
-	<li><a href="#MyFB"><%=TXT_FEEDBACK_EXISTING%> (<%=user_strAgency%>)</a></li>
-	<li><a href="#MyNewFB"><%=TXT_NEW_RECORD_SUGGESTIONS%> (<%=user_strAgency%>)</a></li>
-	<li><a href="#NewFB"><%=TXT_NEW_RECORD_SUGGESTIONS%>  (<%=TXT_UNASSIGNED%>)</a></li>
-	<li><a href="#OtherFB"><%=TXT_FEEDBACK_EXISTING%> (<%=TXT_OTHER_AGENCIES%>)</a></li>
-	<li><a href="#OtherNewFB"><%=TXT_NEW_RECORD_SUGGESTIONS%> (<%=TXT_OTHER_AGENCIES%>)</a></li>
-</ul>
-<hr>
-<%
-Dim strFeedbackSQL, strOrgName
+
+Dim strFeedbackSQL
 Dim cmdFb, rsFb
 Dim fldFBID, _
 	fldOrgName, _
+	fldVNUM, _
+	fldAccessURL, _
 	bDifferentLang
 
 Dim strOwnerList
@@ -89,11 +82,22 @@ With cmdFb
 	.CommandTimeout = 0
 End With
 
+%>
+<ul>
+	<li><a href="#MyFB"><%=TXT_FEEDBACK_EXISTING%> (<%=user_strAgency%>)</a></li>
+	<li><a href="#MyNewFB"><%=TXT_NEW_RECORD_SUGGESTIONS%> (<%=user_strAgency%>)</a></li>
+	<li><a href="#NewFB"><%=TXT_NEW_RECORD_SUGGESTIONS%>  (<%=TXT_UNASSIGNED%>)</a></li>
+	<li><a href="#OtherFB"><%=TXT_FEEDBACK_EXISTING%> (<%=TXT_OTHER_AGENCIES%>)</a></li>
+	<li><a href="#OtherNewFB"><%=TXT_NEW_RECORD_SUGGESTIONS%> (<%=TXT_OTHER_AGENCIES%>)</a></li>
+</ul>
+<hr>
+
+<%
 '***************************************
 ' Feedback for User's Own Agency
 '***************************************
-strFeedbackSQL = "SELECT vo.MemberID, fb.MemberID AS FB_MemberID, fb.FB_ID, fb.SUBMIT_DATE, sl.Culture, sl.LanguageName AS LanguageName," & _
-	"""SUBMITTED_BY"" = CASE WHEN u.User_ID IS NULL THEN CASE WHEN fb.SOURCE_NAME IS NULL THEN '[Unknown]' ELSE fb.SOURCE_NAME END ELSE u.FirstName + ' ' + u.LastName + ' (' + u.Agency + ')' END, " & _
+strFeedbackSQL = "SELECT vo.MemberID, fb.MemberID AS FB_MemberID, fb.FB_ID, fb.SUBMIT_DATE, fb.AccessURL, sl.Culture, sl.LanguageName AS LanguageName," & _
+	"""SUBMITTED_BY"" = CASE WHEN u.User_ID IS NULL THEN CASE WHEN fb.SOURCE_NAME IS NULL THEN " & QsNl("(" & TXT_UNKNOWN & ")") & " ELSE fb.SOURCE_NAME END ELSE u.FirstName + ' ' + u.LastName + ' (' + u.Agency + ')' END, " & _
 	"dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL_FB," & _
 	"vo.VNUM, vod.POSITION_TITLE," & _
 	"dbo.fn_VOL_CanUpdateRecord(vo.VNUM," & user_intID & "," & g_intViewTypeVOL & ",@@LANGID,GETDATE()) AS CAN_UPDATE" & vbCrLf & _
@@ -125,7 +129,7 @@ Select Case Request("Sort")
 	Case "P"
 		strFeedbackSQL = strFeedbackSQL & " ORDER BY vod.POSITION_TITLE, fb.SUBMIT_DATE"
 	Case "O"
-		strFeedbackSQL = strFeedbackSQL & FB_BTD_ORG_SORT
+		strFeedbackSQL = strFeedbackSQL & FB_BTD_ORG_SORT & ", fb.SUBMIT_DATE"
 	Case "S"
 		strFeedbackSQL = strFeedbackSQL & " ORDER BY SUBMITTED_BY, fb.SUBMIT_DATE"
 	Case Else
@@ -145,45 +149,55 @@ With rsFb
 	
 	Set fldFBID = .Fields("FB_ID")
 	Set fldOrgName = .Fields("ORG_NAME_FULL_FB")
+	Set fldVNUM = .Fields("VNUM")
+	Set fldAccessURL = .Fields("AccessURL")
 %>
 
 <h2 id="MyFB"><%=TXT_FEEDBACK_EXISTING%> (<%=user_strAgency%>)</h2>
 <p><%=TXT_THERE_ARE%> <strong><%=.RecordCount%></strong> <%=TXT_RECORDS_WITH_FEEDBACK%></p>
 <%	If .RecordCount > 0 Then%>
-<table class="BasicBorder cell-padding-3">
-<tr class="RevTitleBox">
+<table class="BasicBorder cell-padding-3 table-striped">
+	<thead>
+	<tr class="RevTitleBox">
 <%		If g_bMultiLingual Then%>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=L",vbNullString)%>" class="RevTitleText"><%=TXT_FEEDBACK_LANGUAGE%></a></th>
+		<th><a href="<%=makeLink(ps_strThisPage,"Sort=L",vbNullString)%>" class="RevTitleText"><%=TXT_FEEDBACK_LANGUAGE%></a></th>
 <%		End If%>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=P",vbNullString)%>" class="RevTitleText"><%=TXT_POSITION_TITLE%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=O",vbNullString)%>" class="RevTitleText"><%=TXT_ORG_NAMES%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=S",vbNullString)%>" class="RevTitleText"><%=TXT_SUBMITTED_BY%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=D",vbNullString)%>" class="RevTitleText"><%=TXT_DATE_SUBMITTED%></a></th>
-	<th><%=TXT_ACTION%></th>
-</tr>
+		<th><a href="<%=makeLink(ps_strThisPage,"Sort=P",vbNullString)%>" class="RevTitleText"><%=TXT_POSITION_TITLE%></a></th>
+		<th><a href="<%=makeLink(ps_strThisPage,"Sort=O",vbNullString)%>" class="RevTitleText"><%=TXT_ORG_NAMES%></a></th>
+		<th><a href="<%=makeLink(ps_strThisPage,"Sort=S",vbNullString)%>" class="RevTitleText"><%=TXT_SUBMITTED_BY%></a></th>
+		<th><a href="<%=makeLink(ps_strThisPage,"Sort=D",vbNullString)%>" class="RevTitleText"><%=TXT_DATE_SUBMITTED%></a></th>
+		<th><%=TXT_ACTION%></th>
+	</tr>
+	</thead>
+	<tbody>
 <%
 		While Not .EOF
 %>
-<tr valign="TOP">
-<%		If g_bMultiLingual Then%>
-	<td><%=.Fields("LanguageName")%></td>
-<%		End If%>
-	<td><a href="<%=makeVOLDetailsLink(.Fields("VNUM"),vbNullString,vbNullString)%>"><%=.Fields("POSITION_TITLE")%></a></td>
-	<td><%=fldOrgName.Value%></td>
-	<td align="right"><%=.Fields("SUBMITTED_BY")%></td>
-	<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
-	<td>[&nbsp;<a href="<%=makeLink("revfeedback_view.asp", "FBID=" & .Fields("FB_ID"),vbNullString)%>"><%=TXT_VIEW%></a><%
-		If .Fields("CAN_UPDATE") Then
-		%>&nbsp;|&nbsp;<a href="<%=makeLink("entryform.asp","VNUM=" & .Fields("VNUM") & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><%=TXT_UPDATE%></a><%
-		End If
-		If (user_bCanDeleteRecordVOL) And .Fields("CAN_UPDATE") And (.Fields("MemberID")=g_intMemberID Or .Fields("FB_MemberID")=g_intMemberID) Then
-		%>&nbsp;|&nbsp;<a href="<%=makeLink("revfeedback_delete.asp","FBID=" & .Fields("FB_ID"),vbNullString)%>"><%=TXT_DELETE%></a><%
-		End If%>&nbsp;]</td>
-</tr>
+	<tr valign="TOP">
+<%			If g_bMultiLingual Then%>
+		<td><%=.Fields("LanguageName")%></td>
+<%			End If%>
+		<td><a href="<%=makeVOLDetailsLink(.Fields("VNUM"),vbNullString,vbNullString)%>"><%=.Fields("POSITION_TITLE")%></a></td>
+		<td><%=fldOrgName.Value%></td>
+		<td align="right"><%=.Fields("SUBMITTED_BY")%>
+				<div style="font-size:small; font-style:italic;"><%=fldAccessURL.Value%></div></td>
+		<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
+			<td class="container-action-list">
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & fldFBID,vbNullString)%>"><i class="fa fa-search" aria-hidden="true"></i> <%=TXT_VIEW_FEEDBACK%></a>
+<%			If .Fields("CAN_UPDATE") = 1 Then%>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","VNUM=" & fldVNUM & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><i class="fa fa-file-text-o" aria-hidden="true"></i> <%=TXT_UPDATE%></a>
+<%			End If
+			If user_bCanDeleteRecordVOL And .Fields("CAN_UPDATE") = 1 And (.Fields("MemberID")=g_intMemberID Or .Fields("FB_MemberID")=g_intMemberID) Then%>
+				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & fldFBID,vbNullString)%>"><i class="fa fa-trash" aria-hidden="true"></i> <%=TXT_DELETE%></a>
+<%			End If%>
+			</td>
+		</tr>
 <%			.MoveNext
 		Wend
 %>
+	</tbody>
 </table>
+<hr />
 <%
 	End If
 	.Close
@@ -192,10 +206,11 @@ End With
 '***************************************
 ' New Record Suggestions for User's Own Agency
 '***************************************
-strFeedbackSQL = "SELECT fb.FB_ID, fb.SUBMIT_DATE, sl.Culture, sl.LanguageName AS LanguageName," & _
-	"""SUBMITTED_BY"" = CASE WHEN u.User_ID IS NULL THEN CASE WHEN fb.SOURCE_NAME IS NULL THEN '[" & TXT_UNKNOWN & "]' ELSE fb.SOURCE_NAME END ELSE u.FirstName + ' ' + u.LastName + ' (' + u.Agency + ')' END, " & _
-	"dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL_FB," & _
-	"fb.POSITION_TITLE, CASE WHEN fb.NUM IS NULL THEN fb.ORG_NAME ELSE NULL END AS ORG_NAME" & vbCrLf & _
+strFeedbackSQL = "SELECT fb.FB_ID, fb.SUBMIT_DATE, fb.AccessURL, sl.Culture, sl.LanguageName AS LanguageName," & _
+	"""SUBMITTED_BY"" = CASE WHEN u.User_ID IS NULL THEN CASE WHEN fb.SOURCE_NAME IS NULL THEN " & QsNl("(" & TXT_UNKNOWN & ")") & " ELSE fb.SOURCE_NAME END ELSE u.FirstName + ' ' + u.LastName + ' (' + u.Agency + ')' END, " & _
+	"ISNULL(fb.ORG_NAME,dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME)) AS ORG_NAME_FULL_FB," & _
+	"ISNULL(fb.POSITION_TITLE," & QsNl("(" & TXT_UNKNOWN & ")") & ") AS POSITION_TITLE," & vbCrLf & _
+	"COALESCE(fb.LOCATION,dbo.fn_GBL_DisplayCommunity(bt.LOCATED_IN_CM,@@LANGID),btd.SITE_CITY) AS LOCATED_IN" & vbCrLf & _
 	"FROM VOL_Feedback fb" & vbCrLf & _
 	"INNER JOIN STP_Language sl ON fb.LangID=sl.LangID" & vbCrLf & _
 	"LEFT JOIN GBL_Users u ON fb.User_ID=u.User_ID " & vbCrLf & _
@@ -209,13 +224,13 @@ Select Case Request("Sort")
 	Case "L"
 		strFeedbackSQL = strFeedbackSQL & " ORDER BY fb.LangID, fb.SUBMIT_DATE"
 	Case "P"
-		strFeedbackSQL = strFeedbackSQL & " ORDER BY fb.POSITION_TITLE, fb.SUBMIT_DATE DESC"
+		strFeedbackSQL = strFeedbackSQL & " ORDER BY fb.POSITION_TITLE, fb.SUBMIT_DATE"
 	Case "O"
-		strFeedbackSQL = strFeedbackSQL & FB_NEW_ORG_SORT
+		strFeedbackSQL = strFeedbackSQL & FB_NEW_ORG_SORT & ", fb.SUBMIT_DATE"
 	Case "S"
-		strFeedbackSQL = strFeedbackSQL & " ORDER BY SUBMITTED_BY, fb.SUBMIT_DATE DESC"
+		strFeedbackSQL = strFeedbackSQL & " ORDER BY SUBMITTED_BY, fb.SUBMIT_DATE"
 	Case Else
-		strFeedbackSQL = strFeedbackSQL & " ORDER BY fb.SUBMIT_DATE DESC"
+		strFeedbackSQL = strFeedbackSQL & " ORDER BY fb.SUBMIT_DATE"
 End Select
 
 'Response.Write("<pre>" & strFeedbackSQL & "</pre>")
@@ -232,6 +247,7 @@ With rsFb
 	
 	Set fldFBID = .Fields("FB_ID")
 	Set fldOrgName = .Fields("ORG_NAME_FULL_FB")
+	Set fldAccessURL = .Fields("AccessURL")
 %>
 <a name="MyNewFB"></a>
 <h2><%=TXT_NEW_RECORD_SUGGESTIONS%> (<%=user_strAgency%>)</h2>
@@ -240,84 +256,88 @@ With rsFb
 	If .RecordCount > 0 Then
 		If user_bCanAssignFeedbackVOL Then
 %>
-<form action="revfeedback_assign.asp" method="get">
+<form action="revfeedback_assign.asp" method="get" role="form" class="form-horizontal">
 <%=g_strCacheFormVals%>
 <%
 		End If
 %>
-<table class="BasicBorder cell-padding-3">
-<tr class="RevTitleBox">
+<table class="BasicBorder cell-padding-3 table-striped">
+	<thead>
+		<tr class="RevTitleBox">
 <%		If user_bCanAssignFeedbackVOL Then%>
-	<th>&nbsp;</th>
+			<th>&nbsp;</th>
+<%		End If
+		If g_bMultiLingual Then%>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=L",vbNullString)%>" class="RevTitleText"><%=TXT_FEEDBACK_LANGUAGE%></a></th>
 <%		End If%>
-<%		If g_bMultiLingual Then%>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=L",vbNullString)%>" class="RevTitleText"><%=TXT_FEEDBACK_LANGUAGE%></a></th>
-<%		End If%>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=P",vbNullString)%>" class="RevTitleText"><%=TXT_POSITION_TITLE%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=O",vbNullString)%>" class="RevTitleText"><%=TXT_ORG_NAMES%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=S",vbNullString)%>" class="RevTitleText"><%=TXT_SUBMITTED_BY%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=D",vbNullString)%>" class="RevTitleText"><%=TXT_DATE_SUBMITTED%></a></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=P",vbNullString)%>" class="RevTitleText"><%=TXT_POSITION_TITLE%></a></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=O",vbNullString)%>" class="RevTitleText"><%=TXT_ORG_NAMES%></a></th>
+			<th><%=TXT_LOCATED_IN%></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=S",vbNullString)%>" class="RevTitleText"><%=TXT_SUBMITTED_BY%></a></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=D",vbNullString)%>" class="RevTitleText"><%=TXT_DATE_SUBMITTED%></a></th>
 <%	If user_bAddVOL Or user_bSuperUserVOL Then%>
-	<th><%=TXT_ACTION%></th>
+			<th><%=TXT_ACTION%></th>
 <%	End If%>
-</tr>
+		</tr>
+	</thead>
+	<tbody>
 <%
 		While Not .EOF
-			If Nl(.Fields("ORG_NAME")) Then
-				strOrgName = fldOrgName.Value
-			Else
-				strOrgName = .Fields("ORG_NAME")
-			End If
 			bDifferentLang = False
 			If .Fields("Culture") <> g_objCurrentLang.Culture Then
 				bDifferentLang = True
 			End If
 %>
-<tr>
+		<tr>
 <%			If user_bCanAssignFeedbackVOL Then%>
-	<td><input type="checkbox" name="AssignFB" value="<%=fldFBID%>"></td>
+			<td><input type="checkbox" name="AssignFB" value="<%=fldFBID%>"></td>
+<%			End If
+			If g_bMultiLingual Then%>
+			<td><%=.Fields("LanguageName")%></td>
 <%			End If%>
-<%			If g_bMultiLingual Then%>
-	<td><%=.Fields("LanguageName")%></td>
-<%			End If%>
-	<td><%=IIf(Nl(.Fields("POSITION_TITLE")),"[Not Specified]",.Fields("POSITION_TITLE"))%></td>
-	<td><%=strOrgName%></td>
-	<td align="right"><%=.Fields("SUBMITTED_BY")%></td>
-	<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
-<%
-			If (user_bAddVOL Or user_bSuperUserVOL) Then
-%>
-	<td>[&nbsp;<a href="<%=makeLink("revfeedback_view.asp","FBID=" & .Fields("FB_ID"),vbNullString)%>"><%=TXT_VIEW_FEEDBACK%></a>&nbsp;|&nbsp;<a href="<%=makeLink("entryform.asp","FBID=" & .Fields("FB_ID") & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><%=TXT_CREATE_RECORD%></a><%
-				If user_bCanDeleteRecordVOL Then
-		%>&nbsp;|&nbsp;<a href="<%=makeLink("revfeedback_delete.asp","FBID=" & .Fields("FB_ID"),vbNullString)%>"><%=TXT_DELETE%></a><%
-				End If
-	%>&nbsp;]</td>
-<%
-			End If
-%>
-</tr>
+			<td><%=.Fields("POSITION_TITLE")%></td>
+			<td><%=fldOrgName.Value%></td>
+			<td><%=.Fields("LOCATED_IN")%></td>
+			<td align="right"><%=.Fields("SUBMITTED_BY")%>
+					<div style="font-size:small; font-style:italic;"><%=fldAccessURL.Value%></div></td>
+			<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
+<%				If (user_bAddVOL Or user_bSuperUserVOL) Then%>
+			<td class="container-action-list">
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & .Fields("FB_ID"),vbNullString)%>"><i class="fa fa-search" aria-hidden="true"></i> <%=TXT_VIEW_FEEDBACK%></a>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","FBID=" & .Fields("FB_ID") & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><i class="fa fa-file-text-o" aria-hidden="true"></i> <%=TXT_CREATE_RECORD%></a>
+<%					If user_bCanDeleteRecordVOL Then%>
+				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & .Fields("FB_ID"),vbNullString)%>"><i class="fa fa-trash" aria-hidden="true"></i> <%=TXT_DELETE%></a>
+<%					End If%>
+			</td>
+<%				End If%>
+		</tr>
 <%			.MoveNext
 		Wend
 %>
+	</tbody>
 </table>
-<%
-		If user_bCanAssignFeedbackVOL Then
-%>
-<p><strong><%=TXT_ASSIGN_TO%></strong><%=strOwnerList%> <input type="submit" value="<%=TXT_SUBMIT%>"></p>
+<%		If user_bCanAssignFeedbackVOL Then%>
+	<div class="form-group">
+		<label for="AssignTo" class="control-label col-xs-12 col-sm-6 col-md-4 col-lg-3"><%=TXT_ASSIGN_TO%></label>
+		<div class="col-xs-12 col-sm-6 col-md-8 col-lg-9 form-inline"><%=strOwnerList%> <input type="submit" value="<%=TXT_SUBMIT%>"></div>
+	</div>
 </form>
-<%
-		End If
+<%		End If
 	End If
 	.Close
 End With
+%>
+<hr />
+<%
 
 '***************************************
 ' New Record Suggestions (Unassigned)
 '***************************************
-strFeedbackSQL = "SELECT fb.FB_ID, fb.SUBMIT_DATE, sl.Culture, sl.LanguageName AS LanguageName," & _
-	"""SUBMITTED_BY"" = CASE WHEN u.User_ID IS NULL THEN CASE WHEN fb.SOURCE_NAME IS NULL THEN '[" & TXT_UNKNOWN & "]' ELSE fb.SOURCE_NAME END ELSE u.FirstName + ' ' + u.LastName + ' (' + u.Agency + ')' END, " & _
-	"dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL_FB," & _
-	"fb.POSITION_TITLE, CASE WHEN fb.NUM IS NULL THEN fb.ORG_NAME ELSE NULL END AS ORG_NAME" & vbCrLf & _
+strFeedbackSQL = "SELECT fb.FB_ID, fb.SUBMIT_DATE, fb.AccessURL, sl.Culture, sl.LanguageName AS LanguageName," & _
+	"""SUBMITTED_BY"" = CASE WHEN u.User_ID IS NULL THEN CASE WHEN fb.SOURCE_NAME IS NULL THEN " & QsNl("(" & TXT_UNKNOWN & ")") & " ELSE fb.SOURCE_NAME END ELSE u.FirstName + ' ' + u.LastName + ' (' + u.Agency + ')' END, " & _
+	"ISNULL(fb.ORG_NAME,dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME)) AS ORG_NAME_FULL_FB," & _
+	"ISNULL(fb.POSITION_TITLE," & QsNl("(" & TXT_UNKNOWN & ")") & ") AS POSITION_TITLE," & vbCrLf & _
+	"COALESCE(fb.LOCATION,dbo.fn_GBL_DisplayCommunity(bt.LOCATED_IN_CM,@@LANGID),btd.SITE_CITY) AS LOCATED_IN" & vbCrLf & _
 	"FROM VOL_Feedback fb" & vbCrLf & _
 	"INNER JOIN STP_Language sl ON fb.LangID=sl.LangID" & vbCrLf & _
 	"LEFT JOIN GBL_BaseTable bt ON fb.NUM=bt.NUM " & vbCrLf & _
@@ -331,11 +351,11 @@ Select Case Request("Sort")
 	Case "L"
 		strFeedbackSQL = strFeedbackSQL & " ORDER BY fb.LangID, fb.SUBMIT_DATE"
 	Case "P"
-		strFeedbackSQL = strFeedbackSQL & " ORDER BY fb.POSITION_TITLE, fb.SUBMIT_DATE DESC"
+		strFeedbackSQL = strFeedbackSQL & " ORDER BY fb.POSITION_TITLE, fb.SUBMIT_DATE"
 	Case "O"
-		strFeedbackSQL = strFeedbackSQL & FB_NEW_ORG_SORT
+		strFeedbackSQL = strFeedbackSQL & FB_NEW_ORG_SORT & ", fb.SUBMIT_DATE"
 	Case "S"
-		strFeedbackSQL = strFeedbackSQL & " ORDER BY SUBMITTED_BY, fb.SUBMIT_DATE DESC"
+		strFeedbackSQL = strFeedbackSQL & " ORDER BY SUBMITTED_BY, fb.SUBMIT_DATE"
 	Case Else
 		strFeedbackSQL = strFeedbackSQL & " ORDER BY fb.SUBMIT_DATE DESC"
 End Select
@@ -354,6 +374,7 @@ With rsFb
 	
 	Set fldFBID = .Fields("FB_ID")
 	Set fldOrgName = .Fields("ORG_NAME_FULL_FB")
+	Set fldAccessURL = .Fields("AccessURL")
 %>
 <a name="NewFB"></a>
 <h2><%=TXT_NEW_RECORD_SUGGESTIONS%> (<%=TXT_UNASSIGNED%>)</h2>
@@ -362,82 +383,86 @@ With rsFb
 	If .RecordCount > 0 Then
 		If user_bCanAssignFeedbackVOL Then
 %>
-<form action="revfeedback_assign.asp" method="get">
+<form action="revfeedback_assign.asp" method="get" role="form" class="form-horizontal">
 <%=g_strCacheFormVals%>
 <%
 		End If
 %>
-<table class="BasicBorder cell-padding-3">
-<tr class="RevTitleBox">
+<table class="BasicBorder cell-padding-3 table-striped">
+	<thead>
+		<tr class="RevTitleBox">
 <%		If user_bCanAssignFeedbackVOL Then%>
-	<th>&nbsp;</th>
+			<th>&nbsp;</th>
+<%		End If
+		If g_bMultiLingual Then%>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=L",vbNullString)%>" class="RevTitleText"><%=TXT_FEEDBACK_LANGUAGE%></a></th>
 <%		End If%>
-<%If g_bMultiLingual Then%>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=L",vbNullString)%>" class="RevTitleText"><%=TXT_FEEDBACK_LANGUAGE%></a></th>
-<%End If%>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=P",vbNullString)%>" class="RevTitleText"><%=TXT_POSITION_TITLE%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=O",vbNullString)%>" class="RevTitleText"><%=TXT_ORG_NAMES%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=S",vbNullString)%>" class="RevTitleText"><%=TXT_SUBMITTED_BY%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=D",vbNullString)%>" class="RevTitleText"><%=TXT_DATE_SUBMITTED%></a></th>
-<%	If user_bAddVOL Or user_bSuperUserVOL Then%>
-	<th><%=TXT_ACTION%></th>
-<%	End If%>
-</tr>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=P",vbNullString)%>" class="RevTitleText"><%=TXT_POSITION_TITLE%></a></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=O",vbNullString)%>" class="RevTitleText"><%=TXT_ORG_NAMES%></a></th>
+			<th><%=TXT_LOCATED_IN%></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=S",vbNullString)%>" class="RevTitleText"><%=TXT_SUBMITTED_BY%></a></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=D",vbNullString)%>" class="RevTitleText"><%=TXT_DATE_SUBMITTED%></a></th>
+<%		If user_bAddVOL Or user_bSuperUserVOL Then%>
+			<th><%=TXT_ACTION%></th>
+<%		End If%>
+		</tr>
+	</thead>
+	<tbody>
 <%
 		While Not .EOF
-			If Nl(.Fields("ORG_NAME")) Then
-				strOrgName = fldOrgName.Value
-			Else
-				strOrgName = .Fields("ORG_NAME")
-			End If
 			bDifferentLang = False
 			If .Fields("Culture") <> g_objCurrentLang.Culture Then
 				bDifferentLang = True
 			End If
 %>
-<tr>
+		<tr>
 <%			If user_bCanAssignFeedbackVOL Then%>
-	<td><input type="checkbox" name="AssignFB" value="<%=fldFBID%>"></td>
+			<td><input type="checkbox" name="AssignFB" value="<%=fldFBID%>"></td>
+<%			End If
+			If g_bMultiLingual Then%>
+			<td><%=.Fields("LanguageName")%></td>
 <%			End If%>
-<%			If g_bMultiLingual Then%>
-	<td><%=.Fields("LanguageName")%></td>
+			<td><%=.Fields("POSITION_TITLE")%></td>
+			<td><%=fldOrgName.Value%></td>
+			<td><%=.Fields("LOCATED_IN")%></td>
+			<td align="right"><%=.Fields("SUBMITTED_BY")%>
+					<div style="font-size:small; font-style:italic;"><%=fldAccessURL.Value%></div></td>
+			<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
+<%			If (user_bAddVOL Or user_bSuperUserVOL) Then%>
+			<td class="container-action-list">
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & .Fields("FB_ID"),vbNullString)%>"><i class="fa fa-search" aria-hidden="true"></i> <%=TXT_VIEW_FEEDBACK%></a>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","FBID=" & .Fields("FB_ID") & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><i class="fa fa-file-text-o" aria-hidden="true"></i> <%=TXT_CREATE_RECORD%></a>
+<%					If user_bCanDeleteRecordVOL Then%>
+				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & .Fields("FB_ID"),vbNullString)%>"><i class="fa fa-trash" aria-hidden="true"></i> <%=TXT_DELETE%></a>
+<%					End If%>
+			</td>
 <%			End If%>
-	<td><%=IIf(Nl(.Fields("POSITION_TITLE")),"[Not Specified]",.Fields("POSITION_TITLE"))%></td>
-	<td><%=strOrgName%></td>
-	<td align="right"><%=.Fields("SUBMITTED_BY")%></td>
-	<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
-<%
-			If (user_bAddVOL Or user_bSuperUserVOL) Then
-%>
-	<td>[&nbsp;<a href="<%=makeLink("revfeedback_view.asp","FBID=" & .Fields("FB_ID"),vbNullString)%>"><%=TXT_VIEW_FEEDBACK%></a>&nbsp;|&nbsp;<a href="<%=makeLink("entryform.asp","FBID=" & .Fields("FB_ID") & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><%=TXT_CREATE_RECORD%></a><%
-				If user_bSuperUserVOL Then
-		%>&nbsp;|&nbsp;<a href="<%=makeLink("revfeedback_delete.asp","FBID=" & .Fields("FB_ID"),vbNullString)%>"><%=TXT_DELETE%></a><%
-				End If
-	%>&nbsp;]</td>
-<%
-			End If
-%>
-</tr>
+		</tr>
 <%			.MoveNext
 		Wend
 %>
+	</tbody>
 </table>
-<%
-		If user_bCanAssignFeedbackVOL Then
-%>
-<p><strong><%=TXT_ASSIGN_TO%></strong><%=strOwnerList%> <input type="submit" value="<%=TXT_SUBMIT%>"></p>
+<%		If user_bCanAssignFeedbackVOL Then%>
+	<div class="form-group">
+		<label for="AssignTo" class="control-label col-xs-12 col-sm-6 col-md-4 col-lg-3"><%=TXT_ASSIGN_TO%></label>
+		<div class="col-xs-12 col-sm-6 col-md-8 col-lg-9 form-inline"><%=strOwnerList%> <input type="submit" value="<%=TXT_SUBMIT%>"></div>
+	</div>
 </form>
 <%
 		End If
 	End If
 	.Close
 End With
+%>
+<hr />
+<%
 
 '***************************************
 ' Feedback for Other Agencies
 '***************************************
-strFeedbackSQL = "SELECT vo.MemberID, fb.MemberID AS FB_MemberID, fb.FB_ID, fb.SUBMIT_DATE, sl.Culture, sl.LanguageName AS LanguageName," & _
-	"""SUBMITTED_BY"" = CASE WHEN u.User_ID IS NULL THEN CASE WHEN fb.SOURCE_NAME IS NULL THEN '[Unknown]' ELSE fb.SOURCE_NAME END ELSE u.FirstName + ' ' + u.LastName + ' (' + u.Agency + ')' END, " & _
+strFeedbackSQL = "SELECT vo.MemberID, fb.MemberID AS FB_MemberID, fb.FB_ID, fb.SUBMIT_DATE, fb.AccessURL, sl.Culture, sl.LanguageName AS LanguageName," & _
+	"""SUBMITTED_BY"" = CASE WHEN u.User_ID IS NULL THEN CASE WHEN fb.SOURCE_NAME IS NULL THEN " & QsNl("[" & TXT_UNKNOWN & "]") & " ELSE fb.SOURCE_NAME END ELSE u.FirstName + ' ' + u.LastName + ' (' + u.Agency + ')' END, " & _
 	"dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL_FB," & _
 	"vo.VNUM, vo.RECORD_OWNER, vod.POSITION_TITLE," & _
 	"dbo.fn_VOL_CanUpdateRecord(vo.VNUM," & user_intID & "," & g_intViewTypeVOL & ",@@LANGID,GETDATE()) AS CAN_UPDATE" & vbCrLf & _
@@ -469,7 +494,7 @@ Select Case Request("Sort")
 	Case "P"
 		strFeedbackSQL = strFeedbackSQL & " ORDER BY vod.POSITION_TITLE, fb.SUBMIT_DATE"
 	Case "O"
-		strFeedbackSQL = strFeedbackSQL & FB_BTD_ORG_SORT
+		strFeedbackSQL = strFeedbackSQL & FB_BTD_ORG_SORT & ", fb.SUBMIT_DATE"
 	Case "S"
 		strFeedbackSQL = strFeedbackSQL & " ORDER BY SUBMITTED_BY, fb.SUBMIT_DATE"
 	Case Else
@@ -494,6 +519,7 @@ With rsFb
 	
 	Set fldFBID = .Fields("FB_ID")
 	Set fldOrgName = .Fields("ORG_NAME_FULL_FB")
+	Set fldAccessURL = .Fields("AccessURL")
 %>
 
 <a name="OtherFB"></a>
@@ -502,54 +528,66 @@ With rsFb
 <%
 	If .RecordCount > 0 Then
 %>
-<table class="BasicBorder cell-padding-3">
-<tr class="RevTitleBox">
-<%If g_bMultiLingual Then%>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=L",vbNullString)%>" class="RevTitleText"><%=TXT_FEEDBACK_LANGUAGE%></a></th>
-<%End If%>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=P",vbNullString)%>" class="RevTitleText"><%=TXT_POSITION_TITLE%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=O",vbNullString)%>" class="RevTitleText"><%=TXT_ORG_NAMES%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=R",vbNullString)%>" class="RevTitleText"><%=TXT_RECORD_OWNER%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=S",vbNullString)%>" class="RevTitleText"><%=TXT_SUBMITTED_BY%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=D",vbNullString)%>" class="RevTitleText"><%=TXT_DATE_SUBMITTED%></a></th>
-	<th><%=TXT_ACTION%></th>
-</tr>
+<table class="BasicBorder cell-padding-3 table-striped">
+	<thead>
+		<tr class="RevTitleBox">
+<%		If g_bMultiLingual Then%>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=L",vbNullString)%>" class="RevTitleText"><%=TXT_FEEDBACK_LANGUAGE%></a></th>
+<%		End If%>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=P",vbNullString)%>" class="RevTitleText"><%=TXT_POSITION_TITLE%></a></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=O",vbNullString)%>" class="RevTitleText"><%=TXT_ORG_NAMES%></a></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=R",vbNullString)%>" class="RevTitleText"><%=TXT_RECORD_OWNER%></a></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=S",vbNullString)%>" class="RevTitleText"><%=TXT_SUBMITTED_BY%></a></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=D",vbNullString)%>" class="RevTitleText"><%=TXT_DATE_SUBMITTED%></a></th>
+			<th><%=TXT_ACTION%></th>
+		</tr>
+	</thead>
+	<tbody>
 <%
 		While Not .EOF
 %>
-<tr valign="TOP">
-<%If g_bMultiLingual Then%>
-	<td><%=.Fields("LanguageName")%></td>
-<%End If%>
-	<td><a href="<%=makeVOLDetailsLink(.Fields("VNUM"),vbNullString,vbNullString)%>"><%=.Fields("POSITION_TITLE")%></a></td>
-	<td><%=fldOrgName.Value%></td>
-	<td><%=.Fields("RECORD_OWNER")%></td>
-	<td align="right"><%=.Fields("SUBMITTED_BY")%></td>
-	<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
-	<td>[&nbsp;<a href="<%=makeLink("revfeedback_view.asp", "FBID=" & .Fields("FB_ID"),vbNullString)%>"><%=TXT_VIEW%></a><%
-		If .Fields("CAN_UPDATE") Then
-		%>&nbsp;|&nbsp;<a href="<%=makeLink("entryform.asp","VNUM=" & .Fields("VNUM") & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><%=TXT_UPDATE%></a><%
-		End If
-		If user_bSuperUserVOL And (.Fields("MemberID")=g_intMemberID Or .Fields("FB_MemberID")=g_intMemberID) Then
-		%>&nbsp;|&nbsp;<a href="<%=makeLink("revfeedback_delete.asp","FBID=" & .Fields("FB_ID"),vbNullString)%>"><%=TXT_DELETE%></a><%
-		End If%>&nbsp;]</td>
-</tr>
-<%			.MoveNext
+		<tr valign="top">
+<%			If g_bMultiLingual Then%>
+			<td><%=.Fields("LanguageName")%></td>
+<%			End If%>
+			<td><a href="<%=makeVOLDetailsLink(.Fields("VNUM"),vbNullString,vbNullString)%>"><%=.Fields("POSITION_TITLE")%></a></td>
+			<td><%=fldOrgName.Value%></td>
+			<td><%=.Fields("RECORD_OWNER")%></td>
+			<td align="right"><%=.Fields("SUBMITTED_BY")%>
+					<div style="font-size:small; font-style:italic;"><%=fldAccessURL.Value%></div></td>
+			<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
+			<td class="container-action-list">
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & .Fields("FB_ID"),vbNullString)%>"><i class="fa fa-search" aria-hidden="true"></i> <%=TXT_VIEW_FEEDBACK%></a>
+<%				If .Fields("CAN_UPDATE") Then%>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","VNUM=" & .Fields("VNUM") & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><i class="fa fa-file-text-o" aria-hidden="true"></i> <%=TXT_UPDATE%></a>
+<%				End If
+				If user_bCanDeleteRecordVOL And (.Fields("MemberID")=g_intMemberID Or .Fields("FB_MemberID")=g_intMemberID) Then%>
+				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & .Fields("FB_ID"),vbNullString)%>"><i class="fa fa-trash" aria-hidden="true"></i> <%=TXT_DELETE%></a>
+<%				End If%>
+			</td>
+		</tr>
+<%
+			.MoveNext
 		Wend
 %>
+	</tbody>
 </table>
 <%
 	End If
 	.Close
 End With
+%>
+<hr />
+<%
 
 '***************************************
 ' New Record Suggestions (Other)
 '***************************************
-strFeedbackSQL = "SELECT fb.FB_ID, fb.SUBMIT_DATE, fb.FEEDBACK_OWNER, sl.Culture, sl.LanguageName AS LanguageName," & _
-	"""SUBMITTED_BY"" = CASE WHEN u.User_ID IS NULL THEN CASE WHEN fb.SOURCE_NAME IS NULL THEN '[" & TXT_UNKNOWN & "]' ELSE fb.SOURCE_NAME END ELSE u.FirstName + ' ' + u.LastName + ' (' + u.Agency + ')' END, " & _
-	"dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL_FB," & _
-	"fb.POSITION_TITLE, CASE WHEN fb.NUM IS NULL THEN fb.ORG_NAME ELSE NULL END AS ORG_NAME" & vbCrLf & _
+strFeedbackSQL = "SELECT fb.FB_ID, fb.SUBMIT_DATE, fb.AccessURL, fb.FEEDBACK_OWNER, sl.Culture, sl.LanguageName AS LanguageName," & _
+	"""SUBMITTED_BY"" = CASE WHEN u.User_ID IS NULL THEN CASE WHEN fb.SOURCE_NAME IS NULL THEN " & QsNl("(" & TXT_UNKNOWN & ")") & " ELSE fb.SOURCE_NAME END ELSE u.FirstName + ' ' + u.LastName + ' (' + u.Agency + ')' END, " & _
+	"ISNULL(fb.ORG_NAME,dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME)) AS ORG_NAME_FULL_FB," & _
+	"ISNULL(fb.POSITION_TITLE," & QsNl("(" & TXT_UNKNOWN & ")") & ") AS POSITION_TITLE," & vbCrLf & _
+	"COALESCE(fb.LOCATION,dbo.fn_GBL_DisplayCommunity(bt.LOCATED_IN_CM,@@LANGID),btd.SITE_CITY) AS LOCATED_IN" & vbCrLf & _
 	"FROM VOL_Feedback fb" & vbCrLf & _
 	"INNER JOIN STP_Language sl ON fb.LangID=sl.LangID" & vbCrLf & _
 	"LEFT JOIN GBL_BaseTable bt ON fb.NUM=bt.NUM " & vbCrLf & _
@@ -588,6 +626,7 @@ With rsFb
 	
 	Set fldFBID = .Fields("FB_ID")
 	Set fldOrgName = .Fields("ORG_NAME_FULL_FB")
+	Set fldAccessURL = .Fields("AccessURL")
 %>
 <a name="OtherNewFB"></a>
 <h2><%=TXT_NEW_RECORD_SUGGESTIONS%> (<%=TXT_OTHER_AGENCIES%>)</h2>
@@ -596,72 +635,73 @@ With rsFb
 	If .RecordCount > 0 Then
 		If user_bSuperUserVOL Then
 %>
-<form action="revfeedback_assign.asp" method="get">
+<form action="revfeedback_assign.asp" method="get" role="form" class="form-horizontal">
 <%=g_strCacheFormVals%>
 <%
 		End If
 %>
-<table class="BasicBorder cell-padding-3">
-<tr class="RevTitleBox">
+<table class="BasicBorder cell-padding-3 table-striped">
+	<thead>
+		<tr class="RevTitleBox">
 <%		If user_bSuperUserVOL Then%>
-	<th>&nbsp;</th>
+			<th>&nbsp;</th>
+<%		End If
+		If g_bMultiLingual Then%>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=L",vbNullString)%>" class="RevTitleText"><%=TXT_FEEDBACK_LANGUAGE%></a></th>
 <%		End If%>
-<%If g_bMultiLingual Then%>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=L",vbNullString)%>" class="RevTitleText"><%=TXT_FEEDBACK_LANGUAGE%></a></th>
-<%End If%>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=P",vbNullString)%>" class="RevTitleText"><%=TXT_POSITION_TITLE%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=O",vbNullString)%>" class="RevTitleText"><%=TXT_ORG_NAMES%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=R",vbNullString)%>" class="RevTitleText"><%=TXT_RECORD_OWNER%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=S",vbNullString)%>" class="RevTitleText"><%=TXT_SUBMITTED_BY%></a></th>
-	<th><a href="<%=makeLink(ps_strThisPage,"Sort=D",vbNullString)%>" class="RevTitleText"><%=TXT_DATE_SUBMITTED%></a></th>
-<%	If user_bAddVOL Or user_bSuperUserVOL Then%>
-	<th><%=TXT_ACTION%></th>
-<%	End If%>
-</tr>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=P",vbNullString)%>" class="RevTitleText"><%=TXT_POSITION_TITLE%></a></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=O",vbNullString)%>" class="RevTitleText"><%=TXT_ORG_NAMES%></a></th>
+			<th><%=TXT_LOCATED_IN%></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=R",vbNullString)%>" class="RevTitleText"><%=TXT_RECORD_OWNER%></a></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=S",vbNullString)%>" class="RevTitleText"><%=TXT_SUBMITTED_BY%></a></th>
+			<th><a href="<%=makeLink(ps_strThisPage,"Sort=D",vbNullString)%>" class="RevTitleText"><%=TXT_DATE_SUBMITTED%></a></th>
+<%		If user_bAddVOL Or user_bSuperUserVOL Then%>
+			<th><%=TXT_ACTION%></th>
+<%		End If%>
+		</tr>
+	</thead>
+	<tbody>
 <%
 		While Not .EOF
-			If Nl(.Fields("ORG_NAME")) Then
-				strOrgName = fldOrgName.Value
-			Else
-				strOrgName = .Fields("ORG_NAME")
-			End If
 			bDifferentLang = False
 			If .Fields("Culture") <> g_objCurrentLang.Culture Then
 				bDifferentLang = True
 			End If
 %>
-<tr>
-<%		If user_bSuperUserVOL Then%>
-	<td><input type="checkbox" name="AssignFB" value="<%=fldFBID%>"></td>
-<%		End If%>
-<%			If g_bMultiLingual Then%>
-	<td><%=.Fields("LanguageName")%></td>
+		<tr>
+<%			If user_bSuperUserVOL Then%>
+			<td><input type="checkbox" name="AssignFB" value="<%=fldFBID%>"></td>
+<%			End If
+			If g_bMultiLingual Then%>
+			<td><%=.Fields("LanguageName")%></td>
 <%			End If%>
-	<td><%=IIf(Nl(.Fields("POSITION_TITLE")),"[Not Specified]",.Fields("POSITION_TITLE"))%></td>
-	<td><%=strOrgName%></td>
-	<td><%=.Fields("FEEDBACK_OWNER")%></td>
-	<td align="right"><%=.Fields("SUBMITTED_BY")%></td>
-	<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
-<%
-			If (user_bAddVOL Or user_bSuperUserVOL) Then
-%>
-	<td>[&nbsp;<a href="<%=makeLink("revfeedback_view.asp","FBID=" & .Fields("FB_ID"),vbNullString)%>"><%=TXT_VIEW_FEEDBACK%></a>&nbsp;|&nbsp;<a href="<%=makeLink("entryform.asp","FBID=" & .Fields("FB_ID") & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><%=TXT_CREATE_RECORD%></a><%
-				If user_bSuperUserVOL Then
-		%>&nbsp;|&nbsp;<a href="<%=makeLink("revfeedback_delete.asp","FBID=" & .Fields("FB_ID"),vbNullString)%>"><%=TXT_DELETE%></a><%
-				End If
-	%>&nbsp;]</td>
-<%
-			End If
-%>
-</tr>
+			<td><%=.Fields("POSITION_TITLE")%></td>
+			<td><%=fldOrgName.Value%></td>
+			<td><%=.Fields("LOCATED_IN")%></td>
+			<td><%=.Fields("FEEDBACK_OWNER")%></td>
+			<td align="right"><%=.Fields("SUBMITTED_BY")%>
+					<div style="font-size:small; font-style:italic;"><%=fldAccessURL.Value%></div></td>
+			<td align="right"><%=DateString(.Fields("SUBMIT_DATE"),True)%></td>
+<%				If (user_bAddCIC Or user_bSuperUserCIC) Then%>
+			<td class="container-action-list">
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("revfeedback_view.asp","FBID=" & fldFBID,vbNullString)%>"><i class="fa fa-search" aria-hidden="true"></i> <%=TXT_VIEW_FEEDBACK%></a>
+				<a class="btn btn-sm btn-info btn-action-list" href="<%=makeLink("entryform.asp","FBID=" & fldFBID & StringIf(bDifferentLang,"&UpdateLn=" & .Fields("Culture")),vbNullString)%>"><i class="fa fa-file-text-o" aria-hidden="true"></i> <%=TXT_CREATE_RECORD%></a>
+<%					If user_bSuperUserCIC Or user_bCanDeleteRecordCIC Then%>
+				<a class="btn btn-sm btn-danger btn-action-list" href="<%=makeLink("revfeedback_delete.asp","FBID=" & fldFBID,vbNullString)%>"><i class="fa fa-trash" aria-hidden="true"></i> <%=TXT_DELETE%></a>
+<%					End If%>
+			</td>
+<%				End If%>
+		</tr>
 <%			.MoveNext
 		Wend
 %>
+	</tbody>
 </table>
-<%
-		If user_bSuperUserVOL Then
-%>
-<p><strong><%=TXT_ASSIGN_TO%></strong><%=strOwnerList%> <input type="submit" value="<%=TXT_SUBMIT%>"></p>
+<%		If user_bSuperUserVOL Then%>
+	<div class="form-group">
+		<label for="AssignTo" class="control-label col-xs-12 col-sm-6 col-md-4 col-lg-3"><%=TXT_ASSIGN_TO%></label>
+		<div class="col-xs-12 col-sm-6 col-md-8 col-lg-9 form-inline"><%=strOwnerList%> <input type="submit" value="<%=TXT_SUBMIT%>"></div>
+	</div>
 </form>
 <%
 		End If
