@@ -54,8 +54,8 @@ Sub setTxtSearchAdvancedVOL()
 			TXT_HAS_OPPORTUNITIES_IN_COMMUNITIES = "Has opportunities in any of the following communities" & TXT_COLON
 			TXT_ONLY_CURRENT = "Only current records"
 			TXT_ONLY_EXPIRED = "Only expired records"
-			TXT_OSSD_COMPONENT = "OSSD Component"
-			TXT_OSSD_SUITABLE = "Suitable for the OSSD Volunteer Component"
+			TXT_OSSD_COMPONENT = "Diploma Requirements"
+			TXT_OSSD_SUITABLE = "Suitable for Secondary School Diploma Volunteer Requirements"
 			TXT_SEARCH_OPPORTUNITY = "Search Opportunity"
 			TXT_SEARCH_ORG_NAME = "Search Org Name"
 			TXT_VOL_ADVANCED_SEARCH = "Volunteer Opportunity Advanced Search"

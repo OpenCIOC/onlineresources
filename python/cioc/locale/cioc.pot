@@ -7062,7 +7062,7 @@ msgid "Number of Employees"
 msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1160
-msgid "OSSD Volunteer Component"
+msgid "Diploma Requirements"
 msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1167
