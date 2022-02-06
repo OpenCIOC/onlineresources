@@ -53,7 +53,7 @@ End If
 
 If Nl(Request("NumEmail")) Then
 'Call sendEmail(bIgnoreBlock,strFrom,strTo,strSubject,strMessage)
-If sendEmail(True,"chris@cioc.ca","chris@kclsoftware.com","CIOC Email test","This is a test email message") Then
+If sendEmail(True,CIOC_TASK_NOTIFY_EMAIL,CIOC_TASK_NOTIFY_EMAIL,"CIOC Email test","This is a test email message") Then
 Response.Write("Success")
 Else
 Response.Write("Failure")
@@ -64,7 +64,7 @@ Else
 	strTargetEmail = Request("TargetEmail")
 
 	For i = 1 to intNumEmail
-	 Call sendEmail(True, "chris@cioc.ca", strTargetEmail, "CIOC Email test #" & i, _
+	 Call sendEmail(True, CIOC_TASK_NOTIFY_EMAIL, strTargetEmail, "CIOC Email test #" & i, _
 		"Lorem ipsum dolor sit amet, consectetur adipiscing elit. In sodales imperdiet" & vbCrLf & _
 		"erat et hendrerit. Fusce cursus sit amet ante vitae vehicula. Maecenas vel" & vbCrLf & _
 		"accumsan sem. Sed posuere augue eu scelerisque vehicula. Phasellus in laoreet" & vbCrLf & _

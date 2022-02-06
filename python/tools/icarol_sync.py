@@ -483,8 +483,8 @@ def output_error_log(args, error_log):
 
 def email_log(args, outputstream, report, validation_errors, is_error):
 	try:
-		author = get_config_item(args, 'airs_export_notify_from', 'admin@cioc.ca')
-		to = [x.strip() for x in get_config_item(args, 'airs_export_notify_emails', 'admin@cioc.ca').split(',')]
+		author = get_config_item(args, 'airs_export_notify_from', const.CIOC_ADMIN_EMAIL)
+		to = [x.strip() for x in get_config_item(args, 'airs_export_notify_emails', const.CIOC_ADMIN_EMAIL).split(',')]
 		email.send_email(fakerequest(args.config), author, to, 'AIRS Export to iCarol%s' % (' -- Review Required!' if validation_errors else (' -- ERRORS!' if is_error else '')), '\n\n'.join((report, outputstream.getvalue())))
 	except Exception as e:
 		raise Exception('unable to send email log: {},{}'.format(outputstream.getvalue(), six.text_type(e)), e)

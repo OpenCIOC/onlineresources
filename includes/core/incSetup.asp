@@ -138,6 +138,9 @@ GC_DONT_CHANGE = const.GC_DONT_CHANGE
 MAP_PIN_MIN = const.MAP_PIN_MIN
 MAP_PIN_MAX = const.MAP_PIN_MAX
 
+# TODO this can be turned into normal attribute access after the site's been recycled
+CIOC_TASK_NOTIFY_EMAIL = getattr(const, 'CIOC_TASK_NOTIFY_EMAIL', 'qw4afPcItA5KJ18NH4nV@cioc.ca')
+
 #jQuery and jQueryUI versions
 strJQueryVersion = const.JQUERY_VERSION
 strJQueryUIVersion = const.JQUERY_UI_VERSION

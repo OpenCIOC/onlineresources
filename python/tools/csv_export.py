@@ -202,7 +202,7 @@ class fakerequest(object):
 
 
 def email_log(args, outputstream, is_error, success_email, error_email):
-	author = get_config_item(args, 'csv_export_notify_from', 'admin@cioc.ca')
+	author = get_config_item(args, 'csv_export_notify_from', const.CIOC_ADMIN_EMAIL)
 	to = []
 	if success_email:
 		to.extend(x.strip() for x in success_email.split(','))

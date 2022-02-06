@@ -351,6 +351,10 @@ jQuery(function($) {
 	init_cached_state()
 	init_checklist_search('<%=makeLinkB(ps_strPathToStart & "jsonfeeds/checklist_searchform.asp")%>');
 	init_pre_fill_search_parameters('<%=makeLinkB(ps_strPathToStart & "jsonfeeds/checklist_searchform.asp")%>');
+	init_find_box({
+		P: "<%= makeLink(ps_strPathToStart & "jsonfeeds/vol_keyword_generator.asp", "SearchType=P", vbNullString) %>", 
+		O: "<%= makeLink(ps_strPathToStart & "jsonfeeds/vol_keyword_generator.asp", "SearchType=O", vbNullString) %>", 
+			}, $('#EntryForm'));
 	restore_cached_state();
 });
 </script>

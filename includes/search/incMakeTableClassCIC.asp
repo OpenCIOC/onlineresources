@@ -503,7 +503,7 @@ If Err.Number <> 0 Or cmdOrgList.ActiveConnection.Errors.Count > 0 Then
 			Next
 
 			If Nl(Request("Limit")) Then
-				Call sendEmail(True, "qw4afPcItA5KJ18NH4nV@cioc.ca", "qw4afPcItA5KJ18NH4nV@cioc.ca", "CIC Search SQL Error", strErrorDetails & strSQL)
+				Call sendEmail(True, CIOC_TASK_NOTIFY_EMAIL, CIOC_TASK_NOTIFY_EMAIL, "CIC Search SQL Error", strErrorDetails & strSQL)
 			End If
 	End With
 	Err.Clear

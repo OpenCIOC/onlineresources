@@ -15,10 +15,14 @@
 # =========================================================================================
 
 from __future__ import absolute_import
-import os, time
+import os
+import time
 import logging.handlers
+from . import constants as const
 
 _app_name = None
+_log_root = None
+
 
 def _get_app_name():
 	global _app_name
@@ -28,11 +32,11 @@ def _get_app_name():
 
 	return _app_name
 
-_log_root = None
+
 class TimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
 	"""
-	A version of logging.handlers.TimedRotatingFileHandler that knows about the 
-	location to store log files and calculates the path based on the app name. It also 
+	A version of logging.handlers.TimedRotatingFileHandler that knows about the
+	location to store log files and calculates the path based on the app name. It also
 	always stores to a dated filename.
 	"""
 	def __init__(self, name):
@@ -41,7 +45,7 @@ class TimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
 		app_name = _get_app_name()
 
 		if _log_root is None:
-			_log_root = os.environ.get('CIOC_LOG_ROOT', 'd:\logs')
+			_log_root = os.environ.get('CIOC_LOG_ROOT', 'd:\\logs')
 
 		self._logfilename = os.path.join(_log_root, app_name, 'python', name)
 
@@ -81,30 +85,30 @@ class TimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
 		newRolloverAt = self.computeRollover(currentTime)
 		while newRolloverAt <= currentTime:
 			newRolloverAt = newRolloverAt + self.interval
-		#If DST changes and midnight or weekly rollover, adjust for this.
+		# If DST changes and midnight or weekly rollover, adjust for this.
 		if (self.when == 'MIDNIGHT' or self.when.startswith('W')) and not self.utc:
 			dstNow = time.localtime(currentTime)[-1]
 			dstAtRollover = time.localtime(newRolloverAt)[-1]
 			if dstNow != dstAtRollover:
-				if not dstNow:	# DST kicks in before next rollover, so we need to deduct an hour
+				if not dstNow:  # DST kicks in before next rollover, so we need to deduct an hour
 					newRolloverAt = newRolloverAt - 3600
-				else:			# DST bows out before next rollover, so we need to add an hour
+				else:  # DST bows out before next rollover, so we need to add an hour
 					newRolloverAt = newRolloverAt + 3600
 		self.rolloverAt = newRolloverAt
 
 
 _server = None
+
+
 class SMTPHandler(logging.handlers.SMTPHandler):
-	def __init__(self, server, fromaddr, toaddrs, subject, credentials=None, secure=None):
+	def __init__(self, subject, credentials=None, secure=None):
 		global _server
-		if server is None:
-			if _server is None:
-				_server = os.environ.get('CIOC_MAILHOST', 'mail.oakville.ca')
-			server = _server
-		
+		if _server is None:
+			_server = os.environ.get('CIOC_MAILHOST', '127.0.0.1')
+		server = _server
+
 		app_name = _get_app_name()
 
 		subject = subject.format(site_name=app_name)
 
-		logging.handlers.SMTPHandler.__init__(self, server, fromaddr, toaddrs, subject, credentials, secure)
-
+		super().__init__(server, const.CIOC_TASK_NOTIFY_EMAIL, [const.CIOC_TASK_NOTIFY_EMAIL], subject, credentials, secure)

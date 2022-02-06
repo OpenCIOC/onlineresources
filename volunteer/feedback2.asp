@@ -886,7 +886,7 @@ With cmdInsertFb
 							"SQL state: " & Ns(objErr.SQLState) & vbCrLf
 		Next
 
-		Call sendEmail(True, "qw4afPcItA5KJ18NH4nV@cioc.ca", "qw4afPcItA5KJ18NH4nV@cioc.ca", "Entryform SQL Error", strErrorDetails & strInsSQL)
+		Call sendEmail(True, CIOC_TASK_NOTIFY_EMAIL, CIOC_TASK_NOTIFY_EMAIL, "Entryform SQL Error", strErrorDetails & strInsSQL)
 	End if
 	On Error Goto 0
 End With

@@ -277,8 +277,8 @@ class fakerequest(object):
 
 def email_log(args, outputstream, is_error, to=None):
 	try:
-		author = get_config_item(args, 'o211_import_notify_from', 'admin@cioc.ca')
-		to = [x.strip() for x in (to or get_config_item(args, 'o211_import_notify_emails', 'admin@cioc.ca')).split(',')]
+		author = get_config_item(args, 'o211_import_notify_from', const.CIOC_ADMIN_EMAIL)
+		to = [x.strip() for x in (to or get_config_item(args, 'o211_import_notify_emails', const.CIOC_ADMIN_EMAIL)).split(',')]
 		email.send_email(fakerequest(args.config), author, to, 'Import from iCarol%s' % (' -- ERRORS!' if is_error else ''), outputstream.getvalue().replace('\r', '').replace('\n', '\r\n'))
 	except Exception as e:
 		raise Exception('unable to send email log: {},{}'.format(outputstream.getvalue(), six.text_type(e)), e)

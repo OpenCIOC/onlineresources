@@ -18,6 +18,9 @@ from __future__ import absolute_import
 from collections import namedtuple
 import os
 
+CIOC_TASK_NOTIFY_EMAIL = os.environ.get('CIOC_TASK_NOTIFY_EMAIL', 'qw4afPcItA5KJ18NH4nV@cioc.ca')
+CIOC_ADMIN_EMAIL = os.environ.get('CIOC_ADMIN_EMAIL', 'admin@cioc.ca')
+
 DM_CIC = 1
 DM_VOL = 2
 DM_CCR = 3

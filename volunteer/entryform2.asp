@@ -905,7 +905,7 @@ If Not bOPIDError Then
 									"SQL state: " & Ns(objErr.SQLState) & vbCrLf
 				Next
 
-				Call sendEmail(True, "qw4afPcItA5KJ18NH4nV@cioc.ca", "qw4afPcItA5KJ18NH4nV@cioc.ca", "VOL Entryform SQL Error", strErrorDetails & strInsSQL)
+				Call sendEmail(True, CIOC_TASK_NOTIFY_EMAIL, CIOC_TASK_NOTIFY_EMAIL, "VOL Entryform SQL Error", strErrorDetails & strInsSQL)
 			ElseIf Not rsInsUpd.EOF Then
 				strVNUM = rsInsUpd("VNUM")
 				tmpPosOrg = rsInsUpd.Fields("ORG_NAME_FULL")
