@@ -75,7 +75,7 @@ can_delete = not is_add and can_update
 	%else:
 		<br>${_('This Subject Term <strong>is not</strong> being <strong>used for</strong> any other Subjects.')|n}
 	%endif
-	%if usage.MemberID is not None and usage.MemberID<>request.dboptions.MemberID:
+	%if usage.MemberID is not None and usage.MemberID != request.dboptions.MemberID:
 		<br>${_('This Subject Term is <strong>controlled exclusively</strong> by another CIOC Member in your database.')|n}
 	%elif can_delete:
 		<br>${_('Because this Subject is not being used, you can make it inactive, or delete it using the button at the bottom of the form.')}
@@ -211,7 +211,7 @@ ${self.makeMgmtInfo(usage)}
 	</td>
 </tr>
 %endfor
-%if can_inactivate or can_update or (SuperUserGlobal and usage.MemberID<>request.dboptions.MemberID):
+%if can_inactivate or can_update or (SuperUserGlobal and usage.MemberID != request.dboptions.MemberID):
 	%if is_add or usage.MemberID is None or usage.MemberID==request.dboptions.MemberID:
 <tr>
 	<td class="FieldLabelLeft">${_('Activation')}</td>
