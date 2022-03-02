@@ -45,7 +45,7 @@ SELECT CAST((SELECT (
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName IN ('After Hours', 'après fermeture') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('After Hours', 'après fermeture') THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -73,7 +73,7 @@ SELECT CAST((SELECT (
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName IN ('After Hours', 'après fermeture') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('After Hours', 'après fermeture') THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -161,7 +161,7 @@ SELECT CAST((SELECT (
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName IN ('Crisis', 'Crise') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Crisis', 'Crise') THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -189,7 +189,7 @@ SELECT CAST((SELECT (
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName IN ('Crisis', 'Crise') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Crisis', 'Crise') THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -248,7 +248,7 @@ SELECT CAST((SELECT (
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName IN ('Fax', 'Télécopieur') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Fax', 'Télécopieur') THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -276,7 +276,7 @@ SELECT CAST((SELECT (
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName IN ('Fax', 'Télécopieur') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Fax', 'Télécopieur') THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -367,7 +367,7 @@ SELECT CAST((SELECT (
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName IN ('Office', 'Bureau') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Office', 'Bureau') THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -396,7 +396,7 @@ SELECT CAST((SELECT (
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName IN ('Office', 'Bureau') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Office', 'Bureau') THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -543,7 +543,7 @@ SELECT CAST((SELECT (
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName IN ('TTY', 'ATS-ATME') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('TTY', 'ATS-ATME') THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -571,7 +571,7 @@ SELECT CAST((SELECT (
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName IN ('TTY', 'ATS-ATME') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('TTY', 'ATS-ATME') THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -601,7 +601,7 @@ SELECT CAST((SELECT (
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName IN ('Toll Free', 'sans frais') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Toll Free', 'sans frais') THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -629,7 +629,7 @@ SELECT CAST((SELECT (
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName IN ('Toll Free', 'sans frais') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Toll Free', 'sans frais') THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
