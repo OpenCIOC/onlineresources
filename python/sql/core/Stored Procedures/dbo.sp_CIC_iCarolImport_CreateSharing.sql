@@ -41,11 +41,10 @@ SELECT CAST((SELECT (
 				SELECT CASE WHEN PhoneNumber IS NOT NULL THEN 
 					(
 						CASE WHEN PhoneName IS NOT NULL AND PhoneName NOT IN ('After Hours', 'après fermeture') THEN PhoneName + ': ' 
-							 WHEN PhoneDescription IS NOT NULL THEN PhoneDescription + ': ' 
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('After Hours', 'après fermeture') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -69,11 +68,10 @@ SELECT CAST((SELECT (
 				SELECT CASE WHEN PhoneNumber IS NOT NULL THEN 
 					(
 						CASE WHEN PhoneName IS NOT NULL AND PhoneName NOT IN ('After Hours', 'après fermeture') THEN PhoneName + ' : ' 
-							 WHEN PhoneDescription IS NOT NULL THEN PhoneDescription + ' : ' 
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('After Hours', 'après fermeture') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -157,11 +155,10 @@ SELECT CAST((SELECT (
 				SELECT CASE WHEN PhoneNumber IS NOT NULL THEN 
 					(
 						CASE WHEN PhoneName IS NOT NULL AND PhoneName NOT IN ('Crisis', 'Crise') THEN PhoneName + ': ' 
-							 WHEN PhoneDescription IS NOT NULL THEN PhoneDescription + ': ' 
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Crisis', 'Crise') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -184,12 +181,11 @@ SELECT CAST((SELECT (
 			 (SELECT STUFF((SELECT ' ; ' + NumberValue FROM (
 				SELECT CASE WHEN PhoneNumber IS NOT NULL THEN 
 					(
-						CASE WHEN PhoneName IS NOT NULL AND PhoneName NOT IN ('Crisis', 'Crise') THEN PhoneName + ' : ' 
-							 WHEN PhoneDescription IS NOT NULL THEN PhoneDescription + ' : ' 
+						CASE WHEN PhoneName IS NOT NULL AND PhoneName NOT IN ('Crisis', 'Crise') THEN PhoneName + ' : '
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Crisis', 'Crise') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -244,11 +240,10 @@ SELECT CAST((SELECT (
 				SELECT CASE WHEN PhoneNumber IS NOT NULL THEN 
 					(
 						CASE WHEN PhoneName IS NOT NULL AND PhoneName NOT IN ('Fax', 'Télécopieur') THEN PhoneName + ': ' 
-							 WHEN PhoneDescription IS NOT NULL THEN PhoneDescription + ': ' 
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Fax', 'Télécopieur') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -272,11 +267,10 @@ SELECT CAST((SELECT (
 				SELECT CASE WHEN PhoneNumber IS NOT NULL THEN 
 					(
 						CASE WHEN PhoneName IS NOT NULL AND PhoneName NOT IN ('Fax', 'Télécopieur') THEN PhoneName + ' : ' 
-							 WHEN PhoneDescription IS NOT NULL THEN PhoneDescription + ' : ' 
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Fax', 'Télécopieur') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -363,11 +357,10 @@ SELECT CAST((SELECT (
 				SELECT CASE WHEN PhoneNumber IS NOT NULL THEN 
 					(
 						CASE WHEN PhoneName IS NOT NULL AND PhoneName NOT IN ('Office', 'Bureau') THEN PhoneName + ': ' 
-							 WHEN PhoneDescription IS NOT NULL THEN PhoneDescription + ': ' 
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Office', 'Bureau') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -376,7 +369,7 @@ SELECT CAST((SELECT (
 				   SELECT Preference, PhoneNumber, PhoneName, PhoneDescription, PhoneIsPrivate, ROW_NUMBER() OVER (PARTITION BY PhoneNumber ORDER BY Preference) AS RowNumber
 						FROM (
 						VALUES 
-							(0, a.PhoneNumberOutOfArea, 'Office', a.PhoneNumberOutOfAreaDescription, COALESCE(a.PhoneNumberOutOfAreaIsPrivate, 'False')),
+							(0, a.PhoneNumberBusinessLine, 'Office', a.PhoneNumberBusinessLineDescription, COALESCE(a.PhoneNumberBusinessLineIsPrivate, 'False')),
 							(1, a.Phone1Number, a.Phone1Name, a.Phone1Description, COALESCE(a.Phone1IsPrivate, 'False')),
 							(2, a.Phone2Number, a.Phone2Name, a.Phone2Description, COALESCE(a.Phone2IsPrivate, 'False')),
 							(3, a.Phone3Number, a.Phone3Name, a.Phone3Description, COALESCE(a.Phone3IsPrivate, 'False')),
@@ -392,11 +385,10 @@ SELECT CAST((SELECT (
 				SELECT CASE WHEN PhoneNumber IS NOT NULL THEN 
 					(
 						CASE WHEN PhoneName IS NOT NULL AND PhoneName NOT IN ('Office', 'Bureau') THEN PhoneName + ' : ' 
-							 WHEN PhoneDescription IS NOT NULL THEN PhoneDescription + ' : ' 
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Office', 'Bureau') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -405,7 +397,7 @@ SELECT CAST((SELECT (
 				   SELECT Preference, PhoneNumber, PhoneName, PhoneDescription, PhoneIsPrivate, ROW_NUMBER() OVER (PARTITION BY PhoneNumber ORDER BY Preference) AS RowNumber
 						FROM (
 						VALUES 
-							(0, f.PhoneNumberOutOfArea, 'Office', f.PhoneNumberOutOfAreaDescription, COALESCE(f.PhoneNumberOutOfAreaIsPrivate, 'False')),
+							(0, f.PhoneNumberBusinessLine, 'Office', f.PhoneNumberBusinessLineDescription, COALESCE(f.PhoneNumberBusinessLineIsPrivate, 'False')),
 							(1, f.Phone1Number, f.Phone1Name, f.Phone1Description, COALESCE(f.Phone1IsPrivate, 'False')),
 							(2, f.Phone2Number, f.Phone2Name, f.Phone2Description, COALESCE(f.Phone2IsPrivate, 'False')),
 							(3, f.Phone3Number, f.Phone3Name, f.Phone3Description, COALESCE(f.Phone3IsPrivate, 'False')),
@@ -539,11 +531,10 @@ SELECT CAST((SELECT (
 				SELECT CASE WHEN PhoneNumber IS NOT NULL THEN 
 					(
 						CASE WHEN PhoneName IS NOT NULL AND PhoneName NOT IN ('TTY', 'ATS-ATME') THEN PhoneName + ': ' 
-							 WHEN PhoneDescription IS NOT NULL THEN PhoneDescription + ': ' 
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('TTY', 'ATS-ATME') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -567,11 +558,10 @@ SELECT CAST((SELECT (
 				SELECT CASE WHEN PhoneNumber IS NOT NULL THEN 
 					(
 						CASE WHEN PhoneName IS NOT NULL AND PhoneName NOT IN ('TTY', 'ATS-ATME') THEN PhoneName + ' : ' 
-							 WHEN PhoneDescription IS NOT NULL THEN PhoneDescription + ' : ' 
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('TTY', 'ATS-ATME') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -597,11 +587,10 @@ SELECT CAST((SELECT (
 				SELECT CASE WHEN PhoneNumber IS NOT NULL THEN 
 					(
 						CASE WHEN PhoneName IS NOT NULL AND PhoneName NOT IN ('Toll Free', 'sans frais') THEN PhoneName + ': ' 
-							 WHEN PhoneDescription IS NOT NULL THEN PhoneDescription + ': ' 
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Toll Free', 'sans frais') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -610,7 +599,7 @@ SELECT CAST((SELECT (
 				   SELECT Preference, PhoneNumber, PhoneName, PhoneDescription, PhoneIsPrivate, ROW_NUMBER() OVER (PARTITION BY PhoneNumber ORDER BY Preference) AS RowNumber
 						FROM (
 						VALUES 
-							(0, a.PhoneNumberAfterHours, 'Toll Free', a.PhoneNumberAfterHoursDescription, COALESCE(a.PhoneNumberAfterHoursIsPrivate, 'False')),
+							(0, a.PhoneTollFree, 'Toll Free', a.PhoneTollFreeDescription, COALESCE(a.PhoneTollFreeIsPrivate, 'False')),
 							(1, a.Phone1Number, a.Phone1Name, a.Phone1Description, COALESCE(a.Phone1IsPrivate, 'False')),
 							(2, a.Phone2Number, a.Phone2Name, a.Phone2Description, COALESCE(a.Phone2IsPrivate, 'False')),
 							(3, a.Phone3Number, a.Phone3Name, a.Phone3Description, COALESCE(a.Phone3IsPrivate, 'False')),
@@ -625,11 +614,10 @@ SELECT CAST((SELECT (
 				SELECT CASE WHEN PhoneNumber IS NOT NULL THEN 
 					(
 						CASE WHEN PhoneName IS NOT NULL AND PhoneName NOT IN ('Toll Free', 'sans frais') THEN PhoneName + ' : ' 
-							 WHEN PhoneDescription IS NOT NULL THEN PhoneDescription + ' : ' 
 							 ELSE ''
 						END + PhoneNumber + 
 						(
-							CASE WHEN PhoneDescription IS NOT NULL AND PhoneName NOT IN ('Toll Free', 'sans frais') THEN ', ' + PhoneDescription 
+							CASE WHEN PhoneDescription IS NOT NULL THEN ', ' + PhoneDescription 
 							ELSE '' 
 							END
 						)
@@ -638,7 +626,7 @@ SELECT CAST((SELECT (
 				   SELECT Preference, PhoneNumber, PhoneName, PhoneDescription, PhoneIsPrivate, ROW_NUMBER() OVER (PARTITION BY PhoneNumber ORDER BY Preference) AS RowNumber
 						FROM (
 						VALUES 
-							(0, f.PhoneNumberAfterHours, 'Toll Free', f.PhoneNumberAfterHoursDescription, COALESCE(f.PhoneNumberAfterHoursIsPrivate, 'False')),
+							(0, f.PhoneTollFree, 'Toll Free', f.PhoneTollFreeDescription, COALESCE(f.PhoneTollFreeIsPrivate, 'False')),
 							(1, f.Phone1Number, f.Phone1Name, f.Phone1Description, COALESCE(f.Phone1IsPrivate, 'False')),
 							(2, f.Phone2Number, f.Phone2Name, f.Phone2Description, COALESCE(f.Phone2IsPrivate, 'False')),
 							(3, f.Phone3Number, f.Phone3Name, f.Phone3Description, COALESCE(f.Phone3IsPrivate, 'False')),
