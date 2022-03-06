@@ -135,9 +135,9 @@ Else 'Success
 
 	Dim strEmailBody
 	strEmailBody = "Hi," & vbCrLf & vbCrLf & _
-		TXT_YOU_REQUESTED_REACTIVATION & IIf(g_bSSL, "https://", "http://") & strAccessURL & "/volunteer/" & vbCrLf & vbCrLf & _
+		TXT_YOU_REQUESTED_REACTIVATION & "https://" & strAccessURL & "/volunteer/" & vbCrLf & vbCrLf & _
 		TXT_PLEASE_FOLLOW_LINK & " " & TXT_FINISH_REACTIVATING_ACCOUNT & vbCrLf & _
-		IIf(g_bSSL, "https://", "http://") & strAccessURL & makeLink("/volunteer/profile/confirm.asp", "PID=" & Server.URLEncode(strProfileID) & "&CT=" & Server.URLEncode(strConfirmationToken) & "&ref=reactivate",vbNullString) & vbCrLf & vbCrLf & _
+		"https://" & strAccessURL & makeLink("/volunteer/profile/confirm.asp", "PID=" & Server.URLEncode(strProfileID) & "&CT=" & Server.URLEncode(strConfirmationToken) & "&ref=reactivate",vbNullString) & vbCrLf & vbCrLf & _
 		TXT_LINK_EXPIRE_NOTICE
 				
 	bEmailFailed = sendEmail(False, strFromEmail, strEmail, TXT_EMAIL_REACTIVATE_SUBJECT, strEmailBody)

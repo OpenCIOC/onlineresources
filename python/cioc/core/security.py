@@ -271,7 +271,7 @@ class User(object):
 							user.UserName,
 							format_datetime(datetime.now(), request),
 							get_remote_ip(request),
-							('https://' if request.dboptions.DomainDefaultViewSSLCompatibleCIC else 'http://') + request.host)
+							'https://' + request.host)
 
 						send_email(request, from_, to, gettext('Locked Account in your CIOC database', request), body)
 
@@ -438,20 +438,3 @@ def do_login(request, principal, login_key):
 	# bump session timeout to 5 days
 	request.session.adjust_timeout_for_session(3600 * 24 * 5)
 	remember(request, principal, login_key=login_key)
-
-
-def needs_ssl_domains(request):
-	if request.dboptions.SSLDomains:
-		return True
-	return False
-
-
-def render_ssl_domain_list(request):
-	from markupsafe import Markup
-	link = request.passvars.makeLink("~/login.asp")
-	item_template = Markup(u'''<li><a href="https://%s%s">%s</a></li>''')
-	full_template = Markup(u'''<ul>%s</ul>''')
-
-	inner = Markup(u'').join(item_template % (x, link, x) for x in sorted(request.dboptions.SSLDomains))
-
-	return six.text_type(full_template % inner)

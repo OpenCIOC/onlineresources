@@ -98,13 +98,6 @@ ${self.makeMgmtInfo(template)}
 	${renderer.checkbox("template.Owner", request.user.Agency, label= " " + _('Setup of this item is exclusively controlled by the Agency: ') + (request.user.Agency if is_add or not template.ReadOnlyTemplateOwner else template.ReadOnlyTemplateOwner))}</td>
 </tr>
 %endif
-%if not template or not template.SystemTemplate:
-<tr>
-	<td class="field-label-cell">${_('Full SSL Compatible')}</td>
-	<td class="field-data-cell">${renderer.errorlist("template.FullSSLCompatible")}
-	${renderer.checkbox("template.FullSSLCompatible", label= _('This template can stay in SSL'))}</td>
-</tr>
-%endif
 %for culture in active_cultures:
 <% lang = culture_map[culture] %>
 <tr>

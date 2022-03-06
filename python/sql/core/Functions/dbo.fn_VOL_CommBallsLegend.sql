@@ -26,12 +26,10 @@ DECLARE @ballTable TABLE (
 	CommunityGroupName varchar(100)
 )
 
-SELECT @baseURLVOL = CASE WHEN ISNULL(map.FullSSLCompatible, 0)=1 THEN 'https://' ELSE 'http://' END + mem.BaseURLVOL
+SELECT @baseURLVOL = '//' + mem.BaseURLVOL
 	FROM STP_Member mem
 	INNER JOIN VOL_CommunitySet vcs
 		ON mem.MemberID=vcs.MemberID
-	LEFT JOIN GBL_View_DomainMap map
-		ON map.DomainName=mem.BaseURLVOL
 WHERE vcs.CommunitySetID=@CommunitySetID
 
 INSERT INTO @ballTable SELECT ISNULL(vcg.ImageURL, @baseURLVOL + '/images/' + bl.BallFileName), vcgn.CommunityGroupName

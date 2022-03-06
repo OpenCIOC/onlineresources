@@ -1355,8 +1355,8 @@ Dim strAccessURL
 strAccessURL = Request.ServerVariables("HTTP_HOST")
 
 Dim strDetailLinkTemplate, strRPCDetailLinkTemplate
-strDetailLinkTemplate = IIf(get_db_option("DomainDefaultViewSSLCompatibleCIC"), "https://", "http://") & strAccessURL & makeDetailsLink("[NUMNUM]",vbNullString,"UseCICVw")
-strRPCDetailLinkTemplate = IIf(g_bSSL, "https://", "http://") & strAccessURL & "/" & _ 
+strDetailLinkTemplate = "https://" & strAccessURL & makeDetailsLink("[NUMNUM]",vbNullString,"UseCICVw")
+strRPCDetailLinkTemplate = "https://" & strAccessURL & "/" & _ 
 								makeLink("rpc/record/[NUMNUM]",vbNullString,vbNullString)
 
 Dim bCheckVolOps
@@ -1530,8 +1530,8 @@ Dim strAccessURL
 strAccessURL = Request.ServerVariables("HTTP_HOST") & strAccessURL
 
 Dim strDetailLinkTemplate, strRPCDetailLinkTemplate
-strDetailLinkTemplate = IIf(get_db_option("DomainDefaultViewSSLCompatibleCIC"), "https://", "http://") & strAccessURL & makeDetailsLink("[NUMNUM]",vbNullString,"UseCICVw")
-strRPCDetailLinkTemplate = IIf(g_bSSL, "https://", "http://") & strAccessURL & "/" & _
+strDetailLinkTemplate = "https://" & strAccessURL & makeDetailsLink("[NUMNUM]",vbNullString,"UseCICVw")
+strRPCDetailLinkTemplate = "https://" & strAccessURL & "/" & _
 								makeLink("rpc/record/[NUMNUM]","format=xml",vbNullString)
 
 Dim bCheckVolOps

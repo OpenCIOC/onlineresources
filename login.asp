@@ -32,7 +32,6 @@
 <!--#include file="includes/core/incConnection.asp" -->
 <!--#include file="includes/core/incSetup.asp" -->
 <%
-g_bPageShouldUseSSL = True
 ' setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart, strFocus)
 Call setPageInfo(False, DM_GLOBAL, DM_GLOBAL, vbNullString, vbNullString, "EntryForm.LoginName")
 %>
@@ -43,22 +42,7 @@ Call setPageInfo(False, DM_GLOBAL, DM_GLOBAL, vbNullString, vbNullString, "Entry
 <!--#include file="text/txtMenu.asp" -->
 <% 'End Base includes %>
 <!--#include file="text/txtUsers.asp" -->
-<script language="python" runat="server">
-try:
-	from cioc.core.security import needs_ssl_domains, render_ssl_domain_list
-except ImportError:
-	def needs_ssl_domains(request):
-		return False
-	
-def l_needs_ssl_domains():
-	return needs_ssl_domains(pyrequest)
-
-def l_render_ssl_domain_list():
-	return render_ssl_domain_list(pyrequest)
-</script>
 <% 
-Call EnsureSSL()
-
 Call makePageHeader(TXT_DATABASE_LOGIN, TXT_DATABASE_LOGIN, True, False, True, True)
 Call setSessionValue("session_test","ok")
 
@@ -74,13 +58,6 @@ If Not Nl(intTriesLeft) Then
 <%
 	End If
 End If
-If l_needs_ssl_domains() Then
-%>
-<p class="AlertBubble"><%= TXT_CANT_LOGIN_NON_SECURE_DOMAIN %></p>
-<p><%= TXT_SECURE_DOMAIN_LIST %></p>
-<%= l_render_ssl_domain_list() %>
-<%
-Else
 %>
 <p>[ <%If g_bUseCIC Or user_bLoggedIn Then%><a href="<%=makeLinkB("~/")%>"><%=TXT_ORG_SEARCH%></a><%End If%><%If g_bUseVOL Then%> | <a href="<%=makeLinkB("volunteer/")%>"><%=TXT_VOLUNTEER_SEARCH%></a><%End If%> ]</p>
 <p class="InfoBubble"><%=TXT_INST_LOGIN_1%> <span class="Alert"> <%=TXT_INST_LOGIN_2%></span></p>
@@ -107,7 +84,6 @@ Else
 </form>
 </div>
 <%
-End If
 Call makePageFooter(True)
 %>
 <!--#include file="includes/core/incClose.asp" -->

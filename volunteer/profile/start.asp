@@ -218,7 +218,7 @@ If Not .EOF Then
 <ul>
 <%
 While Not .EOF
-	strSearchURL = IIf(.Fields("DomainFullSSLCompatible") And .Fields("FullSSLCompatible"), "https://", "http://") & .Fields("AccessURL") & "/volunteer/"
+	strSearchURL = "https://" & .Fields("AccessURL") & "/volunteer/"
 	strSearchURL = makeLink(strSearchURL, StringIf(Not Nl(.Fields("ViewType")), "UseVOLVw=" & .Fields("ViewType")), "UseVOLVw")
 	%><li><a href="<%=strSearchURL%>"><%=strSearchURL%></a></li><%
 	.MoveNext

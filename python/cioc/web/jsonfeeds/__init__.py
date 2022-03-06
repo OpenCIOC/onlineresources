@@ -29,11 +29,14 @@ def includeme(config):
 	factory_vol = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
 
 	heading_list_path = urlprefix + 'quicklist/{pubcode:' + validators.code_validator_re[1:-1] + '}'
-	config.add_route('jsonfeeds_headinglist', heading_list_path, 'cioc.core.rootfactories.AllowSSLRootFactory')
+	config.add_route('jsonfeeds_headinglist', heading_list_path,
+				  'cioc.core.rootfactories.BasicRootFactory')
 
-	config.add_route('jsonfeeds_quicklist', urlprefix + 'quicklist', 'cioc.core.rootfactories.AllowSSLRootFactory')
+	config.add_route('jsonfeeds_quicklist', urlprefix + 'quicklist',
+				  'cioc.core.rootfactories.BasicRootFactory')
 
-	config.add_route('jsonfeeds_agegrouplist', urlprefix + 'agegrouplist', 'cioc.core.rootfactories.AllowSSLRootFactory')
+	config.add_route('jsonfeeds_agegrouplist', urlprefix + 'agegrouplist',
+				  'cioc.core.rootfactories.BasicRootFactory')
 
 	config.add_route('jsonfeeds_users', urlprefix + 'users', factory=factory_cic)
 

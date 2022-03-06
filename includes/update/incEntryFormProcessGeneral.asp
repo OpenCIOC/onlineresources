@@ -296,7 +296,7 @@ Sub sendNotifyEmails(strID, intFBID, strRecName)
 			If .Fields("IN_VIEW") Then
 				strDetailLink = TXT_VIEW_RECORD_AT & _
 					vbCrLf & _
-					IIf(Not Nl(.Fields("AccessURL")), IIf(.Fields("DomainFullSSLCompatible" & IIf(ps_intDbArea = DM_CIC, "CIC", "VOL")) And .Fields("ViewFullSSLCompatible" & IIf(ps_intDbArea = DM_CIC, "CIC", "VOL")), "https://", "http://") & .Fields("AccessURL"),IIf(get_db_option("DomainDefaultViewSSLCompatible" & IIf(ps_intDbArea = DM_CIC, "CIC", "VOL")), "https://", "http://") & IIf(ps_intDbArea = DM_CIC,g_strBaseURLCIC,g_strBaseURLVOL)) & _
+					"https://" & IIf(Not Nl(.Fields("AccessURL")), .Fields("AccessURL"), IIf(ps_intDbArea = DM_CIC,g_strBaseURLCIC,g_strBaseURLVOL)) & _
 					"/" & ps_strDbAreaDefaultPath & IIf(Nl(strRecordRoot), _
 						"details.asp?" & IIf(ps_intDbArea=DM_VOL,"VNUM=" & strID,"NUM=" & strID) & "&", _
 						strRecordRoot & strID & "?") & _
@@ -304,7 +304,7 @@ Sub sendNotifyEmails(strID, intFBID, strRecName)
 					"Ln=" & g_objCurrentLang.Culture
 			Else
 				strDetailLink = TXT_VIEW_RECORD_AT & _
-					IIf(Not Nl(.Fields("AccessURL")), IIf(.Fields("DomainFullSSLCompatible" & IIf(ps_intDbArea = DM_CIC, "CIC", "VOL")) And .Fields("ViewFullSSLCompatible" & IIf(ps_intDbArea = DM_CIC, "CIC", "VOL")), "https://", "http://") & .Fields("AccessURL"),IIf(get_db_option("DomainDefaultViewSSLCompatible" & IIf(ps_intDbArea = DM_CIC, "CIC", "VOL")), "https://", "http://") & IIf(ps_intDbArea = DM_CIC,g_strBaseURLCIC,g_strBaseURLVOL)) & _
+					"https://" & IIf(Not Nl(.Fields("AccessURL")), .Fields("AccessURL"), IIf(ps_intDbArea = DM_CIC,g_strBaseURLCIC,g_strBaseURLVOL)) & _
 					"/" & ps_strDbAreaDefaultPath & "feedback.asp?" & _
 					IIf(ps_intDbArea=DM_VOL,"VNUM=","NUM=") & strID & _
 					StringIf(Not Nl(.Fields("ViewType")),IIf(ps_intDbArea=DM_VOL,"&UseVOLVw=","&UseCICVw=") & .Fields("ViewType")) & _

@@ -96,13 +96,7 @@ SELECT	MemberID,
 		GlobalGoogleAnalyticsLanguageDimension,
 		GlobalGoogleAnalyticsDomainDimension,
 		GlobalGoogleAnalyticsResultsCountMetric,
-		BillingInfoPassword,
-		(SELECT FullSSLCompatible_Cache FROM GBL_Template WHERE Template_ID=DefaultTemplate) AS TemplateFullSSLCompatible,
-		(SELECT FullSSLCompatible_Cache FROM GBL_Template WHERE Template_ID=DefaultPrintTemplate) AS PrintFullSSLCompatible,
-		CAST(ISNULL((SELECT CASE WHEN m.FullSSLCompatible=1 AND t.FullSSLCompatible_Cache=1 THEN 1 ELSE 0 END FROM GBL_View_DomainMap m INNER JOIN CIC_View vw ON vw.ViewType = ISNULL(m.CICViewType, mem.DefaultViewCIC) INNER JOIN GBL_Template t ON t.Template_ID = vw.Template WHERE m.DomainName=mem.BaseURLCIC), 0) AS bit) AS FullSSLCompatibleBaseURLCIC,
-		CAST(ISNULL((SELECT CASE WHEN m.FullSSLCompatible=1 AND t.FullSSLCompatible_Cache=1 THEN 1 ELSE 0 END FROM GBL_View_DomainMap m INNER JOIN CIC_View vw ON vw.ViewType = ISNULL(m.VOLViewType, mem.DefaultViewVOL) INNER JOIN GBL_Template t ON t.Template_ID = vw.Template WHERE m.DomainName=mem.BaseURLCIC), 0) AS bit) AS FullSSLCompatibleBaseURLVOL,
-		CAST(ISNULL((SELECT m.FullSSLCompatible FROM GBL_View_DomainMap m WHERE m.DomainName=mem.BaseURLCIC), 0) AS bit) AS DomainFullSSLCompatibleBaseURLCIC,
-		CAST(ISNULL((SELECT m.FullSSLCompatible FROM GBL_View_DomainMap m WHERE m.DomainName=mem.BaseURLCIC), 0) AS bit) AS DomainFullSSLCompatibleBaseURLVOL
+		BillingInfoPassword
 FROM STP_Member mem
 WHERE MemberID=@MemberID
 	AND Active=1

@@ -30,19 +30,7 @@ SELECT DISTINCT
 				ISNULL((SELECT CICViewType FROM GBL_View_DomainMap WHERE DomainName=AccessURL),
 					(SELECT DefaultViewCIC FROM STP_Member WHERE MemberID=fbe.MemberID))
 				),
-			@LangID,0,GETDATE()) AS IN_VIEW,
-			(SELECT t.FullSSLCompatible_Cache
-				FROM CIC_View vw  INNER JOIN GBL_Template t
-					ON t.Template_ID = vw.Template 
-				WHERE vw.ViewType= ISNULL(fbe.ViewType,
-						ISNULL((SELECT CICViewType FROM GBL_View_DomainMap WHERE DomainName=AccessURL),
-							(SELECT DefaultViewCIC FROM STP_Member WHERE MemberID=fbe.MemberID))
-						)
-			) AS ViewFullSSLCompatibleCIC,
-			ISNULL((SELECT m.FullSSLCompatible
-				FROM GBL_View_DomainMap m
-				WHERE DomainName=ISNULL(AccessURL, (SELECT BaseURLCIC FROM STP_Member WHERE MemberID=fbe.MemberID))
-			), 0) AS DomainFullSSLCompatibleCIC
+			@LangID,0,GETDATE()) AS IN_VIEW
 	FROM GBL_FeedbackEntry fbe
 	INNER JOIN GBL_BaseTable bt
 		ON fbe.NUM=bt.NUM

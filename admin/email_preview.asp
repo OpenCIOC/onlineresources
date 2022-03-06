@@ -60,7 +60,6 @@ Dim intDomain, _
 	intViewType, _
 	intViewTypeURL, _
 	strAccessURL, _
-	strAccessProtocol, _
 	strErrorList, _
 	strRecipientList, _
 	bError
@@ -92,7 +91,7 @@ End If
 
 Dim aAccessURL
 aAccessURL = Split(Request("AccessURL")," ")
-If UBound(aAccessURL)=3 Then
+If UBound(aAccessURL)=2 Then
 	If IsIDType(aAccessURL(0)) Then
 		intViewTypeURL = CInt(aAccessURL(0))
 	Else
@@ -104,12 +103,10 @@ If UBound(aAccessURL)=3 Then
 		intViewType = Null
 	End If
 	strAccessURL = aAccessURL(2)
-	strAccessProtocol = aAccessURL(3)
 Else
 	intViewTypeURL = Null
 	intViewType = Null
 	strAccessURL = IIf(intDomain=DM_CIC,g_strBaseURLCIC,g_strBaseURLVOL)
-	strAccessProtocol = IIf(get_db_option("FullSSLCompatibleBaseURL" & IIf(intDomain=DM_CIC, "CIC", "VOL")), "https", "http")
 End If
 
 Dim strIDList, _
@@ -383,7 +380,7 @@ Else
 		strMsgTxtDisp = Replace(makeEmailUpdateMsg( _
 								intDomain, _
 								intViewTypeURL, _
-								strAccessProtocol & "://" & strAccessURL, _
+								"https://" & strAccessURL, _
 								.Fields("RECORD_OWNER"), _
 								Not(intDomain=DM_VOL And bMultiRecord) _
 								), _
@@ -403,7 +400,7 @@ Else
 <form action="email_send.asp" method="post">
 <%=g_strCacheFormVals%>
 <input type="hidden" name="DM" value="<%=intDomain%>">
-<input type="hidden" name="AccessURL" value="<%=Nz(intViewTypeURL,vbNullString) & " " & Nz(intViewType,vbNullString) & " " & strAccessURL & " " & strAccessProtocol %>">
+<input type="hidden" name="AccessURL" value="<%=Nz(intViewTypeURL,vbNullString) & " " & Nz(intViewType,vbNullString) & " " & strAccessURL %>">
 <input type="hidden" name="IDList" value="<%=strIDList%>">
 <input type="hidden" name="EmailID" value="<%=intEmailID%>">
 <%If intCurSearchNumber >= 0 Then%>

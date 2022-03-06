@@ -19,7 +19,6 @@ CREATE TABLE [dbo].[GBL_View_DomainMap]
 [GoogleMapsClientIDVOL] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [GoogleMapsChannelVOL] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [GoogleAnalyticsCode] [nvarchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
-[FullSSLCompatible] [bit] NOT NULL CONSTRAINT [DF_GBL_View_DomainMap_FullSSLCompatible] DEFAULT ((0)),
 [GoogleAnalyticsAgencyDimension] [tinyint] NULL,
 [GoogleAnalyticsLanguageDimension] [tinyint] NULL,
 [GoogleAnalyticsDomainDimension] [tinyint] NULL,

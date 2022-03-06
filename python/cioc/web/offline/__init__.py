@@ -34,13 +34,13 @@ from __future__ import absolute_import
 from functools import partial
 
 from cioc.core import constants as const
-from cioc.core.rootfactories import AllowSSLRootFactory
+from cioc.core.rootfactories import BasicRootFactory
 
 
 def includeme(config):
 	urlprefix = '/offline/'
 
-	factory = partial(AllowSSLRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
+	factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
 
 	# /offline/auth
 	config.add_route('offline_auth', urlprefix + 'auth', factory=factory)

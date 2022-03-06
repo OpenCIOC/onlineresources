@@ -28,7 +28,7 @@ from pyramid.view import view_config, view_defaults
 
 # thisapp
 from cioc.core import validators, constants as const, security
-from cioc.core.rootfactories import RequireSSLRootFactory
+from cioc.core.rootfactories import BasicRootFactory
 
 from cioc.core.i18n import gettext as _
 from cioc.core.viewbase import error_page
@@ -38,7 +38,7 @@ log = logging.getLogger(__name__)
 templateprefix = 'cioc.web.admin:templates/userapicreds/'
 
 
-class AdminUserApiCredsContext(RequireSSLRootFactory):
+class AdminUserApiCredsContext(BasicRootFactory):
 	def __init__(self, request, *args, **kwargs):
 		self.list_page = kwargs.pop('list_page', False)
 

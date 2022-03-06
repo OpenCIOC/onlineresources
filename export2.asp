@@ -279,11 +279,11 @@ Sub getExportProfileData(bSharingFormat)
 					intViewType = Null
 				End If
 				strAccessURLTemplate = aAccessURL(2)
-				strAccessURLProtocol = .Fields("SubmitChangesToAccessProtocol") & "://"
+				strAccessURLProtocol = "https://"
 			Else
 				intViewType = Null
 				strAccessURLTemplate = g_strBaseURLCIC
-				strAccessURLProtocol = IIf(get_db_option("FullSSLCompatibleBaseURLCIC"), "https://", "http://")
+				strAccessURLProtocol = "https://"
 			End If
 				
 		End With

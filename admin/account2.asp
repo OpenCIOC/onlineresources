@@ -35,7 +35,6 @@
 <!--#include file="../includes/core/incConnection.asp" -->
 <!--#include file="../includes/core/incSetup.asp" -->
 <%
-g_bPageShouldUseSSL = True
 ' setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart, strFocus)
 Call setPageInfo(True, DM_GLOBAL, DM_GLOBAL, "../", "admin/", vbNullString)
 %>
@@ -164,7 +163,7 @@ If bCanUpdateAccount Then
 								strTo = Nz(strAgencyEmail,vbNullString) & StringIf(Not Nl(strAgencyEmail) And Not Nl(strUserEmail),",") & Nz(strUserEmail,vbNullString)
 								strEmailMessage = TXT_USER_NAME & TXT_COLON & user_strLogin & vbCrLf & vbCrLf & _
 									TXT_ACCOUNT_IS_LOCKED & vbCrLf & vbCrLf & _
-									TXT_LAST_ATTEMPT & DateTimeString(Now(),True) & " (" & getRemoteIP() & ") http://" & Request.ServerVariables("SERVER_NAME") & vbCrLf & vbCrLf & _
+									TXT_LAST_ATTEMPT & DateTimeString(Now(),True) & " (" & getRemoteIP() & ") https://" & Request.ServerVariables("SERVER_NAME") & vbCrLf & vbCrLf & _
 									TXT_REPEATED_ATTEMPTS_BLOCKS_IP
 								Call sendEmail(True, strFrom, strTo, TXT_LOCKED_ACCOUNT, strEmailMessage)
 							End If
@@ -341,7 +340,7 @@ Else
 		TXT_LAST_NAME & TXT_COLON & Nz(user_strUserLastName,TXT_UNKNOWN) & vbCrLf & _
 		TXT_INITIALS & TXT_COLON & Nz(user_strInitials,TXT_UNKNOWN) & vbCrLf & _
 		TXT_EMAIL & TXT_COLON & Nz(user_strEmail,TXT_UNKNOWN) & vbCrLf & vbCrLf & _
-		TXT_LOGIN_TO_DATABASE & IIf(g_bSSL, "https://", "http://") & IIf(user_bCIC Or Not user_bVOL,g_strBaseURLCIC,g_strBaseURLVOL) & "/login.asp"
+		TXT_LOGIN_TO_DATABASE & "https://" & IIf(user_bCIC Or Not user_bVOL,g_strBaseURLCIC,g_strBaseURLVOL) & "/login.asp"
 	
 	Call setSessionLanguage(strRestoreCulture)
 	

@@ -18,18 +18,18 @@ from __future__ import absolute_import
 from functools import partial
 
 from cioc.core import constants as const, validators
-from cioc.core.rootfactories import AllowSSLRootFactory, RequireSSLRootFactory
+from cioc.core.rootfactories import BasicRootFactory
 
 
 def includeme(config):
 	urlprefix = '/rpc/'
 
-	cicfactory = partial(AllowSSLRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC, allow_api_login=True)
+	cicfactory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC, allow_api_login=True)
 	# /rpc/record/*
 	config.add_route('rpc_orgdetails', urlprefix + 'record/{num:[A-Za-z]{3}\d{4,5}}',
 		factory=cicfactory)
 
-	volfactory = partial(AllowSSLRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL, allow_api_login=True)
+	volfactory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL, allow_api_login=True)
 	config.add_route('rpc_oppdetails', urlprefix + 'opportunity/{vnum:V-[A-Za-z]{3}\d{4,5}}',
 		factory=volfactory)
 
@@ -39,14 +39,14 @@ def includeme(config):
 	config.add_route('rpc_browseoppbyorg', urlprefix + 'browseoppbyorg',
 		factory=volfactory)
 
-	ssl_factory = partial(RequireSSLRootFactory, allow_api_login=True)
-	config.add_route('rpc_whoami', urlprefix + 'whoami', factory=ssl_factory)
+	api_factory = partial(BasicRootFactory, allow_api_login=True)
+	config.add_route('rpc_whoami', urlprefix + 'whoami', factory=api_factory)
 
-	config.add_route('rpc_countall', urlprefix + 'countall/{domain:(cic|vol)}', factory=ssl_factory)
+	config.add_route('rpc_countall', urlprefix + 'countall/{domain:(cic|vol)}', factory=api_factory)
 
-	config.add_route('rpc_agegrouplist', urlprefix + 'agegrouplist', factory=ssl_factory)
+	config.add_route('rpc_agegrouplist', urlprefix + 'agegrouplist', factory=api_factory)
 
 	heading_list_path = urlprefix + 'quicklist/{pubcode:' + validators.code_validator_re[1:-1] + '}'
-	config.add_route('rpc_headinglist', heading_list_path, factory=ssl_factory)
+	config.add_route('rpc_headinglist', heading_list_path, factory=api_factory)
 
-	config.add_route('rpc_quicklist', urlprefix + 'quicklist', factory=ssl_factory)
+	config.add_route('rpc_quicklist', urlprefix + 'quicklist', factory=api_factory)

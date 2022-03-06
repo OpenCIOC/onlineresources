@@ -319,7 +319,7 @@ SELECT
 			CASE WHEN SOURCE_DB IS NULL AND bt.MemberID <> 5000 THEN
 				 (SELECT TOP 1
 					'&copy; <a href="' + 
-					CASE WHEN ISNULL(m.FullSSLCompatible, 0)=0 OR tmpl.FullSSLCompatible_Cache=0 THEN 'http://' ELSE 'https://' END + m.DomainName + '/?Ln=' + (SELECT l.Culture FROM STP_Language l WHERE l.LangID=btd.LangID) +
+					'https://' + m.DomainName + '/?Ln=' + (SELECT l.Culture FROM STP_Language l WHERE l.LangID=btd.LangID) +
 					'">' + CASE WHEN mem.UseMemberNameAsSourceDB=1 THEN ISNULL(memd.MemberNameCIC,memd.MemberName) ELSE memd.DatabaseNameCIC END + '</a>'
 					FROM STP_Member mem
 					INNER JOIN STP_Member_Description memd
@@ -348,17 +348,7 @@ SELECT
 			CASE WHEN SUBMIT_CHANGES_TO_PROTOCOL IS NULL THEN
 				(CASE WHEN SUBMIT_CHANGES_TO IS NULL
 				THEN
-					 (SELECT TOP 1
-						CASE WHEN ISNULL(m.FullSSLCompatible, 0)=0 OR tmpl.FullSSLCompatible_Cache=0 THEN 'http://' ELSE 'https://' END
-						FROM STP_Member mem
-						INNER JOIN GBL_View_DomainMap m
-							ON m.DomainName=mem.BaseURLCIC AND m.MemberID=mem.MemberID
-						INNER JOIN CIC_View vw
-							ON vw.ViewType=ISNULL(m.CICViewType, mem.DefaultViewCIC)
-						INNER JOIN GBL_Template tmpl
-							ON tmpl.Template_ID = vw.Template
-						WHERE mem.MemberID=bt.MemberID
-					 ) 
+					'https://'
 				 ELSE 
 					'http://'
 				 END)

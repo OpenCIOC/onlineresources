@@ -34,7 +34,6 @@
 <!--#include file="../includes/core/incSetup.asp" -->
 <%
 ' setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart, strFocus)
-g_bPageShouldUseSSL = True
 g_bAllowAPILogin = True
 Call setPageInfo(False, DM_GLOBAL, DM_CIC, vbNullString, "rpc/", vbNullString)
 %>

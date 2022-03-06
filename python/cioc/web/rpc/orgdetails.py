@@ -220,7 +220,7 @@ class RpcOrgDetails(viewbase.CicViewBase):
 
 		full_info = OrderedDict([
 			('orgname', data.ORG_NAME_FULL),
-			('feedback_link', data.FEEDBACK_LINK if viewdata.UseSubmitChangesTo else (('https://' if request.dboptions.DomainDefaultViewSSLCompatibleCIC else 'http://') + request.host + makeLink('~/feedback.asp', [('NUM', num), ('UpdateLn', cur_culture)] + extra_link_args))),
+			('feedback_link', data.FEEDBACK_LINK if viewdata.UseSubmitChangesTo else ('https://' + request.host + makeLink('~/feedback.asp', [('NUM', num), ('UpdateLn', cur_culture)] + extra_link_args))),
 			('logo', getattr(data, 'LOGO_ADDRESS', None)),
 			('non_public', data.NON_PUBLIC),
 			('deletion_date', data.DELETION_DATE),

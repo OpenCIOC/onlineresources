@@ -44,46 +44,6 @@ def on_context_found(event):
 	request = event.request
 	context = request.context
 
-	has_ssl = request.headers.get('CIOC-SSL-POSSIBLE')
-	using_ssl = request.headers.get('CIOC-USING-SSL')
-	ssl_hsts = request.headers.get('CIOC-SSL-HSTS')
-
-	# allow debug toolbar to work
-	if '/_debug_toolbar/' in request.url:
-		return
-
-	if ssl_hsts:
-		return
-
-	if has_ssl:
-		if request.dboptions.CanStayInSSL:
-			if using_ssl:
-				return
-			elif request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-				return
-			elif request.method != 'GET':
-				return
-			elif request.url.endswith('.css'):
-				return
-			else:
-				url = 'https:' + request.url.split(':', 1)[-1]
-				raise HTTPFound(url)
-
-		if using_ssl and not context.allow_ssl:
-			if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-				return
-			elif request.method != 'GET':
-				return
-			elif request.url.endswith('.css'):
-				return
-			else:
-				url = 'http:' + request.url.split(':', 1)[-1]
-				raise HTTPFound(url)
-
-		if not using_ssl and context.require_ssl:
-			url = 'https:' + request.url.split(':', 1)[-1]
-			raise HTTPFound(url)
-
 
 def notfound_view(request):
 	return HTTPNotFound()
@@ -110,9 +70,9 @@ def main(global_config, **settings):
 
 	# allow for multiple templated css files with the which match parameter
 	config.add_route('template_css', 'styles/d/{version}/cioc{which:[^_]+}_{templateid:\d+}{debug:(_debug)?}.css',
-				factory='cioc.core.rootfactories.AllowSSLRootFactory')
+				factory='cioc.core.rootfactories.BasicRootFactory')
 	config.add_route('jquery_icons', 'styles/d/{version}/images/ui-icons_{colour:[0-9a-zA-Z]{6}}_256x240.png',
-				factory='cioc.core.rootfactories.AllowSSLRootFactory')
+				factory='cioc.core.rootfactories.BasicRootFactory')
 
 	config.add_static_view('styles', 'cioc:styles')
 	config.add_static_view('scripts', 'cioc:scripts')

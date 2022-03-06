@@ -57,7 +57,7 @@ setup(name='CiocWeb',
       asp = cioc.core.aspextractor:extract_asp
       """,
 	  dependency_links=[
-		  'http://clientservices.kclsoftware.com/cioc/basket/',
+		  'https://clientservices.kclsoftware.com/cioc/basket/',
 		],
 	  paster_plugins=['pyramid'],
 	  )

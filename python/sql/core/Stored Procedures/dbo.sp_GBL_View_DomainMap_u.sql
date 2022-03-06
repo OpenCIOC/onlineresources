@@ -46,15 +46,13 @@ DECLARE @DomainTable TABLE (
 	GoogleMapsChannelCIC nvarchar(100),
 	GoogleMapsAPIKeyVOL varchar(100),
 	GoogleMapsClientIDVOL nvarchar(100),
-	GoogleMapsChannelVOL nvarchar(100),
-	FullSSLCompatible bit
+	GoogleMapsChannelVOL nvarchar(100)
 )
 
 INSERT INTO @DomainTable
 	( DMAP_ID, DefaultCulture, DefaultLangID, CICViewType, VOLViewType, SecondaryName,
 	GoogleMapsAPIKeyCIC, GoogleMapsClientIDCIC, GoogleMapsChannelCIC,
-	GoogleMapsAPIKeyVOL, GoogleMapsClientIDVOL, GoogleMapsChannelVOL,
-	FullSSLCompatible)
+	GoogleMapsAPIKeyVOL, GoogleMapsClientIDVOL, GoogleMapsChannelVOL)
 	
 SELECT 
 	N.value('DMAP_ID[1]', 'int') AS DMAP_ID,
@@ -68,8 +66,7 @@ SELECT
 	N.value('GoogleMapsChannelCIC[1]', 'nvarchar(100)') AS GoogleMapsChannelCIC,
 	N.value('GoogleMapsAPIKeyVOL[1]', 'varchar(100)') AS GoogleMapsAPIKeyVOL,
 	N.value('GoogleMapsClientIDVOL[1]', 'nvarchar(100)') AS GoogleMapsClientIDVOL,
-	N.value('GoogleMapsChannelVOL[1]', 'nvarchar(100)') AS GoogleMapsChannelVOL,
-	N.value('FullSSLCompatible[1]', 'bit') AS FullSSLCompatible
+	N.value('GoogleMapsChannelVOL[1]', 'nvarchar(100)') AS GoogleMapsChannelVOL
 FROM @data.nodes('//Domain') AS T(N)
 EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @DomainMapObjectName, @ErrMsg
 
@@ -120,8 +117,7 @@ UPDATE dst SET
 	GoogleMapsChannelCIC = CASE WHEN @CIC=1 THEN src.GoogleMapsChannelCIC ELSE dst.GoogleMapsChannelCIC END,
 	GoogleMapsAPIKeyVOL = CASE WHEN @VOL=1 THEN src.GoogleMapsAPIKeyVOL ELSE dst.GoogleMapsAPIKeyVOL END,
 	GoogleMapsClientIDVOL = CASE WHEN @VOL=1 THEN src.GoogleMapsClientIDVOL ELSE dst.GoogleMapsClientIDVOL END,
-	GoogleMapsChannelVOL = CASE WHEN @VOL=1 THEN src.GoogleMapsChannelVOL ELSE dst.GoogleMapsChannelVOL END,
-	FullSSLCompatible = src.FullSSLCompatible
+	GoogleMapsChannelVOL = CASE WHEN @VOL=1 THEN src.GoogleMapsChannelVOL ELSE dst.GoogleMapsChannelVOL END
 FROM GBL_View_DomainMap dst
 INNER JOIN @DomainTable src
 	ON dst.DMAP_ID=src.DMAP_ID

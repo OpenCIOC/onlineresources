@@ -33,7 +33,6 @@
 <!--#include file="includes/core/incConnection.asp" -->
 <!--#include file="includes/core/incSetup.asp" -->
 <%
-g_bPageShouldUseSSL = True
 ' setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart, strFocus)
 Call setPageInfo(False, DM_GLOBAL, DM_GLOBAL, vbNullString, vbNullString, vbNullString)
 %>
@@ -49,33 +48,9 @@ Call setPageInfo(False, DM_GLOBAL, DM_GLOBAL, vbNullString, vbNullString, vbNull
 <!--#include file="includes/vprofile/incProfileSecurity.asp" -->
 <script language="python" runat="server">
 from cioc.core.security import Crypt, MakeSalt
-try:
-	from cioc.core.security import needs_ssl_domains, render_ssl_domain_list
-except ImportError:
-	def needs_ssl_domains(request):
-		return False
-	
-def l_needs_ssl_domains():
-	return needs_ssl_domains(pyrequest)
-
-def l_render_ssl_domain_list():
-	return render_ssl_domain_list(pyrequest)
 
 </script>
 <%
-If l_needs_ssl_domains() Then
-	Call makePageHeader(TXT_DATABASE_LOGIN, TXT_DATABASE_LOGIN, True, False, True, True)
-%>
-	<p class="AlertBubble"><%= TXT_CANT_LOGIN_NON_SECURE_DOMAIN %></p>
-	<p><%= TXT_SECURE_DOMAIN_LIST %></p>
-	<%= l_render_ssl_domain_list() %>
-<% 
-	Call makePageFooter(True)
-%>
-	<!--#include file="includes/core/incClose.asp" -->
-<%
-	Response.End
-End If
 
 Dim strLoginName, _
 	strLoginPwd, _
@@ -163,7 +138,7 @@ Else
 							strTo = Nz(strAgencyEmail,vbNullString) & StringIf(Not Nl(strAgencyEmail) And Not Nl(strUserEmail),",") & Nz(strUserEmail,vbNullString)
 							strMessage = TXT_USER_NAME & TXT_COLON & strLoginName & vbCrLf & vbCrLf & _
 								TXT_ACCOUNT_IS_LOCKED & vbCrLf & vbCrLf & _
-								TXT_LAST_ATTEMPT & DateTimeString(Now(),True) & " (" & getRemoteIP() & IIf(g_bSSL,") https://", ") http://") & Request.ServerVariables("SERVER_NAME") & "/login.asp" & vbCrLf & vbCrLf & _
+								TXT_LAST_ATTEMPT & DateTimeString(Now(),True) & " (" & getRemoteIP() & ") https://" & Request.ServerVariables("SERVER_NAME") & "/login.asp" & vbCrLf & vbCrLf & _
 								TXT_REPEATED_ATTEMPTS_BLOCKS_IP
 							Call sendEmail(True, strFrom, strTo, TXT_LOCKED_ACCOUNT, strMessage)
 						End If

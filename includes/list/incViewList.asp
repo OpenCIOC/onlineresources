@@ -107,7 +107,7 @@ Function makeViewList(intSelected, strSelectName, bIncludeBlank, bMultiple)
 	makeViewList = strReturn
 End Function
 
-Function makeViewDomainList(strSelected, strSelectName, bIncludeBlank, bIncludeProtocol)
+Function makeViewDomainList(strSelected, strSelectName, bIncludeBlank)
 	Dim strReturn
 	With rsListView
 		If .RecordCount > 0 Then
@@ -122,7 +122,7 @@ Function makeViewDomainList(strSelected, strSelectName, bIncludeBlank, bIncludeP
 			End If
 			While Not .EOF
 				strReturn = strReturn & _
-					"<option value=""" & .Fields("URLViewType") & " " & .Fields("ViewType") & " " & .Fields("AccessURL") & StringIf(bIncludeProtocol, " " & .Fields("Protocol")) & """"
+					"<option value=""" & .Fields("URLViewType") & " " & .Fields("ViewType") & " " & .Fields("AccessURL") & """"
 				If (strSelected = .Fields("URLViewType") & " " & .Fields("ViewType") & " " & .Fields("AccessURL")) Then
 					strReturn = strReturn & " selected"
 				End If

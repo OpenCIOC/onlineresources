@@ -29,8 +29,7 @@ SET @MemberObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('CIOC Membership')
 SET @VolunteerProfileObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Volunteer Profile')
 
 DECLARE @DefaultView int,
-		@BaseURL varchar(100),
-		@BaseFullSSLCompatible bit
+		@BaseURL varchar(100)
 		
 -- Member ID given ?
 IF @MemberID IS NULL BEGIN
@@ -44,11 +43,8 @@ END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
 END
 
 SELECT	@DefaultView=DefaultViewVOL,
-		@BaseURL=BaseURLVOL,
-		@BaseFullSSLCompatible=ISNULL(FullSSLCompatible,0)
+		@BaseURL=BaseURLVOL
 	FROM STP_Member m 
-	LEFT JOIN dbo.GBL_View_DomainMap mp
-		ON m.BaseURLVOL=mp.DomainName
 WHERE m.MemberID=@MemberID
 
 -- Profile ID given ?
@@ -102,9 +98,7 @@ ORDER BY ain.Name
 
 SELECT CASE WHEN vw.ViewType=@DefaultView OR DomainName IS NOT NULL THEN NULL ELSE vw.ViewType END AS ViewType,
 		ISNULL(DomainName, @BaseURL) + ISNULL(PathToStart,'') COLLATE Latin1_General_100_CI_AI AS AccessURL,
-		CASE WHEN vw.ViewType=@DefaultView THEN 1 ELSE 0 END AS DEFAULT_VIEW,
-		t.FullSSLCompatible_Cache AS FullSSLCompatible,
-		ISNULL(mp.FullSSLCompatible, @BaseFullSSLCompatible) AS DomainFullSSLCompatible
+		CASE WHEN vw.ViewType=@DefaultView THEN 1 ELSE 0 END AS DEFAULT_VIEW
 	FROM VOL_View vw
 	INNER JOIN VOL_View_Description vwd
 		ON vw.ViewType=vwd.ViewType AND vwd.LangID=(SELECT TOP 1 LangID FROM VOL_View_Description WHERE ViewType=vwd.ViewType ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)

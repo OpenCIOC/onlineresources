@@ -1351,7 +1351,7 @@ If Err.Number = 0 And Not bFbSQLError Then
 		Call makePageHeader(TXT_SUGGEST_NEW_RECORD, TXT_SUGGEST_NEW_RECORD, True, False, True, True)
 	Else
 		If Not g_bNoEmail Then
-			Call sendNotifyEmails(rsOrg.Fields("NUM"), rsOrg.Fields("ORG_NAME_FULL"),strOldEmail,strNewEmail,rsOrg.Fields("IN_VIEW"),IIf(get_db_option("DomainDefaultViewSSLCompatibleVOL"), "https://", "http://") & strAccessURL,intCICVw,strFbKey,rsOrg.Fields("FBKEY"))
+			Call sendNotifyEmails(rsOrg.Fields("NUM"), rsOrg.Fields("ORG_NAME_FULL"),strOldEmail,strNewEmail,rsOrg.Fields("IN_VIEW"), "https://" & strAccessURL,intCICVw,strFbKey,rsOrg.Fields("FBKEY"))
 		End If
 		If Not rsOrg.Fields("IN_VIEW") Then
 			Call setSessionLanguage(strRestoreCulture)

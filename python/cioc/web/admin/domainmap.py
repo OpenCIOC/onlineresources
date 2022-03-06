@@ -55,7 +55,6 @@ class DomainSchema(Schema):
 	GoogleMapsAPIKeyVOL = validators.String(max=100)
 	GoogleMapsClientIDVOL = validators.UnicodeString(max=100)
 	GoogleMapsChannelVOL = validators.UnicodeString(max=100)
-	FullSSLCompatible = validators.Bool()
 
 
 class DomainMapSchema(validators.RootSchema):

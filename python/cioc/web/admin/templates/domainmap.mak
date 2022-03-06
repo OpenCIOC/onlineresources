@@ -40,7 +40,6 @@ ${request.passvars.getHTTPVals(bForm=True)}
 		%if request.user.vol.SuperUser:
 		<th class="RevTitleBox">${_("Google Maps (Volunteer)")}</th>
 		%endif
-		<th class="RevTitleBox">${_('SSL Compatible')}</th>
 	</tr>
 	<% languages = [(x, culture_map[x].LanguageName) for x in active_cultures] %>
 	%for i,domain in enumerate(model_state.value('domain')):
@@ -152,10 +151,6 @@ ${request.passvars.getHTTPVals(bForm=True)}
 			</table>
 		</td>
 		%endif
-		<td style="text-align: center;">
-		${renderer.errorlist(prefix + 'FullSSLCompatible')}
-		${renderer.checkbox(prefix + 'FullSSLCompatible', title=domain_name + _(': SSL compatible'))}
-		</td>
 	</tr>
 	%endfor
 	<tr>

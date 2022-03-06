@@ -251,13 +251,12 @@ def getDbOptions(handleDBConnetionError):
 #
 #	The Sub also retrieves any page help or page message information associated with the current page.
 #***************************************
-def l_setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart, strFocus, bPageShouldUseSSL, RedirectAndTidy, MemberName, bAllowAPILogin):
+def l_setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart, strFocus, RedirectAndTidy, MemberName, bAllowAPILogin):
 	global ps_strThisPage, ps_strThisPageFull, ps_bLogin, ps_intDomain, \
 		ps_intDbArea, ps_strPathToStart, ps_strFocus, ps_strRootPath, ps_strTitle, \
 		ps_bHasHelp, g_strMemberNameDOM
 
 	pyrequest.context = rootfactories.BaseRootFactory()
-	pyrequest.context.require_ssl = bPageShouldUseSSL
 	pyrequest.context.allow_api_login = bAllowAPILogin
 	page_info = pageinfo.PageInfo(pyrequest, intDomain, intDbArea)
 	pyrequest.pageinfo = page_info
@@ -276,50 +275,6 @@ def l_setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart
 		g_strMemberNameDOM = dboptions.get_best_lang('MemberNameVOL')
 	else:
 		g_strMemberNameDOM = MemberName
-
-	# If in https and we don't need ssl for this page, return to http
-	has_ssl = pyrequest.headers.get('CIOC-SSL-POSSIBLE')
-	using_ssl = pyrequest.headers.get('CIOC-USING-SSL')
-	ssl_hsts = pyrequest.headers.get('CIOC-SSL-HSTS')
-
-	if ssl_hsts:
-		return
-
-
-	if has_ssl:
-		url = None
-		if pyrequest.dboptions.CanStayInSSL:
-			if using_ssl:
-				return
-			elif pyrequest.headers.get('X-Requested-With') == 'XMLHttpRequest':
-				return
-			elif pyrequest.method != 'GET':
-				return
-			else:
-				url = 'https:' + pyrequest.url.split(':', 1)[-1]
-
-		elif not bPageShouldUseSSL and using_ssl:
-			if pyrequest.headers.get('X-Requested-With') == 'XMLHttpRequest':
-				return
-			elif pyrequest.method != 'GET':
-				return
-			else:
-				url = 'http:' + pyrequest.url.split(':',1)[-1]
-
-		if not url:
-			return
-
-		if '/details.asp' in url:
-			from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
-			parsed = urlparse(url)
-			skip = 'VNUM' if '/volunteer/' in url else 'NUM'
-			parsed_qs = parse_qsl(parsed.query, True)
-			strid = [y for x, y in parsed_qs if x == skip]
-			qs = urlencode([(x,y.encode('utf-8')) for x, y in parsed_qs if x != skip])
-			if strid:
-				url = urlunparse(parsed[:2] + (parsed.path.replace('details.asp', 'record/' + strid[0]),'', qs) + parsed[5:])
-
-		RedirectAndTidy(url)
 
 #***************************************
 # End Sub setPageInfo
@@ -519,15 +474,14 @@ End If
 
 Dim ps_strMsg
 
-Dim g_bPageShouldUseSSL, g_bAllowAPILogin
-g_bPageShouldUseSSL = False
+Dim g_bAllowAPILogin
 g_bAllowAPILogin = False
 
 Dim g_bListScriptLoaded
 g_bListScriptLoaded = False
 
 Sub setPageInfo(ByVal bLogin, ByVal intDomain, ByVal intDbArea, ByVal strPathToStart, ByVal strPathFromStart, ByVal strFocus)
-	Call l_setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart, strFocus, g_bPageShouldUseSSL, GetRef("RedirectAndTidy"), g_strMemberName, g_bAllowAPILogin)
+	Call l_setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart, strFocus, GetRef("RedirectAndTidy"), g_strMemberName, g_bAllowAPILogin)
 End Sub
 
 Sub RedirectAndTidy(strToURL)
