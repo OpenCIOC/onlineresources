@@ -98,8 +98,7 @@ END ELSE BEGIN
 				sl.LangID,
 				@ProfileName,
 				DatabaseNameCIC,
-				ISNULL((SELECT CASE WHEN m.FullSSLCompatible=1 AND t.FullSSLCompatible_Cache=1 THEN 'https://' ELSE 'http://' END FROM GBL_View_DomainMap m INNER JOIN CIC_View vw ON vw.ViewType = ISNULL(m.CICViewType, mem.DefaultViewCIC) INNER JOIN GBL_Template t ON t.Template_ID = vw.Template WHERE m.DomainName=mem.BaseURLCIC), 'http://')
-				+ BaseURLCIC + '/?Ln=' + sl.Culture
+				'https://' + BaseURLCIC + '/?Ln=' + sl.Culture
 			FROM STP_Member mem
 			INNER JOIN STP_Member_Description memd
 				ON mem.MemberID=memd.MemberID

@@ -35,7 +35,6 @@
 Dim bApi
 bApi = Not Nl(Request("api"))
 If bApi Then
-g_bPageShouldUseSSL = True
 g_bAllowAPILogin = True
 End If
 ' setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart, strFocus)
@@ -236,7 +235,7 @@ If Not bVNUMError Then
 		Dim strSentTo, strDetailLink, strRespondedToListing, strContactInfo
 		strDetailLink = TXT_YOU_CAN_VIEW_LISTING & _
 			vbCrLf & _
-			IIf(g_bSSL, "https://", "http://") & strAccessURL & makeVOLDetailsLink(strVNUM, vbNullString, vbNullString)
+			"https://" & strAccessURL & makeVOLDetailsLink(strVNUM, vbNullString, vbNullString)
 		strRespondedToListing = " " & TXT_RESPONDED_TO_THE_LISTING & " " & strPosition & _
 			" " & TXT_WITH_LC & " " & strOrgName & _
 			" " & TXT_DUTIES_DESCRIBED_AS & vbCrLf & strDuties

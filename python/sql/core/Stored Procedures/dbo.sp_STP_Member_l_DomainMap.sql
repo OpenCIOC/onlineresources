@@ -16,21 +16,7 @@ SET NOCOUNT ON
 	Action: NO ACTION REQUIRED
 */
 
-SELECT m.*,
-		 CASE WHEN m.FullSSLCompatible=1 AND ISNULL(
-			(
-				SELECT t.FullSSLCompatible_Cache
-				FROM CIC_View vw  INNER JOIN GBL_Template t
-					ON t.Template_ID = vw.Template 
-				WHERE vw.ViewType = ISNULL(m.CICViewType, (SELECT DefaultViewCIC FROM STP_Member WHERE MemberID=m.MemberID))
-			), 0)= 1 THEN 1 ELSE 0 END AS DefaultViewFullSSLCompatibleCIC,
-		 CASE WHEN m.FullSSLCompatible=1 AND ISNULL(
-			(
-				SELECT t.FullSSLCompatible_Cache
-				FROM VOL_View vw  INNER JOIN GBL_Template t
-					ON t.Template_ID = vw.Template 
-				WHERE vw.ViewType = ISNULL(m.VOLViewType, (SELECT DefaultViewVOL FROM STP_Member WHERE MemberID=m.MemberID))
-			), 0)= 1 THEN 1 ELSE 0 END AS DefaultViewFullSSLCompatibleVOL
+SELECT m.*
 	FROM GBL_View_DomainMap m
 
 SET NOCOUNT OFF

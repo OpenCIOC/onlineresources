@@ -24,7 +24,7 @@ import shutil
 import six
 
 
-# From http://stackoverflow.com/a/299830/108518
+# From https://stackoverflow.com/a/299830/108518
 class BufferedZipFile(zipfile.ZipFile):
 	""" Version of zipfile.ZipFile that can take a buffer to read from """
 

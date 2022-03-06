@@ -16,7 +16,6 @@ CREATE TABLE [dbo].[GBL_Template_Layout]
 [LayoutCSSURL] [varchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
 [LayoutCSSVersionDate] [datetime] NOT NULL CONSTRAINT [DF_GBL_Template_Layout_VersionDate] DEFAULT (getdate()),
 [AlmostStandardsMode] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_Layout_AlmostStandardsMode] DEFAULT ((0)),
-[FullSSLCompatible] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_Layout_FullSSLCompatible] DEFAULT ((0)),
 [SystemLayoutCode] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 ALTER TABLE [dbo].[GBL_Template_Layout] ADD 
@@ -54,15 +53,6 @@ END
 IF UPDATE(AlmostStandardsMode) BEGIN	
 	UPDATE t
 		SET AlmostStandardsMode = CASE WHEN EXISTS(SELECT * FROM GBL_Template_Layout tl WHERE tl.LayoutID IN (t.FooterLayout, t.HeaderLayout, t.SearchLayoutCIC, t.SearchLayoutVOL) AND tl.AlmostStandardsMode=1) THEN 1 ELSE 0 END
-	FROM GBL_Template t
-	WHERE EXISTS(SELECT * FROM Inserted i WHERE i.LayoutID IN (t.FooterLayout, t.HeaderLayout, t.SearchLayoutCIC, t.SearchLayoutVOL))
-END
-
-IF UPDATE(FullSSLCompatible) BEGIN
-	UPDATE t
-		SET FullSSLCompatible_Cache = CASE
-			WHEN t.FullSSLCompatible=0 OR EXISTS(SELECT * FROM GBL_Template_Layout tl WHERE tl.LayoutID IN (t.FooterLayout, t.HeaderLayout, t.SearchLayoutCIC, t.SearchLayoutVOL) AND tl.FullSSLCompatible=0)
-			THEN 0 ELSE 1 END
 	FROM GBL_Template t
 	WHERE EXISTS(SELECT * FROM Inserted i WHERE i.LayoutID IN (t.FooterLayout, t.HeaderLayout, t.SearchLayoutCIC, t.SearchLayoutVOL))
 END

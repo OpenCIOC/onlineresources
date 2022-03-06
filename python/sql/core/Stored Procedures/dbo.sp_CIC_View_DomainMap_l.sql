@@ -38,8 +38,7 @@ SELECT	vw.ViewType,
 		CASE WHEN vw.ViewType=@DefaultView OR (DomainName IS NOT NULL AND DomainName<>@BaseURL) THEN NULL ELSE vw.ViewType END AS URLViewType,
 		ISNULL(DomainName, @BaseURL) + ISNULL(PathToStart,'') COLLATE Latin1_General_100_CI_AI AS AccessURL,
 		CASE WHEN vwd.LangID=@@LANGID THEN vwd.ViewName ELSE '[' + vwd.ViewName + ']' END AS ViewName,
-		CASE WHEN vw.ViewType=@DefaultView THEN 1 ELSE 0 END AS DEFAULT_VIEW,
-		CASE WHEN ISNULL(mp.FullSSLCompatible, 0) = 1 AND (SELECT FullSSLCompatible FROM GBL_Template WHERE Template_ID=vw.Template) = 1 THEN 'https' ELSE 'http' END AS Protocol
+		CASE WHEN vw.ViewType=@DefaultView THEN 1 ELSE 0 END AS DEFAULT_VIEW
 	FROM CIC_View vw
 	INNER JOIN CIC_View_Description vwd
 		ON vw.ViewType=vwd.ViewType

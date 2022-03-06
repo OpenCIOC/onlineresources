@@ -705,7 +705,7 @@ Sub makeSocialMediaValue(strName, strValue)
 				End If
 				strReturn = strReturn & "<tr>" & vbCrLf & _
 					"<td><img src=" & AttrQs(xmlChildNode.getAttribute("Icon16")) & " width=""16"" height=""16"" alt=" & AttrQs(strSmName) & ">&nbsp;" & _
-					StringIf(Not Nl(strGeneralURL),"<a href=""http://" & strGeneralURL & """>") & _
+					StringIf(Not Nl(strGeneralURL),"<a href=""https://" & strGeneralURL & """>") & _
 					strSmName & _
 					StringIf(Not Nl(strGeneralURL),"</a>") & _
 					"</td>" & _

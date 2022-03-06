@@ -116,12 +116,8 @@ END
 	
 SELECT CASE WHEN @MemberID=@ShareMemberID THEN NotifyEmailAddresses ELSE ShareNotifyEmailAddresses END FROM GBL_SharingProfile WHERE ProfileID=@ProfileID
 
-SELECT CASE WHEN t.FullSSLCompatible=1 AND dm.FullSSLCompatible = 1 THEN 'https://' ELSE 'http://' END + BaseURLCIC 
+SELECT 'https://' + BaseURLCIC 
 FROM STP_Member m
-INNER JOIN GBL_View_DomainMap dm
-	ON BaseURLCIC = dm.DomainName
-INNER JOIN GBL_Template t
-	ON m.DefaultTemplate=t.Template_ID
 WHERE m.MemberID=@OtherMemberID
 
 SELECT bt.NUM, dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM, btd.ORG_LEVEL_1, btd.ORG_LEVEL_2, btd.ORG_LEVEL_3, btd.ORG_LEVEL_4, btd.ORG_LEVEL_5, btd.LOCATION_NAME, btd.SERVICE_NAME_LEVEL_1, btd.SERVICE_NAME_LEVEL_2, bt.DISPLAY_LOCATION_NAME, bt.DISPLAY_ORG_NAME)

@@ -33,7 +33,6 @@
 <!--#include file="../includes/core/incConnection.asp" -->
 <!--#include file="../includes/core/incSetup.asp" -->
 <%
-g_bPageShouldUseSSL = True
 ' setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart, strFocus)
 Call setPageInfo(True, DM_GLOBAL, DM_GLOBAL, "../", "admin/", vbNullString)
 %>

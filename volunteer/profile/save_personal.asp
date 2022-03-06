@@ -328,10 +328,10 @@ ElseIf bEmailNew Or bNew Then
 	Dim strEmailBody
 	strEmailBody = TXT_HI & " " & strFirstName & "," & vbCrLf & vbCrLf & _
 		IIf(bNew, TXT_YOU_SIGNED_UP_FOR, TXT_YOU_SUBMITTED_EMAIL_CHANGE) & _
-		" " & IIf(g_bSSL, "https://", "http://") & strAccessURL & "/volunteer/" & vbCrLf & vbCrLf & _
+		" " & "https://" & strAccessURL & "/volunteer/" & vbCrLf & vbCrLf & _
 		TXT_PLEASE_FOLLOW_LINK & " " & _
 		IIf(bNew, TXT_FINISH_CREATING_ACCOUNT, TXT_CONFIRM_EMAIL_ADDRESS) & vbCrLf & _
-		IIf(g_bSSL, "https://", "http://") & strAccessURL & makeLink("/volunteer/profile/confirm.asp", "PID=" & Server.URLEncode(strProfileID) & "&CT=" & Server.URLEncode(strConfirmationToken) & strExtraArgs,vbNullString) & vbCrLf & vbCrLf & _
+		"https://" & strAccessURL & makeLink("/volunteer/profile/confirm.asp", "PID=" & Server.URLEncode(strProfileID) & "&CT=" & Server.URLEncode(strConfirmationToken) & strExtraArgs,vbNullString) & vbCrLf & vbCrLf & _
 		TXT_LINK_EXPIRE_NOTICE
 				
 	bEmailFailed = sendEmail(False, strFromEmail, strEmail, TXT_EMAIL_SUBJECT, strEmailBody)

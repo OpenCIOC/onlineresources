@@ -94,8 +94,6 @@ CREATE TABLE [dbo].[GBL_Template]
 [TemplateCSSVersionDate] [datetime] NULL CONSTRAINT [DF_GBL_Template_TemplateCSSVersionDate] DEFAULT (getdate()),
 [TemplateCSSLayoutURLs] [varchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [AlmostStandardsMode] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_AlmostStandardsMode] DEFAULT ((1)),
-[FullSSLCompatible] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_FullSSLCompatible] DEFAULT ((0)),
-[FullSSLCompatible_Cache] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_FullSSLCompatible_Cache] DEFAULT ((0)),
 [UseFullCIOCBootstrap_Cache] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_UseFullCIOCBootstrap] DEFAULT ((0)),
 [UseFontAwesome] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_UseFontAwesome] DEFAULT ((0)),
 [UseFontAwesome_Cache] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_UseFontAwesome_Cache] DEFAULT ((0)),
@@ -117,16 +115,13 @@ FOR INSERT, UPDATE AS
 
 SET NOCOUNT ON
 
-IF UPDATE(HeaderLayout) OR UPDATE(FooterLayout) OR UPDATE(SearchLayoutCIC) OR UPDATE(SearchLayoutVOL) OR UPDATE(FullSSLCompatible) BEGIN		
+IF UPDATE(HeaderLayout) OR UPDATE(FooterLayout) OR UPDATE(SearchLayoutCIC) OR UPDATE(SearchLayoutVOL) BEGIN		
 	UPDATE t SET
 		TemplateCSSLayoutURLs = dbo.fn_GBL_Template_SystemLayoutURLs(t.Template_ID),
-		FullSSLCompatible_Cache = CASE
-			WHEN t.FullSSLCompatible=0 OR EXISTS(SELECT * FROM GBL_Template_Layout tl WHERE tl.LayoutID IN (t.FooterLayout, t.HeaderLayout, t.SearchLayoutCIC, t.SearchLayoutVOL) AND tl.FullSSLCompatible=0)
-			THEN 0 ELSE 1 END,
-			UseFontAwesome_Cache = CASE
+		UseFontAwesome_Cache = CASE
 			WHEN t.UseFontAwesome=1 OR EXISTS(SELECT * FROM GBL_Template_Layout tl WHERE tl.LayoutID IN (t.FooterLayout, t.HeaderLayout, t.SearchLayoutCIC, t.SearchLayoutVOL) AND tl.UseFontAwesome=1)
 			THEN 1 ELSE 0 END,
-			UseFullCIOCBootstrap_Cache = CASE
+		UseFullCIOCBootstrap_Cache = CASE
 			WHEN EXISTS(SELECT * FROM GBL_Template_Layout tl WHERE tl.LayoutID IN (t.FooterLayout, t.HeaderLayout, t.SearchLayoutCIC, t.SearchLayoutVOL) AND tl.UseFullCIOCBootstrap=1)
 			THEN 1 ELSE 0 END
 	FROM GBL_Template t

@@ -35,7 +35,6 @@
 <!--#include file="../includes/core/incConnection.asp" -->
 <!--#include file="../includes/core/incSetup.asp" -->
 <%
-g_bPageShouldUseSSL = True
 ' setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart, strFocus)
 Call setPageInfo(True, DM_GLOBAL, DM_GLOBAL, "../", "admin/", vbNullString)
 %>
@@ -51,8 +50,6 @@ Call setPageInfo(True, DM_GLOBAL, DM_GLOBAL, "../", "admin/", vbNullString)
 <!--#include file="../includes/core/incFormat.asp" -->
 <!--#include file="../includes/list/incSysLanguageList.asp" -->
 <%
-Call EnsureSSL()
-
 Call makePageHeader(TXT_EDIT_ACCOUNT & user_strLogin, TXT_EDIT_ACCOUNT & user_strLogin, True, False, True, True)
 %>
 

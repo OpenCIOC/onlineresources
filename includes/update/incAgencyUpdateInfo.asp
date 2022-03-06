@@ -87,9 +87,9 @@ strAccessURL = Request.ServerVariables("HTTP_HOST") & strAccessURL
 <%If bOnline Then%>
 	<%Select Case ps_intDomain%>
 		<%Case DM_CIC%>
-	<li><%=TXT_ONLINE_AT%> <strong><%=IIf(g_bSSL, "https://", "http://") & strAccessURL%>/feedback.asp?NUM=<%=strNUM & "&Ln=" & g_objCurrentLang.Culture%></strong></li>	
+	<li><%=TXT_ONLINE_AT%> <strong><%="https://" & strAccessURL%>/feedback.asp?NUM=<%=strNUM & "&Ln=" & g_objCurrentLang.Culture%></strong></li>	
 		<%Case DM_VOL%>
-	<li><%=TXT_ONLINE_AT%> <strong><%=IIf(g_bSSL, "https://", "http://") & strAccessURL%>/volunteer/feedback.asp?VNUM=<%=strVNUM & "&Ln=" & g_objCurrentLang.Culture%></strong></li>		
+	<li><%=TXT_ONLINE_AT%> <strong><%="https://" & strAccessURL%>/volunteer/feedback.asp?VNUM=<%=strVNUM & "&Ln=" & g_objCurrentLang.Culture%></strong></li>		
 	<%End Select%>
 <%End If%>
 </ul>

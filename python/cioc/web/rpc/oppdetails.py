@@ -184,7 +184,7 @@ class RpcOrgDetails(viewbase.VolViewBase):
 		full_info = OrderedDict([
 			('orgname', data.ORG_NAME_FULL),
 			('position_title', data.POSITION_TITLE),
-			('feedback_link', ('https://' if request.dboptions.DomainDefaultViewSSLCompatibleVOL else 'http://') + request.host + makeLink('~/volunteer/feedback.asp', [('VNUM', vnum), ('UpdateLn', cur_culture)] + extra_link_args)),
+			('feedback_link', 'https://' + request.host + makeLink('~/volunteer/feedback.asp', [('VNUM', vnum), ('UpdateLn', cur_culture)] + extra_link_args)),
 			('non_public', data.NON_PUBLIC),
 			('deletion_date', data.DELETION_DATE),
 		])

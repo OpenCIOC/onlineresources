@@ -921,9 +921,9 @@ strAccessURL = reReplace(Request.ServerVariables("PATH_INFO"),"(.*)\/" & ps_strT
 strAccessURL = Request.ServerVariables("HTTP_HOST") & strAccessURL
 
 Dim strDetailLinkTemplate, strRPCDetailLinkTemplate
-strDetailLinkTemplate =  IIf(get_db_option("DomainDefaultViewSSLCompatibleVOL"), "https://", "http://") & strAccessURL & _
+strDetailLinkTemplate =  "https://" & strAccessURL & _
 		makeVOLDetailsLink("[VNUMVNUM]", vbNullString, vbNullString) 
-strRPCDetailLinkTemplate = IIf(g_bSSL, "https://", "http://") & strAccessURL & "/" & _
+strRPCDetailLinkTemplate = "https://" & strAccessURL & "/" & _
 		makeLinkB("rpc/opportunity/[VNUMVNUM]") 
 
 While Not .EOF
@@ -1083,9 +1083,9 @@ strAccessURL = reReplace(Request.ServerVariables("PATH_INFO"),"(.*)\/" & ps_strT
 strAccessURL = Request.ServerVariables("HTTP_HOST") & strAccessURL
 
 Dim strDetailLinkTemplate, strRPCDetailLinkTemplate
-strDetailLinkTemplate =  IIf(get_db_option("DomainDefaultViewSSLCompatibleVOL"), "https://", "http://") & strAccessURL & _
+strDetailLinkTemplate =  "https://" & strAccessURL & _
 		makeVOLDetailsLink("[VNUMVNUM]", vbNullString, vbNullString) 
-strRPCDetailLinkTemplate = IIf(g_bSSL, "https://", "http://") & strAccessURL & "/" & _
+strRPCDetailLinkTemplate = "https://" & strAccessURL & "/" & _
 		makeLink("rpc/opportunity/[VNUMVNUM]", "format=xml", vbNullString) 
 
 While Not .EOF

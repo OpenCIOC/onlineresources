@@ -20,9 +20,6 @@ viewbase = None
 
 
 class BaseRootFactory(object):
-	allow_ssl = False
-	require_ssl = False
-	dont_redirect = False
 	force_print_mode = False
 	allow_api_login = False
 
@@ -38,13 +35,3 @@ class BasicRootFactory(BaseRootFactory):
 		if not viewbase:
 			from . import viewbase
 		viewbase.init_page_info(request, domain, db_area)
-
-
-class AllowSSLRootFactory(BasicRootFactory):
-	allow_ssl = True
-	require_ssl = False
-
-
-class RequireSSLRootFactory(BasicRootFactory):
-	allow_ssl = True
-	require_ssl = True

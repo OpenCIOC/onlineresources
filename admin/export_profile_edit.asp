@@ -299,7 +299,7 @@ Call makePageHeader(TXT_EDIT_PROFILE & TXT_COLON & strProfileName, TXT_EDIT_PROF
 		End If
 %>
 		<td><input type="text" name="SourceDbURL_<%=strCulture%>" id="SourceDbURL_<%=strCulture%>" value=<%=AttrQs(strValue)%> size="<%=IIf(g_bMultiLingualActive,TEXT_SIZE-30,TEXT_SIZE-20)%>" maxlength="200">
-		<input type="button" id="SourceDbURL_<%=strCulture%>_Button" value="<%=TXT_RESET%>" onClick="document.getElementById('SourceDbURL_<%=strCulture%>').value='<%=IIf(get_db_option("FullSSLCompatibleBaseURLCIC"), "https://", "http://") & g_strBaseURLCIC%>/?Ln=<%=strCulture%>'"/></td>
+		<input type="button" id="SourceDbURL_<%=strCulture%>_Button" value="<%=TXT_RESET%>" onClick="document.getElementById('SourceDbURL_<%=strCulture%>').value='<%="https://" & g_strBaseURLCIC%>/?Ln=<%=strCulture%>'"/></td>
 <%
 		bNewRow = True
 	Next
@@ -311,7 +311,7 @@ Call openViewURLListRst(DM_CIC)
 %>
 	<tr>
 		<td class="FieldLabelLeftClr"<%=StringIf(g_bMultiLingualActive," colspan=""2""")%>><label for="SubmitChangesToAccessURL"><%=TXT_SUBMIT_RECORD_CHANGES_TO%></label></td>
-		<td><%=makeViewDomainList(strSubmitChangesToAccessURL,"SubmitChangesToAccessURL",True, False)%></td>
+		<td><%=makeViewDomainList(strSubmitChangesToAccessURL,"SubmitChangesToAccessURL",True)%></td>
 	</tr>
 <%
 	End If

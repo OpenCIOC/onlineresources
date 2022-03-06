@@ -64,7 +64,6 @@ Dim intDomain, _
 	intViewType, _
 	intViewTypeURL, _
 	strAccessURL, _
-	strAccessProtocol, _
 	strReturnLinkPath, _
 	strDbAreaSQL, _
 	strErrorList, _
@@ -96,7 +95,7 @@ End If
 
 Dim aAccessURL
 aAccessURL = Split(Request("AccessURL")," ")
-If UBound(aAccessURL)=3 Then
+If UBound(aAccessURL)=2 Then
 	If IsIDType(aAccessURL(0)) Then
 		intViewTypeURL = CInt(aAccessURL(0))
 	Else
@@ -108,15 +107,13 @@ If UBound(aAccessURL)=3 Then
 		intViewType = Null
 	End If
 	strAccessURL = aAccessURL(2)
-	strAccessProtocol = aAccessURL(3)
 Else
 	intViewTypeURL = Null
 	intViewType = Null
 	strAccessURL = IIf(intDomain=DM_CIC,g_strBaseURLCIC,g_strBaseURLVOL)
-	strAccessProtocol = IIf(get_db_option("FullSSLCompatibleBaseURL" & IIf(intDomain=DM_CIC, "CIC", "VOL")), "https", "http")
 End If
 
-strAccessURL = strAccessProtocol & "://" & strAccessURL
+strAccessURL = "https://" & strAccessURL
 
 Select Case intDomain
 	Case DM_CIC

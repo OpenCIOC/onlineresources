@@ -92,17 +92,6 @@ ${self.makeMgmtInfo(layout)}
 	${renderer.checkbox("layout.UseFullCIOCBootstrap", label=_('Include the full CIOC-adapted Bootstrap design libary'))}
 	</td>
 </tr>
-<tr>
-	<td class="FieldLabelLeft">${_('Full SSL Compatible')}</td>
-	<td>
-	%if not is_add and layout.SystemLayout:
-	${_('This layout can run in full SSL mode.') if layout.FullSSLCompatible else _('This layout cannot be used in full SSL mode.') }
-	%else:
-	${renderer.errorlist("layout.FullSSLCompatible")}
-	${renderer.checkbox("layout.FullSSLCompatible", label=_('This layout can run in full SSL mode.'))}
-	%endif
-	</td>
-</tr>
 %for culture in active_cultures:
 <% lang = culture_map[culture] %>
 <tr>

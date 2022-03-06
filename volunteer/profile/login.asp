@@ -33,7 +33,6 @@
 <!--#include file="../../includes/core/incConnection.asp" -->
 <!--#include file="../../includes/core/incSetup.asp" -->
 <%
-g_bPageShouldUseSSL = True
 ' setPageInfo(bLogin, intDomain, intDbArea, strPathToStart, strPathFromStart, strFocus)
 Call setPageInfo(False, DM_VOL, DM_VOL, "../../", "volunteer/profile/", "EntryForm.LoginName")
 %>
@@ -56,8 +55,6 @@ ElseIf user_bLoggedIn Then
 ElseIf vprofile_bLoggedIn Then
 	Call goToPageB("start.asp")
 End If
-
-Call EnsureSSL()
 
 Call makePageHeader(TXT_VOL_PROFILE_LOGIN, TXT_VOL_PROFILE_LOGIN, True, False, True, True)
 Call setSessionValue("session_test", "ok")

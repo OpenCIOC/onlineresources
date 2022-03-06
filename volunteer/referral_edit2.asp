@@ -247,7 +247,7 @@ Else
 				Dim strSentTo, strDetailLink, strRespondedToListing, strContactInfo
 				strDetailLink = TXT_YOU_CAN_VIEW_LISTING & " " & _
 					vbCrLf & _
-					IIf(get_db_option("FullSSLCompatibleBaseURLVOL"), "https://", "http://") & g_strBaseURLVOL & "/volunteer/" & StringIf(Nl(strRecordRoot), "details.asp?VNUM=") & strRecordRoot & strVNUM
+					"https://" & g_strBaseURLVOL & "/volunteer/" & StringIf(Nl(strRecordRoot), "details.asp?VNUM=") & strRecordRoot & strVNUM
 				strRespondedToListing = " " & TXT_RESPONDED_TO_THE_LISTING & " " & strPosition & _
 					" " & TXT_WITH & " " & strOrgName & _
 					" " & TXT_DUTIES_DESCRIBED_AS & vbCrLf & strDuties

@@ -235,12 +235,6 @@ End Sub
 ' End Sub securityFailure
 '***************************************
 
-Sub EnsureSSL()
-	If Not Nl(Request.ServerVariables("HTTP_CIOC_SSL_POSSIBLE")) And Nl(Request.ServerVariables("HTTP_CIOC_USING_SSL")) Then
-		Response.Redirect "https://" & Request.ServerVariables("HTTP_HOST") & Request.ServerVariables("URL") & StringIf(Not Nl(Request.ServerVariables("QUERY_STRING")), "?" & Request.ServerVariables("QUERY_STRING"))
-	End If
-End Sub
-
 Sub BannedUserCallback(strRemoteIP)
 	Call handleError(strRemoteIP & TXT_COLON & TXT_USER_BANNED, _
 		ps_strPathToStart & "security_failure.asp", vbNullString)

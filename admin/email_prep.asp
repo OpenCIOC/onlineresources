@@ -208,7 +208,6 @@ Else
 	Dim dateEmailUpdate
 	Dim intTimePassed
 	Dim strGBLVolContact
-	Dim strAccessProtocol
 
 	strRecordDbAreaPath = strDbAreaPath
 	strGBLVolContact = vbNullString
@@ -240,11 +239,10 @@ Else
 	Next
 
 
-	strAccessProtocol = IIf(get_db_option("FullSSLCompatibleBaseURL" & IIf(intDomain=DM_CIC, "CIC", "VOL")), "https://", "http://")
 	strMsgTxtDisp = Replace(makeEmailUpdateMsg( _
 								intDomain, _
 								Null, _
-								strAccessProtocol & IIf(intDomain=DM_CIC,g_strBaseURLCIC,g_strBaseURLVOL), _
+								"https://" & IIf(intDomain=DM_CIC,g_strBaseURLCIC,g_strBaseURLVOL), _
 								vbNullString, _
 								Not(intDomain=DM_VOL And bMultiRecord) _
 								), _
@@ -401,7 +399,7 @@ Call openViewURLListRst(intDomain)
 %>
 <tr>
 	<td class="FieldLabelLeft"><label for="AccessURL"><%=TXT_VIEW%></label></td>
-	<td><%=makeViewDomainList(vbNullString,"AccessURL",False, True)%></td>
+	<td><%=makeViewDomainList(vbNullString,"AccessURL",False)%></td>
 </tr>
 <%
 	End If

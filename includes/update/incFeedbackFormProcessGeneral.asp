@@ -277,7 +277,7 @@ Sub sendNotifyEmails(intID, strRecName, strOldEmail, strNewEmail, bInView, strAc
 	If bInView Then
 		strDetailLink = TXT_VIEW_RECORD_AT & _
 			vbCrLf & _
-			Nz(strAccessURL,IIf(get_db_option("FullSSLCompatibleBaseURL" & IIf(ps_intDbArea = DM_CIC, "CIC", "VOL")), "https://", "http://") & IIf(ps_intDbArea = DM_CIC,g_strBaseURLCIC,g_strBaseURLVOL)) & _
+			Nz(strAccessURL, "https://" & IIf(ps_intDbArea = DM_CIC,g_strBaseURLCIC,g_strBaseURLVOL)) & _
 			"/" & IIf(Nl(strRecordRoot), _
 				ps_strDbAreaDefaultPath & "details.asp?" & IIf(ps_intDbArea=DM_VOL,"VNUM=" & intID,"NUM=" & intID) & "&", _
 				StringIf(ps_intDbArea=DM_VOL, "volunteer/") & strRecordRoot & intID & "?") & _
@@ -286,7 +286,7 @@ Sub sendNotifyEmails(intID, strRecName, strOldEmail, strNewEmail, bInView, strAc
 	Else
 		strDetailLink = TXT_VIEW_RECORD_AT & _
 			vbCrLf & _
-			Nz(strAccessURL,IIf(get_db_option("FullSSLCompatibleBaseURL" & IIf(ps_intDbArea = DM_CIC, "CIC", "VOL")), "https://", "http://") & IIf(ps_intDbArea = DM_CIC,g_strBaseURLCIC,g_strBaseURLVOL)) & _
+			Nz(strAccessURL,"https://" & IIf(ps_intDbArea = DM_CIC,g_strBaseURLCIC,g_strBaseURLVOL)) & _
 			"/" & ps_strDbAreaDefaultPath & "feedback.asp?" & _
 			IIf(ps_intDbArea=DM_VOL,"VNUM=","NUM=") & intID & _
 			StringIf(Not Nl(intViewType),IIf(ps_intDbArea=DM_VOL,"&UseVOLVw=","&UseCICVw=") & intViewType) & _

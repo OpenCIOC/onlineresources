@@ -58,10 +58,10 @@ def parse_access_url(value):
 	else:
 		raise ValueError()
 
-	if not len(listval) == 4:
+	if not len(listval) == 3:
 		raise ValueError()
 
-	urlviewtype, viewtype, accessurl, protocol = listval
+	urlviewtype, viewtype, accessurl = listval
 
 	if not urlviewtype:
 		urlviewtype = None
@@ -79,7 +79,7 @@ def parse_access_url(value):
 		except (ValueError, TypeError):
 			raise ValueError()
 
-	return [urlviewtype, viewtype, accessurl, protocol]
+	return [urlviewtype, viewtype, accessurl]
 
 
 class AccessURLValidator(ciocvalidators.FancyValidator):
@@ -198,14 +198,13 @@ class EmailRecordListBase(viewbase.ViewBase):
 
 		if not access_url:
 			# default access_url values
-			dboptions_fields = ['DefaultView', 'BaseURL', 'FullSSLCompatibleBaseURL']
+			dboptions_fields = ['DefaultView', 'BaseURL']
 			access_url = [getattr(self.request.dboptions, x + request.pageinfo.DbAreaS) for x in dboptions_fields]
-			access_url[-1] = 'https' if access_url[-1] else 'http'
 			access_url = [None] + access_url
 
 		exclude_keys = u'Use%sVw' % request.pageinfo.DbAreaS
 		view_param = {} if not access_url[0] else {exclude_keys: six.text_type(access_url[0])}
-		urlprefix = u'%s://%s' % (access_url[-1], access_url[-2])
+		urlprefix = u'https://%s' % (access_url[-1])
 		link_tmpl = self.get_link_template('%s', view_param, exclude_keys)
 
 		link_tmpl = urlprefix + link_tmpl

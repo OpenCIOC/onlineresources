@@ -52,7 +52,6 @@ class LayoutBaseSchema(Schema):
 	LayoutCSSURL = ciocvalidators.Url(max=200)
 	UseFontAwesome = validators.Bool()
 	UseFullCIOCBootstrap = validators.Bool()
-	FullSSLCompatible = validators.Bool()
 
 class LayoutDescriptionSchema(Schema):
 	if_key_missing = None
@@ -135,7 +134,7 @@ class TemplateLayout(viewbase.AdminViewBase):
 			args = [LayoutID, user.Mod, request.dboptions.MemberID, user.Agency]
 			layout = model_state.form.data['layout']
 			args.extend(layout.get(k) for k in (
-				'Owner', 'FullSSLCompatible', 'LayoutType', 'LayoutCSS', 'LayoutCSSURL', 'AlmostStandardsMode', 'UseFontAwesome', 'UseFullCIOCBootstrap'
+				'Owner', 'LayoutType', 'LayoutCSS', 'LayoutCSSURL', 'AlmostStandardsMode', 'UseFontAwesome', 'UseFullCIOCBootstrap'
 			))
 
 			root = ET.Element('DESCS')

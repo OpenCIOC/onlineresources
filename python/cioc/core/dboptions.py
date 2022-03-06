@@ -49,60 +49,13 @@ class DbOptionsDescription(object):
 
 
 class DbOptions(object):
-	def __init__(self, domain_info, request, force_load, ssl_domains=None):
+	def __init__(self, domain_info, request, force_load):
 		self.dbopts = None
 		self.domain_info = domain_info
 		self.member_id = domain_info['MemberID']
 		self._last_modified = None
 		self.request = request
 		self.load(force_load)
-		self.ssl_domains = ssl_domains or None
-
-	@property
-	def CanStayInSSL(self):
-		try:
-			dns_can = self.domain_info.get('FullSSLCompatible', False)
-
-			request = self.request
-			DbArea = request.pageinfo.DbArea
-			print_mode = request.viewdata.PrintMode
-			if DbArea == const.DM_GLOBAL:
-				if print_mode and self.DefaultPrintTemplate:
-					template_can = self.dbopts['PrintFullSSLCompatible']
-				else:
-					template_can = self.dbopts['TemplateFullSSLCompatible']
-			else:
-				vd_dom = request.viewdata.dom
-				if print_mode and vd_dom.PrintTemplate:
-					template_can = vd_dom.PrintFullSSLCompatible
-				else:
-					template_can = vd_dom.TemplateFullSSLCompatible
-			# log.debug('CanStayInSSL: %s, %s, %s, %s', DbArea, print_mode, template_can, dns_can)
-			return template_can and dns_can
-		except AttributeError:
-			log.exception('********************************* attribute error in CanStayInSSL')
-			raise
-
-	@reify
-	def DomainDefaultViewSSLCompatibleCIC(self):
-		return self.domain_info.get('DefaultViewFullSSLCompatibleCIC', False)
-
-	@reify
-	def DomainDefaultViewSSLCompatibleVOL(self):
-		return self.domain_info.get('DefaultViewFullSSLCompatibleVOL', False)
-
-	@reify
-	def SSLDomains(self):
-		if self.request.config.get('ignore_ssl_domains', False):
-			return None
-
-		if not self.dbopts['TemplateFullSSLCompatible']:
-			return None
-
-		if self.domain_info['DomainName'] in self.ssl_domains:
-			return None
-
-		return self.ssl_domains
 
 	def load(self, force=False):
 		cache = self.request.cache
@@ -225,8 +178,6 @@ def get_db_options(request):
 	if not domain_info:
 		raise Exception("This domain is not associated with a Member. Maybe a ResetDb=True is required?, %s, %s" % (host, domain_map))
 
-	ssl_domains = [y for y, x in domain_map.items() if x['MemberID'] == domain_info['MemberID'] and x.get('FullSSLCompatible', False)]
-
-	dbopts = DbOptions(domain_info, request, reset_db, ssl_domains)
+	dbopts = DbOptions(domain_info, request, reset_db)
 
 	return dbopts

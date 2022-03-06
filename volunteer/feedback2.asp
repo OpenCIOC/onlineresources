@@ -896,7 +896,7 @@ If Err.Number = 0 And Not bFbSQLError Then
 		Call makePageHeader(TXT_SUGGEST_NEW_RECORD, TXT_SUGGEST_NEW_RECORD, True, False, True, True)
 	Else
 		If Not g_bNoEmail Then
-			Call sendNotifyEmails(strVNUM, rsOrg.Fields("POSITION_TITLE") & " (" & rsOrg.Fields("ORG_NAME_FULL") & ")",strOldEmail,strNewEmail,rsOrg("IN_VIEW"),IIf(get_db_option("DomainDefaultViewSSLCompatibleVOL"), "https://", "http://") & strAccessURL,intVOLVw,strFbKey,rsOrg("FBKEY"))
+			Call sendNotifyEmails(strVNUM, rsOrg.Fields("POSITION_TITLE") & " (" & rsOrg.Fields("ORG_NAME_FULL") & ")",strOldEmail,strNewEmail,rsOrg("IN_VIEW"), "https://" & strAccessURL,intVOLVw,strFbKey,rsOrg("FBKEY"))
 		End If
 		If Not rsOrg("IN_VIEW") Then
 			Call makePageHeader(TXT_THANKS_FOR_FEEDBACK, TXT_THANKS_FOR_FEEDBACK, True, False, True, True)

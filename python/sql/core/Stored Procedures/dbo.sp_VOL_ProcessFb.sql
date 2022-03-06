@@ -29,19 +29,7 @@ SELECT DISTINCT
 				ISNULL((SELECT VOLViewType FROM GBL_View_DomainMap WHERE DomainName=AccessURL),
 					(SELECT DefaultViewVOL FROM STP_Member WHERE MemberID=fbe.MemberID))
 				),
-			@LangID,0,GETDATE()) AS IN_VIEW,
-			(SELECT t.FullSSLCompatible_Cache
-				FROM VOL_View vw  INNER JOIN GBL_Template t
-					ON t.Template_ID = vw.Template 
-				WHERE vw.ViewType= ISNULL(fbe.ViewType,
-						ISNULL((SELECT VOLViewType FROM GBL_View_DomainMap WHERE DomainName=AccessURL),
-							(SELECT DefaultViewVOL FROM STP_Member WHERE MemberID=fbe.MemberID))
-						)
-			) AS ViewFullSSLCompatibleVOL,
-			ISNULL((SELECT m.FullSSLCompatible
-				FROM GBL_View_DomainMap m
-				WHERE DomainName=ISNULL(AccessURL, (SELECT BaseURLVOL FROM STP_Member WHERE MemberID=fbe.MemberID))
-			), CAST(0 AS bit)) AS DomainFullSSLCompatibleVOL
+			@LangID,0,GETDATE()) AS IN_VIEW
 	FROM VOL_Feedback fbe
 	INNER JOIN VOL_Opportunity vo
 		ON fbe.VNUM=vo.VNUM
