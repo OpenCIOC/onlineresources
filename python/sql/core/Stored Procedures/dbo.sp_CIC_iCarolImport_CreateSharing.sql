@@ -134,21 +134,23 @@ SELECT CAST((SELECT (
 			(SELECT 'E' AS [@LANG],  a.MainContactName AS [@NMLAST], a.MainContactTitle AS [@TTL], a.MainContactPhoneNumber AS [@PH1N], a.MainContactEmailAddress AS [@EML]
 			-- NOTE a.MainContactType didn't have any data in it so it was not mapped
 			WHERE COALESCE(a.MainContactIsPrivate, 'No') = 'No' AND (a.MainContactName IS NOT NULL OR a.MainContactTitle IS NOT NULL OR a.MainContactPhoneNumber IS NOT NULL OR a.MainContactEmailAddress IS NOT NULL)
+			AND a.TaxonomyLevelName <> 'Agency'
 			FOR XML PATH('CONTACT'), TYPE),
 			(SELECT 'F' AS [@LANG], f.MainContactName AS [@NMLAST], f.MainContactTitle AS [@TTL], f.MainContactPhoneNumber AS [@PH1N], f.MainContactEmailAddress AS [@EML]
 			-- NOTE a.MainContactType didn't have any data in it so it was not mapped
 			WHERE COALESCE(f.MainContactIsPrivate, 'No') = 'No' AND (f.MainContactName IS NOT NULL OR f.MainContactTitle IS NOT NULL OR f.MainContactPhoneNumber IS NOT NULL OR f.MainContactEmailAddress IS NOT NULL)
+			AND a.TaxonomyLevelName <> 'Agency'
 			FOR XML PATH('CONTACT'), TYPE)
-			WHERE a.TaxonomyLevelName <> 'Agency'
 		FOR XML PATH('CONTACT_1') ,TYPE),
 		(SELECT
 			(SELECT 'E' AS [@LANG], a.SeniorWorkerName AS [@NMLAST], a.SeniorWorkerTitle AS [@TTL], a.SeniorWorkerPhoneNumber AS [@PH1N], a.SeniorWorkerEmailAddress AS [@EML]
 				WHERE COALESCE(a.SeniorWorkerIsPrivate, 'No') = 'No' AND (a.SeniorWorkerName IS NOT NULL OR a.SeniorWorkerTitle IS NOT NULL OR a.SeniorWorkerPhoneNumber IS NOT NULL OR a.SeniorWorkerEmailAddress IS NOT NULL)
+				AND a.TaxonomyLevelName = 'ProgramAtSite'
 			 FOR XML PATH('CONTACT'), TYPE),
 			(SELECT 'F' AS [@LANG], f.SeniorWorkerName AS [@NMLAST], f.SeniorWorkerTitle AS [@TTL], f.SeniorWorkerPhoneNumber AS [@PH1N], f.SeniorWorkerEmailAddress AS [@EML]
 				WHERE  COALESCE(f.SeniorWorkerIsPrivate, 'No') = 'No' AND (f.SeniorWorkerName IS NOT NULL OR f.SeniorWorkerTitle IS NOT NULL OR f.SeniorWorkerPhoneNumber IS NOT NULL OR f.SeniorWorkerEmailAddress IS NOT NULL)
+				AND a.TaxonomyLevelName = 'ProgramAtSite'
 			 FOR XML PATH('CONTACT'), TYPE)
-			WHERE a.TaxonomyLevelName = 'ProgramAtSite'
 		FOR XML PATH('CONTACT_2') ,TYPE),
 		(SELECT
 			 (SELECT STUFF((SELECT ' ; ' + NumberValue FROM (
@@ -215,24 +217,30 @@ SELECT CAST((SELECT (
 		(SELECT
 			(SELECT 'E' AS [@LANG], a.SeniorWorkerName AS [@NMLAST], a.SeniorWorkerTitle AS [@TTL], a.SeniorWorkerPhoneNumber AS [@PH1N], a.SeniorWorkerEmailAddress AS [@EML]
 				WHERE COALESCE(a.SeniorWorkerIsPrivate, 'No') = 'No' AND (a.SeniorWorkerName IS NOT NULL OR a.SeniorWorkerTitle IS NOT NULL OR a.SeniorWorkerPhoneNumber IS NOT NULL OR a.SeniorWorkerEmailAddress IS NOT NULL)
+				AND a.TaxonomyLevelName <> 'ProgramAtSite'
 			 FOR XML PATH('CONTACT'), TYPE),
 			(SELECT 'F' AS [@LANG], f.SeniorWorkerName AS [@NMLAST], f.SeniorWorkerTitle AS [@TTL], f.SeniorWorkerPhoneNumber AS [@PH1N], f.SeniorWorkerEmailAddress AS [@EML]
 				WHERE  COALESCE(f.SeniorWorkerIsPrivate, 'No') = 'No' AND (f.SeniorWorkerName IS NOT NULL OR f.SeniorWorkerTitle IS NOT NULL OR f.SeniorWorkerPhoneNumber IS NOT NULL OR f.SeniorWorkerEmailAddress IS NOT NULL)
+				AND a.TaxonomyLevelName <> 'ProgramAtSite'
 			 FOR XML PATH('CONTACT'), TYPE)
-			 WHERE a.TaxonomyLevelName <> 'ProgramAtSite'
 		 FOR XML PATH('EXEC_1'),TYPE),
 		 (SELECT
 		 	(SELECT 'E' AS [@LANG],  a.MainContactName AS [@NMLAST], a.MainContactTitle AS [@TTL], a.MainContactPhoneNumber AS [@PH1N], a.MainContactEmailAddress AS [@EML]
 			-- NOTE a.MainContactType didn't have any data in it so it was not mapped
 			WHERE COALESCE(a.MainContactIsPrivate, 'No') = 'No' AND (a.MainContactName IS NOT NULL OR a.MainContactTitle IS NOT NULL OR a.MainContactPhoneNumber IS NOT NULL OR a.MainContactEmailAddress IS NOT NULL)
+			AND a.TaxonomyLevelName = 'Agency'
 			FOR XML PATH('CONTACT'), TYPE),
 			(SELECT 'F' AS [@LANG], f.MainContactName AS [@NMLAST], f.MainContactTitle AS [@TTL], f.MainContactPhoneNumber AS [@PH1N], f.MainContactEmailAddress AS [@EML]
 			-- NOTE a.MainContactType didn't have any data in it so it was not mapped
 			WHERE COALESCE(f.MainContactIsPrivate, 'No') = 'No' AND (f.MainContactName IS NOT NULL OR f.MainContactTitle IS NOT NULL OR f.MainContactPhoneNumber IS NOT NULL OR f.MainContactEmailAddress IS NOT NULL)
+			AND a.TaxonomyLevelName = 'Agency'
 			FOR XML PATH('CONTACT'), TYPE)
-			WHERE a.TaxonomyLevelName = 'Agency'
 		 FOR XML PATH('EXEC_2') ,TYPE),
 		 -- MadeInactiveOn comes in as an iso formated datetime but with a space instead of a T in between the date and time parts
+		(SELECT 'ICAROLEXCLUDEFROMWEBSITE' AS [@FLD], 
+			CASE WHEN a.ExcludeFromWebsite = 'Yes' THEN 'Yes' WHEN a.ExcludeFromWebsite = 'No' THEN 'No' ELSE NULL END AS [@V],
+			CASE WHEN f.ExcludeFromWebsite = 'Yes' THEN 'Oui' WHEN f.ExcludeFromWebsite = 'No' THEN 'Non' ELSE NULL END AS [@VF]
+			FOR XML PATH ('EXTRA'), TYPE),
 		(SELECT 'ICAROLMADEINACTIVEON' AS [@FLD], CASE WHEN a.AgencyStatus = 'Inactive' THEN REPLACE(a.MadeInactiveOn, ' ', 'T') ELSE NULL END AS [@V] FOR XML PATH('EXTRA_DATE'), TYPE),
 		(SELECT 'ICAROLAGENCYSTATUS' AS [@FLD], CASE WHEN a.AgencyStatus = 'Active' THEN 'ACTIVE' WHEN a.AgencyStatus = 'Active, but do not refer' THEN 'DO_NOT_REFER' WHEN a.AgencyStatus = 'Inactive' THEN 'INACTIVE' ELSE a.AgencyStatus END AS [@CD] FOR XML PATH('EXTRA_DROPDOWN'), TYPE),  
 		(SELECT
@@ -349,8 +357,8 @@ SELECT CAST((SELECT (
 			FOR XML PATH('MAIL_ADDRESS'), TYPE
 		),
 		(SELECT 
-			CASE WHEN COALESCE(a.ExcludeFromWebsite, 'No') = 'Yes' OR COALESCE(a.ExcludeFromDirectory, 'No') = 'Yes' OR COALESCE(a.AgencyStatus, 'Active') = 'Inactive' THEN 1 ELSE 0 END AS [@V],
-			CASE WHEN COALESCE(f.ExcludeFromWebsite, 'No') = 'Yes' OR COALESCE(f.ExcludeFromDirectory, 'No') = 'Yes' OR COALESCE(a.AgencyStatus, 'Active') = 'Inactive' THEN 1 ELSE 0 END AS [@VF] 
+			CASE WHEN COALESCE(a.AgencyStatus, 'Active') = 'Inactive' THEN 1 ELSE 0 END AS [@V],
+			CASE WHEN COALESCE(a.AgencyStatus, 'Active') = 'Inactive' THEN 1 ELSE 0 END AS [@VF] 
 			FOR XML PATH('NON_PUBLIC'), TYPE),
 		(SELECT
 			 (SELECT STUFF((SELECT ' ; ' + NumberValue FROM (
