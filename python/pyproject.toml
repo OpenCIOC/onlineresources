@@ -1,0 +1,2 @@
+﻿[tool.black]
+use_tabs=true

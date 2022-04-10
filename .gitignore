@@ -170,6 +170,7 @@ pythonport.config
 *.csv
 *.xls
 
+/python/virtualenv.desc
 /python/cioc/locale/fr_CA/LC_MESSAGES/fr_to_translate
 aspprofiler.asp
 

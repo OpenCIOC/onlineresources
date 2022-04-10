@@ -22,28 +22,31 @@ def initialize_python(app_dir):
 	import os, sys
 	sys.dont_write_bytecode = True
 
-	if sys.version_info[0] == 3:
-		# required to find some DLLs that extentions need
-		os.add_dll_directory(os.path.join(sys.prefix, 'DLLs'))
-		os.add_dll_directory(sys.prefix)
-
-	# This will be driven by the python version that is registered for activescript
-	# NOTE: also update python/wsgisvc.py
-	env = 'ciocenv4py2'
-	if sys.version_info[0] == 3:
-		env = 'ciocenv4py3'
+	# required to find some DLLs that extentions need
+	os.add_dll_directory(os.path.join(sys.prefix, 'DLLs'))
+	os.add_dll_directory(sys.prefix)
 
 	if app_dir[-1] == '\\' or app_dir[-1] == '/':
 		app_dir = app_dir[:-1]
+
+	# This will be driven by the python version that is registered for activescript
+	# NOTE: also update python/wsgisvc.py
+	env = 'ciocenv4py3'
+	virtualenv_directive_file = os.path.join(app_dir, 'python', 'virtualenv.desc')
+	if os.path.exists(virtualenv_directive_file):
+		with open(virtualenv_directive_file) as f:
+			possible_env = f.read().strip()
+
+		if os.path.exists(os.path.join(os.environ.get('CIOC_ENV_ROOT', os.path.join(app_dir, '..', '..')), possible_env, 'scripts', 'activate_this.py')):
+			env = possible_env
+
 	activate_this = os.path.join(os.environ.get('CIOC_ENV_ROOT', os.path.join(app_dir, '..', '..')), env, 'scripts', 'activate_this.py')
 	activate_this = os.path.normpath(activate_this)
-	if sys.version_info[0] == 3:
-		with open(activate_this, 'rb') as f:
-			code = compile(f.read(), activate_this, 'exec') 
-		exec(code, {'__file__': activate_this})
-	else:
-		execfile(activate_this, dict(__file__=activate_this))
+	with open(activate_this, 'rb') as f:
+		code = compile(f.read(), activate_this, 'exec') 
+	exec(code, {'__file__': activate_this})
 
+    # local application
 	sys.path.insert(0, os.path.join(app_dir, 'python'))
 
 	# without this other imports break

@@ -109,11 +109,17 @@ class ServiceSettings(object):
 
 	def getVirtualEnv(self):
 		# NOTE also update includes/core/incInitPython.asp
-		env = "ciocenv4py2"
-		if sys.version_info[0] == 3:
-			env = "ciocenv4py3"
-
 		app_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+		env = "ciocenv4py3"
+		virtualenv_directive_file = os.path.join(app_dir, 'python', 'virtualenv.desc')
+		if os.path.exists(virtualenv_directive_file):
+			with open(virtualenv_directive_file) as f:
+				possible_env = f.read().strip()
+
+			if os.path.exists(os.path.join(os.environ.get('CIOC_ENV_ROOT', os.path.join(app_dir, '..', '..')), possible_env, 'scripts', 'activate_this.py')):
+				env = possible_env
+
 		return os.path.join(
 			os.environ.get("CIOC_ENV_ROOT", os.path.join(app_dir, "..", "..")), env
 		)
@@ -156,8 +162,9 @@ class PasteWinService(win32serviceutil.ServiceFramework):
 		os.add_dll_directory(os.path.join(sys.prefix, 'DLLs'))
 		os.add_dll_directory(sys.prefix)
 
-		if self.ss.getVirtualEnv():
-			activate_virtualenv(self.ss.getVirtualEnv())
+		env = self.ss.getVirtualEnv()
+		if env:
+			activate_virtualenv(env)
 
 		sys.dont_write_bytecode = True
 		os.chdir(self.ss.getCfgFileDir())
