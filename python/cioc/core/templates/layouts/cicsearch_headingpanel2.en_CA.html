@@ -66,7 +66,7 @@
 	[ENDIF:CUSTOM_MENU_ITEMS]
 
 	[IF:HAS_KEYWORD_SEARCH]
-	<div class="panel panel-default">
+	<div id="keyword-search-panel" class="panel panel-default">
 		<div class="panel-heading"><h2><span class="glyphicon glyphicon-[SEARCH_KEYWORD_GLYPH]" aria-hidden="true"></span> [SEARCH_KEYWORD_TITLE]</h2></div>
 		<div class="panel-body">
 			<div class="form-group" id="CIOC_cicsearch_keyword">
@@ -121,7 +121,7 @@
 	<div class="row search-panels">
 		<div class="col-xs-12 col-md-8">
 	[ENDIFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
-			<div class="panel panel-default">
+			<div id="heading-search-panel" class="panel panel-default">
 				<div class="panel-heading"><h2><span class="glyphicon glyphicon-[SEARCH_OTHER_GLYPH]" aria-hidden="true"></span> [SEARCH_OTHER_TITLE]</h2></div>
 				<div class="panel-body">
 					<div id="search-other-message">
@@ -247,7 +247,7 @@
 	[ENDIFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
 
 	[IF:SEARCH_CENTRE_CONTENT]
-	<div class="panel panel-default">
+	<div id="search-centre-panel" class="panel panel-default">
 		[IF:SEARCH_CENTRE_TITLE]
 		<div class="panel-heading"><h2>[IF:SEARCH_CENTRE_GLYPH]<span class="glyphicon glyphicon-[SEARCH_CENTRE_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_CENTRE_GLYPH][SEARCH_CENTRE_TITLE]</h2></div>
 		[ENDIF:SEARCH_CENTRE_TITLE]
