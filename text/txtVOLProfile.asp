@@ -85,6 +85,8 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_INST_PROFILE_SEARCH, _
 	TXT_INST_PROFILE_VIEWS, _
 	TXT_INST_RESET_PW, _
+	TXT_INST_UNSUBSCRIBE, _
+	TXT_INST_UNSUBSCRIBE_STAFF, _
 	TXT_INTEREST, _
 	TXT_INVALID_CT_VALUE, _
 	TXT_INVALID_PID_VALUE, _
@@ -140,6 +142,10 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_SEARCH_PROFILE, _
 	TXT_SELECTED_INTERESTS, _
 	TXT_START_A_NEW, _
+	TXT_SUBSCRIPTIONS, _
+	TXT_SUBSCRIPTIONS_NEW, _
+	TXT_SUBSCRIPTIONS_NEW_AND_UPDATED, _
+	TXT_SUBSCRIPTIONS_NONE, _
 	TXT_SUCCESS_CREATE, _
 	TXT_SUCCESS_CRITERIA, _
 	TXT_SUCCESS_DEACTIVATE, _
@@ -152,6 +158,11 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_TOTAL_PROFILES, _
 	TXT_UNBLOCK, _
 	TXT_UNBLOCKED, _
+	TXT_UNSUBSCRIBE, _
+	TXT_UNSUBSCRIBE_ME, _
+	TXT_UNSUBSCRIBE_SOMETHING_WENT_WRONG, _
+	TXT_UNSUBSCRIBE_SUCCESSFUL, _
+	TXT_UNSUBSCRIBED, _
 	TXT_UNSUCCESSFUL, _
 	TXT_UPDATE_VOL_PROFILE_INFO, _
 	TXT_UPDATE_VOL_PROFILE_CRITERIA, _
@@ -167,6 +178,7 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_VOL_PROFILE_PRIVACY_POLICY, _
 	TXT_VOL_PROFILE_SEARCH_RESULTS, _
 	TXT_VOL_PROFILE_SUMMARY, _
+	TXT_VOL_PROFILE_UNSUBSCRIBE, _
 	TXT_VOLUNTEER_PROFILE, _
 	TXT_WELCOME, _
 	TXT_WOULD_YOU_LIKE_TO_REACTIVATE, _
@@ -257,6 +269,8 @@ Sub setTxtVOLProfile()
 			TXT_INST_PROFILE_SEARCH = "Utiliser ce formulaire pour rechercher et afficher les détails limités des profils de bénévoles vérifiés, lorsque l'utilisateur du profil a accepté de partager ses informations et d'être contacté."
 			TXT_INST_PROFILE_VIEWS = "Il n'y a aucune vue autorisant les profils de bénévoles."
 			TXT_INST_RESET_PW = "Les mots de passe ne peuvent être retrouvés. Si vous avez oublié votre mot de passe, vous pouvez utiliser ce formulaire pour en recevoir un nouveau par courriel."
+			TXT_INST_UNSUBSCRIBE = "TRANSLATE_FR -- This will unsubscribe [EMAIL] from all volunteer profile emails from this site. You can also <a href=""[LOGIN_URL]"">log in</a> and check your settings on your profile page. Please click the button below to confirm you wish to unsubscribe."
+			TXT_INST_UNSUBSCRIBE_STAFF = "TRANSLATE_FR -- Note: this will also revoke this user's agreement to be contacted (if applicable) and cannot be undone by staff."
 			TXT_INTEREST = "Intérêts"
 			TXT_INVALID_CT_VALUE = "Valeur CT invalide"
 			TXT_INVALID_PID_VALUE = "Valeur PID invalide"
@@ -312,6 +326,10 @@ Sub setTxtVOLProfile()
 			TXT_SEARCH_PROFILE = "Rechercher les Profils"
 			TXT_SELECTED_INTERESTS = "Intérêts sélectionnés"
 			TXT_START_A_NEW = "Commencer une nouvelle "
+			TXT_SUBSCRIPTIONS = "TRANSLATE_FR -- Email Subscriptions"
+			TXT_SUBSCRIPTIONS_NEW = "TRANSLATE_FR -- This profile is receiving notifications for new opportunities by email."
+			TXT_SUBSCRIPTIONS_NEW_AND_UPDATED = "TRANSLATE_FR -- This profile is receiving notifications for new and update opportunities by email."
+			TXT_SUBSCRIPTIONS_NONE = "TRANSLATE_FR -- This profile is not receiving notifications of opportunities by email."
 			TXT_SUCCESS_CREATE = "Votre profil de bénévole a été créé avec succès."
 			TXT_SUCCESS_CRITERIA = "Vos critéres de recherche ont été mis à jour avec succès."
 			TXT_SUCCESS_DEACTIVATE = "Votre compte a été désactivé."
@@ -324,6 +342,11 @@ Sub setTxtVOLProfile()
 			TXT_TOTAL_PROFILES = " profils au total, "
 			TXT_UNBLOCK = "Bloqué"
 			TXT_UNBLOCKED = "Débloqué"
+			TXT_UNSUBSCRIBE = "TRANSLATE_FR -- Unsubscribe"
+			TXT_UNSUBSCRIBE_ME = "TRANSLATE_FR -- Unsubscribe Me"
+			TXT_UNSUBSCRIBE_SOMETHING_WENT_WRONG = "TRANSLATE_FR -- Something didn't work when attempting to unsubscribe you. Please check your unsubscribe link and try again or <a href=""[LOGIN_URL]"">log in</a> and check your delivery settings."
+			TXT_UNSUBSCRIBE_SUCCESSFUL = "TRANSLATE_FR -- You were successfully unsubscribed."
+			TXT_UNSUBSCRIBED = "TRANSLATE_FR -- Unsubscribed"
 			TXT_UNSUCCESSFUL = "Sans succès"
 			TXT_UPDATE_VOL_PROFILE_INFO = "Mettre à jour les Informations du profil de bénévole"
 			TXT_UPDATE_VOL_PROFILE_CRITERIA = "Mettre à jour les Critères de recherche sur les profils de bénévole"
@@ -339,6 +362,7 @@ Sub setTxtVOLProfile()
 			TXT_VOL_PROFILE_PRIVACY_POLICY = "Politique de confidentialité du profil du bénévole"
 			TXT_VOL_PROFILE_SEARCH_RESULTS = "Résultats de recherche sur les profils de bénévole"
 			TXT_VOL_PROFILE_SUMMARY = "Résumé du profil de bénévole"
+			TXT_VOL_PROFILE_UNSUBSCRIBE = "TRANSLATE_FR -- Volunteer Profile Unsubscribe"
 			TXT_VOLUNTEER_PROFILE = "Profil du bénévole"
 			TXT_WELCOME = "Bienvenue,"
 			TXT_WOULD_YOU_LIKE_TO_REACTIVATE = "Souhaitez-vous réactiver votre compte ?"
@@ -426,6 +450,8 @@ Sub setTxtVOLProfile()
 			TXT_INST_PROFILE_SEARCH = "Use this form to search and display limited details of verified Volunteer Profiles where the Profile user has agreed to share their information and be contacted."
 			TXT_INST_PROFILE_VIEWS = "There are no Views allowing Volunteer Profiles."
 			TXT_INST_RESET_PW = "It is not possible to retrieve passwords. If you have forgotten your password you can use this form to have a new one sent to you via Email."
+			TXT_INST_UNSUBSCRIBE = "This will unsubscribe [EMAIL] from all volunteer profile emails from this site. You can also <a href=""[LOGIN_URL]"">log in</a> and check your settings on your profile page. Please click the button below to confirm you wish to unsubscribe."
+			TXT_INST_UNSUBSCRIBE_STAFF = "Note: this will also revoke this user's agreement to be contacted (if applicable) and cannot be undone by staff."
 			TXT_INTEREST = "Interest"
 			TXT_INVALID_CT_VALUE = "Invalid CT Value"
 			TXT_INVALID_PID_VALUE = "Invalid PID Value"
@@ -481,6 +507,10 @@ Sub setTxtVOLProfile()
 			TXT_SEARCH_PROFILE = "Search Profile"
 			TXT_SELECTED_INTERESTS = "Selected Interests"
 			TXT_START_A_NEW = "Start a new "
+			TXT_SUBSCRIPTIONS = "Email Subscriptions"
+			TXT_SUBSCRIPTIONS_NEW = "This profile is receiving notifications for new opportunities by email."
+			TXT_SUBSCRIPTIONS_NEW_AND_UPDATED = "This profile is receiving notifications for new and update opportunities by email."
+			TXT_SUBSCRIPTIONS_NONE = "This profile is not receiving notifications of opportunities by email."
 			TXT_SUCCESS_CREATE = "Your Volunteer Profile was successfully created."
 			TXT_SUCCESS_CRITERIA = "Your search criteria was successfully updated."
 			TXT_SUCCESS_DEACTIVATE = "Your account has been deactivated."
@@ -493,6 +523,11 @@ Sub setTxtVOLProfile()
 			TXT_TOTAL_PROFILES = " total Profiles, "
 			TXT_UNBLOCK = "Unblock"
 			TXT_UNBLOCKED = "Unblocked"
+			TXT_UNSUBSCRIBE = "Unsubscribe"
+			TXT_UNSUBSCRIBE_ME = "Unsubscribe Me"
+			TXT_UNSUBSCRIBE_SOMETHING_WENT_WRONG = "Something didn't work when attempting to unsubscribe you. Please check your unsubscribe link and try again or <a href=""[LOGIN_URL]"">log in</a> and check your delivery settings."
+			TXT_UNSUBSCRIBE_SUCCESSFUL = "You were successfully unsubscribed."
+			TXT_UNSUBSCRIBED = "Unsubscribed"
 			TXT_UNSUCCESSFUL = "Unsuccessful"
 			TXT_UPDATE_VOL_PROFILE_INFO = "Update Volunteer Profile Info"
 			TXT_UPDATE_VOL_PROFILE_CRITERIA = "Update Volunteer Profile Search Criteria"
@@ -508,6 +543,7 @@ Sub setTxtVOLProfile()
 			TXT_VOL_PROFILE_PRIVACY_POLICY = "Volunteer Profile Privacy Policy"
 			TXT_VOL_PROFILE_SEARCH_RESULTS = "Volunteer Profile Search Results"
 			TXT_VOL_PROFILE_SUMMARY = "Volunteer Profile Summary"
+			TXT_VOL_PROFILE_UNSUBSCRIBE = "Volunteer Profile Unsubscribe"
 			TXT_VOLUNTEER_PROFILE = "Volunteer Profile"
 			TXT_WELCOME = "Welcome,"
 			TXT_WOULD_YOU_LIKE_TO_REACTIVATE = "Would you like to reactivate your account?"

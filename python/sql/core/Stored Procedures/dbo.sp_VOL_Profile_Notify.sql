@@ -157,7 +157,8 @@ SELECT MemberID, ProfileID, FirstName, LastName, Email, NotifyUpdated,
 		CAST(DATEDIFF(mm, BirthDate, GETDATE())/12.0 AS decimal(5,2)) AS AGE,
 		dbo.fn_VOL_ProfileIDToCommSrchList(ProfileID) AS COMMUNITIES,
 		dbo.fn_VOL_ProfileIDToInterestSrchList(ProfileID) AS INTERESTS,
-		(SELECT Culture FROM STP_Language WHERE vp.LangID=LangID) AS Culture
+		(SELECT Culture FROM STP_Language WHERE vp.LangID=LangID) AS Culture,
+		UnsubscribeToken
 	FROM VOL_Profile vp
 WHERE vp.MemberID=@MemberID
 	AND Verified=1
