@@ -24,7 +24,7 @@ CREATE TABLE [dbo].[VOL_Opportunity_Description]
 [DUTIES] [nvarchar] (4000) COLLATE Latin1_General_100_CI_AI NULL,
 [INTERACTION_LEVEL_NOTES] [nvarchar] (4000) COLLATE Latin1_General_100_CI_AI NULL,
 [LOCATION] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[MORE_INFO_URL] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[MORE_INFO_URL] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [NUM_NEEDED_NOTES] [nvarchar] (4000) COLLATE Latin1_General_100_CI_AI NULL,
 [PROGRAM] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [PUBLIC_COMMENTS] [nvarchar] (4000) COLLATE Latin1_General_100_CI_AI NULL,
@@ -45,7 +45,7 @@ CREATE TABLE [dbo].[VOL_Opportunity_Description]
 [SOURCE_ORG] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_PHONE] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_FAX] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[SOURCE_EMAIL] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[SOURCE_EMAIL] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [TRAINING_NOTES] [nvarchar] (4000) COLLATE Latin1_General_100_CI_AI NULL,
 [TRANSPORTATION_NOTES] [nvarchar] (4000) COLLATE Latin1_General_100_CI_AI NULL,
 [CMP_Interests] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -53,22 +53,8 @@ CREATE TABLE [dbo].[VOL_Opportunity_Description]
 [SRCH_Anywhere] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SRCH_Anywhere_U] [bit] NOT NULL CONSTRAINT [DF_VOL_Opportunity_Description_SRCH_Anywhere_U] DEFAULT ((0)),
 [MORE_INFO_URL_PROTOCOL] [varchar] (8) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-CREATE NONCLUSTERED INDEX [IX_VOL_Opportunity_Description_DELETIONDATE] ON [dbo].[VOL_Opportunity_Description] ([DELETION_DATE]) ON [PRIMARY]
-
-ALTER TABLE [dbo].[VOL_Opportunity_Description] ADD 
-CONSTRAINT [PK_VOL_Opportunity_Description] PRIMARY KEY CLUSTERED  ([OPD_ID]) ON [PRIMARY]
+) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[VOL_Opportunity_Description] ADD CONSTRAINT [IX_VOL_Opportunity_Description] UNIQUE NONCLUSTERED  ([VNUM], [LangID]) ON [PRIMARY]
-
-CREATE NONCLUSTERED INDEX [IX_VOL_Opportunity_Description_VNUMDELETIONDATE] ON [dbo].[VOL_Opportunity_Description] ([VNUM], [DELETION_DATE]) ON [PRIMARY]
-
-CREATE FULLTEXT INDEX ON [dbo].[VOL_Opportunity_Description] KEY INDEX [PK_VOL_Opportunity_Description] ON [VOLRecord] WITH STOPLIST [CIOC_DEFAULT_STOPLIST]
-GO
-
-ALTER FULLTEXT INDEX ON [dbo].[VOL_Opportunity_Description] ENABLE
-GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -165,7 +151,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-
 CREATE TRIGGER [dbo].[tr_VOL_Opportunity_Description_SRCH] ON [dbo].[VOL_Opportunity_Description]
 FOR INSERT, UPDATE AS
 
@@ -182,7 +167,6 @@ IF UPDATE(POSITION_TITLE) OR UPDATE(LOCATION) OR UPDATE(DUTIES)OR UPDATE(BENEFIT
 END
 
 SET NOCOUNT OFF
-
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -207,23 +191,36 @@ END
 
 SET NOCOUNT OFF
 GO
-
+ALTER TABLE [dbo].[VOL_Opportunity_Description] ADD CONSTRAINT [PK_VOL_Opportunity_Description] PRIMARY KEY CLUSTERED ([OPD_ID]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_VOL_Opportunity_Description_DELETIONDATE] ON [dbo].[VOL_Opportunity_Description] ([DELETION_DATE]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_VOL_Opportunity_Description_VNUMDELETIONDATE] ON [dbo].[VOL_Opportunity_Description] ([VNUM], [DELETION_DATE]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_Opportunity_Description] ADD CONSTRAINT [IX_VOL_Opportunity_Description] UNIQUE NONCLUSTERED ([VNUM], [LangID]) ON [PRIMARY]
+GO
 ALTER TABLE [dbo].[VOL_Opportunity_Description] ADD CONSTRAINT [FK_VOL_Opportunity_Description_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
 GO
 ALTER TABLE [dbo].[VOL_Opportunity_Description] ADD CONSTRAINT [FK_VOL_Opportunity_Description_VOL_Opportunity] FOREIGN KEY ([VNUM]) REFERENCES [dbo].[VOL_Opportunity] ([VNUM]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
 GRANT SELECT ON  [dbo].[VOL_Opportunity_Description] TO [cioc_cic_search_role]
-GRANT SELECT ON  [dbo].[VOL_Opportunity_Description] TO [cioc_login_role]
+GO
 GRANT INSERT ON  [dbo].[VOL_Opportunity_Description] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[VOL_Opportunity_Description] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[VOL_Opportunity_Description] TO [cioc_login_role]
+GO
 GRANT SELECT ON  [dbo].[VOL_Opportunity_Description] TO [cioc_vol_search_role]
 GO
-
+CREATE FULLTEXT INDEX ON [dbo].[VOL_Opportunity_Description] KEY INDEX [PK_VOL_Opportunity_Description] ON [VOLRecord]
+GO
 ALTER FULLTEXT INDEX ON [dbo].[VOL_Opportunity_Description] ADD ([POSITION_TITLE] LANGUAGE 0)
 GO
-
 ALTER FULLTEXT INDEX ON [dbo].[VOL_Opportunity_Description] ADD ([CMP_Interests] LANGUAGE 0)
 GO
-
 ALTER FULLTEXT INDEX ON [dbo].[VOL_Opportunity_Description] ADD ([SRCH_Anywhere] LANGUAGE 0)
+GO
+
+ALTER FULLTEXT INDEX ON [dbo].[VOL_Opportunity_Description] ENABLE
 GO

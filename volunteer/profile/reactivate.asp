@@ -94,9 +94,9 @@ Else
 		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
 		Set objProfileID = .CreateParameter("@ProfileID", adGUID, adParamOutput, 16)
 		.Parameters.Append objProfileID
-		.Parameters.Append .CreateParameter("@Email", adVarChar, adParamInput, 60, strEmail)
+		.Parameters.Append .CreateParameter("@Email", adVarChar, adParamInput, 100, strEmail)
 		.Parameters.Append .CreateParameter("@ConfirmationToken", adChar, adParamInput, 32, strConfirmationToken)
-		Set objFromEmail = .CreateParameter("@FromEmail", adVarChar, adParamOutput, 60)
+		Set objFromEmail = .CreateParameter("@FromEmail", adVarChar, adParamOutput, 100)
 		.Parameters.Append objFromEmail
 		Set objErrMsg = .CreateParameter("@ErrMsg", adVarWChar, adParamOutput, 500)
 		.Parameters.Append objErrMsg

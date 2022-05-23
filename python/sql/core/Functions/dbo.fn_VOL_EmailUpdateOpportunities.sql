@@ -4,19 +4,12 @@ SET ANSI_NULLS ON
 GO
 CREATE FUNCTION [dbo].[fn_VOL_EmailUpdateOpportunities](
 	@NUM varchar(8),
-	@CONTACT_EMAIL varchar(60),
+	@CONTACT_EMAIL varchar(100),
 	@LangID smallint
 )
 RETURNS varchar(max) WITH EXECUTE AS CALLER
 AS 
 BEGIN
-
-/*
-	Checked for Release: 3.6
-	Checked by: CL
-	Checked on: 27-Sep-2014
-	Action: TESTING REQUIRED
-*/
 
 DECLARE	@conStr nvarchar(3),
 		@returnStr nvarchar(max)

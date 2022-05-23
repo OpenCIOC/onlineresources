@@ -1833,10 +1833,10 @@ Function makeLogoAddressContents(rst, bUseContent)
 
 	strReturn = "<div class=""row form-group"">" & _
 		"<label for=""LOGO_ADDRESS"" class=""control-label col-md-3"">" & TXT_LOGO_ADDRESS & "</label>" & _
-		"<div class=""col-md-9"">" & makeWebFieldVal("LOGO_ADDRESS", strLogoAddress, 200, True, strLogoAddressProtocol) & "</div>" & _
+		"<div class=""col-md-9"">" & makeWebFieldVal("LOGO_ADDRESS", strLogoAddress, 255, True, strLogoAddressProtocol) & "</div>" & _
 		"</div><div class=""row form-group"">" & _
 		"<label for=""LOGO_ADDRESS_LINK"" class=""control-label col-md-3"">" & TXT_LOGO_LINK_ADDRESS & "</label>" & _
-		"<div class=""col-md-9"">" & makeWebFieldVal("LOGO_ADDRESS_LINK", strLogoLink, 200, True, strLogoLinkProtocol) & "</div>" & _
+		"<div class=""col-md-9"">" & makeWebFieldVal("LOGO_ADDRESS_LINK", strLogoLink, 255, True, strLogoLinkProtocol) & "</div>" & _
 		"</div><div class=""row form-group"">" & _
 		"<label for=""LOGO_ADDRESS_ALT_TEXT"" class=""control-label col-md-3"">" & TXT_LOGO_ALT_TEXT & "</label>" & _
 		"<div class=""col-md-9""><input type=""text"" id=""LOGO_ADDRESS_ALT_TEXT"" name=""LOGO_ADDRESS_ALT_TEXT"" maxlength=""255"" class=""form-control"" value=" & AttrQs(strLogoAltText) & ">"
@@ -2815,7 +2815,7 @@ Function makeSourceContents(rst,bUseContent)
 		"<div class=""form-group"">" & _
 			"<label for=""SOURCE_TITLE"" class=""control-label col-sm-3"">" & TXT_TITLE & "</label>" & _
 			"<div class=""col-sm-9"">" & _
-				"<input type=""text"" name=""SOURCE_TITLE"" id=""SOURCE_TITLE"" maxlength=""100"" value=" & AttrQs(strTitle) & " class=""form-control"">"
+				"<input type=""text"" name=""SOURCE_TITLE"" id=""SOURCE_TITLE"" maxlength=""255"" value=" & AttrQs(strTitle) & " class=""form-control"">"
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("SOURCE_TITLE",True)
 	End If
@@ -2855,7 +2855,7 @@ Function makeSourceContents(rst,bUseContent)
 		"<div class=""form-group"">" & _
 			"<label for=""SOURCE_EMAIL"" class=""control-label col-sm-3"">" & TXT_EMAIL & "</label>" & _
 			"<div class=""col-sm-9"">" & _
-				"<input type=""text"" name=""SOURCE_EMAIL"" id=""SOURCE_EMAIL"" maxlength=""60"" value=" & AttrQs(strEmail) & " class=""form-control"">"
+				"<input type=""text"" name=""SOURCE_EMAIL"" id=""SOURCE_EMAIL"" maxlength=""100"" value=" & AttrQs(strEmail) & " class=""form-control"">"
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("SOURCE_EMAIL",True)
 	End If

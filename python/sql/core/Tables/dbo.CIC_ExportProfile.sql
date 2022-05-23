@@ -6,7 +6,7 @@ CREATE TABLE [dbo].[CIC_ExportProfile]
 [MODIFIED_DATE] [smalldatetime] NULL,
 [MODIFIED_BY] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
 [MemberID] [int] NOT NULL,
-[SubmitChangesToAccessURL] [varchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
+[SubmitChangesToAccessURL] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [IncludePrivacyProfiles] [bit] NOT NULL CONSTRAINT [DF_CIC_ExportProfile_IncludePrivacyProfile] DEFAULT ((0)),
 [ConvertLine1Line2Addresses] [bit] NOT NULL CONSTRAINT [DF_CIC_ExportProfile_ConvertLine1Line2Addresses] DEFAULT ((0))
 ) ON [PRIMARY]

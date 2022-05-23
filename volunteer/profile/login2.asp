@@ -163,7 +163,7 @@ Else
 			.CommandType = adCmdStoredProc
 			.CommandTimeout = 0
 			.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
-			.Parameters.Append .CreateParameter("@Email", adVarChar, adParamInput, 60, strLoginName)
+			.Parameters.Append .CreateParameter("@Email", adVarChar, adParamInput, 100, strLoginName)
 			.Parameters.Append .CreateParameter("@LoginKey", adChar, adParamInput, 32, strLoginKey)
 			.Parameters.Append .CreateParameter("@PasswordHash", adVarChar, adParamInput, 44, strHash)
 			.Parameters.Append .CreateParameter("@PasswordHashSalt", adVarChar, adParamInput, 44, strSalt)

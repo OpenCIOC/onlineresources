@@ -19,9 +19,9 @@ CREATE PROCEDURE [dbo].[sp_STP_Member_u]
 	@UseInitials [bit],
 	@SiteCodeLength [tinyint],
 	@DaysSinceLastEmail [smallint],
-	@DefaultEmailCIC [varchar](60),
-	@DefaultEmailVOL [VARCHAR](60),
-	@DefaultEmailVOLProfile [VARCHAR](60),
+	@DefaultEmailCIC [varchar](100),
+	@DefaultEmailVOL [VARCHAR](100),
+	@DefaultEmailVOLProfile [VARCHAR](100),
     @DefaultEmailNameCIC NVARCHAR(100),
 	@DefaultEmailNameVOL NVARCHAR(100),
 	@BaseURLCIC [varchar](100),
@@ -46,11 +46,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked by: KL
-	Checked on: 02-May-2018
-	Action: NO ACTION REQUIRED
-*/
 
 DECLARE	@Error	int
 SET @Error = 0

@@ -71,7 +71,7 @@ Call setSessionValue("session_test", "ok")
 	<div class="form-group">
 		<label for="LoginName" class="control-label col-sm-2"><%=TXT_EMAIL%></label>
 		<div class="col-sm-10">
-			<input name="LoginName" type="text" maxlength="60" class="form-control">
+			<input name="LoginName" type="text" maxlength="100" class="form-control">
 		</div>
 	</div>
 	<div class="form-group">

@@ -1047,11 +1047,11 @@ Sub getLogoAddress()
 
 	strLogoAddress = Trim(Request("LOGO_ADDRESS"))
 	Call checkWebWithProtocol(TXT_LOGO_ADDRESS, strLogoAddress, strLogoAddressProtocol)
-	Call checkLength(TXT_LOGO_ADDRESS, strLogoAddress, 200)
+	Call checkLength(TXT_LOGO_ADDRESS, strLogoAddress, 255)
 
 	strLogoAddressLink = Trim(Request("LOGO_ADDRESS_LINK"))
 	Call checkWebWithProtocol(TXT_LOGO_ADDRESS, strLogoAddressLink, strLogoAddressLinkProtocol)
-	Call checkLength(TXT_LOGO_LINK_ADDRESS, strLogoAddressLink, 200)
+	Call checkLength(TXT_LOGO_LINK_ADDRESS, strLogoAddressLink, 255)
 
 	strLogoAltText = Trim(Request("LOGO_ADDRESS_ALT_TEXT"))
 	Call checkLength(TXT_LOGO_ALT_TEXT, strLogoAddressLink, 255)

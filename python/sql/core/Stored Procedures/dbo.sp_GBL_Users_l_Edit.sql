@@ -9,7 +9,7 @@ CREATE PROCEDURE [dbo].[sp_GBL_Users_l_Edit]
 	@Agency [varchar](3),
 	@FirstName [varchar](50),
 	@LastName [varchar](50),
-	@Email [varchar](60),
+	@Email [varchar](100),
 	@Inactive [bit],
 	@Locked [bit],
 	@SLIDCIC [int],

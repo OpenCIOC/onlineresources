@@ -6,22 +6,15 @@ CREATE FUNCTION [dbo].[fn_VOL_FullSource_Web](
 	@Pub nvarchar(100),
 	@PubDate smalldatetime,
 	@Name nvarchar(100),
-	@Title nvarchar(100),
+	@Title nvarchar(255),
 	@Org nvarchar(100),
 	@Phone nvarchar(100),
 	@Fax nvarchar(100),
-	@Email nvarchar(60)
+	@Email nvarchar(100)
 )
 RETURNS nvarchar(1000) WITH EXECUTE AS CALLER
 AS 
 BEGIN
-
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 05-Jan-2012
-	Action: NO ACTION REQUIRED
-*/
 
 DECLARE @conStr	nvarchar(3),
 		@colonStr nvarchar(3),
@@ -44,6 +37,10 @@ IF @Name IS NOT NULL BEGIN
 END
 IF @Title IS NOT NULL BEGIN
 	SET @returnStr = @returnStr + @conStr + @Title
+	SET @conStr = ', '
+END
+IF @Org IS NOT NULL BEGIN
+	SET @returnStr = @returnStr + @conStr + @Org
 	SET @conStr = ', '
 END
 IF @Phone IS NOT NULL BEGIN

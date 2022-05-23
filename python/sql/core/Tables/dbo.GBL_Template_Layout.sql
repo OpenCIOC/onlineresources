@@ -13,15 +13,12 @@ CREATE TABLE [dbo].[GBL_Template_Layout]
 [UseFullCIOCBootstrap] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_Layout_UseFullCIOCBootstrap] DEFAULT ((0)),
 [DefaultSearchLayout] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_Layout_DefaultSearchLayout] DEFAULT ((0)),
 [LayoutCSS] [varchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[LayoutCSSURL] [varchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
+[LayoutCSSURL] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [LayoutCSSVersionDate] [datetime] NOT NULL CONSTRAINT [DF_GBL_Template_Layout_VersionDate] DEFAULT (getdate()),
 [AlmostStandardsMode] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_Layout_AlmostStandardsMode] DEFAULT ((0)),
 [SystemLayoutCode] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-ALTER TABLE [dbo].[GBL_Template_Layout] ADD 
-CONSTRAINT [PK_GBL_Template_Layout] PRIMARY KEY CLUSTERED  ([LayoutID]) ON [PRIMARY]
+) ON [PRIMARY]
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -77,13 +74,11 @@ END
 
 SET NOCOUNT OFF
 GO
-
-
-ALTER TABLE [dbo].[GBL_Template_Layout] ADD
-CONSTRAINT [CK_GBL_Template_Layout_SystemLayoutShared] CHECK (([MemberID] IS NOT NULL OR [SystemLayout]=(1)))
+ALTER TABLE [dbo].[GBL_Template_Layout] ADD CONSTRAINT [CK_GBL_Template_Layout_SystemLayoutShared] CHECK (([MemberID] IS NOT NULL OR [SystemLayout]=(1)))
 GO
-
-ALTER TABLE [dbo].[GBL_Template_Layout] ADD CONSTRAINT [FK_GBL_Template_Layout_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
+ALTER TABLE [dbo].[GBL_Template_Layout] ADD CONSTRAINT [PK_GBL_Template_Layout] PRIMARY KEY CLUSTERED ([LayoutID]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[GBL_Template_Layout] ADD CONSTRAINT [FK_GBL_Template_Layout_GBL_Agency] FOREIGN KEY ([Owner]) REFERENCES [dbo].[GBL_Agency] ([AgencyCode]) ON DELETE SET NULL ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[GBL_Template_Layout] ADD CONSTRAINT [FK_GBL_Template_Layout_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
 GO

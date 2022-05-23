@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -11,17 +10,10 @@ CREATE PROCEDURE [dbo].[sp_GBL_Community_External_u_Import]
 	@SystemName varchar(200),
 	@CopyrightHolder1 nvarchar(255),
 	@CopyrightHolder2 nvarchar(255),
-	@ContactEmail varchar(60)
+	@ContactEmail varchar(100)
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.7
-	Checked by: KL
-	Checked on: 30-Sep-2015
-	Action: NO ACTION REQUIRED
-*/
 
 DECLARE	@Error	int,
 		@ErrMsg	nvarchar(500)
@@ -139,7 +131,7 @@ IF @Error = 0 BEGIN
 				 @SystemName, -- SystemName - varchar(200)
 				 @CopyrightHolder1, -- CopyrightHolder1 - nvarchar(255)
 				 @CopyrightHolder2, -- CopyrightHolder2 - nvarchar(255)
-				 @ContactEmail  -- ContactEmail - varchar(60)
+				 @ContactEmail  -- ContactEmail - varchar(100)
 				)
 	END
 

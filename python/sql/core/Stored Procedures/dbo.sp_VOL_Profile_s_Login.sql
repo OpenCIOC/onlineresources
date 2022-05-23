@@ -5,20 +5,13 @@ GO
 
 CREATE PROCEDURE [dbo].[sp_VOL_Profile_s_Login]
 	@MemberID int,
-	@Email varchar(60),
+	@Email varchar(100),
 	@LoginKey char(32),
 	@ProfileID [uniqueidentifier] OUTPUT,
 	@ErrMsg nvarchar(500) OUTPUT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 30-Jan-2012
-	Action: NO ACTION REQUIRED
-*/
 
 DECLARE	@Error int
 SET @Error = 0

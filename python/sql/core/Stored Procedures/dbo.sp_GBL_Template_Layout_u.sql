@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -12,7 +11,7 @@ CREATE PROCEDURE [dbo].[sp_GBL_Template_Layout_u]
 	@Owner [char](3),
 	@LayoutType [varchar](10),
 	@LayoutCSS [varchar](max),
-	@LayoutCSSURL [varchar](200),
+	@LayoutCSSURL [varchar](255),
 	@AlmostStandardsMode [bit],
 	@UseFontAwesome[bit],
 	@UseFullCIOCBootstrap [bit],
@@ -21,13 +20,6 @@ CREATE PROCEDURE [dbo].[sp_GBL_Template_Layout_u]
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.7.3
-	Checked by: KL
-	Checked on: 02-Feb-2016
-	Action: NO ACTION REQUIRED
-*/
 
 DECLARE	@Error		int
 SET @Error = 0

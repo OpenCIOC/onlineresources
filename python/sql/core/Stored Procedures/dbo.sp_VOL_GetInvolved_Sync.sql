@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -11,13 +10,6 @@ CREATE PROCEDURE [dbo].[sp_VOL_GetInvolved_Sync]
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.6
-	Checked by: KL
-	Checked on: 28-Sep-2014
-	Action:	NO ACTION REQUIRED
-*/
 
 DECLARE @Opportunities TABLE (
 	VNUM varchar(10),
@@ -35,7 +27,7 @@ DECLARE @Opportunities TABLE (
 
 DECLARE @DefaultView int,
 		@BaseURL varchar(100),
-		@DefaultEmailVOLProfile varchar(60)
+		@DefaultEmailVOLProfile varchar(100)
 		
 
 SELECT	@DefaultView=DefaultViewVOL,

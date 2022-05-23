@@ -6,7 +6,7 @@ GO
 CREATE PROCEDURE [dbo].[sp_VOL_Profile_u_Basic]
 	@MemberID [int],
 	@ProfileID [uniqueidentifier],
-	@Email [varchar](60),
+	@Email [varchar](100),
 	@PasswordHash [varchar](44),
 	@PasswordHashSalt [varchar](44),
 	@PasswordHashRepeat [varchar](44),
@@ -26,13 +26,6 @@ CREATE PROCEDURE [dbo].[sp_VOL_Profile_u_Basic]
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.5
-	Checked by: CL
-	Checked on: 27-Jul-2012
-	Action: NO ACTION REQUIRED
-*/
 
 DECLARE	@Error int
 SET @Error = 0

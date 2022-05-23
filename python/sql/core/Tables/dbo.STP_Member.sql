@@ -15,7 +15,7 @@ CREATE TABLE [dbo].[STP_Member]
 [TrainingMode] [bit] NOT NULL CONSTRAINT [DF_STP_Member_TrainingMode] DEFAULT ((1)),
 [UseInitials] [bit] NOT NULL CONSTRAINT [DF_STP_Member_UseInitials] DEFAULT ((1)),
 [DaysSinceLastEmail] [smallint] NOT NULL CONSTRAINT [DF_STP_Member_DaysSinceLastEmail] DEFAULT ((14)),
-[DefaultEmailTech] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[DefaultEmailTech] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [ClientTrackerIP] [varchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
 [ClientTrackerRpcURL] [varchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
 [DefaultGCType] [tinyint] NOT NULL CONSTRAINT [DF_STP_Member_DefaultGCType] DEFAULT ((0)),
@@ -25,7 +25,7 @@ CREATE TABLE [dbo].[STP_Member]
 [UseCIC] [bit] NOT NULL CONSTRAINT [DF_STP_Member_UseCIC] DEFAULT ((0)),
 [DefaultViewCIC] [int] NULL,
 [BaseURLCIC] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[DefaultEmailCIC] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[DefaultEmailCIC] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [DefaultEmailNameCIC] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SiteCodeLength] [tinyint] NOT NULL CONSTRAINT [DF_STP_Member_SiteCodeLength] DEFAULT ((0)),
 [UseTaxonomy] [bit] NOT NULL CONSTRAINT [DF_STP_Member_UseTaxonomy] DEFAULT ((0)),
@@ -43,7 +43,7 @@ CREATE TABLE [dbo].[STP_Member]
 [UseVOL] [bit] NOT NULL CONSTRAINT [DF_STP_Member_UseVOL] DEFAULT ((0)),
 [DefaultViewVOL] [int] NULL,
 [BaseURLVOL] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[DefaultEmailVOL] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[DefaultEmailVOL] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [DefaultEmailNameVOL] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [UseVolunteerProfiles] [bit] NOT NULL CONSTRAINT [DF_STP_Member_UseVolunteerProfiles] DEFAULT ((0)),
 [LastVolProfileEmailDate] [smalldatetime] NULL,
@@ -64,7 +64,20 @@ CREATE TABLE [dbo].[STP_Member]
 [GlobalGoogleAnalyticsDomainDimension] [tinyint] NULL,
 [GlobalGoogleAnalyticsResultsCountMetric] [tinyint] NULL,
 [BillingInfoPassword] [varchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
-[ImportNotificationEmailCIC] [varchar] (1000) COLLATE Latin1_General_100_CI_AI NULL
+[ImportNotificationEmailCIC] [varchar] (1000) COLLATE Latin1_General_100_CI_AI NULL,
+[ImportNotificationEmailCICErrors] [varchar] (1000) COLLATE Latin1_General_100_CI_AI NULL,
+[ContactOrgCIC] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactOrgCIC] DEFAULT ((1)),
+[ContactPhone1CIC] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactPhone2CIC1] DEFAULT ((1)),
+[ContactPhone2CIC] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactPhone2CIC] DEFAULT ((1)),
+[ContactPhone3CIC] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactPhone3CIC] DEFAULT ((1)),
+[ContactFaxCIC] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactFaxCIC] DEFAULT ((1)),
+[ContactEmailCIC] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactEmailCIC] DEFAULT ((1)),
+[ContactOrgVOL] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactOrgVOL] DEFAULT ((1)),
+[ContactPhone1VOL] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactPhone1CIC1] DEFAULT ((1)),
+[ContactPhone2VOL] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactPhone2CIC1_1] DEFAULT ((1)),
+[ContactPhone3VOL] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactPhone3CIC1] DEFAULT ((1)),
+[ContactFaxVOL] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactFaxCIC1] DEFAULT ((1)),
+[ContactEmailVOL] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactEmailCIC1] DEFAULT ((1))
 ) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON
@@ -102,7 +115,7 @@ ALTER TABLE [dbo].[STP_Member] ADD CONSTRAINT [CK_STP_Member_NoEmail] CHECK (([N
 GO
 ALTER TABLE [dbo].[STP_Member] ADD CONSTRAINT [CK_STP_Member_SiteCodeLength] CHECK (([SiteCodeLength]>=(0) AND [SiteCodeLength]<=(100)))
 GO
-ALTER TABLE [dbo].[STP_Member] ADD CONSTRAINT [PK_STP_Member] PRIMARY KEY CLUSTERED  ([MemberID]) ON [PRIMARY]
+ALTER TABLE [dbo].[STP_Member] ADD CONSTRAINT [PK_STP_Member] PRIMARY KEY CLUSTERED ([MemberID]) ON [PRIMARY]
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [IX_STP_Member] ON [dbo].[STP_Member] ([DatabaseCode]) ON [PRIMARY]
 GO

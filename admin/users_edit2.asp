@@ -203,7 +203,7 @@ With cmdUpdateAccount
 	.Parameters.Append .CreateParameter("@FirstName", adVarChar, adParamInput, 50, strFirstName)
 	.Parameters.Append .CreateParameter("@LastName", adVarChar, adParamInput, 50, strLastName)
 	.Parameters.Append .CreateParameter("@Initials", adVarChar, adParamInput, 6, strInitials)
-	.Parameters.Append .CreateParameter("@Email", adVarChar, adParamInput, 60, strEmail)
+	.Parameters.Append .CreateParameter("@Email", adVarChar, adParamInput, 100, strEmail)
 	.Parameters.Append .CreateParameter("@SavedSearchQuota", adInteger, adParamInput, 4, intSavedSearchQuota)
 	.Parameters.Append .CreateParameter("@PasswordHash", adVarChar, adParamInput, 44, strHash)
 	.Parameters.Append .CreateParameter("@PasswordHashSalt", adVarChar, adParamInput, 44, strSalt)

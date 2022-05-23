@@ -7,8 +7,8 @@ CREATE PROCEDURE [dbo].[sp_CIC_ImportEntry_u_Source]
 	@EF_ID int,
 	@SourceDbNameEn varchar(255),
 	@SourceDbNameFr varchar(255),
-	@SourceDbURLEn varchar(200),
-	@SourceDbURLFr VARCHAR(200),
+	@SourceDbURLEn varchar(255),
+	@SourceDbURLFr VARCHAR(255),
     @SourceDbCode VARCHAR(20)
 WITH EXECUTE AS CALLER
 AS

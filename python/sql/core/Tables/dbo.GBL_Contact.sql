@@ -15,9 +15,9 @@ CREATE TABLE [dbo].[GBL_Contact]
 [NAME_FIRST] [nvarchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
 [NAME_LAST] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [NAME_SUFFIX] [nvarchar] (30) COLLATE Latin1_General_100_CI_AI NULL,
-[TITLE] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
+[TITLE] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [ORG] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[EMAIL] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[EMAIL] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [FAX_NOTE] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [FAX_NO] [nvarchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
 [FAX_EXT] [nvarchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
@@ -178,7 +178,7 @@ SET NOCOUNT OFF
 GO
 ALTER TABLE [dbo].[GBL_Contact] ADD CONSTRAINT [CK_GBL_Contact] CHECK (([dbo].[fn_GBL_Contact_CheckModule]([GblContactType],[GblNUM],[VolContactType],[VolVNUM])=(0)))
 GO
-ALTER TABLE [dbo].[GBL_Contact] ADD CONSTRAINT [PK_GBL_Contact] PRIMARY KEY CLUSTERED  ([ContactID]) ON [PRIMARY]
+ALTER TABLE [dbo].[GBL_Contact] ADD CONSTRAINT [PK_GBL_Contact] PRIMARY KEY CLUSTERED ([ContactID]) ON [PRIMARY]
 GO
 CREATE NONCLUSTERED INDEX [IX_GBL_Contact_GblNUMGblContactTypeinclLangIDTITLEORGEMAILCMPNameCMPFaxCMPPhoneFull] ON [dbo].[GBL_Contact] ([GblNUM], [GblContactType]) INCLUDE ([CMP_Fax], [CMP_Name], [CMP_PhoneFull], [EMAIL], [LangID], [ORG], [TITLE]) ON [PRIMARY]
 GO

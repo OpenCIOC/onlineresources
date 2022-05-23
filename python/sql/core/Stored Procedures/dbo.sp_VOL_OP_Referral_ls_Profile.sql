@@ -5,18 +5,11 @@ GO
 
 CREATE PROCEDURE [dbo].[sp_VOL_OP_Referral_ls_Profile]
 	@MemberID int,
-	@Email [varchar](60),
+	@Email [varchar](100),
 	@ProfileID uniqueidentifier
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.6
-	Checked by: CL
-	Checked on: 27-Sep-2014
-	Action: TESTING REQUIRED
-*/
 
 DECLARE	@Error	int
 SET @Error = 0

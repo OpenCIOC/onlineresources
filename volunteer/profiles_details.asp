@@ -59,7 +59,7 @@ bError = False
 Dim strEmail, _
 	strProfileID
 
-strEmail = Left(Trim(Request("Email")),60)
+strEmail = Left(Trim(Request("Email")),100)
 strProfileID = Left(Trim(Request("ProfileID")),38)
 
 If Not IsGUIDType(strProfileID) Or Nl(strProfileID) Then
@@ -85,7 +85,7 @@ Else
 		Set objReturn = .CreateParameter("@RETURN_VALUE", adInteger, adParamReturnValue, 4)
 		.Parameters.Append objReturn
 		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
-		.Parameters.Append .CreateParameter("@Email", adVarChar, adParamInput, 60, strEmail)
+		.Parameters.Append .CreateParameter("@Email", adVarChar, adParamInput, 100, strEmail)
 		.Parameters.Append .CreateParameter("@ProfileID", adGUID, adParamInput, 16, strProfileID)
 		Set objErrMsg = .CreateParameter("@ErrMsg", adVarWChar, adParamOutput, 500)
 		.Parameters.Append objErrMsg

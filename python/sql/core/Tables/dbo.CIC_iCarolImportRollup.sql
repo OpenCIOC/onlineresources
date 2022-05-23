@@ -193,9 +193,11 @@ CREATE TABLE [dbo].[CIC_iCarolImportRollup]
 [UniqueIDPriorSystem] [nvarchar] (8) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[CIC_iCarolImportRollup] ADD CONSTRAINT [PK_CIC_iCarolImportRollup] PRIMARY KEY CLUSTERED  ([ResourceAgencyNum], [LangID]) ON [PRIMARY]
+ALTER TABLE [dbo].[CIC_iCarolImportRollup] ADD CONSTRAINT [PK_CIC_iCarolImportRollup] PRIMARY KEY CLUSTERED ([ResourceAgencyNum], [LangID]) ON [PRIMARY]
 GO
 CREATE NONCLUSTERED INDEX [IX_CIC_iCarolImportRollup] ON [dbo].[CIC_iCarolImportRollup] ([ConnectsToProgramNum], [TaxonomyLevelName], [ResourceAgencyNum]) ON [PRIMARY]
 GO
 CREATE NONCLUSTERED INDEX [IX_CIC_iCarolImportRollup_UniqueIDPriorSystem] ON [dbo].[CIC_iCarolImportRollup] ([UniqueIDPriorSystem]) ON [PRIMARY]
+GO
+GRANT SELECT ON  [dbo].[CIC_iCarolImportRollup] TO [cioc_cic_search_role]
 GO

@@ -10,13 +10,6 @@ RETURNS xml WITH EXECUTE AS CALLER
 AS 
 BEGIN 
 
-/*
-	Checked for Release: 3.7
-	Checked by: KL
-	Checked on: 10-Aug-2015
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE	@returnStr xml
 
 SET @returnStr = (SELECT 
@@ -28,7 +21,7 @@ SET @returnStr = (SELECT
 		URL AS '@URL',
 		Proto AS '@Proto'
 	FROM GBL_SocialMedia sm 
-		INNER JOIN (SELECT N.value('@SM_ID', 'int') AS SM_ID, N.value('@URL', 'nvarchar(200)') AS URL, N.value('@Proto', 'varchar(10)') AS Proto FROM @Value.nodes('//SM') AS T(N)) AS pr 
+		INNER JOIN (SELECT N.value('@SM_ID', 'int') AS SM_ID, N.value('@URL', 'nvarchar(255)') AS URL, N.value('@Proto', 'varchar(10)') AS Proto FROM @Value.nodes('//SM') AS T(N)) AS pr 
 			ON pr.SM_ID=sm.SM_ID
 		LEFT JOIN GBL_SocialMedia_Name smn 
 			ON sm.SM_ID=smn.SM_ID AND smn.LangID=@@LANGID

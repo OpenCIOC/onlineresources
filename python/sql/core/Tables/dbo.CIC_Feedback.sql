@@ -3,7 +3,7 @@ CREATE TABLE [dbo].[CIC_Feedback]
 [FB_ID] [int] NOT NULL,
 [ACCREDITED] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [ACTIVITY_INFO] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[AFTER_HRS_PHONE] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[AFTER_HRS_PHONE] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [APPLICATION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [AREAS_SERVED] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [BOUNDARIES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -11,7 +11,7 @@ CREATE TABLE [dbo].[CIC_Feedback]
 [CERTIFIED] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [COMMENTS] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [CORP_REG_NO] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[CRISIS_PHONE] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[CRISIS_PHONE] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [DATES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [DD_CODE] [nvarchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
 [DISTRIBUTION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -28,8 +28,8 @@ CREATE TABLE [dbo].[CIC_Feedback]
 [INTERNAL_MEMO] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [INTERSECTION] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [LANGUAGES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[LOGO_ADDRESS] [nvarchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
-[LOGO_ADDRESS_LINK] [nvarchar] (200) COLLATE Latin1_General_100_CS_AS NULL,
+[LOGO_ADDRESS] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[LOGO_ADDRESS_LINK] [nvarchar] (255) COLLATE Latin1_General_100_CS_AS NULL,
 [MAX_AGE] [nvarchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
 [MIN_AGE] [nvarchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
 [MEETINGS] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -63,7 +63,7 @@ CREATE TABLE [dbo].[CIC_Feedback]
 [EXTRA_CONTACT_A_PHONE2] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [EXTRA_CONTACT_A_PHONE3] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [EXTRA_CONTACT_A_FAX] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[EXTRA_CONTACT_A_EMAIL] [nvarchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[EXTRA_CONTACT_A_EMAIL] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [LOGO_ADDRESS_HOVER_TEXT] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [LOGO_ADDRESS_ALT_TEXT] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
@@ -92,7 +92,7 @@ DELETE fbe
 	)
 SET NOCOUNT OFF
 GO
-ALTER TABLE [dbo].[CIC_Feedback] ADD CONSTRAINT [PK_CIC_Feedback] PRIMARY KEY CLUSTERED  ([FB_ID]) ON [PRIMARY]
+ALTER TABLE [dbo].[CIC_Feedback] ADD CONSTRAINT [PK_CIC_Feedback] PRIMARY KEY CLUSTERED ([FB_ID]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_Feedback] WITH NOCHECK ADD CONSTRAINT [FK_CIC_Feedback_GBL_FeedbackEntry] FOREIGN KEY ([FB_ID]) REFERENCES [dbo].[GBL_FeedbackEntry] ([FB_ID]) ON DELETE CASCADE ON UPDATE CASCADE
 GO

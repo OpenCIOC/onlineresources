@@ -6,20 +6,13 @@ GO
 CREATE PROCEDURE [dbo].[sp_VOL_Profile_u_Reactivate]
 	@MemberID [int],
 	@ProfileID [uniqueidentifier] OUTPUT,
-	@Email varchar(60),
+	@Email varchar(100),
 	@ConfirmationToken char(32),
-	@FromEmail varchar(60) OUTPUT,
+	@FromEmail varchar(100) OUTPUT,
 	@ErrMsg nvarchar(500) OUTPUT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 30-Jan-2012
-	Action: NO ACTION REQUIRED
-*/
 
 DECLARE	@Error int
 SET @Error = 0

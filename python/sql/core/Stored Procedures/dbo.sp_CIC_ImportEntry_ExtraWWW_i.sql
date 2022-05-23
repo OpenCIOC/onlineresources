@@ -8,19 +8,13 @@ CREATE PROCEDURE [dbo].[sp_CIC_ImportEntry_ExtraWWW_i]
 	@HAS_ENGLISH bit,
 	@HAS_FRENCH bit,
 	@ExtraWWWType varchar(100),
-	@ExtraWWWEn nvarchar(200),
-	@ExtraWWWFr nvarchar(200),
+	@ExtraWWWEn nvarchar(255),
+	@ExtraWWWFr nvarchar(255),
 	@FieldID int OUTPUT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 04-Apr-2012
-	Action: NO ACTION REQUIRED
-*/
 
 SET @ExtraWWWEn = RTRIM(LTRIM(@ExtraWWWEn))
 IF @ExtraWWWEn = '' SET @ExtraWWWEn = NULL

@@ -5,18 +5,12 @@ GO
 
 CREATE PROCEDURE [dbo].[sp_VOL_Profile_s_Staff]
 	@MemberID int,
-	@Email [varchar](60),
+	@Email [varchar](100),
 	@ProfileID uniqueidentifier,
 	@ErrMsg nvarchar(500) OUTPUT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked by: KL
-	Checked on: 02-Apr-2018
-	Action: NO ACTION REQUIRED
-*/
 
 DECLARE	@Error int
 SET @Error = 0
@@ -55,7 +49,7 @@ END ELSE BEGIN
 		SELECT	ProfileID,
 				cioc_shared.dbo.fn_SHR_GBL_DateString(vp.CREATED_DATE) AS CREATED_DATE,
 				cioc_shared.dbo.fn_SHR_GBL_DateString(vp.MODIFIED_DATE) AS MODIFIED_DATE,
-				Active, Blocked, OrgCanContact,
+				Active, Blocked, OrgCanContact, NotifyNew, NotifyUpdated,
 				(SELECT COUNT(*) FROM VOL_OP_Referral rf WHERE rf.ProfileID=vp.ProfileID) AS REFERRAL_REQUESTS,
 				FirstName, LastName, Email, Phone, Address, City, PostalCode, Province,
 				cioc_shared.dbo.fn_SHR_GBL_DateString(vp.BirthDate) AS BirthDate,
@@ -84,7 +78,7 @@ END ELSE BEGIN
 		SELECT	ProfileID,
 				cioc_shared.dbo.fn_SHR_GBL_DateString(vp.CREATED_DATE) AS CREATED_DATE,
 				cioc_shared.dbo.fn_SHR_GBL_DateString(vp.MODIFIED_DATE) AS MODIFIED_DATE,
-				Active, Blocked, OrgCanContact,
+				Active, Blocked, OrgCanContact, NotifyNew, NotifyUpdated,
 				(SELECT COUNT(*) FROM VOL_OP_Referral rf WHERE rf.ProfileID=vp.ProfileID) AS REFERRAL_REQUESTS,
 				CASE WHEN OrgCanContact=1 THEN FirstName ELSE cioc_shared.dbo.fn_SHR_GBL_AnonString(FirstName) END AS FirstName,
 				CASE WHEN OrgCanContact=1 THEN LastName ELSE cioc_shared.dbo.fn_SHR_GBL_AnonString(LastName) END AS LastName,

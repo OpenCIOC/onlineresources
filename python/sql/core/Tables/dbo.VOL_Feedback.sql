@@ -8,10 +8,10 @@ CREATE TABLE [dbo].[VOL_Feedback]
 [IPAddress] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
 [User_ID] [int] NULL,
 [ViewType] [int] NULL,
-[AccessURL] [varchar] (160) COLLATE Latin1_General_100_CI_AI NULL,
+[AccessURL] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [FULL_UPDATE] [bit] NOT NULL CONSTRAINT [DF_VOL_Feedback_FULL_UPDATE] DEFAULT ((0)),
 [NO_CHANGES] [bit] NOT NULL CONSTRAINT [DF_VOL_Feedback_NO_CHANGES] DEFAULT ((0)),
-[REMOVE_RECORD] [bit] NOT NULL CONSTRAINT [DF_VOL_Feedback_REMOVE_RECORD] DEFAULT ((0)),
+[REMOVE_RECORD] [bit] NULL CONSTRAINT [DF_VOL_Feedback_REMOVE_RECORD] DEFAULT ((0)),
 [FB_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [VNUM] [varchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
 [FBKEY] [varchar] (6) COLLATE Latin1_General_100_CI_AI NULL,
@@ -29,7 +29,7 @@ CREATE TABLE [dbo].[VOL_Feedback]
 [CONTACT_PHONE2] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [CONTACT_PHONE3] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [CONTACT_FAX] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[CONTACT_EMAIL] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[CONTACT_EMAIL] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [COST] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [DISPLAY_UNTIL] [nvarchar] (25) COLLATE Latin1_General_100_CI_AI NULL,
 [DUTIES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -44,7 +44,7 @@ CREATE TABLE [dbo].[VOL_Feedback]
 [MIN_AGE] [varchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
 [MINIMUM_HOURS] [varchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
 [MINIMUM_HOURS_PER] [nvarchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
-[MORE_INFO_URL] [varchar] (158) COLLATE Latin1_General_100_CI_AI NULL,
+[MORE_INFO_URL] [varchar] (263) COLLATE Latin1_General_100_CI_AI NULL,
 [NO_UPDATE_EMAIL] [nvarchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
 [NON_PUBLIC] [nvarchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
 [NUM_NEEDED] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -60,7 +60,7 @@ CREATE TABLE [dbo].[VOL_Feedback]
 [SCHEDULE_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SEASONS] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SOCIAL_MEDIA] [xml] NULL,
-[SOURCE_EMAIL] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[SOURCE_EMAIL] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_FAX] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_NAME] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_PUBLICATION_DATE] [nvarchar] (25) COLLATE Latin1_General_100_CI_AI NULL,
@@ -74,10 +74,10 @@ CREATE TABLE [dbo].[VOL_Feedback]
 [SUITABILITY] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [TRAINING] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [TRANSPORTATION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[UPDATE_EMAIL] [nvarchar] (60) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+[UPDATE_EMAIL] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[VOL_Feedback] ADD CONSTRAINT [PK_VOL_Feedback] PRIMARY KEY CLUSTERED  ([FB_ID]) ON [PRIMARY]
+ALTER TABLE [dbo].[VOL_Feedback] ADD CONSTRAINT [PK_VOL_Feedback] PRIMARY KEY CLUSTERED ([FB_ID]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[VOL_Feedback] WITH NOCHECK ADD CONSTRAINT [FK_VOL_Feedback_GBL_Users] FOREIGN KEY ([User_ID]) REFERENCES [dbo].[GBL_Users] ([User_ID]) ON DELETE SET NULL ON UPDATE CASCADE
 GO

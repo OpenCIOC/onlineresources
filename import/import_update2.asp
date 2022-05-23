@@ -1625,8 +1625,8 @@ Sub processExtraEmailA()
 		.Parameters.Append .CreateParameter("@HAS_ENGLISH", adBoolean, adParamInput, 1)
 		.Parameters.Append .CreateParameter("@HAS_FRENCH", adBoolean, adParamInput, 1)
 		.Parameters.Append .CreateParameter("@ExtraEmailType", adVarChar, adParamInput, 100)
-		.Parameters.Append .CreateParameter("@ExtraEmailE", adVarWChar, adParamInput, 60)
-		.Parameters.Append .CreateParameter("@ExtraEmailF", adVarWChar, adParamInput, 60)
+		.Parameters.Append .CreateParameter("@ExtraEmailE", adVarWChar, adParamInput, 100)
+		.Parameters.Append .CreateParameter("@ExtraEmailF", adVarWChar, adParamInput, 100)
 		.Parameters.Append .CreateParameter("@FieldID", adInteger, adParamOutput, 4)
 	End With
 
@@ -1792,8 +1792,8 @@ Sub processExtraWWWA()
 		.Parameters.Append .CreateParameter("@HAS_ENGLISH", adBoolean, adParamInput, 1)
 		.Parameters.Append .CreateParameter("@HAS_FRENCH", adBoolean, adParamInput, 1)
 		.Parameters.Append .CreateParameter("@ExtraWWWType", adVarChar, adParamInput, 100)
-		.Parameters.Append .CreateParameter("@ExtraWWWE", adVarWChar, adParamInput, 200)
-		.Parameters.Append .CreateParameter("@ExtraWWWF", adVarWChar, adParamInput, 200)
+		.Parameters.Append .CreateParameter("@ExtraWWWE", adVarWChar, adParamInput, 255)
+		.Parameters.Append .CreateParameter("@ExtraWWWF", adVarWChar, adParamInput, 255)
 		.Parameters.Append .CreateParameter("@FieldID", adInteger, adParamOutput, 4)
 	End With
 

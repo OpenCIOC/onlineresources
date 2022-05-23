@@ -6,7 +6,7 @@ GO
 
 CREATE PROCEDURE [dbo].[sp_VOL_Profile_u_Login]
 	@MemberID int,
-	@Email [varchar](60),
+	@Email [varchar](100),
 	@LoginKey [char](32),
 	-- next three are for gradual move to new hashing
 	@PasswordHash [varchar](44),
@@ -15,13 +15,6 @@ CREATE PROCEDURE [dbo].[sp_VOL_Profile_u_Login]
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.5
-	Checked by: CL
-	Checked on: 26-Jun-2012
-	Action: NO ACTION REQUIRED
-*/
 
 DECLARE	@Error int
 SET @Error = 0

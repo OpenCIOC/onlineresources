@@ -173,7 +173,7 @@
 			<!-- <xsd:pattern value="(([A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+(\.[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+)*@[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+(\.[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+)*)(\s*,*\s*))*"/> -->
 			<xsd:pattern value="(([^@\s,]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,63})(\s*,*\s*))*"/>
 			<xsd:minLength value="1"/>
-			<xsd:maxLength value="60"/>
+			<xsd:maxLength value="100"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 	<xsd:simpleType name="s-GeocodeType">
@@ -468,14 +468,14 @@
 		<xsd:restriction base="xsd:string">
 			<xsd:pattern value="((\d{1,3}(\.\d{1,3}){3})|([\w_-]+(\.[\w\._-]+)*))(:[0-9]+)?([/?][^\s]*)?"/>
 			<xsd:minLength value="1"/>
-			<xsd:maxLength value="200"/>
+			<xsd:maxLength value="255"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 	<xsd:simpleType name="s-URLWithProtocolType">
 		<xsd:restriction base="xsd:string">
 			<xsd:pattern value="(http://|https://)((\d{1,3}(\.\d{1,3}){3})|([\w_-]+(\.[\w\._-]+)*))(:[0-9]+)?([/?][^\s]*)?"/>
 			<xsd:minLength value="1"/>
-			<xsd:maxLength value="200"/>
+			<xsd:maxLength value="255"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 	<xsd:simpleType name="s-URLProtocolType">
@@ -584,7 +584,7 @@
 					<xsd:attribute name="NMFIRST" type="s-Text60Type" use="optional"/>
 					<xsd:attribute name="NMLAST" type="s-Text150Type" use="optional"/>
 					<xsd:attribute name="NMS" type="s-Text30Type" use="optional"/>
-					<xsd:attribute name="TTL" type="s-Text100Type" use="optional"/>
+					<xsd:attribute name="TTL" type="s-Text255Type" use="optional"/>
 					<xsd:attribute name="ORG" type="s-Text100Type" use="optional"/>
 					<xsd:attribute name="EML" type="s-EmailType" use="optional"/>
 					<xsd:attribute name="FAXN" type="s-Text100Type" use="optional"/>
@@ -815,7 +815,7 @@
 									<xsd:attribute name="NF" type="s-Text4000Type" use="optional"/>
 								</xsd:complexType>
 							</xsd:element>
-							<xsd:element name="AFTER_HRS_PHONE" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="AFTER_HRS_PHONE" type="c-Bilingual1000Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="ALT_ORG" minOccurs="0" maxOccurs="1">
 								<xsd:complexType>
 									<xsd:sequence>
@@ -934,7 +934,7 @@
 							<xsd:element name="CORP_REG_NO" type="c-Bilingual100Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="CREATED_BY" type="c-Bilingual50Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="CREATED_DATE" type="c-DateType" minOccurs="0" maxOccurs="1"/>
-							<xsd:element name="CRISIS_PHONE" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CRISIS_PHONE" type="c-Bilingual1000Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="DATES" type="c-Bilingual4000Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="DD_CODE" minOccurs="0" maxOccurs="1">
 								<xsd:complexType>
@@ -1016,7 +1016,7 @@
 									<xsd:attribute name="VF" type="s-URLType" use="optional"/>
 								</xsd:complexType>
 							</xsd:element>
-							<xsd:element name="FAX" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="FAX" type="c-Bilingual1000Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="FEES" type="c-FeeChecklistType" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="FISCAL_YEAR_END" type="c-DropDownType" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="FORMER_ORG" minOccurs="0" maxOccurs="1">
@@ -1236,7 +1236,7 @@
 										<xsd:element name="TYPE" minOccurs="0" maxOccurs="unbounded">
 											<xsd:complexType>
 												<xsd:attribute name="NM" type="s-Text100Type" use="required"/>
-												<xsd:attribute name="PROTOCOL" type="s-URLProtocolType" use="optional" default="http://"/>
+												<xsd:attribute name="PROTOCOL" type="s-URLProtocolType" use="optional" default="https://"/>
 												<xsd:attribute name="URL" type="s-URLType" use="required"/>
 												<xsd:attribute name="LANG" type="s-LangType" use="required"/>
 											</xsd:complexType>
@@ -1249,8 +1249,8 @@
 								<xsd:complexType>
 									<xsd:attribute name="NM" type="s-Text100Type" use="optional"/>
 									<xsd:attribute name="NMF" type="s-Text100Type" use="optional"/>
-									<xsd:attribute name="TTL" type="s-Text100Type" use="optional"/>
-									<xsd:attribute name="TTLF" type="s-Text100Type" use="optional"/>
+									<xsd:attribute name="TTL" type="s-Text255Type" use="optional"/>
+									<xsd:attribute name="TTLF" type="s-Text255Type" use="optional"/>
 									<xsd:attribute name="ORG" type="s-Text100Type" use="optional"/>
 									<xsd:attribute name="ORGF" type="s-Text100Type" use="optional"/>
 									<xsd:attribute name="PHN" type="s-Text100Type" use="optional"/>
@@ -1314,7 +1314,7 @@
 									<xsd:attribute name="MOD" type="s-DateType" use="optional"/>
 								</xsd:complexType>
 							</xsd:element>
-							<xsd:element name="TDD_PHONE" type="c-Bilingual255Type" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TDD_PHONE" type="c-Bilingual1000Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="TOLL_FREE_PHONE" type="c-Bilingual1000Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="TRANSPORTATION" type="c-Bilingual500Type" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="TYPE_OF_CARE" type="c-ChecklistType" minOccurs="0" maxOccurs="1"/>

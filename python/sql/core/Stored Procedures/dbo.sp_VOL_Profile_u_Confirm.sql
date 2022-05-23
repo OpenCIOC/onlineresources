@@ -7,18 +7,11 @@ CREATE PROCEDURE [dbo].[sp_VOL_Profile_u_Confirm]
 	@MemberID int,
 	@ProfileID [uniqueidentifier],
 	@ConfirmationToken char(32),
-	@FromEmail varchar(60) OUTPUT,
+	@FromEmail varchar(100) OUTPUT,
 	@ErrMsg nvarchar(500) OUTPUT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 30-Jan-2012
-	Action: NO ACTION REQUIRED
-*/
 
 DECLARE	@Error int
 SET @Error = 0
@@ -30,7 +23,7 @@ SET @VolunteerProfileObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Volunte
 DECLARE @ConfirmationDate smalldatetime
 SELECT @ConfirmationDate=ConfirmationDate FROM VOL_Profile WHERE ProfileID=@ProfileID
 
-DECLARE @NewEmail nvarchar(60)
+DECLARE @NewEmail nvarchar(100)
 SELECT @NewEmail = NewEmail FROM VOL_Profile WHERE ProfileID=@ProfileID
 
 -- Profile ID given ?

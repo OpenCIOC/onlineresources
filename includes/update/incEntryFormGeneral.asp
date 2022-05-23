@@ -1108,7 +1108,7 @@ Function makeContactContents(rst,strContactType,bUseContent)
 			"<div class=""form-group"">" & _
 				"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_EMAIL & "</label>" & _
 				"<div class=""col-sm-9 col-lg-10"">" & _
-					"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""60"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">" & _
+					"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">" & _
 				"</div>" & _
 			"</div>"
 			
@@ -1259,7 +1259,7 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 				"<div class=""form-group"">" & _
 					"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_EMAIL & "</label>" & _
 					"<div class=""col-sm-9 col-lg-10"">" & _
-						"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""60"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">"
+						"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">"
 	If bFeedback Then
 		strReturn = strReturn & getFeedback(strContactType & "_EMAIL",True)
 	End If
@@ -1773,7 +1773,7 @@ Function makeSocialMediaFieldVal(rst,bUseContent)
 					" value=" & AttrQs(Replace(Ns(xmlChildNode.getAttribute("Proto")), "http://", vbNullString) & xmlChildNode.getAttribute("URL")) & _
 					" size=" & TEXT_SIZE-25 & _
 					" unique=""SOCIAL_MEDIA""" & _
-					" maxlength=""200""" & _
+					" maxlength=""255""" & _
 					" title=" & AttrQs(strName) & _
 					">" 
 			If bFeedback Then

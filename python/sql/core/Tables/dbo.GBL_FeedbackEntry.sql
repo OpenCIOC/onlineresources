@@ -9,7 +9,7 @@ CREATE TABLE [dbo].[GBL_FeedbackEntry]
 [IPAddress] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
 [User_ID] [int] NULL,
 [ViewType] [int] NULL,
-[AccessURL] [varchar] (160) COLLATE Latin1_General_100_CI_AI NULL,
+[AccessURL] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [FBKEY] [varchar] (6) COLLATE Latin1_General_100_CI_AI NULL,
 [FULL_UPDATE] [bit] NOT NULL CONSTRAINT [DF_GBL_FeedbackEntry_FULL_UPDATE] DEFAULT ((0)),
 [NO_CHANGES] [bit] NOT NULL CONSTRAINT [DF_GBL_FeedbackEntry_NO_CHANGES] DEFAULT ((0)),
@@ -20,34 +20,37 @@ CREATE TABLE [dbo].[GBL_FeedbackEntry]
 [AUTH_TYPE] [char] (1) COLLATE Latin1_General_100_CI_AI NULL,
 [FB_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_NAME] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[SOURCE_TITLE] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
+[SOURCE_TITLE] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_ORG] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_PHONE] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_FAX] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[SOURCE_EMAIL] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[SOURCE_EMAIL] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_BUILDING] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_ADDRESS] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_CITY] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_PROVINCE] [nvarchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_POSTAL_CODE] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[GBL_FeedbackEntry] ADD CONSTRAINT [PK_GBL_FeedbackEntry] PRIMARY KEY CLUSTERED  ([FB_ID]) ON [PRIMARY]
+ALTER TABLE [dbo].[GBL_FeedbackEntry] ADD CONSTRAINT [PK_GBL_FeedbackEntry] PRIMARY KEY CLUSTERED ([FB_ID]) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[GBL_FeedbackEntry] ADD CONSTRAINT [FK_GBL_FeedbackEntry_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
-GO
-ALTER TABLE [dbo].[GBL_FeedbackEntry] ADD CONSTRAINT [FK_GBL_FeedbackEntry_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
+ALTER TABLE [dbo].[GBL_FeedbackEntry] ADD CONSTRAINT [FK_GBL_FeedbackEntry_CIC_View] FOREIGN KEY ([ViewType]) REFERENCES [dbo].[CIC_View] ([ViewType]) ON DELETE SET NULL
 GO
 ALTER TABLE [dbo].[GBL_FeedbackEntry] WITH NOCHECK ADD CONSTRAINT [FK_GBL_FeedbackEntry_GBL_BaseTable] FOREIGN KEY ([NUM]) REFERENCES [dbo].[GBL_BaseTable] ([NUM]) NOT FOR REPLICATION
 GO
 ALTER TABLE [dbo].[GBL_FeedbackEntry] ADD CONSTRAINT [FK_GBL_FeedbackEntry_GBL_Users] FOREIGN KEY ([User_ID]) REFERENCES [dbo].[GBL_Users] ([User_ID]) ON DELETE SET NULL ON UPDATE CASCADE
 GO
-ALTER TABLE [dbo].[GBL_FeedbackEntry] ADD CONSTRAINT [FK_GBL_FeedbackEntry_CIC_View] FOREIGN KEY ([ViewType]) REFERENCES [dbo].[CIC_View] ([ViewType]) ON DELETE SET NULL
+ALTER TABLE [dbo].[GBL_FeedbackEntry] ADD CONSTRAINT [FK_GBL_FeedbackEntry_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
+GO
+ALTER TABLE [dbo].[GBL_FeedbackEntry] ADD CONSTRAINT [FK_GBL_FeedbackEntry_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
 GO
 ALTER TABLE [dbo].[GBL_FeedbackEntry] NOCHECK CONSTRAINT [FK_GBL_FeedbackEntry_GBL_BaseTable]
 GO
-GRANT SELECT ON  [dbo].[GBL_FeedbackEntry] TO [cioc_cic_search_role]
 GRANT INSERT ON  [dbo].[GBL_FeedbackEntry] TO [cioc_cic_search_role]
-GRANT SELECT ON  [dbo].[GBL_FeedbackEntry] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[GBL_FeedbackEntry] TO [cioc_cic_search_role]
+GO
 GRANT INSERT ON  [dbo].[GBL_FeedbackEntry] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[GBL_FeedbackEntry] TO [cioc_login_role]
 GO

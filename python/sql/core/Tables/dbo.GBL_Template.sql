@@ -10,14 +10,14 @@ CREATE TABLE [dbo].[GBL_Template]
 [Owner] [char] (3) COLLATE Latin1_General_100_CI_AI NULL,
 [BannerRepeat] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_BannerRepeat] DEFAULT ((1)),
 [BannerHeight] [tinyint] NULL,
-[StyleSheetUrl] [varchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[StyleSheetUrl] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [ExtraCSS] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[JavaScriptTopUrl] [varchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
-[JavaScriptBottomUrl] [varchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
-[ShortCutIcon] [varchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
-[AppleTouchIcon] [varchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
-[BodyTagExtras] [varchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
-[Background] [varchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[JavaScriptTopUrl] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[JavaScriptBottomUrl] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[ShortCutIcon] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[AppleTouchIcon] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[BodyTagExtras] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[Background] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [BackgroundColour] [varchar] (7) COLLATE Latin1_General_100_CI_AI NULL CONSTRAINT [DF_GBL_Template_BackgroundColour] DEFAULT ('#FFFFFF'),
 [bgColorLogo] [varchar] (7) COLLATE Latin1_General_100_CI_AI NULL CONSTRAINT [DF_GBL_Template_bgColorLogo] DEFAULT ('#ffffff'),
 [FontFamily] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
@@ -104,7 +104,7 @@ CREATE TABLE [dbo].[GBL_Template]
 [TitleBgColour] [varchar] (7) COLLATE Latin1_General_100_CI_AI NULL CONSTRAINT [DF_GBL_Template_TitleBgColour] DEFAULT ('#333333'),
 [PreviewTemplate] [bit] NOT NULL CONSTRAINT [DF_GBL_Template_PreviewTemplate] DEFAULT ((0)),
 [ExtraJavascript] [varchar] (max) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -132,27 +132,19 @@ END
 
 SET NOCOUNT OFF
 GO
-
-ALTER TABLE [dbo].[GBL_Template] ADD 
-CONSTRAINT [PK_GBL_Template] PRIMARY KEY CLUSTERED  ([Template_ID]) ON [PRIMARY]
-ALTER TABLE [dbo].[GBL_Template] ADD
-CONSTRAINT [CK_GBL_Template_SystemTemplateShared] CHECK (([MemberID] IS NOT NULL OR [SystemTemplate]=(1)))
+ALTER TABLE [dbo].[GBL_Template] ADD CONSTRAINT [CK_GBL_Template_SystemTemplateShared] CHECK (([MemberID] IS NOT NULL OR [SystemTemplate]=(1)))
 GO
-
-
-
-
-
-
+ALTER TABLE [dbo].[GBL_Template] ADD CONSTRAINT [PK_GBL_Template] PRIMARY KEY CLUSTERED ([Template_ID]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[GBL_Template] ADD CONSTRAINT [FK_GBL_Template_GBL_Agency] FOREIGN KEY ([Owner]) REFERENCES [dbo].[GBL_Agency] ([AgencyCode]) ON DELETE SET NULL ON UPDATE CASCADE
+GO
 ALTER TABLE [dbo].[GBL_Template] ADD CONSTRAINT [FK_GBL_Template_GBL_Template_Layout_Footer] FOREIGN KEY ([FooterLayout]) REFERENCES [dbo].[GBL_Template_Layout] ([LayoutID])
 GO
 ALTER TABLE [dbo].[GBL_Template] ADD CONSTRAINT [FK_GBL_Template_GBL_Template_Layout_Header] FOREIGN KEY ([HeaderLayout]) REFERENCES [dbo].[GBL_Template_Layout] ([LayoutID])
 GO
-ALTER TABLE [dbo].[GBL_Template] ADD CONSTRAINT [FK_GBL_Template_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
-GO
-ALTER TABLE [dbo].[GBL_Template] ADD CONSTRAINT [FK_GBL_Template_GBL_Agency] FOREIGN KEY ([Owner]) REFERENCES [dbo].[GBL_Agency] ([AgencyCode]) ON DELETE SET NULL ON UPDATE CASCADE
-GO
 ALTER TABLE [dbo].[GBL_Template] ADD CONSTRAINT [FK_GBL_Template_GBL_Template_Layout_SearchCIC] FOREIGN KEY ([SearchLayoutCIC]) REFERENCES [dbo].[GBL_Template_Layout] ([LayoutID])
 GO
 ALTER TABLE [dbo].[GBL_Template] ADD CONSTRAINT [FK_GBL_Template_GBL_Template_Layout_SearchVOL] FOREIGN KEY ([SearchLayoutVOL]) REFERENCES [dbo].[GBL_Template_Layout] ([LayoutID])
+GO
+ALTER TABLE [dbo].[GBL_Template] ADD CONSTRAINT [FK_GBL_Template_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
 GO

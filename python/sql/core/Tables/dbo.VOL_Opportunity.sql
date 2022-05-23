@@ -48,18 +48,13 @@ CREATE TABLE [dbo].[VOL_Opportunity]
 [SCH_SN_Evening] [bit] NOT NULL CONSTRAINT [DF_VOL_Opportunity_SCH_SN_Evening] DEFAULT ((0)),
 [START_DATE_FIRST] [smalldatetime] NULL,
 [START_DATE_LAST] [smalldatetime] NULL,
-[UPDATE_EMAIL] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
-[FBKEY] [char] (6) COLLATE Latin1_General_100_CI_AI NOT NULL CONSTRAINT [DF_VOL_Opportunity_FBKEY] DEFAULT (CONVERT([varchar](MAX),[Crypt_Gen_Random]((3)),(2)))
+[UPDATE_EMAIL] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
+[FBKEY] [char] (6) COLLATE Latin1_General_100_CI_AI NOT NULL CONSTRAINT [DF_VOL_Opportunity_FBKEY] DEFAULT (CONVERT([varchar](max),Crypt_Gen_Random((3)),(2)))
 ) ON [PRIMARY]
-CREATE UNIQUE NONCLUSTERED INDEX [IX_VOL_Opportunity_MemberIDVNUMDISPLAYUNTIL] ON [dbo].[VOL_Opportunity] ([MemberID], [VNUM], [DISPLAY_UNTIL]) ON [PRIMARY]
-
-
-
-ALTER TABLE [dbo].[VOL_Opportunity] ADD 
-CONSTRAINT [PK_VOL_Opportunity] PRIMARY KEY CLUSTERED  ([VNUM]) ON [PRIMARY]
-CREATE UNIQUE NONCLUSTERED INDEX [IX_VOL_Opportunity_VNUMInclMemberID] ON [dbo].[VOL_Opportunity] ([VNUM]) INCLUDE ([MemberID]) ON [PRIMARY]
-CREATE UNIQUE NONCLUSTERED INDEX [IX_VOL_Opportunity_OP_ID] ON [dbo].[VOL_Opportunity] ([OP_ID]) ON [PRIMARY]
-
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
 GO
 CREATE TRIGGER [dbo].[tr_VOL_Opportunity_iu] ON [dbo].[VOL_Opportunity]
 FOR INSERT, UPDATE AS
@@ -95,20 +90,31 @@ END
 
 SET NOCOUNT OFF
 GO
-
+ALTER TABLE [dbo].[VOL_Opportunity] ADD CONSTRAINT [PK_VOL_Opportunity] PRIMARY KEY CLUSTERED ([VNUM]) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_VOL_Opportunity_MemberIDVNUMDISPLAYUNTIL] ON [dbo].[VOL_Opportunity] ([MemberID], [VNUM], [DISPLAY_UNTIL]) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_VOL_Opportunity_OP_ID] ON [dbo].[VOL_Opportunity] ([OP_ID]) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_VOL_Opportunity_VNUMInclMemberID] ON [dbo].[VOL_Opportunity] ([VNUM]) INCLUDE ([MemberID]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_Opportunity] WITH NOCHECK ADD CONSTRAINT [FK_VOL_Opportunity_GBL_Agency] FOREIGN KEY ([RECORD_OWNER]) REFERENCES [dbo].[GBL_Agency] ([AgencyCode]) NOT FOR REPLICATION
+GO
+ALTER TABLE [dbo].[VOL_Opportunity] WITH NOCHECK ADD CONSTRAINT [FK_VOL_Opportunity_GBL_BaseTable] FOREIGN KEY ([NUM]) REFERENCES [dbo].[GBL_BaseTable] ([NUM]) ON UPDATE CASCADE
+GO
 ALTER TABLE [dbo].[VOL_Opportunity] ADD CONSTRAINT [FK_VOL_Opportunity_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
 GO
 ALTER TABLE [dbo].[VOL_Opportunity] ADD CONSTRAINT [FK_VOL_Opportunity_VOL_MinHoursPer] FOREIGN KEY ([MINIMUM_HOURS_PER]) REFERENCES [dbo].[VOL_MinHoursPer] ([HPER_ID]) ON DELETE SET NULL
 GO
-ALTER TABLE [dbo].[VOL_Opportunity] WITH NOCHECK ADD CONSTRAINT [FK_VOL_Opportunity_GBL_BaseTable] FOREIGN KEY ([NUM]) REFERENCES [dbo].[GBL_BaseTable] ([NUM]) ON UPDATE CASCADE
-GO
-ALTER TABLE [dbo].[VOL_Opportunity] WITH NOCHECK ADD CONSTRAINT [FK_VOL_Opportunity_GBL_Agency] FOREIGN KEY ([RECORD_OWNER]) REFERENCES [dbo].[GBL_Agency] ([AgencyCode]) NOT FOR REPLICATION
-GO
 ALTER TABLE [dbo].[VOL_Opportunity] NOCHECK CONSTRAINT [FK_VOL_Opportunity_GBL_Agency]
 GO
 GRANT SELECT ON  [dbo].[VOL_Opportunity] TO [cioc_cic_search_role]
-GRANT SELECT ON  [dbo].[VOL_Opportunity] TO [cioc_login_role]
+GO
 GRANT INSERT ON  [dbo].[VOL_Opportunity] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[VOL_Opportunity] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[VOL_Opportunity] TO [cioc_login_role]
+GO
 GRANT SELECT ON  [dbo].[VOL_Opportunity] TO [cioc_vol_search_role]
 GO

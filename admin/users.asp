@@ -113,7 +113,7 @@ If bResults Then
 	strUserName = Left(Trim(Request("UserName")),50)
 	strFirstName = Left(Trim(Request("FirstName")),50)
 	strLastName = Left(Trim(Request("LastName")),50)
-	strEmail = Left(Trim(Request("Email")),60)
+	strEmail = Left(Trim(Request("Email")),100)
 	
 	bShowName = Request("Show_Name") = "on"
 	bShowInitials = Request("Show_Initials") = "on"
@@ -176,7 +176,7 @@ End If
 	<td class="FieldLabelLeft"><label for="LastName"><%=TXT_LAST_NAME%></label></td><td><input id="LastName" name="LastName" size="30" maxlength="50"></td>
 </tr>
 <tr>
-	<td class="FieldLabelLeft"><label for="Email"><%=TXT_EMAIL%></label></td><td colspan="3"><input id="Email" name="Email" size="60" maxlength="60"></td>
+	<td class="FieldLabelLeft"><label for="Email"><%=TXT_EMAIL%></label></td><td colspan="3"><input id="Email" name="Email" size="60" maxlength="100"></td>
 </tr>
 <tr>
 	<td class="FieldLabelLeft"><%=TXT_STATUS%></td>

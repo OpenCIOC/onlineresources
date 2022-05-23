@@ -5,7 +5,7 @@ CREATE TABLE [dbo].[VOL_OP_SM]
 [LangID] [smallint] NOT NULL,
 [SM_ID] [int] NOT NULL,
 [Protocol] [varchar] (10) COLLATE Latin1_General_100_CI_AI NOT NULL CONSTRAINT [DF_VOL_OP_SM_Protocol] DEFAULT ('http://'),
-[URL] [nvarchar] (200) COLLATE Latin1_General_100_CI_AI NOT NULL
+[URL] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NOT NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[VOL_OP_SM] ADD CONSTRAINT [PK_VOL_OP_SM] PRIMARY KEY CLUSTERED ([OP_SM_ID]) ON [PRIMARY]

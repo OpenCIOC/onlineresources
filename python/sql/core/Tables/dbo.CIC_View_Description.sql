@@ -16,7 +16,7 @@ CREATE TABLE [dbo].[CIC_View_Description]
 [CSrchText] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [QuickListName] [nvarchar] (25) COLLATE Latin1_General_100_CI_AI NULL CONSTRAINT [DF_CIC_View_Description_QuickListName] DEFAULT ('Quick&nbsp;List'),
 [FeedbackBlurb] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL CONSTRAINT [DF_CIC_View_Description_FeedbackBlurb] DEFAULT ('Note that any submissions made from this page are <B>''suggested''</B> changes. These suggestions are sent to our office where they are reviewed and processed. Upon completion of this form, you will be taken to the existing view of your record (prior to any of your changes). You will be notified once your suggestions have been processed.'),
-[TermsOfUseURL] [varchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
+[TermsOfUseURL] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [InclusionPolicy] [int] NULL,
 [SearchTips] [int] NULL,
 [SearchLeftTitle] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,

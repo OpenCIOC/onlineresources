@@ -18,13 +18,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.5
-	Checked by: CL
-	Checked on: 28-Sep-2014
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE	@Error	int
 SET @Error = 0
 
@@ -40,7 +33,7 @@ IF @ExtraFieldType IN ('a', 'd') BEGIN
 	SET @FullTextIndex = 0
 END ELSE IF @ExtraFieldType = 'e' BEGIN
 	SET @FieldName = 'EXTRA_EMAIL_' + @ExtraFieldName
-	SET @MaxLength = 60
+	SET @MaxLength = 100
 	SET @FullTextIndex = 0
 END ELSE IF @ExtraFieldType = 'r' BEGIN
 	SET @FieldName = 'EXTRA_RADIO_' + @ExtraFieldName
@@ -55,7 +48,7 @@ END ELSE IF @ExtraFieldType = 't' BEGIN
 		END
 END ELSE IF @ExtraFieldType = 'w' BEGIN
 	SET @FieldName = 'EXTRA_WWW_' + @ExtraFieldName
-	SET @MaxLength = 200
+	SET @MaxLength = 255
 	SET @FullTextIndex = 0
 END ELSE IF @ExtraFieldType = 'l' BEGIN
 	SET @FieldName = 'EXTRA_CHECKLIST_' + @ExtraFieldName

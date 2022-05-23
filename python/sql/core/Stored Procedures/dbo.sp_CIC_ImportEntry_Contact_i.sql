@@ -13,13 +13,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 27-Mar-2012
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE @ContactTable TABLE (
 	[ContactID] int IDENTITY(1,1) NOT NULL,
 	[LangID] smallint NULL,
@@ -29,7 +22,7 @@ DECLARE @ContactTable TABLE (
 	[NAME_SUFFIX] nvarchar(30) NULL,
 	[TITLE] nvarchar(100) NULL,
 	[ORG] nvarchar(100) NULL,
-	[EMAIL] varchar(60) NULL,
+	[EMAIL] varchar(100) NULL,
 	[FAX_NOTE] nvarchar(100) NULL,
 	[FAX_NO] nvarchar(20) NULL,
 	[FAX_EXT] nvarchar(10) NULL,

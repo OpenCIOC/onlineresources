@@ -13,7 +13,7 @@ CREATE TABLE [dbo].[GBL_Users_History]
 [FirstName] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
 [LastName] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
 [Initials] [varchar] (6) COLLATE Latin1_General_100_CI_AI NULL,
-[Email] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
+[Email] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [PasswordChange] [bit] NOT NULL,
 [SavedSearchQuota] [tinyint] NULL,
 [SingleLogin] [bit] NULL,
@@ -23,7 +23,7 @@ CREATE TABLE [dbo].[GBL_Users_History]
 [NewAccount] [bit] NOT NULL CONSTRAINT [DF_GBL_Users_History_NewAccount] DEFAULT ((0))
 ) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[GBL_Users_History] ADD CONSTRAINT [PK_GBL_Users_History] PRIMARY KEY CLUSTERED  ([User_HST_ID]) ON [PRIMARY]
+ALTER TABLE [dbo].[GBL_Users_History] ADD CONSTRAINT [PK_GBL_Users_History] PRIMARY KEY CLUSTERED ([User_HST_ID]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[GBL_Users_History] ADD CONSTRAINT [FK_GBL_Users_History_GBL_Users] FOREIGN KEY ([User_ID]) REFERENCES [dbo].[GBL_Users] ([User_ID])
 GO

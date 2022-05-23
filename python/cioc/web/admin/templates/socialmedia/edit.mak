@@ -80,7 +80,7 @@ ${self.makeMgmtInfo(socialmedia)}
 	<td class="FieldLabelLeft NoWrap"><label for="socialmedia.GeneralURL">${_('Info URL')}</label></td>
 	<td>
 		${renderer.errorlist('socialmedia.GeneralURL')}
-		http:// ${renderer.text('socialmedia.GeneralURL', maxlength=200)}
+		http:// ${renderer.text('socialmedia.GeneralURL', maxlength=255)}
 		<br>${_('Main URL of the Social Media site (if applicable).')}
 	</td>
 </tr>
@@ -91,7 +91,7 @@ ${self.makeMgmtInfo(socialmedia)}
 		%if not is_add:
 		<img src="${socialmedia.IconURL16}" width="16" height="16">
 		%endif
-		${renderer.proto_url('socialmedia.IconURL16', maxlength=200)}
+		${renderer.proto_url('socialmedia.IconURL16', maxlength=255)}
 		<br>${_('URL of social media icon file. Icon must be 16px by 16px.')}
 	</td>
 </tr>
@@ -102,7 +102,7 @@ ${self.makeMgmtInfo(socialmedia)}
 		%if not is_add:
 		<img src="${socialmedia.IconURL24}" width="24" height="24">
 		%endif
-		${renderer.proto_url('socialmedia.IconURL24', maxlength=200)}
+		${renderer.proto_url('socialmedia.IconURL24', maxlength=255)}
 		<br>${_('URL of social media icon file. Icon must be 24px by 24px.')}
 	</td>
 </tr>

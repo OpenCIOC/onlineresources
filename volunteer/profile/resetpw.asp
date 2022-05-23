@@ -67,7 +67,7 @@ Call makePageHeader(TXT_VOL_PROFILE_PASSWORD_RESET, TXT_VOL_PROFILE_PASSWORD_RES
 <table class="BasicBorder cell-padding-3">
 	<tr>
 		<td class="FieldLabelLeft"><%= TXT_EMAIL %></td>
-		<td><input name="LoginName" type="text" size="30" maxlength="60"></td>
+		<td><input name="LoginName" type="text" size="30" maxlength="100"></td>
 	</tr>
 	<tr>
 		<td colspan="2"><input type="submit" value="<%= TXT_EMAIL_MY_NEW_PW %>"></td>

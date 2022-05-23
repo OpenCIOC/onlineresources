@@ -663,10 +663,10 @@ Sub getSocialMediaField()
 	End If
 
 	If bUpdateHistory Then
-		strSQL = "DECLARE @SocialXml xml; DECLARE @SocialTable TABLE (SM_ID int not null, URL nvarchar(200), Protocol varchar(10))" & vbCrLf & _
+		strSQL = "DECLARE @SocialXml xml; DECLARE @SocialTable TABLE (SM_ID int not null, URL nvarchar(255), Protocol varchar(10))" & vbCrLf & _
 				"SET @SocialXml = " & QsNl(strXML) & vbCrLf & _
 				"INSERT INTO @SocialTable (SM_ID, URL, Protocol) " & vbCrLf & _
-				"SELECT N.value('@SM_ID', 'int') AS SM_ID, N.value('@URL', 'nvarchar(200)') AS URL, N.value('@Proto', 'varchar(10)') AS Protocol" & vbCrLf & _
+				"SELECT N.value('@SM_ID', 'int') AS SM_ID, N.value('@URL', 'nvarchar(255)') AS URL, N.value('@Proto', 'varchar(10)') AS Protocol" & vbCrLf & _
 				"FROM @SocialXml.nodes('//SM') AS T(N)" & vbCrLf & _
 				"MERGE INTO " & strTblPrefix & "_SM sm" & vbCrLf & _
 				"USING (SELECT nt.* FROM @SocialTable nt WHERE EXISTS(SELECT * FROM GBL_SocialMedia WHERE SM_ID=nt.SM_ID)) nt" & vbCrLf & _

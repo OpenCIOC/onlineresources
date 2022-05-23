@@ -722,7 +722,7 @@ Call printRow("SOURCE_NAME",strSourcePrefix & TXT_NAME, _
 		makeTextFieldVal("SOURCE_NAME", strSourceName, 60, False), _
 		False,False,False,Not user_bLoggedIn,False,False,True)
 Call printRow("SOURCE_EMAIL",strSourcePrefix & TXT_EMAIL, _
-		makeTextFieldVal("SOURCE_EMAIL", strSourceEmail, 60, False), _
+		makeTextFieldVal("SOURCE_EMAIL", strSourceEmail, 100, False), _
 		False,False,False,Not user_bLoggedIn,False,False,True)
 Call printRow("SOURCE_PHONE",strSourcePrefix & TXT_PHONE, _
 		makeTextFieldVal("SOURCE_PHONE", strSourcePhone, 100, False), _

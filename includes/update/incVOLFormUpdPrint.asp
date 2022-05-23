@@ -439,7 +439,7 @@ Function makeSourceContents(rst,bUseContent)
 		"<div class=""form-group"">" & _
 			"<label for=""SOURCE_TITLE"" class=""control-label col-sm-3"">" & TXT_TITLE & "</label>" & _
 			"<div class=""col-sm-9"">" & _
-				"<input type=""text"" name=""SOURCE_TITLE"" id=""SOURCE_TITLE"" maxlength=""100"" value=" & AttrQs(strTitle) & " class=""form-control"">"
+				"<input type=""text"" name=""SOURCE_TITLE"" id=""SOURCE_TITLE"" maxlength=""255"" value=" & AttrQs(strTitle) & " class=""form-control"">"
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("SOURCE_TITLE",True)
 	End If
@@ -479,7 +479,7 @@ Function makeSourceContents(rst,bUseContent)
 		"<div class=""form-group"">" & _
 			"<label for=""SOURCE_EMAIL"" class=""control-label col-sm-3"">" & TXT_EMAIL & "</label>" & _
 			"<div class=""col-sm-9"">" & _
-				"<input type=""text"" name=""SOURCE_EMAIL"" id=""SOURCE_EMAIL"" maxlength=""60"" value=" & AttrQs(strEmail) & " class=""form-control"">"
+				"<input type=""text"" name=""SOURCE_EMAIL"" id=""SOURCE_EMAIL"" maxlength=""100"" value=" & AttrQs(strEmail) & " class=""form-control"">"
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("SOURCE_EMAIL",True)
 	End If

@@ -10,12 +10,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.6
-	Checked by: CL
-	Checked on: 22-Feb-2015
-	Action: NO ACTION REQUIRED
-*/
 IF @Domain IS NULL SET @FieldName=NULL
 
 IF @FieldName IS NULL BEGIN
@@ -371,9 +365,9 @@ UPDATE fo SET
 		EquivalentSource = CASE WHEN fo.ExtraFieldType IN ('d','c','l','p') THEN 0 ELSE 1 END,
 		MaxLength = CASE
 				WHEN fo.ExtraFieldType IN ('a','d') THEN 25
-				WHEN fo.ExtraFieldType = 'e' THEN 60
+				WHEN fo.ExtraFieldType = 'e' THEN 100
 				WHEN fo.ExtraFieldType IN ('l','r') THEN NULL
-				WHEN fo.ExtraFieldType IN ('p','w') THEN 200
+				WHEN fo.ExtraFieldType IN ('p','w') THEN 255
 				WHEN fo.ExtraFieldType = 't' THEN CASE WHEN fo.MaxLength < 1 THEN 1 WHEN fo.MaxLength IS NULL OR fo.MaxLength > 8000 THEN 8000 ELSE fo.MaxLength END
 			END,
 		DisplayFM = CASE
@@ -470,9 +464,9 @@ UPDATE fo SET
 		EquivalentSource = CASE WHEN fo.ExtraFieldType IN ('d','c','l','p') THEN 0 ELSE 1 END,
 		MaxLength = CASE
 				WHEN fo.ExtraFieldType IN ('a','d') THEN 25
-				WHEN fo.ExtraFieldType = 'e' THEN 60
+				WHEN fo.ExtraFieldType = 'e' THEN 100
 				WHEN fo.ExtraFieldType IN ('l','r') THEN NULL
-				WHEN fo.ExtraFieldType IN ('p','w') THEN 200
+				WHEN fo.ExtraFieldType IN ('p','w') THEN 255
 				WHEN fo.ExtraFieldType = 't' THEN CASE WHEN fo.MaxLength < 1 THEN 1 WHEN fo.MaxLength IS NULL OR fo.MaxLength > 8000 THEN 8000 ELSE fo.MaxLength END
 			END,
 		DisplayFM = CASE
