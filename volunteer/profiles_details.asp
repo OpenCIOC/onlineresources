@@ -141,6 +141,26 @@ If Not bError Then
 		<td><%=IIf(.Fields("Active"),TXT_YES,"<span class=""Alert"">" & TXT_NO & "</span>")%></td>
 	</tr>
 	<tr>
+		<td class="FieldLabelLeft"><%=TXT_SUBSCRIPTIONS%></td>
+		<td>
+		<%
+		If Not .Fields("NotifyNew") Then %>
+			<%= TXT_SUBSCRIPTIONS_NONE %>
+		<%
+		Else 
+			If .Fields("NotifyUpdated") Then%>
+				<%= TXT_SUBSCRIPTIONS_NEW_AND_UPDATED %>
+			<% Else %>
+				<%= TXT_SUBSCRIPTIONS_NEW %>
+			<% End If %>
+		<form method="post" action="profiles_unsubscribe.asp"><input type="hidden" name="ProfileID"
+		value="<%=Server.HTMLEncode(.Fields("ProfileID"))%>"><input type="submit" name="submit"
+		value="<%= TXT_UNSUBSCRIBE %>"></form>
+		<br><span class="SmallNote"><%= TXT_INST_UNSUBSCRIBE_STAFF %></span>
+		<% End If %>
+		</td>
+	</tr>
+	<tr>
 		<td class="FieldLabelLeft"><%= TXT_BLOCKED %></td>
 		<td><form method="post" action="profiles_block.asp"><%=IIf(.Fields("Blocked"),"<span class=""Alert"">" & TXT_YES & "</span>", TXT_NO)%> <input type="hidden" name="ProfileID" value="<%=Server.HTMLEncode(.Fields("ProfileID"))%>"><input type="submit" name="submit" value="<%= IIf(.Fields("Blocked"), TXT_UNBLOCK, TXT_BLOCK) %>"></form></td>
 	</tr>
