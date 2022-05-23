@@ -11,19 +11,12 @@ CREATE FUNCTION [dbo].[fn_VOL_VNUMToSocialMedia_rst](
 RETURNS @SocialMedia TABLE (
 	Name nvarchar(255),
 	Protocol varchar(10),
-	URL nvarchar(200),
-	IconURL16 varchar(200),
-	IconURL24 varchar(200)
+	URL nvarchar(255),
+	IconURL16 varchar(255),
+	IconURL24 varchar(255)
 ) WITH EXECUTE AS CALLER
 AS 
 BEGIN
-
-/*
-	Checked for Release: 3.6
-	Checked by: CL
-	Checked on: 27-Sep-2014
-	Action: TESTING REQUIRED
-*/
 
 INSERT INTO @SocialMedia
 SELECT	ISNULL(smn.Name,sm.DefaultName) AS Name, pr.Protocol, pr.URL, sm.IconURL16, sm.IconURL24

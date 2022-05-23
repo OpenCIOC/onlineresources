@@ -14,10 +14,10 @@ CREATE TABLE [dbo].[GBL_Users]
 [StartModule] [tinyint] NOT NULL CONSTRAINT [DF_GBL_Users_StartModule] DEFAULT ((0)),
 [StartLanguage] [smallint] NOT NULL CONSTRAINT [DF_GBL_Users_StartLanguage] DEFAULT ((0)),
 [Agency] [char] (3) COLLATE Latin1_General_100_CI_AI NOT NULL,
-[FirstName] [varchar] (50) COLLATE Latin1_General_100_CI_AI NOT NULL,
-[LastName] [varchar] (50) COLLATE Latin1_General_100_CI_AI NOT NULL,
-[Initials] [varchar] (6) COLLATE Latin1_General_100_CI_AI NOT NULL,
-[Email] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[FirstName] [varchar] (60) COLLATE Latin1_General_100_CI_AI NOT NULL,
+[LastName] [varchar] (100) COLLATE Latin1_General_100_CI_AI NOT NULL,
+[Initials] [varchar] (10) COLLATE Latin1_General_100_CI_AI NOT NULL,
+[Email] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [PasswordHashRepeat] [int] NOT NULL,
 [PasswordHashSalt] [char] (44) COLLATE Latin1_General_100_CI_AI NOT NULL,
 [PasswordHash] [char] (44) COLLATE Latin1_General_100_CI_AI NOT NULL,
@@ -40,30 +40,41 @@ CREATE TABLE [dbo].[GBL_Users]
 GO
 ALTER TABLE [dbo].[GBL_Users] WITH NOCHECK ADD CONSTRAINT [CK_GBL_Users] CHECK (([StartModule]>(0) AND [StartModule]<=(2)))
 GO
-ALTER TABLE [dbo].[GBL_Users] ADD CONSTRAINT [PK_GBL_Users] PRIMARY KEY CLUSTERED  ([User_ID]) ON [PRIMARY]
+ALTER TABLE [dbo].[GBL_Users] ADD CONSTRAINT [PK_GBL_Users] PRIMARY KEY CLUSTERED ([User_ID]) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[GBL_Users] ADD CONSTRAINT [IX_GBL_Users_UniqueUserName] UNIQUE NONCLUSTERED  ([MemberID_Cache], [UserName]) ON [PRIMARY]
-GO
-ALTER TABLE [dbo].[GBL_Users] ADD CONSTRAINT [FK_GBL_Users_GBL_Agency] FOREIGN KEY ([Agency]) REFERENCES [dbo].[GBL_Agency] ([AgencyCode]) ON UPDATE CASCADE
-GO
-ALTER TABLE [dbo].[GBL_Users] ADD CONSTRAINT [FK_GBL_Users_STP_Member] FOREIGN KEY ([MemberID_Cache]) REFERENCES [dbo].[STP_Member] ([MemberID])
+ALTER TABLE [dbo].[GBL_Users] ADD CONSTRAINT [IX_GBL_Users_UniqueUserName] UNIQUE NONCLUSTERED ([MemberID_Cache], [UserName]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[GBL_Users] WITH NOCHECK ADD CONSTRAINT [FK_GBL_Users_CIC_SecurityLevel] FOREIGN KEY ([SL_ID_CIC]) REFERENCES [dbo].[CIC_SecurityLevel] ([SL_ID])
 GO
-ALTER TABLE [dbo].[GBL_Users] WITH NOCHECK ADD CONSTRAINT [FK_GBL_Users_VOL_SecurityLevel] FOREIGN KEY ([SL_ID_VOL]) REFERENCES [dbo].[VOL_SecurityLevel] ([SL_ID])
+ALTER TABLE [dbo].[GBL_Users] ADD CONSTRAINT [FK_GBL_Users_GBL_Agency] FOREIGN KEY ([Agency]) REFERENCES [dbo].[GBL_Agency] ([AgencyCode]) ON UPDATE CASCADE
 GO
 ALTER TABLE [dbo].[GBL_Users] ADD CONSTRAINT [FK_GBL_Users_STP_Language] FOREIGN KEY ([StartLanguage]) REFERENCES [dbo].[STP_Language] ([LangID])
 GO
+ALTER TABLE [dbo].[GBL_Users] ADD CONSTRAINT [FK_GBL_Users_STP_Member] FOREIGN KEY ([MemberID_Cache]) REFERENCES [dbo].[STP_Member] ([MemberID])
+GO
+ALTER TABLE [dbo].[GBL_Users] WITH NOCHECK ADD CONSTRAINT [FK_GBL_Users_VOL_SecurityLevel] FOREIGN KEY ([SL_ID_VOL]) REFERENCES [dbo].[VOL_SecurityLevel] ([SL_ID])
+GO
 GRANT SELECT ([User_ID]) ON [dbo].[GBL_Users] TO [cioc_cic_search_role]
+GO
 GRANT SELECT ([UserName]) ON [dbo].[GBL_Users] TO [cioc_cic_search_role]
+GO
 GRANT SELECT ([SL_ID_CIC]) ON [dbo].[GBL_Users] TO [cioc_cic_search_role]
+GO
 GRANT SELECT ([SL_ID_VOL]) ON [dbo].[GBL_Users] TO [cioc_cic_search_role]
+GO
 GRANT SELECT ([Agency]) ON [dbo].[GBL_Users] TO [cioc_cic_search_role]
+GO
 GRANT SELECT ([FirstName]) ON [dbo].[GBL_Users] TO [cioc_cic_search_role]
+GO
 GRANT SELECT ([LastName]) ON [dbo].[GBL_Users] TO [cioc_cic_search_role]
+GO
 GRANT SELECT ([Initials]) ON [dbo].[GBL_Users] TO [cioc_cic_search_role]
+GO
 GRANT SELECT ([Email]) ON [dbo].[GBL_Users] TO [cioc_cic_search_role]
+GO
 GRANT SELECT ([Inactive]) ON [dbo].[GBL_Users] TO [cioc_cic_search_role]
+GO
 GRANT SELECT ON  [dbo].[GBL_Users] TO [cioc_login_role]
+GO
 GRANT SELECT ON  [dbo].[GBL_Users] TO [cioc_vol_search_role]
 GO

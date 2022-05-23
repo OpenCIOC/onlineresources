@@ -188,7 +188,7 @@ End If
 	<td class="field-data-cell"><input type="Text" name="VolunteerName" id="VolunteerName" maxlength="100" value=<%=AttrQs(Server.HTMLEncode(Ns(dicContactInfo("FirstName")) & StringIf(Not Nl(dicContactInfo("FirstName")) And Not Nl(dicContactInfo("LastName"))," ") & Ns(dicContactInfo("LastName"))))%> class="form-control"></td></tr>
 <tr>
 	<td class="field-label-cell"><label for="VolunteerEmail"><%=TXT_EMAIL%></label></td>
-	<td class="field-data-cell"><input type="Text" name="VolunteerEmail" id="VolunteerEmail" maxlength="60" value=<%=AttrQs(Server.HTMLEncode(Ns(vprofile_strEmail)))%> class="form-control"></td>
+	<td class="field-data-cell"><input type="Text" name="VolunteerEmail" id="VolunteerEmail" maxlength="100" value=<%=AttrQs(Server.HTMLEncode(Ns(vprofile_strEmail)))%> class="form-control"></td>
 </tr>
 <tr>
 	<td class="field-label-cell"><label for="VolunteerPhone"><%=TXT_PHONE%></label></td>

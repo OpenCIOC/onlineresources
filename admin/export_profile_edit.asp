@@ -298,7 +298,7 @@ Call makePageHeader(TXT_EDIT_PROFILE & TXT_COLON & strProfileName, TXT_EDIT_PROF
 <%
 		End If
 %>
-		<td><input type="text" name="SourceDbURL_<%=strCulture%>" id="SourceDbURL_<%=strCulture%>" value=<%=AttrQs(strValue)%> size="<%=IIf(g_bMultiLingualActive,TEXT_SIZE-30,TEXT_SIZE-20)%>" maxlength="200">
+		<td><input type="text" name="SourceDbURL_<%=strCulture%>" id="SourceDbURL_<%=strCulture%>" value=<%=AttrQs(strValue)%> size="<%=IIf(g_bMultiLingualActive,TEXT_SIZE-30,TEXT_SIZE-20)%>" maxlength="255">
 		<input type="button" id="SourceDbURL_<%=strCulture%>_Button" value="<%=TXT_RESET%>" onClick="document.getElementById('SourceDbURL_<%=strCulture%>').value='<%="https://" & g_strBaseURLCIC%>/?Ln=<%=strCulture%>'"/></td>
 <%
 		bNewRow = True

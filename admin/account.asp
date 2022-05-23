@@ -170,7 +170,7 @@ Set cmdAccount = Nothing
 </tr>
 <tr>
 	<td class="FieldLabelLeft"><label for="Email"><%=TXT_EMAIL%></label></td>
-	<td><input name="Email" id="Email" type="text" maxlength="60" value=<%=AttrQs(strEmail)%> class="form-control"></td>
+	<td><input name="Email" id="Email" type="text" maxlength="100" value=<%=AttrQs(strEmail)%> class="form-control"></td>
 </tr>
 <%If (g_bUseCIC And g_bUseVOL) Or g_bMultiLingualActive Then%>
 <tr>

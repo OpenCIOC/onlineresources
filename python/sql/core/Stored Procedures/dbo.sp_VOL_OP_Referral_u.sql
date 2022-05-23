@@ -15,7 +15,7 @@ CREATE PROCEDURE [dbo].[sp_VOL_OP_Referral_u]
 	@ProfileID [uniqueidentifier],
 	@VolunteerName [nvarchar](100),
 	@VolunteerPhone [nvarchar](100),
-	@VolunteerEmail [varchar](60),
+	@VolunteerEmail [varchar](100),
 	@VolunteerAddress [nvarchar](100),
 	@VolunteerCity [nvarchar](100),
 	@VolunteerPostalCode [varchar](100),
@@ -30,13 +30,6 @@ CREATE PROCEDURE [dbo].[sp_VOL_OP_Referral_u]
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.6
-	Checked by: CL
-	Checked on: 27-Sep-2014
-	Action: TESTING REQUIRED
-*/
 
 DECLARE	@Error	int
 SET @Error = 0

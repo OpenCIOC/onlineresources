@@ -204,7 +204,7 @@ Else
 					.Parameters.Append .CreateParameter("@ProfileID", adInteger, adParamInput, 4, intProfileID)
 					.Parameters.Append .CreateParameter("@MODIFIED_BY", adVarChar, adParamInput, 50, user_strMod)
 					.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
-					.Parameters.Append .CreateParameter("@SubmitChangesToAccessURL", adVarChar, adParamInput, 200, strSubmitChangesToAccessURL)
+					.Parameters.Append .CreateParameter("@SubmitChangesToAccessURL", adVarChar, adParamInput, 255, strSubmitChangesToAccessURL)
 					.Parameters.Append .CreateParameter("@IncludePrivacyProfiles", adBoolean, adParamInput, 1, bIncludePrivacyProfiles)
 					.Parameters.Append .CreateParameter("@ConvertLine1Line2Addresses", adBoolean, adParamInput, 1, bConvertLine1Line2Addresses)
 					.Parameters.Append .CreateParameter("@InViews", adLongVarChar, adParamInput, -1, strInViews)

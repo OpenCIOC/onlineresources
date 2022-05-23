@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -9,19 +8,19 @@ CREATE PROCEDURE [dbo].[sp_GBL_Agency_u]
 	@MemberID int,
 	@AgencyCode char(3),
 	@RecordOwnerCIC bit,
-	@UpdateEmailCIC varchar(60),
+	@UpdateEmailCIC varchar(100),
 	@UpdatePhoneCIC varchar(60),
 	@InquiryPhoneCIC varchar(60),
 	@AgencyNUMCIC varchar(8),
 	@RecordOwnerVOL bit,
-	@UpdateEmailVOL varchar(60),
+	@UpdateEmailVOL varchar(100),
 	@UpdatePhoneVOL varchar(60),
 	@InquiryPhoneVOL varchar(60),
 	@AgencyNUMVOL varchar(8),
 	@EnforceReqFields bit,
 	@UpdateAccountDefault bit,
 	@UpdatePasswordDefault bit,
-	@UpdateAccountEmail varchar(60),
+	@UpdateAccountEmail varchar(100),
 	@UpdateAccountLangID smallint,
 	@ErrMsg nvarchar(500) OUTPUT
 WITH EXECUTE AS CALLER

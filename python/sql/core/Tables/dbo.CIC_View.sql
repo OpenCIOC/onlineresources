@@ -72,7 +72,7 @@ CREATE TABLE [dbo].[CIC_View]
 [UseThesaurusView] [bit] NOT NULL CONSTRAINT [DF_CIC_View_UseThesaurusView] DEFAULT ((1)),
 [UseLocalSubjects] [bit] NOT NULL CONSTRAINT [DF_CIC_View_UseLocalSubjects] DEFAULT ((0)),
 [UseZeroSubjects] [bit] NOT NULL CONSTRAINT [DF_CIC_View_UseZeroSubjects] DEFAULT ((1)),
-[AlsoNotify] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[AlsoNotify] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [NoProcessNotify] [bit] NOT NULL CONSTRAINT [DF_CIC_View_NoProcessNotify] DEFAULT ((0)),
 [UseSubmitChangesTo] [bit] NOT NULL CONSTRAINT [DF_CIC_View_UseSubmitChangesTo] DEFAULT ((0)),
 [DataUseAuth] [bit] NOT NULL CONSTRAINT [DF_CIC_View_DataUseAuth] DEFAULT ((0)),
@@ -104,9 +104,9 @@ CREATE TABLE [dbo].[CIC_View]
 GO
 ALTER TABLE [dbo].[CIC_View] WITH NOCHECK ADD CONSTRAINT [CK_CIC_View_TaxDefnLevel] CHECK (([TaxDefnLevel]>=(0) AND [TaxDefnLevel]<=(5)))
 GO
-ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [PK_CIC_View] PRIMARY KEY CLUSTERED  ([ViewType]) ON [PRIMARY]
+ALTER TABLE [dbo].[CIC_View] ADD CONSTRAINT [PK_CIC_View] PRIMARY KEY CLUSTERED ([ViewType]) ON [PRIMARY]
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_CIC_View_ViewTypeInclViewCriteria] ON [dbo].[CIC_View] ([ViewType]) INCLUDE ([CanSeeDeleted], [CanSeeNonPublic], [HidePastDueBy], [MemberID], [PB_ID]) ON [PRIMARY]
+CREATE UNIQUE NONCLUSTERED INDEX [IX_CIC_View_ViewTypeInclViewCriteria] ON [dbo].[CIC_View] ([ViewType]) INCLUDE ([MemberID], [CanSeeNonPublic], [CanSeeDeleted], [HidePastDueBy], [PB_ID]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_View] WITH NOCHECK ADD CONSTRAINT [FK_CIC_View_CIC_Publication] FOREIGN KEY ([PB_ID]) REFERENCES [dbo].[CIC_Publication] ([PB_ID])
 GO

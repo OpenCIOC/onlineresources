@@ -352,7 +352,7 @@ End If
 </tr>
 <tr>
 	<td class="FieldLabelLeft"><label for="Email"><%=TXT_EMAIL%></label> <span class="Alert">*</span></td>
-	<td><input name="Email" id="Email" type="text" size="50" maxlength="60" value=<%=AttrQs(strEmail)%> autocomplete="off"></td>
+	<td><input name="Email" id="Email" type="text" size="50" maxlength="100" value=<%=AttrQs(strEmail)%> autocomplete="off"></td>
 </tr>
 <tr>
 	<td class="FieldLabelLeft"><%=TXT_SAVED_SEARCH%></td>

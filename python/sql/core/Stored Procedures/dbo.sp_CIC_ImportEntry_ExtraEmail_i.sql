@@ -8,19 +8,12 @@ CREATE PROCEDURE [dbo].[sp_CIC_ImportEntry_ExtraEmail_i]
 	@HAS_ENGLISH bit,
 	@HAS_FRENCH bit,
 	@ExtraEmailType varchar(100),
-	@ExtraEmailEn varchar(60),
-	@ExtraEmailFr varchar(60),
+	@ExtraEmailEn varchar(100),
+	@ExtraEmailFr varchar(100),
 	@FieldID int OUTPUT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 04-Apr-2012
-	Action: NO ACTION REQUIRED
-*/
 
 SET @ExtraEmailEn = RTRIM(LTRIM(@ExtraEmailEn))
 IF @ExtraEmailEn = '' SET @ExtraEmailEn = NULL

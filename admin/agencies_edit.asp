@@ -292,7 +292,7 @@ End If
 		<div class="form-group row">
 			<label for="UpdateEmailCIC" class="control-label col-sm-3"><%=TXT_UPDATE_EMAIL%><%If intGBLCount > 0 Then%> <span class="Alert">*</span><%End If%></label>
 			<div class="col-sm-9">
-				<input type="text" name="UpdateEmailCIC" id="UpdateEmailCIC" value=<%=AttrQs(strUpdateEmailCIC)%> maxlength="60" class="form-control">
+				<input type="text" name="UpdateEmailCIC" id="UpdateEmailCIC" value=<%=AttrQs(strUpdateEmailCIC)%> maxlength="100" class="form-control">
 			</div>
 		</div>
 		<div class="form-group row">
@@ -340,7 +340,7 @@ End If
 		<div class="form-group row">
 			<label for="UpdateEmailVOL" class="control-label col-sm-3"><%=TXT_UPDATE_EMAIL%><%If intVOLCount > 0 Then%> <span class="Alert">*</span><%End If%></label>
 			<div class="col-sm-9">
-				<input type="text" name="UpdateEmailVOL" id="UpdateEmailVOL" value=<%=AttrQs(strUpdateEmailVOL)%> maxlength="60" class="form-control">
+				<input type="text" name="UpdateEmailVOL" id="UpdateEmailVOL" value=<%=AttrQs(strUpdateEmailVOL)%> maxlength="100" class="form-control">
 			</div>
 		</div>
 		<div class="form-group row">
@@ -394,7 +394,7 @@ End If
 		<div class="form-group row">
 			<label for="UpdateAccountEmail" class="control-label col-sm-3"><%=TXT_UPDATE_EMAIL & TXT_COLON%></label>
 			<div class="col-sm-9">
-				<input type="text" id="UpdateAccountEmail" name="UpdateAccountEmail" value=<%=AttrQs(strUpdateAccountEmail)%> maxlength="60" class="form-control">
+				<input type="text" id="UpdateAccountEmail" name="UpdateAccountEmail" value=<%=AttrQs(strUpdateAccountEmail)%> maxlength="100" class="form-control">
 			</div>
 		</div>
 		<div class="form-group row">

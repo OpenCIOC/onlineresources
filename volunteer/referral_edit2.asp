@@ -209,7 +209,7 @@ Else
 			.Parameters.Append .CreateParameter("@ProfileID", adGUID, adParamInput, 16, Null)
 			.Parameters.Append .CreateParameter("@VolunteerName", adVarWChar, adParamInput, 100, strVolunteerName)
 			.Parameters.Append .CreateParameter("@VolunteerPhone", adVarWChar, adParamInput, 100, strVolunteerPhone)
-			.Parameters.Append .CreateParameter("@VolunteerEmail", adVarChar, adParamInput, 60, strVolunteerEmail)
+			.Parameters.Append .CreateParameter("@VolunteerEmail", adVarChar, adParamInput, 100, strVolunteerEmail)
 			.Parameters.Append .CreateParameter("@VolunteerAddress", adVarWChar, adParamInput, 100, strVolunteerAddress)
 			.Parameters.Append .CreateParameter("@VolunteerCity", adVarWChar, adParamInput, 100, strVolunteerCity)
 			.Parameters.Append .CreateParameter("@VolunteerPostalCode", adVarChar, adParamInput, 100, strVolunteerPostalCode)

@@ -294,7 +294,7 @@ End If
 	<td><input type="text" name="VolunteerName" id="VolunteerName" size="<%=TEXT_SIZE%>" maxlength="100" value=<%=AttrQs(strVolunteerName)%>></td></tr>
 <tr>
 	<td class="FieldLabelLeft"><label for="VolunteerEmail"><%=TXT_EMAIL%></label></td>
-	<td><input type="text" name="VolunteerEmail" id="VolunteerEmail" size="<%=TEXT_SIZE%>" maxlength="60" value=<%=AttrQs(strVolunteerEmail)%>></td>
+	<td><input type="text" name="VolunteerEmail" id="VolunteerEmail" size="<%=TEXT_SIZE%>" maxlength="100" value=<%=AttrQs(strVolunteerEmail)%>></td>
 </tr>
 <tr>
 	<td class="FieldLabelLeft"><label for="VolunteerPhone"><%=TXT_PHONE%></label></td>

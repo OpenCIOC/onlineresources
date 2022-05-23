@@ -41,9 +41,9 @@ class SocialMediaBaseSchema(Schema):
 
 	Active = validators.Bool()
 	DefaultName = ciocvalidators.UnicodeString(max=100, not_empty=True)
-	IconURL16 = ciocvalidators.URLWithProto(max=200, not_empty=True)
-	IconURL24 = ciocvalidators.URLWithProto(max=200, not_empty=True)
-	GeneralURL = ciocvalidators.UnicodeString(max=200)
+	IconURL16 = ciocvalidators.URLWithProto(max=255, not_empty=True)
+	IconURL24 = ciocvalidators.URLWithProto(max=255, not_empty=True)
+	GeneralURL = ciocvalidators.UnicodeString(max=255)
 
 socialmedia_fields = ['DefaultName', 'GeneralURL', 'IconURL16', 'IconURL24', 'Active']
 

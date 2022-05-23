@@ -7,19 +7,12 @@ CREATE PROCEDURE [dbo].[sp_GBL_DownloadURL_i]
 	@MODIFIED_BY varchar(50),
 	@MemberID [int],
 	@Domain tinyint,
-	@ResourceURL varchar(150),
+	@ResourceURL varchar(255),
 	@ResourceNames xml,
 	@ErrMsg nvarchar(500) OUTPUT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 13-Jan-2012
-	Action: NO ACTION REQUIRED
-*/
 
 DECLARE	@Error	int
 SET @Error = 0

@@ -447,7 +447,7 @@ End If
 <table class="BasicBorder cell-padding-3 form-table responsive-table">
 <%
 	Call printRow("SOURCE_NAME",TXT_YOUR & TXT_NAME, makeTextFieldVal("SOURCE_NAME", strSourceName, 60, False), False,False,False,True,False,False, False)
-	Call printRow("SOURCE_EMAIL",TXT_YOUR & TXT_EMAIL, makeTextFieldVal("SOURCE_EMAIL", strSourceEmail, 60, False), False,False,False,True,False,False, False)
+	Call printRow("SOURCE_EMAIL",TXT_YOUR & TXT_EMAIL, makeTextFieldVal("SOURCE_EMAIL", strSourceEmail, 100, False), False,False,False,True,False,False, False)
 	Call printRow("SOURCE_PHONE",TXT_YOUR & TXT_PHONE, makeTextFieldVal("SOURCE_PHONE", strSourcePhone, 60, False), False,False,False,True,False,False, False)
 %>
 </table>

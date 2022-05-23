@@ -121,7 +121,7 @@ Function makeContactFieldVal(strContactType)
 		"</tr>" & vbCrLf & _
 		"<tr>" & vbCrLf & _
 		"	<td class=""FieldLabelLeftClr"">" & TXT_TITLE & "</td>" & vbCrLf & _
-		"	<td><input type=""text"" id=""" & strContactType & "_TITLE"" name=""" & strContactType & "_TITLE"" size=""70"" maxlength=""100""></td>" & vbCrLf & _
+		"	<td><input type=""text"" id=""" & strContactType & "_TITLE"" name=""" & strContactType & "_TITLE"" size=""70"" maxlength=""255""></td>" & vbCrLf & _
 		"</tr>"	& vbCrLf & _
 		"<tr>" & vbCrLf & _
 		"	<td class=""FieldLabelLeftClr"">" & TXT_ORGANIZATION & "</td>" & vbCrLf & _
@@ -129,7 +129,7 @@ Function makeContactFieldVal(strContactType)
 		"</tr>" & vbCrLf & _
 		"<tr>" & vbCrLf & _
 		"	<td class=""FieldLabelLeftClr"">" & TXT_EMAIL & "</td>" & vbCrLf & _
-		"	<td><input type=""text"" id=""" & strContactType & "_EMAIL"" name=""" & strContactType & "_EMAIL"" size=""70"" maxlength=""60""></td>" & vbCrLf & _
+		"	<td><input type=""text"" id=""" & strContactType & "_EMAIL"" name=""" & strContactType & "_EMAIL"" size=""70"" maxlength=""100""></td>" & vbCrLf & _
 		"</tr>" & vbCrLf & _
 		"<tr valign=""top"">" & vbCrLf & _
 		"	<td class=""FieldLabelLeftClr"">" & TXT_FAX & "</td>" & vbCrLf & _

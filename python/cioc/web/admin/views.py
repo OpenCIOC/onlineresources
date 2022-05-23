@@ -236,7 +236,7 @@ class ViewDescriptionSchema(Schema):
 	KeywordSearchTitle = ciocvalidators.UnicodeString(max=100)
 	KeywordSearchGlyph = ciocvalidators.String(max=30)
 
-	TermsOfUseURL = ciocvalidators.URLWithProto(max=200)
+	TermsOfUseURL = ciocvalidators.URLWithProto(max=255)
 	InclusionPolicy = ciocvalidators.IDValidator()
 	SearchTips = ciocvalidators.IDValidator()
 	SearchPromptOverride = ciocvalidators.UnicodeString(max=255)

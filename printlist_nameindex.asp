@@ -167,7 +167,7 @@ strLimit = StringIf(Not Nl(strWhereClause),AND_CON & "(" & strWhereClause & ")")
 
 If bIncEmail Then
 	strReturn = strReturn & ", " & vbCrLf & _
-			"E_MAIL varchar(60) COLLATE Latin1_General_100_CI_AI"
+			"E_MAIL varchar(100) COLLATE Latin1_General_100_CI_AI"
 End If
 If bIncOffice Then
 	strReturn = strReturn & ", " & vbCrLf & _

@@ -8,12 +8,12 @@ CREATE TABLE [dbo].[CIC_BaseTable_Description]
 [MODIFIED_DATE] [smalldatetime] NULL CONSTRAINT [DF_CIC_BaseTable_Description_MODIFIED_DATE] DEFAULT (getdate()),
 [MODIFIED_BY] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
 [ACTIVITY_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[AFTER_HRS_PHONE] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[AFTER_HRS_PHONE] [nvarchar] (1000) COLLATE Latin1_General_100_CI_AI NULL,
 [APPLICATION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [AREAS_SERVED_NOTES] [nvarchar] (4000) COLLATE Latin1_General_100_CI_AI NULL,
 [BOUNDARIES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [COMMENTS] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[CRISIS_PHONE] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[CRISIS_PHONE] [nvarchar] (1000) COLLATE Latin1_General_100_CI_AI NULL,
 [DATES] [nvarchar] (4000) COLLATE Latin1_General_100_CI_AI NULL,
 [ELIGIBILITY_NOTES] [nvarchar] (4000) COLLATE Latin1_General_100_CI_AI NULL,
 [ELECTIONS] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
@@ -24,8 +24,8 @@ CREATE TABLE [dbo].[CIC_BaseTable_Description]
 [HOURS] [nvarchar] (4000) COLLATE Latin1_General_100_CI_AI NULL,
 [INTERSECTION] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [LANGUAGE_NOTES] [nvarchar] (4000) COLLATE Latin1_General_100_CI_AI NULL,
-[LOGO_ADDRESS] [varchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
-[LOGO_ADDRESS_LINK] [varchar] (200) COLLATE Latin1_General_100_CS_AS NULL,
+[LOGO_ADDRESS] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[LOGO_ADDRESS_LINK] [varchar] (255) COLLATE Latin1_General_100_CS_AS NULL,
 [MEETINGS] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [MEMBERSHIP_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [PUBLIC_COMMENTS] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -33,7 +33,7 @@ CREATE TABLE [dbo].[CIC_BaseTable_Description]
 [RESOURCES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SITE_LOCATION] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [SUP_DESCRIPTION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[TDD_PHONE] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[TDD_PHONE] [nvarchar] (1000) COLLATE Latin1_General_100_CI_AI NULL,
 [TRANSPORTATION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [VACANCY_NOTES] [nvarchar] (4000) COLLATE Latin1_General_100_CI_AI NULL,
 [BUS_ROUTE_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -59,7 +59,7 @@ CREATE TABLE [dbo].[CIC_BaseTable_Description]
 [LOGO_ADDRESS_HOVER_TEXT] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
 [LOGO_ADDRESS_ALT_TEXT] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [AREAS_SERVED_ONLY_DISPLAY_NOTES] [bit] NOT NULL CONSTRAINT [DF_CIC_BaseTable_Description_AREAS_SERVED_DISPLAY_ONLY_NOTES] DEFAULT ((0))
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -208,9 +208,9 @@ END
 
 SET NOCOUNT OFF
 GO
-ALTER TABLE [dbo].[CIC_BaseTable_Description] ADD CONSTRAINT [PK_CIC_BaseTable_Description] PRIMARY KEY CLUSTERED  ([CBTD_ID]) ON [PRIMARY]
+ALTER TABLE [dbo].[CIC_BaseTable_Description] ADD CONSTRAINT [PK_CIC_BaseTable_Description] PRIMARY KEY CLUSTERED ([CBTD_ID]) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[CIC_BaseTable_Description] ADD CONSTRAINT [IX_CIC_BaseTable_Description] UNIQUE NONCLUSTERED  ([NUM], [LangID]) ON [PRIMARY]
+ALTER TABLE [dbo].[CIC_BaseTable_Description] ADD CONSTRAINT [IX_CIC_BaseTable_Description] UNIQUE NONCLUSTERED ([NUM], [LangID]) ON [PRIMARY]
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [IX_CIC_BaseTable_Description_NUMLangIDCBTDIDinclCOMMENTS] ON [dbo].[CIC_BaseTable_Description] ([NUM], [LangID], [CBTD_ID]) INCLUDE ([COMMENTS]) ON [PRIMARY]
 GO
@@ -228,7 +228,7 @@ GRANT SELECT ON  [dbo].[CIC_BaseTable_Description] TO [cioc_login_role]
 GO
 GRANT UPDATE ON  [dbo].[CIC_BaseTable_Description] TO [cioc_login_role]
 GO
-CREATE FULLTEXT INDEX ON [dbo].[CIC_BaseTable_Description] KEY INDEX [PK_CIC_BaseTable_Description] ON [GBLRecord] WITH STOPLIST [CIOC_DEFAULT_STOPLIST]
+CREATE FULLTEXT INDEX ON [dbo].[CIC_BaseTable_Description] KEY INDEX [PK_CIC_BaseTable_Description] ON [GBLRecord]
 GO
 ALTER FULLTEXT INDEX ON [dbo].[CIC_BaseTable_Description] ADD ([CMP_Languages] LANGUAGE 1033)
 GO

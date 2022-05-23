@@ -7,10 +7,10 @@ CREATE PROCEDURE [dbo].[sp_GBL_Users_u_MyAccount]
 	@User_ID int,
 	@MODIFIED_BY varchar(50),
 	@MemberID int,
-	@FirstName varchar(50),
-	@LastName varchar(50),
-	@Initials varchar(6),
-	@Email varchar(60),
+	@FirstName varchar(60),
+	@LastName varchar(100),
+	@Initials varchar(10),
+	@Email varchar(100),
 	@StartModule tinyint,
 	@StartLanguage smallint,
 	@PasswordHash varchar(44),
@@ -20,13 +20,6 @@ CREATE PROCEDURE [dbo].[sp_GBL_Users_u_MyAccount]
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.5.1
-	Checked by: KL
-	Checked on: 18-Mar-2013
-	Action:	NO ACTION REQUIRED
-*/
 
 DECLARE	@Error	int
 SET @Error = 0

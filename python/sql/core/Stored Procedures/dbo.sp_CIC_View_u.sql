@@ -88,7 +88,7 @@ CREATE PROCEDURE [dbo].[sp_CIC_View_u]
 	@UseThesaurusView BIT,
 	@UseLocalSubjects BIT,
 	@UseZeroSubjects BIT,
-	@AlsoNotify VARCHAR(60),
+	@AlsoNotify VARCHAR(100),
 	@NoProcessNotify BIT,
 	@UseSubmitChangesTo BIT,
 	@MapSearchResults BIT,
@@ -132,12 +132,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.7.4
-	Checked by: KL
-	Checked on: 04-May-2016
-	Action:	NO ACTION REQUIRED
-*/
 
 DECLARE	@Error		int
 SET @Error = 0
@@ -173,7 +167,7 @@ DECLARE @DescTable table (
 	CSrchText nvarchar(255) NULL,
 	QuickListName nvarchar(25) NULL,
 	FeedbackBlurb nvarchar(MAX) NULL,
-	TermsOfUseURL varchar(200) NULL,
+	TermsOfUseURL varchar(255) NULL,
 	InclusionPolicy int NULL,
 	SearchTips int NULL,
 	SearchLeftTitle nvarchar(100) NULL,
@@ -303,7 +297,7 @@ SELECT
 	N.value('CSrchText[1]', 'nvarchar(255)') AS CSrchText,
 	N.value('QuickListName[1]', 'nvarchar(25)') AS QuickListName,
 	N.value('FeedbackBlurb[1]', 'nvarchar(2000)') AS FeedbackBlurb,
-	N.value('TermsOfUseURL[1]', 'varchar(200)') AS TermsOfUseURL,
+	N.value('TermsOfUseURL[1]', 'varchar(255)') AS TermsOfUseURL,
 	(SELECT InclusionPolicyID FROM GBL_InclusionPolicy WHERE MemberID=@MemberID AND InclusionPolicyID=N.value('InclusionPolicy[1]', 'int')) AS InclusionPolicy,
 	(SELECT SearchTipsID
 		FROM GBL_SearchTips

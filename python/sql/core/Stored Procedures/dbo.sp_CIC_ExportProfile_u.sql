@@ -7,7 +7,7 @@ CREATE PROCEDURE [dbo].[sp_CIC_ExportProfile_u]
 	@ProfileID [int],
 	@MODIFIED_BY [varchar](50),
 	@MemberID [int],
-	@SubmitChangesToAccessURL [varchar](200),
+	@SubmitChangesToAccessURL [varchar](255),
 	@IncludePrivacyProfiles [bit],
 	@ConvertLine1Line2Addresses [BIT],
 	@InViews [varchar](max),
@@ -16,13 +16,6 @@ CREATE PROCEDURE [dbo].[sp_CIC_ExportProfile_u]
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 06-Apr-2012
-	Action:	NO ACTION REQUIRED
-*/
 
 DECLARE	@Error int
 SET @Error = 0
@@ -46,7 +39,7 @@ DECLARE @DescTable TABLE (
 	LangID smallint NULL,
 	Name nvarchar(100) NULL,
 	SourceDbName nvarchar(255) NULL,
-	SourceDbURL varchar(200) NULL
+	SourceDbURL varchar(255) NULL
 )
 
 DECLARE @UsedNames nvarchar(max),
@@ -64,7 +57,7 @@ SELECT
 	(SELECT LangID FROM STP_Language sl WHERE sl.Culture = N.value('Culture[1]', 'varchar(5)') AND Active=1) AS LangID,
 	N.value('Name[1]', 'nvarchar(100)') AS Name,	
 	N.value('SourceDbName[1]', 'nvarchar(255)') AS SourceDbName,
-	N.value('SourceDbURL[1]', 'nvarchar(200)') AS SourceDbURL
+	N.value('SourceDbURL[1]', 'nvarchar(255)') AS SourceDbURL
 FROM @Descriptions.nodes('//DESC') as T(N)
 
 UPDATE @DescTable

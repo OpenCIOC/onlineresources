@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -8,22 +7,15 @@ CREATE PROCEDURE [dbo].[sp_GBL_SocialMedia_u]
 	@SM_ID [int] OUTPUT,
 	@MODIFIED_BY [varchar](50),
 	@DefaultName [nvarchar](100),
-	@GeneralURL [varchar](200),
-	@IconURL16 varchar(200),
-	@IconURL24 varchar(200),
+	@GeneralURL [varchar](255),
+	@IconURL16 varchar(255),
+	@IconURL24 varchar(255),
 	@Active [bit],
 	@Descriptions [xml],
 	@ErrMsg [nvarchar](500) OUTPUT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 12-May-2012
-	Action: NO ACTION REQUIRED
-*/
 
 DECLARE	@Error		int
 SET @Error = 0

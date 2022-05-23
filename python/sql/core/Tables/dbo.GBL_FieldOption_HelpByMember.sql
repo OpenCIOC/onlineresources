@@ -7,10 +7,12 @@ CREATE TABLE [dbo].[GBL_FieldOption_HelpByMember]
 [CREATED_BY] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
 [MODIFIED_DATE] [smalldatetime] NULL CONSTRAINT [DF_GBL_FieldOption_HelpByMember_MODIFIED_DATE] DEFAULT (getdate()),
 [MODIFIED_BY] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
-[HelpText] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NOT NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+[HelpText] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NOT NULL,
+[QuickHelpPublic] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[QuickHelpStaff] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[GBL_FieldOption_HelpByMember] ADD CONSTRAINT [PK_GBL_FieldOption_HelpByMember] PRIMARY KEY CLUSTERED  ([FieldID], [LangID], [MemberID]) ON [PRIMARY]
+ALTER TABLE [dbo].[GBL_FieldOption_HelpByMember] ADD CONSTRAINT [PK_GBL_FieldOption_HelpByMember] PRIMARY KEY CLUSTERED ([FieldID], [LangID], [MemberID]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[GBL_FieldOption_HelpByMember] ADD CONSTRAINT [FK_GBL_FieldOption_HelpByMember_GBL_FieldOption_Description] FOREIGN KEY ([FieldID], [LangID]) REFERENCES [dbo].[GBL_FieldOption_Description] ([FieldID], [LangID]) ON DELETE CASCADE ON UPDATE CASCADE
 GO

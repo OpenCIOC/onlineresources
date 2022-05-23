@@ -3,8 +3,8 @@ GO
 SET ANSI_NULLS ON
 GO
 CREATE FUNCTION [dbo].[fn_GBL_Link_ImageWithProtocol](
-	@ImgURL [varchar](200),
-	@ImgLink [varchar](200),
+	@ImgURL [varchar](255),
+	@ImgLink [varchar](255),
 	@ImgID [VARCHAR](50),
 	@ImgClass [varchar](50),
 	@ImgURLProtocol varchar(8),
@@ -12,10 +12,10 @@ CREATE FUNCTION [dbo].[fn_GBL_Link_ImageWithProtocol](
 	@ImgHoverText NVARCHAR(500),
 	@ImgAltText NVARCHAR(255)
 )
-RETURNS [varchar](500) WITH EXECUTE AS CALLER
+RETURNS [nvarchar](1000) WITH EXECUTE AS CALLER
 AS 
 BEGIN 
-DECLARE @returnStr varchar(500)
+DECLARE @returnStr nvarchar(1000)
 
 IF @ImgURL IS NULL BEGIN
 	SET @returnStr = NULL

@@ -8,14 +8,14 @@ CREATE TABLE [dbo].[VOL_OP_Referral]
 [MemberID] [int] NOT NULL,
 [VNUM] [varchar] (10) COLLATE Latin1_General_100_CI_AI NOT NULL,
 [ViewType] [int] NULL,
-[AccessURL] [varchar] (160) COLLATE Latin1_General_100_CI_AI NULL,
+[AccessURL] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [LangID] [smallint] NOT NULL CONSTRAINT [DF_VOL_OP_Referral_LangID] DEFAULT ((0)),
 [ReferralDate] [smalldatetime] NOT NULL CONSTRAINT [DF_VOL_Referral_ReferralDate] DEFAULT (getdate()),
 [FollowUpFlag] [bit] NOT NULL CONSTRAINT [DF_VOL_OP_Referral_FollowUpFlag] DEFAULT ((0)),
 [ProfileID] [uniqueidentifier] NULL,
 [VolunteerName] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NOT NULL,
 [VolunteerPhone] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[VolunteerEmail] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[VolunteerEmail] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [VolunteerAddress] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [VolunteerCity] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [VolunteerPostalCode] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
@@ -34,7 +34,7 @@ CREATE TABLE [dbo].[VOL_OP_Referral]
 GO
 ALTER TABLE [dbo].[VOL_OP_Referral] WITH NOCHECK ADD CONSTRAINT [CK_VOL_OP_Referral_ContactRequired] CHECK ((NOT ([VolunteerPhone] IS NULL AND [VolunteerEmail] IS NULL AND [VolunteerAddress] IS NULL)))
 GO
-ALTER TABLE [dbo].[VOL_OP_Referral] ADD CONSTRAINT [PK_VOL_Referral] PRIMARY KEY CLUSTERED  ([REF_ID]) ON [PRIMARY]
+ALTER TABLE [dbo].[VOL_OP_Referral] ADD CONSTRAINT [PK_VOL_Referral] PRIMARY KEY CLUSTERED ([REF_ID]) ON [PRIMARY]
 GO
 CREATE NONCLUSTERED INDEX [IX_VOL_Referral] ON [dbo].[VOL_OP_Referral] ([VNUM]) ON [PRIMARY]
 GO

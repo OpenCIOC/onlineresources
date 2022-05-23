@@ -8,13 +8,13 @@ CREATE TABLE [dbo].[GBL_Template_Layout_Description]
 [MODIFIED_BY] [varchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
 [LayoutName] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NOT NULL,
 [LayoutHTML] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[LayoutHTMLURL] [varchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
+[LayoutHTMLURL] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [SystemLayoutCode] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[GBL_Template_Layout_Description] ADD CONSTRAINT [PK_GBL_Template_Layout_Description] PRIMARY KEY CLUSTERED  ([LayoutID], [LangID]) ON [PRIMARY]
-GO
-ALTER TABLE [dbo].[GBL_Template_Layout_Description] ADD CONSTRAINT [FK_GBL_Template_Layout_Description_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
+ALTER TABLE [dbo].[GBL_Template_Layout_Description] ADD CONSTRAINT [PK_GBL_Template_Layout_Description] PRIMARY KEY CLUSTERED ([LayoutID], [LangID]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[GBL_Template_Layout_Description] ADD CONSTRAINT [FK_GBL_Template_Layout_Description_GBL_Template_Layout] FOREIGN KEY ([LayoutID]) REFERENCES [dbo].[GBL_Template_Layout] ([LayoutID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[GBL_Template_Layout_Description] ADD CONSTRAINT [FK_GBL_Template_Layout_Description_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
 GO

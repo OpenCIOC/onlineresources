@@ -121,7 +121,7 @@ ${self.makeMgmtInfo(template)}
 <tr>
 	<td class="field-label-cell">${renderer.label("descriptions." + lang.FormCulture + ".LogoAltText", _('Logo Alt Text') + " (" + lang.LanguageName + ")")}</td>
 	<td class="field-data-cell">${renderer.errorlist("descriptions." + lang.FormCulture + ".LogoAltText")}
-	${renderer.text("descriptions." + lang.FormCulture + ".LogoAltText", maxlength=200, class_="form-control")}</td>
+	${renderer.text("descriptions." + lang.FormCulture + ".LogoAltText", maxlength=255, class_="form-control")}</td>
 
 </tr>
 %endfor
@@ -675,7 +675,7 @@ ${colour_set('Info',_('Info'))}
 			${renderer.checkbox(prefix + '.delete', title=_('Delete Menu Item'))}
 		</td>
 		<td>${renderer.errorlist(prefix + '.Link')}${renderer.text(prefix + '.Link', maxlength=150, title=_('Link Location'), class_="form-control")}</td>
-		<td>${renderer.errorlist(prefix + '.Display')}${renderer.text(prefix + '.Display', maxlength=200, title=_('Display Text'), class_="form-control")}</td>
+		<td>${renderer.errorlist(prefix + '.Display')}${renderer.text(prefix + '.Display', maxlength=255, title=_('Display Text'), class_="form-control")}</td>
 		<td>${renderer.errorlist(prefix + '.MenuGroup')}${renderer.select(prefix + '.MenuGroup', options=[('',''), '1', '2', '3'], class_="form-control")}</td>
 		<td><div class="ui-state-default ui-corner-all drag-handle"><span class="ui-icon ui-icon-arrow-2-n-s">${_('Drag to Re-Order Items')}</span></div></td>
 	</tr>

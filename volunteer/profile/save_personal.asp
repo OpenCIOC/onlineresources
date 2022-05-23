@@ -197,7 +197,7 @@ If Nl(strErrorList) And Not bNew And Not Nl(strCurPW) Then
 		.CommandType = adCmdStoredProc
 		.CommandTimeout = 0
 		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
-		.Parameters.Append .CreateParameter("@Email", adVarChar, adParamInput, 60, vprofile_strEmail)
+		.Parameters.Append .CreateParameter("@Email", adVarChar, adParamInput, 100, vprofile_strEmail)
 	End With
 
 
@@ -250,7 +250,7 @@ Else
 			Set objProfileID = .CreateParameter("@ProfileID", adGUID, adParamInput, 16, vprofile_strID)
 		End If
 		.Parameters.Append objProfileID
-		.Parameters.Append .CreateParameter("@Email", adVarChar, adParamInput, 60, strEmail)
+		.Parameters.Append .CreateParameter("@Email", adVarChar, adParamInput, 100, strEmail)
 		.Parameters.Append .CreateParameter("@PasswordHash", adVarChar, adParamInput, 44, strHash)
 		.Parameters.Append .CreateParameter("@PasswordHashSalt", adVarChar, adParamInput, 44, strSalt)
 		.Parameters.Append .CreateParameter("@PasswordHashRepeat", adInteger, adParamInput, 4, intHashRepeat)
@@ -265,7 +265,7 @@ Else
 		.Parameters.Append .CreateParameter("@OrgCanContact", adBoolean, adParamInput, 1, IIf(bOrgCanContact,SQL_TRUE,SQL_FALSE))
 		.Parameters.Append .CreateParameter("@AgreedToPrivacyPolicy", adBoolean, adParamInput, 1, IIf(bAgreedToPrivacyPolicy,SQL_TRUE,SQL_FALSE))
 		.Parameters.Append .CreateParameter("@ConfirmationToken", adChar, adParamInput, 32, strConfirmationToken)
-		Set objFromEmail = .CreateParameter("@FromEmail", adVarChar, adParamOutput, 60)
+		Set objFromEmail = .CreateParameter("@FromEmail", adVarChar, adParamOutput, 100)
 		.Parameters.Append objFromEmail
 		Set objErrMsg = .CreateParameter("@ErrMsg", adVarWChar, adParamOutput, 500)
 		.Parameters.Append objErrMsg

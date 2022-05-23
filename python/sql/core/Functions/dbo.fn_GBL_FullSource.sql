@@ -4,11 +4,11 @@ SET ANSI_NULLS ON
 GO
 CREATE FUNCTION [dbo].[fn_GBL_FullSource](
 	@Name nvarchar(100),
-	@Title nvarchar(100),
+	@Title nvarchar(255),
 	@Org nvarchar(100),
 	@Phone nvarchar(100),
 	@Fax nvarchar(100),
-	@Email varchar(60),
+	@Email varchar(100),
 	@Building nvarchar(100),
 	@Address nvarchar(150),
 	@City nvarchar(100),

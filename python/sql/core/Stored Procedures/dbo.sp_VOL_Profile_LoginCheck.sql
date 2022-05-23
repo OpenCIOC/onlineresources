@@ -5,22 +5,13 @@ GO
 
 CREATE PROCEDURE [dbo].[sp_VOL_Profile_LoginCheck]
 	@MemberID int,
-	@Email [varchar](60)
+	@Email [varchar](100)
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.5
-	Checked by: CL
-	Checked on: 26-Jul-2012
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE	@Error int
 SET @Error = 0
-
-
 
 SELECT l.Culture AS StartCulture, Password, PasswordHashRepeat, PasswordHashSalt, PasswordHash, vp.Active, vp.Blocked
 FROM VOL_Profile vp

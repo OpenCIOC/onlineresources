@@ -40,8 +40,8 @@ CREATE TABLE [dbo].[GBL_BaseTable_Description]
 [LOCATION_DESCRIPTION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [DESCRIPTION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [ESTABLISHED] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
-[E_MAIL] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
-[FAX] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[E_MAIL] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
+[FAX] [nvarchar] (1000) COLLATE Latin1_General_100_CI_AI NULL,
 [GEOCODE_NOTES] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [MAIL_CARE_OF] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [MAIL_BOX_TYPE] [nvarchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
@@ -68,20 +68,20 @@ CREATE TABLE [dbo].[GBL_BaseTable_Description]
 [SITE_CITY] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SITE_PROVINCE] [varchar] (2) COLLATE Latin1_General_100_CI_AI NULL,
 [SITE_COUNTRY] [nvarchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
-[WWW_ADDRESS] [nvarchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
+[WWW_ADDRESS] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_NAME] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[SOURCE_TITLE] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
+[SOURCE_TITLE] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_ORG] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_PHONE] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_FAX] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[SOURCE_EMAIL] [varchar] (60) COLLATE Latin1_General_100_CI_AI NULL,
+[SOURCE_EMAIL] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_BUILDING] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_ADDRESS] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_CITY] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_PROVINCE] [nvarchar] (2) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_POSTAL_CODE] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
 [SOURCE_DB] [nvarchar] (1000) COLLATE Latin1_General_100_CI_AI NULL,
-[SUBMIT_CHANGES_TO] [varchar] (160) COLLATE Latin1_General_100_CI_AI NULL,
+[SUBMIT_CHANGES_TO] [varchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [CMP_Accessibility] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [CMP_AltOrg] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [CMP_CrossRef] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
@@ -555,7 +555,7 @@ GRANT UPDATE ON  [dbo].[GBL_BaseTable_Description] TO [cioc_login_role]
 GO
 GRANT SELECT ON  [dbo].[GBL_BaseTable_Description] TO [cioc_vol_search_role]
 GO
-CREATE FULLTEXT INDEX ON [dbo].[GBL_BaseTable_Description] KEY INDEX [PK_GBL_BaseTable_Description] ON [GBLRecord] WITH STOPLIST [CIOC_DEFAULT_STOPLIST]
+CREATE FULLTEXT INDEX ON [dbo].[GBL_BaseTable_Description] KEY INDEX [PK_GBL_BaseTable_Description] ON [GBLRecord]
 GO
 ALTER FULLTEXT INDEX ON [dbo].[GBL_BaseTable_Description] ADD ([ORG_LEVEL_1] LANGUAGE 0)
 GO

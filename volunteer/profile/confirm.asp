@@ -82,7 +82,7 @@ If Nl(strError) Then
 		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
 		.Parameters.Append .CreateParameter("@ProfileID", adGUID, adParamInput, 16, strProfileID)
 		.Parameters.Append .CreateParameter("@ConfirmationToken", adChar, adParamInput, 32, strConfirmationToken)
-		Set objEmail = .CreateParameter("@FromEmail", adVarChar, adParamOutput, 60)
+		Set objEmail = .CreateParameter("@FromEmail", adVarChar, adParamOutput, 100)
 		.Parameters.Append objEmail
 		Set objErrMsg = .CreateParameter("@ErrMsg", adVarWChar, adParamOutput, 500)
 		.Parameters.Append objErrMsg

@@ -7,7 +7,7 @@ GO
 
 CREATE PROCEDURE [dbo].[sp_VOL_Profile_u_Unsubscribe]
 	@MemberID [INT],
-	@Email [VARCHAR](60),
+	@Email [VARCHAR](100),
 	@UnsubscribeToken [VARCHAR](36),
 	@ErrMsg [NVARCHAR](500) OUTPUT
 WITH EXECUTE AS CALLER

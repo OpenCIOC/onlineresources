@@ -37,7 +37,7 @@ Sub VOLProfilePersonalForm(bNew, dicBasicInfo)
 		<td>
 			<div class="form-group">
 				<div class="col-sm-12">
-					<input type="text" class="form-control" name="EMail" value=<%=AttrQs(Server.HTMLEncode(dicBasicInfo("Email")))%> maxlength="60">
+					<input type="text" class="form-control" name="EMail" value=<%=AttrQs(Server.HTMLEncode(dicBasicInfo("Email")))%> maxlength="100">
 				</div>
 			</div>
 		</td>

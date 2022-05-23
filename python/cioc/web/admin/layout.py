@@ -49,7 +49,7 @@ class LayoutBaseSchema(Schema):
 
 	AlmostStandardsMode = validators.StringBool(if_empty=False)
 	LayoutCSS = ciocvalidators.UnicodeString()
-	LayoutCSSURL = ciocvalidators.Url(max=200)
+	LayoutCSSURL = ciocvalidators.Url(max=255)
 	UseFontAwesome = validators.Bool()
 	UseFullCIOCBootstrap = validators.Bool()
 
@@ -58,7 +58,7 @@ class LayoutDescriptionSchema(Schema):
 
 	LayoutName = ciocvalidators.UnicodeString(max=150, not_empty=True)
 	LayoutHTML = ciocvalidators.UnicodeString()
-	LayoutHTMLURL = ciocvalidators.Url(max=200)
+	LayoutHTMLURL = ciocvalidators.Url(max=255)
 	chained_validators = [
 		ciocvalidators.RequireIfAny('LayoutName', present=["LayoutHTML", "LayoutHTMLURL"]),
 	]
@@ -374,7 +374,7 @@ class TemplateLayout(viewbase.AdminViewBase):
 		model_state = request.model_state
 
 		model_state.validators = {
-			'url': ciocvalidators.Url(max=200, not_empty=True)
+			'url': ciocvalidators.Url(max=255, not_empty=True)
 		}
 		model_state.method = None
 
