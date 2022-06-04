@@ -106,7 +106,7 @@ Else
 		.Parameters.Append objReturn
 		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
 		.Parameters.Append .CreateParameter("@Email", adVarChar, adParamInput, 60, strEmail)
-		.Parameters.Append .CreateParameter("@UnsubscribeToken", adVarChar, adParamInput, 36, strUnsubscribeToken)
+		.Parameters.Append .CreateParameter("@UnsubscribeToken", adVarChar, adParamInput, 38, strUnsubscribeToken)
 		Set objErrMsg = .CreateParameter("@ErrMsg", adVarWChar, adParamOutput, 500)
 		.Parameters.Append objErrMsg
 	End With
