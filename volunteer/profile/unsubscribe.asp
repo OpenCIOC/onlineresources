@@ -59,7 +59,7 @@ Dim strEmail, _
 	bConfirmed
 
 strEmail = Left(Ns(Trim(Request("email"))), 60)
-strUnsubscribeToken = Left(Ns(Trim(Request("token"))), 36)
+strUnsubscribeToken = Left(Ns(Trim(Request("token"))), 38)
 
 Sub SomethingWentWrong()
 	Call handleError(Replace(TXT_UNSUBSCRIBE_SOMETHING_WENT_WRONG, "[LOGIN_URL]", makeLinkB("login.asp")),vbNullString, vbNullString)
