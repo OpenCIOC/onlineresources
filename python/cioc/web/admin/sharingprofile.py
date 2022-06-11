@@ -20,7 +20,6 @@ from __future__ import absolute_import
 import logging
 import six
 from six.moves import map
-log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
 from datetime import timedelta, date, datetime
@@ -39,13 +38,16 @@ from cioc.core.email import send_email, format_message
 from cioc.core.i18n import gettext, format_date
 from cioc.web.admin.viewbase import AdminViewBase, get_domain
 
+log = logging.getLogger(__name__)
 templateprefix = 'cioc.web.admin:templates/sharingprofile/'
 
-_ = lambda x: x
+def _(x):
+	return x
+
 
 _send_subject = _('A Record Sharing Profile is ready for review.')
 _send_template = _(
-"""\
+	"""\
 Hello,
 
 A member in your CIOC database (%(MemberName)s) has created the Record Sharing
@@ -55,7 +57,7 @@ setup area of your CIOC site to accept it.
 
 _accept_subject = _('A Record Sharing Profile has been accepted.')
 _accept_template = _(
-"""\
+	"""\
 Hello,
 
 Your Record Sharing Profile '%(ProfileName)s' has been accepted by a member
@@ -64,7 +66,7 @@ in your CIOC database (%(MemberName)s).
 
 _revoke_subject = _('A Sharing Profile has been revoked and will end on %(ExpireDate)s.')
 _revoke_template = _(
-"""\
+	"""\
 Hello,
 
 Your Record Sharing Profile called '%(ProfileName)s' has been revoked by a
@@ -74,7 +76,7 @@ will end on %(ExpireDate)s.
 
 _revoke_records_subject = _('Removal of shared records in your database as of %(ExpireDate)s')
 _revoke_records_template = _(
-"""\
+	"""\
 Hello,
 
 Some records in your Sharing Profile called '%(ProfileName)s' have been
@@ -1013,6 +1015,9 @@ class SharingProfile(AdminViewBase):
 	def remove_records(self):
 		request = self.request
 		context = request.context
+		min_date = date.today()
+		if context.addable:
+			min_date = min_date + timedelta(context.profile.RevocationPeriod)
 
 		domain = context.domain
 		validator = {}
@@ -1024,9 +1029,6 @@ class SharingProfile(AdminViewBase):
 			validator['VNUM'] = ciocvalidators.CSVForEach(ciocvalidators.VNumValidator())
 
 		if context.addable or context.partnerreview:
-			min_date = date.today()
-			if context.addable:
-				min_date = min_date + timedelta(context.profile.RevocationPeriod)
 
 			validator['RevocationDate'] = ciocvalidators.DateConverter(not_empty=True, min=min_date)
 
@@ -1104,7 +1106,7 @@ class SharingProfile(AdminViewBase):
 		model_state.form.data[id_name] = request.POST.getall(id_name)
 
 		title = _('Manage Sharing Profiles', request)
-		return self._create_response_namespace(title, title, dict(ProfileID=context.ProfileID, profile=context.profile, domain=domain, records=records, ErrMsg=ErrMsg), no_index=True)
+		return self._create_response_namespace(title, title, dict(ProfileID=context.ProfileID, profile=context.profile, domain=domain, records=records, min_date=min_date, ErrMsg=ErrMsg), no_index=True)
 
 	@view_config(match_param='action=changeemail', renderer=templateprefix + 'changeemail.mak', custom_predicates=[lambda c, r: c.partnerreview])
 	def changeemail(self):
