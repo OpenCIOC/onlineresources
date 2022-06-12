@@ -39,3 +39,4 @@ pyramid_debugtoolbar==2.2
 pdfkit==0.6.1
 libsass==0.21.0
 cryptography==36.0.2
+bleach==5.0.0

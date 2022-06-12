@@ -2,7 +2,7 @@
 'File:			$HeadURL$
 'Last Modified:	$Date$
 'Last Mod By:	$Author$
-'Purpose: 
+'Purpose:
 '
 '=================================================================
 'Copyright (c) 2003-2012 Community Information Online Consortium (CIOC)
@@ -14,6 +14,7 @@
 %>
 
 <script language="python" runat="server">
+from cioc.core.security import sanitize_html_description
 
 def getEventScheduleXML(checkDate, checkInteger, checkID, checkLength, checkAddValidationError):
 	schedules = getEventScheduleValues(checkDate, checkInteger, checkID, checkLength, checkAddValidationError)
@@ -53,11 +54,11 @@ Function addXMLInsertField(bNew, _
 		ByRef strInsertInto, _
 		ByRef strInsertValue, _
 		ByRef xmlNode)
-	
+
 	Dim bReturn
 	bReturn = False
 
-	Dim strOldValue	
+	Dim strOldValue
 
 	If bNew Then
 		If Not Nl(strNewValue) Then
@@ -122,7 +123,7 @@ Function addXMLInsertField(bNew, _
 			End If
 		End If
 	End If
-	
+
 	addXMLInsertField = bReturn
 End Function
 
@@ -132,11 +133,11 @@ Function addBTInsertField(strFldName, _
 		ByRef strUpdateList, _
 		ByRef strInsertInto, _
 		ByRef strInsertValue)
-	
+
 	Dim bReturn
 	bReturn = False
 
-	Dim strOldValue	
+	Dim strOldValue
 
 	'Response.Write("<br>" & strFldName)
 	'Response.Flush()
@@ -208,7 +209,7 @@ Function addBTInsertField(strFldName, _
 			End If
 		End If
 	End If
-	
+
 	addBTInsertField = bReturn
 End Function
 
@@ -224,7 +225,7 @@ Function processXMLStrFldArray(bNew, strContactType, aFields, ByRef strUpdateLis
 			End If
 		Next
 	End If
-	
+
 	processXMLStrFldArray = bReturn
 End Function
 
@@ -240,7 +241,7 @@ Function processStrFldArray(ByRef aFields, ByRef strUpdateList, ByRef strInsertI
 			End If
 		Next
 	End If
-	
+
 	processStrFldArray = bReturn
 End Function
 
@@ -271,7 +272,7 @@ Sub sendNotifyEmails(strID, intFBID, strRecName)
 	Dim strMsgText, _
 		strSender, _
 		strSubject
-	
+
 	Dim cmdFb, rsFb
 	Set cmdFb = Server.CreateObject("ADODB.Command")
 	With cmdFb
@@ -288,7 +289,7 @@ Sub sendNotifyEmails(strID, intFBID, strRecName)
 		.Parameters.Append .CreateParameter("@LangID", adInteger, adParamInput, 2, g_objCurrentLang.LangID)
 		Set rsFb = .Execute
 	End With
-	
+
 	With rsFb
 		If Not .EOF And Not g_bNoEmail Then
 			strSender = strROUpdateEmail & " <" & strROUpdateEmail & ">"
@@ -319,7 +320,7 @@ Sub sendNotifyEmails(strID, intFBID, strRecName)
 					vbCrLf & vbCrLf & _
 					TXT_RECORD_WAS_REVIEWED & _
 					vbCrLf & strDetailLink
-			While Not .EOF 
+			While Not .EOF
 				Call sendEmail(False, strSender, .Fields("SOURCE_EMAIL"), strSubject, strMsgText)
 				.MoveNext
 			Wend
@@ -332,7 +333,7 @@ End Sub
 
 Dim aContactFields, _
 	aContactFieldsValidate
-	
+
 aContactFields = Array("NAME_HONORIFIC", "NAME_FIRST", "NAME_LAST", "NAME_SUFFIX", _
 					"TITLE", "ORG", "EMAIL", _
 					"FAX_NOTE", "FAX_NO", "FAX_EXT", _
@@ -346,28 +347,28 @@ aContactFieldsValidate = Array("NAME_FIRST","NAME_LAST", _
 	"PHONE_1_NOTE","PHONE_1_NO","PHONE_1_EXT","PHONE_1_OPTION", _
 	"PHONE_2_NOTE","PHONE_2_NO","PHONE_2_EXT","PHONE_2_OPTION", _
 	"PHONE_3_NOTE","PHONE_3_NO","PHONE_3_EXT","PHONE_3_OPTION")
-					
+
 Sub getContactFields(strContactType)
 	Dim intContactID, _
 		strUpdateList, _
 		strInsertInto, _
 		strInsertValue
-		
+
 	Dim xmlDoc, xmlNode
-	
+
 	Set xmlDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
 	With xmlDoc
 		.async = False
 		.setProperty "SelectionLanguage", "XPath"
 	End With
-	
+
 	If Not bNew Then
 		xmlDoc.loadXML Nz(rsOrg(strContactType).Value,"<CONTACT/>")
 	Else
 		xmlDoc.loadXML "<CONTACT/>"
 	End If
 	Set xmlNode = xmlDoc.selectSingleNode("/CONTACT")
-	
+
 	intContactID = xmlNode.getAttribute("ContactID")
 
 	Call checkEmail(fldDisplay.Value & " " & TXT_EMAIL,Trim(Request(strContactType & "_EMAIL")))
@@ -377,9 +378,9 @@ Sub getContactFields(strContactType)
 			strContactType, _
 			aContactFields, _
 			strUpdateList,strInsertInto,strInsertValue,xmlNode) Then
-			
+
 			Call addChangeField(fldName.Value, g_objCurrentLang.LangID)
-			
+
 			Dim indValidateField, bHasContent
 			bHasContent = False
 			For Each indValidateField in aContactFieldsValidate
@@ -403,7 +404,7 @@ Sub getContactFields(strContactType)
 				ElseIf Not bHasContent Then
 					If ps_intDbArea = DM_VOL Then
 						strExtraSQL = strExtraSQL & vbCrLf & _
-							"DELETE GBL_Contact WHERE VolContactType=" & QsNl(strContactType) & " AND VolVNUM=@VNUM AND LangID=@@LANGID"					
+							"DELETE GBL_Contact WHERE VolContactType=" & QsNl(strContactType) & " AND VolVNUM=@VNUM AND LangID=@@LANGID"
 					Else
 						strExtraSQL = strExtraSQL & vbCrLf & _
 							"DELETE GBL_Contact WHERE GblContactType=" & QsNl(strContactType) & " AND GblNUM=@NUM AND LangID=@@LANGID"
@@ -448,7 +449,7 @@ Sub getRecordNoteFields(strNoteType)
 	If intCanUpdateRecordNote = RN_CHANGE_ANYONE Or (user_bSuperUserDOM And intCanUpdateRecordNote = RN_CHANGE_SUPER_USER) Then
 		bCanUpdateRecordNote = True
 	End If
-	
+
 	Dim strUpdateRecordNoteIDs, _
 		strDeleteRecordNoteIDs, _
 		strCancelRecordNoteIDs, _
@@ -459,17 +460,17 @@ Sub getRecordNoteFields(strNoteType)
 		indRecordNoteID, _
 		intNoteTypeID, _
 		strNoteValue
-	
+
 	strUpdateRecordNoteIDs = Nz(Request(strNoteType & "_UPDATE_IDS"),vbNullString)
 	aAllUpdateRecordNoteIDs = Split(Replace(strUpdateRecordNoteIDs," ",vbNullString),",")
 	aNewRecordNoteIDs = Filter(aAllUpdateRecordNoteIDs,"NEW",True)
-	
+
 	If bCanUpdateRecordNote Then
 		aUpdateRecordNoteIDs = Filter(aAllUpdateRecordNoteIDs,"NEW",False)
 	Else
 		aUpdateRecordNoteIDs = Array()
 	End If
-	
+
 	If bCanDeleteRecordNote Then
 		strDeleteRecordNoteIDs = Nz(Request(strNoteType & "_DELETE_IDS"),vbNullString)
 		If Not IsIDList(strDeleteRecordNoteIDs) Then
@@ -490,7 +491,7 @@ Sub getRecordNoteFields(strNoteType)
 	End If
 
 	strExtraSQL = strExtraSQL & vbCrLf & "DECLARE @NoteTypeID int"
-	
+
 	'Add New Notes
 	For Each indRecordNoteID In aNewRecordNoteIDs
 		intNoteTypeID = Request(strNoteType & "_" & indRecordNoteID & "_NoteTypeID")
@@ -514,7 +515,7 @@ Sub getRecordNoteFields(strNoteType)
 				strExtraSQL = strExtraSQL & vbCrLf & _
 					"INSERT INTO GBL_RecordNote (GblNoteType,GblNUM,LangID,CREATED_BY,MODIFIED_BY,NoteTypeID,Value)" & vbCrLf & _
 					"VALUES (" & QsNl(strNoteType) & ",@NUM,@@LANGID," & QsNl(user_strMod) & "," & QsNl(user_strMod) & ",@NoteTypeID," & QsNl(strNoteValue) & ")"
-		
+
 			End If
 		End If
 	Next
@@ -543,7 +544,7 @@ Sub getRecordNoteFields(strNoteType)
 			Else
 				strExtraSQL = strExtraSQL & vbCrLf & _
 					"AND GblNoteType=" & QsNl(strNoteType) & " AND GblNUM=@NUM AND LangID=@@LANGID"
-		
+
 			End If
 		End If
 	Next
@@ -563,7 +564,7 @@ Sub getRecordNoteFields(strNoteType)
 				"	AND RecordNoteID IN (" & strDeleteRecordNoteIDs & ")"
 		End If
 	End If
-	
+
 	'Cancel Notes
 	If Not Nl(strCancelRecordNoteIDs) Then
 		strExtraSQL = strExtraSQL & vbCrLf & _
@@ -577,7 +578,7 @@ Sub getRecordNoteFields(strNoteType)
 				"AND GblNoteType=" & QsNl(strNoteType) & " AND GblNUM=@NUM AND LangID=@@LANGID"
 		End If
 	End If
-	
+
 	'Restore Notes
 	If Not Nl(strRestoreRecordNoteIDs) Then
 		strExtraSQL = strExtraSQL & vbCrLf & _
@@ -604,7 +605,7 @@ Sub getSocialMediaField()
 		.async = False
 		.setProperty "SelectionLanguage", "XPath"
 	End With
-	
+
 	If Not bNew Then
 		xmlDoc.loadXML Nz(rsOrg("SOCIAL_MEDIA").Value,"<SOCIAL_MEDIA/>")
 	Else
@@ -708,7 +709,7 @@ Sub addChangeField(strFieldName, intLangID)
 	End If
 End Sub
 
-Sub addBTInsertWebField(strFieldName, strFieldDisplay, ByVal strFieldVal, intMaxLength, ByRef strUpdateList, ByRef strInsertInto, ByRef strInsertValue) 
+Sub addBTInsertWebField(strFieldName, strFieldDisplay, ByVal strFieldVal, intMaxLength, ByRef strUpdateList, ByRef strInsertInto, ByRef strInsertValue)
 	Dim strProtocol, bChanged
 	bChanged = False
 	Call checkWebWithProtocol(strFieldDisplay,strFieldVal,strProtocol)
@@ -733,4 +734,3 @@ Sub getEventScheduleSQL()
 End Sub
 
 %>
-
