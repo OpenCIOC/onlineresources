@@ -145,11 +145,11 @@ SELECT CAST((SELECT (
 		(SELECT
 			(SELECT 'E' AS [@LANG], a.SeniorWorkerName AS [@NMLAST], a.SeniorWorkerTitle AS [@TTL], a.SeniorWorkerPhoneNumber AS [@PH1N], a.SeniorWorkerEmailAddress AS [@EML]
 				WHERE COALESCE(a.SeniorWorkerIsPrivate, 'No') = 'No' AND (a.SeniorWorkerName IS NOT NULL OR a.SeniorWorkerTitle IS NOT NULL OR a.SeniorWorkerPhoneNumber IS NOT NULL OR a.SeniorWorkerEmailAddress IS NOT NULL)
-				AND a.TaxonomyLevelName = 'ProgramAtSite'
+				AND a.TaxonomyLevelName <> 'Agency'
 			 FOR XML PATH('CONTACT'), TYPE),
 			(SELECT 'F' AS [@LANG], f.SeniorWorkerName AS [@NMLAST], f.SeniorWorkerTitle AS [@TTL], f.SeniorWorkerPhoneNumber AS [@PH1N], f.SeniorWorkerEmailAddress AS [@EML]
 				WHERE  COALESCE(f.SeniorWorkerIsPrivate, 'No') = 'No' AND (f.SeniorWorkerName IS NOT NULL OR f.SeniorWorkerTitle IS NOT NULL OR f.SeniorWorkerPhoneNumber IS NOT NULL OR f.SeniorWorkerEmailAddress IS NOT NULL)
-				AND a.TaxonomyLevelName = 'ProgramAtSite'
+				AND a.TaxonomyLevelName <> 'Agency'
 			 FOR XML PATH('CONTACT'), TYPE)
 		FOR XML PATH('CONTACT_2') ,TYPE),
 		(SELECT
@@ -217,11 +217,21 @@ SELECT CAST((SELECT (
 		(SELECT
 			(SELECT 'E' AS [@LANG], a.SeniorWorkerName AS [@NMLAST], a.SeniorWorkerTitle AS [@TTL], a.SeniorWorkerPhoneNumber AS [@PH1N], a.SeniorWorkerEmailAddress AS [@EML]
 				WHERE COALESCE(a.SeniorWorkerIsPrivate, 'No') = 'No' AND (a.SeniorWorkerName IS NOT NULL OR a.SeniorWorkerTitle IS NOT NULL OR a.SeniorWorkerPhoneNumber IS NOT NULL OR a.SeniorWorkerEmailAddress IS NOT NULL)
-				AND a.TaxonomyLevelName <> 'ProgramAtSite'
+				AND a.TaxonomyLevelName = 'Agency'
 			 FOR XML PATH('CONTACT'), TYPE),
 			(SELECT 'F' AS [@LANG], f.SeniorWorkerName AS [@NMLAST], f.SeniorWorkerTitle AS [@TTL], f.SeniorWorkerPhoneNumber AS [@PH1N], f.SeniorWorkerEmailAddress AS [@EML]
 				WHERE  COALESCE(f.SeniorWorkerIsPrivate, 'No') = 'No' AND (f.SeniorWorkerName IS NOT NULL OR f.SeniorWorkerTitle IS NOT NULL OR f.SeniorWorkerPhoneNumber IS NOT NULL OR f.SeniorWorkerEmailAddress IS NOT NULL)
-				AND a.TaxonomyLevelName <> 'ProgramAtSite'
+				AND a.TaxonomyLevelName = 'Agency'
+			 FOR XML PATH('CONTACT'), TYPE),
+			(SELECT 'E' AS [@LANG], p.MainContactName AS [@NMLAST], p.MainContactTitle AS [@TTL], p.MainContactPhoneNumber AS [@PH1N], p.MainContactEmailAddress AS [@EML]
+                FROM dbo.CIC_iCarolImportRollup p 
+				WHERE a.TaxonomyLevelName <> 'Agency' AND  a.ParentAgencyNum=p.ResourceAgencyNum AND a.LangID=p.LangID
+					AND COALESCE(p.MainContactIsPrivate, 'No') = 'No' AND (p.MainContactName IS NOT NULL OR p.MainContactTitle IS NOT NULL OR p.MainContactPhoneNumber IS NOT NULL OR p.MainContactEmailAddress IS NOT NULL)
+			 FOR XML PATH('CONTACT'), TYPE),
+			(SELECT 'F' AS [@LANG], p.MainContactName AS [@NMLAST], p.MainContactTitle AS [@TTL], p.MainContactPhoneNumber AS [@PH1N], p.MainContactEmailAddress AS [@EML]
+                FROM dbo.CIC_iCarolImportRollup p 
+				WHERE a.TaxonomyLevelName <> 'Agency' AND  a.ParentAgencyNum=p.ResourceAgencyNum AND a.LangID=p.LangID
+					AND COALESCE(p.MainContactIsPrivate, 'No') = 'No' AND (p.MainContactName IS NOT NULL OR p.MainContactTitle IS NOT NULL OR p.MainContactPhoneNumber IS NOT NULL OR p.MainContactEmailAddress IS NOT NULL)
 			 FOR XML PATH('CONTACT'), TYPE)
 		 FOR XML PATH('EXEC_1'),TYPE),
 		 (SELECT
