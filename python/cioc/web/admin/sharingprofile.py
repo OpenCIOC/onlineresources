@@ -751,11 +751,11 @@ class SharingProfile(AdminViewBase):
 				cursor = conn.execute(sql, context.ProfileID, request.user.User_ID, model_state.value('RevocationDate'))
 
 				emails = cursor.fetchone()
-				
+
 				if emails[0]:
 					emails = [x.strip() for x in emails[0].split(',')]
 				else:
-					email = None
+					emails = None
 
 				cursor.nextset()
 

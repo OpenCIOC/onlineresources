@@ -5,7 +5,7 @@
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+# 	   http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,7 +28,7 @@ from babel import Locale, dates, numbers
 import formencode.api
 
 
-tsf = TranslationStringFactory('cioc')
+tsf = TranslationStringFactory("cioc")
 
 
 def gettext(s, request=None, *args, **kwargs):
@@ -47,8 +47,8 @@ def ngettext(singular, plural, num, request, **kwargs):
 	if not request:
 		request = get_current_request()
 
-	if 'domain' not in kwargs:
-		kwargs['domain'] = 'cioc'
+	if "domain" not in kwargs:
+		kwargs["domain"] = "cioc"
 
 	return get_localizer(request).pluralize(singular, plural, num, **kwargs)
 
@@ -61,8 +61,13 @@ def get_localizer(request):
 	try:
 		return _localizers[locale_name]
 	except KeyError:
-		tdirs = [os.path.join(os.path.dirname(__file__), '..', 'locale'), formencode.api.get_localedir()]
-		l = _localizers[locale_name] = make_localizer(locale_name.replace('-', '_'), tdirs)
+		tdirs = [
+			os.path.join(os.path.dirname(__file__), "..", "locale"),
+			formencode.api.get_localedir(),
+		]
+		l = _localizers[locale_name] = make_localizer(
+			locale_name.replace("-", "_"), tdirs
+		)
 		return l
 
 
@@ -70,56 +75,59 @@ class LocaleDict(defaultdict):
 	def __missing__(self, key):
 		return Locale.parse(key, sep="-")
 
+
 _locales = LocaleDict()
 
 
 def get_locale(request):
 	return _locales[request.language.Culture]
 
+
 _locale_date_format = {
-	'en-CA': 'd MMM yyyy',
-	'fr-CA': 'd MMM yyyy',
-	'de': 'dd.MM.yyyy',
-	'fr': 'd MMM yyyy',
-	'es-MX': 'MM/dd/yyyy',
-	'it': 'd MMM yyyy',
-	'nl': 'd MMM yyyy',
-	'no': 'd MMM yyyy',
-	'pt': 'd-MM-yyyy',
-	'sv': 'd MMM yyyy',
-	'hu': 'MMM d. yyyy',
-	'pl': 'd MMM yyyy',
-	'ro': 'd MMM yyyy',
-	'hr': 'd MMM yyyy',
-	'sk': 'dd.MM.yyyy',
-	'sl': 'd MMM yyyy',
-	'el': 'dd/MM/yyyy',
-	'bg': 'd MMM yyyy',
-	'ru': 'd MMM yyyy',
-	'tr': 'd MMM yyyy',
-	'lv': 'd MMM yyyy',
-	'lt': 'd MMM yyyy',
-	'zh-TW': 'yyyy/MM/dd',
-	'ko': 'yyyy/MM/dd',
-	'zh-CN': 'yyyy/MM/dd',
-	'th': 'd MMM yyyy'
+	"en-CA": "d MMM yyyy",
+	"fr-CA": "d MMM yyyy",
+	"de": "dd.MM.yyyy",
+	"fr": "d MMM yyyy",
+	"es-MX": "MM/dd/yyyy",
+	"it": "d MMM yyyy",
+	"nl": "d MMM yyyy",
+	"no": "d MMM yyyy",
+	"pt": "d-MM-yyyy",
+	"sv": "d MMM yyyy",
+	"hu": "MMM d. yyyy",
+	"pl": "d MMM yyyy",
+	"ro": "d MMM yyyy",
+	"hr": "d MMM yyyy",
+	"sk": "dd.MM.yyyy",
+	"sl": "d MMM yyyy",
+	"el": "dd/MM/yyyy",
+	"bg": "d MMM yyyy",
+	"ru": "d MMM yyyy",
+	"tr": "d MMM yyyy",
+	"lv": "d MMM yyyy",
+	"lt": "d MMM yyyy",
+	"zh-TW": "yyyy/MM/dd",
+	"ko": "yyyy/MM/dd",
+	"zh-CN": "yyyy/MM/dd",
+	"th": "d MMM yyyy",
 }
 
 
 def format_date(d, request):
 	if d is None:
-		return ''
+		return ""
 	if not isinstance(d, (date, datetime, time)):
 		return d
 
 	l = get_locale(request)
-	format = _locale_date_format.get(request.language.Culture, 'medium')
-	return dates.format_date(d, locale=l, format=format)
+	format = _locale_date_format.get(request.language.Culture, "medium")
+	d_out = dates.format_date(d, locale=l, format=format)
+	return d_out
 
 
 def format_time(t, request):
 	if t is None:
-		return ''
+		return ""
 	if not isinstance(t, (datetime, time)):
 		return t
 
@@ -129,7 +137,7 @@ def format_time(t, request):
 
 def format_datetime(dt, request):
 	if dt is None:
-		return ''
+		return ""
 	if not isinstance(dt, (date, datetime, time)):
 		return dt
 
@@ -141,12 +149,12 @@ def format_datetime(dt, request):
 	if isinstance(dt, (datetime, time)):
 		parts.append(format_time(dt, request))
 
-	return ' '.join(parts)
+	return " ".join(parts)
 
 
 def format_decimal(d, request):
 	if d is None:
-		return ''
+		return ""
 	if not isinstance(d, (float, int, decimal.Decimal)):
 		return d
 	l = get_locale(request)
