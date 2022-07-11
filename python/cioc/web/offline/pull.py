@@ -35,193 +35,212 @@ from cioc.web.offline.auth import AuthFailure, verify_auth
 import logging
 import six
 from six.moves import zip
+
 log = logging.getLogger(__name__)
 
 _ = i18n.gettext
 
-mime_type = 'application/zip'
+mime_type = "application/zip"
 
 
 class PullSchema(Schema):
-	allow_extra_fields = True
-	filter_extra_fields = True
-	if_key_missing = None
+    allow_extra_fields = True
+    filter_extra_fields = True
+    if_key_missing = None
 
-	FromDate = ciocvalidators.ISODateConverter(if_missing=None, not_empty=False)
+    FromDate = ciocvalidators.ISODateConverter(if_missing=None, not_empty=False)
 
 
 class Pull2Schema(Schema):
-	allow_extra_fields = True
-	filter_extra_fields = True
-	if_key_missing = None
+    allow_extra_fields = True
+    filter_extra_fields = True
+    if_key_missing = None
 
-	NewRecords = ForEach(ciocvalidators.NumValidator())
-	NewFields = ForEach(ciocvalidators.IDValidator())
+    NewRecords = ForEach(ciocvalidators.NumValidator())
+    NewFields = ForEach(ciocvalidators.IDValidator())
 
 
-@view_config(route_name='offline_pull')
+@view_config(route_name="offline_pull")
 class Pull(viewbase.CicViewBase):
+    def __call__(self):
+        data, record_data = self._really_do_it()
 
-	def __call__(self):
-		data, record_data = self._really_do_it()
+        data = json.dumps(data)
 
-		data = json.dumps(data)
+        file = tempfile.TemporaryFile()
+        zip = zipfile.ZipFile(file, "w", zipfile.ZIP_DEFLATED)
+        zip.writestr("export.json", data)
 
-		file = tempfile.TemporaryFile()
-		zip = zipfile.ZipFile(file, 'w', zipfile.ZIP_DEFLATED)
-		zip.writestr('export.json', data)
+        if record_data:
+            try:
+                zip.write(record_data, "record_data.xml")
+            finally:
+                try:
+                    os.unlink(record_data)
+                except:
+                    pass
 
-		if record_data:
-			try:
-				zip.write(record_data, 'record_data.xml')
-			finally:
-				try:
-					os.unlink(record_data)
-				except:
-					pass
+        zip.close()
+        length = file.tell()
+        file.seek(0)
 
-		zip.close()
-		length = file.tell()
-		file.seek(0)
+        res = Response(content_type="application/zip", charset=None)
+        res.app_iter = FileIterator(file)
+        res.content_length = length
 
-		res = Response(content_type='application/zip', charset=None)
-		res.app_iter = FileIterator(file)
-		res.content_length = length
+        res.headers["Content-Disposition"] = "attachment;filename=Export.zip"
+        return res
 
-		res.headers['Content-Disposition'] = 'attachment;filename=Export.zip'
-		return res
+    def _really_do_it(self):
+        request = self.request
 
-	def _really_do_it(self):
-		request = self.request
+        try:
+            user_type = verify_auth(request)
+        except AuthFailure as e:
+            return e.result_info, None
 
-		try:
-			user_type = verify_auth(request)
-		except AuthFailure as e:
-			return e.result_info, None
+        model_state = request.model_state
 
-		model_state = request.model_state
+        model_state.schema = PullSchema()
+        if not model_state.validate():
+            # validation error
+            return {"fail": True, "reason": _("invalid request", request)}, None
 
-		model_state.schema = PullSchema()
-		if not model_state.validate():
-			# validation error
-			return {'fail': True, 'reason': _('invalid request', request)}, None
+        data = {}
+        file = None
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(
+                "EXEC sp_GBL_BaseTable_History_Offline_s ?, ?",
+                user_type.MachineID,
+                model_state.value("FromDate"),
+            )
 
-		data = {}
-		file = None
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute('EXEC sp_GBL_BaseTable_History_Offline_s ?, ?',
-						user_type.MachineID, model_state.value('FromDate'))
+            for i, table in enumerate(
+                [
+                    "views",
+                    "communities",
+                    "publications",
+                    "view_publications",
+                    "field_groups",
+                    "fields",
+                    "fieldgroup_fields",
+                    "users",
+                    "records_views",
+                    "record_publications",
+                    "record_communities",
+                ]
+            ):
+                if i:
+                    cursor.nextset()
 
-			for i, table in enumerate(['views', 'communities', 'publications',
-							'view_publications', 'field_groups', 'fields',
-							'fieldgroup_fields', 'users', 'records_views',
-							'record_publications', 'record_communities']):
-				if i:
-					cursor.nextset()
+                cols = [d[0] for d in cursor.description]
+                data[table] = [dict(zip(cols, row)) for row in cursor.fetchall()]
 
-				cols = [d[0] for d in cursor.description]
-				data[table] = [dict(zip(cols, row)) for row in cursor.fetchall()]
+            cursor.nextset()
 
-			cursor.nextset()
+            file = _get_record_data(cursor)
 
-			file = _get_record_data(cursor)
+            cursor.close()
 
-			cursor.close()
-
-		return {'fail': False, 'data': data}, file
+        return {"fail": False, "data": data}, file
 
 
-@view_config(route_name='offline_pull2')
+@view_config(route_name="offline_pull2")
 class Pull2(viewbase.CicViewBase):
+    def __call__(self):
+        data, record_data = self._really_do_it()
 
-	def __call__(self):
-		data, record_data = self._really_do_it()
+        data = json.dumps(data)
 
-		data = json.dumps(data)
+        file = tempfile.TemporaryFile()
+        zip = zipfile.ZipFile(file, "w", zipfile.ZIP_DEFLATED)
+        zip.writestr("export.json", data)
 
-		file = tempfile.TemporaryFile()
-		zip = zipfile.ZipFile(file, 'w', zipfile.ZIP_DEFLATED)
-		zip.writestr('export.json', data)
+        if record_data:
+            try:
+                zip.write(record_data, "record_data.xml")
+            finally:
+                try:
+                    os.unlink(record_data)
+                except:
+                    pass
 
-		if record_data:
-			try:
-				zip.write(record_data, 'record_data.xml')
-			finally:
-				try:
-					os.unlink(record_data)
-				except:
-					pass
+        zip.close()
+        length = file.tell()
+        file.seek(0)
 
-		zip.close()
-		length = file.tell()
-		file.seek(0)
+        res = Response(content_type="application/zip", charset=None)
+        res.app_iter = FileIterator(file)
+        res.content_length = length
 
-		res = Response(content_type='application/zip', charset=None)
-		res.app_iter = FileIterator(file)
-		res.content_length = length
+        res.headers["Content-Disposition"] = "attachment;filename=Export.zip"
+        return res
 
-		res.headers['Content-Disposition'] = 'attachment;filename=Export.zip'
-		return res
+    def _really_do_it(self):
+        request = self.request
 
-	def _really_do_it(self):
-		request = self.request
+        try:
+            user_type = verify_auth(request)
+        except AuthFailure as e:
+            return e.result_info, None
 
-		try:
-			user_type = verify_auth(request)
-		except AuthFailure as e:
-			return e.result_info, None
+        model_state = request.model_state
+        model_state.schema = Pull2Schema()
 
-		model_state = request.model_state
-		model_state.schema = Pull2Schema()
+        if not model_state.validate():
+            # validation error
+            log.debug("Failure")
+            return {"fail": True, "reason": _("invalid request", request)}, None
 
-		if not model_state.validate():
-			# validation error
-			log.debug('Failure')
-			return {'fail': True, 'reason': _('invalid request', request)}, None
+        new_fields = model_state.value("NewFields")
+        if new_fields:
+            new_fields = ",".join(six.text_type(x) for x in sorted(set(new_fields)))
 
-		new_fields = model_state.value('NewFields')
-		if new_fields:
-			new_fields = u','.join(six.text_type(x) for x in sorted(set(new_fields)))
+        new_records = model_state.value("NewRecords")
+        if new_records:
+            new_records = ",".join(
+                six.text_type(x).upper() for x in sorted(set(new_records))
+            )
 
-		new_records = model_state.value('NewRecords')
-		if new_records:
-			new_records = u','.join(six.text_type(x).upper() for x in sorted(set(new_records)))
+        data = {}
+        log.debug("Machine id: %d", user_type.MachineID)
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(
+                "EXEC sp_GBL_BaseTable_History_Offline_s_NewItems ?, ?, ?",
+                user_type.MachineID,
+                new_records or None,
+                new_fields or None,
+            )
 
-		data = {}
-		log.debug('Machine id: %d', user_type.MachineID)
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute('EXEC sp_GBL_BaseTable_History_Offline_s_NewItems ?, ?, ?',
-						user_type.MachineID, new_records or None, new_fields or None)
+            file = _get_record_data(cursor)
 
-			file = _get_record_data(cursor)
+            cursor.close()
 
-			cursor.close()
-
-		log.debug('response')
-		return {'fail': False, 'data': data}, file
+        log.debug("response")
+        return {"fail": False, "data": data}, file
 
 
 def _get_record_data(cursor):
 
-	fd, fname = tempfile.mkstemp()
-	file = os.fdopen(fd, 'w+b')
-	log.debug("file name: %s", file.name)
+    fd, fname = tempfile.mkstemp()
+    file = os.fdopen(fd, "w+b")
+    log.debug("file name: %s", file.name)
 
-	file.write(u'<record_data>'.encode('utf-8'))
-	cols = None
-	while True:
-		rows = cursor.fetchmany(5000)
-		if not rows:
-			break
+    file.write("<record_data>".encode("utf-8"))
+    cols = None
+    while True:
+        rows = cursor.fetchmany(5000)
+        if not rows:
+            break
 
-		if not cols:
-			cols = [d[0] for d in cursor.description]
+        if not cols:
+            cols = [d[0] for d in cursor.description]
 
-		rows = u''.join(x[0] for x in rows)
-		file.write(rows.encode('utf-8'))
+        rows = "".join(x[0] for x in rows)
+        file.write(rows.encode("utf-8"))
 
-	file.write(u'</record_data>'.encode('utf-8'))
+    file.write("</record_data>".encode("utf-8"))
 
-	file.close()
+    file.close()
 
-	return fname
+    return fname

@@ -20,6 +20,7 @@ from __future__ import absolute_import
 import logging
 import six
 from six.moves import map
+
 log = logging.getLogger(__name__)
 
 from operator import attrgetter
@@ -38,65 +39,74 @@ from cioc.core.bufferedzip import BufferedZipFile
 from cioc.core.utf8csv import write_csv_to_zip
 from cioc.core.webobfiletool import FileIterator
 
-templateprefix = 'cioc.web.admin:templates/vacancy/'
+templateprefix = "cioc.web.admin:templates/vacancy/"
 
 
-@view_defaults(route_name='admin_vacancy')
+@view_defaults(route_name="admin_vacancy")
 class Community(viewbase.AdminViewBase):
+    @view_config(match_param="action=history", renderer=templateprefix + "list.mak")
+    def index(self):
+        request = self.request
+        user = request.user
 
-	@view_config(match_param='action=history', renderer=templateprefix + 'list.mak')
-	def index(self):
-		request = self.request
-		user = request.user
+        if not user.cic.SuperUser:
+            self._security_failure()
 
-		if not user.cic.SuperUser:
-			self._security_failure()
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(
+                "EXEC sp_CIC_Vacancy_l_History ?", request.dboptions.MemberID
+            )
+            history = cursor.fetchall()
+            cursor.close()
 
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute('EXEC sp_CIC_Vacancy_l_History ?', request.dboptions.MemberID)
-			history = cursor.fetchall()
-			cursor.close()
+        headings = [
+            _("Record #", request),
+            _("Record Name", request),
+            _("Service Title", request),
+            _("Service Title At Change", request),
+            _("Vacancy Unit Type ID", request),
+            _("Vacancy Unit Type GUID", request),
+            _("Modified Date", request),
+            _("Modified By", request),
+            _("Vacancy Change", request),
+            _("Total Vacancy", request),
+        ]
+        fields = [
+            "NUM",
+            "OrgName",
+            "ServiceTitleNow",
+            "ServiceTitle",
+            "BT_VUT_ID",
+            "BT_VUT_GUID",
+            "MODIFIED_DATE",
+            "MODIFIED_BY",
+            "VacancyChange",
+            "VacancyFinal",
+        ]
 
-		headings = [
-			_('Record #', request),
-			_('Record Name', request),
-			_('Service Title', request),
-			_('Service Title At Change', request),
-			_('Vacancy Unit Type ID', request),
-			_('Vacancy Unit Type GUID', request),
-			_('Modified Date', request),
-			_('Modified By', request),
-			_('Vacancy Change', request),
-			_('Total Vacancy', request)
-		]
-		fields = [
-			'NUM',
-			'OrgName',
-			'ServiceTitleNow',
-			'ServiceTitle',
-			'BT_VUT_ID',
-			'BT_VUT_GUID',
-			'MODIFIED_DATE',
-			'MODIFIED_BY',
-			'VacancyChange',
-			'VacancyFinal',
-		]
+        getter = attrgetter(*fields)
 
-		getter = attrgetter(*fields)
+        def row_getter(x):
+            return tuple("" if y is None else six.text_type(y) for y in getter(x))
 
-		def row_getter(x):
-			return tuple(u'' if y is None else six.text_type(y) for y in getter(x))
+        file = tempfile.TemporaryFile()
+        with BufferedZipFile(file, "w", zipfile.ZIP_DEFLATED) as zip:
+            write_csv_to_zip(
+                zip,
+                itertools.chain([headings], map(row_getter, history)),
+                "vacancy_history.csv",
+            )
 
-		file = tempfile.TemporaryFile()
-		with BufferedZipFile(file, 'w', zipfile.ZIP_DEFLATED) as zip:
-			write_csv_to_zip(zip, itertools.chain([headings], map(row_getter, history)), 'vacancy_history.csv')
-
-		length = file.tell()
-		file.seek(0)
-		res = request.response
-		res.content_type = 'application/zip'
-		res.charset = None
-		res.app_iter = FileIterator(file)
-		res.content_length = length
-		res.headers['Content-Disposition'] = 'attachment;filename=vacancy-history-%s.zip' % (datetime.today().isoformat('-').replace(':', '-').split('.')[0])
-		return res
+        length = file.tell()
+        file.seek(0)
+        res = request.response
+        res.content_type = "application/zip"
+        res.charset = None
+        res.app_iter = FileIterator(file)
+        res.content_length = length
+        res.headers[
+            "Content-Disposition"
+        ] = "attachment;filename=vacancy-history-%s.zip" % (
+            datetime.today().isoformat("-").replace(":", "-").split(".")[0]
+        )
+        return res

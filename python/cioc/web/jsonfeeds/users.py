@@ -22,53 +22,56 @@ import logging
 # 3rd party
 from pyramid.view import view_config
 
-#this app
+# this app
 from cioc.web.cic import viewbase
 
 log = logging.getLogger(__name__)
 
 
-@view_config(route_name='jsonfeeds_users', renderer='json')
+@view_config(route_name="jsonfeeds_users", renderer="json")
 class JsonFeedsUsers(viewbase.CicViewBase):
+    def __call__(self):
+        request = self.request
+        user = request.user
 
-	def __call__(self):
-		request = self.request
-		user = request.user
+        if not user:
+            return []
 
-		if not user:
-			return []
+        term = request.params.get("term")
+        if term:
+            term = term.strip()
+        if not term:
+            return []
 
-		term = request.params.get('term')
-		if term:
-			term = term.strip()
-		if not term:
-			return []
+        if len(term) > 60:
+            return []
 
-		if len(term) > 60:
-			return []
+        args = [request.dboptions.MemberID, term]
 
-		args = [request.dboptions.MemberID, term]
-
-		sql = """
+        sql = """
 			SELECT User_ID, UserName, Agency FROM GBL_Users WHERE Inactive = 0 AND
 			MemberID_Cache = ? AND UserName LIKE '%' + ? + '%' COLLATE Latin1_General_100_CI_AI
 		"""
-		if not user.SuperUser:
-			sql += ' AND Agency = ?'
-			args.append(user.Agency)
+        if not user.SuperUser:
+            sql += " AND Agency = ?"
+            args.append(user.Agency)
 
-		sql += """
+        sql += """
 			ORDER BY CASE WHEN UserName LIKE ? + '%' COLLATE Latin1_General_100_CI_AI THEN 0 ELSE 1 END,
 			UserName COLLATE Latin1_General_100_CI_AI
 		"""
 
-		args.append(term)
+        args.append(term)
 
-		with request.connmgr.get_connection('admin') as conn:
-			users = conn.execute(sql, args).fetchall()
+        with request.connmgr.get_connection("admin") as conn:
+            users = conn.execute(sql, args).fetchall()
 
-		return [{
-				'chkid': u.User_ID,
-				'value': u.UserName,
-				'label': u.UserName + ((' (' + u.Agency + ')') if user.SuperUser else '')
-				} for u in users]
+        return [
+            {
+                "chkid": u.User_ID,
+                "value": u.UserName,
+                "label": u.UserName
+                + ((" (" + u.Agency + ")") if user.SuperUser else ""),
+            }
+            for u in users
+        ]

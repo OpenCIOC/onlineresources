@@ -23,45 +23,51 @@ from pyramid.exceptions import NotFound
 from cioc.core import viewbase
 from cioc.core.i18n import gettext as _
 
-template = 'cioc.web.gbl:templates/pages.mak'
+template = "cioc.web.gbl:templates/pages.mak"
 log = logging.getLogger(__name__)
 
 
 class PagesBase(viewbase.ViewBase):
-	def __init__(self, request):
-		viewbase.ViewBase.__init__(self, request, False)
+    def __init__(self, request):
+        viewbase.ViewBase.__init__(self, request, False)
 
-	def __call__(self):
-		request = self.request
+    def __call__(self):
+        request = self.request
 
-		with request.connmgr.get_connection() as conn:
-			cursor = conn.execute(
-				'''EXEC sp_%s_Page_s_Slug ?, ?, ?''' % request.pageinfo.DbAreaS,
-				request.dboptions.MemberID, request.matchdict['slug'], request.viewdata.dom.ViewType)
+        with request.connmgr.get_connection() as conn:
+            cursor = conn.execute(
+                """EXEC sp_%s_Page_s_Slug ?, ?, ?""" % request.pageinfo.DbAreaS,
+                request.dboptions.MemberID,
+                request.matchdict["slug"],
+                request.viewdata.dom.ViewType,
+            )
 
-			page = cursor.fetchone()
+            page = cursor.fetchone()
 
-			cursor.nextset()
+            cursor.nextset()
 
-			other_langs = cursor.fetchall()
+            other_langs = cursor.fetchall()
 
-		if not page and not other_langs:
-			raise NotFound()
+        if not page and not other_langs:
+            raise NotFound()
 
-		title = page and page.Title or _('Page not found', request)
-		return self._create_response_namespace(
-			title, title,
-			{
-				'page': page,
-				'other_langs': other_langs,
-			}, no_index=True)
+        title = page and page.Title or _("Page not found", request)
+        return self._create_response_namespace(
+            title,
+            title,
+            {
+                "page": page,
+                "other_langs": other_langs,
+            },
+            no_index=True,
+        )
 
 
-@view_config(route_name='pages_cic', renderer=template)
+@view_config(route_name="pages_cic", renderer=template)
 class PagesCIC(PagesBase):
-	pass
+    pass
 
 
-@view_config(route_name='pages_vol', renderer=template)
+@view_config(route_name="pages_vol", renderer=template)
 class PagesVOL(PagesBase):
-	pass
+    pass

@@ -24,36 +24,45 @@ from subprocess import call, check_output
 args = sys.argv[1:]
 
 if len(args) != 1:
-	print('iisconfig [iissitename]')
-	sys.exit(1)
+    print("iisconfig [iissitename]")
+    sys.exit(1)
 
-config = {
-	'iishome': '%systemroot%\\system32\\inetsrv',
-	'iissitename': args[0]
-}
+config = {"iishome": "%systemroot%\\system32\\inetsrv", "iissitename": args[0]}
 
 
 def run_cmd(cmd, **kwargs):
-	kwargs.update(config)
-	call(cmd % kwargs, shell=True)
+    kwargs.update(config)
+    call(cmd % kwargs, shell=True)
 
 
 def get_output(cmd, **kwargs):
-	kwargs.update(config)
-	return check_output(cmd % kwargs, shell=True)
+    kwargs.update(config)
+    return check_output(cmd % kwargs, shell=True)
 
-run_cmd("%(iishome)s\\appcmd.exe set config -section:system.webServer/proxy /enabled:True /includePortInXForwardedFor:False /preserveHostHeader:True /arrResponseHeader:False /reverseRewriteHostInResponseHeaders:False /timeout:\"01:00:00\" /commit:apphost")
 
-run_cmd("%(iishome)s\\appcmd.exe set config \"%(iissitename)s\" -section:system.webServer/asp /session.allowSessionState:\"False\" /enableParentPaths:\"True\" /codePage:\"65001\"  /commit:apphost")
+run_cmd(
+    '%(iishome)s\\appcmd.exe set config -section:system.webServer/proxy /enabled:True /includePortInXForwardedFor:False /preserveHostHeader:True /arrResponseHeader:False /reverseRewriteHostInResponseHeaders:False /timeout:"01:00:00" /commit:apphost'
+)
 
-run_cmd("%(iishome)s\\appcmd.exe set config \"%(iissitename)s\" -section:system.webServer/security/requestFiltering /requestLimits.maxQueryString:8192 /requestLimits.maxUrl:8192 /commit:apphost")
+run_cmd(
+    '%(iishome)s\\appcmd.exe set config "%(iissitename)s" -section:system.webServer/asp /session.allowSessionState:"False" /enableParentPaths:"True" /codePage:"65001"  /commit:apphost'
+)
 
-output = get_output("%(iishome)s\\appcmd.exe list config \"%(iissitename)s\" -section:system.webServer/rewrite/allowedServerVariables")
+run_cmd(
+    '%(iishome)s\\appcmd.exe set config "%(iissitename)s" -section:system.webServer/security/requestFiltering /requestLimits.maxQueryString:8192 /requestLimits.maxUrl:8192 /commit:apphost'
+)
 
-headers = 'HTTP_CIOC_FRIENDLY_RECORD_URL HTTP_CIOC_FRIENDLY_RECORD_URL_ROOT HTTP_X_FORWARDED_PROTO HTTP_CIOC_USING_SSL HTTP_CIOC_SSL_POSSIBLE RESPONSE_LOCATION'.split()
+output = get_output(
+    '%(iishome)s\\appcmd.exe list config "%(iissitename)s" -section:system.webServer/rewrite/allowedServerVariables'
+)
+
+headers = "HTTP_CIOC_FRIENDLY_RECORD_URL HTTP_CIOC_FRIENDLY_RECORD_URL_ROOT HTTP_X_FORWARDED_PROTO HTTP_CIOC_USING_SSL HTTP_CIOC_SSL_POSSIBLE RESPONSE_LOCATION".split()
 for header in headers:
-	if re.search(' name="' + header + '"', output):
-		# already set
-		continue
+    if re.search(' name="' + header + '"', output):
+        # already set
+        continue
 
-	run_cmd("%(iishome)s\\appcmd.exe set config \"%(iissitename)s\" -section:system.webServer/rewrite/allowedServerVariables /+[name='%(header)s'] /commit:apphost", header=header)
+    run_cmd(
+        "%(iishome)s\\appcmd.exe set config \"%(iissitename)s\" -section:system.webServer/rewrite/allowedServerVariables /+[name='%(header)s'] /commit:apphost",
+        header=header,
+    )

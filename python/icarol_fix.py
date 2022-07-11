@@ -16,8 +16,9 @@
 
 from __future__ import absolute_import
 import sys
-sys.path.append('.')
-sys.path.append('tools')
+
+sys.path.append(".")
+sys.path.append("tools")
 
 import icarol_sync
 from cioc.core import config
@@ -27,35 +28,42 @@ import requests
 
 
 def run_update(argv, dest, files):
-	args = icarol_sync.parse_args(argv)
-	args.config = config.get_config(args.configfile, const._app_name)
-	args.previous = '123'
+    args = icarol_sync.parse_args(argv)
+    args.config = config.get_config(args.configfile, const._app_name)
+    args.previous = "123"
 
-	args.dest = dest
-	args.dest_file = os.path.join(args.dest, files[0])
+    args.dest = dest
+    args.dest_file = os.path.join(args.dest, files[0])
 
-	field = icarol_sync.get_config_item(args, 'airs_export_db_count_field', None)
+    field = icarol_sync.get_config_item(args, "airs_export_db_count_field", None)
 
-	for file in files:
-		kwargs = icarol_sync.download_kwargs(args)
-		kwargs['params']['Field'] = field
-		headers = {'content-type': 'application/json'}
-		data = open(os.path.join(args.dest, file), 'r').read()
+    for file in files:
+        kwargs = icarol_sync.download_kwargs(args)
+        kwargs["params"]["Field"] = field
+        headers = {"content-type": "application/json"}
+        data = open(os.path.join(args.dest, file), "r").read()
 
-		url = icarol_sync.download_url(args.url)
-		r = requests.post(url, data=data, headers=headers, **kwargs)
-		r.raise_for_status()
+        url = icarol_sync.download_url(args.url)
+        r = requests.post(url, data=data, headers=headers, **kwargs)
+        r.raise_for_status()
 
-		args.type = 'part'
+        args.type = "part"
+
 
 run_update(
-	'--type full https://ontario.cioc.ca/ tools'.split(), r'Y:\work\other clients\O211SC\iCarolLoads\ONT',
-	['ONFull20141107T151508_counts.json', 'ONIncrementalFrom20141031T095049To20141107T023003_counts.json', 'ONIncrementalFrom20141107T023003To20141114T023003_counts.json', 'ONIncrementalFrom20141114T023003To20141121T023003_counts.json']
+    "--type full https://ontario.cioc.ca/ tools".split(),
+    r"Y:\work\other clients\O211SC\iCarolLoads\ONT",
+    [
+        "ONFull20141107T151508_counts.json",
+        "ONIncrementalFrom20141031T095049To20141107T023003_counts.json",
+        "ONIncrementalFrom20141107T023003To20141114T023003_counts.json",
+        "ONIncrementalFrom20141114T023003To20141121T023003_counts.json",
+    ],
 )
-#print 'Done Ontario- press enter to continue'
-#raw_input()
-#run_update(
-#	'--config-prefix nvt --nosslverify https://fizban-m2/ tools'.split(), r'Y:\work\other clients\O211SC\iCarolLoads\NVT',
-#	['NVFull20141121T024000_counts.json']
-#)
-#print 'Done nunavut'
+# print 'Done Ontario- press enter to continue'
+# raw_input()
+# run_update(
+# 	'--config-prefix nvt --nosslverify https://fizban-m2/ tools'.split(), r'Y:\work\other clients\O211SC\iCarolLoads\NVT',
+# 	['NVFull20141121T024000_counts.json']
+# )
+# print 'Done nunavut'

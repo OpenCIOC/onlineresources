@@ -33,47 +33,48 @@ _ = i18n.gettext
 
 
 def make_headers(extra_headers=None):
-	tmp = dict(extra_headers or {})
-	return tmp
+    tmp = dict(extra_headers or {})
+    return tmp
 
 
-def make_401_error(message, realm='CIOC RPC'):
-	error = HTTPUnauthorized(headers=make_headers({'WWW-Authenticate': 'Basic realm="%s"' % realm}))
-	error.content_type = "text/plain"
-	error.text = message
-	return error
+def make_401_error(message, realm="CIOC RPC"):
+    error = HTTPUnauthorized(
+        headers=make_headers({"WWW-Authenticate": 'Basic realm="%s"' % realm})
+    )
+    error.content_type = "text/plain"
+    error.text = message
+    return error
 
 
 def make_internal_server_error(message):
-	error = HTTPInternalServerError()
-	error.content_type = "text/plain"
-	error.text = message
-	return error
+    error = HTTPInternalServerError()
+    error.content_type = "text/plain"
+    error.text = message
+    return error
 
 
-@view_config(route_name='rpc_whoami', renderer='json')
+@view_config(route_name="rpc_whoami", renderer="json")
 class RpcWhoAmI(viewbase.ViewBase):
+    def __call__(self):
+        request = self.request
+        user = request.user
 
-	def __call__(self):
-		request = self.request
-		user = request.user
+        if not user:
+            return make_401_error("Access Denied")
 
-		if not user:
-			return make_401_error(u'Access Denied')
+        retval = {}
+        if "realtimestandard" in user.vol.ExternalAPIs:
+            retval["VOL"] = True
+        if "realtimestandard" in user.cic.ExternalAPIs:
+            retval["CIC"] = True
 
-		retval = {}
-		if 'realtimestandard' in user.vol.ExternalAPIs:
-			retval['VOL'] = True
-		if 'realtimestandard' in user.cic.ExternalAPIs:
-			retval['CIC'] = True
+        if not retval:
+            return make_401_error("Insufficient Permissions")
 
-		if not retval:
-			return make_401_error(u'Insufficient Permissions')
+        retval["UserName"] = user.UserName
 
-		retval['UserName'] = user.UserName
+        format = request.params.get("format")
+        if format and format.lower() == "xml":
+            request.override_renderer = "cioc:xml"
 
-		format = request.params.get('format')
-		if format and format.lower() == 'xml':
-			request.override_renderer = 'cioc:xml'
-
-		return retval
+        return retval

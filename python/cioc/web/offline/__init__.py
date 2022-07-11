@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-
 # ######
 # How Auth Works:
 # Initially user logs in using username and password to provide public RSA key.
@@ -38,18 +37,18 @@ from cioc.core.rootfactories import BasicRootFactory
 
 
 def includeme(config):
-	urlprefix = '/offline/'
+    urlprefix = "/offline/"
 
-	factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
+    factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
 
-	# /offline/auth
-	config.add_route('offline_auth', urlprefix + 'auth', factory=factory)
+    # /offline/auth
+    config.add_route("offline_auth", urlprefix + "auth", factory=factory)
 
-	# /offline/pull
-	config.add_route('offline_pull', urlprefix + 'pull', factory=factory)
+    # /offline/pull
+    config.add_route("offline_pull", urlprefix + "pull", factory=factory)
 
-	# /offline/pull2
-	config.add_route('offline_pull2', urlprefix + 'pull2', factory=factory)
+    # /offline/pull2
+    config.add_route("offline_pull2", urlprefix + "pull2", factory=factory)
 
-	# /offline/register
-	config.add_route('offline_register', urlprefix + 'register', factory=factory)
+    # /offline/register
+    config.add_route("offline_register", urlprefix + "register", factory=factory)

@@ -23,46 +23,78 @@ from cioc.core.rootfactories import BasicRootFactory
 
 
 def includeme(config):
-	urlprefix = '/stats/'
+    urlprefix = "/stats/"
 
-	# /stats/auto_datamgmt
-	factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
-	config.add_route('stats_auto_datamgmt_cic', urlprefix + 'auto_datamgmt', factory=factory)
+    # /stats/auto_datamgmt
+    factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
+    config.add_route(
+        "stats_auto_datamgmt_cic", urlprefix + "auto_datamgmt", factory=factory
+    )
 
-	factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
-	config.add_route('stats_auto_datamgmt_vol', '/volunteer' + urlprefix + 'auto_datamgmt', factory=factory)
+    factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
+    config.add_route(
+        "stats_auto_datamgmt_vol",
+        "/volunteer" + urlprefix + "auto_datamgmt",
+        factory=factory,
+    )
 
-	# /stats/auto_viewsbyro
-	factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
-	config.add_route('stats_auto_viewsbyro_cic', urlprefix + 'auto_viewsbyro', factory=factory)
+    # /stats/auto_viewsbyro
+    factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
+    config.add_route(
+        "stats_auto_viewsbyro_cic", urlprefix + "auto_viewsbyro", factory=factory
+    )
 
-	factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
-	config.add_route('stats_auto_viewsbyro_vol', '/volunteer' + urlprefix + 'auto_viewsbyro', factory=factory)
+    factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
+    config.add_route(
+        "stats_auto_viewsbyro_vol",
+        "/volunteer" + urlprefix + "auto_viewsbyro",
+        factory=factory,
+    )
 
-	# /stats/auto_viewsbyview
-	factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
-	config.add_route('stats_auto_viewsbyview_cic', urlprefix + 'auto_viewsbyview', factory=factory)
+    # /stats/auto_viewsbyview
+    factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
+    config.add_route(
+        "stats_auto_viewsbyview_cic", urlprefix + "auto_viewsbyview", factory=factory
+    )
 
-	factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
-	config.add_route('stats_auto_viewsbyview_vol', '/volunteer' + urlprefix + 'auto_viewsbyview', factory=factory)
+    factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
+    config.add_route(
+        "stats_auto_viewsbyview_vol",
+        "/volunteer" + urlprefix + "auto_viewsbyview",
+        factory=factory,
+    )
 
-	# /stats/auto_ipsbyro
-	factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
-	config.add_route('stats_auto_ipsbyro_cic', urlprefix + 'auto_ipsbyro', factory=factory)
+    # /stats/auto_ipsbyro
+    factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
+    config.add_route(
+        "stats_auto_ipsbyro_cic", urlprefix + "auto_ipsbyro", factory=factory
+    )
 
-	factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
-	config.add_route('stats_auto_ipsbyro_vol', '/volunteer' + urlprefix + 'auto_ipsbyro', factory=factory)
+    factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
+    config.add_route(
+        "stats_auto_ipsbyro_vol",
+        "/volunteer" + urlprefix + "auto_ipsbyro",
+        factory=factory,
+    )
 
-	# /stats/auto_ipsbyview
-	factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
-	config.add_route('stats_auto_ipsbyview_cic', urlprefix + 'auto_ipsbyview', factory=factory)
+    # /stats/auto_ipsbyview
+    factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
+    config.add_route(
+        "stats_auto_ipsbyview_cic", urlprefix + "auto_ipsbyview", factory=factory
+    )
 
-	factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
-	config.add_route('stats_auto_ipsbyview_vol', '/volunteer' + urlprefix + 'auto_ipsbyview', factory=factory)
+    factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
+    config.add_route(
+        "stats_auto_ipsbyview_vol",
+        "/volunteer" + urlprefix + "auto_ipsbyview",
+        factory=factory,
+    )
 
-	# /stats/auto_ipsbyview
-	factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
-	config.add_route('stats_auto_ips_cic', urlprefix + 'auto_ips', factory=factory)
+    # /stats/auto_ipsbyview
+    factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
+    config.add_route("stats_auto_ips_cic", urlprefix + "auto_ips", factory=factory)
 
-	factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
-	config.add_route('stats_auto_ips_vol', '/volunteer' + urlprefix + 'auto_ips', factory=factory)
+    factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
+    config.add_route(
+        "stats_auto_ips_vol", "/volunteer" + urlprefix + "auto_ips", factory=factory
+    )

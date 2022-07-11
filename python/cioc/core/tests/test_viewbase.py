@@ -21,155 +21,155 @@ from cioc.core import viewbase, constants as const, pageinfo
 from cioc.web import on_new_request, on_context_found
 
 import logging
+
+
 class DummyEvent(object):
-	def __init__(self, request):
-		self.request = request
+    def __init__(self, request):
+        self.request = request
+
 
 log = logging.getLogger(__name__)
+
+
 class Test_ViewBase(object):
-	def setUp(self):
+    def setUp(self):
 
-		self.config = testing.setUp()
-		self.config.add_route('test_route', '/test')
-		self.request = request = testing.DummyRequest()
-		def route_url(route_name, *args, **kw):
-			return url.route_url(route_name, request, *args, **kw)
+        self.config = testing.setUp()
+        self.config.add_route("test_route", "/test")
+        self.request = request = testing.DummyRequest()
 
-		request.route_url = route_url
-		on_new_request(DummyEvent(request))
+        def route_url(route_name, *args, **kw):
+            return url.route_url(route_name, request, *args, **kw)
 
-		request.matched_route = 'test'
+        request.route_url = route_url
+        on_new_request(DummyEvent(request))
 
-		on_context_found(DummyEvent(request))
-		request.pageinfo = pageinfo.PageInfo(request, const.DM_CIC, const.DM_CIC)
+        request.matched_route = "test"
 
-	def tearDown(self):
-		testing.tearDown()
+        on_context_found(DummyEvent(request))
+        request.pageinfo = pageinfo.PageInfo(request, const.DM_CIC, const.DM_CIC)
 
-	def _check_exc(self, exc, end):
-		response = viewbase.redirect(exc, self.request)
-		
-		log.info(response.headers)
+    def tearDown(self):
+        testing.tearDown()
 
-		assert 'Location' in response.headers
-		url = response.headers['Location']
+    def _check_exc(self, exc, end):
+        response = viewbase.redirect(exc, self.request)
 
-		assert url.startswith('http://')
-		assert url.endswith(end)
+        log.info(response.headers)
 
-	def test_redirect_view_gotoroute(self):
+        assert "Location" in response.headers
+        url = response.headers["Location"]
 
-		exc = viewbase.GoToRoute('test_route')
+        assert url.startswith("http://")
+        assert url.endswith(end)
 
-		self._check_exc(exc, '/test')
+    def test_redirect_view_gotoroute(self):
 
-	def test_redirect_view_gotopage(self):
+        exc = viewbase.GoToRoute("test_route")
 
-		exc = viewbase.GoToPage('~/test.asp')
+        self._check_exc(exc, "/test")
 
-		self._check_exc(exc, '/test.asp')
+    def test_redirect_view_gotopage(self):
 
+        exc = viewbase.GoToPage("~/test.asp")
 
-	def test_redirect_view_security_failure(self):
+        self._check_exc(exc, "/test.asp")
 
-		exc = viewbase.SecurityFailure()
+    def test_redirect_view_security_failure(self):
 
-		self._check_exc(exc, '/security_failure.asp')
+        exc = viewbase.SecurityFailure()
 
-		
-		
-	def test_base_class_go_to_page(self):
-		vb = viewbase.ViewBase(self.request, const.DM_CIC, const.DM_CIC)
-		
-		try:
-			vb._go_to_page('~/test.asp')
-		except viewbase.GoToPage as e:
-			assert e.url == '~/test.asp'
-			assert e.httpvals is None
-			assert e.exclude_keys is None
-		else:
-			assert False, "Didn't throw exception"
+        self._check_exc(exc, "/security_failure.asp")
 
+    def test_base_class_go_to_page(self):
+        vb = viewbase.ViewBase(self.request, const.DM_CIC, const.DM_CIC)
 
-		try:
-			vb._go_to_page('~/test.asp', 'orange', 'blue')
-		except viewbase.GoToPage as e:
-			assert e.url == '~/test.asp'
-			assert e.httpvals == 'orange'
-			assert e.exclude_keys == 'blue'
-		else:
-			assert False, "Didn't throw exception"
-	
-	def test_base_class_go_to_route(self):
-		vb = viewbase.ViewBase(self.request, const.DM_CIC, const.DM_CIC)
-		
-		try:
-			vb._go_to_route('test')
-		except viewbase.GoToRoute as e:
-			assert e.route_name == 'test'
-			assert e.exclude_keys is None
-			assert not e.kw
-		else:
-			assert False, "Didn't throw exception"
+        try:
+            vb._go_to_page("~/test.asp")
+        except viewbase.GoToPage as e:
+            assert e.url == "~/test.asp"
+            assert e.httpvals is None
+            assert e.exclude_keys is None
+        else:
+            assert False, "Didn't throw exception"
 
+        try:
+            vb._go_to_page("~/test.asp", "orange", "blue")
+        except viewbase.GoToPage as e:
+            assert e.url == "~/test.asp"
+            assert e.httpvals == "orange"
+            assert e.exclude_keys == "blue"
+        else:
+            assert False, "Didn't throw exception"
 
-		try:
-			vb._go_to_route('test', 'blue', orange='orange')
-		except viewbase.GoToRoute as e:
-			assert e.route_name == 'test'
-			assert e.exclude_keys == 'blue'
-			assert e.kw['orange'] == 'orange'
-		else:
-			assert False, "Didn't throw exception"
+    def test_base_class_go_to_route(self):
+        vb = viewbase.ViewBase(self.request, const.DM_CIC, const.DM_CIC)
 
-	def test_base_class_security_login(self):
-		try:
-			vb = viewbase.ViewBase(self.request, const.DM_CIC, const.DM_CIC, True)
-		except viewbase.SecurityFailure:
-			pass
-		else:
-			assert False, "Expected security failure"
+        try:
+            vb._go_to_route("test")
+        except viewbase.GoToRoute as e:
+            assert e.route_name == "test"
+            assert e.exclude_keys is None
+            assert not e.kw
+        else:
+            assert False, "Didn't throw exception"
 
+        try:
+            vb._go_to_route("test", "blue", orange="orange")
+        except viewbase.GoToRoute as e:
+            assert e.route_name == "test"
+            assert e.exclude_keys == "blue"
+            assert e.kw["orange"] == "orange"
+        else:
+            assert False, "Didn't throw exception"
 
-	def test_base_class_no_public_access(self):
-		from cioc.core import dboptions
-		class DummyDbOptions(dboptions.DbOptions):
-			def __init__(self, dboptions):
-				self.dbopts = dboptions.dbopts
+    def test_base_class_security_login(self):
+        try:
+            vb = viewbase.ViewBase(self.request, const.DM_CIC, const.DM_CIC, True)
+        except viewbase.SecurityFailure:
+            pass
+        else:
+            assert False, "Expected security failure"
 
-		dboptions = DummyDbOptions(self.request.dboptions)
-		dboptions.AllowPublicAccess = False
+    def test_base_class_no_public_access(self):
+        from cioc.core import dboptions
 
-		self.request.dboptions = dboptions
+        class DummyDbOptions(dboptions.DbOptions):
+            def __init__(self, dboptions):
+                self.dbopts = dboptions.dbopts
 
-		try:
-			vb = viewbase.ViewBase(self.request, const.DM_CIC, const.DM_CIC)
-		except viewbase.SecurityFailure:
-			pass
-		else:
-			assert False, "Expected security failure"
-			
+        dboptions = DummyDbOptions(self.request.dboptions)
+        dboptions.AllowPublicAccess = False
 
-	def test_base_class_create_namespace(self):
-		vb = viewbase.ViewBase(self.request, const.DM_CIC, const.DM_CIC)
-		
-		ns = vb._create_response_namespace("test page", "test doc", {'a': 'a'})
+        self.request.dboptions = dboptions
 
-		assert ns['a'] == 'a'
+        try:
+            vb = viewbase.ViewBase(self.request, const.DM_CIC, const.DM_CIC)
+        except viewbase.SecurityFailure:
+            pass
+        else:
+            assert False, "Expected security failure"
 
+    def test_base_class_create_namespace(self):
+        vb = viewbase.ViewBase(self.request, const.DM_CIC, const.DM_CIC)
 
-		assert 'renderinfo' in ns
+        ns = vb._create_response_namespace("test page", "test doc", {"a": "a"})
 
-		self.config.add_settings({'mako.directories': 'cioc.web:templates'})
+        assert ns["a"] == "a"
 
-		r = vb._render_to_response('cioc.core.tests:empty.mak', 'test page', 'test doc', {'a': 'a'})
+        assert "renderinfo" in ns
 
-	def test_base_class_security_failure(self):
-		vb = viewbase.ViewBase(self.request, const.DM_CIC, const.DM_CIC)
-		try:
-			vb._security_failure()
-		except viewbase.SecurityFailure:
-			pass
-		else:
-			assert False, "Expected security failure"
+        self.config.add_settings({"mako.directories": "cioc.web:templates"})
 
+        r = vb._render_to_response(
+            "cioc.core.tests:empty.mak", "test page", "test doc", {"a": "a"}
+        )
+
+    def test_base_class_security_failure(self):
+        vb = viewbase.ViewBase(self.request, const.DM_CIC, const.DM_CIC)
+        try:
+            vb._security_failure()
+        except viewbase.SecurityFailure:
+            pass
+        else:
+            assert False, "Expected security failure"

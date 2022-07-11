@@ -22,8 +22,8 @@ from cioc.core.rootfactories import BasicRootFactory
 
 
 def includeme(config):
-	urlprefix = '/ct/'
+    urlprefix = "/ct/"
 
-	factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
-	config.add_route('ct_inrequest', urlprefix + 'inrequest', factory=factory)
-	config.add_route('ct_push', urlprefix + 'push', factory=factory)
+    factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
+    config.add_route("ct_inrequest", urlprefix + "inrequest", factory=factory)
+    config.add_route("ct_push", urlprefix + "push", factory=factory)

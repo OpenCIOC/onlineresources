@@ -32,210 +32,282 @@ from cioc.web.admin import viewbase
 import logging
 import six
 from six.moves import map
+
 log = logging.getLogger(__name__)
 
-templateprefix = 'cioc.web.admin:templates/'
+templateprefix = "cioc.web.admin:templates/"
 
-EditInfo = namedtuple('EditInfo', 'community_sets interests skills gi_interests gi_skills gi_sites data')
+EditInfo = namedtuple(
+    "EditInfo", "community_sets interests skills gi_interests gi_skills gi_sites data"
+)
 
-get_involved_sites = [('https://testapi.getinvolved.ca/rpc', 'Test Site'),
-					('https://api.getinvolved.ca/rpc', 'Production Site')]
+get_involved_sites = [
+    ("https://testapi.getinvolved.ca/rpc", "Test Site"),
+    ("https://api.getinvolved.ca/rpc", "Production Site"),
+]
 
 
 class AgencySchema(Schema):
-	if_key_missing = None
+    if_key_missing = None
 
-	AgencyCode = validators.AgencyCodeValidator(not_empty=True)
-	GetInvolvedUser = validators.UnicodeString(max=100)
-	GetInvolvedToken = validators.UnicodeString(max=100)
-	GetInvolvedCommunitySet = validators.IDValidator()
-	GetInvolvedSite = validators.OneOf([x[0] for x in get_involved_sites])
+    AgencyCode = validators.AgencyCodeValidator(not_empty=True)
+    GetInvolvedUser = validators.UnicodeString(max=100)
+    GetInvolvedToken = validators.UnicodeString(max=100)
+    GetInvolvedCommunitySet = validators.IDValidator()
+    GetInvolvedSite = validators.OneOf([x[0] for x in get_involved_sites])
 
-	chained_validators = [validators.RequireNoneOrAll(['GetInvolvedUser', 'GetInvolvedToken',
-													'GetInvolvedCommunitySet', 'GetInvolvedSite'])]
+    chained_validators = [
+        validators.RequireNoneOrAll(
+            [
+                "GetInvolvedUser",
+                "GetInvolvedToken",
+                "GetInvolvedCommunitySet",
+                "GetInvolvedSite",
+            ]
+        )
+    ]
 
 
 class InterestSchema(Schema):
-	if_key_missing = None
+    if_key_missing = None
 
-	AI_ID = validators.IDValidator()
-	GIInterestID = validators.IDValidator()
-	GISkillID = validators.IDValidator()
+    AI_ID = validators.IDValidator()
+    GIInterestID = validators.IDValidator()
+    GISkillID = validators.IDValidator()
 
 
 class SkillSchema(Schema):
-	if_key_missing = None
+    if_key_missing = None
 
-	SK_ID = validators.IDValidator()
-	GIInterestID = validators.IDValidator()
-	GISkillID = validators.IDValidator()
+    SK_ID = validators.IDValidator()
+    GIInterestID = validators.IDValidator()
+    GISkillID = validators.IDValidator()
 
 
 class GetInvolvedAPISchema(validators.RootSchema):
-	if_key_missing = None
+    if_key_missing = None
 
-	agencies = ForEach(AgencySchema())
-	interests = ForEach(InterestSchema())
-	skills = ForEach(SkillSchema())
+    agencies = ForEach(AgencySchema())
+    interests = ForEach(InterestSchema())
+    skills = ForEach(SkillSchema())
 
 
-@view_defaults(route_name='admin_getinvolvedapi', renderer=templateprefix + 'getinvolvedapi.mak')
+@view_defaults(
+    route_name="admin_getinvolvedapi", renderer=templateprefix + "getinvolvedapi.mak"
+)
 class GetInvolvedAPI(viewbase.AdminViewBase):
+    @view_config(request_method="POST")
+    def post(self):
+        request = self.request
+        user = request.user
 
-	@view_config(request_method='POST')
-	def post(self):
-		request = self.request
-		user = request.user
+        if not user.vol.SuperUserGlobal:
+            self._security_failure()
 
-		if not user.vol.SuperUserGlobal:
-			self._security_failure()
+        model_state = request.model_state
+        model_state.schema = GetInvolvedAPISchema()
+        model_state.form.variable_decode = True
 
-		model_state = request.model_state
-		model_state.schema = GetInvolvedAPISchema()
-		model_state.form.variable_decode = True
+        if model_state.validate():
+            # success
+            agencies = ET.Element("Agencies")
 
-		if model_state.validate():
-			#success
-			agencies = ET.Element('Agencies')
+            for agency in model_state.value("agencies") or []:
+                if not any(agency.values()):
+                    continue
 
-			for agency in model_state.value('agencies') or []:
-				if not any(agency.values()):
-					continue
+                el = ET.SubElement(agencies, "Agency")
+                for key, val in six.iteritems(agency):
+                    if val:
+                        ET.SubElement(el, key).text = six.text_type(val)
 
-				el = ET.SubElement(agencies, 'Agency')
-				for key, val in six.iteritems(agency):
-					if val:
-						ET.SubElement(el, key).text = six.text_type(val)
+            interests = ET.Element("Interests")
 
-			interests = ET.Element('Interests')
+            for interest in model_state.value("interests") or []:
+                if not interest.get("AI_ID") or not any(
+                    interest.get(k) for k in ["GISkillID", "GIInterestID"]
+                ):
+                    continue
 
-			for interest in model_state.value('interests') or []:
-				if not interest.get('AI_ID') or not any(interest.get(k) for k in ['GISkillID', 'GIInterestID']):
-					continue
+                el = ET.SubElement(interests, "Interest")
+                for key, val in six.iteritems(interest):
+                    if val:
+                        ET.SubElement(el, key).text = six.text_type(val)
 
-				el = ET.SubElement(interests, 'Interest')
-				for key, val in six.iteritems(interest):
-					if val:
-						ET.SubElement(el, key).text = six.text_type(val)
+            skills = ET.Element("Skills")
+            for skill in model_state.value("skills") or []:
+                if not skill.get("SK_ID") or not any(
+                    skill.get(k) for k in ["GISkillID", "GIInterestID"]
+                ):
+                    continue
 
-			skills = ET.Element('Skills')
-			for skill in model_state.value('skills') or []:
-				if not skill.get('SK_ID') or not any(skill.get(k) for k in ['GISkillID', 'GIInterestID']):
-					continue
+                el = ET.SubElement(skills, "Skill")
+                for key, val in six.iteritems(skill):
+                    if val:
+                        ET.SubElement(el, key).text = six.text_type(val)
 
-				el = ET.SubElement(skills, 'Skill')
-				for key, val in six.iteritems(skill):
-					if val:
-						ET.SubElement(el, key).text = six.text_type(val)
+            args = [
+                request.dboptions.MemberID,
+                ET.tostring(agencies, encoding="unicode"),
+                ET.tostring(interests, encoding="unicode"),
+                ET.tostring(skills, encoding="unicode"),
+            ]
 
-			args = [request.dboptions.MemberID, ET.tostring(agencies, encoding='unicode'), ET.tostring(interests, encoding='unicode'), ET.tostring(skills, encoding='unicode')]
-
-			with request.connmgr.get_connection('admin') as conn:
-				sql = '''
+            with request.connmgr.get_connection("admin") as conn:
+                sql = """
 					DECLARE @ErrMsg as nvarchar(500),
 					@RC as int
 
 					EXECUTE @RC = dbo.sp_VOL_GetInvolvedAPI_u ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
 					SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				'''
+				"""
 
-				cursor = conn.execute(sql, args)
-				result = cursor.fetchone()
-				cursor.close()
+                cursor = conn.execute(sql, args)
+                result = cursor.fetchone()
+                cursor.close()
 
-			if not result.Return:
-				msg = _('The Get Involved API configuration was successfully updated.', request)
+            if not result.Return:
+                msg = _(
+                    "The Get Involved API configuration was successfully updated.",
+                    request,
+                )
 
-				self._go_to_route('admin_getinvolvedapi', _query=[('InfoMsg', msg)])
+                self._go_to_route("admin_getinvolvedapi", _query=[("InfoMsg", msg)])
 
-		else:
-			ErrMsg = _('There were validation errors.')
+        else:
+            ErrMsg = _("There were validation errors.")
 
-		edit_info = self._get_edit_info()._asdict()
-		edit_info['ErrMsg'] = ErrMsg
+        edit_info = self._get_edit_info()._asdict()
+        edit_info["ErrMsg"] = ErrMsg
 
-		model_state.form.data = variabledecode.variable_decode(request.POST)
+        model_state.form.data = variabledecode.variable_decode(request.POST)
 
-		title = _('Manage Get Involved API Configuration', request)
-		return self._create_response_namespace(title, title, edit_info, no_index=True)
+        title = _("Manage Get Involved API Configuration", request)
+        return self._create_response_namespace(title, title, edit_info, no_index=True)
 
-	@view_config()
-	def get(self):
-		request = self.request
-		user = request.user
+    @view_config()
+    def get(self):
+        request = self.request
+        user = request.user
 
-		if not user.vol.SuperUserGlobal:
-			self._security_failure()
+        if not user.vol.SuperUserGlobal:
+            self._security_failure()
 
-		edit_info = self._get_edit_info()
+        edit_info = self._get_edit_info()
 
-		request.model_state.form.data = edit_info.data
+        request.model_state.form.data = edit_info.data
 
-		title = _('Manage Get Involved API Configuration', request)
-		return self._create_response_namespace(title, title, edit_info._asdict(), no_index=True)
+        title = _("Manage Get Involved API Configuration", request)
+        return self._create_response_namespace(
+            title, title, edit_info._asdict(), no_index=True
+        )
 
-	def _get_edit_info(self, all=True):
-		request = self.request
+    def _get_edit_info(self, all=True):
+        request = self.request
 
-		agencies = []
-		interests = []
-		skills = []
-		gi_interests = []
-		gi_skills = []
-		community_sets = []
-		interest_map = []
-		skill_map = []
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute('EXEC sp_VOL_GetInvolvedAPI_s ?, ?', request.dboptions.MemberID, all)
+        agencies = []
+        interests = []
+        skills = []
+        gi_interests = []
+        gi_skills = []
+        community_sets = []
+        interest_map = []
+        skill_map = []
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(
+                "EXEC sp_VOL_GetInvolvedAPI_s ?, ?", request.dboptions.MemberID, all
+            )
 
-			community_sets = list(map(tuple, cursor.fetchall()))
+            community_sets = list(map(tuple, cursor.fetchall()))
 
-			cursor.nextset()
+            cursor.nextset()
 
-			interests = cursor.fetchall()
+            interests = cursor.fetchall()
 
-			cursor.nextset()
+            cursor.nextset()
 
-			skills = list(map(tuple, cursor.fetchall()))
+            skills = list(map(tuple, cursor.fetchall()))
 
-			cursor.nextset()
+            cursor.nextset()
 
-			gi_interests = cursor.fetchall()
+            gi_interests = cursor.fetchall()
 
-			cursor.nextset()
+            cursor.nextset()
 
-			gi_skills = list(map(tuple, cursor.fetchall()))
+            gi_skills = list(map(tuple, cursor.fetchall()))
 
-			if all:
-				cursor.nextset()
+            if all:
+                cursor.nextset()
 
-				agencies = cursor.fetchall()
+                agencies = cursor.fetchall()
 
-				cursor.nextset()
+                cursor.nextset()
 
-				interest_map = cursor.fetchall()
+                interest_map = cursor.fetchall()
 
-				cursor.nextset()
+                cursor.nextset()
 
-				skill_map = cursor.fetchall()
+                skill_map = cursor.fetchall()
 
-			cursor.close()
+            cursor.close()
 
-		data = {}
-		if all:
-			data['agencies'] = [{'AgencyCode': x.AgencyCode, 'GetInvolvedUser':x.GetInvolvedUser, 'GetInvolvedToken': x.GetInvolvedToken, 'GetInvolvedCommunitySet': x.GetInvolvedCommunitySet, 'GetInvolvedSite': x.GetInvolvedSite} for x in agencies]
+        data = {}
+        if all:
+            data["agencies"] = [
+                {
+                    "AgencyCode": x.AgencyCode,
+                    "GetInvolvedUser": x.GetInvolvedUser,
+                    "GetInvolvedToken": x.GetInvolvedToken,
+                    "GetInvolvedCommunitySet": x.GetInvolvedCommunitySet,
+                    "GetInvolvedSite": x.GetInvolvedSite,
+                }
+                for x in agencies
+            ]
 
-			data['interests'] = [{'AI_ID': x.AI_ID, 'GISkillID': x.GISkillID, 'GIInterestID': x.GIInterestID} for x in interest_map]
-			data['skills'] = [{'SK_ID': x.SK_ID, 'GISkillID': x.GISkillID, 'GIInterestID': x.GIInterestID} for x in skill_map]
+            data["interests"] = [
+                {
+                    "AI_ID": x.AI_ID,
+                    "GISkillID": x.GISkillID,
+                    "GIInterestID": x.GIInterestID,
+                }
+                for x in interest_map
+            ]
+            data["skills"] = [
+                {
+                    "SK_ID": x.SK_ID,
+                    "GISkillID": x.GISkillID,
+                    "GIInterestID": x.GIInterestID,
+                }
+                for x in skill_map
+            ]
 
-		if request.dboptions.OnlySpecificInterests:
-			interests = list(sorted(set((g.AI_ID, g.InterestName) for g in interests), key=lambda x: x[1]))
-		else:
-			interests = [([(g.AI_ID, g.InterestName) for g in group], k) for k, group in groupby(interests, key=attrgetter('InterestGroup'))]
+        if request.dboptions.OnlySpecificInterests:
+            interests = list(
+                sorted(
+                    set((g.AI_ID, g.InterestName) for g in interests),
+                    key=lambda x: x[1],
+                )
+            )
+        else:
+            interests = [
+                ([(g.AI_ID, g.InterestName) for g in group], k)
+                for k, group in groupby(interests, key=attrgetter("InterestGroup"))
+            ]
 
-		log.debug('interests: %s', interests)
-		gi_interests = [([(g.GIInterestID, g.GIInterestName) for g in group], k) for k, group in groupby(gi_interests, key=attrgetter('GIInterestGroup'))]
+        log.debug("interests: %s", interests)
+        gi_interests = [
+            ([(g.GIInterestID, g.GIInterestName) for g in group], k)
+            for k, group in groupby(gi_interests, key=attrgetter("GIInterestGroup"))
+        ]
 
-		# XXX fill out edit info
-		return EditInfo(community_sets, interests, skills, gi_interests, gi_skills, get_involved_sites, data)
+        # XXX fill out edit info
+        return EditInfo(
+            community_sets,
+            interests,
+            skills,
+            gi_interests,
+            gi_skills,
+            get_involved_sites,
+            data,
+        )

@@ -34,66 +34,79 @@ _ = i18n.gettext
 
 
 def make_headers(extra_headers=None):
-	tmp = dict(extra_headers or {})
-	return tmp
+    tmp = dict(extra_headers or {})
+    return tmp
 
 
-def make_401_error(message, realm='CIOC RPC'):
-	error = HTTPUnauthorized(headers=make_headers({'WWW-Authenticate': 'Basic realm="%s"' % realm}))
-	error.content_type = "text/plain"
-	error.text = message
-	return error
+def make_401_error(message, realm="CIOC RPC"):
+    error = HTTPUnauthorized(
+        headers=make_headers({"WWW-Authenticate": 'Basic realm="%s"' % realm})
+    )
+    error.content_type = "text/plain"
+    error.text = message
+    return error
 
 
 def make_internal_server_error(message):
-	error = HTTPInternalServerError()
-	error.content_type = "text/plain"
-	error.text = message
-	return error
+    error = HTTPInternalServerError()
+    error.content_type = "text/plain"
+    error.text = message
+    return error
 
 
-@view_config(route_name='rpc_browseoppbyorg', renderer='json')
+@view_config(route_name="rpc_browseoppbyorg", renderer="json")
 class RpcBrowseOppByOrg(viewbase.VolViewBase):
+    def __call__(self):
+        request = self.request
+        user = request.user
 
-	def __call__(self):
-		request = self.request
-		user = request.user
+        if not user:
+            return make_401_error("Access Denied")
 
-		if not user:
-			return make_401_error(u'Access Denied')
+        if "realtimestandard" not in user.vol.ExternalAPIs:
+            return make_401_error("Insufficient Permissions")
 
-		if 'realtimestandard' not in user.vol.ExternalAPIs:
-			return make_401_error(u'Insufficient Permissions')
+        viewdata = request.viewdata.vol
+        with request.connmgr.get_connection() as conn:
+            organizations = conn.execute(
+                "EXEC sp_VOL_BrowseByOrg NULL, ?", viewdata.ViewType
+            ).fetchall()
 
-		viewdata = request.viewdata.vol
-		with request.connmgr.get_connection() as conn:
-			organizations = conn.execute('EXEC sp_VOL_BrowseByOrg NULL, ?',
-						viewdata.ViewType).fetchall()
+        makeLink = request.passvars.makeLink
+        route_url = request.passvars.route_url
 
-		makeLink = request.passvars.makeLink
-		route_url = request.passvars.route_url
+        format = request.params.get("format")
+        if format and format.lower() == "xml":
+            extra_link_args = [("format", "xml")]
+            api_detail_args = {"_query": extra_link_args}
+        else:
+            extra_link_args = []
+            api_detail_args = {}
 
-		format = request.params.get('format')
-		if format and format.lower() == 'xml':
-			extra_link_args = [('format', 'xml')]
-			api_detail_args = {'_query': extra_link_args}
-		else:
-			extra_link_args = []
-			api_detail_args = {}
+        full_info = [
+            OrderedDict(
+                [
+                    ("ORG_NAME", x.ORG_NAME_FULL),
+                    ("NUM", x.NUM),
+                    ("OP_COUNT", x.OpCount),
+                    (
+                        "OPP_SEARCH_LINK",
+                        request.host_url
+                        + makeLink(
+                            "~/rpc/oppsearch.asp", [("NUM", x.NUM)] + extra_link_args
+                        ),
+                    ),
+                    (
+                        "API_RECORD_DETAILS",
+                        route_url("rpc_orgdetails", num=x.NUM, **api_detail_args),
+                    ),
+                ]
+            )
+            for x in organizations
+        ]
 
-		full_info = [
-			OrderedDict([
-				('ORG_NAME', x.ORG_NAME_FULL),
-				('NUM', x.NUM),
-				('OP_COUNT', x.OpCount),
-				('OPP_SEARCH_LINK', request.host_url + makeLink('~/rpc/oppsearch.asp', [('NUM', x.NUM)] + extra_link_args)),
-				('API_RECORD_DETAILS', route_url('rpc_orgdetails', num=x.NUM, **api_detail_args)),
-			])
-			for x in organizations
-		]
+        format = request.params.get("format")
+        if format and format.lower() == "xml":
+            request.override_renderer = "cioc:xml"
 
-		format = request.params.get('format')
-		if format and format.lower() == 'xml':
-			request.override_renderer = 'cioc:xml'
-
-		return full_info
+        return full_info

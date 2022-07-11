@@ -20,31 +20,34 @@ import six.moves.urllib.request, six.moves.urllib.parse, six.moves.urllib.error
 
 
 def hasGoogleMapsAPI(request):
-	area_str = request.pageinfo.DbAreaS
-	if area_str == 'GBL':
-		area_str = 'CIC'
-	domain_info = request.dboptions.domain_info
-	return not not (domain_info['GoogleMapsClientID' + area_str] or domain_info['GoogleMapsAPIKey' + area_str])
+    area_str = request.pageinfo.DbAreaS
+    if area_str == "GBL":
+        area_str = "CIC"
+    domain_info = request.dboptions.domain_info
+    return not not (
+        domain_info["GoogleMapsClientID" + area_str]
+        or domain_info["GoogleMapsAPIKey" + area_str]
+    )
 
 
 def getGoogleMapsKeyArg(request):
-	area_str = request.pageinfo.DbAreaS
-	if area_str == 'GBL':
-		area_str = 'CIC'
-	domain_info = request.dboptions.domain_info
-	params = {}
-	client_id = domain_info['GoogleMapsClientID' + area_str]
-	api_key = domain_info['GoogleMapsAPIKey' + area_str]
-	if client_id:
-		params['client'] = client_id
-		channel = domain_info['GoogleMapsChannel' + area_str]
-		if channel:
-			params['channel'] = channel
+    area_str = request.pageinfo.DbAreaS
+    if area_str == "GBL":
+        area_str = "CIC"
+    domain_info = request.dboptions.domain_info
+    params = {}
+    client_id = domain_info["GoogleMapsClientID" + area_str]
+    api_key = domain_info["GoogleMapsAPIKey" + area_str]
+    if client_id:
+        params["client"] = client_id
+        channel = domain_info["GoogleMapsChannel" + area_str]
+        if channel:
+            params["channel"] = channel
 
-	elif api_key:
-		params['key'] = api_key
+    elif api_key:
+        params["key"] = api_key
 
-	if params:
-		return six.moves.urllib.parse.urlencode(params)
+    if params:
+        return six.moves.urllib.parse.urlencode(params)
 
-	return ''
+    return ""

@@ -29,45 +29,56 @@ from cioc.core.viewbase import ViewBase
 
 log = logging.getLogger(__name__)
 
-templateprefix = 'cioc.web.gbl:templates/'
+templateprefix = "cioc.web.gbl:templates/"
 
-def make_icon_html(icon_type, icon_name, no_blanks=False, extra_class=''):
 
-	if icon_name and not icon_type:
-		icon_type, icon_name = icon_name.split('-',1)
+def make_icon_html(icon_type, icon_name, no_blanks=False, extra_class=""):
 
-	if icon_type == 'fa':
-		icon_html = Markup('<i class="fa fa-%s %s"></i>' % (icon_name, extra_class))
-	elif icon_type == 'glyphicon':
-		icon_html = Markup('<span class="glyphicon glyphicon-%s %s"></span>' % (icon_name, extra_class))
-	elif icon_type == 'icon':
-		icon_html = Markup('<span class="fa icon-%s %s"></span>' % (icon_name, extra_class))
-	elif no_blanks:
-		icon_html = '?'
-	else:
-		icon_html = ''
+    if icon_name and not icon_type:
+        icon_type, icon_name = icon_name.split("-", 1)
 
-	return icon_html
+    if icon_type == "fa":
+        icon_html = Markup('<i class="fa fa-%s %s"></i>' % (icon_name, extra_class))
+    elif icon_type == "glyphicon":
+        icon_html = Markup(
+            '<span class="glyphicon glyphicon-%s %s"></span>' % (icon_name, extra_class)
+        )
+    elif icon_type == "icon":
+        icon_html = Markup(
+            '<span class="fa icon-%s %s"></span>' % (icon_name, extra_class)
+        )
+    elif no_blanks:
+        icon_html = "?"
+    else:
+        icon_html = ""
 
-@view_defaults(route_name='gbl_iconlist', renderer=templateprefix + 'iconlist.mak')
+    return icon_html
+
+
+@view_defaults(route_name="gbl_iconlist", renderer=templateprefix + "iconlist.mak")
 class IconlistView(ViewBase):
-	def __init__(self, request, require_login=True):
-		super(IconlistView, self).__init__(request, require_login)
+    def __init__(self, request, require_login=True):
+        super(IconlistView, self).__init__(request, require_login)
 
-	@view_config()
-	def get(self):
-		request = self.request
-		user = request.user
+    @view_config()
+    def get(self):
+        request = self.request
+        user = request.user
 
-		with request.connmgr.get_connection('admin') as conn:
-			sql = '''
+        with request.connmgr.get_connection("admin") as conn:
+            sql = """
 			EXEC sp_STP_Icon_ls NULL, NULL
-			'''
-			cursor = conn.execute(sql)
+			"""
+            cursor = conn.execute(sql)
 
-			icons = cursor.fetchall()
+            icons = cursor.fetchall()
 
-			cursor.close()
+            cursor.close()
 
-		title = _('Browse Icons', request)
-		return self._create_response_namespace(title, title, {'icons': icons, 'make_icon_html': make_icon_html}, no_index=True)
+        title = _("Browse Icons", request)
+        return self._create_response_namespace(
+            title,
+            title,
+            {"icons": icons, "make_icon_html": make_icon_html},
+            no_index=True,
+        )

@@ -22,94 +22,107 @@ from cioc.core.viewbase import ViewBase
 
 
 class AdminViewBase(ViewBase):
-
-	def __init__(self, request, require_login=True):
-		ViewBase.__init__(self, request, require_login)
+    def __init__(self, request, require_login=True):
+        ViewBase.__init__(self, request, require_login)
 
 
 domain_validator = validators.DictConverter(
-	{
-		str(const.DMT_CIC.id): const.DMT_CIC,
-		str(const.DMT_VOL.id): const.DMT_VOL
-	}, if_invalid=None, if_empty=None)
+    {str(const.DMT_CIC.id): const.DMT_CIC, str(const.DMT_VOL.id): const.DMT_VOL},
+    if_invalid=None,
+    if_empty=None,
+)
 
 
-ShowCultures = All(validators.Set(use_set=True),
-		ForEach(ciocvalidators.ActiveCulture(record_cultures=True)),
-		if_invalid=None, if_empty=None)
+ShowCultures = All(
+    validators.Set(use_set=True),
+    ForEach(ciocvalidators.ActiveCulture(record_cultures=True)),
+    if_invalid=None,
+    if_empty=None,
+)
 
-ShowCulturesOnlyActive = All(validators.Set(use_set=True),
-		ForEach(ciocvalidators.ActiveCulture(record_cultures=False)),
-		if_invalid=None, if_empty=None)
+ShowCulturesOnlyActive = All(
+    validators.Set(use_set=True),
+    ForEach(ciocvalidators.ActiveCulture(record_cultures=False)),
+    if_invalid=None,
+    if_empty=None,
+)
 
 
-def cull_extra_cultures(desc_key, multi_key=None, ensure_active_cultures=True, record_cultures=True):
-	def inner_cull_extra_cultures(value_dict, state, self):
-		cultures = value_dict.get('ShowCultures')
-		validator = ShowCultures if record_cultures else ShowCulturesOnlyActive
-		try:
-			cultures = validator.to_python(cultures) or set()
-		except validators.Invalid:
-			cultures = set()
+def cull_extra_cultures(
+    desc_key, multi_key=None, ensure_active_cultures=True, record_cultures=True
+):
+    def inner_cull_extra_cultures(value_dict, state, self):
+        cultures = value_dict.get("ShowCultures")
+        validator = ShowCultures if record_cultures else ShowCulturesOnlyActive
+        try:
+            cultures = validator.to_python(cultures) or set()
+        except validators.Invalid:
+            cultures = set()
 
-		if ensure_active_cultures:
-			cultures.update(syslanguage.active_cultures())
+        if ensure_active_cultures:
+            cultures.update(syslanguage.active_cultures())
 
-		if multi_key:
-			items = value_dict.get(multi_key) or []
-		else:
-			items = [value_dict]
+        if multi_key:
+            items = value_dict.get(multi_key) or []
+        else:
+            items = [value_dict]
 
-		for item in items:
-			descriptions = item.get(desc_key, {})
-			for culture in set(c.replace('_', '-') for c in descriptions.keys()) - cultures:
-				del descriptions[culture.replace('-', '_')]
+        for item in items:
+            descriptions = item.get(desc_key, {})
+            for culture in (
+                set(c.replace("_", "-") for c in descriptions.keys()) - cultures
+            ):
+                del descriptions[culture.replace("-", "_")]
 
-	return schema.SimpleFormValidator(inner_cull_extra_cultures)
+    return schema.SimpleFormValidator(inner_cull_extra_cultures)
 
 
 class ShowCulturesAndDomain(Schema):
-	allow_extra_fields = True
-	filter_extra_fields = True
+    allow_extra_fields = True
+    filter_extra_fields = True
 
-	if_key_missing = None
+    if_key_missing = None
 
-	DM = domain_validator
-	ShowCultures = ShowCultures
+    DM = domain_validator
+    ShowCultures = ShowCultures
 
 
 class ShowCulturesAndDomainOnlyActive(Schema):
-	allow_extra_fields = True
-	filter_extra_fields = True
+    allow_extra_fields = True
+    filter_extra_fields = True
 
-	if_key_missing = None
+    if_key_missing = None
 
-	DM = domain_validator
-	ShowCultures = ShowCulturesOnlyActive
+    DM = domain_validator
+    ShowCultures = ShowCulturesOnlyActive
 
 
-def get_domain_and_show_cultures(params, ensure_active_cultures=True, record_cultures=True):
-	params = params.copy()
+def get_domain_and_show_cultures(
+    params, ensure_active_cultures=True, record_cultures=True
+):
+    params = params.copy()
 
-	schema = ShowCulturesAndDomain if record_cultures else ShowCulturesAndDomainOnlyActive
+    schema = (
+        ShowCulturesAndDomain if record_cultures else ShowCulturesAndDomainOnlyActive
+    )
 
-	try:
-		params = schema.to_python(params)
-	except validators.Invalid:
-		pass
+    try:
+        params = schema.to_python(params)
+    except validators.Invalid:
+        pass
 
-	shown_cultures = params['ShowCultures'] or set()
-	if ensure_active_cultures:
-		shown_cultures.update(syslanguage.active_cultures())
+    shown_cultures = params["ShowCultures"] or set()
+    if ensure_active_cultures:
+        shown_cultures.update(syslanguage.active_cultures())
 
-	return params['DM'], shown_cultures
+    return params["DM"], shown_cultures
 
 
 def get_domain(params):
-	dm = params.get('DM')
-	try:
-		dm = domain_validator.to_python(dm)
-	except validators.Invalid:
-		pass
+    dm = params.get("DM")
+    try:
+        dm = domain_validator.to_python(dm)
+    except validators.Invalid:
+        pass
 
-	return dm
+    return dm

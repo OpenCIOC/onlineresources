@@ -17,10 +17,11 @@
 # std library
 from __future__ import absolute_import
 import string
+
 try:
-	from cgi import escape
+    from cgi import escape
 except ImportError:
-	from html import escape
+    from html import escape
 
 # 3rd party
 
@@ -31,17 +32,20 @@ _ = i18n.gettext
 
 
 def makeAlphaListItems(include_nums, link_url, request):
-	letters = string.ascii_uppercase
-	if include_nums:
-		letters = ['0-9'] + list(letters)
+    letters = string.ascii_uppercase
+    if include_nums:
+        letters = ["0-9"] + list(letters)
 
-	makeLink = request.passvars.makeLink
-	letters = ((escape(makeLink(link_url, {'Let': l}), True), l) for l in letters)
+    makeLink = request.passvars.makeLink
+    letters = ((escape(makeLink(link_url, {"Let": l}), True), l) for l in letters)
 
-	return ({'LINK': l, 'DISPLAY': d} for l, d in letters)
+    return ({"LINK": l, "DISPLAY": d} for l, d in letters)
 
 
 def makeAlphaList(include_nums, link_url, href_class, request):
-	templ = '<a class="%s" href="%%(LINK)s">%%(DISPLAY)s</a>' % href_class
-	letters = (templ % l for l in makeAlphaListItems(include_nums, link_url, request))
-	return '''<div class="browse-by-list">%s<br>%s</div>''' % (_('Select Letter', request), '&nbsp;&nbsp;'.join(letters))
+    templ = '<a class="%s" href="%%(LINK)s">%%(DISPLAY)s</a>' % href_class
+    letters = (templ % l for l in makeAlphaListItems(include_nums, link_url, request))
+    return """<div class="browse-by-list">%s<br>%s</div>""" % (
+        _("Select Letter", request),
+        "&nbsp;&nbsp;".join(letters),
+    )

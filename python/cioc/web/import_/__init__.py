@@ -22,14 +22,16 @@ from cioc.core.rootfactories import BasicRootFactory
 
 
 def includeme(config):
-	urlprefix = '/import/'
+    urlprefix = "/import/"
 
-	# /import/upload
-	factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
-	config.add_route('import_upload', urlprefix + 'upload', factory=factory)
+    # /import/upload
+    factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
+    config.add_route("import_upload", urlprefix + "upload", factory=factory)
 
-	config.add_route('import_community_map', urlprefix + 'externalcommunities')
-	config.add_route('import_community', urlprefix + 'community')
+    config.add_route("import_community_map", urlprefix + "externalcommunities")
+    config.add_route("import_community", urlprefix + "community")
 
-	factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
-	config.add_route('import_upload_vol', '/volunteer' + urlprefix + 'upload', factory=factory)
+    factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
+    config.add_route(
+        "import_upload_vol", "/volunteer" + urlprefix + "upload", factory=factory
+    )

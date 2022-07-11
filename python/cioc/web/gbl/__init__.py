@@ -23,36 +23,46 @@ from cioc.web.gbl.emaillist import EmailListContext
 
 
 def includeme(config):
-	urlprefix = '/'
+    urlprefix = "/"
 
-	# /recordlist
-	factory = partial(EmailListContext, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
-	config.add_route('record_list_cic', urlprefix + 'recordlist', factory=factory)
+    # /recordlist
+    factory = partial(EmailListContext, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
+    config.add_route("record_list_cic", urlprefix + "recordlist", factory=factory)
 
-	factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
-	config.add_route('pages_cic', urlprefix + 'pages/{slug}', factory=factory)
+    factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
+    config.add_route("pages_cic", urlprefix + "pages/{slug}", factory=factory)
 
-	factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
-	config.add_route('sched_upcoming_cic', urlprefix + 'events/upcoming', factory=factory)
+    factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
+    config.add_route(
+        "sched_upcoming_cic", urlprefix + "events/upcoming", factory=factory
+    )
 
-	# /volunteer/recordlist
-	factory = partial(EmailListContext, domain=const.DM_VOL, db_area=const.DM_VOL)
-	config.add_route('record_list_vol', '/volunteer' + urlprefix + 'recordlist', factory=factory)
+    # /volunteer/recordlist
+    factory = partial(EmailListContext, domain=const.DM_VOL, db_area=const.DM_VOL)
+    config.add_route(
+        "record_list_vol", "/volunteer" + urlprefix + "recordlist", factory=factory
+    )
 
-	factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
-	config.add_route('pages_vol', '/volunteer' + urlprefix + 'pages/{slug}', factory=factory)
+    factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
+    config.add_route(
+        "pages_vol", "/volunteer" + urlprefix + "pages/{slug}", factory=factory
+    )
 
-	factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
-	config.add_route('sched_upcoming_vol', '/volunteer' + urlprefix + 'events/upcoming', factory=factory)
+    factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
+    config.add_route(
+        "sched_upcoming_vol",
+        "/volunteer" + urlprefix + "events/upcoming",
+        factory=factory,
+    )
 
-	# /shortcodes
-	factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_GLOBAL)
-	config.add_route('gbl_shortcodes', urlprefix + 'shortcodes')
+    # /shortcodes
+    factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_GLOBAL)
+    config.add_route("gbl_shortcodes", urlprefix + "shortcodes")
 
-	# /iconlist
-	factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_GLOBAL)
-	config.add_route('gbl_iconlist', urlprefix + 'iconlist')
+    # /iconlist
+    factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_GLOBAL)
+    config.add_route("gbl_iconlist", urlprefix + "iconlist")
 
-	# /go
-	factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_GLOBAL)
-	config.add_route('gbl_go', urlprefix + 'go/{slug}')
+    # /go
+    factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_GLOBAL)
+    config.add_route("gbl_go", urlprefix + "go/{slug}")

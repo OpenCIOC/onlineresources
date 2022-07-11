@@ -16,22 +16,24 @@
 
 from __future__ import absolute_import
 from . import constants as const
+
 viewbase = None
 
 
 class BaseRootFactory(object):
-	force_print_mode = False
-	allow_api_login = False
+    force_print_mode = False
+    allow_api_login = False
 
 
 class BasicRootFactory(BaseRootFactory):
+    def __init__(
+        self, request, domain=const.DM_GLOBAL, db_area=const.DM_GLOBAL, **kwargs
+    ):
+        for key, val in kwargs.items():
+            setattr(self, key, val)
 
-	def __init__(self, request, domain=const.DM_GLOBAL, db_area=const.DM_GLOBAL, **kwargs):
-		for key, val in kwargs.items():
-			setattr(self, key, val)
-
-		request.context = self
-		global viewbase
-		if not viewbase:
-			from . import viewbase
-		viewbase.init_page_info(request, domain, db_area)
+        request.context = self
+        global viewbase
+        if not viewbase:
+            from . import viewbase
+        viewbase.init_page_info(request, domain, db_area)

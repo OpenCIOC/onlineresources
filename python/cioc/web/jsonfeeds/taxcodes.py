@@ -28,28 +28,27 @@ from cioc.web.cic import viewbase
 log = logging.getLogger(__name__)
 
 
-@view_config(route_name='jsonfeeds_taxcodes', renderer='json')
+@view_config(route_name="jsonfeeds_taxcodes", renderer="json")
 class JsonFeedsIcons(viewbase.CicViewBase):
+    def __call__(self):
+        request = self.request
 
-	def __call__(self):
-		request = self.request
+        term = request.params.get("term")
+        if term:
+            term = term.strip()
+        if not term:
+            return []
 
-		term = request.params.get('term')
-		if term:
-			term = term.strip()
-		if not term:
-			return []
+        if len(term) > 60:
+            return []
 
-		if len(term) > 60:
-			return []
+        args = [request.dboptions.MemberID, term]
 
-		args = [request.dboptions.MemberID, term]
-
-		sql = """
+        sql = """
 			EXEC sp_CIC_TaxCode_Finder ?, ?
 		"""
 
-		with request.connmgr.get_connection('cic') as conn:
-			codes = conn.execute(sql, args).fetchall()
+        with request.connmgr.get_connection("cic") as conn:
+            codes = conn.execute(sql, args).fetchall()
 
-		return [{'value': x.Code, 'label': x.Term} for x in codes]
+        return [{"value": x.Code, "label": x.Term} for x in codes]

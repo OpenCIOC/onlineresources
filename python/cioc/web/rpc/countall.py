@@ -33,54 +33,57 @@ _ = i18n.gettext
 
 
 def make_headers(extra_headers=None):
-	tmp = dict(extra_headers or {})
-	return tmp
+    tmp = dict(extra_headers or {})
+    return tmp
 
 
-def make_401_error(message, realm='CIOC RPC'):
-	error = HTTPUnauthorized(headers=make_headers({'WWW-Authenticate': 'Basic realm="%s"' % realm}))
-	error.content_type = "text/plain"
-	error.text = message
-	return error
+def make_401_error(message, realm="CIOC RPC"):
+    error = HTTPUnauthorized(
+        headers=make_headers({"WWW-Authenticate": 'Basic realm="%s"' % realm})
+    )
+    error.content_type = "text/plain"
+    error.text = message
+    return error
 
 
 def make_internal_server_error(message):
-	error = HTTPInternalServerError()
-	error.content_type = "text/plain"
-	error.text = message
-	return error
+    error = HTTPInternalServerError()
+    error.content_type = "text/plain"
+    error.text = message
+    return error
 
 
-@view_config(route_name='rpc_countall', renderer='json')
+@view_config(route_name="rpc_countall", renderer="json")
 class Count(viewbase.ViewBase):
+    def __call__(self):
+        request = self.request
+        user = request.user
 
-	def __call__(self):
-		request = self.request
-		user = request.user
+        retval = {}
 
-		retval = {}
+        domain = request.matchdict["domain"].upper()
 
-		domain = request.matchdict['domain'].upper()
+        if not user:
+            return make_401_error("Access Denied")
 
-		if not user:
-			return make_401_error(u'Access Denied')
+        if "realtimestandard" not in user.cic.ExternalAPIs:
+            return make_401_error("Insufficient Permissions")
 
-		if 'realtimestandard' not in user.cic.ExternalAPIs:
-			return make_401_error(u'Insufficient Permissions')
+        with request.connmgr.get_connection() as conn:
+            count_row = conn.execute(
+                "EXEC sp_" + domain + "_View_c_Records ?", request.viewdata.cic.ViewType
+            ).fetchone()
 
-		with request.connmgr.get_connection() as conn:
-			count_row = conn.execute('EXEC sp_' + domain + '_View_c_Records ?', request.viewdata.cic.ViewType).fetchone()
+            if count_row:
+                retval["RecordCount"] = count_row.RecordsInView
+            else:
+                retval["RecordCount"] = 0
 
-			if count_row:
-				retval['RecordCount'] = count_row.RecordsInView
-			else:
-				retval['RecordCount'] = 0
+        if not retval:
+            return make_401_error("Insufficient Permissions")
 
-		if not retval:
-			return make_401_error(u'Insufficient Permissions')
+        format = request.params.get("format")
+        if format and format.lower() == "xml":
+            request.override_renderer = "cioc:xml"
 
-		format = request.params.get('format')
-		if format and format.lower() == 'xml':
-			request.override_renderer = 'cioc:xml'
-
-		return retval
+        return retval

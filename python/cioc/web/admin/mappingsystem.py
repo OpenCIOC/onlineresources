@@ -33,110 +33,124 @@ import six
 
 log = logging.getLogger(__name__)
 
-templateprefix = 'cioc.web.admin:templates/mappingsystem/'
+templateprefix = "cioc.web.admin:templates/mappingsystem/"
 
 
 class MappingSystemBaseSchema(Schema):
-	if_key_missing = None
+    if_key_missing = None
 
-	NewWindow = validators.Bool()
-	DefaultProvince = ciocvalidators.String(min=2, max=2, if_empty=None, not_empty=True)
-	DefaultCountry = ciocvalidators.UnicodeString(max=50, not_empty=True)
+    NewWindow = validators.Bool()
+    DefaultProvince = ciocvalidators.String(min=2, max=2, if_empty=None, not_empty=True)
+    DefaultCountry = ciocvalidators.UnicodeString(max=50, not_empty=True)
 
-mapping_fields = ['NewWindow', 'DefaultProvince', 'DefaultCountry']
+
+mapping_fields = ["NewWindow", "DefaultProvince", "DefaultCountry"]
 
 
 class MappingSystemDescriptionSchema(Schema):
-	if_key_missing = None
+    if_key_missing = None
 
-	Name = ciocvalidators.UnicodeString(max=50)
-	Label = ciocvalidators.UnicodeString(max=200)
-	String = Pipe(ciocvalidators.URLWithProto(max=255), validators.MaxLength(255))
+    Name = ciocvalidators.UnicodeString(max=50)
+    Label = ciocvalidators.UnicodeString(max=200)
+    String = Pipe(ciocvalidators.URLWithProto(max=255), validators.MaxLength(255))
 
-	chained_validators = [
-		ciocvalidators.RequireIfAny('Name', present=("Label", 'String')),
-		ciocvalidators.RequireIfAny('Label', present=("Name", "String")),
-		ciocvalidators.RequireIfAny('String', present=("Name", "Label")),
-	]
+    chained_validators = [
+        ciocvalidators.RequireIfAny("Name", present=("Label", "String")),
+        ciocvalidators.RequireIfAny("Label", present=("Name", "String")),
+        ciocvalidators.RequireIfAny("String", present=("Name", "Label")),
+    ]
 
 
 class MappingSystemSchema(Schema):
-	allow_extra_fields = True
-	filter_extra_fields = True
+    allow_extra_fields = True
+    filter_extra_fields = True
 
-	if_key_missing = None
+    if_key_missing = None
 
-	mapping = MappingSystemBaseSchema()
-	descriptions = ciocvalidators.CultureDictSchema(MappingSystemDescriptionSchema(), record_cultures=True, delete_empty=False)
+    mapping = MappingSystemBaseSchema()
+    descriptions = ciocvalidators.CultureDictSchema(
+        MappingSystemDescriptionSchema(), record_cultures=True, delete_empty=False
+    )
 
 
-@view_defaults(route_name='admin_mappingsystem')
+@view_defaults(route_name="admin_mappingsystem")
 class MappingSystem(viewbase.AdminViewBase):
+    @view_config(
+        route_name="admin_mappingsystem_index", renderer=templateprefix + "index.mak"
+    )
+    def index(self):
+        request = self.request
+        user = request.user
 
-	@view_config(route_name='admin_mappingsystem_index', renderer=templateprefix + 'index.mak')
-	def index(self):
-		request = self.request
-		user = request.user
+        if not user.SuperUserGlobal:
+            self._security_failure()
 
-		if not user.SuperUserGlobal:
-			self._security_failure()
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute("EXEC sp_GBL_MappingSystem_l NULL")
+            mappings = cursor.fetchall()
+            cursor.close()
 
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute('EXEC sp_GBL_MappingSystem_l NULL')
-			mappings = cursor.fetchall()
-			cursor.close()
+        title = _("Manage Mapping Systems", request)
+        return self._create_response_namespace(
+            title, title, dict(mappings=mappings), no_index=True
+        )
 
-		title = _('Manage Mapping Systems', request)
-		return self._create_response_namespace(title, title, dict(mappings=mappings), no_index=True)
+    @view_config(
+        match_param="action=edit",
+        request_method="POST",
+        renderer=templateprefix + "edit.mak",
+    )
+    def save(self):
+        request = self.request
 
-	@view_config(match_param='action=edit', request_method="POST", renderer=templateprefix + 'edit.mak')
-	def save(self):
-		request = self.request
+        if request.POST.get("Delete"):
+            self._go_to_route(
+                "admin_mappingsystem",
+                action="delete",
+                _query=[("MAP_ID", request.POST.get("MAP_ID"))],
+            )
 
-		if request.POST.get('Delete'):
-			self._go_to_route('admin_mappingsystem', action='delete', _query=[('MAP_ID', request.POST.get('MAP_ID'))])
+        user = request.user
 
-		user = request.user
+        if not user.SuperUserGlobal:
+            self._security_failure()
 
-		if not user.SuperUserGlobal:
-			self._security_failure()
+        model_state = request.model_state
+        model_state.schema = MappingSystemSchema()
+        model_state.form.variable_decode = True
 
-		model_state = request.model_state
-		model_state.schema = MappingSystemSchema()
-		model_state.form.variable_decode = True
+        validator = ciocvalidators.IDValidator()
+        try:
+            MAP_ID = validator.to_python(request.POST.get("MAP_ID"))
+        except validators.Invalid:
+            self._error_page(_("Invalid Mapping System ID", request))
 
-		validator = ciocvalidators.IDValidator()
-		try:
-			MAP_ID = validator.to_python(request.POST.get('MAP_ID'))
-		except validators.Invalid:
-			self._error_page(_('Invalid Mapping System ID', request))
+        is_add = not MAP_ID
 
-		is_add = not MAP_ID
+        domain, shown_cultures = viewbase.get_domain_and_show_cultures(request.params)
 
-		domain, shown_cultures = viewbase.get_domain_and_show_cultures(request.params)
+        if model_state.validate():
+            # valid. Save changes and redirect
+            args = [MAP_ID, user.Mod]
+            mapping = model_state.form.data.get("mapping", {})
+            args.extend(mapping.get(x) for x in mapping_fields)
 
-		if model_state.validate():
-			# valid. Save changes and redirect
-			args = [MAP_ID, user.Mod]
-			mapping = model_state.form.data.get('mapping', {})
-			args.extend(mapping.get(x) for x in mapping_fields)
+            root = ET.Element("DESCS")
 
-			root = ET.Element('DESCS')
+            for culture, data in six.iteritems(model_state.form.data["descriptions"]):
+                if culture.replace("_", "-") not in shown_cultures:
+                    continue
 
-			for culture, data in six.iteritems(model_state.form.data['descriptions']):
-				if culture.replace('_', '-') not in shown_cultures:
-					continue
+                desc = ET.SubElement(root, "DESC")
+                ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
+                for name, value in six.iteritems(data):
+                    if value:
+                        ET.SubElement(desc, name).text = value
 
-				desc = ET.SubElement(root, 'DESC')
-				ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-				for name, value in six.iteritems(data):
-					if value:
-						ET.SubElement(desc, name).text = value
+            args.append(ET.tostring(root, encoding="unicode"))
 
-			args.append(ET.tostring(root, encoding='unicode'))
-
-			with request.connmgr.get_connection('admin') as conn:
-				sql = '''
+            with request.connmgr.get_connection("admin") as conn:
+                sql = """
 				Declare @ErrMsg as nvarchar(500),
 				@RC as int,
 				@MAP_ID as int
@@ -146,163 +160,213 @@ class MappingSystem(viewbase.AdminViewBase):
 				EXECUTE @RC = dbo.sp_GBL_MappingSystem_u @MAP_ID OUTPUT, %s, @ErrMsg=@ErrMsg OUTPUT
 
 				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @MAP_ID as MAP_ID
-				''' % ', '.join('?' * (len(args) - 1))
+				""" % ", ".join(
+                    "?" * (len(args) - 1)
+                )
 
-				cursor = conn.execute(sql, *args)
-				result = cursor.fetchone()
-				cursor.close()
+                cursor = conn.execute(sql, *args)
+                result = cursor.fetchone()
+                cursor.close()
 
-			if not result.Return:
-				MAP_ID = result.MAP_ID
+            if not result.Return:
+                MAP_ID = result.MAP_ID
 
-				if is_add:
-					msg = _('The Mapping System was successfully added.', request)
-				else:
-					msg = _('The Mapping System was successfully updated.', request)
+                if is_add:
+                    msg = _("The Mapping System was successfully added.", request)
+                else:
+                    msg = _("The Mapping System was successfully updated.", request)
 
-				self._go_to_route('admin_mappingsystem', action='edit', _query=[('InfoMsg', msg), ("MAP_ID", MAP_ID), ("ShowCultures", shown_cultures)])
+                self._go_to_route(
+                    "admin_mappingsystem",
+                    action="edit",
+                    _query=[
+                        ("InfoMsg", msg),
+                        ("MAP_ID", MAP_ID),
+                        ("ShowCultures", shown_cultures),
+                    ],
+                )
 
-			ErrMsg = _('Unable to save: ') + result.ErrMsg
+            ErrMsg = _("Unable to save: ") + result.ErrMsg
 
-		else:
+        else:
 
-			ErrMsg = _('There were validation errors.')
+            ErrMsg = _("There were validation errors.")
 
-		mapping = None
+        mapping = None
 
-		if not is_add:
-			with request.connmgr.get_connection('admin') as conn:
-				cursor = conn.execute('EXEC dbo.sp_GBL_MappingSystem_s ?', model_state.value('MAP_ID'))
+        if not is_add:
+            with request.connmgr.get_connection("admin") as conn:
+                cursor = conn.execute(
+                    "EXEC dbo.sp_GBL_MappingSystem_s ?", model_state.value("MAP_ID")
+                )
 
-				mapping = cursor.fetchone()
+                mapping = cursor.fetchone()
 
-				cursor.close()
+                cursor.close()
 
-		record_cultures = syslanguage.active_record_cultures()
+        record_cultures = syslanguage.active_record_cultures()
 
-		# XXX should we refetch the basic info?
-		title = _('Manage Mapping Systems', request)
-		return self._create_response_namespace(title, title,
-				dict(mapping=mapping, MAP_ID=model_state.value('MAP_ID'),
-					shown_cultures=shown_cultures, record_cultures=record_cultures,
-					is_add=is_add, ErrMsg=ErrMsg), no_index=True)
+        # XXX should we refetch the basic info?
+        title = _("Manage Mapping Systems", request)
+        return self._create_response_namespace(
+            title,
+            title,
+            dict(
+                mapping=mapping,
+                MAP_ID=model_state.value("MAP_ID"),
+                shown_cultures=shown_cultures,
+                record_cultures=record_cultures,
+                is_add=is_add,
+                ErrMsg=ErrMsg,
+            ),
+            no_index=True,
+        )
 
-	@view_config(match_param='action=edit', renderer=templateprefix + 'edit.mak')
-	def edit(self):
-		request = self.request
-		user = request.user
+    @view_config(match_param="action=edit", renderer=templateprefix + "edit.mak")
+    def edit(self):
+        request = self.request
+        user = request.user
 
-		if not user.SuperUserGlobal:
-			self._security_failure()
+        if not user.SuperUserGlobal:
+            self._security_failure()
 
-		model_state = request.model_state
-		model_state.validators = {
-			'MAP_ID': ciocvalidators.IDValidator()
-		}
-		model_state.method = None
+        model_state = request.model_state
+        model_state.validators = {"MAP_ID": ciocvalidators.IDValidator()}
+        model_state.method = None
 
-		if not model_state.validate():
-			# XXX invalid MAP_ID
+        if not model_state.validate():
+            # XXX invalid MAP_ID
 
-			self._error_page(_('Invalid ID', request))
+            self._error_page(_("Invalid ID", request))
 
-		MAP_ID = model_state.form.data.get('MAP_ID')
-		is_add = not MAP_ID
+        MAP_ID = model_state.form.data.get("MAP_ID")
+        is_add = not MAP_ID
 
-		mapping = None
-		mapping_descriptions = {}
+        mapping = None
+        mapping_descriptions = {}
 
-		if not is_add:
-			with request.connmgr.get_connection('admin') as conn:
-				cursor = conn.execute('EXEC dbo.sp_GBL_MappingSystem_s ?', MAP_ID)
-				mapping = cursor.fetchone()
-				if mapping:
-					cursor.nextset()
-					for lng in cursor.fetchall():
-						mapping_descriptions[lng.Culture.replace('-', '_')] = lng
+        if not is_add:
+            with request.connmgr.get_connection("admin") as conn:
+                cursor = conn.execute("EXEC dbo.sp_GBL_MappingSystem_s ?", MAP_ID)
+                mapping = cursor.fetchone()
+                if mapping:
+                    cursor.nextset()
+                    for lng in cursor.fetchall():
+                        mapping_descriptions[lng.Culture.replace("-", "_")] = lng
 
-				cursor.close()
+                cursor.close()
 
-			if not mapping:
-				# not found
-				self._error_page(_('Mapping System Not Found', request))
+            if not mapping:
+                # not found
+                self._error_page(_("Mapping System Not Found", request))
 
-		domain, shown_cultures = viewbase.get_domain_and_show_cultures(request.params)
+        domain, shown_cultures = viewbase.get_domain_and_show_cultures(request.params)
 
-		model_state.form.data['mapping'] = mapping
-		model_state.form.data['descriptions'] = mapping_descriptions
+        model_state.form.data["mapping"] = mapping
+        model_state.form.data["descriptions"] = mapping_descriptions
 
-		title = _('Manage Mapping Systems', request)
-		return self._create_response_namespace(
-			title, title,
-			dict(
-				mapping=mapping, MAP_ID=MAP_ID, is_add=is_add, shown_cultures=shown_cultures,
-				record_cultures=syslanguage.active_record_cultures()
-			), no_index=True)
+        title = _("Manage Mapping Systems", request)
+        return self._create_response_namespace(
+            title,
+            title,
+            dict(
+                mapping=mapping,
+                MAP_ID=MAP_ID,
+                is_add=is_add,
+                shown_cultures=shown_cultures,
+                record_cultures=syslanguage.active_record_cultures(),
+            ),
+            no_index=True,
+        )
 
-	@view_config(match_param='action=delete', renderer='cioc.web:templates/confirmdelete.mak')
-	def delete(self):
-		request = self.request
-		user = request.user
+    @view_config(
+        match_param="action=delete", renderer="cioc.web:templates/confirmdelete.mak"
+    )
+    def delete(self):
+        request = self.request
+        user = request.user
 
-		if not user.SuperUserGlobal:
-			self._security_failure()
+        if not user.SuperUserGlobal:
+            self._security_failure()
 
-		model_state = request.model_state
+        model_state = request.model_state
 
-		model_state.validators = {
-			'MAP_ID': ciocvalidators.IDValidator(not_empty=True)
-		}
-		model_state.method = None
+        model_state.validators = {"MAP_ID": ciocvalidators.IDValidator(not_empty=True)}
+        model_state.method = None
 
-		if not model_state.validate():
-			self._error_page(_('Invalid ID', request))
+        if not model_state.validate():
+            self._error_page(_("Invalid ID", request))
 
-		MAP_ID = model_state.form.data['MAP_ID']
+        MAP_ID = model_state.form.data["MAP_ID"]
 
-		request.override_renderer = 'cioc.web:templates/confirmdelete.mak'
+        request.override_renderer = "cioc.web:templates/confirmdelete.mak"
 
-		title = _('Manage Mapping Systems', request)
-		return self._create_response_namespace(title, title, dict(id_name='MAP_ID', id_value=MAP_ID, route='admin_mappingsystem', action='delete'), no_index=True)
+        title = _("Manage Mapping Systems", request)
+        return self._create_response_namespace(
+            title,
+            title,
+            dict(
+                id_name="MAP_ID",
+                id_value=MAP_ID,
+                route="admin_mappingsystem",
+                action="delete",
+            ),
+            no_index=True,
+        )
 
-	@view_config(match_param='action=delete', request_method="POST")
-	def delete_confirm(self):
-		request = self.request
-		user = request.user
+    @view_config(match_param="action=delete", request_method="POST")
+    def delete_confirm(self):
+        request = self.request
+        user = request.user
 
-		if not user.SuperUserGlobal:
-			self._security_failure()
+        if not user.SuperUserGlobal:
+            self._security_failure()
 
-		model_state = request.model_state
+        model_state = request.model_state
 
-		model_state.validators = {
-			'MAP_ID': ciocvalidators.IDValidator(not_empty=True)
-		}
-		model_state.method = None
+        model_state.validators = {"MAP_ID": ciocvalidators.IDValidator(not_empty=True)}
+        model_state.method = None
 
-		if not model_state.validate():
-			self._error_page(_('Invalid ID', request))
+        if not model_state.validate():
+            self._error_page(_("Invalid ID", request))
 
-		MAP_ID = model_state.form.data['MAP_ID']
+        MAP_ID = model_state.form.data["MAP_ID"]
 
-		with request.connmgr.get_connection('admin') as conn:
-			sql = '''
+        with request.connmgr.get_connection("admin") as conn:
+            sql = """
 			Declare @ErrMsg as nvarchar(500),
 			@RC as int
 
 			EXECUTE @RC = dbo.sp_GBL_MappingSystem_d ?, @ErrMsg=@ErrMsg OUTPUT
 
 			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			'''
+			"""
 
-			cursor = conn.execute(sql, MAP_ID)
-			result = cursor.fetchone()
-			cursor.close()
+            cursor = conn.execute(sql, MAP_ID)
+            result = cursor.fetchone()
+            cursor.close()
 
-		if not result.Return:
-			self._go_to_route('admin_mappingsystem_index', _query=[('InfoMsg', _('The Mapping System was successfully deleted.', request))])
+        if not result.Return:
+            self._go_to_route(
+                "admin_mappingsystem_index",
+                _query=[
+                    (
+                        "InfoMsg",
+                        _("The Mapping System was successfully deleted.", request),
+                    )
+                ],
+            )
 
-		if result.Return == 3:
-			self._error_page(_('Unable to delete Mapping System: ', request) + result.ErrMsg)
+        if result.Return == 3:
+            self._error_page(
+                _("Unable to delete Mapping System: ", request) + result.ErrMsg
+            )
 
-		self._go_to_route('admin_mappingsystem', action='edit', _query=[('ErrMsg', _('Unable to delete Mapping System: ') + result.ErrMsg), ('MAP_ID', MAP_ID)])
+        self._go_to_route(
+            "admin_mappingsystem",
+            action="edit",
+            _query=[
+                ("ErrMsg", _("Unable to delete Mapping System: ") + result.ErrMsg),
+                ("MAP_ID", MAP_ID),
+            ],
+        )

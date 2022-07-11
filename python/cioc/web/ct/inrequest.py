@@ -18,6 +18,7 @@
 from __future__ import absolute_import
 import logging
 import six
+
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -30,71 +31,98 @@ from cioc.core.i18n import gettext as _
 from cioc.core.clienttracker import has_been_launched
 from cioc.web.cic import viewbase
 
+
 class InRequest(viewbase.CicViewBase):
+    @view_config(route_name="ct_inrequest", renderer="json")
+    def inrequest(self):
+        CT = "{http://clienttracker.cioc.ca/schema/}"
+        request = self.request
+        if not has_been_launched(request):
+            return {
+                "fail": True,
+                "errinfo": _(
+                    "Current session not associated with a Client Tracker user.",
+                    request,
+                ),
+            }
 
-	@view_config(route_name='ct_inrequest', renderer='json')
-	def inrequest(self):
-		CT = '{http://clienttracker.cioc.ca/schema/}'
-		request = self.request
-		if not has_been_launched(request):
-			return {'fail': True, 'errinfo': _('Current session not associated with a Client Tracker user.', request)}
+        vals = request.cioc_get_cookie("ctlaunched").split(":")
+        if len(vals) != 3:
+            return {
+                "fail": True,
+                "errinfo": _(
+                    "Current session not associated with a Client Tracker user.",
+                    request,
+                ),
+            }
 
-		vals = request.cioc_get_cookie('ctlaunched').split(':')
-		if len(vals) != 3:
-			return {'fail': True, 'errinfo': _('Current session not associated with a Client Tracker user.', request)}
+        ctid, login, key = vals
 
-		ctid, login, key = vals
+        root = ET.Element("isInRequest", xmlns="http://clienttracker.cioc.ca/schema/")
+        ET.SubElement(root, "login").text = six.text_type(login)
+        ET.SubElement(root, "key").text = six.text_type(key)
+        ET.SubElement(root, "ctid").text = six.text_type(ctid)
 
+        fd = StringIO()
+        ET.ElementTree(root).write(fd, "utf-8", True)
+        xml = fd.getvalue()
+        fd.close()
 
-		root = ET.Element(u'isInRequest', xmlns=u'http://clienttracker.cioc.ca/schema/')
-		ET.SubElement(root, u'login').text = six.text_type(login)
-		ET.SubElement(root, u'key').text = six.text_type(key)
-		ET.SubElement(root, u'ctid').text = six.text_type(ctid)
+        url = request.dboptions.ClientTrackerRpcURL + "is_in_request"
+        headers = {"content-type": "application/xml; charset=utf-8"}
 
-		fd = StringIO()
-		ET.ElementTree(root).write(fd, 'utf-8', True)
-		xml = fd.getvalue()
-		fd.close()
+        r = requests.post(url, data=xml, headers=headers)
+        try:
+            r.raise_for_status()
+        except Exception as e:
+            log.debug(
+                "unable to contact %s: %s %s, %s", url, r.status_code, r.reason, e
+            )
+            return {
+                "fail": True,
+                "errinfo": _(
+                    "There was an error communicating with the Client Tracker server: %s",
+                    request,
+                )
+                % e,
+            }
 
-		url = request.dboptions.ClientTrackerRpcURL + 'is_in_request'
-		headers = {"content-type": "application/xml; charset=utf-8"}
+        log.debug("encoding: %s", r.headers)
+        log.debug("response: %s", repr(r.content))
+        fd = StringIO(r.content)
+        tree = ET.parse(fd)
+        fd.close()
 
-		r = requests.post(url, data=xml, headers=headers)
-		try:
-			r.raise_for_status()
-		except Exception as e:
-			log.debug('unable to contact %s: %s %s, %s', url, r.status_code, r.reason, e)
-			return {'fail': True, 'errinfo': _('There was an error communicating with the Client Tracker server: %s', request) % e}
+        root = tree.getroot()
 
+        error = root.find(CT + "error")
+        if error is not None:
+            return {
+                "fail": True,
+                "errinfo": _("The Client Tracker server returned an error: %s", request)
+                % error.text,
+            }
 
+        yes = root.find(CT + "yes")
+        no = root.find(CT + "no")
+        if yes is not None and no is not None:
+            return {
+                "fail": _(
+                    "The Client Tracker server gave an invalid response.", request
+                )
+            }
 
-		log.debug('encoding: %s', r.headers)
-		log.debug('response: %s', repr(r.content))
-		fd = StringIO(r.content)
-		tree = ET.parse(fd)
-		fd.close()
+        ids = []
+        previous_ids = []
+        log.debug("root %s", root.tag)
+        if yes is not None:
+            ids.extend(x.text for x in yes.findall(CT + "id"))
+            previous_ids.extend(
+                x.text for x in yes.findall("{0}previous-request/{0}id".format(CT))
+            )
 
-		root = tree.getroot()
+        retval = {"fail": False, "inrequest": yes is not None, "ids": ids}
+        if previous_ids:
+            retval["previous_ids"] = previous_ids
 
-		error = root.find(CT + 'error')
-		if error is not None:
-			return {'fail': True, 'errinfo': _('The Client Tracker server returned an error: %s', request) % error.text}
-
-		yes = root.find(CT + 'yes')
-		no = root.find(CT + 'no')
-		if yes is not None and no is not None:
-			return {'fail': _('The Client Tracker server gave an invalid response.', request)}
-
-		ids = []
-		previous_ids = []
-		log.debug('root %s', root.tag)
-		if yes is not None:
-			ids.extend(x.text for x in yes.findall(CT + 'id'))
-			previous_ids.extend(x.text for x in yes.findall('{0}previous-request/{0}id'.format(CT)))
-
-
-		retval = {'fail': False, 'inrequest': yes is not None, 'ids': ids}
-		if previous_ids:
-			retval['previous_ids'] = previous_ids
-
-		return retval
+        return retval

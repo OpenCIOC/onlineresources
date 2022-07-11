@@ -17,7 +17,8 @@
 
 # Logging
 from __future__ import absolute_import
-import logging 
+import logging
+
 log = logging.getLogger(__name__)
 
 # Python Libraries
@@ -31,157 +32,205 @@ from pyramid.view import view_config, view_defaults
 from cioc.core import i18n, validators
 from cioc.web.cic.viewbase import CicViewBase
 
-templateprefix = 'cioc.web.cic:templates/taxonomy/'
+templateprefix = "cioc.web.cic:templates/taxonomy/"
 
 _ = i18n.gettext
 
-class OptionsSchema(validators.RootSchema):
-	GlobalActivations = validators.Bool()
-	InactivateUnused = validators.Bool()
-	IncludeShared = validators.Bool()
-	RollupLowLevelTerms = validators.Bool()
-	ExcludeYBranch = validators.Bool()
-	RecommendActivations = validators.Bool()
 
-Options = namedtuple('Options', 'GlobalActivations InactivateUnused IncludeShared RollupLowLevelTerms ExcludeYBranch RecommendActivations')
+class OptionsSchema(validators.RootSchema):
+    GlobalActivations = validators.Bool()
+    InactivateUnused = validators.Bool()
+    IncludeShared = validators.Bool()
+    RollupLowLevelTerms = validators.Bool()
+    ExcludeYBranch = validators.Bool()
+    RecommendActivations = validators.Bool()
+
+
+Options = namedtuple(
+    "Options",
+    "GlobalActivations InactivateUnused IncludeShared RollupLowLevelTerms ExcludeYBranch RecommendActivations",
+)
 _default_options = Options(False, True, True, False, True, True)
 
+
 class ChangesSchema(validators.RootSchema):
-	InactivateRollupIDList = validators.ForEach(validators.TaxonomyCodeValidator())
-	RecommendActivationIDList = validators.ForEach(validators.TaxonomyCodeValidator())
+    InactivateRollupIDList = validators.ForEach(validators.TaxonomyCodeValidator())
+    RecommendActivationIDList = validators.ForEach(validators.TaxonomyCodeValidator())
 
-@view_defaults(route_name='cic_taxonomy', match_param='action=activationrec', renderer=templateprefix + 'activationrec.mak')
+
+@view_defaults(
+    route_name="cic_taxonomy",
+    match_param="action=activationrec",
+    renderer=templateprefix + "activationrec.mak",
+)
 class activationRecView(CicViewBase):
-	def __init__(self, request, require_login=True):
-		CicViewBase.__init__(self, request, require_login)
+    def __init__(self, request, require_login=True):
+        CicViewBase.__init__(self, request, require_login)
 
-	@view_config()
-	def activationrec(self):
-		request = self.request
-		user = request.user
+    @view_config()
+    def activationrec(self):
+        request = self.request
+        user = request.user
 
-		if not user.cic.SuperUser:
-			self._security_failure()
-			
-		globaltermchanges = []
-		localtermchanges = []
-		activationsuggestions = []
+        if not user.cic.SuperUser:
+            self._security_failure()
 
-		options = self._get_options()
+        globaltermchanges = []
+        localtermchanges = []
+        activationsuggestions = []
 
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute('EXEC dbo.sp_TAX_Term_ActivationFix ?, ?, ?, ?, ?, ?, ?, 0, NULL, NULL', None if options.GlobalActivations else request.dboptions.MemberID, user.Mod, *options[1:])
+        options = self._get_options()
 
-			globaltermchanges = cursor.fetchall()
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(
+                "EXEC dbo.sp_TAX_Term_ActivationFix ?, ?, ?, ?, ?, ?, ?, 0, NULL, NULL",
+                None if options.GlobalActivations else request.dboptions.MemberID,
+                user.Mod,
+                *options[1:]
+            )
 
-			if not options.GlobalActivations:
-				cursor.nextset()
-				localtermchanges = cursor.fetchall()
+            globaltermchanges = cursor.fetchall()
 
-			if options.RecommendActivations:
-				cursor.nextset()
-				activationsuggestions = cursor.fetchall()
+            if not options.GlobalActivations:
+                cursor.nextset()
+                localtermchanges = cursor.fetchall()
 
-			cursor.close()
+            if options.RecommendActivations:
+                cursor.nextset()
+                activationsuggestions = cursor.fetchall()
 
-		data = request.model_state.form.data
-		data['InactivateRollupIDList'] = set(x.Code for x in chain(globaltermchanges, localtermchanges) if not x.PreferredTerm)
-		if options.RecommendActivations:
-			data['RecommendActivationIDList'] = set(x.Code for x in activationsuggestions if x.PreferredTerm)
+            cursor.close()
 
-		data.update(options._asdict())
+        data = request.model_state.form.data
+        data["InactivateRollupIDList"] = set(
+            x.Code
+            for x in chain(globaltermchanges, localtermchanges)
+            if not x.PreferredTerm
+        )
+        if options.RecommendActivations:
+            data["RecommendActivationIDList"] = set(
+                x.Code for x in activationsuggestions if x.PreferredTerm
+            )
 
-		
-		title = _('Taxonomy Activation Recommendation Report', request)
-		return self._create_response_namespace(title, title, dict(globaltermchanges=globaltermchanges, localtermchanges=localtermchanges, activationsuggestions=activationsuggestions, options=options), no_index=True)
+        data.update(options._asdict())
 
-	@view_config(request_method="POST")
-	def activationrec_save(self):
-		request = self.request
-		user = request.user
+        title = _("Taxonomy Activation Recommendation Report", request)
+        return self._create_response_namespace(
+            title,
+            title,
+            dict(
+                globaltermchanges=globaltermchanges,
+                localtermchanges=localtermchanges,
+                activationsuggestions=activationsuggestions,
+                options=options,
+            ),
+            no_index=True,
+        )
 
-		if not user.cic.SuperUser:
-			self._security_failure()
-			
-		options = self._get_options()
+    @view_config(request_method="POST")
+    def activationrec_save(self):
+        request = self.request
+        user = request.user
 
-		model_state = request.model_state
-		model_state.schema = ChangesSchema()
+        if not user.cic.SuperUser:
+            self._security_failure()
 
-		if model_state.validate():
-			args = [None if options.GlobalActivations else request.dboptions.MemberID, user.Mod]
-			args.extend(options[1:])
-			args.append(True)
+        options = self._get_options()
 
-			inactive_ids = model_state.value('InactivateRollupIDList')
-			if inactive_ids:
-				inactive_ids = ','.join(inactive_ids)
-			else:
-				inactive_ids = None
-			args.append(inactive_ids)
+        model_state = request.model_state
+        model_state.schema = ChangesSchema()
 
-			activate_ids = model_state.value('RecommendActivationIDList')
-			if activate_ids:
-				activate_ids = ','.join(activate_ids)
-			else:
-				activate_ids = None
+        if model_state.validate():
+            args = [
+                None if options.GlobalActivations else request.dboptions.MemberID,
+                user.Mod,
+            ]
+            args.extend(options[1:])
+            args.append(True)
 
-			args.append(activate_ids)
-			
-			with request.connmgr.get_connection('admin') as conn:
-				cursor = conn.execute('EXEC dbo.sp_TAX_Term_ActivationFix ?, ?, ?, ?, ?, ?, ?, ?, ?, ?', *args)
-				cursor.close()
+            inactive_ids = model_state.value("InactivateRollupIDList")
+            if inactive_ids:
+                inactive_ids = ",".join(inactive_ids)
+            else:
+                inactive_ids = None
+            args.append(inactive_ids)
 
-			query = {k:v for k,v in options._asdict().items() if v}
-			query['mod'] = 'on'
-			self._go_to_route('cic_taxonomy', action='activationrec', _query=query)
+            activate_ids = model_state.value("RecommendActivationIDList")
+            if activate_ids:
+                activate_ids = ",".join(activate_ids)
+            else:
+                activate_ids = None
 
-		globaltermchanges = []
-		localtermchanges = []
-		activationsuggestions = []
+            args.append(activate_ids)
 
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute('EXEC dbo.sp_TAX_Term_ActivationFix ?, ?, ?, ?, ?, ?, ?, 0, NULL, NULL', request.dboptions.MemberID, user.Mod, *options[1:])
+            with request.connmgr.get_connection("admin") as conn:
+                cursor = conn.execute(
+                    "EXEC dbo.sp_TAX_Term_ActivationFix ?, ?, ?, ?, ?, ?, ?, ?, ?, ?",
+                    *args
+                )
+                cursor.close()
 
-			globaltermchanges = cursor.fetchall()
+            query = {k: v for k, v in options._asdict().items() if v}
+            query["mod"] = "on"
+            self._go_to_route("cic_taxonomy", action="activationrec", _query=query)
 
-			cursor.nextset()
-			localtermchanges = cursor.fetchall()
+        globaltermchanges = []
+        localtermchanges = []
+        activationsuggestions = []
 
-			if options.RecommendActivations:
-				cursor.nextset()
-				activationsuggestions = cursor.fetchall()
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(
+                "EXEC dbo.sp_TAX_Term_ActivationFix ?, ?, ?, ?, ?, ?, ?, 0, NULL, NULL",
+                request.dboptions.MemberID,
+                user.Mod,
+                *options[1:]
+            )
 
-			cursor.close()
+            globaltermchanges = cursor.fetchall()
 
-		raise Exception
-		title = _('Taxonomy Activation Recommendation Report', request)
-		return self._create_response_namespace(title, title, dict(globaltermchanges=globaltermchanges, localtermchanges=localtermchanges, activationsuggestions=activationsuggestions, options=options, ErrMsg=_('There were validation errors.', request)), no_index=True)
-		
+            cursor.nextset()
+            localtermchanges = cursor.fetchall()
 
+            if options.RecommendActivations:
+                cursor.nextset()
+                activationsuggestions = cursor.fetchall()
 
-	def _get_options(self):
-		request = self.request
-		if not request.params.get('mod'):
-			options = _default_options
+            cursor.close()
 
-		else:
-			validator = OptionsSchema()
-			try:
-				opts = validator.to_python(request.params)
-				options = Options(**opts)
-			except validators.Invalid:
-				# Something went wrong. Tot he defaults
-				options = _default_options
+        raise Exception
+        title = _("Taxonomy Activation Recommendation Report", request)
+        return self._create_response_namespace(
+            title,
+            title,
+            dict(
+                globaltermchanges=globaltermchanges,
+                localtermchanges=localtermchanges,
+                activationsuggestions=activationsuggestions,
+                options=options,
+                ErrMsg=_("There were validation errors.", request),
+            ),
+            no_index=True,
+        )
 
+    def _get_options(self):
+        request = self.request
+        if not request.params.get("mod"):
+            options = _default_options
 
-		if not request.dboptions.OtherMembersActive:
-			options = options._replace(GlobalActivations=True)
-		elif not request.user.cic.SuperUserGlobal:
-			options = options._replace(GlobalActivations=False)
+        else:
+            validator = OptionsSchema()
+            try:
+                opts = validator.to_python(request.params)
+                options = Options(**opts)
+            except validators.Invalid:
+                # Something went wrong. Tot he defaults
+                options = _default_options
 
-		log.debug('Options: %s', options)
+        if not request.dboptions.OtherMembersActive:
+            options = options._replace(GlobalActivations=True)
+        elif not request.user.cic.SuperUserGlobal:
+            options = options._replace(GlobalActivations=False)
 
-		return options
+        log.debug("Options: %s", options)
 
-
+        return options

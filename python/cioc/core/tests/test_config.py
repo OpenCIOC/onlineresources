@@ -20,62 +20,63 @@ import cioc.core.config as config
 import os
 
 this_dir = os.path.dirname(__file__)
-config_1 = os.path.join(this_dir, 'config.ini')
-config_2 = os.path.join(this_dir, 'config2.ini')
-def change_config1():
-	inf = open(config_1, 'rU')
-	data = inf.read()
-	inf.close()
+config_1 = os.path.join(this_dir, "config.ini")
+config_2 = os.path.join(this_dir, "config2.ini")
 
-	outf = open(config_1, 'w')
-	outf.write(data)
-	outf.close()
+
+def change_config1():
+    inf = open(config_1, "rU")
+    data = inf.read()
+    inf.close()
+
+    outf = open(config_1, "w")
+    outf.write(data)
+    outf.close()
+
 
 def test_config():
-	cnf_mgr = config.ConfigManager(config_1)
-	assert cnf_mgr.config_dict['a'] == 'a'
+    cnf_mgr = config.ConfigManager(config_1)
+    assert cnf_mgr.config_dict["a"] == "a"
 
-	last_change = cnf_mgr._changed
+    last_change = cnf_mgr._changed
 
-	cnf_mgr.maybe_reload()
-	assert last_change == cnf_mgr._changed
+    cnf_mgr.maybe_reload()
+    assert last_change == cnf_mgr._changed
 
-	change_config1()
+    change_config1()
 
-	cnf_mgr.maybe_reload()
-	assert last_change != cnf_mgr._changed
+    cnf_mgr.maybe_reload()
+    assert last_change != cnf_mgr._changed
 
+    cnf_mgr.maybe_reload(config_2)
 
-	cnf_mgr.maybe_reload(config_2)
+    assert cnf_mgr.config_dict["b"] == "b"
 
-	assert cnf_mgr.config_dict['b'] == 'b'
 
 def test_getconfig():
-	cnf = config.get_config(config_1)
+    cnf = config.get_config(config_1)
 
-	assert cnf['a'] == 'a'
+    assert cnf["a"] == "a"
 
-	del config._config.config_dict['a']
+    del config._config.config_dict["a"]
 
-	cnf, changed = config.get_config(config_1, True)
+    cnf, changed = config.get_config(config_1, True)
 
-	assert 'a' not in cnf
-	assert not changed
+    assert "a" not in cnf
+    assert not changed
 
-	cnf = config.get_config(config_1)
+    cnf = config.get_config(config_1)
 
-	change_config1()
+    change_config1()
 
-	cnf = config.get_config(config_1)
-	assert cnf['a'] == 'a'
+    cnf = config.get_config(config_1)
+    assert cnf["a"] == "a"
 
-	change_config1()
+    change_config1()
 
-	cnf, changed = config.get_config(config_1, True)
-	assert changed
+    cnf, changed = config.get_config(config_1, True)
+    assert changed
 
-	cnf, changed = config.get_config(config_2, True)
-	assert changed
-	assert cnf['b'] == 'b'
-
-
+    cnf, changed = config.get_config(config_2, True)
+    assert changed
+    assert cnf["b"] == "b"

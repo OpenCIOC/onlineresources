@@ -28,75 +28,86 @@ import six
 from six.moves import zip
 
 
-_fields = 'MODIFIED_DATE MODIFIED_BY VacancyChange VacancyFinal'.split()
+_fields = "MODIFIED_DATE MODIFIED_BY VacancyChange VacancyFinal".split()
 _xml_transform = [isodate.parse_datetime, six.text_type, int, int]
 
-ChangesTuple = namedtuple('ChangesTuple', _fields)
+ChangesTuple = namedtuple("ChangesTuple", _fields)
 
 _fields = list(zip(_fields, _xml_transform))
 
-_change_item_template = Markup('''
+_change_item_template = Markup(
+    """
 <tr><td>%(date)s (%(by)s)</td><td style="text-align: right">%(change)s</td><td style="text-align: right">%(total)s</td></tr>
-''')
+"""
+)
 
-_change_has_items_template = Markup('''
+_change_has_items_template = Markup(
+    """
 <table class="BasicBorder">
 <tr><th>%(modified)s</th><th>%(change)s</th><th>%(total)s</th></tr>
 %(changes)s
 </table>
-''')
+"""
+)
 
 
 def make_history_table(request, changes):
-	changes = Markup('\n').join(
-		_change_item_template % {
-			'date': format_datetime(x.MODIFIED_DATE, request),
-			'by': x.MODIFIED_BY,
-			'change': x.VacancyChange,
-			'total': x.VacancyFinal
-		}
-		for x in changes)
+    changes = Markup("\n").join(
+        _change_item_template
+        % {
+            "date": format_datetime(x.MODIFIED_DATE, request),
+            "by": x.MODIFIED_BY,
+            "change": x.VacancyChange,
+            "total": x.VacancyFinal,
+        }
+        for x in changes
+    )
 
-	changes = _change_has_items_template % {
-		'modified': _('Revision Date', request),
-		'change': _('Change', request),
-		'total': _('Vacancy', request),
-		'changes': changes
-	}
+    changes = _change_has_items_template % {
+        "modified": _("Revision Date", request),
+        "change": _("Change", request),
+        "total": _("Vacancy", request),
+        "changes": changes,
+    }
 
-	return changes
+    return changes
 
 
 def make_history_table_from_xml_changes(request, changes):
-	changes = u'<root>' + changes + '</root>'
+    changes = "<root>" + changes + "</root>"
 
-	root = ET.fromstring(changes.encode('utf-8'))
-	_changes = (ChangesTuple(*[fn(x.find(name).text) for (name, fn) in _fields]) for x in root.findall('.//Change'))
+    root = ET.fromstring(changes.encode("utf-8"))
+    _changes = (
+        ChangesTuple(*[fn(x.find(name).text) for (name, fn) in _fields])
+        for x in root.findall(".//Change")
+    )
 
-	return make_history_table(request, _changes)
+    return make_history_table(request, _changes)
 
 
 def vacancy_parameters(request):
-	makeLink = request.passvars.makeLink
-	return dumps({
-		'permission_url': makeLink("~/jsonfeeds/vacancy/canedit"),
-		'increment_url': makeLink("~/jsonfeeds/vacancy/increment"),
-		'refresh_url': makeLink("~/jsonfeeds/vacancy/refresh"),
-		'history_url': makeLink("~/jsonfeeds/vacancy/history"),
-		'edit_txt': _('Edit', request),
-		'up_txt': _('Release Occupancy', request),
-		'down_txt': _('Assign Occupancy', request),
-		'done_txt': _('Finished Editing', request),
-		'history_txt': _('Change History', request),
-		'close_txt': _('Close', request),
-		'history_title_txt': _('Vacancy History', request),
-		'loading_txt': _('Loading...', request),
-		'server_error_txt': _('Unable to talk to server: ', request),
-	})
+    makeLink = request.passvars.makeLink
+    return dumps(
+        {
+            "permission_url": makeLink("~/jsonfeeds/vacancy/canedit"),
+            "increment_url": makeLink("~/jsonfeeds/vacancy/increment"),
+            "refresh_url": makeLink("~/jsonfeeds/vacancy/refresh"),
+            "history_url": makeLink("~/jsonfeeds/vacancy/history"),
+            "edit_txt": _("Edit", request),
+            "up_txt": _("Release Occupancy", request),
+            "down_txt": _("Assign Occupancy", request),
+            "done_txt": _("Finished Editing", request),
+            "history_txt": _("Change History", request),
+            "close_txt": _("Close", request),
+            "history_title_txt": _("Vacancy History", request),
+            "loading_txt": _("Loading...", request),
+            "server_error_txt": _("Unable to talk to server: ", request),
+        }
+    )
 
 
 def vacancy_script(request):
-	if not request.user.cic:
-		return u''
+    if not request.user.cic:
+        return ""
 
-	return u'''initialize_vacancy(%s)''' % vacancy_parameters(request)
+    return """initialize_vacancy(%s)""" % vacancy_parameters(request)

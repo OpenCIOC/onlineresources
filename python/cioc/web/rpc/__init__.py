@@ -22,31 +22,55 @@ from cioc.core.rootfactories import BasicRootFactory
 
 
 def includeme(config):
-	urlprefix = '/rpc/'
+    urlprefix = "/rpc/"
 
-	cicfactory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC, allow_api_login=True)
-	# /rpc/record/*
-	config.add_route('rpc_orgdetails', urlprefix + 'record/{num:[A-Za-z]{3}\d{4,5}}',
-		factory=cicfactory)
+    cicfactory = partial(
+        BasicRootFactory,
+        domain=const.DM_CIC,
+        db_area=const.DM_CIC,
+        allow_api_login=True,
+    )
+    # /rpc/record/*
+    config.add_route(
+        "rpc_orgdetails",
+        urlprefix + "record/{num:[A-Za-z]{3}\d{4,5}}",
+        factory=cicfactory,
+    )
 
-	volfactory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL, allow_api_login=True)
-	config.add_route('rpc_oppdetails', urlprefix + 'opportunity/{vnum:V-[A-Za-z]{3}\d{4,5}}',
-		factory=volfactory)
+    volfactory = partial(
+        BasicRootFactory,
+        domain=const.DM_VOL,
+        db_area=const.DM_VOL,
+        allow_api_login=True,
+    )
+    config.add_route(
+        "rpc_oppdetails",
+        urlprefix + "opportunity/{vnum:V-[A-Za-z]{3}\d{4,5}}",
+        factory=volfactory,
+    )
 
-	config.add_route('rpc_oppdetails_opid', urlprefix + 'opportunity/{opid:\d+}',
-		factory=volfactory)
+    config.add_route(
+        "rpc_oppdetails_opid", urlprefix + "opportunity/{opid:\d+}", factory=volfactory
+    )
 
-	config.add_route('rpc_browseoppbyorg', urlprefix + 'browseoppbyorg',
-		factory=volfactory)
+    config.add_route(
+        "rpc_browseoppbyorg", urlprefix + "browseoppbyorg", factory=volfactory
+    )
 
-	api_factory = partial(BasicRootFactory, allow_api_login=True)
-	config.add_route('rpc_whoami', urlprefix + 'whoami', factory=api_factory)
+    api_factory = partial(BasicRootFactory, allow_api_login=True)
+    config.add_route("rpc_whoami", urlprefix + "whoami", factory=api_factory)
 
-	config.add_route('rpc_countall', urlprefix + 'countall/{domain:(cic|vol)}', factory=api_factory)
+    config.add_route(
+        "rpc_countall", urlprefix + "countall/{domain:(cic|vol)}", factory=api_factory
+    )
 
-	config.add_route('rpc_agegrouplist', urlprefix + 'agegrouplist', factory=api_factory)
+    config.add_route(
+        "rpc_agegrouplist", urlprefix + "agegrouplist", factory=api_factory
+    )
 
-	heading_list_path = urlprefix + 'quicklist/{pubcode:' + validators.code_validator_re[1:-1] + '}'
-	config.add_route('rpc_headinglist', heading_list_path, factory=api_factory)
+    heading_list_path = (
+        urlprefix + "quicklist/{pubcode:" + validators.code_validator_re[1:-1] + "}"
+    )
+    config.add_route("rpc_headinglist", heading_list_path, factory=api_factory)
 
-	config.add_route('rpc_quicklist', urlprefix + 'quicklist', factory=api_factory)
+    config.add_route("rpc_quicklist", urlprefix + "quicklist", factory=api_factory)

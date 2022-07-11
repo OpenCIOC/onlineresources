@@ -33,45 +33,72 @@ log = logging.getLogger(__name__)
 
 _ = i18n.gettext
 
-mime_type = 'application/zip'
+mime_type = "application/zip"
 
 
-@view_config(route_name='vol_export')
+@view_config(route_name="vol_export")
 class VOLExport(viewbase.CicViewBase):
+    def __call__(self):
+        request = self.request
+        user = request.user
 
-	def __call__(self):
-		request = self.request
-		user = request.user
+        if not user.vol.SuperUser:
+            self._security_failure()
 
-		if not user.vol.SuperUser:
-			self._security_failure()
+        sql = (
+            "SELECT * FROM VOL_SHARE_VIEW_EN vo WHERE "
+            + request.viewdata.WhereClauseVOL.replace("NON_PUBLIC", "XNP")
+            .replace("DELETION_DATE", "XDEL")
+            .replace("UPDATE_DATE", "XUPD")
+            .replace("vod.", "vo.")
+            .replace("vo.MemberID=1", "1=1")
+        )
 
-		sql = 'SELECT * FROM VOL_SHARE_VIEW_EN vo WHERE ' + request.viewdata.WhereClauseVOL.replace('NON_PUBLIC', 'XNP').replace('DELETION_DATE', 'XDEL').replace('UPDATE_DATE', 'XUPD').replace('vod.', 'vo.').replace('vo.MemberID=1', '1=1')
+        log.debug("SQL: %s", sql)
 
-		log.debug('SQL: %s', sql)
+        log.debug("sql: %s", sql)
+        data = [
+            '<?xml version="1.0" encoding="UTF-8"?>\r\n<ROOT xmlns="urn:ciocshare-schema-vol">'.encode(
+                "utf8"
+            )
+        ]
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(sql)
 
-		log.debug('sql: %s', sql)
-		data = [u'<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<ROOT xmlns="urn:ciocshare-schema-vol">'.encode('utf8')]
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute(sql)
+            data.extend(
+                "".join(
+                    [
+                        '<RECORD VNUM="',
+                        six.text_type(x.VNUM),
+                        '" RECORD_OWNER="',
+                        six.text_type(x.RECORD_OWNER),
+                        '" HAS_ENGLISH="',
+                        six.text_type(x.HAS_ENGLISH),
+                        '" HAS_FRENCH="',
+                        six.text_type(x.HAS_FRENCH),
+                        '">',
+                    ]
+                    + list(map(six.text_type, x[7:]))
+                    + ["</RECORD>"]
+                ).encode("utf8")
+                for x in cursor.fetchall()
+            )
 
-			data.extend(u''.join([u'<RECORD VNUM="', six.text_type(x.VNUM), u'" RECORD_OWNER="', six.text_type(x.RECORD_OWNER), u'" HAS_ENGLISH="', six.text_type(x.HAS_ENGLISH), u'" HAS_FRENCH="', six.text_type(x.HAS_FRENCH), u'">'] + list(map(six.text_type, x[7:])) + [u'</RECORD>']).encode('utf8') for x in cursor.fetchall())
+            cursor.close()
 
-			cursor.close()
+        data.append("</ROOT>".encode("utf8"))
+        data = "\r\n".encode("utf8").join(data)
 
-		data.append(u'</ROOT>'.encode('utf8'))
-		data = u'\r\n'.encode('utf8').join(data)
+        file = tempfile.TemporaryFile()
+        zip = zipfile.ZipFile(file, "w", zipfile.ZIP_DEFLATED)
+        zip.writestr("export.xml", data)
+        zip.close()
+        length = file.tell()
+        file.seek(0)
 
-		file = tempfile.TemporaryFile()
-		zip = zipfile.ZipFile(file, 'w', zipfile.ZIP_DEFLATED)
-		zip.writestr('export.xml', data)
-		zip.close()
-		length = file.tell()
-		file.seek(0)
+        res = Response(content_type="application/zip", charset=None)
+        res.app_iter = FileIterator(file)
+        res.content_length = length
 
-		res = Response(content_type='application/zip', charset=None)
-		res.app_iter = FileIterator(file)
-		res.content_length = length
-
-		res.headers['Content-Disposition'] = 'attachment;filename=Export.zip'
-		return res
+        res.headers["Content-Disposition"] = "attachment;filename=Export.zip"
+        return res

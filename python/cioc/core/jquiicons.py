@@ -21,41 +21,42 @@ import struct
 from zlib import crc32
 from binascii import unhexlify
 
+
 class FormatError(Exception):
-	pass
+    pass
 
 
 class jQueryUIIcons(object):
-	def __init__(self, location):
-		self.location = location
-		self._changed = None
-		self._template = None
-		self._palette_length = None
+    def __init__(self, location):
+        self.location = location
+        self._changed = None
+        self._template = None
+        self._palette_length = None
 
-	def get_mtime(self):
-		mtime = os.path.getmtime(self.location)
+    def get_mtime(self):
+        mtime = os.path.getmtime(self.location)
 
-		return mtime
+        return mtime
 
-	def get_icon_string(self, colour):
-		colour = unhexlify(colour)
+    def get_icon_string(self, colour):
+        colour = unhexlify(colour)
 
-		mtime = os.path.getmtime(self.location)
+        mtime = os.path.getmtime(self.location)
 
-		if not self._template or mtime != self._changed:
-			f = open(self.location, 'rb')
-			data = f.read()
-			f.close()
+        if not self._template or mtime != self._changed:
+            f = open(self.location, "rb")
+            data = f.read()
+            f.close()
 
-			pos = data.find(b'PLTE') - 4
-			if pos < 0:
-				raise FormatError()
+            pos = data.find(b"PLTE") - 4
+            if pos < 0:
+                raise FormatError()
 
-			length = self._palette_length = struct.unpack('>L', data[pos:pos + 4])[0]
+            length = self._palette_length = struct.unpack(">L", data[pos : pos + 4])[0]
 
-			self._template = (data[:pos + 8], data[pos + 8 + length + 4:])
+            self._template = (data[: pos + 8], data[pos + 8 + length + 4 :])
 
-		colour = colour * (self._palette_length // 3)
-		colour = colour + struct.pack('>L', crc32(b'PLTE' + colour) & 0xffffffff)
+        colour = colour * (self._palette_length // 3)
+        colour = colour + struct.pack(">L", crc32(b"PLTE" + colour) & 0xFFFFFFFF)
 
-		return colour.join(self._template)
+        return colour.join(self._template)

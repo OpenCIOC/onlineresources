@@ -20,15 +20,15 @@ import six
 
 
 def get_search_list(request, dbarea):
-	if dbarea == const.DM_CIC:
-		key = 'aNUMSearchList'
+    if dbarea == const.DM_CIC:
+        key = "aNUMSearchList"
 
-	elif dbarea == const.DM_VOL:
-		key = 'aOPIDSearchList'
-	else:
-		return []
+    elif dbarea == const.DM_VOL:
+        key = "aOPIDSearchList"
+    else:
+        return []
 
-	value = request.session.get(key)
+    value = request.session.get(key)
 
-	if value:
-		return six.text_type(value).split(u',')
+    if value:
+        return six.text_type(value).split(",")

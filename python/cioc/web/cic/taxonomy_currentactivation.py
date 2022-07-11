@@ -18,6 +18,7 @@
 # Logging
 from __future__ import absolute_import
 import logging
+
 log = logging.getLogger(__name__)
 
 # Python Libraries
@@ -29,27 +30,31 @@ from pyramid.view import view_config, view_defaults
 from cioc.core import i18n
 from cioc.web.cic.viewbase import CicViewBase
 
-templateprefix = 'cioc.web.cic:templates/taxonomy/'
+templateprefix = "cioc.web.cic:templates/taxonomy/"
 
 _ = i18n.gettext
 
 
-@view_defaults(route_name='cic_taxonomy', match_param='action=currentactivation')
+@view_defaults(route_name="cic_taxonomy", match_param="action=currentactivation")
 class MultiLevelReportView(CicViewBase):
-	def __init__(self, request, require_login=True):
-		CicViewBase.__init__(self, request, require_login)
+    def __init__(self, request, require_login=True):
+        CicViewBase.__init__(self, request, require_login)
 
-	@view_config(renderer=templateprefix + 'currentactivation.mak')
-	def multilevelreport(self):
-		request = self.request
-		user = request.user
+    @view_config(renderer=templateprefix + "currentactivation.mak")
+    def multilevelreport(self):
+        request = self.request
+        user = request.user
 
-		if not user.cic.SuperUser:
-			self._security_failure()
+        if not user.cic.SuperUser:
+            self._security_failure()
 
-		terms = []
-		with request.connmgr.get_connection('admin') as conn:
-			terms = conn.execute('EXEC dbo.sp_TAX_Term_ActiveUsed_l ?', request.dboptions.MemberID).fetchall()
+        terms = []
+        with request.connmgr.get_connection("admin") as conn:
+            terms = conn.execute(
+                "EXEC dbo.sp_TAX_Term_ActiveUsed_l ?", request.dboptions.MemberID
+            ).fetchall()
 
-		title = _('Taxonomy Activation and Usage Report', request)
-		return self._create_response_namespace(title, title, dict(terms=terms), no_index=True)
+        title = _("Taxonomy Activation and Usage Report", request)
+        return self._create_response_namespace(
+            title, title, dict(terms=terms), no_index=True
+        )

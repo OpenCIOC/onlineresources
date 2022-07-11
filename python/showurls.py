@@ -21,18 +21,19 @@ import sys
 import textwrap
 
 import pyramid
+
 assert pyramid
 
 from pyramid.paster import bootstrap
 
 
 def main(argv=sys.argv, quiet=False):
-	command = PRoutesCommand(argv, quiet)
-	return command.run()
+    command = PRoutesCommand(argv, quiet)
+    return command.run()
 
 
 class PRoutesCommand(object):
-	description = """\
+    description = """\
 	Print all URL dispatch routes used by a Pyramid application in the
 	order in which they are evaluated.	Each route includes the name of the
 	route, the pattern of the route, and the view callable which will be
@@ -44,60 +45,61 @@ class PRoutesCommand(object):
 	will be assumed.  Example: "proutes myapp.ini".
 
 	"""
-	bootstrap = (bootstrap,)
-	stdout = sys.stdout
-	usage = '%prog config_uri'
+    bootstrap = (bootstrap,)
+    stdout = sys.stdout
+    usage = "%prog config_uri"
 
-	parser = optparse.OptionParser(
-		usage,
-		description=textwrap.dedent(description)
-		)
+    parser = optparse.OptionParser(usage, description=textwrap.dedent(description))
 
-	def __init__(self, argv, quiet=False):
-		self.options, self.args = self.parser.parse_args(argv[1:])
-		self.quiet = quiet
+    def __init__(self, argv, quiet=False):
+        self.options, self.args = self.parser.parse_args(argv[1:])
+        self.quiet = quiet
 
-	def _get_mapper(self, registry):
-		from pyramid.config import Configurator
-		config = Configurator(registry=registry)
-		return config.get_routes_mapper()
+    def _get_mapper(self, registry):
+        from pyramid.config import Configurator
 
-	def out(self, msg):  # pragma: no cover
-		if not self.quiet:
-			print(msg)
+        config = Configurator(registry=registry)
+        return config.get_routes_mapper()
 
-	def run(self, quiet=False):
-		if not self.args:
-			self.out('requires a config file argument')
-			return 2
-		config_uri = self.args[0]
-		env = self.bootstrap[0](config_uri)
-		registry = env['registry']
-		introspector = registry.introspector
+    def out(self, msg):  # pragma: no cover
+        if not self.quiet:
+            print(msg)
 
-		urls = set()
-		for route in introspector.get_category('routes'):
-			rout_intr = route['introspectable']
-			pattern = rout_intr['pattern']
-			if not pattern.startswith('/'):
-				pattern = '/' + pattern
-			if pattern.endswith('{action}'):
-				for view in route['related']:
-					if view.category_name != 'views':
-						continue
-					match_param = view.get('match_param')
-					if match_param:
-						urls.add(pattern.replace('{action}', match_param.split('=')[-1]))
-					else:
-						#import pdb
-						#pdb.set_trace()
-						urls.add(pattern)
-			else:
-				urls.add(pattern)
+    def run(self, quiet=False):
+        if not self.args:
+            self.out("requires a config file argument")
+            return 2
+        config_uri = self.args[0]
+        env = self.bootstrap[0](config_uri)
+        registry = env["registry"]
+        introspector = registry.introspector
 
-		print("\n".join(sorted(urls)))
+        urls = set()
+        for route in introspector.get_category("routes"):
+            rout_intr = route["introspectable"]
+            pattern = rout_intr["pattern"]
+            if not pattern.startswith("/"):
+                pattern = "/" + pattern
+            if pattern.endswith("{action}"):
+                for view in route["related"]:
+                    if view.category_name != "views":
+                        continue
+                    match_param = view.get("match_param")
+                    if match_param:
+                        urls.add(
+                            pattern.replace("{action}", match_param.split("=")[-1])
+                        )
+                    else:
+                        # import pdb
+                        # pdb.set_trace()
+                        urls.add(pattern)
+            else:
+                urls.add(pattern)
 
-		return 0
+        print("\n".join(sorted(urls)))
 
-if __name__ == '__main__':
-	main()
+        return 0
+
+
+if __name__ == "__main__":
+    main()

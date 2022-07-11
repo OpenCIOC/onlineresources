@@ -20,35 +20,36 @@ from operator import attrgetter
 
 
 def format_list(items, formatter=None, id_key=None, label_key=None):
-	if not id_key and not label_key and not formatter:
-		formatter = tuple
-	if not formatter:
-		formatter = attrgetter(id_key, label_key)
+    if not id_key and not label_key and not formatter:
+        formatter = tuple
+    if not formatter:
+        formatter = attrgetter(id_key, label_key)
 
-	return [formatter(item) for item in items]
+    return [formatter(item) for item in items]
 
 
 class PubItemFormatter(object):
-	def __init__(self, flag_non_public=False, pub_names_only=False):
-		self.flag_non_public = flag_non_public
-		self.pub_names_only = pub_names_only
+    def __init__(self, flag_non_public=False, pub_names_only=False):
+        self.flag_non_public = flag_non_public
+        self.pub_names_only = pub_names_only
 
-	def __call__(self, item):
-		if self.pub_names_only:
-			label = item.PubName or item.PubCode
-		else:
-			label = [item.PubCode]
-			if item.PubName:
-				label.extend([' - ', item.PubName])
+    def __call__(self, item):
+        if self.pub_names_only:
+            label = item.PubName or item.PubCode
+        else:
+            label = [item.PubCode]
+            if item.PubName:
+                label.extend([" - ", item.PubName])
 
-			if self.flag_non_public and item.NonPublic:
-				label.append(' *')
+            if self.flag_non_public and item.NonPublic:
+                label.append(" *")
 
-			label = ''.join(label)
+            label = "".join(label)
 
-		return (item.PB_ID, label)
+        return (item.PB_ID, label)
 
 
 def format_pub_list(items, flag_non_public=False, pub_names_only=False):
-	return format_list(items,
-					formatter=PubItemFormatter(flag_non_public, pub_names_only))
+    return format_list(
+        items, formatter=PubItemFormatter(flag_non_public, pub_names_only)
+    )

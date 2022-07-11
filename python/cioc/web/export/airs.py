@@ -36,338 +36,343 @@ import logging
 import six
 from six.moves import zip
 from six.moves import map
+
 log = logging.getLogger(__name__)
 
 _ = i18n.gettext
 
 
 def make_headers(extra_headers=None):
-	tmp = dict(extra_headers or {})
-	return tmp
+    tmp = dict(extra_headers or {})
+    return tmp
 
 
-def make_401_error(message, realm='AIRS Export'):
-	error = HTTPUnauthorized(headers=make_headers({'WWW-Authenticate': 'Basic realm="%s"' % realm}))
-	error.content_type = "text/plain"
-	error.text = message
-	return error
+def make_401_error(message, realm="AIRS Export"):
+    error = HTTPUnauthorized(
+        headers=make_headers({"WWW-Authenticate": 'Basic realm="%s"' % realm})
+    )
+    error.content_type = "text/plain"
+    error.text = message
+    return error
 
 
 def make_internal_server_error(message):
-	error = HTTPInternalServerError()
-	error.content_type = "text/plain"
-	error.text = message
-	return error
+    error = HTTPInternalServerError()
+    error.content_type = "text/plain"
+    error.text = message
+    return error
 
 
 class AIRSExportOptionsSchema(validators.RootSchema):
-	allow_extra_fields = True
-	if_key_missing = None
+    allow_extra_fields = True
+    if_key_missing = None
 
-	version = validators.OneOf(["3_1", "3_0", "3_0_Testing"], if_empty="3_0")
-	DST = validators.UnicodeString(max=20, not_empty=True)
-	IncludeDeleted = validators.Bool()
-	IncludeSiteAgency = validators.Bool()
-	PartialDate = validators.ISODateConverter()
-	PubCodeSync = validators.Bool()
-	FileSuffix = validators.String(max=100)
-	LabelLangOverride = validators.Int(min=0, max=validators.MAX_TINY_INT)
-	AnyLanguageChange = validators.Bool()
+    version = validators.OneOf(["3_1", "3_0", "3_0_Testing"], if_empty="3_0")
+    DST = validators.UnicodeString(max=20, not_empty=True)
+    IncludeDeleted = validators.Bool()
+    IncludeSiteAgency = validators.Bool()
+    PartialDate = validators.ISODateConverter()
+    PubCodeSync = validators.Bool()
+    FileSuffix = validators.String(max=100)
+    LabelLangOverride = validators.Int(min=0, max=validators.MAX_TINY_INT)
+    AnyLanguageChange = validators.Bool()
 
 
-@view_config(route_name='export_airs')
+@view_config(route_name="export_airs")
 class AIRSExport(viewbase.CicViewBase):
+    def __call__(self):
+        request = self.request
+        user = request.user
 
-	def __call__(self):
-		request = self.request
-		user = request.user
+        if not user:
+            return make_401_error("Access Denied")
 
-		if not user:
-			return make_401_error(u'Access Denied')
+        if "airsexport" not in user.cic.ExternalAPIs:
+            return make_401_error("Insufficient Permissions")
 
-		if 'airsexport' not in user.cic.ExternalAPIs:
-			return make_401_error(u'Insufficient Permissions')
+        model_state = modelstate.ModelState(request)
+        model_state.schema = AIRSExportOptionsSchema()
+        model_state.form.method = None
 
-		model_state = modelstate.ModelState(request)
-		model_state.schema = AIRSExportOptionsSchema()
-		model_state.form.method = None
+        if not model_state.validate():
+            if model_state.is_error("DST"):
+                msg = "Invalid Distribution"
+            elif model_state.is_error("version"):
+                msg = "Invalid Version"
+            else:
+                msg = "An unknown error occurred."
 
-		if not model_state.validate():
-			if model_state.is_error('DST'):
-				msg = u"Invalid Distribution"
-			elif model_state.is_error("version"):
-				msg = u"Invalid Version"
-			else:
-				msg = u"An unknown error occurred."
+                log.error("AIRS Export Errors: %s: %s", msg, model_state.form.errors)
+            return make_internal_server_error(msg)
 
-				log.error('AIRS Export Errors: %s: %s', msg, model_state.form.errors)
-			return make_internal_server_error(msg)
+        res = Response(content_type="application/zip", charset=None)
+        res.app_iter, res.length = _zip_stream(request, model_state)
 
-		res = Response(content_type='application/zip', charset=None)
-		res.app_iter, res.length = _zip_stream(request, model_state)
-
-		res.headers['Content-Disposition'] = 'attachment;filename=Export.zip'
-		return res
+        res.headers["Content-Disposition"] = "attachment;filename=Export.zip"
+        return res
 
 
 def _zip_stream(request, model_state):
-	sql = '''EXEC sp_GBL_AIRS_Export_%s ?, @@LANGID, ?, ?, ?, ?, ?, @LabelLangOverride=?, @AnyLanguageChange=? '''
+    sql = """EXEC sp_GBL_AIRS_Export_%s ?, @@LANGID, ?, ?, ?, ?, ?, @LabelLangOverride=?, @AnyLanguageChange=? """
 
-	values = [
-		request.viewdata.cic.ViewType,
-		model_state.value('DST'),
-		model_state.value('PubCodeSync'),
-		model_state.value('PartialDate'),
-		model_state.value('IncludeDeleted'),
-		model_state.value('IncludeSiteAgency'),
-		model_state.value('LabelLangOverride'),
-		model_state.value('AnyLanguageChange')
-	]
-	log.debug('query values: %s', values)
+    values = [
+        request.viewdata.cic.ViewType,
+        model_state.value("DST"),
+        model_state.value("PubCodeSync"),
+        model_state.value("PartialDate"),
+        model_state.value("IncludeDeleted"),
+        model_state.value("IncludeSiteAgency"),
+        model_state.value("LabelLangOverride"),
+        model_state.value("AnyLanguageChange"),
+    ]
+    log.debug("query values: %s", values)
 
-	file = tempfile.TemporaryFile()
-	with bufferedzip.BufferedZipFile(file, 'w', zipfile.ZIP_DEFLATED) as zip:
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute(
-				sql % model_state.value('version'),
-				*values
-			)
-			root_parameters = cursor.fetchone()
+    file = tempfile.TemporaryFile()
+    with bufferedzip.BufferedZipFile(file, "w", zipfile.ZIP_DEFLATED) as zip:
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(sql % model_state.value("version"), *values)
+            root_parameters = cursor.fetchone()
 
-			cursor.nextset()
+            cursor.nextset()
 
-			_get_record_data(
-				root_parameters, cursor, zip,
-				'export%s.xml' % (model_state.value('FileSuffix') or ''))
+            _get_record_data(
+                root_parameters,
+                cursor,
+                zip,
+                "export%s.xml" % (model_state.value("FileSuffix") or ""),
+            )
 
-			cursor.close()
+            cursor.close()
 
-	length = file.tell()
-	file.seek(0)
+    length = file.tell()
+    file.seek(0)
 
-	return FileIterator(file), length
+    return FileIterator(file), length
 
 
 def _get_record_data(root_parameters, cursor, zipfile, fname):
-	names = [t[0] for t in root_parameters.cursor_description]
-	values = [quoteattr(six.text_type(x) if x is not None else u'') for x in root_parameters]
-	root_parameters = u' '.join(u'='.join(x) for x in zip(names, values))
+    names = [t[0] for t in root_parameters.cursor_description]
+    values = [
+        quoteattr(six.text_type(x) if x is not None else "") for x in root_parameters
+    ]
+    root_parameters = " ".join("=".join(x) for x in zip(names, values))
 
-	with tempfile.TemporaryFile() as file:
-		file.write(u'<?xml version="1.0" encoding="UTF-8"?>\n'.encode('utf-8'))
-		file.write((u'<Source %s>\n' % root_parameters).encode('utf-8'))
-		while True:
-			rows = cursor.fetchmany(2000)
-			if not rows:
-				break
+    with tempfile.TemporaryFile() as file:
+        file.write('<?xml version="1.0" encoding="UTF-8"?>\n'.encode("utf-8"))
+        file.write(("<Source %s>\n" % root_parameters).encode("utf-8"))
+        while True:
+            rows = cursor.fetchmany(2000)
+            if not rows:
+                break
 
-			rows = u'\n'.join(x[0] for x in rows) + u'\n'
-			file.write(rows.encode('utf-8'))
+            rows = "\n".join(x[0] for x in rows) + "\n"
+            file.write(rows.encode("utf-8"))
 
-		file.write(u'</Source>\n'.encode('utf-8'))
+        file.write("</Source>\n".encode("utf-8"))
 
-		file.seek(0)
-		zipfile.writebuffer(file, fname)
+        file.seek(0)
+        zipfile.writebuffer(file, fname)
 
 
-@view_config(route_name='export_airs', request_method='POST', renderer='string')
+@view_config(route_name="export_airs", request_method="POST", renderer="string")
 class AIRSExportUpdateCount(viewbase.CicViewBase):
+    def __call__(self):
+        request = self.request
+        user = request.user
+        passvars = request.passvars  # noqa
 
-	def __call__(self):
-		request = self.request
-		user = request.user
-		passvars = request.passvars  # noqa
+        if not user:
+            return make_401_error("Access Denied")
 
-		if not user:
-			return make_401_error(u'Access Denied')
+        if "airsexport" not in user.cic.ExternalAPIs:
+            return make_401_error("Insufficient Permissions")
 
-		if 'airsexport' not in user.cic.ExternalAPIs:
-			return make_401_error(u'Insufficient Permissions')
+        model_state = modelstate.ModelState(request)
+        model_state.schema = AIRSExportOptionsSchema(
+            Field=validators.String(max=10, not_empty=True)
+        )
+        model_state.form.method = None
 
-		model_state = modelstate.ModelState(request)
-		model_state.schema = AIRSExportOptionsSchema(Field=validators.String(max=10, not_empty=True))
-		model_state.form.method = None
+        # I don't think that version is relevant, just ignore it
+        del model_state.schema.fields["version"]
+        del model_state.schema.fields["DST"]
+        del model_state.schema.fields["PartialDate"]
+        del model_state.schema.fields["IncludeDeleted"]
+        del model_state.schema.fields["IncludeSiteAgency"]
 
-		# I don't think that version is relevant, just ignore it
-		del model_state.schema.fields['version']
-		del model_state.schema.fields['DST']
-		del model_state.schema.fields['PartialDate']
-		del model_state.schema.fields['IncludeDeleted']
-		del model_state.schema.fields['IncludeSiteAgency']
+        if not model_state.validate(params=request.params):
+            if model_state.is_error("Field"):
+                msg = "Invalid Field"
+            else:
+                msg = "An unknown error occurred:\n"
+                msg += "\n".join(unicode(x) for x in model_state.renderer.all_errors())
 
-		if not model_state.validate(params=request.params):
-			if model_state.is_error('Field'):
-				msg = u'Invalid Field'
-			else:
-				msg = u"An unknown error occurred:\n"
-				msg += "\n".join(unicode(x) for x in model_state.renderer.all_errors())
+            return make_internal_server_error(msg)
 
-			return make_internal_server_error(msg)
+        try:
+            data = request.json_body
+        except:
+            return make_internal_server_error("Error getting request body as JSON")
 
-		try:
-			data = request.json_body
-		except:
-			return make_internal_server_error(u'Error getting request body as JSON')
+        counts = ET.Element("root")
+        for num, count in six.iteritems(data["counts"]):
+            ET.SubElement(counts, "row", {"num": num, "count": six.text_type(count)})
 
-		counts = ET.Element('root')
-		for num, count in six.iteritems(data['counts']):
-			ET.SubElement(counts, 'row', {'num': num, 'count': six.text_type(count)})
+        sent = ET.Element("sent")
+        for num in data["sent"]:
+            ET.SubElement(sent, "row", {"num": num})
 
-		sent = ET.Element('sent')
-		for num in data['sent']:
-			ET.SubElement(sent, 'row', {'num': num})
+        field = "EXTRA_" + model_state.value("Field").upper() + "FILECOUNT"
+        datefield = "EXTRA_DATE_" + model_state.value("Field").upper() + "LASTSENT"
+        if request.language.Culture != "en-CA":
+            datefield += request.language.Culture.split("-")[0].upper()
 
-		field = 'EXTRA_' + model_state.value('Field').upper() + 'FILECOUNT'
-		datefield = 'EXTRA_DATE_' + model_state.value('Field').upper() + 'LASTSENT'
-		if request.language.Culture != 'en-CA':
-			datefield += request.language.Culture.split('-')[0].upper()
+        log.debug("Date Field: %s %s", datefield, request.language.Culture)
 
-		log.debug('Date Field: %s %s', datefield, request.language.Culture)
-
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute(
-				'''
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(
+                """
 				DECLARE @ErrMsg as nvarchar(500),
 				@RC as int
 
 				EXEC @RC = sp_GBL_AIRS_Export_u_Counts ?, @@LANGID, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 				SELECT @RC AS [Return], @ErrMsg AS ErrMsg
-				''',
-				request.viewdata.cic.ViewType,
-				field,
-				datefield,
-				ET.tostring(counts, encoding='unicode'),
-				ET.tostring(sent, encoding='unicode'),
-			)
-			result = cursor.fetchone()
-			if result.Return:
-				log.debug('Error: %s', result.ErrMsg)
-				return make_internal_server_error(_('Unable to save: ') + result.ErrMsg)
+				""",
+                request.viewdata.cic.ViewType,
+                field,
+                datefield,
+                ET.tostring(counts, encoding="unicode"),
+                ET.tostring(sent, encoding="unicode"),
+            )
+            result = cursor.fetchone()
+            if result.Return:
+                log.debug("Error: %s", result.ErrMsg)
+                return make_internal_server_error(_("Unable to save: ") + result.ErrMsg)
 
-		response = request.response
-		response.content_type = 'text/plain'
-		return 'success'
+        response = request.response
+        response.content_type = "text/plain"
+        return "success"
 
 
-@view_config(route_name='export_airs_full_list', renderer='string')
+@view_config(route_name="export_airs_full_list", renderer="string")
 class AIRSExportFullList(viewbase.CicViewBase):
+    def __call__(self):
+        request = self.request
+        user = request.user
 
-	def __call__(self):
-		request = self.request
-		user = request.user
+        if not user:
+            return make_401_error("Access Denied")
 
-		if not user:
-			return make_401_error(u'Access Denied')
+        if "airsexport" not in user.cic.ExternalAPIs:
+            return make_401_error("Insufficient Permissions")
 
-		if 'airsexport' not in user.cic.ExternalAPIs:
-			return make_401_error(u'Insufficient Permissions')
+        model_state = modelstate.ModelState(request)
+        model_state.schema = AIRSExportOptionsSchema()
+        model_state.form.method = None
+        log.debug("full list")
 
-		model_state = modelstate.ModelState(request)
-		model_state.schema = AIRSExportOptionsSchema()
-		model_state.form.method = None
-		log.debug('full list')
+        # I don't think that version is relevant, just ignore it
+        del model_state.schema.fields["version"]
 
-		# I don't think that version is relevant, just ignore it
-		del model_state.schema.fields['version']
+        if not model_state.validate():
+            if model_state.is_error("DST"):
+                msg = "Invalid Distribution"
+            elif model_state.is_error("Field"):
+                msg = "Invalid Field"
+            else:
+                msg = "An unknown error occurred."
 
-		if not model_state.validate():
-			if model_state.is_error('DST'):
-				msg = u"Invalid Distribution"
-			elif model_state.is_error('Field'):
-				msg = u'Invalid Field'
-			else:
-				msg = u"An unknown error occurred."
+            return make_internal_server_error(msg)
 
-			return make_internal_server_error(msg)
+        sql = """EXEC sp_GBL_AIRS_Export_FullList ?, @@LANGID, ?, ?, ?, ?"""
 
-		sql = '''EXEC sp_GBL_AIRS_Export_FullList ?, @@LANGID, ?, ?, ?, ?'''
+        values = [
+            request.viewdata.cic.ViewType,
+            model_state.value("DST"),
+            model_state.value("PubCodeSync"),
+            model_state.value("IncludeDeleted"),
+            model_state.value("IncludeSiteAgency"),
+        ]
+        log.debug("full list: %s", values)
+        file = tempfile.TemporaryFile()
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(sql, values)
 
-		values = [
-			request.viewdata.cic.ViewType,
-			model_state.value('DST'),
-			model_state.value('PubCodeSync'),
-			model_state.value('IncludeDeleted'),
-			model_state.value('IncludeSiteAgency')
-		]
-		log.debug('full list: %s', values)
-		file = tempfile.TemporaryFile()
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute(
-				sql, values
-			)
+            def row_group_iterable():
+                yield [["Record NUM", "Parent NUM", "Record Type"]]
+                while True:
+                    rows = cursor.fetchmany(2000)
+                    if not rows:
+                        break
+                    yield map(lambda x: tuple(y or "" for y in x), rows)
 
-			def row_group_iterable():
-				yield [[u'Record NUM', u'Parent NUM', u'Record Type']]
-				while True:
-					rows = cursor.fetchmany(2000)
-					if not rows:
-						break
-					yield map(lambda x: tuple(y or u'' for y in x), rows)
+            with bufferedzip.BufferedZipFile(file, "w", zipfile.ZIP_DEFLATED) as zip:
+                write_csv_to_zip(
+                    zip,
+                    itertools.chain.from_iterable(row_group_iterable()),
+                    "records%s.csv" % (model_state.value("FileSuffix") or ""),
+                )
 
-			with bufferedzip.BufferedZipFile(file, 'w', zipfile.ZIP_DEFLATED) as zip:
-				write_csv_to_zip(
-					zip, itertools.chain.from_iterable(row_group_iterable()),
-					'records%s.csv' % (model_state.value('FileSuffix') or ''))
+        response = request.response
+        response.content_type = "application/zip"
 
-		response = request.response
-		response.content_type = 'application/zip'
-
-		length = file.tell()
-		file.seek(0)
-		res = request.response
-		res.content_type = 'application/zip'
-		res.charset = None
-		res.app_iter = FileIterator(file)
-		res.content_length = length
-		res.headers['Content-Disposition'] = 'attachment;filename=records%s.zip' % (model_state.value('FileSuffix') or '')
-		return res
+        length = file.tell()
+        file.seek(0)
+        res = request.response
+        res.content_type = "application/zip"
+        res.charset = None
+        res.app_iter = FileIterator(file)
+        res.content_length = length
+        res.headers["Content-Disposition"] = "attachment;filename=records%s.zip" % (
+            model_state.value("FileSuffix") or ""
+        )
+        return res
 
 
-@view_config(route_name='export_airs_icarol_source_list', renderer='string')
+@view_config(route_name="export_airs_icarol_source_list", renderer="string")
 class AIRSExportICarolSourceList(viewbase.CicViewBase):
+    def __call__(self):
+        request = self.request
+        user = request.user
 
-	def __call__(self):
-		request = self.request
-		user = request.user
+        if not user:
+            return make_401_error("Access Denied")
 
-		if not user:
-			return make_401_error(u'Access Denied')
+        if "airsexport" not in user.cic.ExternalAPIs:
+            return make_401_error("Insufficient Permissions")
 
-		if 'airsexport' not in user.cic.ExternalAPIs:
-			return make_401_error(u'Insufficient Permissions')
+        log.debug("icarol source list")
 
-		log.debug('icarol source list')
+        sql = """EXEC sp_GBL_AIRS_Export_ICarolSource"""
 
-		sql = '''EXEC sp_GBL_AIRS_Export_ICarolSource'''
+        file = tempfile.TemporaryFile()
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(sql)
 
-		file = tempfile.TemporaryFile()
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute(
-				sql
-			)
+            def row_group_iterable():
+                yield [["Record NUM"]]
+                while True:
+                    rows = cursor.fetchmany(2000)
+                    if not rows:
+                        break
+                    yield map(lambda x: tuple(y or "" for y in x), rows)
 
-			def row_group_iterable():
-				yield [[u'Record NUM']]
-				while True:
-					rows = cursor.fetchmany(2000)
-					if not rows:
-						break
-					yield map(lambda x: tuple(y or u'' for y in x), rows)
+            with bufferedzip.BufferedZipFile(file, "w", zipfile.ZIP_DEFLATED) as zip:
+                write_csv_to_zip(
+                    zip,
+                    itertools.chain.from_iterable(row_group_iterable()),
+                    "record_ids.csv",
+                )
 
-			with bufferedzip.BufferedZipFile(file, 'w', zipfile.ZIP_DEFLATED) as zip:
-				write_csv_to_zip(
-					zip, itertools.chain.from_iterable(row_group_iterable()),
-					'record_ids.csv')
+        response = request.response
+        response.content_type = "application/zip"
 
-		response = request.response
-		response.content_type = 'application/zip'
-
-		length = file.tell()
-		file.seek(0)
-		res = request.response
-		res.content_type = 'application/zip'
-		res.charset = None
-		res.app_iter = FileIterator(file)
-		res.content_length = length
-		res.headers['Content-Disposition'] = 'attachment;filename=record_ids.zip'
-		return res
+        length = file.tell()
+        file.seek(0)
+        res = request.response
+        res.content_type = "application/zip"
+        res.charset = None
+        res.app_iter = FileIterator(file)
+        res.content_length = length
+        res.headers["Content-Disposition"] = "attachment;filename=record_ids.zip"
+        return res

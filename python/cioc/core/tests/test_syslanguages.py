@@ -19,44 +19,43 @@ from cioc.core import syslanguage
 
 
 def test_active_cultures():
-	assert not syslanguage.is_active_culture('en-CA') 
+    assert not syslanguage.is_active_culture("en-CA")
 
-	ac = syslanguage.active_cultures()
-	assert len(ac)==0
+    ac = syslanguage.active_cultures()
+    assert len(ac) == 0
 
-	ac = [x._replace(Active=True) for x in syslanguage._culture_list]
+    ac = [x._replace(Active=True) for x in syslanguage._culture_list]
 
-	syslanguage.update_cultures([x._asdict() for x in ac])
+    syslanguage.update_cultures([x._asdict() for x in ac])
 
-	new_ac = syslanguage.active_cultures()
-	
-	assert len(new_ac) == 2
+    new_ac = syslanguage.active_cultures()
 
-	assert set(new_ac) == set(x.Culture for x in ac)
+    assert len(new_ac) == 2
 
+    assert set(new_ac) == set(x.Culture for x in ac)
 
-	assert syslanguage.is_active_culture('en-CA')
-	assert not syslanguage.is_active_culture('blah')
+    assert syslanguage.is_active_culture("en-CA")
+    assert not syslanguage.is_active_culture("blah")
 
 
 def test_SystemLanguage():
-	sl = syslanguage.SystemLanguage()
+    sl = syslanguage.SystemLanguage()
 
-	def callback_fr(culture_description):
-		assert culture_description.Culture == 'fr-CA'
+    def callback_fr(culture_description):
+        assert culture_description.Culture == "fr-CA"
 
-	sl.addListener(callback_fr)
+    sl.addListener(callback_fr)
 
-	sl.setSystemLanguage('fr-CA')
+    sl.setSystemLanguage("fr-CA")
 
-	assert sl.LocaleID == 4105, "French LCID"
+    assert sl.LocaleID == 4105, "French LCID"
 
-	def callback_en(culture_description):
-		assert culture_description.Culture == 'en-CA'
+    def callback_en(culture_description):
+        assert culture_description.Culture == "en-CA"
 
-	sl = syslanguage.SystemLanguage()
-	sl.addListener(callback_en)
+    sl = syslanguage.SystemLanguage()
+    sl.addListener(callback_en)
 
-	#invalid culture
-	sl.setSystemLanguage('blah')
-	assert sl.Culture == 'en-CA'
+    # invalid culture
+    sl.setSystemLanguage("blah")
+    assert sl.Culture == "en-CA"

@@ -25,132 +25,173 @@ from cioc.core.rootfactories import BasicRootFactory
 
 import logging
 from six.moves import zip
+
 log = logging.getLogger(__name__)
 
 
 def init_page_info(request, domain, db_area):
-	if not hasattr(request, 'pageinfo'):
-		request.pageinfo = pageinfo.PageInfo(request, domain, db_area)
+    if not hasattr(request, "pageinfo"):
+        request.pageinfo = pageinfo.PageInfo(request, domain, db_area)
 
 
 _page_whitelist = []
 
 
 class ViewBase(object):
-	""" Base class for views."""
-	__autoexpose__ = None
+    """Base class for views."""
 
-	def __init__(self, request, require_login=False):
-		self.request = request
-		request.model_state = modelstate.ModelState(request)
+    __autoexpose__ = None
 
-		self.require_login = require_login
+    def __init__(self, request, require_login=False):
+        self.request = request
+        request.model_state = modelstate.ModelState(request)
 
-		request.pageinfo.fetch()
+        self.require_login = require_login
 
-		request.assetmgr = asset.AssetManager(request)
+        request.pageinfo.fetch()
 
-		if security.is_basic_security_failure(request, require_login):
-			self._security_failure()
+        request.assetmgr = asset.AssetManager(request)
 
-	def _render_to_response(self, template_name, page_name, doc_title, namespace=None,
-			no_cache=False, no_index=False, print_table=True, focus='', show_message=False):
+        if security.is_basic_security_failure(request, require_login):
+            self._security_failure()
 
-		args = self._create_response_namespace(page_name, doc_title, namespace, no_cache, no_index, print_table, focus, show_message)
+    def _render_to_response(
+        self,
+        template_name,
+        page_name,
+        doc_title,
+        namespace=None,
+        no_cache=False,
+        no_index=False,
+        print_table=True,
+        focus="",
+        show_message=False,
+    ):
 
-		return render_to_response(template_name, args, self.request)
+        args = self._create_response_namespace(
+            page_name,
+            doc_title,
+            namespace,
+            no_cache,
+            no_index,
+            print_table,
+            focus,
+            show_message,
+        )
 
-	def _create_response_namespace(self, page_name, doc_title, namespace=None,
-			no_cache=False, no_index=False, print_table=True, focus='', show_message=False):
+        return render_to_response(template_name, args, self.request)
 
-		ri = template.RenderInfo(self.request, page_name, doc_title, no_cache, no_index, print_table, focus=focus, show_message=show_message)
-		args = ri.get_html_template_namespace()
+    def _create_response_namespace(
+        self,
+        page_name,
+        doc_title,
+        namespace=None,
+        no_cache=False,
+        no_index=False,
+        print_table=True,
+        focus="",
+        show_message=False,
+    ):
 
-		args['model_state'] = self.request.model_state
-		args.update(namespace or {})
+        ri = template.RenderInfo(
+            self.request,
+            page_name,
+            doc_title,
+            no_cache,
+            no_index,
+            print_table,
+            focus=focus,
+            show_message=show_message,
+        )
+        args = ri.get_html_template_namespace()
 
-		return args
+        args["model_state"] = self.request.model_state
+        args.update(namespace or {})
 
-	def _render(self, template_name, args):
-		return render(template_name, args, self.request)
+        return args
 
-	def _security_failure(self):
-		self._go_to_page('~/security_failure.asp')
+    def _render(self, template_name, args):
+        return render(template_name, args, self.request)
 
-	def _go_to_page(self, url, httpvals=None, exclude_keys=None):
-		redirect(self.request, url=url, httpvals=httpvals, exclude_keys=exclude_keys)
+    def _security_failure(self):
+        self._go_to_page("~/security_failure.asp")
 
-	def _go_to_route(self, route_name, exclude_keys=None, **kw):
-		redirect(self.request, route_name=route_name, exclude_keys=exclude_keys, **kw)
+    def _go_to_page(self, url, httpvals=None, exclude_keys=None):
+        redirect(self.request, url=url, httpvals=httpvals, exclude_keys=exclude_keys)
 
-	def _error_page(self, ErrMsg, title=None):
-		pageinfo = self.request.pageinfo
-		error_page(self.request, ErrMsg, pageinfo.Domain, pageinfo.DbArea, title)
+    def _go_to_route(self, route_name, exclude_keys=None, **kw):
+        redirect(self.request, route_name=route_name, exclude_keys=exclude_keys, **kw)
 
-	@staticmethod
-	def dict_from_row(row):
-		return {t[0]: value for (t, value) in zip(row.cursor_description, row)}
+    def _error_page(self, ErrMsg, title=None):
+        pageinfo = self.request.pageinfo
+        error_page(self.request, ErrMsg, pageinfo.Domain, pageinfo.DbArea, title)
 
-	@staticmethod
-	def _dict_list_from_xml(txt, base_element):
-		if txt:
-			xml = ET.fromstring(txt.encode('utf8'))
-		else:
-			return []
+    @staticmethod
+    def dict_from_row(row):
+        return {t[0]: value for (t, value) in zip(row.cursor_description, row)}
 
-		items = []
-		for item_el in xml.findall('./' + base_element):
-			item = {}
-			items.append(item)
+    @staticmethod
+    def _dict_list_from_xml(txt, base_element):
+        if txt:
+            xml = ET.fromstring(txt.encode("utf8"))
+        else:
+            return []
 
-			for el in item_el:
-				item[el.tag] = el.text
+        items = []
+        for item_el in xml.findall("./" + base_element):
+            item = {}
+            items.append(item)
 
-		return items
+            for el in item_el:
+                item[el.tag] = el.text
 
-	@staticmethod
-	def _culture_dict_from_xml(txt, base_element):
-		items = ViewBase._dict_list_from_xml(txt, base_element)
-		return dict((x['Culture'].replace('-', '_'), x) for x in items)
+        return items
 
-	@staticmethod
-	def _list_from_xml(txt, base_element):
-		if txt:
-			xml = ET.fromstring(txt.encode('utf8'))
-		else:
-			return []
+    @staticmethod
+    def _culture_dict_from_xml(txt, base_element):
+        items = ViewBase._dict_list_from_xml(txt, base_element)
+        return dict((x["Culture"].replace("-", "_"), x) for x in items)
 
-		return [x.text for x in xml.findall('./' + base_element)]
+    @staticmethod
+    def _list_from_xml(txt, base_element):
+        if txt:
+            xml = ET.fromstring(txt.encode("utf8"))
+        else:
+            return []
+
+        return [x.text for x in xml.findall("./" + base_element)]
 
 
 def security_failure(request):
-	go_to_page(request, "~/security_failure.asp")
+    go_to_page(request, "~/security_failure.asp")
 
 
 def go_to_page(request, url, httpvals=None, exclude_keys=None):
-	redirect(request, url=url, httpvals=httpvals, exclude_keys=exclude_keys)
+    redirect(request, url=url, httpvals=httpvals, exclude_keys=exclude_keys)
 
 
 def go_to_route(request, route_name, exclude_keys=None, **kw):
-	redirect(request, route_name=route_name, exclude_keys=exclude_keys, **kw)
+    redirect(request, route_name=route_name, exclude_keys=exclude_keys, **kw)
 
 
 class ErrorPage(Exception, BasicRootFactory):
-	def __init__(self, request, ErrMsg, domain, db_area, title=None):
-		self.ErrMsg = ErrMsg
-		self.title = title
+    def __init__(self, request, ErrMsg, domain, db_area, title=None):
+        self.ErrMsg = ErrMsg
+        self.title = title
 
-		BasicRootFactory.__init__(self, request, domain, db_area)
+        BasicRootFactory.__init__(self, request, domain, db_area)
 
 
 def error_page(request, ErrMsg, domain, db_area, title=None):
-	raise ErrorPage(request, ErrMsg, domain, db_area, title)
+    raise ErrorPage(request, ErrMsg, domain, db_area, title)
 
 
-def redirect(request, url=None, route_name=None, exclude_keys=None, httpvals=None, **kw):
-	if route_name:
-		url = request.passvars.route_url(route_name, exclude_keys, **kw)
-	else:
-		url = request.host_url + request.passvars.makeLink(url, httpvals, exclude_keys)
+def redirect(
+    request, url=None, route_name=None, exclude_keys=None, httpvals=None, **kw
+):
+    if route_name:
+        url = request.passvars.route_url(route_name, exclude_keys, **kw)
+    else:
+        url = request.host_url + request.passvars.makeLink(url, httpvals, exclude_keys)
 
-	raise HTTPFound(location=url)
+    raise HTTPFound(location=url)

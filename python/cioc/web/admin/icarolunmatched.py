@@ -18,6 +18,7 @@
 # std lib
 from __future__ import absolute_import
 import logging
+
 log = logging.getLogger(__name__)
 
 
@@ -28,23 +29,27 @@ from pyramid.view import view_config
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 
-templateprefix = 'cioc.web.admin:templates/icarol/'
+templateprefix = "cioc.web.admin:templates/icarol/"
 
 
 class IcarolUnmanaged(viewbase.AdminViewBase):
+    @view_config(
+        route_name="admin_icarolunmatched_index",
+        renderer=templateprefix + "unmatched.mak",
+    )
+    def index(self):
+        request = self.request
+        user = request.user
 
-	@view_config(route_name='admin_icarolunmatched_index', renderer=templateprefix + 'unmatched.mak')
-	def index(self):
-		request = self.request
-		user = request.user
+        if not user.cic.SuperUser:
+            self._security_failure()
 
-		if not user.cic.SuperUser:
-			self._security_failure()
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute("EXEC dbo.sp_CIC_iCarolImport_l_Unmatched")
+            unmatched = cursor.fetchall()
+            cursor.close()
 
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute('EXEC dbo.sp_CIC_iCarolImport_l_Unmatched')
-			unmatched = cursor.fetchall()
-			cursor.close()
-
-		title = _('iCarol Unmatched', request)
-		return self._create_response_namespace(title, title, dict(unmatched=unmatched), no_index=True)
+        title = _("iCarol Unmatched", request)
+        return self._create_response_namespace(
+            title, title, dict(unmatched=unmatched), no_index=True
+        )

@@ -28,38 +28,40 @@ from cioc.web.cic import viewbase
 log = logging.getLogger(__name__)
 
 
-@view_config(route_name='jsonfeeds_icons', renderer='json')
+@view_config(route_name="jsonfeeds_icons", renderer="json")
 class JsonFeedsIcons(viewbase.CicViewBase):
+    def __call__(self):
+        request = self.request
+        user = request.user
 
-	def __call__(self):
-		request = self.request
-		user = request.user
+        if not user:
+            return []
 
-		if not user:
-			return []
+        term = request.params.get("term")
+        if term:
+            term = term.strip()
+        if not term:
+            return []
 
-		term = request.params.get('term')
-		if term:
-			term = term.strip()
-		if not term:
-			return []
+        if len(term) > 60:
+            return []
 
-		if len(term) > 60:
-			return []
+        term = term.split("-", 1)
 
-		term = term.split('-', 1)
+        limit = None
+        if len(term) > 1:
+            limit = term[0]
 
-		limit = None
-		if len(term) > 1:
-			limit = term[0]
+        args = [limit, term[-1]]
 
-		args = [limit, term[-1]]
-
-		sql = """
+        sql = """
 			EXEC sp_STP_Icon_ls ?, ?
 		"""
 
-		with request.connmgr.get_connection('admin') as conn:
-			icons = conn.execute(sql, args).fetchall()
+        with request.connmgr.get_connection("admin") as conn:
+            icons = conn.execute(sql, args).fetchall()
 
-		return [{'value': '-'.join(x), 'class_extra': '' if x[0] == 'icon' else x[0]} for x in icons]
+        return [
+            {"value": "-".join(x), "class_extra": "" if x[0] == "icon" else x[0]}
+            for x in icons
+        ]

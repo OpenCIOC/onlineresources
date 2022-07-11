@@ -16,8 +16,9 @@
 
 
 from __future__ import absolute_import
-import logging 
+import logging
 import six
+
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
@@ -29,179 +30,188 @@ from pyramid.view import view_config, view_defaults
 from cioc.core import validators as ciocvalidators
 
 from cioc.core.i18n import gettext as _
-from cioc.web.admin import viewbase 
+from cioc.web.admin import viewbase
 
-templateprefix = 'cioc.web.admin:templates/pagetitle/'
+templateprefix = "cioc.web.admin:templates/pagetitle/"
 
-EditValues = collections.namedtuple('EditValues', 'PageName page descriptions')
+EditValues = collections.namedtuple("EditValues", "PageName page descriptions")
+
 
 class PageTitleDescriptionSchema(Schema):
-	if_key_missing = None
+    if_key_missing = None
 
-	TitleOverride = ciocvalidators.UnicodeString(max=255)
+    TitleOverride = ciocvalidators.UnicodeString(max=255)
 
 
 class PageTitleSchema(Schema):
-	allow_extra_fields = True
-	filter_extra_fields = True
+    allow_extra_fields = True
+    filter_extra_fields = True
 
-	if_key_missing = None
+    if_key_missing = None
 
-	pre_validators = [viewbase.cull_extra_cultures('descriptions')]
+    pre_validators = [viewbase.cull_extra_cultures("descriptions")]
 
-	PageName = ciocvalidators.String(max=255, not_empty=True)
-	descriptions = ciocvalidators.CultureDictSchema(PageTitleDescriptionSchema(), record_cultures=True, delete_empty=False)
+    PageName = ciocvalidators.String(max=255, not_empty=True)
+    descriptions = ciocvalidators.CultureDictSchema(
+        PageTitleDescriptionSchema(), record_cultures=True, delete_empty=False
+    )
 
 
-@view_defaults(route_name='admin_pagetitle')
+@view_defaults(route_name="admin_pagetitle")
 class PageTitle(viewbase.AdminViewBase):
+    @view_config(
+        route_name="admin_pagetitle_index", renderer=templateprefix + "index.mak"
+    )
+    def index(self):
+        request = self.request
+        user = request.user
 
-	@view_config(route_name='admin_pagetitle_index', renderer=templateprefix+'index.mak')
-	def index(self):
-		request = self.request
-		user = request.user
+        if not user.SuperUserGlobal:
+            self._security_failure()
 
-		if not user.SuperUserGlobal:
-			self._security_failure()
+        with request.connmgr.get_connection("admin") as conn:
+            pages = conn.execute("EXEC dbo.sp_GBL_PageTitle_l").fetchall()
 
-		with request.connmgr.get_connection('admin') as conn:
-			pages = conn.execute('EXEC dbo.sp_GBL_PageTitle_l').fetchall()
+        title = _("Manage Page Titles", request)
+        return self._create_response_namespace(
+            title, title, dict(pages=pages), no_index=True
+        )
 
+    @view_config(
+        match_param="action=edit",
+        request_method="POST",
+        renderer=templateprefix + "edit.mak",
+    )
+    def save(self):
+        request = self.request
 
-		title = _('Manage Page Titles', request)
-		return self._create_response_namespace(title, title, dict(pages=pages), no_index=True)
+        user = request.user
 
-	
-	@view_config(match_param='action=edit', request_method="POST", renderer=templateprefix+'edit.mak')
-	def save(self):
-		request = self.request
+        if not user.SuperUserGlobal:
+            self._security_failure()
 
-		user = request.user
+        model_state = request.model_state
+        model_state.schema = PageTitleSchema()
+        model_state.form.variable_decode = True
 
-		if not user.SuperUserGlobal:
-			self._security_failure()
+        if model_state.validate():
+            PageName = model_state.form.data.get("PageName")
+            # valid. Save changes and redirect
+            args = [PageName, user.Mod]
 
+            root = ET.Element("DESCS")
 
-		model_state = request.model_state
-		model_state.schema = PageTitleSchema()
-		model_state.form.variable_decode = True
+            for culture, data in six.iteritems(model_state.form.data["descriptions"]):
+                desc = ET.SubElement(root, "DESC")
+                ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
+                for name, value in six.iteritems(data):
+                    if value:
+                        ET.SubElement(desc, name).text = value
 
+            args.append(ET.tostring(root, encoding="unicode"))
 
-		if model_state.validate():
-			PageName = model_state.form.data.get('PageName')
-			# valid. Save changes and redirect
-			args = [PageName, user.Mod]
+            # xml = args[-1]
+            # raise Exception
 
-			root = ET.Element('DESCS')
-
-			for culture, data in six.iteritems(model_state.form.data['descriptions']):
-				desc = ET.SubElement(root, 'DESC')
-				ET.SubElement(desc, "Culture").text = culture.replace('_', '-')
-				for name, value in six.iteritems(data):
-					if value:
-						ET.SubElement(desc, name).text = value
-
-			args.append(ET.tostring(root, encoding='unicode'))
-
-			#xml = args[-1]
-			#raise Exception
-							
-
-			with request.connmgr.get_connection('admin') as conn:
-				sql = '''
+            with request.connmgr.get_connection("admin") as conn:
+                sql = """
 				DECLARE @ErrMsg as nvarchar(500), 
 				@RC as int 
 
 				EXEC @RC = dbo.sp_GBL_PageTitle_u ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT  
 
 				SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				''' 
+				"""
 
-				cursor = conn.execute(sql, *args)
-				result = cursor.fetchone()
-				cursor.close()
+                cursor = conn.execute(sql, *args)
+                result = cursor.fetchone()
+                cursor.close()
 
-			if not result.Return:
-				self._go_to_route('admin_pagetitle', action='edit', _query=[('InfoMsg', _('The Page Title was successfully updated.', request)),("PageName", PageName)])
+            if not result.Return:
+                self._go_to_route(
+                    "admin_pagetitle",
+                    action="edit",
+                    _query=[
+                        (
+                            "InfoMsg",
+                            _("The Page Title was successfully updated.", request),
+                        ),
+                        ("PageName", PageName),
+                    ],
+                )
 
-			ErrMsg = _('Unable to save: ') + result.ErrMsg
+            ErrMsg = _("Unable to save: ") + result.ErrMsg
 
-		else:
-			if model_state.is_error('PageName'):
-				self._go_to_route('admin_pagetitle_index', _query=[('ErrMsg', _('Invalid Page', request))])
+        else:
+            if model_state.is_error("PageName"):
+                self._go_to_route(
+                    "admin_pagetitle_index",
+                    _query=[("ErrMsg", _("Invalid Page", request))],
+                )
 
-			ErrMsg = _('There were validation errors.')
+            ErrMsg = _("There were validation errors.")
 
-		edit_values = self._get_edit_info(request.post.get('PageName'))._asdict()
-		edit_values['ErrMsg'] = ErrMsg
+        edit_values = self._get_edit_info(request.post.get("PageName"))._asdict()
+        edit_values["ErrMsg"] = ErrMsg
 
+        # errors = model_state.form.errors
+        # data = model_state.form.data
+        # raise Exception
+        # XXX should we refetch the basic info?
+        title = _("Manage Page Titles", request)
+        return self._create_response_namespace(title, title, edit_values, no_index=True)
 
+    @view_config(match_param="action=edit", renderer=templateprefix + "edit.mak")
+    def edit(self):
+        request = self.request
+        user = request.user
 
-		#errors = model_state.form.errors
-		#data = model_state.form.data
-		#raise Exception
-		# XXX should we refetch the basic info?
-		title = _('Manage Page Titles', request)
-		return self._create_response_namespace(title, title,
-				edit_values, no_index=True)
+        if not user.SuperUserGlobal:
+            self._security_failure()
 
-	@view_config(match_param='action=edit', renderer=templateprefix+'edit.mak')
-	def edit(self):
-		request = self.request
-		user = request.user
+        model_state = request.model_state
+        model_state.validators = {
+            "PageName": ciocvalidators.String(max=255, not_empty=True)
+        }
+        model_state.method = None
 
-		if not user.SuperUserGlobal:
-			self._security_failure()
+        if not model_state.validate():
+            # XXX invalid PageName
 
+            self._go_to_route(
+                "admin_pagetitle_index", _query=[("ErrMsg", _("Invalid ID", request))]
+            )
 
-		model_state = request.model_state
-		model_state.validators = {
-				'PageName': ciocvalidators.String(max=255,not_empty=True)
-				}
-		model_state.method = None
+        PageName = model_state.form.data.get("PageName")
 
-		if not model_state.validate():
-			# XXX invalid PageName
-				
-			self._go_to_route('admin_pagetitle_index', _query=[('ErrMsg', _('Invalid ID', request))])
+        edit_values = self._get_edit_info(PageName)
 
-		PageName = model_state.form.data.get('PageName')
+        model_state.form.data["descriptions"] = edit_values.descriptions
 
-		edit_values = self._get_edit_info(PageName)
+        title = _("Manage Page Titles", request)
+        return self._create_response_namespace(
+            title, title, edit_values._asdict(), no_index=True
+        )
 
-		model_state.form.data['descriptions'] = edit_values.descriptions
+    def _get_edit_info(self, PageName):
+        request = self.request
 
-		title = _('Manage Page Titles', request)
-		return self._create_response_namespace(title, title,
-				edit_values._asdict(),
-				no_index=True)
+        page = None
+        descriptions = {}
 
-	def _get_edit_info(self, PageName):
-		request = self.request
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute("EXEC dbo.sp_GBL_PageTitle_s ?", PageName)
+            page = cursor.fetchone()
 
-		page = None
-		descriptions = {}
+            cursor.nextset()
 
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute('EXEC dbo.sp_GBL_PageTitle_s ?', PageName)
-			page = cursor.fetchone()
+            for lng in cursor.fetchall():
+                descriptions[lng.Culture.replace("-", "_")] = lng
 
-			cursor.nextset()
+            cursor.close()
 
-			for lng in cursor.fetchall():
-				descriptions[lng.Culture.replace('-', '_')] = lng
+        if not page:
+            # not found
+            self._error_page(_("Field Not Found", request))
 
-
-			cursor.close()
-
-
-		if not page:
-			# not found
-			self._error_page(_('Field Not Found', request))
-
-
-		return EditValues(PageName, page, descriptions)
-
-
-
-
+        return EditValues(PageName, page, descriptions)

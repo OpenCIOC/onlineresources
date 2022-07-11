@@ -31,21 +31,22 @@ from cioc.web.admin import viewbase
 
 log = logging.getLogger(__name__)
 
-templateprefix = 'cioc.web.admin:templates/'
+templateprefix = "cioc.web.admin:templates/"
 
 
-@view_defaults(route_name='admin_sysinfo', renderer=templateprefix + 'sysinfo.mak')
+@view_defaults(route_name="admin_sysinfo", renderer=templateprefix + "sysinfo.mak")
 class SystemInfo(viewbase.AdminViewBase):
+    @view_config()
+    def get(self):
+        request = self.request
+        user = request.user
 
-	@view_config()
-	def get(self):
-		request = self.request
-		user = request.user
+        if not user.SuperUser:
+            self._security_failure()
 
-		if not user.SuperUser:
-			self._security_failure()
+        sysinfo = systeminfo.get_system_version_info_html()
 
-		sysinfo = systeminfo.get_system_version_info_html()
-
-		title = _('Manage Google Analytics Configuration', request)
-		return self._create_response_namespace(title, title, {'sysinfo': sysinfo}, no_index=True)
+        title = _("Manage Google Analytics Configuration", request)
+        return self._create_response_namespace(
+            title, title, {"sysinfo": sysinfo}, no_index=True
+        )

@@ -22,9 +22,9 @@ from cioc.core.rootfactories import BasicRootFactory
 
 
 def includeme(config):
-	urlprefix = 'volunteer/'
+    urlprefix = "volunteer/"
 
-	factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
-	config.add_route('vol_basic_search', urlprefix, factory=factory)
+    factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
+    config.add_route("vol_basic_search", urlprefix, factory=factory)
 
-	config.add_route('vol_export', urlprefix + 'export', factory=factory)
+    config.add_route("vol_export", urlprefix + "export", factory=factory)

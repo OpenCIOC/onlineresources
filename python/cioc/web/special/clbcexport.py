@@ -28,46 +28,44 @@ from cioc.web.cic import viewbase
 
 _ = i18n.gettext
 
-mime_type = 'application/zip'
+mime_type = "application/zip"
 
-@view_config(route_name='special_clbcexport')
+
+@view_config(route_name="special_clbcexport")
 class ClbcExport(viewbase.CicViewBase):
+    def __call__(self):
+        request = self.request
+        user = request.user
 
-	def __call__(self):
-		request = self.request
-		user = request.user
+        if not user:
+            return make_401_error("Access Denied", "Export")
 
-		if not user:
-			return make_401_error('Access Denied', 'Export')
+        if "clbcexport" not in user.cic.ExternalAPIs:
+            return make_401_error("Insufficient Permissions", "Export")
 
-		if 'clbcexport' not in user.cic.ExternalAPIs:
-			return make_401_error('Insufficient Permissions', 'Export')
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(
+                "SELECT CAST(Vendor AS nvarchar(max)) AS Vendor FROM CLBC_VENDOR_EXPORT"
+            )
 
+            data = [x[0] for x in cursor.fetchall()]
 
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute('SELECT CAST(Vendor AS nvarchar(max)) AS Vendor FROM CLBC_VENDOR_EXPORT')
-			
-			data = [x[0] for x in cursor.fetchall()]
+            cursor.close()
 
-			cursor.close()
+        data.insert(0, '<?xml version="1.0" encoding="UTF-8"?>\r\n<Vendors>')
+        data.append("</Vendors>")
+        data = "\r\n".join(data).encode("utf8")
 
-		data.insert(0, u'<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Vendors>')
-		data.append(u'</Vendors>')
-		data = u'\r\n'.join(data).encode('utf8')
+        file = tempfile.TemporaryFile()
+        zip = zipfile.ZipFile(file, "w", zipfile.ZIP_DEFLATED)
+        zip.writestr("export.xml", data)
+        zip.close()
+        length = file.tell()
+        file.seek(0)
 
-		file = tempfile.TemporaryFile()
-		zip = zipfile.ZipFile(file, 'w', zipfile.ZIP_DEFLATED)
-		zip.writestr('export.xml', data)
-		zip.close()
-		length = file.tell()
-		file.seek(0)
-		
-		res = Response(content_type='application/zip', charset=None)
-		res.app_iter = FileIterator(file)
-		res.content_length = length
+        res = Response(content_type="application/zip", charset=None)
+        res.app_iter = FileIterator(file)
+        res.content_length = length
 
-
-		res.headers['Content-Disposition'] = 'attachment;filename=Export.zip'
-		return res
-
-
+        res.headers["Content-Disposition"] = "attachment;filename=Export.zip"
+        return res

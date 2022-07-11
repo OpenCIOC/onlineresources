@@ -16,12 +16,14 @@
 
 
 from __future__ import absolute_import
-import logging 
+import logging
 import six
+
 log = logging.getLogger(__name__)
 
 import xml.etree.cElementTree as ET
-#import elementtree.ElementTree as ET
+
+# import elementtree.ElementTree as ET
 
 import collections
 
@@ -33,173 +35,191 @@ from cioc.core import validators as ciocvalidators
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 
-templateprefix = 'cioc.web.admin:templates/naics/'
+templateprefix = "cioc.web.admin:templates/naics/"
 
-EditValues = collections.namedtuple('EditValues', 'Code codeinfo examples')
+EditValues = collections.namedtuple("EditValues", "Code codeinfo examples")
+
 
 def description_required(value_dict, state):
-	exid = value_dict.get('Example_ID')
-	if exid and exid != 'NEW':
-		return True
-	return False
+    exid = value_dict.get("Example_ID")
+    if exid and exid != "NEW":
+        return True
+    return False
+
 
 class NaicsExampleBaseSchema(Schema):
-	if_key_missing = None
-	
-	Example_ID = Any(ciocvalidators.IDValidator(), validators.OneOf(['NEW']))
-	LangID = validators.Int(min=0, max=ciocvalidators.MAX_SMALL_INT, not_empty=True)
-	Description = ciocvalidators.UnicodeString(max=255) #sometimes required as per RequireIfPredicate below
-	delete = validators.Bool()
+    if_key_missing = None
 
-	chained_validators = [ciocvalidators.RequireIfPredicate(description_required, ['Description'])]
+    Example_ID = Any(ciocvalidators.IDValidator(), validators.OneOf(["NEW"]))
+    LangID = validators.Int(min=0, max=ciocvalidators.MAX_SMALL_INT, not_empty=True)
+    Description = ciocvalidators.UnicodeString(
+        max=255
+    )  # sometimes required as per RequireIfPredicate below
+    delete = validators.Bool()
+
+    chained_validators = [
+        ciocvalidators.RequireIfPredicate(description_required, ["Description"])
+    ]
 
 
 class PostSchema(Schema):
-	allow_extra_fields = True
-	filter_extra_fields = True
+    allow_extra_fields = True
+    filter_extra_fields = True
 
-	if_key_missing = None
+    if_key_missing = None
 
-	example = foreach.ForEach(NaicsExampleBaseSchema())
+    example = foreach.ForEach(NaicsExampleBaseSchema())
 
 
-@view_defaults(route_name='admin_naics', match_param='action=example', renderer=templateprefix + 'example.mak')
+@view_defaults(
+    route_name="admin_naics",
+    match_param="action=example",
+    renderer=templateprefix + "example.mak",
+)
 class NaicsExample(viewbase.AdminViewBase):
-	
-	@view_config()
-	def index(self):
-		request = self.request
-		
-		Code = self._basic_info()
+    @view_config()
+    def index(self):
+        request = self.request
 
-		edit_values = self._get_edit_info(Code)
-			
-		#raise Exception
+        Code = self._basic_info()
 
-		request.model_state.form.data['example'] = edit_values.examples
+        edit_values = self._get_edit_info(Code)
 
-		title = _('NAICS Examples (%s)', request) % edit_values.codeinfo.Classification
+        # raise Exception
 
-		return self._create_response_namespace(title, title,
-				edit_values._asdict(),
-				no_index=True)
+        request.model_state.form.data["example"] = edit_values.examples
 
-	@view_config(request_method="POST")
-	def save(self):
-		request = self.request
-		user = request.user
+        title = _("NAICS Examples (%s)", request) % edit_values.codeinfo.Classification
 
-		Code = self._basic_info()
+        return self._create_response_namespace(
+            title, title, edit_values._asdict(), no_index=True
+        )
 
-		model_state = request.model_state
-		model_state.schema = PostSchema()
+    @view_config(request_method="POST")
+    def save(self):
+        request = self.request
+        user = request.user
 
-		model_state.form.variable_decode = True
+        Code = self._basic_info()
 
-		if model_state.validate():
-			# valid. Save changes and redirect
+        model_state = request.model_state
+        model_state.schema = PostSchema()
 
-			root = ET.Element('Examples')
-			for i,example in enumerate(model_state.form.data['example']):
-				if not example.get('Example_ID'):
-					continue
+        model_state.form.variable_decode = True
 
-				if example.get('Example_ID') == 'NEW' and not example.get('Description'):
-					continue
+        if model_state.validate():
+            # valid. Save changes and redirect
 
-				if example.get('delete'):
-					continue
+            root = ET.Element("Examples")
+            for i, example in enumerate(model_state.form.data["example"]):
+                if not example.get("Example_ID"):
+                    continue
 
-				example_el = ET.SubElement(root, 'Example')
-				ET.SubElement(example_el, 'CNT').text = six.text_type(i)
+                if example.get("Example_ID") == "NEW" and not example.get(
+                    "Description"
+                ):
+                    continue
 
-				for key,value in six.iteritems(example):
-					if key == 'Example_ID' and value == 'NEW':
-						value = -1
+                if example.get("delete"):
+                    continue
 
-					if value is not None:
-						ET.SubElement(example_el, key).text = six.text_type(value)
+                example_el = ET.SubElement(root, "Example")
+                ET.SubElement(example_el, "CNT").text = six.text_type(i)
 
-			args = [Code, user.Mod, ET.tostring(root, encoding='unicode')]
+                for key, value in six.iteritems(example):
+                    if key == "Example_ID" and value == "NEW":
+                        value = -1
 
-			#raise Exception
-			with request.connmgr.get_connection('admin') as conn:
-				sql = '''
+                    if value is not None:
+                        ET.SubElement(example_el, key).text = six.text_type(value)
+
+            args = [Code, user.Mod, ET.tostring(root, encoding="unicode")]
+
+            # raise Exception
+            with request.connmgr.get_connection("admin") as conn:
+                sql = """
 				DECLARE @ErrMsg as nvarchar(500), 
 				@RC as int 
 
 				EXECUTE @RC = dbo.sp_NAICS_Example_u ?, ?, ?, @ErrMsg OUTPUT  
 
 				SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				'''
+				"""
 
-				cursor = conn.execute(sql, *args)
-				result = cursor.fetchone()
-				cursor.close()
+                cursor = conn.execute(sql, *args)
+                result = cursor.fetchone()
+                cursor.close()
 
-			if not result.Return:
+            if not result.Return:
 
-				self._go_to_route('admin_naics', action='example', 
-						_query=[('InfoMsg', _('The NAICS examples were successfully updated.', request)), 
-							('Code', Code)])
+                self._go_to_route(
+                    "admin_naics",
+                    action="example",
+                    _query=[
+                        (
+                            "InfoMsg",
+                            _("The NAICS examples were successfully updated.", request),
+                        ),
+                        ("Code", Code),
+                    ],
+                )
 
-			ErrMsg = _('Unable to save: ') + result.ErrMsg
+            ErrMsg = _("Unable to save: ") + result.ErrMsg
 
-		else:
-			ErrMsg = _('There were validation errors.')
+        else:
+            ErrMsg = _("There were validation errors.")
 
+        edit_values = self._get_edit_info(Code)
 
-		edit_values = self._get_edit_info(Code)
+        title = _("NAICS Examples (%s)", request) % edit_values.codeinfo.Classification
 
+        edit_values = edit_values._asdict()
 
-		title = _('NAICS Examples (%s)', request) % edit_values.codeinfo.Classification
+        examples = edit_values["examples"] = variabledecode.variable_decode(
+            request.POST
+        )["example"]
 
-		edit_values = edit_values._asdict()
+        model_state.form.data["example"] = examples
 
-		examples = edit_values['examples'] = variabledecode.variable_decode(request.POST)['example']
+        edit_values["ErrMsg"] = ErrMsg
 
-		model_state.form.data['example'] = examples
+        # errors = model_state.form.errors
+        # raise Exception()
 
-		edit_values['ErrMsg'] = ErrMsg
+        return self._create_response_namespace(title, title, edit_values, no_index=True)
 
-		#errors = model_state.form.errors
-		#raise Exception()
+    def _basic_info(self):
+        request = self.request
+        user = request.user
 
-		return self._create_response_namespace(title, title,
-				edit_values, no_index=True)
+        if not user.cic.SuperUserGlobal:
+            self._security_failure()
 
-	def _basic_info(self):
-		request = self.request
-		user = request.user
+        validator = ciocvalidators.IDValidator(not_empty=True)
+        try:
+            Code = validator.to_python(request.params.get("Code"))
+        except validators.Invalid as e:
+            self._error_page(_("Invalid NAICS Code:", request) + e.msg)
 
-		if not user.cic.SuperUserGlobal:
-			self._security_failure()
+        return Code
 
-		validator = ciocvalidators.IDValidator(not_empty=True)
-		try:
-			Code = validator.to_python(request.params.get('Code'))
-		except validators.Invalid as e:
-			self._error_page(_('Invalid NAICS Code:', request) + e.msg )
+    def _get_edit_info(self, Code):
+        request = self.request
 
-		return Code
+        codeinfo = None
+        examples = []
+        with request.connmgr.get_connection() as conn:
+            cursor = conn.execute("EXEC sp_NAICS_Example_lf ?", Code)
+            codeinfo = cursor.fetchone()
 
-	def _get_edit_info(self, Code):
-		request = self.request
+            if codeinfo:
+                cursor.nextset()
 
-		codeinfo = None
-		examples = []
-		with request.connmgr.get_connection() as conn:
-			cursor = conn.execute('EXEC sp_NAICS_Example_lf ?', Code)
-			codeinfo = cursor.fetchone()
+                examples = cursor.fetchall()
 
-			if codeinfo:
-				cursor.nextset()
+            cursor.close()
 
-				examples = cursor.fetchall()
+        if not codeinfo:  ## not a valid view
+            self._error_page(_("NAICS Code Not Found", request))
 
-			cursor.close()
-
-		if not codeinfo: ## not a valid view
-			self._error_page(_('NAICS Code Not Found', request))
-
-		return EditValues(Code, codeinfo, examples)
+        return EditValues(Code, codeinfo, examples)

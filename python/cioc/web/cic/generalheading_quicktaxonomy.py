@@ -19,6 +19,7 @@
 from __future__ import absolute_import
 import logging
 from six.moves import map
+
 log = logging.getLogger(__name__)
 
 # 3rd Party Libraries
@@ -29,51 +30,51 @@ from markupsafe import Markup
 from cioc.core import constants as const, i18n, validators
 from cioc.web.cic.viewbase import CicViewBase
 
-templateprefix = 'cioc.web.cic:templates/generalheading/'
+templateprefix = "cioc.web.cic:templates/generalheading/"
 
 _ = i18n.gettext
 
 
 class CodesSchema(validators.RootSchema):
-	Code = validators.ForEach(validators.TaxonomyCodeValidator())
+    Code = validators.ForEach(validators.TaxonomyCodeValidator())
 
-	chained_validators = [validators.ForceRequire('Code')]
+    chained_validators = [validators.ForceRequire("Code")]
 
 
 class RowsSchema(validators.RootSchema):
-	TC = validators.TaxonomyCodeValidator(not_empty=True)
-	LV = validators.Int(min=1, max=7)
+    TC = validators.TaxonomyCodeValidator(not_empty=True)
+    LV = validators.Int(min=1, max=7)
 
 
-@view_defaults(route_name='cic_generalheading', match_param='action=quicktaxonomy', renderer='json')
+@view_defaults(
+    route_name="cic_generalheading", match_param="action=quicktaxonomy", renderer="json"
+)
 class ActivtionsView(CicViewBase):
+    @view_config(renderer=templateprefix + "quicktaxonomy.mak")
+    def quicktaxonomy(self):
+        request = self.request
+        user = request.user
 
-	@view_config(renderer=templateprefix + 'quicktaxonomy.mak')
-	def quicktaxonomy(self):
-		request = self.request
-		user = request.user
+        if not user.cic or user.cic.CanUpdatePubs != const.UPDATE_ALL:
+            self._security_failure()
 
-		if not user.cic or user.cic.CanUpdatePubs != const.UPDATE_ALL:
-			self._security_failure()
+        model_state = request.model_state
+        model_state.validators = {"PB_ID": validators.IDValidator(not_empty=True)}
+        model_state.method = None
 
-		model_state = request.model_state
-		model_state.validators = {
-				'PB_ID': validators.IDValidator(not_empty=True)
-				}
-		model_state.method = None
+        if not model_state.validate():
+            self._error_page(_("Invalid Publication ID", request))
 
-		if not model_state.validate():
-			self._error_page(_('Invalid Publication ID', request))
+        PB_ID = model_state.value("PB_ID")
 
-		PB_ID = model_state.value('PB_ID')
+        if user.cic.LimitedView and PB_ID and PB_ID != user.cic.PB_ID:
+            self._security_failure()
 
-		if user.cic.LimitedView and PB_ID and PB_ID != user.cic.PB_ID:
-			self._security_failure()
+        terms = []
 
-		terms = []
-
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute('''
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(
+                """
 			SELECT PubCode FROM CIC_Publication WHERE PB_ID=?
 
 			DECLARE @MemberID int
@@ -87,88 +88,110 @@ class ActivtionsView(CicViewBase):
 				ON tm.Code=tmd.Code AND tmd.LangID=@@LANGID
 			WHERE tm.CdLvl=1
 			ORDER BY tm.Code
-			''', PB_ID, request.dboptions.MemberID)
+			""",
+                PB_ID,
+                request.dboptions.MemberID,
+            )
 
-			pubcode = cursor.fetchone()
-			if pubcode:
-				pubcode = pubcode[0]
+            pubcode = cursor.fetchone()
+            if pubcode:
+                pubcode = pubcode[0]
 
-			cursor.nextset()
+            cursor.nextset()
 
-			terms = cursor.fetchall()
+            terms = cursor.fetchall()
 
-			cursor.close()
+            cursor.close()
 
-		title = _('Quick Create Taxonomy Headings', request)
-		return self._create_response_namespace(title, title, dict(terms=self._get_dd_rows(terms, 1), pubcode=pubcode, PB_ID=PB_ID), no_index=True)
+        title = _("Quick Create Taxonomy Headings", request)
+        return self._create_response_namespace(
+            title,
+            title,
+            dict(terms=self._get_dd_rows(terms, 1), pubcode=pubcode, PB_ID=PB_ID),
+            no_index=True,
+        )
 
-	@view_config(request_method="POST", renderer='json')
-	def activations_save(self):
-		request = self.request
-		user = request.user
+    @view_config(request_method="POST", renderer="json")
+    def activations_save(self):
+        request = self.request
+        user = request.user
 
-		if not user.cic or user.cic.CanUpdatePubs != const.UPDATE_ALL:
-			self._security_failure()
+        if not user.cic or user.cic.CanUpdatePubs != const.UPDATE_ALL:
+            self._security_failure()
 
-		validator = validators.IDValidator(not_empty=True)
-		try:
-			PB_ID = validator.to_python(request.POST.get('PB_ID'))
-		except validators.Invalid as e:
-			self._error_page(_('Publication ID:', request) + e.msg)
+        validator = validators.IDValidator(not_empty=True)
+        try:
+            PB_ID = validator.to_python(request.POST.get("PB_ID"))
+        except validators.Invalid as e:
+            self._error_page(_("Publication ID:", request) + e.msg)
 
-		if user.cic.LimitedView and PB_ID and user.cic.PB_ID != PB_ID:
-			self._security_failure()
+        if user.cic.LimitedView and PB_ID and user.cic.PB_ID != PB_ID:
+            self._security_failure()
 
-		model_state = request.model_state
-		model_state.schema = CodesSchema()
+        model_state = request.model_state
+        model_state.schema = CodesSchema()
 
-		if model_state.validate():
-			args = [PB_ID, user.Mod, request.dboptions.MemberID, not request.dboptions.OtherMembersActive or user.cic.SuperUserGlobal, ','.join(model_state.value('Code'))]
+        if model_state.validate():
+            args = [
+                PB_ID,
+                user.Mod,
+                request.dboptions.MemberID,
+                not request.dboptions.OtherMembersActive or user.cic.SuperUserGlobal,
+                ",".join(model_state.value("Code")),
+            ]
 
-			with request.connmgr.get_connection('admin') as conn:
-				sql = '''
+            with request.connmgr.get_connection("admin") as conn:
+                sql = """
 					DECLARE @RC int, @ErrMsg nvarchar(500), @BadCodes nvarchar(max)
 					EXEC @RC = dbo.sp_CIC_GeneralHeading_i_QuickTax ?,?,?,?,?, @BadCodes OUTPUT, @ErrMsg OUTPUT
 
 					SELECT @RC AS [Return], @ErrMsg AS ErrMsg, @BadCodes AS BadCodes
-					'''
-				cursor = conn.execute(sql, args)
+					"""
+                cursor = conn.execute(sql, args)
 
-				result = cursor.fetchone()
+                result = cursor.fetchone()
 
-				cursor.close()
+                cursor.close()
 
-			if not result.Return:
-				info_msg = _('The General Heading(s) were successfully added.', request) if result.BadCodes is None else result.BadCodes
-				self._go_to_route('cic_publication', action='edit', _query=[('PB_ID', PB_ID), ('InfoMsg', info_msg)])
+            if not result.Return:
+                info_msg = (
+                    _("The General Heading(s) were successfully added.", request)
+                    if result.BadCodes is None
+                    else result.BadCodes
+                )
+                self._go_to_route(
+                    "cic_publication",
+                    action="edit",
+                    _query=[("PB_ID", PB_ID), ("InfoMsg", info_msg)],
+                )
 
-			self._error_page(result.ErrMsg)
+            self._error_page(result.ErrMsg)
 
-		self._error_page(_('There were validation errors.', request))
+        self._error_page(_("There were validation errors.", request))
 
-	@view_config(match_param='action=ddrows')
-	def ddrows(self):
-		request = self.request
-		user = request.user
+    @view_config(match_param="action=ddrows")
+    def ddrows(self):
+        request = self.request
+        user = request.user
 
-		if not user.cic.SuperUser:
-			self._security_failure()
+        if not user.cic.SuperUser:
+            self._security_failure()
 
-		model_state = request.model_state
-		model_state.method = None
-		model_state.schema = RowsSchema()
+        model_state = request.model_state
+        model_state.method = None
+        model_state.schema = RowsSchema()
 
-		if not model_state.validate():
-			return []
+        if not model_state.validate():
+            return []
 
-		if request.dboptions.OtherMembersActive:
-			records_criteria = 'AND (bt.MemberID=@MemberID OR EXISTS(SELECT * FROM GBL_BT_SharingProfile WHERE NUM=bt.NUM AND ShareMemberID_Cache=@MemberID))'
-		elif request.dboptions.OtherMembers:
-			records_criteria = 'AND (bt.MemberID=@MemberID)'
-		else:
-			records_criteria = ''
+        if request.dboptions.OtherMembersActive:
+            records_criteria = "AND (bt.MemberID=@MemberID OR EXISTS(SELECT * FROM GBL_BT_SharingProfile WHERE NUM=bt.NUM AND ShareMemberID_Cache=@MemberID))"
+        elif request.dboptions.OtherMembers:
+            records_criteria = "AND (bt.MemberID=@MemberID)"
+        else:
+            records_criteria = ""
 
-		sql = '''
+        sql = """
 			DECLARE @MemberID int
 			SET @MemberID = ?
 			SELECT tm.Code,ISNULL(tmd.AltTerm,tmd.Term) AS Term,
@@ -190,46 +213,69 @@ class ActivtionsView(CicViewBase):
 			WHERE tm.ParentCode = ?
 			GROUP BY tm.Code, tm.CdLvl, tm.CdLvl1, ISNULL(tmd.AltTerm,tmd.Term), tm.Active, tm.ParentCode
 			ORDER BY tm.Code
-		''' % (records_criteria)
+		""" % (
+            records_criteria
+        )
 
-		terms = []
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute(sql, request.dboptions.MemberID, model_state.value('TC'))
-			terms = cursor.fetchall()
-			cursor.close()
+        terms = []
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(
+                sql, request.dboptions.MemberID, model_state.value("TC")
+            )
+            terms = cursor.fetchall()
+            cursor.close()
 
-		return self._get_dd_rows(terms, model_state.value('LV'))
+        return self._get_dd_rows(terms, model_state.value("LV"))
 
-	def _get_dd_rows(self, terms, level):
-		request = self.request
-		route_path = request.passvars.route_path
-		query = [('TC', 'CODE')]
+    def _get_dd_rows(self, terms, level):
+        request = self.request
+        route_path = request.passvars.route_path
+        query = [("TC", "CODE")]
 
-		plus_minus_tmpl = Markup('''<span class="SimulateLink taxPlusMinus" data-taxcode="%(Code)s" data-url="{}" data-level="%(level)d" data-closed="true"><img border="0" align="bottom" src="{}"></span>
-						''').format(route_path('cic_generalheading', action='ddrows', _query=query).replace('CODE', '%(Code)s'), request.static_url('cioc:images/plus.gif'))
-		no_icon_tmpl = Markup('''<span data-taxcode="%(Code)s" data-level="%(level)d"><img border="0" align="bottom" src="{}"></span>''').format(request.static_url('cioc:images/noplusminus.gif'))
+        plus_minus_tmpl = Markup(
+            """<span class="SimulateLink taxPlusMinus" data-taxcode="%(Code)s" data-url="{}" data-level="%(level)d" data-closed="true"><img border="0" align="bottom" src="{}"></span>
+						"""
+        ).format(
+            route_path("cic_generalheading", action="ddrows", _query=query).replace(
+                "CODE", "%(Code)s"
+            ),
+            request.static_url("cioc:images/plus.gif"),
+        )
+        no_icon_tmpl = Markup(
+            """<span data-taxcode="%(Code)s" data-level="%(level)d"><img border="0" align="bottom" src="{}"></span>"""
+        ).format(request.static_url("cioc:images/noplusminus.gif"))
 
-		more_info_url = request.passvars.makeLink('~/jsonfeeds/tax_moreinfo.asp', [('TC', 'CODE')]).replace('CODE', '%(Code)s')
+        more_info_url = request.passvars.makeLink(
+            "~/jsonfeeds/tax_moreinfo.asp", [("TC", "CODE")]
+        ).replace("CODE", "%(Code)s")
 
-		base_tmpl = Markup('''<tr valign="top" class="TaxRowLevel%(level)d">
+        base_tmpl = Markup(
+            """<tr valign="top" class="TaxRowLevel%(level)d">
 					<td class="%(levelclass)s"><input type="checkbox" value="%(Code)s" name="Code"></td>
 					<td class="%(levelclass)s">%(Code)s</td>
 					<td class="%(levelclass)s"><div class="CodeLevel%(level)d" id="tax-code-%(CodeID)s">{}&nbsp;<span class="taxExpandTerm SimulateLink TaxLink%(Inactive)s" data-closed="true" data-taxcode="%(Code)s" data-url="{}"><span class="rollup-indicator %(Rollup)s">&uArr;&nbsp;</span>%(Term)s&nbsp;%(Count)s</span>
 					</div>
 					<div class="taxDetail"></div>
-					</td></tr>''')
+					</td></tr>"""
+        )
 
-		level_class = ('TaxLevel%d' % level) if level <= 2 else 'TaxBasic'
+        level_class = ("TaxLevel%d" % level) if level <= 2 else "TaxBasic"
 
-		def build_line(term):
-			return base_tmpl.format((no_icon_tmpl if not term.HAS_CHILDREN else plus_minus_tmpl), more_info_url) % {
-				'Code': term.Code,
-				'CodeID': term.Code.replace('.', '-'),
-				'Term': term.Term,
-				'Inactive': '' if term.Active else 'Inactive',
-				'level': level,
-				'levelclass': level_class,
-				'Count': (Markup('&nbsp;[%d]') % term.CountRecords) if term.CountRecords else '',
-				'Rollup': '' if term.Active is None else 'hidden',
-			}
-		return list(map(build_line, terms))
+        def build_line(term):
+            return base_tmpl.format(
+                (no_icon_tmpl if not term.HAS_CHILDREN else plus_minus_tmpl),
+                more_info_url,
+            ) % {
+                "Code": term.Code,
+                "CodeID": term.Code.replace(".", "-"),
+                "Term": term.Term,
+                "Inactive": "" if term.Active else "Inactive",
+                "level": level,
+                "levelclass": level_class,
+                "Count": (Markup("&nbsp;[%d]") % term.CountRecords)
+                if term.CountRecords
+                else "",
+                "Rollup": "" if term.Active is None else "hidden",
+            }
+
+        return list(map(build_line, terms))

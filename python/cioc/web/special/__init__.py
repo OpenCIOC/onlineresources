@@ -22,17 +22,30 @@ from cioc.core.rootfactories import BasicRootFactory
 
 
 def includeme(config):
-	urlprefix = '/special/'
+    urlprefix = "/special/"
 
-	factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC, allow_api_login=True)
-	# /special/CLBCExport.mvc/*
-	config.add_route('special_clbcexport', urlprefix + 'CLBCExport.mvc', factory=factory)
+    factory = partial(
+        BasicRootFactory,
+        domain=const.DM_CIC,
+        db_area=const.DM_CIC,
+        allow_api_login=True,
+    )
+    # /special/CLBCExport.mvc/*
+    config.add_route(
+        "special_clbcexport", urlprefix + "CLBCExport.mvc", factory=factory
+    )
 
-	# /special/CLBCUpdate.mvc/*
-	config.add_route('special_clbcupdate', urlprefix + 'CLBCUpdate.mvc', factory=factory)
+    # /special/CLBCUpdate.mvc/*
+    config.add_route(
+        "special_clbcupdate", urlprefix + "CLBCUpdate.mvc", factory=factory
+    )
 
-	# /special/O211Export.mvc/*
-	config.add_route('special_o211export', urlprefix + 'O211Export.mvc', factory=factory)
+    # /special/O211Export.mvc/*
+    config.add_route(
+        "special_o211export", urlprefix + "O211Export.mvc", factory=factory
+    )
 
-	# /special/oaccacc/*
-	config.add_route('special_oaccacexport', urlprefix + 'oaccacexport', factory=factory)
+    # /special/oaccacc/*
+    config.add_route(
+        "special_oaccacexport", urlprefix + "oaccacexport", factory=factory
+    )

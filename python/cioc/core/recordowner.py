@@ -19,32 +19,44 @@ from collections import namedtuple
 
 from cioc.core import constants as const
 
-ROInfo = namedtuple('ROInfo', 'Name Fax UpdatePhone UpdateEmail SiteAddress MailAddress')
-empty_record_owner = ROInfo('', '', '', '', '', '')
+ROInfo = namedtuple(
+    "ROInfo", "Name Fax UpdatePhone UpdateEmail SiteAddress MailAddress"
+)
+empty_record_owner = ROInfo("", "", "", "", "", "")
 
 
 def get_record_owner_info(request, agency_code, domain):
-	if not agency_code:
-		return empty_record_owner
+    if not agency_code:
+        return empty_record_owner
 
-	if domain == const.DM_CIC:
-		sql = 'EXEC dbo.sp_CIC_Agency_Update_s ?'
-	elif domain == const.DM_VOL:
-		sql = 'EXEC dbo.sp_VOL_Agency_Update_s ?'
-	else:
-		raise ValueError('Expected %s or %s for domain paramter but got %r' % (const.DM_CIC, const.DM_VOL, domain))
+    if domain == const.DM_CIC:
+        sql = "EXEC dbo.sp_CIC_Agency_Update_s ?"
+    elif domain == const.DM_VOL:
+        sql = "EXEC dbo.sp_VOL_Agency_Update_s ?"
+    else:
+        raise ValueError(
+            "Expected %s or %s for domain paramter but got %r"
+            % (const.DM_CIC, const.DM_VOL, domain)
+        )
 
-	with request.connmgr.get_connection('admin') as conn:
-		ro = conn.execute(sql, agency_code).fetchone()
+    with request.connmgr.get_connection("admin") as conn:
+        ro = conn.execute(sql, agency_code).fetchone()
 
-	if not ro:
-		return empty_record_owner
+    if not ro:
+        return empty_record_owner
 
-	email = ro.UPDATE_EMAIL
-	if not email:
-		if request.pageinfo.DbArea == const.DM_CIC:
-			email = request.dboptions.DefaultEmailCIC
-		else:
-			email = request.dboptions.DefaultEmailVOL
+    email = ro.UPDATE_EMAIL
+    if not email:
+        if request.pageinfo.DbArea == const.DM_CIC:
+            email = request.dboptions.DefaultEmailCIC
+        else:
+            email = request.dboptions.DefaultEmailVOL
 
-	return ROInfo(ro.ORG_NAME_FULL, ro.FAX, ro.UPDATE_PHONE, email, ro.SITE_ADDRESS, ro.MAIL_ADDRESS)
+    return ROInfo(
+        ro.ORG_NAME_FULL,
+        ro.FAX,
+        ro.UPDATE_PHONE,
+        email,
+        ro.SITE_ADDRESS,
+        ro.MAIL_ADDRESS,
+    )

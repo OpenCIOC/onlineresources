@@ -28,51 +28,75 @@ log = logging.getLogger(__name__)
 
 
 def link_code(request, link_text, naics_codes, link_page=None):
-	if not request.viewdata.PrintMode and link_page:
-		return Markup('<a href="%s">%s</a>') % (request.passvars.makeLink(link_page, {'NAICS': naics_codes}), link_text)
+    if not request.viewdata.PrintMode and link_page:
+        return Markup('<a href="%s">%s</a>') % (
+            request.passvars.makeLink(link_page, {"NAICS": naics_codes}),
+            link_text,
+        )
 
-	return escape(link_text)
+    return escape(link_text)
 
 
 def get_exclusions(request, naics_code, link_page=None, all_langs=False):
-	with request.connmgr.get_connection() as conn:
-		cursor = conn.execute('EXEC dbo.sp_NAICS_Exclusion_l ?,?', str(naics_code), all_langs)
-		exclusions = cursor.fetchall()
-		
-		cursor.nextset()
+    with request.connmgr.get_connection() as conn:
+        cursor = conn.execute(
+            "EXEC dbo.sp_NAICS_Exclusion_l ?,?", str(naics_code), all_langs
+        )
+        exclusions = cursor.fetchall()
 
-		uses = cursor.fetchall()
+        cursor.nextset()
 
-		cursor.close()
+        uses = cursor.fetchall()
 
-	
-	uses = dict((k, list(v)) for k,v in groupby(uses, attrgetter('Exclusion_ID')))
+        cursor.close()
 
-	output = []
-	for establishment, exclusions in groupby(exclusions, attrgetter('Establishment')):
-		if establishment:
-			output.extend([Markup('<p>'), _('Establishments primarily engaged in:', request), Markup('</p>')])
+    uses = dict((k, list(v)) for k, v in groupby(uses, attrgetter("Exclusion_ID")))
 
-		output.append(Markup('<ul>'))
-		for exclusion in exclusions:
-			use_instead = "; ".join(link_code(request, x.Code, x.Code, link_page) + ' ' + escape(x.Classification) for x in (uses.get(exclusion.Exclusion_ID) or []))
-			if use_instead:
-				use_instead = use_instead.join([" (", ")"])
+    output = []
+    for establishment, exclusions in groupby(exclusions, attrgetter("Establishment")):
+        if establishment:
+            output.extend(
+                [
+                    Markup("<p>"),
+                    _("Establishments primarily engaged in:", request),
+                    Markup("</p>"),
+                ]
+            )
 
-			output.extend([Markup('<li>'), escape(exclusion.Description), use_instead,Markup('</li>')])
-			
+        output.append(Markup("<ul>"))
+        for exclusion in exclusions:
+            use_instead = "; ".join(
+                link_code(request, x.Code, x.Code, link_page)
+                + " "
+                + escape(x.Classification)
+                for x in (uses.get(exclusion.Exclusion_ID) or [])
+            )
+            if use_instead:
+                use_instead = use_instead.join([" (", ")"])
 
-		output.append(Markup('</ul>'))
+            output.extend(
+                [
+                    Markup("<li>"),
+                    escape(exclusion.Description),
+                    use_instead,
+                    Markup("</li>"),
+                ]
+            )
 
-	return Markup(''.join(output))
+        output.append(Markup("</ul>"))
+
+    return Markup("".join(output))
+
 
 def get_examples(request, naics_code, all_langs=False):
-	with request.connmgr.get_connection() as conn:
-		examples = conn.execute('EXEC dbo.sp_NAICS_Example_l ?,?', str(naics_code), all_langs).fetchall()
+    with request.connmgr.get_connection() as conn:
+        examples = conn.execute(
+            "EXEC dbo.sp_NAICS_Example_l ?,?", str(naics_code), all_langs
+        ).fetchall()
 
-	li_tmpl = Markup('<li>%s</li>')
-	retval = ''.join(li_tmpl % x.Description for x in examples)
-	if retval:
-		return Markup('<ul>' + retval + '</ul>')
+    li_tmpl = Markup("<li>%s</li>")
+    retval = "".join(li_tmpl % x.Description for x in examples)
+    if retval:
+        return Markup("<ul>" + retval + "</ul>")
 
-	return retval
+    return retval

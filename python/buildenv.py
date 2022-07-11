@@ -16,63 +16,84 @@
 
 from __future__ import absolute_import
 from __future__ import print_function
+
+
 def _get_file_list_dir(root):
-	import os
-	return os.listdir(root)
+    import os
+
+    return os.listdir(root)
+
 
 def _get_file_list_html(root):
-	import six.moves.urllib.request, six.moves.urllib.error, six.moves.urllib.parse
-	import re
+    import six.moves.urllib.request, six.moves.urllib.error, six.moves.urllib.parse
+    import re
 
-	filere = re.compile('<a href="([^"/]+)">')
+    filere = re.compile('<a href="([^"/]+)">')
 
-	f = six.moves.urllib.request.urlopen(root)
-	content = f.read()
-	f.close()
+    f = six.moves.urllib.request.urlopen(root)
+    content = f.read()
+    f.close()
 
-	return [m.group(1) for m in filere.finditer(content)]
+    return [m.group(1) for m in filere.finditer(content)]
 
 
 def get_file_list(root):
-	if root.startswith('http'):
-		return _get_file_list_html(root)
+    if root.startswith("http"):
+        return _get_file_list_html(root)
 
-	return _get_file_list_dir(root)
+    return _get_file_list_dir(root)
 
 
 def install_base_packages(opts):
-	base_packages = set('Beaker lxml MarkupSafe pyodbc zope.interface pycrypto'.split())
-	files = get_file_list(opts.root)
+    base_packages = set("Beaker lxml MarkupSafe pyodbc zope.interface pycrypto".split())
+    files = get_file_list(opts.root)
 
-	import os
-	pyversion = 'py' + opts.pyversion
-	sep = '/' if opts.root.startswith('http') else os.path.sep
+    import os
 
-	root = opts.root
-	if root[-1] == '/' or root[-1] == '\\':
-		root = root[:-1]
+    pyversion = "py" + opts.pyversion
+    sep = "/" if opts.root.startswith("http") else os.path.sep
 
-	for fname in files:
-		if pyversion not in fname:
-			continue
+    root = opts.root
+    if root[-1] == "/" or root[-1] == "\\":
+        root = root[:-1]
 
-		basename = fname.split('-')[0]
-		if basename in base_packages:
-			cmd = 'easy_install -Z %s%s%s' % (opts.root, sep, fname)
-			print('\n\n' + cmd)
-			os.system(cmd)
+    for fname in files:
+        if pyversion not in fname:
+            continue
+
+        basename = fname.split("-")[0]
+        if basename in base_packages:
+            cmd = "easy_install -Z %s%s%s" % (opts.root, sep, fname)
+            print("\n\n" + cmd)
+            os.system(cmd)
 
 
 def main():
-	import argparse
-	import sys
-	parser = argparse.ArgumentParser(description='initialize an empty and activated virtualenv with dependencies')
+    import argparse
+    import sys
 
-	parser.add_argument('-p', '--pyversion', dest='pyversion', default=sys.version[:3], help="python version to use")
-	parser.add_argument('-r', '--root', dest='root', default="http://cioc.info/basket/", help="root of the place to install the packages from")
+    parser = argparse.ArgumentParser(
+        description="initialize an empty and activated virtualenv with dependencies"
+    )
 
-	args = parser.parse_args()
-	install_base_packages(args)
+    parser.add_argument(
+        "-p",
+        "--pyversion",
+        dest="pyversion",
+        default=sys.version[:3],
+        help="python version to use",
+    )
+    parser.add_argument(
+        "-r",
+        "--root",
+        dest="root",
+        default="http://cioc.info/basket/",
+        help="root of the place to install the packages from",
+    )
 
-if __name__ == '__main__':
-	main()
+    args = parser.parse_args()
+    install_base_packages(args)
+
+
+if __name__ == "__main__":
+    main()

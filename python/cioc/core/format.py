@@ -22,20 +22,23 @@ import re
 from markupsafe import escape, Markup
 
 
-_lots_of_html = re.compile(r'(<br>)|(<br ?/>)|(<p>)|(<a\s+href)|(<b>)|(<strong>)|(<i>)|(<em>)|(<li>)|(<img\s+)|(<table\s+)|(<table>)|(&nbsp;)|(&amp;)|(h[1-6]>)|(<span[\s>])|(<div[\s>])', re.I)
-_html_line_breaks = re.compile(r'(<br>)|(<br ?/>)|(<p>)', re.I)
+_lots_of_html = re.compile(
+    r"(<br>)|(<br ?/>)|(<p>)|(<a\s+href)|(<b>)|(<strong>)|(<i>)|(<em>)|(<li>)|(<img\s+)|(<table\s+)|(<table>)|(&nbsp;)|(&amp;)|(h[1-6]>)|(<span[\s>])|(<div[\s>])",
+    re.I,
+)
+_html_line_breaks = re.compile(r"(<br>)|(<br ?/>)|(<p>)", re.I)
 
 
 def textToHTML(strText):
-	if not strText:
-		return None
+    if not strText:
+        return None
 
-	br = Markup('&nbsp;<br>')
-	if not _lots_of_html.search(strText):
-		return escape(strText).replace('\r\n', br).replace('\n', br).replace('\r', br)
+    br = Markup("&nbsp;<br>")
+    if not _lots_of_html.search(strText):
+        return escape(strText).replace("\r\n", br).replace("\n", br).replace("\r", br)
 
-	elif not _html_line_breaks.search(strText):
-		return Markup(strText).replace('\r\n', br).replace('\n', br).replace('\r', br)
+    elif not _html_line_breaks.search(strText):
+        return Markup(strText).replace("\r\n", br).replace("\n", br).replace("\r", br)
 
-	else:
-		return Markup(strText)
+    else:
+        return Markup(strText)

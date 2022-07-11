@@ -20,5 +20,5 @@ from cioc.core.viewbase import ViewBase
 
 
 class VolViewBase(ViewBase):
-	def __init__(self, request, require_login=False):
-		ViewBase.__init__(self, request, require_login)
+    def __init__(self, request, require_login=False):
+        ViewBase.__init__(self, request, require_login)

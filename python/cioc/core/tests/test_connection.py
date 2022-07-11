@@ -23,80 +23,87 @@ import mock
 from cioc.core import connection, syslanguage, config, constants as const
 
 
-app_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+app_path = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 app_name = os.path.split(app_path)[1]
-real_config_location = os.path.join(app_path, '..','..', 'config', app_name + '.ini')
-class DummyObject():
-	pass
+real_config_location = os.path.join(app_path, "..", "..", "config", app_name + ".ini")
 
-fake_settings = {
-		'server': 'server',
-		'database': 'database'
-		}
-permissions = ['cic', 'vol', 'admin']
-settings = ['uid', 'pwd']
-fake_settings.update(['_'.join((perm,setting))]*2 for perm in permissions for setting in settings)
+
+class DummyObject:
+    pass
+
+
+fake_settings = {"server": "server", "database": "database"}
+permissions = ["cic", "vol", "admin"]
+settings = ["uid", "pwd"]
+fake_settings.update(
+    ["_".join((perm, setting))] * 2 for perm in permissions for setting in settings
+)
+
 
 class Test_ConnectionMgr(object):
-	@classmethod
-	def setUpAll(self):
-		self.request = DummyObject()
+    @classmethod
+    def setUpAll(self):
+        self.request = DummyObject()
 
-		self.culture_list_before = syslanguage._culture_list
-		syslanguage.update_cultures(x._replace(Active=True)._asdict() for x in syslanguage._culture_list)
+        self.culture_list_before = syslanguage._culture_list
+        syslanguage.update_cultures(
+            x._replace(Active=True)._asdict() for x in syslanguage._culture_list
+        )
 
-		self.request.language = syslanguage.SystemLanguage()
+        self.request.language = syslanguage.SystemLanguage()
 
-	@classmethod
-	def tearDownAll(self):
-		syslanguage._culture_list = self.culture_list_before
-		syslanguage.update_culture_map()
+    @classmethod
+    def tearDownAll(self):
+        syslanguage._culture_list = self.culture_list_before
+        syslanguage.update_culture_map()
 
-	def test_connection_mgr(self):
-		cnnmgr = connection.ConnectionManager(self.request, fake_settings.copy())
-		cnstr_base = "Server=server;Database=database;UID=%(perm)s_uid;PWD=%(perm)s_pwd"
-		def run_test(perm): 
-			base = cnstr_base % {'perm': perm}
-			assert cnnmgr.get_connection_string_base(perm) == base
-			assert cnnmgr.get_connection_string(perm) == ('Driver={SQL Server Native Client 10.0};' + base)
+    def test_connection_mgr(self):
+        cnnmgr = connection.ConnectionManager(self.request, fake_settings.copy())
+        cnstr_base = "Server=server;Database=database;UID=%(perm)s_uid;PWD=%(perm)s_pwd"
 
-		for p in permissions:
-			yield run_test, p
+        def run_test(perm):
+            base = cnstr_base % {"perm": perm}
+            assert cnnmgr.get_connection_string_base(perm) == base
+            assert cnnmgr.get_connection_string(perm) == (
+                "Driver={SQL Server Native Client 10.0};" + base
+            )
 
+        for p in permissions:
+            yield run_test, p
 
+    def test_get_connection(self):
+        cnnmgr = connection.ConnectionManager(self.request, fake_settings.copy())
 
-	def test_get_connection(self):
-		cnnmgr = connection.ConnectionManager(self.request, fake_settings.copy())
+        mocked_connection = mock.Mock()
+        mocked_connect = mock.Mock()
+        mocked_connect.return_value = mocked_connection
 
-		mocked_connection = mock.Mock()
-		mocked_connect = mock.Mock()
-		mocked_connect.return_value = mocked_connection
-		@mock.patch('pyodbc.connect', mocked_connect)
-		def run_test(kw, expected_perm, expected_language):
-			mocked_connect.reset_mock()
-			mocked_connection.reset_mock()
+        @mock.patch("pyodbc.connect", mocked_connect)
+        def run_test(kw, expected_perm, expected_language):
+            mocked_connect.reset_mock()
+            mocked_connection.reset_mock()
 
-			conn = cnnmgr.get_connection(**kw)
+            conn = cnnmgr.get_connection(**kw)
 
-			connection_string = cnnmgr.get_connection_string(expected_perm)
-			mocked_connect.assert_called_once_with(connection_string,autocommit=True)
+            connection_string = cnnmgr.get_connection_string(expected_perm)
+            mocked_connect.assert_called_once_with(connection_string, autocommit=True)
 
-			conn.execute.assert_called_once_with("SET LANGUAGE '" + expected_language + "'")
+            conn.execute.assert_called_once_with(
+                "SET LANGUAGE '" + expected_language + "'"
+            )
 
-		yield run_test, {}, 'cic', 'English'
+        yield run_test, {}, "cic", "English"
 
-		for language, expected_ln in [('a', 'a'), (None, 'English')]:
-			for perm in ('cic', 'vol', 'admin'):
-				yield run_test, {'perm': perm, 'language': language}, perm, expected_ln
+        for language, expected_ln in [("a", "a"), (None, "English")]:
+            for perm in ("cic", "vol", "admin"):
+                yield run_test, {"perm": perm, "language": language}, perm, expected_ln
 
-		pageinfo = self.request.pageinfo = DummyObject()
+        pageinfo = self.request.pageinfo = DummyObject()
 
-		for DM, perm in [(const.DM_CIC, 'cic'), (const.DM_VOL, 'vol'), (const.DM_GLOBAL, 'cic')]:
-			pageinfo.DbArea = DM
-			yield run_test, {}, perm, 'English'
-				
-
-
-
-
-				
+        for DM, perm in [
+            (const.DM_CIC, "cic"),
+            (const.DM_VOL, "vol"),
+            (const.DM_GLOBAL, "cic"),
+        ]:
+            pageinfo.DbArea = DM
+            yield run_test, {}, perm, "English"

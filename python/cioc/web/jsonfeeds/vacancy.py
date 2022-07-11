@@ -19,6 +19,7 @@ from __future__ import absolute_import
 import logging
 from six.moves import map
 import six
+
 log = logging.getLogger(__name__)
 
 from pyramid.view import view_config, view_defaults
@@ -34,181 +35,205 @@ idlist_validator = ciocvalidators.CSVForEach(ciocvalidators.IDValidator(not_emtp
 
 
 class IncrementSchema(ciocvalidators.RootSchema):
-	BT_VUT_ID = ciocvalidators.IDValidator(not_empty=True)
-	Value = ciocvalidators.Int(max=1, min=-1, not_empty=True)
+    BT_VUT_ID = ciocvalidators.IDValidator(not_empty=True)
+    Value = ciocvalidators.Int(max=1, min=-1, not_empty=True)
 
-_change_global_template = Markup('''
+
+_change_global_template = Markup(
+    """
 	<h3>%(title)s</h3>
 	%(changes)s
-''')
+"""
+)
 
-_change_no_items_template = Markup('''<p class="Info">%s</p>''')
+_change_no_items_template = Markup("""<p class="Info">%s</p>""")
 
 
-@view_defaults(route_name='jsonfeeds_vacancy', renderer='json', http_cache=0)
+@view_defaults(route_name="jsonfeeds_vacancy", renderer="json", http_cache=0)
 class Vacancy(viewbase.CicViewBase):
+    def __init__(self, request):
+        viewbase.CicViewBase.__init__(self, request, require_login=True)
 
-	def __init__(self, request):
-		viewbase.CicViewBase.__init__(self, request, require_login=True)
+    @view_config(match_param="action=canedit")
+    def canedit(self):
+        request = self.request
+        user = self.request.user
 
-	@view_config(match_param='action=canedit')
-	def canedit(self):
-		request = self.request
-		user = self.request.user
+        if not user.cic:
+            return []
 
-		if not user.cic:
-			return []
+        ids = request.params.get("ids")
 
-		ids = request.params.get('ids')
+        try:
+            ids = idlist_validator.to_python(ids)
+        except Invalid:
+            ids = []
 
-		try:
-			ids = idlist_validator.to_python(ids)
-		except Invalid:
-			ids = []
+        if not ids:
+            return []
 
-		if not ids:
-			return []
+        ids = ",".join(map(six.text_type, ids))
 
-		ids = ','.join(map(six.text_type, ids))
+        with request.connmgr.get_connection() as conn:
+            editable = conn.execute(
+                "EXEC sp_CIC_Vacancy_l_CanUpdate ?, ?, ?",
+                user.User_ID,
+                request.viewdata.cic.ViewType,
+                ids,
+            ).fetchall()
 
-		with request.connmgr.get_connection() as conn:
-			editable = conn.execute('EXEC sp_CIC_Vacancy_l_CanUpdate ?, ?, ?', user.User_ID, request.viewdata.cic.ViewType, ids).fetchall()
+        return [x[0] for x in editable]
 
-		return [x[0] for x in editable]
+    @view_config(match_param="action=refresh")
+    def refresh(self):
+        request = self.request
+        user = self.request.user
 
-	@view_config(match_param='action=refresh')
-	def refresh(self):
-		request = self.request
-		user = self.request.user
+        if not user.cic:
+            return {"success": False}
 
-		if not user.cic:
-			return {'success': False}
+        ids = request.params.get("ids")
 
-		ids = request.params.get('ids')
+        try:
+            ids = idlist_validator.to_python(ids)
+        except Invalid:
+            ids = []
 
-		try:
-			ids = idlist_validator.to_python(ids)
-		except Invalid:
-			ids = []
+        if not ids:
+            return {"success": False}
 
-		if not ids:
-			return {'success': False}
+        ids = ",".join(map(six.text_type, ids))
 
-		ids = ','.join(map(six.text_type, ids))
+        with request.connmgr.get_connection("admin") as conn:
+            updates = conn.execute(
+                "EXEC sp_CIC_Vacancy_l_Refresh ?, ?, ?",
+                request.dboptions.MemberID,
+                request.viewdata.cic.ViewType,
+                ids,
+            ).fetchall()
 
-		with request.connmgr.get_connection('admin') as conn:
-			updates = conn.execute('EXEC sp_CIC_Vacancy_l_Refresh ?, ?, ?', request.dboptions.MemberID, request.viewdata.cic.ViewType, ids).fetchall()
+        updates = [{"text": x.Text, "bt_vut_id": x.BT_VUT_ID} for x in updates]
 
-		updates = [{'text': x.Text, 'bt_vut_id': x.BT_VUT_ID} for x in updates]
+        return {"success": True, "updates": updates}
 
-		return {
-			'success': True,
-			'updates': updates
-		}
+    @view_config(match_param="action=increment", request_method="POST")
+    def increment(self):
+        request = self.request
+        user = request.user
 
-	@view_config(match_param='action=increment', request_method='POST')
-	def increment(self):
-		request = self.request
-		user = request.user
+        if not user.cic:
+            return {
+                "success": False,
+                "msg": _("Permission Denied", request),
+                "updates": [],
+            }
 
-		if not user.cic:
-			return {'success': False, 'msg': _('Permission Denied', request), 'updates': []}
+        model_state = request.model_state
+        model_state.schema = IncrementSchema()
 
-		model_state = request.model_state
-		model_state.schema = IncrementSchema()
-
-		if model_state.validate():
-			sql = '''DECLARE @RC int, @ErrMsg nvarchar(500)
+        if model_state.validate():
+            sql = """DECLARE @RC int, @ErrMsg nvarchar(500)
 			EXEC @RC = sp_CIC_Vacancy_u_Increment ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC AS [Return], @ErrMsg AS ErrMsg '''
-			with request.connmgr.get_connection('admin') as conn:
-				cursor = conn.execute(sql, user.User_ID, user.Mod, request.viewdata.cic.ViewType, model_state.value('BT_VUT_ID'), model_state.value('Value'))
+			SELECT @RC AS [Return], @ErrMsg AS ErrMsg """
+            with request.connmgr.get_connection("admin") as conn:
+                cursor = conn.execute(
+                    sql,
+                    user.User_ID,
+                    user.Mod,
+                    request.viewdata.cic.ViewType,
+                    model_state.value("BT_VUT_ID"),
+                    model_state.value("Value"),
+                )
 
-				new_values = cursor.fetchone()
+                new_values = cursor.fetchone()
 
-				cursor.nextset()
+                cursor.nextset()
 
-				result = cursor.fetchone()
+                result = cursor.fetchone()
 
-				cursor.close()
+                cursor.close()
 
-			updates = [
-				{
-					'text': new_values.Text,
-					'bt_vut_id': new_values.BT_VUT_ID
-				}
-			]
-			if not result.Return:
-				value = model_state.value('Value')
-				if value > 0:
-					msg = _('Success: added %d to vacancy.') % value
-				else:
-					msg = _('Success: removed %d from vacancy.') % abs(value)
+            updates = [{"text": new_values.Text, "bt_vut_id": new_values.BT_VUT_ID}]
+            if not result.Return:
+                value = model_state.value("Value")
+                if value > 0:
+                    msg = _("Success: added %d to vacancy.") % value
+                else:
+                    msg = _("Success: removed %d from vacancy.") % abs(value)
 
-				return {
-					'success': True,
-					'msg': msg,
-					'updates': updates
-				}
+                return {"success": True, "msg": msg, "updates": updates}
 
-			ErrMsg = _('Unable to complete your change: %s') % result.ErrMsg
+            ErrMsg = _("Unable to complete your change: %s") % result.ErrMsg
 
-		else:
-			updates = []
-			ErrMsg = _('Validation Error')
+        else:
+            updates = []
+            ErrMsg = _("Validation Error")
 
-		return {
-			'success': False,
-			'msg': ErrMsg,
-			'updates': updates
-		}
+        return {"success": False, "msg": ErrMsg, "updates": updates}
 
-	@view_config(match_param='action=history')
-	def history(self):
-		request = self.request
-		user = self.request.user
+    @view_config(match_param="action=history")
+    def history(self):
+        request = self.request
+        user = self.request.user
 
-		if not user.cic:
-			permission_denied = _('Unable to load history information: Permission Denied', request)
-			return {'success': False, 'content': permission_denied, 'title': permission_denied}
+        if not user.cic:
+            permission_denied = _(
+                "Unable to load history information: Permission Denied", request
+            )
+            return {
+                "success": False,
+                "content": permission_denied,
+                "title": permission_denied,
+            }
 
-		vut_id = request.params.get('BT_VUT_ID')
-		validator = ciocvalidators.IDValidator(not_emtpy=True)
+        vut_id = request.params.get("BT_VUT_ID")
+        validator = ciocvalidators.IDValidator(not_emtpy=True)
 
-		try:
-			vut_id = validator.to_python(vut_id)
-		except Invalid:
-			unable_to_load = _('Unable to load history information.', request)
-			return {'success': False, 'content': unable_to_load, 'title': unable_to_load}
+        try:
+            vut_id = validator.to_python(vut_id)
+        except Invalid:
+            unable_to_load = _("Unable to load history information.", request)
+            return {
+                "success": False,
+                "content": unable_to_load,
+                "title": unable_to_load,
+            }
 
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute('EXEC sp_CIC_Vacancy_sl_History ?, ?, ?', user.User_ID, request.viewdata.cic.ViewType, vut_id)
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(
+                "EXEC sp_CIC_Vacancy_sl_History ?, ?, ?",
+                user.User_ID,
+                request.viewdata.cic.ViewType,
+                vut_id,
+            )
 
-			info = cursor.fetchone()
+            info = cursor.fetchone()
 
-			cursor.nextset()
+            cursor.nextset()
 
-			changes = cursor.fetchall()
+            changes = cursor.fetchall()
 
-			cursor.close()
+            cursor.close()
 
-		if not info or not info.CAN_SEE_HISTORY:
-			permission_denied = _('Unable to load history information: Permission Denied', request)
-			return {'success': False, 'content': permission_denied, 'title': permission_denied}
+        if not info or not info.CAN_SEE_HISTORY:
+            permission_denied = _(
+                "Unable to load history information: Permission Denied", request
+            )
+            return {
+                "success": False,
+                "content": permission_denied,
+                "title": permission_denied,
+            }
 
-		title = _('Vacancy History for %s', request) % info.RecordTitle
+        title = _("Vacancy History for %s", request) % info.RecordTitle
 
-		if not changes:
-			changes = _change_no_items_template % _('No change history')
+        if not changes:
+            changes = _change_no_items_template % _("No change history")
 
-		else:
-			changes = make_history_table(request, changes)
+        else:
+            changes = make_history_table(request, changes)
 
-		content = _change_global_template % {'title': title, 'changes': changes}
+        content = _change_global_template % {"title": title, "changes": changes}
 
-		return {
-			'success': True,
-			'content': content,
-			'title': title
-		}
+        return {"success": True, "content": content, "title": title}

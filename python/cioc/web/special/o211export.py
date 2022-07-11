@@ -36,77 +36,83 @@ log = logging.getLogger(__name__)
 
 _ = i18n.gettext
 
-mime_type = 'application/zip'
+mime_type = "application/zip"
 
 
 def make_headers(extra_headers=None):
-	tmp = dict(extra_headers or {})
-	return tmp
+    tmp = dict(extra_headers or {})
+    return tmp
 
 
-def make_401_error(message, realm='O211 Export'):
-	error = HTTPUnauthorized(headers=make_headers({'WWW-Authenticate': 'Basic realm="%s"' % realm}))
-	error.content_type = "text/plain"
-	error.text = message
-	return error
+def make_401_error(message, realm="O211 Export"):
+    error = HTTPUnauthorized(
+        headers=make_headers({"WWW-Authenticate": 'Basic realm="%s"' % realm})
+    )
+    error.content_type = "text/plain"
+    error.text = message
+    return error
 
 
 def make_internal_server_error(message):
-	error = HTTPInternalServerError()
-	error.content_type = "text/plain"
-	error.text = message
-	return error
+    error = HTTPInternalServerError()
+    error.content_type = "text/plain"
+    error.text = message
+    return error
 
 
 class O211ExportOptionsSchema(Schema):
-	allow_extra_fields = True
-	if_key_missing = None
+    allow_extra_fields = True
+    if_key_missing = None
 
-	feed = validators.OneOf('recordids taxonomy community'.split(), if_empty=None, strip=True)
-	date = ciocvalidators.ISODateConverter(if_empty=None)
+    feed = validators.OneOf(
+        "recordids taxonomy community".split(), if_empty=None, strip=True
+    )
+    date = ciocvalidators.ISODateConverter(if_empty=None)
 
 
-@view_config(route_name='special_o211export')
+@view_config(route_name="special_o211export")
 class O211Export(viewbase.CicViewBase):
+    def __call__(self):
+        request = self.request
+        user = request.user
 
-	def __call__(self):
-		request = self.request
-		user = request.user
+        if not user:
+            return make_401_error("Access Denied")
 
-		if not user:
-			return make_401_error(u'Access Denied')
+        if "o211export" not in user.cic.ExternalAPIs:
+            return make_401_error("Insufficient Permissions")
 
-		if 'o211export' not in user.cic.ExternalAPIs:
-			return make_401_error(u'Insufficient Permissions')
+        model_state = modelstate.ModelState(request)
+        model_state.schema = O211ExportOptionsSchema()
+        model_state.form.method = None
 
-		model_state = modelstate.ModelState(request)
-		model_state.schema = O211ExportOptionsSchema()
-		model_state.form.method = None
+        if not model_state.validate():
+            if model_state.is_error("date"):
+                msg = "Invalid date"
+            elif model_state.is_error("feed"):
+                msg = "Invalid feed."
+            else:
+                msg = "An unknown error occurred."
 
-		if not model_state.validate():
-			if model_state.is_error('date'):
-				msg = u"Invalid date"
-			elif model_state.is_error('feed'):
-				msg = u"Invalid feed."
-			else:
-				msg = u"An unknown error occurred."
+            return make_internal_server_error(msg)
 
-			return make_internal_server_error(msg)
+        feed = model_state.value("feed")
+        date = model_state.value("date")
 
-		feed = model_state.value('feed')
-		date = model_state.value('date')
+        args = []
+        if not feed:
+            sql = [
+                "SELECT CAST(record AS nvarchar(max)) AS record FROM O211SC_RECORD_EXPORT btd"
+            ]
 
-		args = []
-		if not feed:
-			sql = ['SELECT CAST(record AS nvarchar(max)) AS record FROM O211SC_RECORD_EXPORT btd']
+            if request.viewdata.cic.PB_ID:
+                args.append(request.viewdata.cic.PB_ID)
+                sql.append(" INNER JOIN CIC_BT_PB pb ON btd.NUM=pb.NUM AND pb.PB_ID=?")
 
-			if request.viewdata.cic.PB_ID:
-				args.append(request.viewdata.cic.PB_ID)
-				sql.append(" INNER JOIN CIC_BT_PB pb ON btd.NUM=pb.NUM AND pb.PB_ID=?")
-
-			if date:
-				args.append(date)
-				sql.append('''
+            if date:
+                args.append(date)
+                sql.append(
+                    """
 						WHERE EXISTS (SELECT * FROM GBL_BaseTable_History h
 							INNER JOIN GBL_FieldOption fo
 									ON h.FieldID=fo.FieldID
@@ -119,52 +125,55 @@ class O211Export(viewbase.CicViewBase):
 									'LANGUAGES','LOCATED_IN_CM','MAIL_ADDRESS','PUBLIC_COMMENTS',
 									'OFFICE_PHONE','SERVICE_LEVEL','RECORD_OWNER','DESCRIPTION','SITE_ADDRESS','SUBJECTS',
 									'TDD_PHONE','TOLL_FREE_PHONE','WWW_ADDRESS', 'UPDATE_DATE', 'NUM', 'SUBMIT_CHANGES_TO', 'SOURCE_DB')
-							)''')
+							)"""
+                )
 
-			sql = ' '.join(sql)
+            sql = " ".join(sql)
 
-		elif feed == 'recordids':
-			sql = ['SELECT CAST((SELECT id=btd.NUM, language=btd.Culture FROM O211SC_RECORD_EXPORT btd']
-			if request.viewdata.cic.PB_ID:
-				args.append(request.viewdata.cic.PB_ID)
-				sql.append(" INNER JOIN CIC_BT_PB pb ON btd.NUM=pb.NUM AND pb.PB_ID=?")
+        elif feed == "recordids":
+            sql = [
+                "SELECT CAST((SELECT id=btd.NUM, language=btd.Culture FROM O211SC_RECORD_EXPORT btd"
+            ]
+            if request.viewdata.cic.PB_ID:
+                args.append(request.viewdata.cic.PB_ID)
+                sql.append(" INNER JOIN CIC_BT_PB pb ON btd.NUM=pb.NUM AND pb.PB_ID=?")
 
-			sql.append("FOR XML PATH('record'), TYPE) AS nvarchar(max)) AS data ")
+            sql.append("FOR XML PATH('record'), TYPE) AS nvarchar(max)) AS data ")
 
-			sql = ' '.join(sql)
+            sql = " ".join(sql)
 
-		elif feed == 'taxonomy':
-			sql = "SELECT CAST(record AS nvarchar(max)) AS record from O211SC_TAXONOMY_EXPORT"
+        elif feed == "taxonomy":
+            sql = "SELECT CAST(record AS nvarchar(max)) AS record from O211SC_TAXONOMY_EXPORT"
 
-		elif feed == 'community':
-			sql = "SELECT CAST(record AS nvarchar(max)) AS record from O211SC_COMMUNITY_EXPORT"
+        elif feed == "community":
+            sql = "SELECT CAST(record AS nvarchar(max)) AS record from O211SC_COMMUNITY_EXPORT"
 
-		else:
-			#XXX we should never get here
-			return make_internal_server_error(u'Invalid feed.')
+        else:
+            # XXX we should never get here
+            return make_internal_server_error("Invalid feed.")
 
-		log.debug('sql: %s', sql)
-		with request.connmgr.get_connection('admin') as conn:
-			cursor = conn.execute(sql, *args)
+        log.debug("sql: %s", sql)
+        with request.connmgr.get_connection("admin") as conn:
+            cursor = conn.execute(sql, *args)
 
-			data = [x[0] for x in cursor.fetchall()]
+            data = [x[0] for x in cursor.fetchall()]
 
-			cursor.close()
+            cursor.close()
 
-		data.insert(0, u'<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<records>')
-		data.append(u'</records>')
-		data = u'\r\n'.join(data).encode('utf8')
+        data.insert(0, '<?xml version="1.0" encoding="UTF-8"?>\r\n<records>')
+        data.append("</records>")
+        data = "\r\n".join(data).encode("utf8")
 
-		file = tempfile.TemporaryFile()
-		zip = zipfile.ZipFile(file, 'w', zipfile.ZIP_DEFLATED)
-		zip.writestr('export.xml', data)
-		zip.close()
-		length = file.tell()
-		file.seek(0)
+        file = tempfile.TemporaryFile()
+        zip = zipfile.ZipFile(file, "w", zipfile.ZIP_DEFLATED)
+        zip.writestr("export.xml", data)
+        zip.close()
+        length = file.tell()
+        file.seek(0)
 
-		res = Response(content_type='application/zip', charset=None)
-		res.app_iter = FileIterator(file)
-		res.content_length = length
+        res = Response(content_type="application/zip", charset=None)
+        res.app_iter = FileIterator(file)
+        res.content_length = length
 
-		res.headers['Content-Disposition'] = 'attachment;filename=Export.zip'
-		return res
+        res.headers["Content-Disposition"] = "attachment;filename=Export.zip"
+        return res

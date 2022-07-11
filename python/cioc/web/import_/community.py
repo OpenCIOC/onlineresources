@@ -31,142 +31,164 @@ _ = i18n.gettext
 
 log = logging.getLogger(__name__)
 
-templateprefix = 'cioc.web.import_:templates/community/'
+templateprefix = "cioc.web.import_:templates/community/"
 
 
 def get_xmlschema(filename):
 
-	schema_path = os.path.join('..', 'import', filename)
-	schema_doc = etree.parse(schema_path)
+    schema_path = os.path.join("..", "import", filename)
+    schema_doc = etree.parse(schema_path)
 
-	return etree.XMLSchema(schema_doc)
+    return etree.XMLSchema(schema_doc)
 
 
 def get_community_args(data, document):
-	# NOTE also update self.sql below for the correct number of args
-	return [data, document.getroot().get('source')]
+    # NOTE also update self.sql below for the correct number of args
+    return [data, document.getroot().get("source")]
 
 
 def get_community_map_args(data, document):
-	root = document.getroot()
-	# NOTE also update self.sql below for the correct number of args
-	return [data] + [root.get(x) for x in ['SystemCode', 'SystemName', 'CopyrightHolder1', 'CopyrightHolder2', 'ContactEmail']]
+    root = document.getroot()
+    # NOTE also update self.sql below for the correct number of args
+    return [data] + [
+        root.get(x)
+        for x in [
+            "SystemCode",
+            "SystemName",
+            "CopyrightHolder1",
+            "CopyrightHolder2",
+            "ContactEmail",
+        ]
+    ]
 
 
 class UploadSchema(validators.RootSchema):
-	ImportFile = validators.FieldStorageUploadConverter(not_empty=True)
+    ImportFile = validators.FieldStorageUploadConverter(not_empty=True)
 
 
-@view_defaults(renderer=templateprefix + 'index.mak')
+@view_defaults(renderer=templateprefix + "index.mak")
 class CommunityUpload(AdminViewBase):
+    def __init__(self, request):
+        AdminViewBase.__init__(self, request)
 
-	def __init__(self, request):
-		AdminViewBase.__init__(self, request)
+        mapping = self.mapping = request.matched_route.name == "import_community_map"
+        if mapping:
+            # NOTE next line must match number of args in get_community_map_args()
+            self.sql = "EXEC sp_GBL_Community_External_u_Import ?, ?, ?, ?, ?, ?"
+            self.get_sql_args = get_community_map_args
+            self.schemafile = None
+            self.title = _("Upload External Community File", request)
+        else:
+            # NOTE next line must match number of args in get_community_args()
+            self.sql = "EXEC sp_GBL_Community_u_Import ?, ?"
+            self.get_sql_args = get_community_args
+            self.schemafile = "cioc_community_schema.xsd"
+            self.title = _("Upload Community File", request)
 
-		mapping = self.mapping = request.matched_route.name == 'import_community_map'
-		if mapping:
-			# NOTE next line must match number of args in get_community_map_args()
-			self.sql = 'EXEC sp_GBL_Community_External_u_Import ?, ?, ?, ?, ?, ?'
-			self.get_sql_args = get_community_map_args
-			self.schemafile = None
-			self.title = _('Upload External Community File', request)
-		else:
-			# NOTE next line must match number of args in get_community_args()
-			self.sql = 'EXEC sp_GBL_Community_u_Import ?, ?'
-			self.get_sql_args = get_community_args
-			self.schemafile = 'cioc_community_schema.xsd'
-			self.title = _('Upload Community File', request)
+    @view_config(route_name="import_community")
+    @view_config(route_name="import_community_map")
+    def index(self):
+        request = self.request
+        user = request.user
 
-	@view_config(route_name='import_community')
-	@view_config(route_name='import_community_map')
-	def index(self):
-		request = self.request
-		user = request.user
+        if not user.SuperUserGlobal:
+            self._security_failure()
 
-		if not user.SuperUserGlobal:
-			self._security_failure()
+        title = self.title
+        return self._create_response_namespace(
+            title, title, {"title": title}, no_index=True
+        )
 
-		title = self.title
-		return self._create_response_namespace(title, title, {'title': title}, no_index=True)
+    @view_config(route_name="import_community", request_method="POST")
+    @view_config(route_name="import_community_map", request_method="POST")
+    def upload(self):
+        request = self.request
+        user = self.request.user
 
-	@view_config(route_name='import_community', request_method="POST")
-	@view_config(route_name='import_community_map', request_method="POST")
-	def upload(self):
-		request = self.request
-		user = self.request.user
+        if not user.SuperUserGlobal:
+            self._security_failure()
 
-		if not user.SuperUserGlobal:
-			self._security_failure()
+        model_state = request.model_state
+        model_state.schema = UploadSchema()
 
-		model_state = request.model_state
-		model_state.schema = UploadSchema()
+        title = self.title
 
-		title = self.title
+        if not model_state.validate():
+            return self._create_response_namespace(
+                title,
+                title,
+                dict(title=title, ErrMsg=_("There were validation errors.", request)),
+                no_index=True,
+            )
 
-		if not model_state.validate():
-			return self._create_response_namespace(title, title, dict(title=title, ErrMsg=_('There were validation errors.', request)), no_index=True)
+        data = model_state.form.data
+        importfile = data["ImportFile"]
 
-		data = model_state.form.data
-		importfile = data['ImportFile']
+        filename = importfile.filename
+        file = importfile.file
 
-		filename = importfile.filename
-		file = importfile.file
+        zipfile = None
+        try:
+            zipfile = ZipFile(file, "r")
+            files = zipfile.namelist()
+            data = zipfile.read(files[0])
+            zipfile.close()
+            file.close()
+        except Exception as e:
+            file.seek(0)
+            data = file.read()
+            file.close()
 
-		zipfile = None
-		try:
-			zipfile = ZipFile(file, 'r')
-			files = zipfile.namelist()
-			data = zipfile.read(files[0])
-			zipfile.close()
-			file.close()
-		except Exception as e:
-			file.seek(0)
-			data = file.read()
-			file.close()
+        xmlfile = StringIO(data)
 
-		xmlfile = StringIO(data)
+        error_log = []
+        sqlargs = None
+        community_doc = None
+        validator = None
+        if self.schemafile:
+            validator = get_xmlschema(self.schemafile)
 
-		error_log = []
-		sqlargs = None
-		community_doc = None
-		validator = None
-		if self.schemafile:
-			validator = get_xmlschema(self.schemafile)
+        try:
+            community_doc = etree.parse(xmlfile)
+            if validator and not validator.validate(community_doc):
+                log.debug("Schema error: %s", validator.error_log)
+                error_log.extend(
+                    _("Line %d, Column %d: %s", request) % (x.line, x.column, x.message)
+                    for x in validator.error_log
+                )
 
-		try:
-			community_doc = etree.parse(xmlfile)
-			if validator and not validator.validate(community_doc):
-				log.debug('Schema error: %s', validator.error_log)
-				error_log.extend(_('Line %d, Column %d: %s', request) %
-					(x.line, x.column, x.message)
-					for x in validator.error_log)
+            if not error_log:
+                sqlargs = self.get_sql_args(data, community_doc)
 
-			if not error_log:
-				sqlargs = self.get_sql_args(data, community_doc)
+        except etree.XMLSyntaxError as e:
+            error_log.append(e.args[0])
 
-		except etree.XMLSyntaxError as e:
-			error_log.append(e.args[0])
+        finally:
+            community_doc = None
+            validator = None
 
-		finally:
-			community_doc = None
-			validator = None
+        unauthorized = []
+        if not error_log and sqlargs:
+            with request.connmgr.get_connection("admin") as conn:
+                cursor = conn.execute(self.sql, sqlargs)
 
-		unauthorized = []
-		if not error_log and sqlargs:
-			with request.connmgr.get_connection('admin') as conn:
-				cursor = conn.execute(self.sql, sqlargs)
+                result = cursor.fetchone()
 
-				result = cursor.fetchone()
+                cursor.nextset()
+                unauthorized = cursor.fetchall()
 
-				cursor.nextset()
-				unauthorized = cursor.fetchall()
+            if result.Error:
+                error_log.append(result.ErrMsg)
 
-			if result.Error:
-				error_log.append(result.ErrMsg)
+        request.override_renderer = templateprefix + "result.mak"
 
-		request.override_renderer = templateprefix + 'result.mak'
-
-		return self._create_response_namespace(title, title,
-				{'error_log': error_log, 'unauthorized': unauthorized,
-				'filename': filename},
-				no_index=True)
+        return self._create_response_namespace(
+            title,
+            title,
+            {
+                "error_log": error_log,
+                "unauthorized": unauthorized,
+                "filename": filename,
+            },
+            no_index=True,
+        )

@@ -18,10 +18,19 @@
 from __future__ import absolute_import
 from cioc.core.basetypes import IsIDType
 
-def test_is_id_type():
-	def do_test(val, expect):
-		assert bool(IsIDType(val)) == expect
 
-	tests = [(0, False), (1, True), (-1, False), (2147483647, True), (2147483648, False), ('a', False), ('0xCD', False)]
-	for val, expect in tests:
-		yield do_test, val, expect
+def test_is_id_type():
+    def do_test(val, expect):
+        assert bool(IsIDType(val)) == expect
+
+    tests = [
+        (0, False),
+        (1, True),
+        (-1, False),
+        (2147483647, True),
+        (2147483648, False),
+        ("a", False),
+        ("0xCD", False),
+    ]
+    for val, expect in tests:
+        yield do_test, val, expect

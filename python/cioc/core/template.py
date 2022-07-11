@@ -506,7 +506,7 @@ def _inline_css_file(root_dir, out, fname, relative="."):
             match = _import_re.search(line)
             if match:
                 out.append(line[: match.start()])
-                line = line[match.end():]
+                line = line[match.end() :]
                 req_fname = match.group(1)
 
                 # check url safety
@@ -689,8 +689,8 @@ class LayoutHeader(object):
         template_values = self.request.template_values
         header_layout_template = template_values["HeaderLayoutHTML"]
         if (
-            template_values["HeaderSystemLayout"] and
-            template_values["HeaderLayoutHTMLURL"]
+            template_values["HeaderSystemLayout"]
+            and template_values["HeaderLayoutHTMLURL"]
         ):
             header_layout_template = read_file(
                 os.path.join(_system_layout_dir, template_values["HeaderLayoutHTMLURL"])

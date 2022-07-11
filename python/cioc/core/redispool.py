@@ -23,17 +23,17 @@ _redisurl = None
 
 
 def get_redis_pool(request):
-	config = request.config
-	url = config.get('session.url', '172.23.16.12:6379')
+    config = request.config
+    url = config.get("session.url", "172.23.16.12:6379")
 
-	global _redispool, _redisurl
-	if not _redispool or url != _redisurl:
-		if _redispool:
-			# address change disconnect all connections
-			_redispool.disconnect()
+    global _redispool, _redisurl
+    if not _redispool or url != _redisurl:
+        if _redispool:
+            # address change disconnect all connections
+            _redispool.disconnect()
 
-		host, port = url.split(':')
-		_redispool = ConnectionPool(host=host, port=int(port))
-		_redisurl = url
+        host, port = url.split(":")
+        _redispool = ConnectionPool(host=host, port=int(port))
+        _redisurl = url
 
-	return _redispool
+    return _redispool

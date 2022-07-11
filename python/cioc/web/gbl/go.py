@@ -23,27 +23,29 @@ from pyramid.httpexceptions import HTTPNotFound, HTTPFound
 
 from cioc.core import viewbase
 
-template = 'cioc.web.gbl:templates/pages.mak'
+template = "cioc.web.gbl:templates/pages.mak"
 log = logging.getLogger(__name__)
 
 
-@view_config(route_name='gbl_go')
+@view_config(route_name="gbl_go")
 class GoView(viewbase.ViewBase):
-	def __init__(self, request):
-		super().__init__(request, require_login=False)
+    def __init__(self, request):
+        super().__init__(request, require_login=False)
 
-	def __call__(self):
-		request = self.request
+    def __call__(self):
+        request = self.request
 
-		with request.connmgr.get_connection() as conn:
-			cursor = conn.execute(
-				'''EXEC sp_GBL_Redirect_s_Slug ?, ?''',
-				request.dboptions.MemberID, request.matchdict['slug'])
+        with request.connmgr.get_connection() as conn:
+            cursor = conn.execute(
+                """EXEC sp_GBL_Redirect_s_Slug ?, ?""",
+                request.dboptions.MemberID,
+                request.matchdict["slug"],
+            )
 
-			redirect = cursor.fetchone()
+            redirect = cursor.fetchone()
 
-		if not redirect:
-			return HTTPNotFound()
+        if not redirect:
+            return HTTPNotFound()
 
-		url = urljoin(request.url, redirect.url)
-		return HTTPFound(location=url)
+        url = urljoin(request.url, redirect.url)
+        return HTTPFound(location=url)

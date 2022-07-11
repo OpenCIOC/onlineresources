@@ -16,11 +16,10 @@
 
 # XXX should this be moved to validators.py?
 def IsIDType(val):
-	try:
-		val = int(str(val), 10)
-		if val <= 0 or val > 2147483647:
-			return False
-		return True
-	except ValueError:
-		return False
-
+    try:
+        val = int(str(val), 10)
+        if val <= 0 or val > 2147483647:
+            return False
+        return True
+    except ValueError:
+        return False

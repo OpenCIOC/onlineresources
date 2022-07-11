@@ -22,13 +22,18 @@ from cioc.core.i18n import gettext as _
 
 
 def details_sidebar_parameters(request):
-	return dumps([
-		"[" + _('Show Listings', request) + "]",
-		"[" + _('Hide Listings', request) + "]",
-		"[" + _('Show Deleted', request) + "]",
-		"[" + _('Hide Deleted', request) + "]"
-	])
+    return dumps(
+        [
+            "[" + _("Show Listings", request) + "]",
+            "[" + _("Hide Listings", request) + "]",
+            "[" + _("Show Deleted", request) + "]",
+            "[" + _("Hide Deleted", request) + "]",
+        ]
+    )
 
 
 def details_sidebar_script(request):
-	return u'''initialize_listing_toggle.apply(null, %s);''' % details_sidebar_parameters(request)
+    return (
+        """initialize_listing_toggle.apply(null, %s);"""
+        % details_sidebar_parameters(request)
+    )

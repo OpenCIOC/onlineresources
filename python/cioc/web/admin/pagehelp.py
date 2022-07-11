@@ -15,103 +15,135 @@
 # =========================================================================================
 
 
-#std library
+# std library
 from __future__ import absolute_import
 import os
 import logging
 import subprocess
 from datetime import datetime
 
-#3rd party libs
+# 3rd party libs
 from pyramid.view import view_config
 
-#this app
+# this app
 from cioc.core.i18n import gettext as _, format_date
 from cioc.core.utils import read_file
 from cioc.web.admin.viewbase import AdminViewBase
 
 log = logging.getLogger(__name__)
 
-templateprefix = 'cioc.web.admin:templates/page_help.mak'
+templateprefix = "cioc.web.admin:templates/page_help.mak"
 
 
 class SubProcException(Exception):
-	pass
+    pass
 
 
-git_exe_options = ['git.cmd', 'git.exe']
-git_path_prefix = os.environ.get('CIOC_GIT_CMD_PREFIX', 'c:/Program Files (x86)/Git/cmd')
+git_exe_options = ["git.cmd", "git.exe"]
+git_path_prefix = os.environ.get(
+    "CIOC_GIT_CMD_PREFIX", "c:/Program Files (x86)/Git/cmd"
+)
 git = None
 
 for git_exe in git_exe_options:
-	git_exe = os.path.join(git_path_prefix, git_exe)
-	if os.path.exists(git_exe):
-		git = git_exe
-		break
+    git_exe = os.path.join(git_path_prefix, git_exe)
+    if os.path.exists(git_exe):
+        git = git_exe
+        break
 
 
 def get_git_blame(filename):
-	if git is None:
-		raise SubProcException("Can't find git executable", -1)
+    if git is None:
+        raise SubProcException("Can't find git executable", -1)
 
-	proc = subprocess.Popen([git, 'blame', '-p', '-L', '1,1', filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	output = [x.decode('ascii') for x in proc.communicate()]
+    proc = subprocess.Popen(
+        [git, "blame", "-p", "-L", "1,1", filename],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    output = [x.decode("ascii") for x in proc.communicate()]
 
-	if proc.returncode:
-		log.debug(output)
-		raise SubProcException('Result Failed: \n' + output[1].join('\n'), proc.returncode)
+    if proc.returncode:
+        log.debug(output)
+        raise SubProcException(
+            "Result Failed: \n" + output[1].join("\n"), proc.returncode
+        )
 
-	lines = output[0].split('\n')
-	return dict(x for x in (n.strip().split(' ', 1) for n in lines[1:-2]) if len(x) == 2)
+    lines = output[0].split("\n")
+    return dict(
+        x for x in (n.strip().split(" ", 1) for n in lines[1:-2]) if len(x) == 2
+    )
 
 
 def get_help_content(request, strHelpFileName):
-	filename = '../pagehelp/' + strHelpFileName
+    filename = "../pagehelp/" + strHelpFileName
 
-	try:
-		blame = get_git_blame(filename)
-		last_mod_date = blame.get('committer-time')
-		if last_mod_date:
-			last_mod_date = datetime.fromtimestamp(int(blame['committer-time']))
+    try:
+        blame = get_git_blame(filename)
+        last_mod_date = blame.get("committer-time")
+        if last_mod_date:
+            last_mod_date = datetime.fromtimestamp(int(blame["committer-time"]))
 
-		else:
-			last_mod_date = datetime.now()
+        else:
+            last_mod_date = datetime.now()
 
-		last_mod_date = format_date(last_mod_date, request)
-	except SubProcException as e:
-		log.error('Error getting last change timestamp. Subproc returned %d: %s', e.args[1], e.args[0])
-		last_mod_date = '%s' % _('Unknown')
-	except WindowsError as e:
-		log.exception('Error getting last change timestamp.')
-		last_mod_date = '%s' % _('Unknown')
+        last_mod_date = format_date(last_mod_date, request)
+    except SubProcException as e:
+        log.error(
+            "Error getting last change timestamp. Subproc returned %d: %s",
+            e.args[1],
+            e.args[0],
+        )
+        last_mod_date = "%s" % _("Unknown")
+    except WindowsError as e:
+        log.exception("Error getting last change timestamp.")
+        last_mod_date = "%s" % _("Unknown")
 
-	return read_file(filename, 'utf-8-sig').replace('$Date$', last_mod_date)
+    return read_file(filename, "utf-8-sig").replace("$Date$", last_mod_date)
 
 
 class EmailValues(AdminViewBase):
+    @view_config(
+        route_name="admin_pagehelp", renderer="cioc.web.admin:templates/pagehelp.mak"
+    )
+    def index(self):
+        request = self.request
 
-	@view_config(route_name='admin_pagehelp', renderer='cioc.web.admin:templates/pagehelp.mak')
-	def index(self):
-		request = self.request
+        page_name = request.params.get("Page")
+        ErrMsg = ""
 
-		page_name = request.params.get("Page")
-		ErrMsg = ''
+        page_help = None
+        page_help_content = None
 
-		page_help = None
-		page_help_content = None
+        title = _("Page Help", request)
+        if not page_name:
+            ErrMsg = _("Cannot print page help: ", request) + _(
+                "No page was chosen", request
+            )
+        else:
+            with request.connmgr.get_connection("admin") as conn:
+                page_help = conn.execute(
+                    "EXEC dbo.sp_GBL_PageInfo_s_Help ?", page_name
+                ).fetchone()
 
-		title = _('Page Help', request)
-		if not page_name:
-			ErrMsg = _('Cannot print page help: ', request) + _("No page was chosen", request)
-		else:
-			with request.connmgr.get_connection('admin') as conn:
-				page_help = conn.execute('EXEC dbo.sp_GBL_PageInfo_s_Help ?',
-							page_name).fetchone()
+            if not page_help or not os.path.exists(
+                "../pagehelp/" + page_help.HelpFileName
+            ):
+                self._error_page(
+                    _("Cannot print page help: ", request)
+                    + _("No help was found for the selected page."),
+                    title=title,
+                )
 
-			if not page_help or not os.path.exists('../pagehelp/' + page_help.HelpFileName):
-				self._error_page(_('Cannot print page help: ', request) + _("No help was found for the selected page."), title=title)
+            else:
+                page_help_content = get_help_content(request, page_help.HelpFileName)
 
-			else:
-				page_help_content = get_help_content(request, page_help.HelpFileName)
-
-		return self._create_response_namespace(title, title, dict(page_help=page_help, page_help_content=page_help_content, ErrMsg=ErrMsg), no_index=True, print_table=False)
+        return self._create_response_namespace(
+            title,
+            title,
+            dict(
+                page_help=page_help, page_help_content=page_help_content, ErrMsg=ErrMsg
+            ),
+            no_index=True,
+            print_table=False,
+        )

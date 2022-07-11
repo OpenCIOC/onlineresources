@@ -20,7 +20,11 @@ from __future__ import absolute_import
 import logging
 
 # 3rd party
-from pyramid.httpexceptions import HTTPForbidden, HTTPInternalServerError, HTTPUnauthorized
+from pyramid.httpexceptions import (
+    HTTPForbidden,
+    HTTPInternalServerError,
+    HTTPUnauthorized,
+)
 from pyramid.view import view_config
 
 # this app
@@ -35,51 +39,50 @@ _ = i18n.gettext
 
 
 def make_headers(extra_headers=None):
-	tmp = dict(extra_headers or {})
-	return tmp
+    tmp = dict(extra_headers or {})
+    return tmp
 
 
-def make_401_error(message, realm='CIOC RPC'):
-	error = HTTPUnauthorized(headers=make_headers({'WWW-Authenticate': 'Basic realm="%s"' % realm}))
-	error.content_type = "text/plain"
-	error.text = message
-	return error
+def make_401_error(message, realm="CIOC RPC"):
+    error = HTTPUnauthorized(
+        headers=make_headers({"WWW-Authenticate": 'Basic realm="%s"' % realm})
+    )
+    error.content_type = "text/plain"
+    error.text = message
+    return error
 
 
-def make_403_error(message, realm='CIOC RPC'):
-	error = HTTPForbidden()
-	error.content_type = "text/plain"
-	error.text = message
-	return error
+def make_403_error(message, realm="CIOC RPC"):
+    error = HTTPForbidden()
+    error.content_type = "text/plain"
+    error.text = message
+    return error
 
 
 def make_internal_server_error(message):
-	error = HTTPInternalServerError()
-	error.content_type = "text/plain"
-	error.text = message
-	return error
+    error = HTTPInternalServerError()
+    error.content_type = "text/plain"
+    error.text = message
+    return error
 
 
-@view_config(route_name='jsonfeeds_agegrouplist', renderer='json')
-@view_config(route_name='rpc_agegrouplist', renderer='json')
+@view_config(route_name="jsonfeeds_agegrouplist", renderer="json")
+@view_config(route_name="rpc_agegrouplist", renderer="json")
 class JsonfeedsQuicklist(viewbase.ViewBase):
+    def __call__(self):
+        request = self.request
 
-	def __call__(self):
-		request = self.request
+        if request.matched_route.name.startswith("rpc_") and not request.user:
+            return make_401_error("Access Denied")
 
-		if request.matched_route.name.startswith('rpc_') and not request.user:
-			return make_401_error(u'Access Denied')
+        sql = "EXEC dbo.sp_GBL_AgeGroup_l ?,0"
+        args = [request.dboptions.MemberID]
 
-		sql = 'EXEC dbo.sp_GBL_AgeGroup_l ?,0'
-		args = [request.dboptions.MemberID]
+        with request.connmgr.get_connection("cic") as conn:
+            cursor = conn.execute(sql, args)
+            agegrouplist = cursor.fetchall()
+            colnames = [t[0] for t in cursor.description]
 
-		with request.connmgr.get_connection('cic') as conn:
-			cursor = conn.execute(sql, args)
-			agegrouplist = cursor.fetchall()
-			colnames = [t[0] for t in cursor.description]
-
-		fixfn = lambda x: dict(zip(colnames, x))
-		request.response.headers["Access-Control-Allow-Origin"] = "*"
-		return {
-			'agegroups': list(map(fixfn, agegrouplist))
-		}
+        fixfn = lambda x: dict(zip(colnames, x))
+        request.response.headers["Access-Control-Allow-Origin"] = "*"
+        return {"agegroups": list(map(fixfn, agegrouplist))}

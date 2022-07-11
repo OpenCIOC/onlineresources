@@ -20,10 +20,17 @@ from cioc.core.security import get_remote_ip
 
 
 def insert_stat(request, recid, numvnum, api=False):
-	area = request.pageinfo.DbAreaS
-	user = request.user
-	with request.connmgr.get_connection('admin') as conn:
-		conn.execute(
-			'EXEC dbo.sp_%s_Stats_i ?, ?, ?, ?, ?, ?, ?, ?' % area,
-			request.dboptions.MemberID, datetime.now(), get_remote_ip(request), recid, user.User_ID,
-			request.viewdata.dom.ViewType, api, numvnum)
+    area = request.pageinfo.DbAreaS
+    user = request.user
+    with request.connmgr.get_connection("admin") as conn:
+        conn.execute(
+            "EXEC dbo.sp_%s_Stats_i ?, ?, ?, ?, ?, ?, ?, ?" % area,
+            request.dboptions.MemberID,
+            datetime.now(),
+            get_remote_ip(request),
+            recid,
+            user.User_ID,
+            request.viewdata.dom.ViewType,
+            api,
+            numvnum,
+        )

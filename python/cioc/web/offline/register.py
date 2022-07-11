@@ -25,54 +25,66 @@ from cioc.web.cic import viewbase
 
 _ = i18n.gettext
 
+
 class RegisterSchema(Schema):
-	allow_extra_fields = True
-	filter_extra_fields = True
+    allow_extra_fields = True
+    filter_extra_fields = True
 
-	MachineName = ciocvalidators.UnicodeString(max=255, not_empty=True)
-	PublicKey = ciocvalidators.UnicodeString(max=1000, not_empty=True)
+    MachineName = ciocvalidators.UnicodeString(max=255, not_empty=True)
+    PublicKey = ciocvalidators.UnicodeString(max=1000, not_empty=True)
 
-@view_config(route_name='offline_register',renderer='json')
+
+@view_config(route_name="offline_register", renderer="json")
 class Register(viewbase.CicViewBase):
+    def __call__(self):
+        request = self.request
 
-	def __call__(self):
-		request = self.request
+        if not request.dboptions.UseOfflineTools:
+            return {
+                "fail": True,
+                "message": _("Offline Tools not enabled for this database."),
+            }
 
-		if not request.dboptions.UseOfflineTools:
-			return {'fail': True, 'message': _('Offline Tools not enabled for this database.')}
+        request.response.content_type = "application/json"
+        if not request.user:
+            # security failure
+            # response = request.response
+            # response.status = "Not Authorized"
+            # response.status_int = 401
+            # response.headers['WWW-Authenticate'] = 'Basic realm="CIOC Offline Tools"'
+            return {"fail": True, "message": _("Invalid Username or Password", request)}
 
-		request.response.content_type = 'application/json'
-		if not request.user:
-			#security failure
-			#response = request.response
-			#response.status = "Not Authorized"
-			#response.status_int = 401
-			#response.headers['WWW-Authenticate'] = 'Basic realm="CIOC Offline Tools"'
-			return {'fail': True, 'message': _('Invalid Username or Password', request)}
+        if not request.user.cic.ViewTypeOffline:
+            return {
+                "fail": True,
+                "message": _("User does not have offline tool permissions", request),
+            }
 
-		if not request.user.cic.ViewTypeOffline:
-			return {'fail': True, 'message': _('User does not have offline tool permissions', request)}
+        model_state = request.model_state
+        model_state.schema = RegisterSchema()
+        if not model_state.validate():
+            # validation error
+            return {
+                "fail": True,
+                "message": _("invalid request", request),
+                "errordetail": model_state.form.errors,
+            }
 
-
-		model_state = request.model_state
-		model_state.schema = RegisterSchema()
-		if not model_state.validate():
-			#validation error
-			return {'fail': True, 'message': _('invalid request', request), 
-					'errordetail': model_state.form.errors}
-
-		with request.connmgr.get_connection('admin') as conn:
-			result = conn.execute('''
+        with request.connmgr.get_connection("admin") as conn:
+            result = conn.execute(
+                """
 						 SET NOCOUNT ON
 						 DECLARE @RC int, @ErrMsg nvarchar(500)
 						 EXEC @RC = sp_CIC_Offline_Machine_i ?,?,?, @ErrMsg OUTPUT
 						 SELECT @RC AS [Return], @ErrMsg AS ErrMsg
-							''', request.user.cic.SL_ID, model_state.value('MachineName'), model_state.value('PublicKey')).fetchone()
+							""",
+                request.user.cic.SL_ID,
+                model_state.value("MachineName"),
+                model_state.value("PublicKey"),
+            ).fetchone()
 
-		if result.Return:
-			#error
-			return {'fail':True, 'message': result.ErrMsg}
+        if result.Return:
+            # error
+            return {"fail": True, "message": result.ErrMsg}
 
-		return {'fail': False}
-
-
+        return {"fail": False}
