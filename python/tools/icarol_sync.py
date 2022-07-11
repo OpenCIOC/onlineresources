@@ -43,6 +43,8 @@ try:
 except ImportError:
 	sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
+from tools.toolslib import fakerequest
+
 from cioc.core import constants as const, config, email, bufferedzip
 from cioc.core.utf8csv import open_csv_reader, write_csv_to_zip
 
@@ -346,6 +348,7 @@ def schema_part_prep(schema_doc, name, type):
 
 	return etree.XMLSchema(new_doc), elements
 
+
 schema_parts = {
 	'tAgency': 'Agency',
 	'tSite': 'Location',
@@ -457,22 +460,6 @@ def validate_download(args, counts):
 	_validate_part(error_log, counts, iterable, element, 'Source', *xmlschema_elements['tSource'])
 
 	return error_log
-
-
-class fakerequest(object):
-	def __init__(self, config):
-		self.config = config
-
-	class dboptions(object):
-		TrainingMode = False
-		NoEmail = False
-		DefaultEmailCIC = None
-		DefaultEmailVOL = None
-		DefaultEmailNameCIC = None
-		DefaultEmailNameVOL = None
-
-	class pageinfo(object):
-		DbArea = const.DM_CIC
 
 
 def output_error_log(args, error_log):

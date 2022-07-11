@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,12 +14,14 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 from collections import namedtuple
 import os
+import typing as t
 
-CIOC_TASK_NOTIFY_EMAIL = os.environ.get('CIOC_TASK_NOTIFY_EMAIL', 'qw4afPcItA5KJ18NH4nV@cioc.ca')
-CIOC_ADMIN_EMAIL = os.environ.get('CIOC_ADMIN_EMAIL', 'admin@cioc.ca')
+CIOC_TASK_NOTIFY_EMAIL = os.environ.get(
+    "CIOC_TASK_NOTIFY_EMAIL", "qw4afPcItA5KJ18NH4nV@cioc.ca"
+)
+CIOC_ADMIN_EMAIL = os.environ.get("CIOC_ADMIN_EMAIL", "admin@cioc.ca")
 
 DM_CIC = 1
 DM_VOL = 2
@@ -31,12 +33,12 @@ DM_S_VOL = "VOL"
 DM_S_CCR = "CCR"
 DM_S_GBL = "GBL"
 
-_ = lambda x: x
-_DomainTuple = namedtuple('_DomainTuple', 'id str label')
-DMT_GBL = _DomainTuple(id=DM_GLOBAL, str=DM_S_GBL, label=_('Global'))
-DMT_CIC = _DomainTuple(id=DM_CIC, str=DM_S_CIC, label=_('CIC'))
-DMT_VOL = _DomainTuple(id=DM_VOL, str=DM_S_VOL, label=_('Volunteer'))
-DMT_CCR = _DomainTuple(id=DM_CCR, str=DM_S_CCR, label=_('Child Care'))
+_ = lambda x: x  # noqa
+_DomainTuple = namedtuple("_DomainTuple", "id str label")
+DMT_GBL = _DomainTuple(id=DM_GLOBAL, str=DM_S_GBL, label=_("Global"))
+DMT_CIC = _DomainTuple(id=DM_CIC, str=DM_S_CIC, label=_("CIC"))
+DMT_VOL = _DomainTuple(id=DM_VOL, str=DM_S_VOL, label=_("Volunteer"))
+DMT_CCR = _DomainTuple(id=DM_CCR, str=DM_S_CCR, label=_("Child Care"))
 del _
 
 # System Language Constants
@@ -69,33 +71,33 @@ LANG_SIMPLIFIED_CHINESE = 30
 LANG_THAI = 32
 
 # SQL Server Language Alias Constants
-SQLALIAS_ENGLISH = 'English'
-SQLALIAS_GERMAN = 'German'
-SQLALIAS_FRENCH = 'French'
-SQLALIAS_JAPANESE = 'Japanese'
-SQLALIAS_SPANISH = 'Spanish'
-SQLALIAS_ITALIAN = 'Italian'
-SQLALIAS_DUTCH = 'Dutch'
-SQLALIAS_NORWEGIAN = 'Norwegian'
-SQLALIAS_PORTUGUESE = 'Portuguese'
-SQLALIAS_SWEDISH = 'Swedish'
-SQLALIAS_CZECH = 'Czech'
-SQLALIAS_HUNGARIAN = 'Hungarian'
-SQLALIAS_POLISH = 'Polish'
-SQLALIAS_ROMANIAN = 'Romanian'
-SQLALIAS_CROATIAN = 'Croatian'
-SQLALIAS_SLOVAK = 'Slovak'
-SQLALIAS_SLOVENIAN = 'Slovenian'
-SQLALIAS_GREEK = 'Greek'
-SQLALIAS_BULGARIAN = 'Bulgarian'
-SQLALIAS_RUSSIAN = 'Russian'
-SQLALIAS_TURKISH = 'Turkish'
-SQLALIAS_LATVIAN = 'Latvian'
-SQLALIAS_LITHUANIAN = 'Lithuanian'
-SQLALIAS_TRADITIONAL_CHINESE = 'Traditional Chinese'
-SQLALIAS_KOREAN = 'Korean'
-SQLALIAS_SIMPLIFIED_CHINESE = 'Simplified Chinese'
-SQLALIAS_THAI = 'Thai'
+SQLALIAS_ENGLISH = "English"
+SQLALIAS_GERMAN = "German"
+SQLALIAS_FRENCH = "French"
+SQLALIAS_JAPANESE = "Japanese"
+SQLALIAS_SPANISH = "Spanish"
+SQLALIAS_ITALIAN = "Italian"
+SQLALIAS_DUTCH = "Dutch"
+SQLALIAS_NORWEGIAN = "Norwegian"
+SQLALIAS_PORTUGUESE = "Portuguese"
+SQLALIAS_SWEDISH = "Swedish"
+SQLALIAS_CZECH = "Czech"
+SQLALIAS_HUNGARIAN = "Hungarian"
+SQLALIAS_POLISH = "Polish"
+SQLALIAS_ROMANIAN = "Romanian"
+SQLALIAS_CROATIAN = "Croatian"
+SQLALIAS_SLOVAK = "Slovak"
+SQLALIAS_SLOVENIAN = "Slovenian"
+SQLALIAS_GREEK = "Greek"
+SQLALIAS_BULGARIAN = "Bulgarian"
+SQLALIAS_RUSSIAN = "Russian"
+SQLALIAS_TURKISH = "Turkish"
+SQLALIAS_LATVIAN = "Latvian"
+SQLALIAS_LITHUANIAN = "Lithuanian"
+SQLALIAS_TRADITIONAL_CHINESE = "Traditional Chinese"
+SQLALIAS_KOREAN = "Korean"
+SQLALIAS_SIMPLIFIED_CHINESE = "Simplified Chinese"
+SQLALIAS_THAI = "Thai"
 
 # Types of Update record privileges
 UPDATE_NONE = 0
@@ -154,31 +156,33 @@ OB_CUSTOM = 6
 OB_REQUEST = 7
 OB_LOCATION = 8
 
-_app_path = None
-_config_file = None
-_app_name = None
-session_lock_dir = None
-cache_lock_dir = None
+_app_path: t.Optional[str] = None
+_config_file: t.Optional[str] = None
+_app_name: t.Optional[str] = None
+session_lock_dir: t.Optional[str] = None
+cache_lock_dir: t.Optional[str] = None
 
 
 def update_cache_values():
-	# called from application init at startup
-	global _app_path, _config_file, _app_name, session_lock_dir, cache_lock_dir, _sass_dir
+    # called from application init at startup
+    global _app_path, _config_file, _app_name, session_lock_dir, cache_lock_dir, _sass_dir
 
-	if _app_path is None:
-		_app_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
-		_app_name = os.path.split(_app_path)[1]
-		_config_file = os.path.join(_app_path, '..', '..', 'config', _app_name + '.ini')
-		session_lock_dir = os.path.join(_app_path, 'python', 'session_lock')
-		cache_lock_dir = os.path.join(_app_path, 'python', 'cache_lock')
-		_sass_dir = os.path.join(_app_path, 'styles', 'sass')
+    if _app_path is None:
+        _app_path = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "..")
+        )
+        _app_name = os.path.split(_app_path)[1]
+        _config_file = os.path.join(_app_path, "..", "..", "config", _app_name + ".ini")
+        session_lock_dir = os.path.join(_app_path, "python", "session_lock")
+        cache_lock_dir = os.path.join(_app_path, "python", "cache_lock")
+        _sass_dir = os.path.join(_app_path, "styles", "sass")
 
-		try:
-			os.makedirs(session_lock_dir)
-		except os.error:
-			pass
+        try:
+            os.makedirs(session_lock_dir)
+        except os.error:
+            pass
 
-		try:
-			os.makedirs(cache_lock_dir)
-		except os.error:
-			pass
+        try:
+            os.makedirs(cache_lock_dir)
+        except os.error:
+            pass

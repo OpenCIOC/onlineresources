@@ -48,9 +48,14 @@ try:
 except ImportError:
 	sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-from tools.toolslib import Context
+from tools.toolslib import (
+	Context,
+	FileWriteDetector,
+	get_config_item,
+	email_log,
+)
 
-from cioc.core import constants as const, email
+from cioc.core import constants as const
 from cioc.core import syslanguage
 from cioc.core.utf8csv import UTF8CSVWriter, SQLServerBulkDialect
 from cioc.core.connection import ConnectionError
@@ -61,112 +66,249 @@ CREATE_NO_WINDOW = 0x08000000
 creationflags = 0
 
 
-invalid_xml_chars = re.compile(u'[\x00-\x08\x0c\x0e-\x19]')
+invalid_xml_chars = re.compile("[\x00-\x08\x0c\x0e-\x19]")
 
 const.update_cache_values()
-_time_format = '%Y-%m-%d %H:%M:%S'
-LangSetting = namedtuple('LangSetting', 'culture file_suffix language_name sql_language')
+_time_format = "%Y-%m-%d %H:%M:%S"
+LangSetting = namedtuple(
+	"LangSetting", "culture file_suffix language_name sql_language"
+)
 
 _lang_settings = {
-	'en-CA': LangSetting('en-CA', '', 'en', syslanguage.SQLALIAS_ENGLISH),
-	'fr-CA': LangSetting('fr-CA', '_frCA', 'fr', syslanguage.SQLALIAS_FRENCH)
+	"en-CA": LangSetting("en-CA", "", "en", syslanguage.SQLALIAS_ENGLISH),
+	"fr-CA": LangSetting("fr-CA", "_frCA", "fr", syslanguage.SQLALIAS_FRENCH),
 }
 
 FieldOrder = [
-	"ResourceAgencyNum", "ImportDate", "ImportStatus", "Refresh",
-	"PublicName", "AlternateName", "OfficialName", "TaxonomyLevelName",
-	"ParentAgency", "ParentAgencyNum", "RecordOwner", "UniqueIDPriorSystem",
-	"MailingAttentionName", "MailingAddress1", "MailingAddress2",
-	"MailingCity", "MailingStateProvince", "MailingPostalCode",
-	"MailingCountry", "MailingAddressIsPrivate", "PhysicalAddress1",
-	"PhysicalAddress2", "PhysicalCity", "PhysicalCounty",
-	"PhysicalStateProvince", "PhysicalPostalCode", "PhysicalCountry",
-	"PhysicalAddressIsPrivate", "OtherAddress1", "OtherAddress2", "OtherCity",
-	"OtherCounty", "OtherStateProvince", "OtherPostalCode", "OtherCountry",
-	"Latitude", "Longitude", "HoursOfOperation", "Phone1Number", "Phone1Name",
-	"Phone1Description", "Phone1IsPrivate", "Phone1Type", "Phone2Number",
-	"Phone2Name", "Phone2Description", "Phone2IsPrivate", "Phone2Type",
-	"Phone3Number", "Phone3Name", "Phone3Description", "Phone3IsPrivate",
-	"Phone3Type", "Phone4Number", "Phone4Name", "Phone4Description",
-	"Phone4IsPrivate", "Phone4Type", "Phone5Number", "Phone5name",
-	"Phone5Description", "Phone5IsPrivate", "Phone5Type", "PhoneFax",
-	"PhoneFaxDescription", "PhoneFaxIsPrivate", "PhoneTTY",
-	"PhoneTTYDescription", "PhoneTTYIsPrivate", "PhoneTollFree",
-	"PhoneTollFreeDescription", "PhoneTollFreeIsPrivate", "PhoneNumberHotline",
-	"PhoneNumberHotlineDescription", "PhoneNumberHotlineIsPrivate",
-	"PhoneNumberBusinessLine", "PhoneNumberBusinessLineDescription",
-	"PhoneNumberBusinessLineIsPrivate", "PhoneNumberOutOfArea",
-	"PhoneNumberOutOfAreaDescription", "PhoneNumberOutOfAreaIsPrivate",
-	"PhoneNumberAfterHours", "PhoneNumberAfterHoursDescription",
-	"PhoneNumberAfterHoursIsPrivate", "EmailAddressMain", "WebsiteAddress",
-	"AgencyStatus", "AgencyClassification", "AgencyDescription", "SearchHints",
-	"CoverageArea", "CoverageAreaText", "Eligibility",
-	"EligibilityAdult", "EligibilityChild", "EligibilityFamily",
-	"EligibilityFemale", "EligibilityMale", "EligibilityTeen",
-	"SeniorWorkerName", "SeniorWorkerTitle", "SeniorWorkerEmailAddress",
-	"SeniorWorkerPhoneNumber", "SeniorWorkerIsPrivate", "MainContactName",
-	"MainContactTitle", "MainContactEmailAddress", "MainContactPhoneNumber",
-	"MainContactType", "MainContactIsPrivate", "LicenseAccreditation",
-	"IRSStatus", "FEIN", "YearIncorporated", "AnnualBudgetTotal",
-	"LegalStatus", "SourceOfFunds", "ExcludeFromWebsite",
-	"ExcludeFromDirectory", "DisabilitiesAccess",
-	"PhysicalLocationDescription", "BusServiceAccess",
-	"PublicAccessTransportation", "PaymentMethods", "FeeStructureSource",
-	"ApplicationProcess", "ResourceInfo", "DocumentsRequired",
-	"LanguagesOffered", "LanguagesOfferedList", "AvailabilityNumberOfTimes",
-	"AvailabilityFrequency", "AvailabilityPeriod",
-	"ServiceNotAlwaysAvailability", "CapacityType", "ServiceCapacity",
-	"NormalWaitTime", "TemporaryMessage", "TemporaryMessageAppears",
-	"TemporaryMessageExpires", "EnteredOn", "UpdatedOn", "MadeInactiveOn",
-	"InternalNotes", "InternalNotesForEditorsAndViewers",
-	"HighlightedResource", "LastVerifiedOn", "LastVerifiedByName",
-	"LastVerifiedByTitle", "LastVerifiedByPhoneNumber",
-	"LastVerifiedByEmailAddress", "LastVerificationApprovedBy",
-	"AvailableForDirectory", "AvailableForReferral", "AvailableForResearch",
-	"PreferredProvider", "ConnectsToSiteNum", "ConnectsToProgramNum",
-	"LanguageOfRecord", "CurrentWorkflowStepCode", "VolunteerOpportunities",
-	"VolunteerDuties", "IsLinkOnly", "ProgramAgencyNamePublic",
-	"SiteAgencyNamePublic", "Categories", "TaxonomyTerm", "TaxonomyTerms",
-	"TaxonomyTermsNotDeactivated", "TaxonomyCodes", "Coverage", "Hours",
+	"ResourceAgencyNum",
+	"ImportDate",
+	"ImportStatus",
+	"Refresh",
+	"PublicName",
+	"AlternateName",
+	"OfficialName",
+	"TaxonomyLevelName",
+	"ParentAgency",
+	"ParentAgencyNum",
+	"RecordOwner",
+	"UniqueIDPriorSystem",
+	"MailingAttentionName",
+	"MailingAddress1",
+	"MailingAddress2",
+	"MailingCity",
+	"MailingStateProvince",
+	"MailingPostalCode",
+	"MailingCountry",
+	"MailingAddressIsPrivate",
+	"PhysicalAddress1",
+	"PhysicalAddress2",
+	"PhysicalCity",
+	"PhysicalCounty",
+	"PhysicalStateProvince",
+	"PhysicalPostalCode",
+	"PhysicalCountry",
+	"PhysicalAddressIsPrivate",
+	"OtherAddress1",
+	"OtherAddress2",
+	"OtherCity",
+	"OtherCounty",
+	"OtherStateProvince",
+	"OtherPostalCode",
+	"OtherCountry",
+	"Latitude",
+	"Longitude",
+	"HoursOfOperation",
+	"Phone1Number",
+	"Phone1Name",
+	"Phone1Description",
+	"Phone1IsPrivate",
+	"Phone1Type",
+	"Phone2Number",
+	"Phone2Name",
+	"Phone2Description",
+	"Phone2IsPrivate",
+	"Phone2Type",
+	"Phone3Number",
+	"Phone3Name",
+	"Phone3Description",
+	"Phone3IsPrivate",
+	"Phone3Type",
+	"Phone4Number",
+	"Phone4Name",
+	"Phone4Description",
+	"Phone4IsPrivate",
+	"Phone4Type",
+	"Phone5Number",
+	"Phone5name",
+	"Phone5Description",
+	"Phone5IsPrivate",
+	"Phone5Type",
+	"PhoneFax",
+	"PhoneFaxDescription",
+	"PhoneFaxIsPrivate",
+	"PhoneTTY",
+	"PhoneTTYDescription",
+	"PhoneTTYIsPrivate",
+	"PhoneTollFree",
+	"PhoneTollFreeDescription",
+	"PhoneTollFreeIsPrivate",
+	"PhoneNumberHotline",
+	"PhoneNumberHotlineDescription",
+	"PhoneNumberHotlineIsPrivate",
+	"PhoneNumberBusinessLine",
+	"PhoneNumberBusinessLineDescription",
+	"PhoneNumberBusinessLineIsPrivate",
+	"PhoneNumberOutOfArea",
+	"PhoneNumberOutOfAreaDescription",
+	"PhoneNumberOutOfAreaIsPrivate",
+	"PhoneNumberAfterHours",
+	"PhoneNumberAfterHoursDescription",
+	"PhoneNumberAfterHoursIsPrivate",
+	"EmailAddressMain",
+	"WebsiteAddress",
+	"AgencyStatus",
+	"AgencyClassification",
+	"AgencyDescription",
+	"SearchHints",
+	"CoverageArea",
+	"CoverageAreaText",
+	"Eligibility",
+	"EligibilityAdult",
+	"EligibilityChild",
+	"EligibilityFamily",
+	"EligibilityFemale",
+	"EligibilityMale",
+	"EligibilityTeen",
+	"SeniorWorkerName",
+	"SeniorWorkerTitle",
+	"SeniorWorkerEmailAddress",
+	"SeniorWorkerPhoneNumber",
+	"SeniorWorkerIsPrivate",
+	"MainContactName",
+	"MainContactTitle",
+	"MainContactEmailAddress",
+	"MainContactPhoneNumber",
+	"MainContactType",
+	"MainContactIsPrivate",
+	"LicenseAccreditation",
+	"IRSStatus",
+	"FEIN",
+	"YearIncorporated",
+	"AnnualBudgetTotal",
+	"LegalStatus",
+	"SourceOfFunds",
+	"ExcludeFromWebsite",
+	"ExcludeFromDirectory",
+	"DisabilitiesAccess",
+	"PhysicalLocationDescription",
+	"BusServiceAccess",
+	"PublicAccessTransportation",
+	"PaymentMethods",
+	"FeeStructureSource",
+	"ApplicationProcess",
+	"ResourceInfo",
+	"DocumentsRequired",
+	"LanguagesOffered",
+	"LanguagesOfferedList",
+	"AvailabilityNumberOfTimes",
+	"AvailabilityFrequency",
+	"AvailabilityPeriod",
+	"ServiceNotAlwaysAvailability",
+	"CapacityType",
+	"ServiceCapacity",
+	"NormalWaitTime",
+	"TemporaryMessage",
+	"TemporaryMessageAppears",
+	"TemporaryMessageExpires",
+	"EnteredOn",
+	"UpdatedOn",
+	"MadeInactiveOn",
+	"InternalNotes",
+	"InternalNotesForEditorsAndViewers",
+	"HighlightedResource",
+	"LastVerifiedOn",
+	"LastVerifiedByName",
+	"LastVerifiedByTitle",
+	"LastVerifiedByPhoneNumber",
+	"LastVerifiedByEmailAddress",
+	"LastVerificationApprovedBy",
+	"AvailableForDirectory",
+	"AvailableForReferral",
+	"AvailableForResearch",
+	"PreferredProvider",
+	"ConnectsToSiteNum",
+	"ConnectsToProgramNum",
+	"LanguageOfRecord",
+	"CurrentWorkflowStepCode",
+	"VolunteerOpportunities",
+	"VolunteerDuties",
+	"IsLinkOnly",
+	"ProgramAgencyNamePublic",
+	"SiteAgencyNamePublic",
+	"Categories",
+	"TaxonomyTerm",
+	"TaxonomyTerms",
+	"TaxonomyTermsNotDeactivated",
+	"TaxonomyCodes",
+	"Coverage",
+	"Hours",
 	"Custom_Public Comments",
-	"Custom_Former Names", "Custom_Headings",
-	"Custom_Legal Name", "Custom_Pub Codes",
-	"Custom_Record Owner (controlled)", "Custom_SINV", "Custom_iCarol-managed record",
-	"Custom_Facebook", "Custom_Instagram", "Custom_LinkedIn", "Custom_Twitter", "Custom_YouTube",
-	"Custom_Minimum Age", "Custom_Maximum Age"
+	"Custom_Former Names",
+	"Custom_Headings",
+	"Custom_Legal Name",
+	"Custom_Pub Codes",
+	"Custom_Record Owner (controlled)",
+	"Custom_SINV",
+	"Custom_iCarol-managed record",
+	"Custom_Facebook",
+	"Custom_Instagram",
+	"Custom_LinkedIn",
+	"Custom_Twitter",
+	"Custom_YouTube",
+	"Custom_Minimum Age",
+	"Custom_Maximum Age",
 ]
 
 AllRecordsFieldOrder = [
-	"ResourceAgencyNum", "ParentAgencyNum", "ConnectsToSiteNum",
-	"ConnectsToProgramNum", "UniqueIDPriorSystem", "PublicName",
-	"TaxonomyLevelName", "iCarolManaged", "RecordOwner", "UpdatedOn",
+	"ResourceAgencyNum",
+	"ParentAgencyNum",
+	"ConnectsToSiteNum",
+	"ConnectsToProgramNum",
+	"UniqueIDPriorSystem",
+	"PublicName",
+	"TaxonomyLevelName",
+	"iCarolManaged",
+	"RecordOwner",
+	"UpdatedOn",
 ]
 
-dts_file_template = os.path.join(os.environ.get('CIOC_UDL_BASE', r'd:\UDLS'), '%s', 'cron_job_runner.UDL')
+dts_file_template = os.path.join(
+	os.environ.get("CIOC_UDL_BASE", r"d:\UDLS"), "%s", "cron_job_runner.UDL"
+)
 
 
 def get_bulk_connection(language):
 	dts = dts_file_template % const._app_name
-	with open(dts, 'rb') as dts_file:
+	with open(dts, "rb") as dts_file:
 
 		# the [1:] is there to drop the bom from the start of the file
-		connstr = dts_file.read().decode('utf_16').replace(u'\r', u'').split(u'\n')
+		connstr = dts_file.read().decode("utf_16").replace("\r", "").split("\n")
 
 	for line in connstr:
-		if line and line.startswith((u';', u'[')):
+		if line and line.startswith((";", "[")):
 			continue
 
 		break
 
-	settings = dict(x.split(u'=') for x in line.split(';'))
+	settings = dict(x.split("=") for x in line.split(";"))
 	settings = [
-		('Driver', '{SQL Server Native Client 10.0}'),
-		('Server', settings['Data Source']),
-		('Database', settings['Initial Catalog']),
-		('UID', settings['User ID']),
-		('PWD', settings['Password'])
+		("Driver", "{SQL Server Native Client 10.0}"),
+		("Server", settings["Data Source"]),
+		("Database", settings["Initial Catalog"]),
+		("UID", settings["User ID"]),
+		("PWD", settings["Password"]),
 	]
-	connstr = ';'.join('='.join(x) for x in settings)
+	connstr = ";".join("=".join(x) for x in settings)
 
 	try:
 		conn = pyodbc.connect(connstr, autocommit=True, unicode_results=True)
@@ -177,68 +319,51 @@ def get_bulk_connection(language):
 	return conn
 
 
-class FileWriteDetector(object):
-
-	def __init__(self, obj):
-		self.__obj = obj
-		self.__dirty = False
-
-	def is_dirty(self):
-		return self.__dirty
-
-	def write(self, string):
-		self.__dirty = True
-		return self.__obj.write(string)
-
-	def __getattr__(self, key):
-		return getattr(self.__obj, key)
-
-
-class DEFAULT(object):
-	pass
-
-
-def get_config_item(args, key, default=DEFAULT):
-	config_prefix = args.config_prefix
-	config = args.config
-	if default is DEFAULT:
-		return config.get(config_prefix + key, config[key])
-
-	return args.config.get(config_prefix + key, config.get(key, default))
-
-
 def prepare_session(args):
 	session = requests.Session()
-	session.headers.update({
-		'Accept': 'application/json'
-	})
+	session.headers.update({"Accept": "application/json"})
 	args.session = session
-	args.host = get_config_item(args, 'o211_import_api_host')
-	args.key = get_config_item(args, 'o211_import_api_key', '')
+	args.host = get_config_item(args, "o211_import_api_host")
+	args.key = get_config_item(args, "o211_import_api_key", "")
 
 
 def parse_args(argv):
 	parser = argparse.ArgumentParser()
-	parser.add_argument('--config', dest='configfile', action='store',
-						default=const._config_file)
-	parser.add_argument('--test', dest='test', action='store_const', const=True, default=False)
-	parser.add_argument('--email', dest='email', action='store_const', const=True, default=False)
-	parser.add_argument('--config-prefix', dest='config_prefix', action='store', default='')
-	parser.add_argument('--modified-since', dest='modified_since', action='store', default=None)
-	parser.add_argument('--fetch-mechanism', dest='fetch_mechanism', action='store', default=None)
-	parser.add_argument('--only-lang', dest='only_lang', action='append', default=[])
-	parser.add_argument('--skip-fetch', dest='skip_fetch', action='store_true', default=False)
-	parser.add_argument('--skip-import', dest='skip_import', action='store_true', default=False)
+	parser.add_argument(
+		"--config", dest="configfile", action="store", default=const._config_file
+	)
+	parser.add_argument(
+		"--test", dest="test", action="store_const", const=True, default=False
+	)
+	parser.add_argument(
+		"--email", dest="email", action="store_const", const=True, default=False
+	)
+	parser.add_argument(
+		"--config-prefix", dest="config_prefix", action="store", default=""
+	)
+	parser.add_argument(
+		"--modified-since", dest="modified_since", action="store", default=None
+	)
+	parser.add_argument(
+		"--fetch-mechanism", dest="fetch_mechanism", action="store", default=None
+	)
+	parser.add_argument("--only-lang", dest="only_lang", action="append", default=[])
+	parser.add_argument(
+		"--skip-fetch", dest="skip_fetch", action="store_true", default=False
+	)
+	parser.add_argument(
+		"--skip-import", dest="skip_import", action="store_true", default=False
+	)
 
 	args = parser.parse_args(argv)
-	if args.config_prefix and not args.config_prefix.endswith('.'):
-		args.config_prefix += '.'
+	if args.config_prefix and not args.config_prefix.endswith("."):
+		args.config_prefix += "."
 
-	if args.modified_since and args.modified_since != 'any':
+	if args.modified_since and args.modified_since != "any":
 		try:
 			args.modified_since = isodate.parse_datetime(args.modified_since)
 		except:
-			parser.error('invalid date format must be like 2018-10-10T15:45:00')
+			parser.error("invalid date format must be like 2018-10-10T15:45:00")
 
 	return args
 
@@ -258,80 +383,51 @@ def pager(iterable, page_size=10):
 		yield page
 
 
-class fakerequest(object):
-	def __init__(self, config):
-		self.config = config
-		config['mailer.manager'] = 'immediate'
-
-	class dboptions(object):
-		TrainingMode = False
-		NoEmail = False
-		DefaultEmailCIC = None
-		DefaultEmailVOL = None
-		DefaultEmailNameCIC = None
-		DefaultEmailNameVOL = None
-
-	class pageinfo(object):
-		DbArea = const.DM_CIC
-
-
-def email_log(args, outputstream, is_error, to=None):
-	try:
-		author = get_config_item(args, 'o211_import_notify_from', const.CIOC_ADMIN_EMAIL)
-		to = [x.strip() for x in (to or get_config_item(args, 'o211_import_notify_emails', const.CIOC_ADMIN_EMAIL)).split(',')]
-		email.send_email(fakerequest(args.config), author, to, 'Import from iCarol%s' % (' -- ERRORS!' if is_error else ''), outputstream.getvalue().replace('\r', '').replace('\n', '\r\n'))
-	except Exception as e:
-		raise Exception('unable to send email log: {},{}'.format(outputstream.getvalue(), six.text_type(e)), e)
-
-
-def get_record_list(args, modifiedSince=None, lang='en'):
-	url = 'https://' + args.host + '/api/records/'
-	params = {
-		'key': args.key,
-		'service': '0',
-		'lang': lang
-	}
+def get_record_list(args, modifiedSince=None, lang="en"):
+	url = "https://" + args.host + "/api/records/"
+	params = {"key": args.key, "service": "0", "lang": lang}
 
 	if args.extra_criteria:
 		params.update(args.extra_criteria)
 
 	if modifiedSince:
-		params['updatedOn'] = modifiedSince
+		params["updatedOn"] = modifiedSince
 
-	url = url + '?' + six.moves.urllib.parse.urlencode(params)
+	url = url + "?" + six.moves.urllib.parse.urlencode(params)
 
 	response = args.session.get(url)
 	response.raise_for_status()
 	data = response.json(object_pairs_hook=OrderedDict)
 	if isinstance(data, dict):
-		error = data.get('Error')
+		error = data.get("Error")
 		if error:
-			raise Exception('Request Error: %s' % error)
-		raise Exception('Response dictionary not list: %r' % data)
+			raise Exception("Request Error: %s" % error)
+		raise Exception("Response dictionary not list: %r" % data)
 
 	return data
 
 
-def get_records(args, id, lang='en'):
-	url = 'https://' + args.host + '/api/record/'
+def get_records(args, id, lang="en"):
+	url = "https://" + args.host + "/api/record/"
 	if not isinstance(id, list):
 		id = [id]
 
 	id_str = list(map(str, id))
-	params = {
-		'id': ",".join(id_str),
-		'key': args.key,
-		'service': '0',
-		'lang': lang
-	}
-	url = url + '?' + six.moves.urllib.parse.urlencode(params)
+	params = {"id": ",".join(id_str), "key": args.key, "service": "0", "lang": lang}
+	url = url + "?" + six.moves.urllib.parse.urlencode(params)
 	start = time.time()
 	response = args.session.get(url)
 	duration = time.time() - start
 	if args.test:
-		print('requested {} records in {}s'.format(len(id), duration))
+		print("requested {} records in {}s".format(len(id), duration))
 	response.raise_for_status()
-	tmp = {x['ResourceAgencyNum']: x for x in json.loads(response.text.encode('latin1').decode('utf-8'), object_pairs_hook=OrderedDict)}
+	tmp = {
+		x["ResourceAgencyNum"]: x
+		for x in json.loads(
+			response.text.encode("latin1").decode("utf-8"),
+			object_pairs_hook=OrderedDict,
+		)
+	}
 	result = [tmp[x] for x in id]
 	return result
 
@@ -344,10 +440,10 @@ def fetch_record_batches(args, record_ids, lang):
 
 def _to_unicode(value):
 	if value is None:
-		return u''
+		return ""
 
 	value = six.text_type(value)
-	return invalid_xml_chars.sub(u'', value).strip()
+	return invalid_xml_chars.sub("", value).strip()
 
 
 def to_csv(records, target_file, headings):
@@ -368,9 +464,13 @@ class CsvFileWriter(object):
 
 	def __enter__(self):
 		if six.PY3:
-			self.fd = tempfile.NamedTemporaryFile('w', encoding='utf-8', suffix='.csv', dir=self.target_dir, delete=False)
+			self.fd = tempfile.NamedTemporaryFile(
+				"w", encoding="utf-8", suffix=".csv", dir=self.target_dir, delete=False
+			)
 		else:
-			self.fd = tempfile.NamedTemporaryFile(suffix='.csv', dir=self.target_dir, delete=False)
+			self.fd = tempfile.NamedTemporaryFile(
+				suffix=".csv", dir=self.target_dir, delete=False
+			)
 		self.full_name = self.fd.name
 		return self
 
@@ -383,7 +483,7 @@ class CsvFileWriter(object):
 
 	def serialize_records(self, records):
 		if not self.fd:
-			raise Exception('File not opened yet')
+			raise Exception("File not opened yet")
 
 		to_csv(records, self.fd, self.headings)
 
@@ -407,9 +507,9 @@ def push_bulk(context, conn, sql, headings, batch, *args):
 
 
 def push_to_database(context, lang, queue):
-	sql = u'''
+	sql = """
 	EXEC sp_CIC_iCarolImport_Incremental ?, ?
-	'''
+	"""
 	next_modified = context.args.next_modified_since
 	with get_bulk_connection(language=lang.sql_language) as conn:
 
@@ -427,9 +527,9 @@ def push_to_database(context, lang, queue):
 
 
 def push_all_records(conext, lang, all_records):
-	sql = u'''
+	sql = """
 	EXEC sp_CIC_iCarolImport_AllRecords ?
-	'''
+	"""
 	with get_bulk_connection(language=lang.sql_language) as conn:
 		cursor = push_bulk(conext, conn, sql, AllRecordsFieldOrder, all_records)
 		stats = cursor.fetchall()
@@ -439,28 +539,30 @@ def push_all_records(conext, lang, all_records):
 
 
 def fetch_from_o211(context, lang):
-	all_records = get_record_list(context.args, 'any', lang.language_name)
+	all_records = get_record_list(context.args, "any", lang.language_name)
 	stats, records = push_all_records(context, lang, all_records)
 	if context.args.test:
-		records.sort(key=lambda x: x['UpdatedOn'])
+		records.sort(key=lambda x: x["UpdatedOn"])
 		records = records[-60:]
 		pprint.pprint(records)
 		return
 
 	for row in stats:
 		if row.resurrected:
-			action = f'resurrected from {row.tbl} which were deleted on {row.days_deleted}'
-		elif row.op == 'mark':
-			action = f'marked for deletion from {row.tbl} with deletion days on {row.days_deleted}'
-		elif row.op == 'purge':
-			action = f'purged from {row.tbl}'
+			action = (
+				f"resurrected from {row.tbl} which were deleted on {row.days_deleted}"
+			)
+		elif row.op == "mark":
+			action = f"marked for deletion from {row.tbl} with deletion days on {row.days_deleted}"
+		elif row.op == "purge":
+			action = f"purged from {row.tbl}"
 		else:
-			action = f'unexpected action: op={row.op}, tbl={row.tbl}, resurected={row.resurected}, days_deleted={row.days_deleted}'
+			action = f"unexpected action: op={row.op}, tbl={row.tbl}, resurected={row.resurected}, days_deleted={row.days_deleted}"
 
 		if row.days_imported:
-			action = f'{action}. records last imported on {row.days_imported}'
+			action = f"{action}. records last imported on {row.days_imported}"
 
-		print(f'{row.num_records} records were {action}')
+		print(f"{row.num_records} records were {action}")
 
 	queue = Queue(maxsize=2)
 	thread = Thread(target=push_to_database, args=(context, lang, queue))
@@ -468,14 +570,22 @@ def fetch_from_o211(context, lang):
 	thread.start()
 
 	pulled_record_count = 0
-	for batch in pager(fetch_record_batches(context.args, (x.ResourceAgencyNum for x in records), lang), 5000):
+	for batch in pager(
+		fetch_record_batches(
+			context.args, (x.ResourceAgencyNum for x in records), lang
+		),
+		5000,
+	):
 		pulled_record_count += len(batch)
 		queue.put(batch)
 
 	queue.put(None)
 	queue.join()
 
-	print('Pulled %s changed source records in %s.' % (pulled_record_count, lang.sql_language))
+	print(
+		"Pulled %s changed source records in %s."
+		% (pulled_record_count, lang.sql_language)
+	)
 
 
 def check_db_state(context):
@@ -483,8 +593,8 @@ def check_db_state(context):
 	if not context.args.fetch_mechanism:
 		return
 
-	sql = 'SELECT * FROM CIC_iCarolImportMeta WHERE Mechanism=?'
-	with context.connmgr.get_connection('admin') as conn:
+	sql = "SELECT * FROM CIC_iCarolImportMeta WHERE Mechanism=?"
+	with context.connmgr.get_connection("admin") as conn:
 		meta_data = conn.execute(sql, context.args.fetch_mechanism).fetchone()
 
 	if not meta_data:
@@ -503,9 +613,9 @@ def check_db_state(context):
 
 def format_modified_date(context):
 	if context.args.modified_since is None:
-		context.args.modified_since = 'any'
+		context.args.modified_since = "any"
 
-	if context.args.modified_since == 'any':
+	if context.args.modified_since == "any":
 		return
 
 	context.args.modified_since = context.args.modified_since.strftime(_time_format)
@@ -515,15 +625,17 @@ def update_db_state(context):
 	if not context.args.fetch_mechanism:
 		return
 
-	sql = 'EXEC dbo.sp_CIC_iCarolImportMeta_u ?, ?'
-	with context.connmgr.get_connection('admin') as conn:
-		conn.execute(sql, context.args.fetch_mechanism, context.args.next_modified_since)
+	sql = "EXEC dbo.sp_CIC_iCarolImportMeta_u ?, ?"
+	with context.connmgr.get_connection("admin") as conn:
+		conn.execute(
+			sql, context.args.fetch_mechanism, context.args.next_modified_since
+		)
 
 
 def generate_and_upload_import(context):
-	sql = 'EXEC sp_CIC_iCarolImport_Rollup'
+	sql = "EXEC sp_CIC_iCarolImport_Rollup"
 	total_import_count = 0
-	with context.connmgr.get_connection('admin') as conn:
+	with context.connmgr.get_connection("admin") as conn:
 		cursor = conn.execute(sql)
 		members = cursor.fetchall()
 		cursor.close()
@@ -531,47 +643,72 @@ def generate_and_upload_import(context):
 			stdout = StringIO()
 			stderr = FileWriteDetector(stdout)
 			try:
-				member_name = member.DefaultEmailNameCIC or member.BaseURLCIC or member.MemberID
+				member_name = (
+					member.DefaultEmailNameCIC or member.BaseURLCIC or member.MemberID
+				)
 				print("Generating sharing file for %s.\n" % (member_name,), file=stdout)
 
-				cursor = conn.execute('EXEC sp_CIC_iCarolImport_CreateSharing ?', member.MemberID)
+				cursor = conn.execute(
+					"EXEC sp_CIC_iCarolImport_CreateSharing ?", member.MemberID
+				)
 				batch = cursor.fetchmany(5000)
 
 				if not batch:
-					print("No Records for %s, skipping.\n" % (member_name,), file=stdout)
+					print(
+						"No Records for %s, skipping.\n" % (member_name,), file=stdout
+					)
 					cursor.close()
 					continue
 				else:
 					print("Processing Imports for %s." % (member_name,), file=stdout)
 
 				with tempfile.TemporaryFile() as fd:
-					fd.write(u'''<?xml version="1.0" encoding="UTF-8"?>
-					<root xmlns="urn:ciocshare-schema"><SOURCE_DB CD="ICAROL"/><DIST_CODE_LIST/><PUB_CODE_LIST/>'''.encode('utf8'))
+					fd.write(
+						"""<?xml version="1.0" encoding="UTF-8"?>
+					<root xmlns="urn:ciocshare-schema"><SOURCE_DB CD="ICAROL"/><DIST_CODE_LIST/><PUB_CODE_LIST/>""".encode(
+							"utf8"
+						)
+					)
 					while batch:
-						fd.write(u''.join(x.record for x in batch).encode('utf8'))
+						fd.write("".join(x.record for x in batch).encode("utf8"))
 						batch = cursor.fetchmany(5000)
 
-					fd.write(u'</root>'.encode('utf8'))
+					fd.write("</root>".encode("utf8"))
 					fd.seek(0)
 					cursor.close()
 
 					error_log, total_inserted = process_import(
-						'icarol_import_%s.xml' % (context.args.next_modified_since.isoformat(),),
-						fd, member.MemberID, const.DM_CIC, const.DM_S_CIC, "(import system)",
-						'iCarol Import %s' % (context.args.next_modified_since.isoformat(),),
-						context.connmgr, lambda x: x
+						"icarol_import_%s.xml"
+						% (context.args.next_modified_since.isoformat(),),
+						fd,
+						member.MemberID,
+						const.DM_CIC,
+						const.DM_S_CIC,
+						"(import system)",
+						"iCarol Import %s"
+						% (context.args.next_modified_since.isoformat(),),
+						context.connmgr,
+						lambda x: x,
 					)
 
 				total_import_count += total_inserted
-				print("Import Complete for Member %s. %s records imported." % (member_name, total_inserted), file=stdout)
+				print(
+					"Import Complete for Member %s. %s records imported."
+					% (member_name, total_inserted),
+					file=stdout,
+				)
 				if error_log:
-					print("A problem was encountered validating input for Member %s, see below." % (member_name,), file=stderr)
+					print(
+						"A problem was encountered validating input for Member %s, see below."
+						% (member_name,),
+						file=stderr,
+					)
 
 				for record, errmsg in error_log:
 					if record:
-						print(u': '.join((record, errmsg)).encode('utf8'), file=stderr)
+						print(": ".join((record, errmsg)).encode("utf8"), file=stderr)
 					else:
-						print(errmsg.encode('utf8'), file=stderr)
+						print(errmsg.encode("utf8"), file=stderr)
 
 				if context.args.email and member.ImportNotificationEmailCIC:
 					# email sending is turned on and this member has a configured email target.
@@ -579,7 +716,8 @@ def generate_and_upload_import(context):
 						context.args,
 						stdout,
 						stderr.is_dirty(),
-						to=member.ImportNotificationEmailCIC
+						"o211_import",
+						to=member.ImportNotificationEmailCIC,
 					)
 
 			finally:
@@ -599,35 +737,36 @@ def main(argv):
 	try:
 		args.config = context.config
 	except Exception:
-		sys.stderr.write('ERROR: Could not process config file:\n')
+		sys.stderr.write("ERROR: Could not process config file:\n")
 		sys.stderr.write(traceback.format_exc())
 		return 2
 
 	if args.email:
-		if not get_config_item(args, 'o211_import_notify_emails', None):
-			sys.stderr.write('ERROR: No value for o211_import_notify_emails set in config\n')
+		if not get_config_item(args, "o211_import_notify_emails", None):
+			sys.stderr.write(
+				"ERROR: No value for o211_import_notify_emails set in config\n"
+			)
 			return 3
 		else:
 			sys.stdout = StringIO()
 			sys.stderr = sys.stdout
 
 	sys.stderr = FileWriteDetector(sys.stderr)
-	import traceback
 
 	try:
 		prepare_session(args)
 		check_db_state(context)
 		format_modified_date(context)
-		context.csv_target_dir = get_config_item(args, 'o211_import_csv_target')
-		context.csv_source_dir = get_config_item(args, 'o211_import_csv_source')
+		context.csv_target_dir = get_config_item(args, "o211_import_csv_target")
+		context.csv_source_dir = get_config_item(args, "o211_import_csv_source")
 
-		langs = get_config_item(args, 'o211_import_languages', 'en-CA').split(',')
+		langs = get_config_item(args, "o211_import_languages", "en-CA").split(",")
 		for culture in langs:
 			if args.only_lang and culture not in args.only_lang:
-				print('Skipping ', culture)
+				print("Skipping ", culture)
 				continue
 
-			lang = _lang_settings.get(culture.strip(), _lang_settings['en-CA'])
+			lang = _lang_settings.get(culture.strip(), _lang_settings["en-CA"])
 
 			if not args.skip_fetch:
 				fetch_from_o211(context, lang)
@@ -646,16 +785,12 @@ def main(argv):
 		retval = 1
 
 	if args.email:
-		email_log(
-			args,
-			sys.stdout,
-			sys.stderr.is_dirty()
-		)
+		email_log(args, sys.stdout, sys.stderr.is_dirty(), "o211_import")
 
 	return retval
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	normalstdout = sys.stdout
 	normalstderr = sys.stderr
 	try:

@@ -14,51 +14,59 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import os
-from six.moves.configparser import SafeConfigParser as ConfigParser
+import typing as t
+from configparser import ConfigParser
 
 
 class ConfigManager(object):
-	def __init__(self, config_file, app_name):
-		self._config_file = config_file
-		self.load()
-		self.app_name = app_name
+    app_name: str
+    config_dict: dict
 
-	def load(self):
-		self._changed = os.path.getmtime(self._config_file)
+    _config_file: str
+    _changed: float
 
-		cp = ConfigParser()
-		cp.read(self._config_file)
+    def __init__(self, config_file, app_name):
+        self._config_file = config_file
+        self.load()
+        self.app_name = app_name
 
-		self.config_dict = dict(cp.items('global'))
-		self.config_dict['_last_change'] = self._changed
+    def load(self) -> None:
+        self._changed = os.path.getmtime(self._config_file)
 
-	def maybe_reload(self, config_file=None):
-		if config_file and config_file != self._config_file:
-			self._config_file = config_file
-			self.load()
-			return
+        cp = ConfigParser()
+        cp.read(self._config_file)
 
-		mtime = os.path.getmtime(self._config_file)
-		if self._changed != mtime:
-			self.load()
+        self.config_dict = dict(cp.items("global"))
+        self.config_dict["_last_change"] = self._changed
+
+    def maybe_reload(self, config_file=None):
+        if config_file and config_file != self._config_file:
+            self._config_file = config_file
+            self.load()
+            return
+
+        mtime = os.path.getmtime(self._config_file)
+        if self._changed != mtime:
+            self.load()
 
 
-_config = None
+_config: ConfigManager = None
 
 
-def get_config(config_file, app_name, include_changed=False):
-	global _config
-	if not _config:
-		_config = ConfigManager(config_file, app_name)
-		changed = True
-	else:
-		before = _config._changed
-		_config.maybe_reload(config_file)
-		changed = _config._changed != before
+def get_config(
+    config_file: str, app_name: str, include_changed: bool = False
+) -> t.Union[dict, tuple[dict, bool]]:
+    global _config
+    if not _config:
+        _config = ConfigManager(config_file, app_name)
+        changed = True
+    else:
+        before = _config._changed
+        _config.maybe_reload(config_file)
+        changed = _config._changed != before
 
-	if include_changed:
-		return _config.config_dict.copy(), changed
+    if include_changed:
+        return _config.config_dict.copy(), changed
 
-	return _config.config_dict.copy()
+    return _config.config_dict.copy()

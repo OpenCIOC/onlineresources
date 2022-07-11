@@ -33,6 +33,8 @@ try:
 except ImportError:
 	sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
+from tools.toolslib import fakerequest
+
 from cioc.core import constants as const, config, email
 
 const.update_cache_values()
@@ -182,23 +184,6 @@ def open_zipfile(dest_file):
 	zip = ZipFile(dest_file, 'r')
 	files = zip.namelist()
 	return zip.open(files[0], 'r')
-
-
-class fakerequest(object):
-
-	def __init__(self, config):
-		self.config = config
-
-	class dboptions(object):
-		TrainingMode = False
-		NoEmail = False
-		DefaultEmailCIC = None
-		DefaultEmailVOL = None
-		DefaultEmailNameCIC = None
-		DefaultEmailNameVOL = None
-
-	class pageinfo(object):
-		DbArea = const.DM_CIC
 
 
 def email_log(args, outputstream, is_error, success_email, error_email):

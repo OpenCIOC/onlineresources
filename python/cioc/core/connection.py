@@ -14,65 +14,87 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import pyodbc
+import typing as t
 
 import cioc.core.constants as const
 
-PERMISSION_ADMIN = 'admin'
-PERMISSION_CIC = 'cic'
-PERMISSION_VOL = 'vol'
+if t.TYPE_CHECKING:
+    from .syslanguage import SystemLanguage
+    from .pageinfo import PageInfo
+
+PERMISSION_ADMIN = "admin"
+PERMISSION_CIC = "cic"
+PERMISSION_VOL = "vol"
+
+PermType = t.Literal[PERMISSION_ADMIN, PERMISSION_CIC, PERMISSION_VOL]
 
 
 class ConnectionError(Exception):
-	pass
+    pass
+
+
+class SupportsConfigLanguageAndPageinfo(t.Protocol):
+    config: dict
+    language: "SystemLanguage"
+    pageinfo: t.Optional["PageInfo"]
 
 
 class ConnectionManager(object):
-	def __init__(self, request):
-		self.request = request
-		self.config = request.config
+    def __init__(self, request: SupportsConfigLanguageAndPageinfo):
+        self.request = request
+        self.config = request.config
 
-	def get_connection_string_base(self, perm):
-		config = self.config
-		settings = [
-			('Server', config['server']),
-			('Database', config['database']),
-			('UID', config[perm + '_uid']),
-			('PWD', config[perm + '_pwd'])
-		]
+    def get_connection_string_base(self, perm: PermType) -> str:
+        config = self.config
+        settings = [
+            ("Server", config["server"]),
+            ("Database", config["database"]),
+            ("UID", config[perm + "_uid"]),
+            ("PWD", config[perm + "_pwd"]),
+        ]
 
-		return ';'.join('='.join(x) for x in settings)
+        return ";".join("=".join(x) for x in settings)
 
-	def get_connection_string(self, perm):
-		return ';'.join(['Driver={%s}' % self.config.get('driver', 'SQL Server Native Client 10.0'), self.get_connection_string_base(perm)])
+    def get_connection_string(self, perm: PermType) -> str:
+        return ";".join(
+            [
+                "Driver={%s}"
+                % self.config.get("driver", "SQL Server Native Client 10.0"),
+                self.get_connection_string_base(perm),
+            ]
+        )
 
-	def get_asp_connection_string(self, perm, language):
-		settings = [
-			('Provider', self.config.get('provider', 'SQLNCLI10')),
-			('DataTypeCompatibility', '80'),
-			('Persist Security Info', 'True'),
-			('Current Language', language)
-		]
+    def get_asp_connection_string(self, perm: PermType, language: str) -> str:
+        settings = [
+            ("Provider", self.config.get("provider", "SQLNCLI10")),
+            ("DataTypeCompatibility", "80"),
+            ("Persist Security Info", "True"),
+            ("Current Language", language),
+        ]
 
-		settings = ';'.join('='.join(x) for x in settings)
-		return ';'.join([settings, self.get_connection_string_base(perm)])
+        settings = ";".join("=".join(x) for x in settings)
+        return ";".join([settings, self.get_connection_string_base(perm)])
 
-	def get_connection(self, perm=None, language=None):
-		if not language:
-			language = self.request.language.LanguageAlias
+    def get_connection(
+        self, perm: t.Optional[PermType] = None, language: t.Optional[str] = None
+    ) -> pyodbc.Connection:
+        if not language:
+            language = self.request.language.LanguageAlias
 
-		if not perm:
-			pageinfo = getattr(self.request, 'pageinfo', None)
-			if pageinfo and pageinfo.DbArea == const.DM_VOL:
-				perm = PERMISSION_VOL
-			else:
-				perm = PERMISSION_CIC
+        if not perm:
+            pageinfo = self.request.pageinfo
+            if pageinfo and pageinfo.DbArea == const.DM_VOL:
+                perm = PERMISSION_VOL
+            else:
+                perm = PERMISSION_CIC
 
-		try:
-			conn = pyodbc.connect(self.get_connection_string(perm), autocommit=True, unicode_results=True)
-			conn.execute("SET LANGUAGE '" + language + "'")
-		except pyodbc.Error as e:
-			raise ConnectionError(e)
+        try:
+            conn = pyodbc.connect(
+                self.get_connection_string(perm), autocommit=True, unicode_results=True
+            )
+            conn.execute("SET LANGUAGE '" + language + "'")
+        except pyodbc.Error as e:
+            raise ConnectionError(e)
 
-		return conn
+        return conn
