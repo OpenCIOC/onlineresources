@@ -14,11 +14,9 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 from markupsafe import Markup
 
 from cioc.core.i18n import gettext as _
-import six
 
 
 def has_been_launched(request):
@@ -49,7 +47,7 @@ def my_list_add_record_basic_ui(request, id):
     launched = has_been_launched(request)
 
     if launched or request.viewdata.dom.MyList:
-        id = six.text_type(id)
+        id = str(id)
         if launched:
             ct = _ct_template % {
                 "id": id,

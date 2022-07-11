@@ -16,7 +16,6 @@
 
 
 # Logging
-from __future__ import absolute_import
 import logging
 
 log = logging.getLogger(__name__)
@@ -81,11 +80,11 @@ class ChildCareSearch(CicViewBase):
                 return None, None, None
 
             sql = """
-				SET NOCOUNT ON;
-				DECLARE @MemberID int = ?, @ViewType int = ?;
-				EXEC dbo.sp_GBL_AgeGroup_l @MemberID, 1;
-				EXEC dbo.sp_CCR_TypeOfCare_l @MemberID, 0, 0;
-			"""
+                SET NOCOUNT ON;
+                DECLARE @MemberID int = ?, @ViewType int = ?;
+                EXEC dbo.sp_GBL_AgeGroup_l @MemberID, 1;
+                EXEC dbo.sp_CCR_TypeOfCare_l @MemberID, 0, 0;
+            """
             if not communities:
                 sql += "\nEXEC dbo.sp_CIC_View_Community_l @ViewType;"
 

@@ -15,13 +15,10 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 # import elementtree.ElementTree as ET
 
@@ -33,6 +30,7 @@ from cioc.core import validators as ciocvalidators, constants as const, syslangu
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 
+log = logging.getLogger(__name__)
 templateprefix = "cioc.web.admin:templates/"
 
 
@@ -100,7 +98,7 @@ class FieldRadio(viewbase.AdminViewBase):
 
         record_cultures = syslanguage.active_record_cultures()
 
-        fieldinfo_map = dict((str(f.FieldID), f) for f in fields)
+        fieldinfo_map = {str(f.FieldID): f for f in fields}
         request.model_state.form.data["field"] = fields
 
         title = _("Change Field Yes/No Values", request)
@@ -146,23 +144,23 @@ class FieldRadio(viewbase.AdminViewBase):
             root = ET.Element("FIELDS")
             for field in model_state.form.data["field"]:
                 field_el = ET.SubElement(root, "Field")
-                for key, value in six.iteritems(field):
+                for key, value in field.items():
                     if not value:
                         continue
 
                     if key != "Descriptions":
-                        ET.SubElement(field_el, key).text = six.text_type(value)
+                        ET.SubElement(field_el, key).text = str(value)
                         continue
 
                     descs = ET.SubElement(field_el, "DESCS")
-                    for culture, data in six.iteritems(value):
+                    for culture, data in value.items():
                         culture = culture.replace("_", "-")
                         if culture not in shown_cultures:
                             continue
 
                         desc = ET.SubElement(descs, "DESC")
                         ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                        for key, value in six.iteritems(data):
+                        for key, value in data.items():
                             if value:
                                 ET.SubElement(desc, key).text = value
 
@@ -172,13 +170,13 @@ class FieldRadio(viewbase.AdminViewBase):
             with request.connmgr.get_connection("admin") as conn:
                 sql = (
                     """
-				DECLARE @ErrMsg as nvarchar(500), 
-				@RC as int 
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int
 
-				EXECUTE @RC = dbo.sp_%s_Field_Radio_u ?, ?, @ErrMsg OUTPUT  
+                EXECUTE @RC = dbo.sp_%s_Field_Radio_u ?, ?, @ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg
+                """
                     % domain.str
                 )
 
@@ -213,7 +211,7 @@ class FieldRadio(viewbase.AdminViewBase):
         # raise Exception()
         # XXX should we refetch the basic info?
 
-        fieldinfo_map = dict((str(f.FieldID), f) for f in fields)
+        fieldinfo_map = {str(f.FieldID): f for f in fields}
 
         fields = variabledecode.variable_decode(request.POST)["field"]
 

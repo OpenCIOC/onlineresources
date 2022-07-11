@@ -14,7 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import datetime
 from decimal import Decimal
 
@@ -73,7 +72,7 @@ def main(global_config, **settings):
     # allow for multiple templated css files with the which match parameter
     config.add_route(
         "template_css",
-        "styles/d/{version}/cioc{which:[^_]+}_{templateid:\d+}{debug:(_debug)?}.css",
+        r"styles/d/{version}/cioc{which:[^_]+}_{templateid:\d+}{debug:(_debug)?}.css",
         factory="cioc.core.rootfactories.BasicRootFactory",
     )
     config.add_route(

@@ -16,10 +16,9 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 import collections
 
 # 3rd party
@@ -32,8 +31,6 @@ from cioc.core.listformat import format_pub_list
 
 from cioc.core.i18n import gettext as _
 from cioc.web.cic.viewbase import CicViewBase
-import six
-from six.moves import map
 
 log = logging.getLogger(__name__)
 
@@ -175,12 +172,12 @@ class Publication(CicViewBase):
             with request.connmgr.get_connection("admin") as conn:
                 result = conn.execute(
                     """
-						DECLARE @RC int, @ErrMsg as nvarchar(500)
+                        DECLARE @RC int, @ErrMsg as nvarchar(500)
 
-						EXEC @RC = dbo.sp_CIC_Publication_u_MemberInactive ?, ?, @ErrMsg OUTPUT
+                        EXEC @RC = dbo.sp_CIC_Publication_u_MemberInactive ?, ?, @ErrMsg OUTPUT
 
-						SELECT @RC AS [Return], @ErrMsg AS ErrMsg
-						""",
+                        SELECT @RC AS [Return], @ErrMsg AS ErrMsg
+                        """,
                     request.dboptions.MemberID,
                     ",".join(map(str, model_state.value("PubHide") or [])),
                 ).fetchone()
@@ -232,7 +229,7 @@ class Publication(CicViewBase):
         pubs, shared_pubs, other_pubs = self._get_index_edit_info()
 
         request.model_state.form.data["PubHide"] = {
-            six.text_type(p.PB_ID) for p in shared_pubs if p.Hide
+            str(p.PB_ID) for p in shared_pubs if p.Hide
         }
 
         title = _("Manage Publications", request)
@@ -347,10 +344,10 @@ class Publication(CicViewBase):
 
             root = ET.Element("DESCS")
 
-            for culture, data in six.iteritems((form_data["descriptions"] or {})):
+            for culture, data in (form_data["descriptions"] or {}).items():
                 desc = ET.SubElement(root, "DESC")
                 ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                for name, value in six.iteritems(data):
+                for name, value in data.items():
                     if value:
                         ET.SubElement(desc, name).text = value
 
@@ -371,25 +368,25 @@ class Publication(CicViewBase):
                     continue
 
                 group_el = ET.SubElement(root, "GROUP")
-                ET.SubElement(group_el, "CNT").text = six.text_type(i)
+                ET.SubElement(group_el, "CNT").text = str(i)
 
-                for key, value in six.iteritems(group):
+                for key, value in group.items():
                     if key == "GroupID" and value == "NEW":
                         value = -1
 
                     if key != "Descriptions":
                         if value is not None:
-                            ET.SubElement(group_el, key).text = six.text_type(value)
+                            ET.SubElement(group_el, key).text = str(value)
 
                         continue
 
                     descs = ET.SubElement(group_el, "DESCS")
-                    for culture, data in six.iteritems(value):
+                    for culture, data in value.items():
                         culture = culture.replace("_", "-")
 
                         desc = ET.SubElement(descs, "DESC")
                         ET.SubElement(desc, "Culture").text = culture
-                        for key, value in six.iteritems(data):
+                        for key, value in data.items():
                             if value:
                                 ET.SubElement(desc, key).text = value
 
@@ -398,16 +395,16 @@ class Publication(CicViewBase):
             with request.connmgr.get_connection("admin") as conn:
                 sql = (
                     """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int,
-				@PB_ID as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int,
+                @PB_ID as int
 
-				SET @PB_ID = ?
+                SET @PB_ID = ?
 
-				EXECUTE @RC = dbo.sp_CIC_Publication_u @PB_ID OUTPUT, ?,?,?, %s, @Descriptions=?, @Groups=?, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_CIC_Publication_u @PB_ID OUTPUT, ?,?,?, %s, @Descriptions=?, @Groups=?, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @PB_ID as PB_ID
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg, @PB_ID as PB_ID
+                """
                     % kwargstr
                 )
 
@@ -624,13 +621,13 @@ class Publication(CicViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_CIC_Publication_d ?,?,?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_CIC_Publication_d ?,?,?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             cursor = conn.execute(
                 sql,
@@ -723,13 +720,13 @@ class Publication(CicViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_CIC_Publication_ClearRecords_d ?,?,?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_CIC_Publication_ClearRecords_d ?,?,?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             cursor = conn.execute(
                 sql,
@@ -817,13 +814,13 @@ class Publication(CicViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_CIC_Publication_u_SharedState ?,?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_CIC_Publication_u_SharedState ?,?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             cursor = conn.execute(sql, PB_ID, shared)
             result = cursor.fetchone()

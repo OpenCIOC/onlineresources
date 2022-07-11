@@ -1,11 +1,11 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
-# 	   http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,6 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import decimal
 import logging
 import re
@@ -44,7 +43,6 @@ import babel
 import cioc.core.syslanguage as syslanguage
 import cioc.core.constants as const
 import cioc.core.i18n as i18n
-import six
 
 log = logging.getLogger(__name__)
 
@@ -102,11 +100,11 @@ class Url(validators.Regex):
             return
         if value is None:
             value = ""
-        elif not isinstance(value, six.string_types):
+        elif not isinstance(value, str):
             try:
                 value = str(value)
             except UnicodeEncodeError:
-                value = six.text_type(value)
+                value = str(value)
         if self.max is not None and len(value) > self.max:
             raise Invalid(self.message("tooLong", state, max=self.max), value, state)
         if self.min is not None and len(value) < self.min:
@@ -150,18 +148,18 @@ class URLWithProto(validators.URL):
     allow_idna = False
     url_re = re.compile(
         r"""
-		^(http|https)://
-		(?:[%:\w]*@)?							   # authenticator
-		(?:										   # ip or domain
-		(?P<ip>(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))|
-		(?P<domain>[a-z0-9][a-z0-9\-]{,62}(?:\.[a-z0-9][a-z0-9\-]{,62})*)	 # subdomain
-		(?P<tld>\.[a-z]{2,63}|xn--[a-z0-9\-]{2,59})?	# top level domain
-		)
-		(?::[0-9]{1,5})?						   # port
-		# files/delims/etc
-		(?P<path>/[a-z0-9\-\._~:/\?#\[\]@!%\$&\'\(\)\*\+,;=]*)?
-		$
-	""",
+        ^(http|https)://
+        (?:[%:\w]*@)?                              # authenticator
+        (?:                                        # ip or domain
+        (?P<ip>(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))|
+        (?P<domain>[a-z0-9][a-z0-9\-]{,62}(?:\.[a-z0-9][a-z0-9\-]{,62})*)    # subdomain
+        (?P<tld>\.[a-z]{2,63}|xn--[a-z0-9\-]{2,59})?    # top level domain
+        )
+        (?::[0-9]{1,5})?                           # port
+        # files/delims/etc
+        (?P<path>/[a-z0-9\-\._~:/\?#\[\]@!%\$&\'\(\)\*\+,;=]*)?
+        $
+    """,
         re.I | re.VERBOSE,
     )
 
@@ -228,7 +226,7 @@ class AgencyCodeValidator(validators.Regex):
 class TaxonomyCodeValidator(validators.Regex):
     strip = True
     regex = re.compile(
-        "^[A-Z]([A-Z](\-[0-9]{4}(\.[0-9]{4}(\-[0-9]{3}(\.[0-9]{2})?)?)?)?)?(\-L)?$"
+        r"^[A-Z]([A-Z](\-[0-9]{4}(\.[0-9]{4}(\-[0-9]{3}(\.[0-9]{2})?)?)?)?)?(\-L)?$"
     )
     messages = {"invalid": _("Invalid Taxonomy Code")}
 
@@ -276,7 +274,7 @@ class EmailValidator(All):
 
 
 class EmailListRegexValidator(validators.Regex):
-    regex = re.compile(r"""%s(\s*,\s*%s)*""" % (email_regex_str, email_regex_str))
+    regex = re.compile(rf"""{email_regex_str}(\s*,\s*{email_regex_str})*""")
     strip = True
     if_empty = None
 
@@ -369,10 +367,10 @@ class DateConverter(FancyValidator):
         day = date_match.group("day")
         year = date_match.group("year")
 
-        months = dict(
-            (v.lower().replace(".", ""), k)
-            for (k, v) in chain(six.iteritems(months), six.iteritems(shortmonths))
-        )
+        months = {
+            v.lower().replace(".", ""): k
+            for (k, v) in chain(months.items(), shortmonths.items())
+        }
         days = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
         day = int(day)
@@ -511,8 +509,8 @@ class DeleteKeyIfEmpty(FancyValidator):
     def _to_python(self, value_dict, state):
         to_del = []
         try:
-            for key, value in six.iteritems(value_dict):
-                if not any(v for v in six.itervalues(value)):
+            for key, value in value_dict.items():
+                if not any(v for v in value.values()):
                     to_del.append(key)
 
             for key in to_del:
@@ -553,7 +551,7 @@ class CultureDictSchema(Schema):
             else sl.active_cultures()
         )
 
-        culture_fields = set(x.replace("-", "_") for x in active_cultures)
+        culture_fields = {x.replace("-", "_") for x in active_cultures}
         existing_fields = set(self.fields.keys())
 
         for field in existing_fields - culture_fields:
@@ -588,7 +586,7 @@ class FlagRequiredIfNoCulture(validators.FormValidator):
         errors = {}
 
         # log.debug('active_cultures: %s', active_cultures)
-        for fieldname, validator in six.iteritems(self.targetvalidator.fields):
+        for fieldname, validator in self.targetvalidator.fields.items():
             if not validator.not_empty:
                 continue
 
@@ -651,7 +649,7 @@ class RequireIfAny(validators.FormValidator):
 
             >>> from formencode import validators
             >>> v = validators.RequireIfPresent('phone_type', present='phone')
-            >>> v.to_python(dict(phone_type='', phone='510 420	4577'))
+            >>> v.to_python(dict(phone_type='', phone='510 420  4577'))
             Traceback (most recent call last):
                     ...
             Invalid: You must give a value for phone_type
@@ -712,7 +710,7 @@ class RequireIfAny(validators.FormValidator):
         return value_dict
 
     def _convert_to_list(self, value):
-        if isinstance(value, (str, six.text_type)):
+        if isinstance(value, (str, str)):
             return [value]
         elif value is None:
             return []
@@ -752,7 +750,7 @@ class RequireAtLeastOne(validators.FormValidator):
         return value_dict
 
     def _convert_to_list(self, value):
-        if isinstance(value, (str, six.text_type)):
+        if isinstance(value, (str, str)):
             return [value]
         elif value is None:
             return []
@@ -794,7 +792,7 @@ class RequireNoneOrAll(validators.FormValidator):
         return value_dict
 
     def _convert_to_list(self, value):
-        if isinstance(value, (str, six.text_type)):
+        if isinstance(value, (str, str)):
             return [value]
         elif value is None:
             return []
@@ -854,7 +852,7 @@ class RequireIfPredicate(validators.FormValidator):
         return value_dict
 
     def _convert_to_list(self, value):
-        if isinstance(value, (str, six.text_type)):
+        if isinstance(value, (str, str)):
             return [value]
         elif value is None:
             return []
@@ -966,7 +964,7 @@ class ForceRequire(validators.FormValidator):
         return field_dict
 
     def _convert_to_list(self, value):
-        if isinstance(value, (str, six.text_type)):
+        if isinstance(value, (str, str)):
             return [value]
         elif value is None:
             return []
@@ -983,7 +981,7 @@ class ForceRequire(validators.FormValidator):
 
 class CSVForEach(ForEach):
     def _convert_to_list(self, value):
-        if isinstance(value, (str, six.text_type)):
+        if isinstance(value, (str, str)):
             return value.split(",")
 
         return ForEach._convert_to_list(self, value)

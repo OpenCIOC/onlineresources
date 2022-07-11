@@ -15,9 +15,7 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-from six.moves import map
 
 log = logging.getLogger(__name__)
 
@@ -127,13 +125,13 @@ class FieldHide(viewbase.AdminViewBase):
 
             sql = (
                 """
-			DECLARE @ErrMsg as nvarchar(500), 
-			@RC as int 
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_%s_Fields_u_InactiveByMember ?,?, @ErrMsg OUTPUT  
+            EXECUTE @RC = dbo.sp_%s_Fields_u_InactiveByMember ?,?, @ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
                 % domain.str
             )
 

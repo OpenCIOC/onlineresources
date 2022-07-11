@@ -16,7 +16,6 @@
 
 
 # std library
-from __future__ import absolute_import
 import logging
 
 # 3rd party libs
@@ -26,8 +25,6 @@ from pyramid.view import view_config, view_defaults
 from cioc.core import validators, constants as const
 from cioc.core.i18n import gettext as _
 from cioc.web.admin.viewbase import AdminViewBase, get_domain
-from six.moves import map
-import six
 
 log = logging.getLogger(__name__)
 
@@ -110,22 +107,22 @@ class PagesView(AdminViewBase):
                 model_state.value("page.Title"),
                 model_state.value("page.Owner"),
                 model_state.value("page.PageContent"),
-                ",".join(map(six.text_type, model_state.value("views", []))),
+                ",".join(map(str, model_state.value("views", []))),
             ]
 
             log.debug("args %s", args)
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int,
-				@PageID as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int,
+                @PageID as int
 
-				SET @PageID = ?
+                SET @PageID = ?
 
-				EXECUTE @RC = dbo.sp_GBL_Page_u @PageID OUTPUT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_GBL_Page_u @PageID OUTPUT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @PageID as PageID
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg, @PageID as PageID
+                """
                 cursor = conn.execute(sql, *args)
                 result = cursor.fetchone()
                 cursor.close()
@@ -235,7 +232,7 @@ class PagesView(AdminViewBase):
 
         data = model_state.form.data
         data["page"] = page
-        data["views"] = set(six.text_type(v.ViewType) for v in views if v.Selected)
+        data["views"] = {str(v.ViewType) for v in views if v.Selected}
 
         title = _("Page (%s)", request) % _(domain.label, request)
         return self._create_response_namespace(
@@ -299,13 +296,13 @@ class PagesView(AdminViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_GBL_Page_d ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_GBL_Page_d ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             cursor = conn.execute(
                 sql, request.dboptions.MemberID, request.user.Agency, domain.id, PageID

@@ -14,8 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
-from __future__ import print_function
 
 
 def _get_file_list_dir(root):
@@ -63,7 +61,7 @@ def install_base_packages(opts):
 
         basename = fname.split("-")[0]
         if basename in base_packages:
-            cmd = "easy_install -Z %s%s%s" % (opts.root, sep, fname)
+            cmd = f"easy_install -Z {opts.root}{sep}{fname}"
             print("\n\n" + cmd)
             os.system(cmd)
 

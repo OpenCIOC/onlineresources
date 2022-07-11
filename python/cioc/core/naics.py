@@ -14,7 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import logging
 
 from itertools import groupby
@@ -50,7 +49,7 @@ def get_exclusions(request, naics_code, link_page=None, all_langs=False):
 
         cursor.close()
 
-    uses = dict((k, list(v)) for k, v in groupby(uses, attrgetter("Exclusion_ID")))
+    uses = {k: list(v) for k, v in groupby(uses, attrgetter("Exclusion_ID"))}
 
     output = []
     for establishment, exclusions in groupby(exclusions, attrgetter("Establishment")):

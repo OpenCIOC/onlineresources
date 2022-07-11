@@ -16,10 +16,9 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 # 3rd party
 from formencode import Schema, validators, ForEach, All, variabledecode
@@ -30,14 +29,13 @@ from cioc.core import validators as ciocvalidators
 
 from cioc.core.i18n import gettext as _
 from cioc.web.admin.viewbase import AdminViewBase
-import six
 
 log = logging.getLogger(__name__)
 
 templateprefix = "cioc.web.admin:templates/excelprofile/"
 
 column_headers = {"N": None, "F": False, "L": True}
-column_headers_reverse = {v: k for k, v in six.iteritems(column_headers)}
+column_headers_reverse = {v: k for k, v in column_headers.items()}
 
 
 class ProfileBaseSchema(Schema):
@@ -151,10 +149,10 @@ class ExcelProfile(AdminViewBase):
 
             root = ET.Element("DESCS")
 
-            for culture, data in six.iteritems(model_state.form.data["descriptions"]):
+            for culture, data in model_state.form.data["descriptions"].items():
                 desc = ET.SubElement(root, "DESC")
                 ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                for name, value in six.iteritems(data):
+                for name, value in data.items():
                     if value:
                         ET.SubElement(desc, name).text = value
 
@@ -162,7 +160,7 @@ class ExcelProfile(AdminViewBase):
 
             root = ET.Element("VIEWS")
             for view_type in model_state.form.data["Views"]:
-                ET.SubElement(root, "VIEW").text = six.text_type(view_type)
+                ET.SubElement(root, "VIEW").text = str(view_type)
 
             # raise Exception
 
@@ -175,24 +173,24 @@ class ExcelProfile(AdminViewBase):
                     or field["SortByOrder"] is not None
                 ):
                     field_el = ET.SubElement(root, "FIELD")
-                    for name, value in six.iteritems(field):
+                    for name, value in field.items():
                         if value is not None:
-                            ET.SubElement(field_el, name).text = six.text_type(value)
+                            ET.SubElement(field_el, name).text = str(value)
 
             args.append(ET.tostring(root, encoding="unicode"))
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int,
-				@ProfileID as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int,
+                @ProfileID as int
 
-				SET @ProfileID = ?
+                SET @ProfileID = ?
 
-				EXECUTE @RC = dbo.sp_CIC_ExcelProfile_u @ProfileID OUTPUT, ?, ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_CIC_ExcelProfile_u @ProfileID OUTPUT, ?, ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @ProfileID as ProfileID
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg, @ProfileID as ProfileID
+                """
 
                 cursor = conn.execute(sql, *args)
                 result = cursor.fetchone()
@@ -249,7 +247,7 @@ class ExcelProfile(AdminViewBase):
 
         params = variabledecode.variable_decode(request.POST)
         fieldorder = [str(x["FieldID"]) for x in params.get("Fields", [])]
-        field_descs = dict((str(f.FieldID), f) for f in field_descs)
+        field_descs = {str(f.FieldID): f for f in field_descs}
 
         val = model_state.value("profile.ColumnHeadersWeb")
         model_state.form.data["profile.ColumnHeadersWeb"] = column_headers_reverse.get(
@@ -352,7 +350,7 @@ class ExcelProfile(AdminViewBase):
 
         fieldorder = [str(f.FieldID) for f in field_descs]
         field_sort_key = {f.FieldID: i for i, f in enumerate(field_descs)}
-        field_descs = dict((str(f.FieldID), f) for f in field_descs)
+        field_descs = {str(f.FieldID): f for f in field_descs}
 
         model_state.form.data["profile"] = profile
         model_state.form.data["descriptions"] = profile_descriptions
@@ -369,7 +367,7 @@ class ExcelProfile(AdminViewBase):
             ] = column_headers_reverse.get(profile.ColumnHeaders, "L")
 
         if is_add:
-            for desc in six.itervalues(profile_descriptions):
+            for desc in profile_descriptions.values():
                 desc.Name = None
 
         title = _("Manage Excel Profiles", request)
@@ -447,13 +445,13 @@ class ExcelProfile(AdminViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_CIC_ExcelProfile_d ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_CIC_ExcelProfile_d ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             cursor = conn.execute(sql, ProfileID, request.dboptions.MemberID)
             result = cursor.fetchone()

@@ -17,10 +17,8 @@
 
 # stdlib
 
-from __future__ import absolute_import
 import datetime
 import time
-import six
 
 
 def _strftime(value):
@@ -98,7 +96,7 @@ class Marshaller:
         return
 
     def dump_default(self, value, write, escape=escape):
-        write(escape(six.text_type(value)))
+        write(escape(str(value)))
 
     def dump_bool(self, value, write):
         write(value and "1" or "0")
@@ -125,8 +123,8 @@ class Marshaller:
         self.memo.add(i)
         dump = self.__dump
         for k, v in value.items():
-            if isinstance(k, six.string_types):
-                k = escape(six.text_type(k))
+            if isinstance(k, str):
+                k = escape(str(k))
             else:
                 raise TypeError("dictionary key must be string")
             if v is not None:

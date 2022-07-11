@@ -14,7 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 from functools import partial
 
 from cioc.core import constants as const, validators
@@ -33,7 +32,7 @@ def includeme(config):
     # /rpc/record/*
     config.add_route(
         "rpc_orgdetails",
-        urlprefix + "record/{num:[A-Za-z]{3}\d{4,5}}",
+        urlprefix + r"record/{num:[A-Za-z]{3}\d{4,5}}",
         factory=cicfactory,
     )
 
@@ -45,12 +44,12 @@ def includeme(config):
     )
     config.add_route(
         "rpc_oppdetails",
-        urlprefix + "opportunity/{vnum:V-[A-Za-z]{3}\d{4,5}}",
+        urlprefix + r"opportunity/{vnum:V-[A-Za-z]{3}\d{4,5}}",
         factory=volfactory,
     )
 
     config.add_route(
-        "rpc_oppdetails_opid", urlprefix + "opportunity/{opid:\d+}", factory=volfactory
+        "rpc_oppdetails_opid", urlprefix + r"opportunity/{opid:\d+}", factory=volfactory
     )
 
     config.add_route(

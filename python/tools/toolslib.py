@@ -25,7 +25,7 @@ class ArgsType:
     config: t.Optional[dict] = None
 
 
-class ContextBase(object):
+class ContextBase:
     params: dict[str, str]
     args: ArgsType
 
@@ -40,12 +40,12 @@ class Context(request.CiocRequestMixin, ContextBase):
         return config.get_config(self.args.configfile, const._app_name)
 
 
-class fakerequest(object):
+class fakerequest:
     def __init__(self, config):
         self.config = config
         config["mailer.manager"] = "immediate"
 
-    class dboptions(object):
+    class dboptions:
         TrainingMode = False
         NoEmail = False
         DefaultEmailCIC = None
@@ -53,11 +53,11 @@ class fakerequest(object):
         DefaultEmailNameCIC = None
         DefaultEmailNameVOL = None
 
-    class pageinfo(object):
+    class pageinfo:
         DbArea = const.DM_CIC
 
 
-class FileWriteDetector(object):
+class FileWriteDetector:
     __dirty: bool
     __obj: t.TextIO
 
@@ -135,6 +135,6 @@ def email_log(
         )
     except Exception as e:
         raise Exception(
-            "unable to send email log: {},{}".format(outputstream.getvalue(), str(e)),
+            f"unable to send email log: {outputstream.getvalue()},{str(e)}",
             e,
         )

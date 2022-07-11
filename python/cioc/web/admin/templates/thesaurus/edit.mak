@@ -20,7 +20,6 @@
 <%!
 from markupsafe import Markup, escape
 from cioc.core import constants as const
-import six
 %>
 
 <%def name="makeSubjLink(subj, show_with=False)" filter="Markup" buffered="True"><a href="${request.passvars.route_path('admin_thesaurus', action='edit', _query=[('SubjID',subj.Subj_ID)])}" ${'class="Alert"' if subj.Inactive else '' |n}>${subj.SubjectTerm}</a>${'' if not (show_with and subj.UsedWith) else ' ' + Markup(_('(with <em>%s</em>)')) % subj.UsedWith}</%def>
@@ -64,7 +63,7 @@ can_delete = not is_add and can_update
 		<% can_delete = False %>
 		${_('This Subject Term is being used by <strong>%d</strong> local record(s) and <strong>%d</strong> record(s) shared with you by other members.') % (usage.UsageCountLocal, usage.UsageCountShared) |n} [ <a href="${request.passvars.makeLink('/results.asp',dict(incDel='on', SubjID=SubjID))}">${_('Search')}</a> ]
 		%if SuperUserGlobal:
-		<br>${_('This Subject Term is being used by <strong>%d</strong> record(s) in total in this database.') % (usage.UsageCountLocal + usage.UsageCountOther) |n}		
+		<br>${_('This Subject Term is being used by <strong>%d</strong> record(s) in total in this database.') % (usage.UsageCountLocal + usage.UsageCountOther) |n}
 		%endif
 	%else:
 		${_('This Subject Term <strong>is not</strong> being used by any records.')|n}
@@ -166,7 +165,7 @@ ${self.makeMgmtInfo(usage)}
 %endif
 <tr>
 	<td class="FieldLabelLeft">${_('Related Term(s)')}</td>
-	<td> 
+	<td>
 	%if can_update:
 	${subject_selector('RelatedSubj', relatedsubjects)}
 	%else:
@@ -235,7 +234,7 @@ ${self.makeMgmtInfo(usage)}
 	<td colspan="2">
 	<input type="submit" name="Submit" value="${_('Add') if is_add else _('Update')}">
 	%if can_delete:
-	<input type="submit" name="Delete" value="${_('Delete')}"> 
+	<input type="submit" name="Delete" value="${_('Delete')}">
 	%endif
 	<input type="reset" value="${_('Reset Form')}"></td>
 </tr>
@@ -245,7 +244,7 @@ ${self.makeMgmtInfo(usage)}
 <%def name="subject_selector(field, subjs)">
 	${renderer.errorlist(field + "_ID")}
 	<div id="${field}_existing_add_container">
-	%for desc in (x for x in other_term_descs if six.text_type(x.Subj_ID) in subjs):
+	%for desc in (x for x in other_term_descs if str(x.Subj_ID) in subjs):
 		${renderer.ms_checkbox(field + "_ID", desc.Subj_ID, label=makeSubjLink(desc))}
 	%endfor
 	</div>
@@ -257,9 +256,9 @@ ${self.makeMgmtInfo(usage)}
 	</table>
 	</tr>
 </%def>
-	
+
 <%def name="subject_list(subjs)">
-	${escape(', ').join(makeSubjLink(x) for x in other_term_descs if six.text_type(x.Subj_ID) in subjs)}
+	${escape(', ').join(makeSubjLink(x) for x in other_term_descs if str(x.Subj_ID) in subjs)}
 </%def>
 </form>
 </div>

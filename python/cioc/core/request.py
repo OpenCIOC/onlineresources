@@ -16,11 +16,8 @@
 
 
 # Python STD Lib
-from __future__ import absolute_import
-import six.moves.http_cookies
-import six.moves.urllib.request
-import six.moves.urllib.error
-import six.moves.urllib.parse
+from http import cookies as http_cookies
+import urllib.parse
 import logging
 import typing as t
 
@@ -51,7 +48,7 @@ if t.TYPE_CHECKING:
 log = logging.getLogger(__name__)
 
 
-class CiocRequestMixin(object):
+class CiocRequestMixin:
     added_gtranslate: bool = False
     pageinfo: t.Optional["PageInfo"]
 
@@ -146,25 +143,25 @@ class CiocRequestMixin(object):
 
 class CiocRequest(CiocRequestMixin, Request):
     def __init__(self, *args, **kw):
-        super(CiocRequest, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
 
         self.passvars
 
     def cioc_get_cookie(self, name):
-        val = self.cookies.get(six.moves.urllib.parse.quote(name).replace("_", "%5F"))
+        val = self.cookies.get(urllib.parse.quote(name).replace("_", "%5F"))
         if val:
-            val = six.moves.urllib.parse.unquote(val)
+            val = urllib.parse.unquote(val)
         return val
 
     def cioc_set_cookie(self, name, value, **args):
-        cookie = six.moves.http_cookies.SimpleCookie()
-        key = six.moves.urllib.parse.quote(name).replace("_", "%5F")
+        cookie = http_cookies.SimpleCookie()
+        key = urllib.parse.quote(name).replace("_", "%5F")
         if value is None:
             # deleting value
             value = ""
             args["max_age"] = 0
             args["expires"] = "Wed, 31-Dec-97 23:59:59 GMT"
-        cookie[key] = six.moves.urllib.parse.quote(value)
+        cookie[key] = urllib.parse.quote(value)
         morsel = cookie[key]
         morsel.update((x, y) for x, y in args.items() if y is not None)
 
@@ -173,4 +170,4 @@ class CiocRequest(CiocRequestMixin, Request):
     def current_route_url(self, *elements, **kw):
         if "_query" not in kw:
             kw["_query"] = {}
-        return super(CiocRequest, self).current_route_url(*elements, **kw)
+        return super().current_route_url(*elements, **kw)

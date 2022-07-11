@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 from pyramid import testing, url
 from cioc.core import viewbase, constants as const, pageinfo
 from cioc.web import on_new_request, on_context_found
@@ -23,7 +22,7 @@ from cioc.web import on_new_request, on_context_found
 import logging
 
 
-class DummyEvent(object):
+class DummyEvent:
     def __init__(self, request):
         self.request = request
 
@@ -31,7 +30,7 @@ class DummyEvent(object):
 log = logging.getLogger(__name__)
 
 
-class Test_ViewBase(object):
+class Test_ViewBase:
     def setUp(self):
 
         self.config = testing.setUp()

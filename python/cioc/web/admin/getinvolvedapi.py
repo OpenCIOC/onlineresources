@@ -15,9 +15,8 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 from collections import namedtuple
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 from itertools import groupby
 from operator import attrgetter
 
@@ -30,8 +29,6 @@ from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 
 import logging
-import six
-from six.moves import map
 
 log = logging.getLogger(__name__)
 
@@ -117,9 +114,9 @@ class GetInvolvedAPI(viewbase.AdminViewBase):
                     continue
 
                 el = ET.SubElement(agencies, "Agency")
-                for key, val in six.iteritems(agency):
+                for key, val in agency.items():
                     if val:
-                        ET.SubElement(el, key).text = six.text_type(val)
+                        ET.SubElement(el, key).text = str(val)
 
             interests = ET.Element("Interests")
 
@@ -130,9 +127,9 @@ class GetInvolvedAPI(viewbase.AdminViewBase):
                     continue
 
                 el = ET.SubElement(interests, "Interest")
-                for key, val in six.iteritems(interest):
+                for key, val in interest.items():
                     if val:
-                        ET.SubElement(el, key).text = six.text_type(val)
+                        ET.SubElement(el, key).text = str(val)
 
             skills = ET.Element("Skills")
             for skill in model_state.value("skills") or []:
@@ -142,9 +139,9 @@ class GetInvolvedAPI(viewbase.AdminViewBase):
                     continue
 
                 el = ET.SubElement(skills, "Skill")
-                for key, val in six.iteritems(skill):
+                for key, val in skill.items():
                     if val:
-                        ET.SubElement(el, key).text = six.text_type(val)
+                        ET.SubElement(el, key).text = str(val)
 
             args = [
                 request.dboptions.MemberID,
@@ -155,13 +152,13 @@ class GetInvolvedAPI(viewbase.AdminViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-					DECLARE @ErrMsg as nvarchar(500),
-					@RC as int
+                    DECLARE @ErrMsg as nvarchar(500),
+                    @RC as int
 
-					EXECUTE @RC = dbo.sp_VOL_GetInvolvedAPI_u ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+                    EXECUTE @RC = dbo.sp_VOL_GetInvolvedAPI_u ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-					SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				"""
+                    SELECT @RC as [Return], @ErrMsg AS ErrMsg
+                """
 
                 cursor = conn.execute(sql, args)
                 result = cursor.fetchone()
@@ -285,7 +282,7 @@ class GetInvolvedAPI(viewbase.AdminViewBase):
         if request.dboptions.OnlySpecificInterests:
             interests = list(
                 sorted(
-                    set((g.AI_ID, g.InterestName) for g in interests),
+                    {(g.AI_ID, g.InterestName) for g in interests},
                     key=lambda x: x[1],
                 )
             )

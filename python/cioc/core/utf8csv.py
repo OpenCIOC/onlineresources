@@ -15,11 +15,8 @@
 # =========================================================================================
 
 # this is adapted from the example at the bottom of https://docs.python.org/2/library/csv.html
-from __future__ import absolute_import
 import csv
-import codecs
 import tempfile
-import six
 import io
 
 
@@ -32,15 +29,14 @@ class SQLServerBulkDialect(csv.Dialect):
 
 
 def open_csv_reader(f, encoding="utf-8-sig", *args, **kwargs):
-    if six.PY3:
-        return csv.reader(
-            io.TextIOWrapper(f, encoding=encoding, newline=""), *args, **kwargs
-        )
+    return csv.reader(
+        io.TextIOWrapper(f, encoding=encoding, newline=""), *args, **kwargs
+    )
 
     return UTF8Reader(f, *args, **kwargs)
 
 
-class UTF8Reader(object):
+class UTF8Reader:
     """
     A CSV reader which will iterate over lines in the CSV file "f",
     which is encoded in the given encoding.
@@ -51,7 +47,7 @@ class UTF8Reader(object):
 
     def next(self):
         row = next(self.reader)
-        return [six.text_type(s, "utf-8-sig") for s in row]
+        return [str(s, "utf-8-sig") for s in row]
 
     def __iter__(self):
         return self
@@ -59,7 +55,7 @@ class UTF8Reader(object):
     __next__ = next
 
 
-class UTF8CSVWriter(object):
+class UTF8CSVWriter:
     """
     A CSV writer which will write rows to CSV file "f",
     which is encoded in the given encoding.
@@ -70,9 +66,6 @@ class UTF8CSVWriter(object):
         self.writer = csv.writer(f, dialect=dialect, **kwds)
 
     def writerow(self, row):
-        if six.PY2:
-            row = [s.encode("utf-8") for s in row]
-
         self.writer.writerow(row)
 
     def writerows(self, rows):
@@ -82,19 +75,12 @@ class UTF8CSVWriter(object):
 
 def write_csv_to_zip(zip, data, fname, **kwargs):
     csvfile = rawfile = tempfile.TemporaryFile()
-    if six.PY3:
-        csvfile = io.TextIOWrapper(rawfile, encoding="utf-8-sig", newline="")
-
-    else:
-        # required to have all spreadsheet programs
-        # understand Unicode
-        csvfile.write(codecs.BOM_UTF8)
+    csvfile = io.TextIOWrapper(rawfile, encoding="utf-8-sig", newline="")
 
     csvwriter = UTF8CSVWriter(csvfile, **kwargs)
 
     csvwriter.writerows(data)
-    if six.PY3:
-        csvfile.flush()
+    csvfile.flush()
 
     csvfile.seek(0)
     rawfile.seek(0)

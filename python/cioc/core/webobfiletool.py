@@ -16,7 +16,7 @@
 
 
 # Adapted from http://docs.webob.org/en/latest/file-example.html
-class FileIterable(object):
+class FileIterable:
     def __init__(self, filename, start=None, stop=None):
         self.filename = filename
         self.start = start
@@ -29,7 +29,7 @@ class FileIterable(object):
         return self.__class__(self.filename, start, stop)
 
 
-class FileIterator(object):
+class FileIterator:
     chunk_size = 4096
 
     def __init__(self, fileobj, start=None, stop=None):

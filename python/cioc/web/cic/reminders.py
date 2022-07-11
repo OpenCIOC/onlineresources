@@ -16,7 +16,6 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 from datetime import datetime
 
@@ -36,7 +35,6 @@ from cioc.core import (
 )
 from cioc.web.admin.notices import get_notices_info
 from cioc.core.rootfactories import BasicRootFactory
-import six
 
 log = logging.getLogger(__name__)
 
@@ -45,7 +43,7 @@ _ = i18n.gettext
 templateprefix = "cioc.web.cic:templates/reminders/"
 
 dismiss_options = {"S": False, "A": True}
-dismiss_options_reverse = {v: k for k, v in six.iteritems(dismiss_options)}
+dismiss_options_reverse = {v: k for k, v in dismiss_options.items()}
 
 
 class ReminderBaseSchema(validators.Schema):
@@ -328,12 +326,12 @@ class ReminderView(viewbase.ViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-					DECLARE @RC int, @ErrMsg as nvarchar(500), @ReminderID int=?
+                    DECLARE @RC int, @ErrMsg as nvarchar(500), @ReminderID int=?
 
-					EXEC @RC = sp_GBL_Reminder_u @ReminderID OUTPUT, %s @ErrMsg OUTPUT
+                    EXEC @RC = sp_GBL_Reminder_u @ReminderID OUTPUT, %s @ErrMsg OUTPUT
 
-					SELECT @RC AS [Return], @ErrMsg AS ErrMsg, @ReminderID AS ReminderID
-					""" % (
+                    SELECT @RC AS [Return], @ErrMsg AS ErrMsg, @ReminderID AS ReminderID
+                    """ % (
                     "?," * (len(args) - 1)
                 )
 
@@ -413,9 +411,9 @@ class ReminderView(viewbase.ViewBase):
 
             cursor = conn.execute(
                 """
-						EXEC sp_GBL_Agency_l ?, ?
-						EXEC sp_GBL_RecordNote_Type_l
-						""",
+                        EXEC sp_GBL_Agency_l ?, ?
+                        EXEC sp_GBL_RecordNote_Type_l
+                        """,
                 request.dboptions.MemberID,
                 False,
             )
@@ -437,10 +435,10 @@ class ReminderView(viewbase.ViewBase):
         if not is_add:
             if not is_error:
                 data["reminder"] = reminder
-                data["reminder_user_ID"] = [six.text_type(x[0]) for x in reminder_users]
+                data["reminder_user_ID"] = [str(x[0]) for x in reminder_users]
                 data["reminder_agency_ID"] = [x[0] for x in reminder_agencies]
                 data["NUM"] = [x[0] for x in nums]
-                data["VNUM"] = [six.text_type(x[0]) for x in vnums]
+                data["VNUM"] = [str(x[0]) for x in vnums]
 
         if is_add or is_error:
             data["NUM"] = request.params.getall("NUM")
@@ -488,12 +486,12 @@ class ReminderView(viewbase.ViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-				DECLARE @RC int, @ErrMsg nvarchar(500)
+                DECLARE @RC int, @ErrMsg nvarchar(500)
 
-				EXEC @RC = sp_GBL_Reminder_u_Dismiss ?, ?, ?, ?, @ErrMsg OUTPUT
+                EXEC @RC = sp_GBL_Reminder_u_Dismiss ?, ?, ?, ?, @ErrMsg OUTPUT
 
-				SELECT @RC AS [Return], @ErrMsg AS ErrMsg
-			"""
+                SELECT @RC AS [Return], @ErrMsg AS ErrMsg
+            """
             dismissed = not not request.POST.get("dismiss")
             cursor = conn.execute(sql, reminder_id, user.Mod, user.User_ID, dismissed)
 
@@ -565,12 +563,12 @@ class ReminderView(viewbase.ViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @RC int, @ErrMsg nvarchar(500)
+            DECLARE @RC int, @ErrMsg nvarchar(500)
 
-			EXEC @RC = dbo.sp_GBL_Reminder_d ?, ?, ?, @ErrMsg OUTPUT
+            EXEC @RC = dbo.sp_GBL_Reminder_d ?, ?, ?, @ErrMsg OUTPUT
 
-			SELECT @RC AS [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC AS [Return], @ErrMsg AS ErrMsg
+            """
 
             result = conn.execute(
                 sql, reminder_id, user.User_ID, not not user.SuperUser

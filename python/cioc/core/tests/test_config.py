@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import cioc.core.config as config
 import os
 
@@ -25,7 +24,7 @@ config_2 = os.path.join(this_dir, "config2.ini")
 
 
 def change_config1():
-    inf = open(config_1, "rU")
+    inf = open(config_1)
     data = inf.read()
     inf.close()
 

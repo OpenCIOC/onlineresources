@@ -17,12 +17,9 @@
 </%doc>
 
 <%def name="header()">
-<%!
-import six
-%>
 <%
 
-inline_results = six.text_type(request.params.get('InlineResults')) == u'on'
+inline_results = str(request.params.get('InlineResults')) == u'on'
 culture = request.language.Culture
 
 custom_style_sheet_url = request.template_values['StyleSheetUrl']
@@ -43,7 +40,7 @@ template_stylesheet=${template_style_sheet_url}
 <!doctype html>
 %endif
 
-<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ --> 
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
 <!--[if lt IE 7 ]> <html lang="${culture}" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="${culture}" class="no-js ie7"> <![endif]-->
 <!--[if IE 8 ]>    <html lang="${culture}" class="no-js ie8"> <![endif]-->
@@ -85,7 +82,7 @@ template_stylesheet=${template_style_sheet_url}
 	%if request.template_values['UseFontAwesome'] or ((request.pageinfo.ThisPage).lower() in ["results.asp","sresults.asp","whatsnew.asp","iconlist","publication/edit","generalheading/edit"]):
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 	%endif
-	
+
 	<link rel="stylesheet" type="text/css" href="${basic_style_sheet_url}" id="basic_style">
 	<link rel="stylesheet" type="text/css" href="${template_style_sheet_url}" id="template_style">
 
@@ -115,7 +112,7 @@ function add_class(el, classname) {
 	if ( !myRE.test(el.className) ) {
 		if (el.className) {
 			classname = ' ' + classname;
-		} 
+		}
 		el.className += classname;
 	}
 }
@@ -157,7 +154,7 @@ function openWinXL(pageToOpen,windowName)  {
 	popWin = window.open(pageToOpen,windowName,"toolbar=no,width=755,height=550,location=no,scrollBars=yes,resizable=no,titlebar=yes");
 	popWin.focus();
 }
-	
+
 //--></script>
 
 </head>
@@ -168,18 +165,18 @@ function openWinXL(pageToOpen,windowName)  {
 %endif
 
 	<div id="body_content">
-	
+
 		%if renderinfo.print_table:
 		${makeLayoutHeader()|n}
 		%endif
-		
+
 		%if request.dboptions.TrainingMode and not request.viewdata.PrintMode and renderinfo.print_table:
 		<div class="ui-state-error clearfix ui-corner-all" id="training-mode">${_('The database is in training mode')}</div>
 		%endif
 
 		<div id="page_content" role="main">
-		
-		<% 
+
+		<%
 		ErrMsg = context.get('ErrMsg')
 		Info = context.get('Info')
 		errmsg = sanitize_html(request.params.get("ErrMsg"))

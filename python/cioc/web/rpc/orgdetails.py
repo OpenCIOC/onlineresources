@@ -16,11 +16,11 @@
 
 
 # stdlib
-from __future__ import absolute_import
 from collections import OrderedDict
 from itertools import groupby
 from operator import attrgetter
-from xml.etree import cElementTree as ET
+
+from xml.etree import ElementTree as ET
 
 # 3rd party
 from pyramid.httpexceptions import (
@@ -35,7 +35,6 @@ from cioc.core.format import textToHTML
 from cioc.core import i18n, syslanguage
 from cioc.core.stat import insert_stat
 from cioc.web.cic import viewbase
-from six.moves import range
 
 _ = i18n.gettext
 
@@ -143,25 +142,25 @@ class RpcOrgDetails(viewbase.CicViewBase):
 
             sql = [
                 """DECLARE @ViewType int
-					SET @ViewType = ?
-					SELECT bt.MemberID, btd.BTD_ID,
-					dbo.fn_CIC_LinkOrgLevel(@ViewType,bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,GETDATE()) AS LINK_ORG_TO,
-					dbo.fn_CIC_LinkLocationName(@ViewType,bt.NUM,bt.ORG_NUM,btd.LOCATION_NAME,GETDATE()) AS LINK_LOCATION_NAME,
-					dbo.fn_CIC_LinkServiceNameLevel(@ViewType,bt.NUM,bt.ORG_NUM,btd.SERVICE_NAME_LEVEL_1,GETDATE()) AS LINK_SERVICE_NAME_1,
-					dbo.fn_CIC_LinkServiceNameLevel(@ViewType,bt.NUM,bt.ORG_NUM,btd.SERVICE_NAME_LEVEL_2,GETDATE()) AS LINK_SERVICE_NAME_2,
-					dbo.fn_CIC_RecordInView(bt.NUM,@ViewType,btd.LangID,0,GETDATE()) AS IN_VIEW,
-					bt.RSN, bt.NUM, bt.RECORD_OWNER,
-					dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL,
-					btd.ORG_LEVEL_1, btd.ORG_LEVEL_2, btd.ORG_LEVEL_3, btd.ORG_LEVEL_4, btd.ORG_LEVEL_5,
-					LOCATION_NAME,
-					SERVICE_NAME_LEVEL_1, SERVICE_NAME_LEVEL_2,
-					bt.ORG_NUM, btd.NON_PUBLIC,
-					cioc_shared.dbo.fn_SHR_GBL_DateString(btd.MODIFIED_DATE) AS MODIFIED_DATE,
-					cioc_shared.dbo.fn_SHR_GBL_DateString(btd.UPDATE_DATE) AS UPDATE_DATE,
-					cioc_shared.dbo.fn_SHR_GBL_DateString(btd.UPDATE_SCHEDULE) AS UPDATE_SCHEDULE,
-					cioc_shared.dbo.fn_SHR_GBL_DateString(btd.DELETION_DATE) AS DELETION_DATE,
-					(SELECT Culture,LangID,LanguageName,LanguageAlias,LCID,Active
-						FROM STP_Language LANG WHERE LangID<>@@LANGID AND dbo.fn_CIC_RecordInView(bt.NUM,@ViewType,LangID,0,GETDATE())=1 AND """,
+                    SET @ViewType = ?
+                    SELECT bt.MemberID, btd.BTD_ID,
+                    dbo.fn_CIC_LinkOrgLevel(@ViewType,bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,GETDATE()) AS LINK_ORG_TO,
+                    dbo.fn_CIC_LinkLocationName(@ViewType,bt.NUM,bt.ORG_NUM,btd.LOCATION_NAME,GETDATE()) AS LINK_LOCATION_NAME,
+                    dbo.fn_CIC_LinkServiceNameLevel(@ViewType,bt.NUM,bt.ORG_NUM,btd.SERVICE_NAME_LEVEL_1,GETDATE()) AS LINK_SERVICE_NAME_1,
+                    dbo.fn_CIC_LinkServiceNameLevel(@ViewType,bt.NUM,bt.ORG_NUM,btd.SERVICE_NAME_LEVEL_2,GETDATE()) AS LINK_SERVICE_NAME_2,
+                    dbo.fn_CIC_RecordInView(bt.NUM,@ViewType,btd.LangID,0,GETDATE()) AS IN_VIEW,
+                    bt.RSN, bt.NUM, bt.RECORD_OWNER,
+                    dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2,bt.DISPLAY_LOCATION_NAME,bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL,
+                    btd.ORG_LEVEL_1, btd.ORG_LEVEL_2, btd.ORG_LEVEL_3, btd.ORG_LEVEL_4, btd.ORG_LEVEL_5,
+                    LOCATION_NAME,
+                    SERVICE_NAME_LEVEL_1, SERVICE_NAME_LEVEL_2,
+                    bt.ORG_NUM, btd.NON_PUBLIC,
+                    cioc_shared.dbo.fn_SHR_GBL_DateString(btd.MODIFIED_DATE) AS MODIFIED_DATE,
+                    cioc_shared.dbo.fn_SHR_GBL_DateString(btd.UPDATE_DATE) AS UPDATE_DATE,
+                    cioc_shared.dbo.fn_SHR_GBL_DateString(btd.UPDATE_SCHEDULE) AS UPDATE_SCHEDULE,
+                    cioc_shared.dbo.fn_SHR_GBL_DateString(btd.DELETION_DATE) AS DELETION_DATE,
+                    (SELECT Culture,LangID,LanguageName,LanguageAlias,LCID,Active
+                        FROM STP_Language LANG WHERE LangID<>@@LANGID AND dbo.fn_CIC_RecordInView(bt.NUM,@ViewType,LangID,0,GETDATE())=1 AND """,
                 "ActiveRecord=1"
                 if viewdata.ViewOtherLangs
                 else "EXISTS(SELECT * FROM CIC_View_Description WHERE ViewType=@ViewType AND LangID=LANG.LangID)",
@@ -193,13 +192,13 @@ class RpcOrgDetails(viewbase.CicViewBase):
 
             sql.append(
                 """,btd.NUM AS LangNUM
-						FROM GBL_BaseTable bt
-						LEFT JOIN GBL_BaseTable_Description btd ON bt.NUM=btd.NUM AND btd.LangID=@@LANGID
-						LEFT JOIN CIC_BaseTable cbt ON bt.NUM=cbt.NUM
-						LEFT JOIN CIC_BaseTable_Description cbtd ON cbt.NUM=cbtd.NUM AND cbtd.LangID=@@LANGID
-						LEFT JOIN CCR_BaseTable ccbt ON bt.NUM=ccbt.NUM
-						LEFT JOIN CCR_BaseTable_Description ccbtd ON ccbt.NUM=ccbtd.NUM AND ccbtd.LangID=@@LANGID
-						WHERE bt.NUM=? """
+                        FROM GBL_BaseTable bt
+                        LEFT JOIN GBL_BaseTable_Description btd ON bt.NUM=btd.NUM AND btd.LangID=@@LANGID
+                        LEFT JOIN CIC_BaseTable cbt ON bt.NUM=cbt.NUM
+                        LEFT JOIN CIC_BaseTable_Description cbtd ON cbt.NUM=cbtd.NUM AND cbtd.LangID=@@LANGID
+                        LEFT JOIN CCR_BaseTable ccbt ON bt.NUM=ccbt.NUM
+                        LEFT JOIN CCR_BaseTable_Description ccbtd ON ccbt.NUM=ccbtd.NUM AND ccbtd.LangID=@@LANGID
+                        WHERE bt.NUM=? """
             )
 
             sql = "".join(sql)

@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import zipfile
 import tempfile
 import logging
@@ -113,19 +112,19 @@ class O211Export(viewbase.CicViewBase):
                 args.append(date)
                 sql.append(
                     """
-						WHERE EXISTS (SELECT * FROM GBL_BaseTable_History h
-							INNER JOIN GBL_FieldOption fo
-									ON h.FieldID=fo.FieldID
-								WHERE h.NUM=btd.NUM AND h.LangID=btd.LangID
-									AND h.MODIFIED_DATE >= ?
-									AND fo.FieldName IN ('ORG_LEVEL_1','ORG_LEVEL_2','ORG_LEVEL_3','ORG_LEVEL_4','ORG_LEVEL_5',
-									'ACCESSIBILITY','AFTER_HRS_PHONE','ALT_ORG','APPLICATION','AREAS_SERVED',
-									'CONTACT_1','CONTACT_2','EXEC_1','EXEC_2','VOLCONTACT',
-									'CRISIS_PHONE','ELIGIBILITY','E_MAIL','FAX','FORMER_ORG','HOURS','INTERSECTION',
-									'LANGUAGES','LOCATED_IN_CM','MAIL_ADDRESS','PUBLIC_COMMENTS',
-									'OFFICE_PHONE','SERVICE_LEVEL','RECORD_OWNER','DESCRIPTION','SITE_ADDRESS','SUBJECTS',
-									'TDD_PHONE','TOLL_FREE_PHONE','WWW_ADDRESS', 'UPDATE_DATE', 'NUM', 'SUBMIT_CHANGES_TO', 'SOURCE_DB')
-							)"""
+                        WHERE EXISTS (SELECT * FROM GBL_BaseTable_History h
+                            INNER JOIN GBL_FieldOption fo
+                                    ON h.FieldID=fo.FieldID
+                                WHERE h.NUM=btd.NUM AND h.LangID=btd.LangID
+                                    AND h.MODIFIED_DATE >= ?
+                                    AND fo.FieldName IN ('ORG_LEVEL_1','ORG_LEVEL_2','ORG_LEVEL_3','ORG_LEVEL_4','ORG_LEVEL_5',
+                                    'ACCESSIBILITY','AFTER_HRS_PHONE','ALT_ORG','APPLICATION','AREAS_SERVED',
+                                    'CONTACT_1','CONTACT_2','EXEC_1','EXEC_2','VOLCONTACT',
+                                    'CRISIS_PHONE','ELIGIBILITY','E_MAIL','FAX','FORMER_ORG','HOURS','INTERSECTION',
+                                    'LANGUAGES','LOCATED_IN_CM','MAIL_ADDRESS','PUBLIC_COMMENTS',
+                                    'OFFICE_PHONE','SERVICE_LEVEL','RECORD_OWNER','DESCRIPTION','SITE_ADDRESS','SUBJECTS',
+                                    'TDD_PHONE','TOLL_FREE_PHONE','WWW_ADDRESS', 'UPDATE_DATE', 'NUM', 'SUBMIT_CHANGES_TO', 'SOURCE_DB')
+                            )"""
                 )
 
             sql = " ".join(sql)

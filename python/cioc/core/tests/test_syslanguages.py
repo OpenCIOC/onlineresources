@@ -14,7 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 from cioc.core import syslanguage
 
 
@@ -32,7 +31,7 @@ def test_active_cultures():
 
     assert len(new_ac) == 2
 
-    assert set(new_ac) == set(x.Culture for x in ac)
+    assert set(new_ac) == {x.Culture for x in ac}
 
     assert syslanguage.is_active_culture("en-CA")
     assert not syslanguage.is_active_culture("blah")

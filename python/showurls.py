@@ -14,8 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
-from __future__ import print_function
 import optparse
 import sys
 import textwrap
@@ -32,19 +30,19 @@ def main(argv=sys.argv, quiet=False):
     return command.run()
 
 
-class PRoutesCommand(object):
+class PRoutesCommand:
     description = """\
-	Print all URL dispatch routes used by a Pyramid application in the
-	order in which they are evaluated.	Each route includes the name of the
-	route, the pattern of the route, and the view callable which will be
-	invoked when the route is matched.
+    Print all URL dispatch routes used by a Pyramid application in the
+    order in which they are evaluated.  Each route includes the name of the
+    route, the pattern of the route, and the view callable which will be
+    invoked when the route is matched.
 
-	This command accepts one positional argument named "config_uri".  It
-	specifies the PasteDeploy config file to use for the interactive
-	shell. The format is "inifile#name". If the name is left off, "main"
-	will be assumed.  Example: "proutes myapp.ini".
+    This command accepts one positional argument named "config_uri".  It
+    specifies the PasteDeploy config file to use for the interactive
+    shell. The format is "inifile#name". If the name is left off, "main"
+    will be assumed.  Example: "proutes myapp.ini".
 
-	"""
+    """
     bootstrap = (bootstrap,)
     stdout = sys.stdout
     usage = "%prog config_uri"

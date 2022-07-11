@@ -16,9 +16,7 @@
 
 
 # Logging
-from __future__ import absolute_import
 import logging
-from six.moves import map
 
 log = logging.getLogger(__name__)
 
@@ -75,20 +73,20 @@ class ActivtionsView(CicViewBase):
         with request.connmgr.get_connection("admin") as conn:
             cursor = conn.execute(
                 """
-			SELECT PubCode FROM CIC_Publication WHERE PB_ID=?
+            SELECT PubCode FROM CIC_Publication WHERE PB_ID=?
 
-			DECLARE @MemberID int
-			SET @MemberID = ?
-			SELECT tm.Code,ISNULL(tmd.AltTerm,tmd.Term) AS Term,
-			CAST(CASE WHEN EXISTS(SELECT * FROM TAX_Term_ParentList WHERE ParentCode=tm.Code) THEN 1 ELSE 0 END AS bit) AS HAS_CHILDREN,
-			0 AS CountRecords,
-			CAST(CASE WHEN EXISTS(SELECT * FROM TAX_Term_ActivationByMember WHERE Code=tm.Code AND MemberID=@MemberID) THEN 1 ELSE 0 END AS bit) AS Active
-			FROM TAX_Term tm
-			INNER JOIN TAX_Term_Description tmd
-				ON tm.Code=tmd.Code AND tmd.LangID=@@LANGID
-			WHERE tm.CdLvl=1
-			ORDER BY tm.Code
-			""",
+            DECLARE @MemberID int
+            SET @MemberID = ?
+            SELECT tm.Code,ISNULL(tmd.AltTerm,tmd.Term) AS Term,
+            CAST(CASE WHEN EXISTS(SELECT * FROM TAX_Term_ParentList WHERE ParentCode=tm.Code) THEN 1 ELSE 0 END AS bit) AS HAS_CHILDREN,
+            0 AS CountRecords,
+            CAST(CASE WHEN EXISTS(SELECT * FROM TAX_Term_ActivationByMember WHERE Code=tm.Code AND MemberID=@MemberID) THEN 1 ELSE 0 END AS bit) AS Active
+            FROM TAX_Term tm
+            INNER JOIN TAX_Term_Description tmd
+                ON tm.Code=tmd.Code AND tmd.LangID=@@LANGID
+            WHERE tm.CdLvl=1
+            ORDER BY tm.Code
+            """,
                 PB_ID,
                 request.dboptions.MemberID,
             )
@@ -142,11 +140,11 @@ class ActivtionsView(CicViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-					DECLARE @RC int, @ErrMsg nvarchar(500), @BadCodes nvarchar(max)
-					EXEC @RC = dbo.sp_CIC_GeneralHeading_i_QuickTax ?,?,?,?,?, @BadCodes OUTPUT, @ErrMsg OUTPUT
+                    DECLARE @RC int, @ErrMsg nvarchar(500), @BadCodes nvarchar(max)
+                    EXEC @RC = dbo.sp_CIC_GeneralHeading_i_QuickTax ?,?,?,?,?, @BadCodes OUTPUT, @ErrMsg OUTPUT
 
-					SELECT @RC AS [Return], @ErrMsg AS ErrMsg, @BadCodes AS BadCodes
-					"""
+                    SELECT @RC AS [Return], @ErrMsg AS ErrMsg, @BadCodes AS BadCodes
+                    """
                 cursor = conn.execute(sql, args)
 
                 result = cursor.fetchone()
@@ -192,28 +190,28 @@ class ActivtionsView(CicViewBase):
             records_criteria = ""
 
         sql = """
-			DECLARE @MemberID int
-			SET @MemberID = ?
-			SELECT tm.Code,ISNULL(tmd.AltTerm,tmd.Term) AS Term,
-			CAST(CASE WHEN EXISTS(SELECT * FROM TAX_Term_ActivationByMember WHERE Code=tm.Code AND MemberID=@MemberID) THEN 1 ELSE 0 END AS bit) AS Active,
-			CAST(CASE WHEN EXISTS(SELECT * FROM TAX_Term WHERE ParentCode=tm.Code) THEN 1 ELSE 0 END AS bit) AS HAS_CHILDREN,
-			COUNT(DISTINCT tl.NUM) AS CountRecords
-			FROM TAX_Term tm
-			INNER JOIN TAX_Term_Description tmd
-				ON tm.Code=tmd.Code AND tmd.LangID=@@LANGID
-			LEFT JOIN CIC_BT_TAX_TM tlt
-				ON tlt.Code=tm.Code
-			LEFT JOIN CIC_BT_TAX tl
-				ON tlt.BT_TAX_ID=tl.BT_TAX_ID
-					AND EXISTS(SELECT *
-						FROM GBL_BaseTable bt
-						WHERE bt.NUM=tl.NUM
-						%s
-						)
-			WHERE tm.ParentCode = ?
-			GROUP BY tm.Code, tm.CdLvl, tm.CdLvl1, ISNULL(tmd.AltTerm,tmd.Term), tm.Active, tm.ParentCode
-			ORDER BY tm.Code
-		""" % (
+            DECLARE @MemberID int
+            SET @MemberID = ?
+            SELECT tm.Code,ISNULL(tmd.AltTerm,tmd.Term) AS Term,
+            CAST(CASE WHEN EXISTS(SELECT * FROM TAX_Term_ActivationByMember WHERE Code=tm.Code AND MemberID=@MemberID) THEN 1 ELSE 0 END AS bit) AS Active,
+            CAST(CASE WHEN EXISTS(SELECT * FROM TAX_Term WHERE ParentCode=tm.Code) THEN 1 ELSE 0 END AS bit) AS HAS_CHILDREN,
+            COUNT(DISTINCT tl.NUM) AS CountRecords
+            FROM TAX_Term tm
+            INNER JOIN TAX_Term_Description tmd
+                ON tm.Code=tmd.Code AND tmd.LangID=@@LANGID
+            LEFT JOIN CIC_BT_TAX_TM tlt
+                ON tlt.Code=tm.Code
+            LEFT JOIN CIC_BT_TAX tl
+                ON tlt.BT_TAX_ID=tl.BT_TAX_ID
+                    AND EXISTS(SELECT *
+                        FROM GBL_BaseTable bt
+                        WHERE bt.NUM=tl.NUM
+                        %s
+                        )
+            WHERE tm.ParentCode = ?
+            GROUP BY tm.Code, tm.CdLvl, tm.CdLvl1, ISNULL(tmd.AltTerm,tmd.Term), tm.Active, tm.ParentCode
+            ORDER BY tm.Code
+        """ % (
             records_criteria
         )
 
@@ -234,7 +232,7 @@ class ActivtionsView(CicViewBase):
 
         plus_minus_tmpl = Markup(
             """<span class="SimulateLink taxPlusMinus" data-taxcode="%(Code)s" data-url="{}" data-level="%(level)d" data-closed="true"><img border="0" align="bottom" src="{}"></span>
-						"""
+                        """
         ).format(
             route_path("cic_generalheading", action="ddrows", _query=query).replace(
                 "CODE", "%(Code)s"
@@ -251,12 +249,12 @@ class ActivtionsView(CicViewBase):
 
         base_tmpl = Markup(
             """<tr valign="top" class="TaxRowLevel%(level)d">
-					<td class="%(levelclass)s"><input type="checkbox" value="%(Code)s" name="Code"></td>
-					<td class="%(levelclass)s">%(Code)s</td>
-					<td class="%(levelclass)s"><div class="CodeLevel%(level)d" id="tax-code-%(CodeID)s">{}&nbsp;<span class="taxExpandTerm SimulateLink TaxLink%(Inactive)s" data-closed="true" data-taxcode="%(Code)s" data-url="{}"><span class="rollup-indicator %(Rollup)s">&uArr;&nbsp;</span>%(Term)s&nbsp;%(Count)s</span>
-					</div>
-					<div class="taxDetail"></div>
-					</td></tr>"""
+                    <td class="%(levelclass)s"><input type="checkbox" value="%(Code)s" name="Code"></td>
+                    <td class="%(levelclass)s">%(Code)s</td>
+                    <td class="%(levelclass)s"><div class="CodeLevel%(level)d" id="tax-code-%(CodeID)s">{}&nbsp;<span class="taxExpandTerm SimulateLink TaxLink%(Inactive)s" data-closed="true" data-taxcode="%(Code)s" data-url="{}"><span class="rollup-indicator %(Rollup)s">&uArr;&nbsp;</span>%(Term)s&nbsp;%(Count)s</span>
+                    </div>
+                    <div class="taxDetail"></div>
+                    </td></tr>"""
         )
 
         level_class = ("TaxLevel%d" % level) if level <= 2 else "TaxBasic"

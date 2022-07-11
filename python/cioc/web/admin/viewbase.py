@@ -14,7 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 from formencode import Schema, validators, ForEach, All, schema
 
 from cioc.core import validators as ciocvalidators, constants as const, syslanguage
@@ -70,7 +69,7 @@ def cull_extra_cultures(
         for item in items:
             descriptions = item.get(desc_key, {})
             for culture in (
-                set(c.replace("_", "-") for c in descriptions.keys()) - cultures
+                {c.replace("_", "-") for c in descriptions.keys()} - cultures
             ):
                 del descriptions[culture.replace("-", "_")]
 

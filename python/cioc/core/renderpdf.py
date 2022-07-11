@@ -14,8 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
-import six
 import pdfkit
 
 
@@ -24,7 +22,7 @@ def render_to_pdf(request, html, footer_file):
         "wkhtmltopdfpath", r"c:\Program Files (x86)\wkhtmltopdf\bin\wkhtmltopdf.exe"
     )
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdfpath)
-    if isinstance(html, six.binary_type):
+    if isinstance(html, bytes):
         html = html.decode("utf-8")
     return pdfkit.from_string(
         html,

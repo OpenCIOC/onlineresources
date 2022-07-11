@@ -15,13 +15,10 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 import collections
 
 from formencode import Schema, validators, ForEach, All
@@ -32,6 +29,7 @@ from cioc.core import validators as ciocvalidators, constants as const, syslangu
 from cioc.core.i18n import gettext as _
 from cioc.web.cic.viewbase import CicViewBase
 
+log = logging.getLogger(__name__)
 templateprefix = "cioc.web.cic:templates/updatepubs/"
 
 
@@ -108,10 +106,10 @@ class UpdatePubs(CicViewBase):
 
             root = ET.Element("DESCS")
 
-            for culture, data in six.iteritems((form_data["descriptions"] or {})):
+            for culture, data in (form_data["descriptions"] or {}).items():
                 desc = ET.SubElement(root, "DESC")
                 ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                for name, value in six.iteritems(data):
+                for name, value in data.items():
                     if value:
                         ET.SubElement(desc, name).text = value
 
@@ -119,7 +117,7 @@ class UpdatePubs(CicViewBase):
 
             root = ET.Element("HEADINGS")
             for heading in form_data["GHID"] or []:
-                ET.SubElement(root, "GHID").text = six.text_type(heading)
+                ET.SubElement(root, "GHID").text = str(heading)
 
             args.append(ET.tostring(root, encoding="unicode"))
 
@@ -131,16 +129,16 @@ class UpdatePubs(CicViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				DECLARE @ErrMsg as nvarchar(500), 
-				@RC as int, 
-				@BTPBID as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int,
+                @BTPBID as int
 
-				SET @BTPBID = ?
+                SET @BTPBID = ?
 
-				EXECUTE @RC = dbo.sp_CIC_NUMPub_u @BTPBID OUTPUT, ?, ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_CIC_NUMPub_u @BTPBID OUTPUT, ?, ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @BTPBID as BTPBID
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg, @BTPBID as BTPBID
+                """
 
                 cursor = conn.execute(sql, *args)
                 result = cursor.fetchone()
@@ -274,9 +272,7 @@ class UpdatePubs(CicViewBase):
                 errordata.ErrMsg or _("An unknown error occurred.", request)
             )
 
-        linked_headings = set(
-            six.text_type(x.GH_ID) for x in generalheadings if x.SELECTED
-        )
+        linked_headings = {str(x.GH_ID) for x in generalheadings if x.SELECTED}
 
         record_cultures = [
             x
@@ -370,13 +366,13 @@ class UpdatePubs(CicViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500), 
-			@RC as int 
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_CIC_NUMPub_d ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_CIC_NUMPub_d ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             cursor = conn.execute(
                 sql, BTPBID, user.User_ID, request.viewdata.cic.ViewType

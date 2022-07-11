@@ -14,7 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import os
 
 import struct
@@ -26,7 +25,7 @@ class FormatError(Exception):
     pass
 
 
-class jQueryUIIcons(object):
+class jQueryUIIcons:
     def __init__(self, location):
         self.location = location
         self._changed = None

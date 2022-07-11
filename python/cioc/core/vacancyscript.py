@@ -15,21 +15,18 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 from json import dumps
 
 from collections import namedtuple
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 import isodate
 
 from markupsafe import Markup
 from cioc.core.i18n import gettext as _, format_datetime
-import six
-from six.moves import zip
 
 
 _fields = "MODIFIED_DATE MODIFIED_BY VacancyChange VacancyFinal".split()
-_xml_transform = [isodate.parse_datetime, six.text_type, int, int]
+_xml_transform = [isodate.parse_datetime, str, int, int]
 
 ChangesTuple = namedtuple("ChangesTuple", _fields)
 

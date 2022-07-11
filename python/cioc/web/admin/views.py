@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,11 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
 
-log = logging.getLogger(__name__)
 
 import collections
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 from formencode import Schema, validators, ForEach, All
 from pyramid.view import view_config, view_defaults
@@ -33,6 +30,7 @@ from cioc.core.i18n import gettext as _
 from cioc.core.listformat import format_list, format_pub_list
 from cioc.web.admin import viewbase
 
+log = logging.getLogger(__name__)
 templateprefix = "cioc.web.admin:templates/views/"
 
 TopicSearchEditValues = collections.namedtuple(
@@ -41,22 +39,16 @@ TopicSearchEditValues = collections.namedtuple(
 )
 
 CanSeeNonPublicPubOptions = {"A": True, "P": False, "S": None}
-RCanSeeNonPublicPubOptions = dict(
-    (v, k) for k, v in six.iteritems(CanSeeNonPublicPubOptions)
-)
+RCanSeeNonPublicPubOptions = {v: k for k, v in CanSeeNonPublicPubOptions.items()}
 
 SrchCommunityDefaultOptions = {"L": False, "S": True}
-RSrchCommunityDefaultOptions = dict(
-    (v, k) for k, v in six.iteritems(SrchCommunityDefaultOptions)
-)
+RSrchCommunityDefaultOptions = {v: k for k, v in SrchCommunityDefaultOptions.items()}
 
 CCRFieldsOptions = {"P": False, "A": True}
-RCCRFieldsOptions = dict((v, k) for k, v in six.iteritems(CCRFieldsOptions))
+RCCRFieldsOptions = {v: k for k, v in CCRFieldsOptions.items()}
 
 QuickListMatchAllOptions = {"ALL": True, "ANY": False}
-RQuickListMatchAllOptions = dict(
-    (v, k) for k, v in six.iteritems(QuickListMatchAllOptions)
-)
+RQuickListMatchAllOptions = {v: k for k, v in QuickListMatchAllOptions.items()}
 
 
 class QuickListType(validators.Int):
@@ -534,14 +526,14 @@ class View(viewbase.AdminViewBase):
                 root = ET.Element("PubIDs")
                 if view.get("CanSeeNonPublicPub") is None:
                     for pub in form_data["PUB_ID"]:
-                        ET.SubElement(root, "PBID").text = six.text_type(pub)
+                        ET.SubElement(root, "PBID").text = str(pub)
 
                 args.append(ET.tostring(root, encoding="unicode"))
                 argnames.append("Publications")
 
                 root = ET.Element("PubIDs")
                 for pub in form_data["ADDPUB_ID"]:
-                    ET.SubElement(root, "PBID").text = six.text_type(pub)
+                    ET.SubElement(root, "PBID").text = str(pub)
 
                 args.append(ET.tostring(root, encoding="unicode"))
                 argnames.append("AddPublications")
@@ -549,26 +541,26 @@ class View(viewbase.AdminViewBase):
             root = ET.Element("DESCS")
 
             has_label_overrides = form_data.get("HasLabelOverrides")
-            for culture, data in six.iteritems((form_data["descriptions"] or {})):
+            for culture, data in (form_data["descriptions"] or {}).items():
                 desc = ET.SubElement(root, "DESC")
                 ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                for name, value in six.iteritems(data):
+                for name, value in data.items():
                     if not has_label_overrides and name in label_override_fields:
                         continue
                     if value:
-                        ET.SubElement(desc, name).text = six.text_type(value)
+                        ET.SubElement(desc, name).text = str(value)
 
             args.append(ET.tostring(root, encoding="unicode"))
 
             root = ET.Element("VIEWS")
             for view_type in form_data["Views"]:
-                ET.SubElement(root, "VIEW").text = six.text_type(view_type)
+                ET.SubElement(root, "VIEW").text = str(view_type)
 
             args.append(ET.tostring(root, encoding="unicode"))
 
             root = ET.Element("AdvSearchCheckLists")
             for field in form_data["AdvSearchCheckLists"]:
-                ET.SubElement(root, "Chk").text = six.text_type(field)
+                ET.SubElement(root, "Chk").text = str(field)
 
             args.append(ET.tostring(root, encoding="unicode"))
 
@@ -582,13 +574,13 @@ class View(viewbase.AdminViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int
 
-				EXECUTE @RC = dbo.sp_%s_View_u ?, ?, ?, ?, %s, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_{}_View_u ?, ?, ?, ?, {}, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				""" % (
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg
+                """.format(
                     domain.str,
                     argnames,
                 )
@@ -655,7 +647,7 @@ class View(viewbase.AdminViewBase):
 
             cursor.nextset()
 
-            view_cultures = set(x.Culture for x in cursor.fetchall())
+            view_cultures = {x.Culture for x in cursor.fetchall()}
 
             cursor.nextset()
 
@@ -850,7 +842,7 @@ class View(viewbase.AdminViewBase):
 
                 cursor.nextset()
 
-                disp_opt_fields = set(x[0] for x in cursor.fetchall())
+                disp_opt_fields = {x[0] for x in cursor.fetchall()}
 
                 if domain.id == const.DM_CIC:
                     cursor.nextset()
@@ -882,7 +874,7 @@ class View(viewbase.AdminViewBase):
 
             cursor.nextset()
 
-            view_cultures = set(x.Culture for x in cursor.fetchall())
+            view_cultures = {x.Culture for x in cursor.fetchall()}
 
             cursor.nextset()
 
@@ -1080,13 +1072,13 @@ class View(viewbase.AdminViewBase):
         with request.connmgr.get_connection("admin") as conn:
             sql = (
                 """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_%s_View_d ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_%s_View_d ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
                 % domain.str
             )
 
@@ -1159,13 +1151,13 @@ class View(viewbase.AdminViewBase):
         with request.connmgr.get_connection("admin") as conn:
             sql = (
                 """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_%s_View_i_Lang ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_%s_View_i_Lang ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
                 % domain.str
             )
 
@@ -1274,13 +1266,13 @@ class View(viewbase.AdminViewBase):
         with request.connmgr.get_connection("admin") as conn:
             sql = (
                 """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_%s_View_d_Lang ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_%s_View_d_Lang ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
                 % domain.str
             )
 
@@ -1392,26 +1384,26 @@ class View(viewbase.AdminViewBase):
 
             root = ET.Element("DESCS")
 
-            for culture, description in six.iteritems((data["descriptions"] or {})):
+            for culture, description in (data["descriptions"] or {}).items():
                 desc = ET.SubElement(root, "DESC")
                 ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                for name, value in six.iteritems(description):
+                for name, value in description.items():
                     if value:
                         ET.SubElement(desc, name).text = value
 
             args.append(ET.tostring(root, encoding="unicode"))
 
             sql = """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int,
-				@TopicSearchID as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int,
+                @TopicSearchID as int
 
-				SET @TopicSearchID = ?
+                SET @TopicSearchID = ?
 
-				EXEC @RC = dbo.sp_CIC_View_TopicSearch_u @TopicSearchID OUTPUT, ?, ?, ?, @ViewType=?, %s, @Descriptions=?, @ErrMsg=@ErrMsg OUTPUT
+                EXEC @RC = dbo.sp_CIC_View_TopicSearch_u @TopicSearchID OUTPUT, ?, ?, ?, @ViewType=?, %s, @Descriptions=?, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg as ErrMsg, @TopicSearchID as TopicSearchID
-			""" % ", ".join(
+                SELECT @RC as [Return], @ErrMsg as ErrMsg, @TopicSearchID as TopicSearchID
+            """ % ", ".join(
                 "@%s=?" % f for f in fields
             )
 
@@ -1595,13 +1587,13 @@ class View(viewbase.AdminViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_CIC_View_TopicSearch_d ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_CIC_View_TopicSearch_d ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             cursor = conn.execute(
                 sql, TopicSearchID, request.dboptions.MemberID, user.Agency

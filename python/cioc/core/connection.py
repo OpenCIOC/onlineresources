@@ -40,7 +40,7 @@ class SupportsConfigLanguageAndPageinfo(t.Protocol):
     pageinfo: t.Optional["PageInfo"]
 
 
-class ConnectionManager(object):
+class ConnectionManager:
     def __init__(self, request: SupportsConfigLanguageAndPageinfo):
         self.request = request
         self.config = request.config

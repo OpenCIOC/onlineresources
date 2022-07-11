@@ -16,7 +16,6 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 
 from uuid import uuid4
@@ -42,7 +41,7 @@ class AdminUserApiCredsContext(BasicRootFactory):
     def __init__(self, request, *args, **kwargs):
         self.list_page = kwargs.pop("list_page", False)
 
-        super(AdminUserApiCredsContext, self).__init__(request, *args, **kwargs)
+        super().__init__(request, *args, **kwargs)
         self.request = request
 
         if request.user.CanManageUsers:
@@ -79,9 +78,9 @@ class AdminUserApiCredsContext(BasicRootFactory):
             return
 
         sql = """
-			DECLARE @MemberID int = ?, @AgencyCode char(3) = ?, @User_ID int = ?
-			EXEC sp_GBL_Users_s_APICreds @MemberID, @AgencyCode, @User_ID
-			"""
+            DECLARE @MemberID int = ?, @AgencyCode char(3) = ?, @User_ID int = ?
+            EXEC sp_GBL_Users_s_APICreds @MemberID, @AgencyCode, @User_ID
+            """
         if self.list_page:
             sql += "EXEC sp_GBL_Users_APICreds_l @MemberID, @AgencyCode, @User_ID"
 
@@ -151,10 +150,10 @@ class AdminUserApiCredsView(AdminViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-				DECLARE @RC int, @ErrMsg nvarchar(500)
-				EXEC @RC = sp_GBL_Users_APICreds_i ?, ?, ?, ?,?, ?, ?, ?, ?, @ErrMsg OUTPUT
-				SELECT @RC AS [Return], @ErrMsg AS ErrMsg
-			"""
+                DECLARE @RC int, @ErrMsg nvarchar(500)
+                EXEC @RC = sp_GBL_Users_APICreds_i ?, ?, ?, ?,?, ?, ?, ?, ?, @ErrMsg OUTPUT
+                SELECT @RC AS [Return], @ErrMsg AS ErrMsg
+            """
 
             result = conn.execute(
                 sql,
@@ -227,13 +226,13 @@ class AdminUserApiCredsView(AdminViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_GBL_Users_APICreds_d ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_GBL_Users_APICreds_d ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             result = conn.execute(
                 sql,

@@ -1,11 +1,10 @@
-from __future__ import absolute_import
 import os
 import argparse
 import shutil
 import subprocess
 
 site_root = os.path.abspath(
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+    os.path.join(os.path.dirname(__file__), "..")
 )
 
 
@@ -125,7 +124,7 @@ def main():
                 "config",
                 args.site_name,
                 "-section:system.webServer/rewrite/allowedServerVariables",
-                "/+[name='{}']".format(header),
+                f"/+[name='{header}']",
                 "/commit:apphost",
             ]
         )

@@ -17,11 +17,10 @@
 </%doc>
 
 <%inherit file="cioc.web:templates/master.mak" />
-<%! 
+<%!
 from cioc.core import constants as const
-import six
 %>
-<p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> | 
+<p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> |
 	<a href="${request.passvars.makeLink('~/admin/thesaurus.asp')}">${_('Return to Manage Thesaurus')}</a> ]</p>
 
 <p class="HideJs Alert">
@@ -39,13 +38,13 @@ ${request.passvars.cached_form_vals|n}
 	<th class="RevTitleBox">${_('Name')} <span class="Alert">*</span></th>
 </tr>
 
-<% 
+<%
 	language_options = (culture_map[culture] for culture in active_cultures)
 	language_options = [(x.LangID, x.LanguageName) for x in language_options]
 %>
 %for index, source in enumerate(sources):
-<% 
-	prefix = 'source-' + str(index) + '.' 
+<%
+	prefix = 'source-' + str(index) + '.'
 	if isinstance(source, dict):
 		sourceid = source.get('SRC_ID')
 	else:
@@ -58,7 +57,7 @@ ${request.passvars.cached_form_vals|n}
 <tr>
 	<td colspan="3">
 	<button id="add-row">${_('Add New Item')}</button>
-	<input type="submit" name="Submit" value="${_('Submit Changes')}"> 
+	<input type="submit" name="Submit" value="${_('Submit Changes')}">
 	<input type="reset" value="${_('Reset Form')}"></td>
 </tr>
 </table>
@@ -94,7 +93,7 @@ jQuery(function($) {
 	<% args = [True] if itemid == 'NEW' else [] %>
 	<td>
 		${renderer.hidden(prefix + 'SRC_ID', itemid)}
-	%if not usage.get(six.text_type(itemid)):
+	%if not usage.get(str(itemid)):
 		${renderer.checkbox(prefix + 'delete')}
 	%endif
 	</td>
@@ -113,4 +112,3 @@ jQuery(function($) {
 	</table></td>
 </tr>
 </%def>
-

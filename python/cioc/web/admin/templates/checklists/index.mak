@@ -18,12 +18,11 @@
 
 <%inherit file="cioc.web:templates/master.mak" />
 <%namespace file="cioc.web.admin:templates/shown_cultures.mak" name="sc" />
-<%! 
+<%!
 from markupsafe import Markup
-import six
 %>
-<% 
-makeLink = request.passvars.makeLink 
+<%
+makeLink = request.passvars.makeLink
 PrintMode = request.viewdata.PrintMode
 HeaderClass = '' if PrintMode else Markup('class="RevTitleBox"')
 MissingLangClass = 'AlertBorder' if chk_type.HighlightMissingLang else ''
@@ -50,7 +49,7 @@ else:
 
 
 %if not PrintMode:
-<p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> 
+<p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a>
 %if not SuperUserGlobal:
 | <a href="${request.passvars.route_path('admin_notices', action='new', _query=[('AreaCode', chk_type.AdminAreaCode)])}">${_('Request Change')}</a>
 %endif
@@ -84,8 +83,8 @@ ${make_table_header()}
 
 <% index = -1 %>
 %for index, chkitem in enumerate(chkitems):
-<% 
-	prefix = 'chkitem-' + str(index) + '.' 
+<%
+	prefix = 'chkitem-' + str(index) + '.'
 	if isinstance(chkitem, dict):
 		chkid = chkitem.get(chk_type.ID)
 	else:
@@ -100,11 +99,11 @@ ${make_row(prefix, chkitem, chkid)}
 <tr>
 	<% colspan = (len(record_cultures) * (1+ len(chk_type.ExtraNameFields or []))) + bool(chk_type.CodeTitle) + (bool(chkusage and (chk_type.SearchLink or chk_type.SearchLink2)) * 2) + bool(chk_type.DisplayOrder) + len(chk_type.ExtraFields or []) + 1 + (2 * int(chk_type.Shared != 'full')) + (3 * int(chk_type.Shared != 'full' and SuperUserGlobal)) + bool(chk_type.SearchParameter and request.params.get('SearchPareterKey')) %>
 	<td colspan="${colspan}">
-	<input type="submit" name="Submit" value="${_('Update "Hide" State')}"> 
+	<input type="submit" name="Submit" value="${_('Update "Hide" State')}">
 	<input type="reset" value="${_('Reset Form')}">
 
 %if SuperUserGlobal:
-<button onclick="window.location.href='${request.passvars.route_path('admin_checklists_shared', _query=[('chk', chk_type.FieldCode)])}'; return false;">${_('Add / Edit All Shared Values')}</button> 
+<button onclick="window.location.href='${request.passvars.route_path('admin_checklists_shared', _query=[('chk', chk_type.FieldCode)])}'; return false;">${_('Add / Edit All Shared Values')}</button>
 %endif
 <button onclick="window.location.href='${request.passvars.route_path('admin_checklists_local', _query=[('chk', chk_type.FieldCode)])}'; return false;">${_('Add / Edit All Local Values')}</button>
 	</td>
@@ -139,14 +138,14 @@ ${sc.shown_cultures_js()}
 %endfor
 
 	%if chk_type.CodeTitle:
-		<td> 
+		<td>
 		${row_title.append(getattr(chkitem,chk_type.CodeField))}
 		${getattr(chkitem,chk_type.CodeField)}
 		</td>
 	%endif
 
 	%for i,culture in enumerate(record_cultures):
-	<% 
+	<%
 		lang = culture_map[culture]
 		name = chkitem.Descriptions.get(lang.FormCulture, {}).get('Name')
 		row_title.append(name)
@@ -214,32 +213,32 @@ if _context.OtherMembersActive:
 	types.append('Other')
 %>
 %for which in types:
-	<% 
-		usage = chkusage.get(six.text_type(getattr(chkitem, chk_type.ID)))
+	<%
+		usage = chkusage.get(str(getattr(chkitem, chk_type.ID)))
 		usage1 = getattr(usage, 'Usage1' + which, None)
 		usage2 = getattr(usage, 'Usage2' + which, None)
 	%>
 	<td>
 	%if usage1:
-	${'' if not chk_type.SearchLinkTitle else _(chk_type.SearchLinkTitle)} 
+	${'' if not chk_type.SearchLinkTitle else _(chk_type.SearchLinkTitle)}
 		%if which == 'Local' and not PrintMode:
 		<a href="${makeLink(*chk_type.SearchLink).replace('IDIDID', str(itemid))}"><img src="${request.static_url('cioc:images/zoom.gif')}" width="17" height="14" border="0" title="${_('Usage: %d') % usage1}"></a>
 		%else:
 		${usage1}
 		%endif
-	
+
 	%endif
 	%if usage1 and usage2:
 	<br>
 	%endif
 	%if usage2:
-	${'' if not chk_type.SearchLinkTitle2 else _(chk_type.SearchLinkTitle2)} 
+	${'' if not chk_type.SearchLinkTitle2 else _(chk_type.SearchLinkTitle2)}
 		%if which == 'Local' and not PrintMode:
 		<a href="${makeLink(*chk_type.SearchLink2).replace('IDIDID', str(itemid))}"><img src="${request.static_url('cioc:images/zoom.gif')}" width="17" height="14" border="0" title="${_('Usage: %d') % usage2}"></a>
 		%else:
 		${usage2}
 		%endif
-	
+
 	%endif
 	</td>
 %endfor
@@ -299,7 +298,7 @@ if _context.OtherMembersActive:
 	%if chk_type.CodeTitle:
 		<th ${HeaderClass}>${_(chk_type.CodeTitle)}</th>
 	%endif
-	
+
 %for culture in record_cultures:
 <% lang = culture_map[culture] %>
 	<th ${'' if PrintMode else sc.shown_cultures_attrs(culture, "RevTitleBox")}>${_('Display')} (${lang.LanguageName})</th>

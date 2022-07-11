@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
 
 # 3rd party
@@ -136,15 +135,15 @@ class DataFeedApiKeyView(viewbase.AdminViewBase):
             with request.connmgr.get_connection("admin") as conn:
                 sql = (
                     """
-				DECLARE @ErrMsg as nvarchar(500),
-					@RC as int,
-					@FeedAPIKey uniqueidentifier
-				SET @FeedAPIKey = ?
+                DECLARE @ErrMsg as nvarchar(500),
+                    @RC as int,
+                    @FeedAPIKey uniqueidentifier
+                SET @FeedAPIKey = ?
 
-				EXECUTE @RC = dbo.sp_GBL_FeedAPIKey_%s, ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_GBL_FeedAPIKey_%s, ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @FeedAPIKey AS FeedAPIKey
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg, @FeedAPIKey AS FeedAPIKey
+                """
                     % sql_method
                 )
                 result = conn.execute(sql, args).fetchone()
@@ -199,13 +198,13 @@ class DataFeedApiKeyView(viewbase.AdminViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_GBL_FeedAPIKey_u_Inactive ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_GBL_FeedAPIKey_u_Inactive ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
             result = conn.execute(
                 sql, FeedAPIKey, request.MemberID, inactivate
             ).fetchone()
@@ -255,13 +254,13 @@ class DataFeedApiKeyView(viewbase.AdminViewBase):
             with request.connmgr.get_connection("admin") as conn:
 
                 sql = """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int
 
-				EXECUTE @RC = dbo.sp_GBL_FeedAPIKey_s ?, ?, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_GBL_FeedAPIKey_s ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg
+                """
 
                 cursor = conn.execute(sql, FeedAPIKey, request.MemberID)
 

@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import codecs
 
 from pyramid.response import Response
@@ -255,109 +254,109 @@ def _vendor_address_update(conn, action, rsn, user_name):
 # SQL Strings below here
 
 _sql_prefix = """
-	DECLARE @NUM varchar(8),
-			@RSN int,
-			@MODIFIED_BY varchar(200),
-			@MODIFIED_DATE datetime;
-			SET @RSN = ?;
-			SET @MODIFIED_BY = ?
-			SET @MODIFIED_DATE = GETDATE();
-			SELECT @NUM=NUM FROM GBL_BaseTable WHERE RSN=@RSN;
-			"""
+    DECLARE @NUM varchar(8),
+            @RSN int,
+            @MODIFIED_BY varchar(200),
+            @MODIFIED_DATE datetime;
+            SET @RSN = ?;
+            SET @MODIFIED_BY = ?
+            SET @MODIFIED_DATE = GETDATE();
+            SELECT @NUM=NUM FROM GBL_BaseTable WHERE RSN=@RSN;
+            """
 _sql_validate = (
     _sql_prefix
     + """
-			DECLARE @BADDR_ID int;
-			SET @BADDR_ID = ?
-			IF @BADDR_ID IS NOT NULL BEGIN
-				SELECT HAS_RECORD=CAST(CASE WHEN EXISTS(SELECT * FROM GBL_BT_BILLINGADDRESS WHERE NUM=@NUM AND BADDR_ID=@BADDR_ID) THEN 1 ELSE 0 END AS bit)
-			END ELSE BEGIN
-				SELECT HAS_RECORD=CAST(CASE WHEN @NUM IS NOT NULL THEN 1 ELSE 0 END as bit)
-			END"""
+            DECLARE @BADDR_ID int;
+            SET @BADDR_ID = ?
+            IF @BADDR_ID IS NOT NULL BEGIN
+                SELECT HAS_RECORD=CAST(CASE WHEN EXISTS(SELECT * FROM GBL_BT_BILLINGADDRESS WHERE NUM=@NUM AND BADDR_ID=@BADDR_ID) THEN 1 ELSE 0 END AS bit)
+            END ELSE BEGIN
+                SELECT HAS_RECORD=CAST(CASE WHEN @NUM IS NOT NULL THEN 1 ELSE 0 END as bit)
+            END"""
 )
 
 
 _sql_vendor_match = (
     _sql_prefix
     + """
-			DECLARE @Value smalldatetime;
-			SET @Value = ?
-			IF NOT EXISTS(SELECT * FROM CIC_BT_EXTRA_DATE WHERE FieldName='EXTRA_DATE_B' AND NUM=@NUM) BEGIN
-				INSERT INTO CIC_BT_EXTRA_DATE (FieldName, NUM, Value) VALUES ('EXTRA_DATE_B', @NUM, @Value)
-			END ELSE BEGIN
-				UPDATE CIC_BT_EXTRA_DATE SET Value=@Value WHERE FieldName='EXTRA_DATE_B' AND NUM=@NUM
-			END
-			UPDATE CIC_BaseTable SET MODIFIED_BY=@MODIFIED_BY,MODIFIED_DATE=@MODIFIED_DATE WHERE NUM=@NUM
-			EXEC sp_GBL_BaseTable_History_i @MODIFIED_BY, @MODIFIED_DATE, @NUM, 'EXTRA_DATE_B', 1, 0"""
+            DECLARE @Value smalldatetime;
+            SET @Value = ?
+            IF NOT EXISTS(SELECT * FROM CIC_BT_EXTRA_DATE WHERE FieldName='EXTRA_DATE_B' AND NUM=@NUM) BEGIN
+                INSERT INTO CIC_BT_EXTRA_DATE (FieldName, NUM, Value) VALUES ('EXTRA_DATE_B', @NUM, @Value)
+            END ELSE BEGIN
+                UPDATE CIC_BT_EXTRA_DATE SET Value=@Value WHERE FieldName='EXTRA_DATE_B' AND NUM=@NUM
+            END
+            UPDATE CIC_BaseTable SET MODIFIED_BY=@MODIFIED_BY,MODIFIED_DATE=@MODIFIED_DATE WHERE NUM=@NUM
+            EXEC sp_GBL_BaseTable_History_i @MODIFIED_BY, @MODIFIED_DATE, @NUM, 'EXTRA_DATE_B', 1, 0"""
 )
 
 _sql_vendor_address_match = (
     _sql_prefix
     + """
-			DECLARE @BADDR_ID int
-			DECLARE @Value smalldatetime;
-			SET @BADDR_ID = ?
-			SET @Value = ?
-			UPDATE GBL_BT_BILLINGADDRESS SET CAS_CONFIRMATION_DATE=@Value WHERE NUM=@NUM AND BADDR_ID=@BADDR_ID
-			UPDATE GBL_BaseTable_Description SET MODIFIED_BY=@MODIFIED_BY,MODIFIED_DATE=@MODIFIED_DATE WHERE NUM=@NUM AND LangID=0
-			EXEC sp_GBL_BaseTable_History_i @MODIFIED_BY, @MODIFIED_DATE, @NUM, 'BILLING_ADDRESSES', 1, 0"""
+            DECLARE @BADDR_ID int
+            DECLARE @Value smalldatetime;
+            SET @BADDR_ID = ?
+            SET @Value = ?
+            UPDATE GBL_BT_BILLINGADDRESS SET CAS_CONFIRMATION_DATE=@Value WHERE NUM=@NUM AND BADDR_ID=@BADDR_ID
+            UPDATE GBL_BaseTable_Description SET MODIFIED_BY=@MODIFIED_BY,MODIFIED_DATE=@MODIFIED_DATE WHERE NUM=@NUM AND LangID=0
+            EXEC sp_GBL_BaseTable_History_i @MODIFIED_BY, @MODIFIED_DATE, @NUM, 'BILLING_ADDRESSES', 1, 0"""
 )
 
 _sql_vendor_name_update = (
     _sql_prefix
     + """
-			DECLARE @Value nvarchar(200);
-			SET @Value = ?
-			DECLARE @OldOrgLevel1 varchar(200); SELECT @OldOrgLevel1=ORG_LEVEL_1 FROM GBL_BaseTable_Description WHERE NUM=@NUM AND LangID=0
-			DECLARE @OLD_NUMS TABLE(NUM varchar(8));
-			INSERT INTO @OLD_NUMS (NUM)
-				SELECT NUM FROM GBL_BaseTable_Description btd
-				WHERE ORG_LEVEL_1=@OldOrgLevel1
-				AND EXISTS(SELECT * FROM CIC_BaseTable cbt INNER JOIN CIC_RecordType rt ON cbt.RECORD_TYPE = rt.RT_ID AND rt.RecordType='L' AND btd.NUM=cbt.NUM)
-			UPDATE GBL_BaseTable_Description SET ORG_LEVEL_1=@Value,MODIFIED_BY=@MODIFIED_BY,MODIFIED_DATE=@MODIFIED_DATE WHERE NUM=@NUM AND LangID=0
-			UPDATE GBL_BaseTable_Description SET ORG_LEVEL_1=@Value,MODIFIED_BY=@MODIFIED_BY,MODIFIED_DATE=@MODIFIED_DATE WHERE EXISTS(SELECT * FROM @OLD_NUMS old WHERE GBL_BaseTable_Description.NUM=old.NUM)
-			EXEC sp_GBL_BaseTable_History_i @MODIFIED_BY, @MODIFIED_DATE, @NUM, 'ORG_LEEL_1', 1, 0
-			DECLARE @UPD_NUM varchar(8); DECLARE cur CURSOR LOCAL FOR SELECT NUM FROM @OLD_NUMS;
-			OPEN cur; fetch next from cur into @UPD_NUM; WHILE @@FETCH_STATUS=0 BEGIN;
-				EXEC sp_GBL_BaseTable_History_i @MODIFIED_BY, @MODIFIED_DATE, @UPD_NUM, 'ORG_LEVEL_1', 1, 0;
-				fetch next from cur into @UPD_NUM
-			END\n CLOSE cur\n deallocate cur;
-			"""
+            DECLARE @Value nvarchar(200);
+            SET @Value = ?
+            DECLARE @OldOrgLevel1 varchar(200); SELECT @OldOrgLevel1=ORG_LEVEL_1 FROM GBL_BaseTable_Description WHERE NUM=@NUM AND LangID=0
+            DECLARE @OLD_NUMS TABLE(NUM varchar(8));
+            INSERT INTO @OLD_NUMS (NUM)
+                SELECT NUM FROM GBL_BaseTable_Description btd
+                WHERE ORG_LEVEL_1=@OldOrgLevel1
+                AND EXISTS(SELECT * FROM CIC_BaseTable cbt INNER JOIN CIC_RecordType rt ON cbt.RECORD_TYPE = rt.RT_ID AND rt.RecordType='L' AND btd.NUM=cbt.NUM)
+            UPDATE GBL_BaseTable_Description SET ORG_LEVEL_1=@Value,MODIFIED_BY=@MODIFIED_BY,MODIFIED_DATE=@MODIFIED_DATE WHERE NUM=@NUM AND LangID=0
+            UPDATE GBL_BaseTable_Description SET ORG_LEVEL_1=@Value,MODIFIED_BY=@MODIFIED_BY,MODIFIED_DATE=@MODIFIED_DATE WHERE EXISTS(SELECT * FROM @OLD_NUMS old WHERE GBL_BaseTable_Description.NUM=old.NUM)
+            EXEC sp_GBL_BaseTable_History_i @MODIFIED_BY, @MODIFIED_DATE, @NUM, 'ORG_LEEL_1', 1, 0
+            DECLARE @UPD_NUM varchar(8); DECLARE cur CURSOR LOCAL FOR SELECT NUM FROM @OLD_NUMS;
+            OPEN cur; fetch next from cur into @UPD_NUM; WHILE @@FETCH_STATUS=0 BEGIN;
+                EXEC sp_GBL_BaseTable_History_i @MODIFIED_BY, @MODIFIED_DATE, @UPD_NUM, 'ORG_LEVEL_1', 1, 0;
+                fetch next from cur into @UPD_NUM
+            END\n CLOSE cur\n deallocate cur;
+            """
 )
 
 _sql_vendor_address_update = (
     _sql_prefix
     + """
-			DECLARE @BADDR_ID int,
-					@Line1 nvarchar(200),
-					@Line2 nvarchar(200),
-					@Line3 nvarchar(200),
-					@Line4 nvarchar(200),
-					@City nvarchar(100),
-					@Province varchar(2),
-					@Country nvarchar(60),
-					@PostalCode varchar(20)
-			SET @BADDR_ID = ?
-			SET @Line1 = ?
-			SET @Line2 = ?
-			SET @Line3 = ?
-			SET @Line4 = ?
-			SET @City = ?
-			SET @Province = ?
-			SET @Country = ?
-			SET @PostalCode = ?
+            DECLARE @BADDR_ID int,
+                    @Line1 nvarchar(200),
+                    @Line2 nvarchar(200),
+                    @Line3 nvarchar(200),
+                    @Line4 nvarchar(200),
+                    @City nvarchar(100),
+                    @Province varchar(2),
+                    @Country nvarchar(60),
+                    @PostalCode varchar(20)
+            SET @BADDR_ID = ?
+            SET @Line1 = ?
+            SET @Line2 = ?
+            SET @Line3 = ?
+            SET @Line4 = ?
+            SET @City = ?
+            SET @Province = ?
+            SET @Country = ?
+            SET @PostalCode = ?
 
-			UPDATE GBL_BT_BILLINGADDRESS SET
-				LINE_1=@Line1,
-				LINE_2=@Line2,
-				LINE_3=@Line3,
-				LINE_4=@Line4,
-				CITY=@City,
-				PROVINCE=@Province,
-				COUNTRY=@Country,
-				POSTAL_CODE=@PostalCode
-			WHERE NUM=@NUM AND BADDR_ID=@BADDR_ID
-			UPDATE GBL_BaseTable_Description SET MODIFIED_BY=@MODIFIED_BY,MODIFIED_DATE=@MODIFIED_DATE WHERE NUM=@NUM AND LangID=0
-			EXEC sp_GBL_BaseTable_History_i @MODIFIED_BY, @MODIFIED_DATE, @NUM, 'BILLING_ADDRESSES', 1, 0
-			"""
+            UPDATE GBL_BT_BILLINGADDRESS SET
+                LINE_1=@Line1,
+                LINE_2=@Line2,
+                LINE_3=@Line3,
+                LINE_4=@Line4,
+                CITY=@City,
+                PROVINCE=@Province,
+                COUNTRY=@Country,
+                POSTAL_CODE=@PostalCode
+            WHERE NUM=@NUM AND BADDR_ID=@BADDR_ID
+            UPDATE GBL_BaseTable_Description SET MODIFIED_BY=@MODIFIED_BY,MODIFIED_DATE=@MODIFIED_DATE WHERE NUM=@NUM AND LangID=0
+            EXEC sp_GBL_BaseTable_History_i @MODIFIED_BY, @MODIFIED_DATE, @NUM, 'BILLING_ADDRESSES', 1, 0
+            """
 )

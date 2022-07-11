@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
 
 from pyramid.decorator import reify
@@ -72,7 +71,7 @@ non_bool_view_values = {
 }
 
 
-class ViewType(object):
+class ViewType:
     def __init__(self, view, cultures, request):
         self.view = view
         self.request = request
@@ -111,7 +110,7 @@ class ViewType(object):
     __bool__ = __nonzero__
 
 
-class ViewData(object):
+class ViewData:
     def __init__(self, request):
         self.request = request
 
@@ -143,9 +142,9 @@ class ViewData(object):
         with request.connmgr.get_connection() as conn:
             cursor = conn.execute(
                 """
-						DECLARE @RC int, @ErrMsg nvarchar(500)
-						EXEC @RC = dbo.sp_GBL_Users_s_View ?,?,?,?,?,?,?,?, @ErrMsg=@ErrMsg OUTPUT
-						""",
+                        DECLARE @RC int, @ErrMsg nvarchar(500)
+                        EXEC @RC = dbo.sp_GBL_Users_s_View ?,?,?,?,?,?,?,?, @ErrMsg=@ErrMsg OUTPUT
+                        """,
                 request.dboptions.MemberID,
                 request.user.User_ID,
                 request.pageinfo.ThisPageFull,
@@ -418,6 +417,6 @@ def _get_view_type(cursor, request):
 
     cursor.nextset()
 
-    cultures = dict((x.Culture, x.LanguageName) for x in cursor)
+    cultures = {x.Culture: x.LanguageName for x in cursor}
 
     return ViewType(view, cultures, request)

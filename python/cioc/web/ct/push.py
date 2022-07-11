@@ -15,17 +15,13 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
-from six.moves import range
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 # import elementtree.ElementTree as ET
-from six import BytesIO as StringIO
+from io import BytesIO as StringIO
 
 from pyramid.view import view_config
 import requests
@@ -35,6 +31,8 @@ from cioc.core.i18n import gettext as _
 from cioc.core.clienttracker import has_been_launched
 from cioc.web.cic import viewbase
 from cioc.core import validators as ciocvalidators
+
+log = logging.getLogger(__name__)
 
 
 class InRequest(viewbase.CicViewBase):
@@ -86,7 +84,7 @@ class InRequest(viewbase.CicViewBase):
 
         if remove:
             domain = remove
-        elif isinstance(idstring, six.string_types):
+        elif isinstance(idstring, str):
             domain = "CIC"
             idstring = idstring.upper()
         else:
@@ -96,11 +94,11 @@ class InRequest(viewbase.CicViewBase):
             root = ET.Element(
                 "pushResourceRemove", xmlns="http://clienttracker.cioc.ca/schema/"
             )
-            ET.SubElement(root, "login").text = six.text_type(login)
-            ET.SubElement(root, "key").text = six.text_type(key)
-            ET.SubElement(root, "ctid").text = six.text_type(ctid)
+            ET.SubElement(root, "login").text = str(login)
+            ET.SubElement(root, "key").text = str(key)
+            ET.SubElement(root, "ctid").text = str(ctid)
             resource_item = ET.SubElement(root, "resourceItem")
-            ET.SubElement(resource_item, "id").text = six.text_type(idstring)
+            ET.SubElement(resource_item, "id").text = str(idstring)
         else:
             idfield = "NUM"
             sql = [
@@ -142,19 +140,17 @@ class InRequest(viewbase.CicViewBase):
             )
 
             if domain == "VOL":
-                org_name = "%s (%s)" % (record.POSITION_TITLE, org_name)
+                org_name = f"{record.POSITION_TITLE} ({org_name})"
 
             root = ET.Element(
                 "pushResource", xmlns="http://clienttracker.cioc.ca/schema/"
             )
-            ET.SubElement(root, "login").text = six.text_type(login)
-            ET.SubElement(root, "key").text = six.text_type(key)
-            ET.SubElement(root, "ctid").text = six.text_type(ctid)
+            ET.SubElement(root, "login").text = str(login)
+            ET.SubElement(root, "key").text = str(key)
+            ET.SubElement(root, "ctid").text = str(ctid)
             resource_item = ET.SubElement(root, "resourceItem")
-            ET.SubElement(resource_item, "id").text = six.text_type(
-                getattr(record, idfield)
-            )
-            ET.SubElement(resource_item, "name").text = six.text_type(org_name)
+            ET.SubElement(resource_item, "id").text = str(getattr(record, idfield))
+            ET.SubElement(resource_item, "name").text = str(org_name)
 
             pfs = request.passvars.path_from_start
             request.passvars.path_from_start = "/"
@@ -170,7 +166,7 @@ class InRequest(viewbase.CicViewBase):
 
             request.passvars.path_from_start = pfs
 
-            ET.SubElement(resource_item, "url").text = six.text_type(url)
+            ET.SubElement(resource_item, "url").text = str(url)
 
         fd = StringIO()
         ET.ElementTree(root).write(fd, "utf-8", True)

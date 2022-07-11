@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,6 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 
 # 3rd party
@@ -38,15 +37,13 @@ def make_icon_html(icon_type, icon_name, no_blanks=False, extra_class=""):
         icon_type, icon_name = icon_name.split("-", 1)
 
     if icon_type == "fa":
-        icon_html = Markup('<i class="fa fa-%s %s"></i>' % (icon_name, extra_class))
+        icon_html = Markup(f'<i class="fa fa-{icon_name} {extra_class}"></i>')
     elif icon_type == "glyphicon":
         icon_html = Markup(
-            '<span class="glyphicon glyphicon-%s %s"></span>' % (icon_name, extra_class)
+            f'<span class="glyphicon glyphicon-{icon_name} {extra_class}"></span>'
         )
     elif icon_type == "icon":
-        icon_html = Markup(
-            '<span class="fa icon-%s %s"></span>' % (icon_name, extra_class)
-        )
+        icon_html = Markup(f'<span class="fa icon-{icon_name} {extra_class}"></span>')
     elif no_blanks:
         icon_html = "?"
     else:
@@ -58,7 +55,7 @@ def make_icon_html(icon_type, icon_name, no_blanks=False, extra_class=""):
 @view_defaults(route_name="gbl_iconlist", renderer=templateprefix + "iconlist.mak")
 class IconlistView(ViewBase):
     def __init__(self, request, require_login=True):
-        super(IconlistView, self).__init__(request, require_login)
+        super().__init__(request, require_login)
 
     @view_config()
     def get(self):
@@ -67,8 +64,8 @@ class IconlistView(ViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			EXEC sp_STP_Icon_ls NULL, NULL
-			"""
+            EXEC sp_STP_Icon_ls NULL, NULL
+            """
             cursor = conn.execute(sql)
 
             icons = cursor.fetchall()

@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,10 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
-from six.moves import range
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 from itertools import groupby
 from operator import attrgetter, itemgetter
 
@@ -38,6 +34,8 @@ from cioc.core import validators as ciocvalidators, constants as const
 
 from cioc.core.i18n import gettext as _
 from cioc.web.admin.viewbase import AdminViewBase
+
+log = logging.getLogger(__name__)
 
 templateprefix = "cioc.web.admin:templates/template/"
 
@@ -150,9 +148,7 @@ class TemplateBaseSchema(Schema):
     # NOTE some field validators added dynamically below
 
 
-all_fields = (
-    tuple(six.iterkeys(TemplateBaseSchema.fields)) + colour_fields + link_fields
-)
+all_fields = tuple(TemplateBaseSchema.fields.keys()) + colour_fields + link_fields
 
 for field in colour_fields:
     TemplateBaseSchema.add_field(field, ciocvalidators.HexColourValidator())
@@ -384,18 +380,18 @@ class Template(AdminViewBase):
 
             root = ET.Element("DESCS")
 
-            for culture, data in six.iteritems(model_state.form.data["descriptions"]):
+            for culture, data in model_state.form.data["descriptions"].items():
                 desc = ET.SubElement(root, "DESC")
                 ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                for name, value in six.iteritems(data):
+                for name, value in data.items():
                     if value:
-                        ET.SubElement(desc, name).text = six.text_type(value)
+                        ET.SubElement(desc, name).text = str(value)
 
             args.append(ET.tostring(root, encoding="unicode"))
 
             root = ET.Element("MENUS")
-            for menu_type, data in six.iteritems(model_state.form.data["menus"]):
-                for culture, menu_item_list in six.iteritems(data):
+            for menu_type, data in model_state.form.data["menus"].items():
+                for culture, menu_item_list in data.items():
                     for i, menu_item in enumerate(menu_item_list):
                         if menu_item.get("delete") or (
                             not menu_item.get("Link") and not menu_item.get("Display")
@@ -406,28 +402,28 @@ class Template(AdminViewBase):
                         menu = ET.SubElement(root, "MENU")
                         ET.SubElement(menu, "Culture").text = culture.replace("_", "-")
                         ET.SubElement(menu, "MenuType").text = menu_type
-                        ET.SubElement(menu, "DisplayOrder").text = six.text_type(i)
-                        for name, value in six.iteritems(menu_item):
+                        ET.SubElement(menu, "DisplayOrder").text = str(i)
+                        for name, value in menu_item.items():
                             if name == "MenuID" and value == "NEW":
                                 continue
 
                             if value:
-                                ET.SubElement(menu, name).text = six.text_type(value)
+                                ET.SubElement(menu, name).text = str(value)
 
             args.append(ET.tostring(root, encoding="unicode"))
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int,
-				@TemplateID as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int,
+                @TemplateID as int
 
-				SET @TemplateID = ?
+                SET @TemplateID = ?
 
-				EXECUTE @RC = dbo.sp_GBL_Template_u @TemplateID OUTPUT, ?, ?, ?, ?, ?, %s, @Descriptions=?, @MenuItems=?, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_GBL_Template_u @TemplateID OUTPUT, ?, ?, ?, ?, ?, %s, @Descriptions=?, @MenuItems=?, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @TemplateID as TemplateID
-				""" % (
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg, @TemplateID as TemplateID
+                """ % (
                     kwargs
                 )
 
@@ -591,11 +587,11 @@ class Template(AdminViewBase):
         if is_add:
             if template:
                 template.SystemTemplate = False
-            for desc in six.itervalues(template_descriptions):
+            for desc in template_descriptions.values():
                 desc.Name = None
 
-            for menu_group in six.itervalues(menus):
-                for menu_lang in six.itervalues(menu_group):
+            for menu_group in menus.values():
+                for menu_lang in menu_group.values():
                     for menu_item in menu_lang:
                         menu_item["MenuID"] = "NEW"
         else:
@@ -626,7 +622,7 @@ class Template(AdminViewBase):
         views = []
 
         xml = ET.fromstring(related_views.encode("utf8"))
-        MemberID = six.text_type(self.request.dboptions.MemberID)
+        MemberID = str(self.request.dboptions.MemberID)
         for view in xml.findall("./VIEW"):
             attrib = view.attrib
             if (
@@ -739,13 +735,13 @@ class Template(AdminViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_GBL_Template_d ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_GBL_Template_d ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             cursor = conn.execute(
                 sql, TemplateID, request.dboptions.MemberID, user.Agency

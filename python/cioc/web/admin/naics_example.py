@@ -15,13 +15,10 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 # import elementtree.ElementTree as ET
 
@@ -35,6 +32,7 @@ from cioc.core import validators as ciocvalidators
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 
+log = logging.getLogger(__name__)
 templateprefix = "cioc.web.admin:templates/naics/"
 
 EditValues = collections.namedtuple("EditValues", "Code codeinfo examples")
@@ -124,27 +122,27 @@ class NaicsExample(viewbase.AdminViewBase):
                     continue
 
                 example_el = ET.SubElement(root, "Example")
-                ET.SubElement(example_el, "CNT").text = six.text_type(i)
+                ET.SubElement(example_el, "CNT").text = str(i)
 
-                for key, value in six.iteritems(example):
+                for key, value in example.items():
                     if key == "Example_ID" and value == "NEW":
                         value = -1
 
                     if value is not None:
-                        ET.SubElement(example_el, key).text = six.text_type(value)
+                        ET.SubElement(example_el, key).text = str(value)
 
             args = [Code, user.Mod, ET.tostring(root, encoding="unicode")]
 
             # raise Exception
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				DECLARE @ErrMsg as nvarchar(500), 
-				@RC as int 
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int
 
-				EXECUTE @RC = dbo.sp_NAICS_Example_u ?, ?, ?, @ErrMsg OUTPUT  
+                EXECUTE @RC = dbo.sp_NAICS_Example_u ?, ?, ?, @ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg
+                """
 
                 cursor = conn.execute(sql, *args)
                 result = cursor.fetchone()

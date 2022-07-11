@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 from operator import attrgetter
 
 
@@ -28,7 +27,7 @@ def format_list(items, formatter=None, id_key=None, label_key=None):
     return [formatter(item) for item in items]
 
 
-class PubItemFormatter(object):
+class PubItemFormatter:
     def __init__(self, flag_non_public=False, pub_names_only=False):
         self.flag_non_public = flag_non_public
         self.pub_names_only = pub_names_only

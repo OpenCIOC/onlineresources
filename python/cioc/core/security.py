@@ -16,7 +16,6 @@
 
 
 # std lib
-from __future__ import absolute_import
 import binascii
 import hashlib
 import re
@@ -35,8 +34,6 @@ from pyramid.decorator import reify
 import cioc.core.constants as const
 from cioc.core.i18n import gettext, format_datetime
 from cioc.core.email import send_email, format_message
-import six
-from six.moves import range
 import base64
 
 
@@ -96,21 +93,14 @@ def getRandomPassword(length):
     return "".join(sr.choice(password_chars) for x in range(length))
 
 
-if six.PY3:
-
-    def _hex_encode(b):
-        return b.hex()
-
-else:
-
-    def _hex_encode(b):
-        return b.encode("hex")
+def _hex_encode(b):
+    return b.hex()
 
 
 def HashComponents(*args):
     md5 = hashlib.md5()
     for arg in args:
-        if isinstance(arg, six.text_type):
+        if isinstance(arg, str):
             arg = arg.encode("utf8")
 
         md5.update(arg)
@@ -137,7 +127,7 @@ non_bool_user_values = {
 }
 
 
-class UserType(object):
+class UserType:
     def __init__(self, user, user_type):
         self.user = user
         self.user_type = user_type
@@ -215,7 +205,7 @@ class UserType(object):
     __bool__ = __nonzero__
 
 
-class User(object):
+class User:
     def __init__(self, request):
         self.request = request
         self.user = None
@@ -426,8 +416,8 @@ def is_banned(request):
         banned = (
             conn.execute(
                 """DECLARE @Banned bit; SET NOCOUNT ON;
-						EXEC dbo.sp_GBL_Banned_Check ?, @Banned Output;
-						SELECT @Banned AS Banned""",
+                        EXEC dbo.sp_GBL_Banned_Check ?, @Banned Output;
+                        SELECT @Banned AS Banned""",
                 get_remote_ip(request),
             )
             .fetchone()
@@ -502,10 +492,10 @@ def get_auth_principal(request):
 
 
 def remember(request, principal, **kw):
-    request.session[_userid_key] = six.text_type(principal)
+    request.session[_userid_key] = str(principal)
     login_key = kw.get("login_key")
     if login_key:
-        request.session[_login_key] = six.text_type(login_key)
+        request.session[_login_key] = str(login_key)
     return []
 
 

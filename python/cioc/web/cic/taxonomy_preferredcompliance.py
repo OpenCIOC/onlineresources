@@ -16,7 +16,6 @@
 
 
 # Logging
-from __future__ import absolute_import
 import logging
 
 log = logging.getLogger(__name__)
@@ -73,9 +72,9 @@ class activationRecView(CicViewBase):
             cursor.close()
 
         data = request.model_state.form.data
-        data["AutoFixList"] = set(
+        data["AutoFixList"] = {
             x.Code for x in compliancelist if x.Active == 1 and x.OrphanWarning == 0
-        )
+        }
 
         title = _("Taxonomy Preferred Term Compliance Report", request)
         return self._create_response_namespace(

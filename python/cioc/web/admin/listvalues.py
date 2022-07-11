@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +16,10 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
-import six
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 # 3rd party
 from formencode import Schema, foreach, variabledecode, Any
@@ -35,6 +32,8 @@ from cioc.core.viewbase import init_page_info, error_page
 
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
+
+log = logging.getLogger(__name__)
 
 templateprefix = "cioc.web.admin:templates/listvalues/"
 
@@ -117,7 +116,7 @@ class ListValues(viewbase.AdminViewBase):
         listitems = []
         with request.connmgr.get_connection("admin") as conn:
             # sp_GBL_BoxType_l or sp_GBL_StreetType_lf or ...
-            sql = "EXEC sp_%s_%s" % (list_type.Table, list_type.ListProcExtension)
+            sql = f"EXEC sp_{list_type.Table}_{list_type.ListProcExtension}"
             listitems = conn.execute(sql).fetchall()
 
             list_type.ListName = _(list_type.ListName, request)
@@ -221,7 +220,7 @@ class ListValues(viewbase.AdminViewBase):
 
                 list_el = ET.SubElement(root, "CHK")
 
-                for key, value in six.iteritems(listitem):
+                for key, value in listitem.items():
                     if key == list_type.ID and value == "NEW":
                         value = -1
 
@@ -229,7 +228,7 @@ class ListValues(viewbase.AdminViewBase):
                         value = int(value)
 
                     if value is not None:
-                        ET.SubElement(list_el, key).text = six.text_type(value)
+                        ET.SubElement(list_el, key).text = str(value)
 
             if list_type.HasModified:
                 args = [user.Mod, ET.tostring(root, encoding="unicode")]
@@ -238,9 +237,9 @@ class ListValues(viewbase.AdminViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-					DECLARE @RC int, @ErrMsg nvarchar(500)
-					EXEC @RC = sp_%s_u %s, @ErrMsg OUTPUT
-					SELECT @RC AS [Return], @ErrMsg AS ErrMsg""" % (
+                    DECLARE @RC int, @ErrMsg nvarchar(500)
+                    EXEC @RC = sp_{}_u {}, @ErrMsg OUTPUT
+                    SELECT @RC AS [Return], @ErrMsg AS ErrMsg""".format(
                     list_type.Table,
                     ",".join("?" * len(args)),
                 )
@@ -299,7 +298,7 @@ _normal_notice_1 = _(
 )
 
 
-class ListValuesModel(object):
+class ListValuesModel:
     FieldName = None
     ListName = None
 
@@ -453,13 +452,13 @@ class ListContactPhoneType(ListValuesModel):
     HasModified = False
 
 
-list_types = dict(
-    (x.FieldCode, x)
-    for k, x in six.iteritems(globals())
+list_types = {
+    x.FieldCode: x
+    for k, x in globals().items()
     if k.startswith("List")
     and issubclass(x, ListValuesModel)
     and x is not ListValuesModel
-)
+}
 
 _ = old_
 del old_

@@ -5,7 +5,7 @@
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
-# 	   http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 # =========================================================================================
-from __future__ import absolute_import
 
 # stdlib
 import os
@@ -27,7 +26,6 @@ from marrow.mailer import Mailer, Message
 from marrow.mailer.exc import DeliveryException
 from concurrent.futures import ThreadPoolExecutor
 from marrow.mailer.manager.dynamic import DynamicManager, ScalingPoolExecutor
-import six
 
 # this app
 from cioc.core.i18n import gettext as _
@@ -80,10 +78,10 @@ def _get_mailer(request):
             "tls": "ssl" if os.environ.get("CIOC_MAIL_USE_SSL") else False,
         }
         # print transport['host']
-        transport = {k: v for k, v in six.iteritems(transport) if v is not None}
+        transport = {k: v for k, v in transport.items() if v is not None}
 
         manager = request.config.get("mailer.manager", "immediate")
-        if six.PY3 and manager == "dynamic":
+        if manager == "dynamic":
             manager = DynamicManagerHotFix
 
         _mailer = Mailer({"transport": transport, "manager": {"use": manager}})
@@ -99,7 +97,7 @@ def send_email(
     if not isinstance(to, (list, tuple, set)):
         to = [x.strip() for x in to.split(",")]
 
-    to = [six.text_type(x) for x in to if x]
+    to = [str(x) for x in to if x]
     dboptions = request.dboptions
     TrainingMode = dboptions.TrainingMode
     NoEmail = dboptions.NoEmail
@@ -123,12 +121,12 @@ def send_email(
         request.email_notice(
             Markup(
                 """
-				<p>Sending Email...<br><br>
-				<strong>From:</strong> %s<br><br>
-				<strong>To:</strong> %s<br><br>
-				<strong>Reply-To:</strong> %s<br><br>
-				<strong>Subject:</strong> %s<br><br>
-				<strong>Message:</strong><br>%s</p>"""
+                <p>Sending Email...<br><br>
+                <strong>From:</strong> %s<br><br>
+                <strong>To:</strong> %s<br><br>
+                <strong>Reply-To:</strong> %s<br><br>
+                <strong>Subject:</strong> %s<br><br>
+                <strong>Message:</strong><br>%s</p>"""
             )
             % (
                 author,
@@ -152,11 +150,9 @@ def send_email(
         and author
     ):
         mailer = _get_mailer(request)
-        args = dict(
-            author=[six.text_type(author)], to=to, subject=subject, plain=message
-        )
+        args = dict(author=[str(author)], to=to, subject=subject, plain=message)
         if reply:
-            args["reply"] = [six.text_type(reply)]
+            args["reply"] = [str(reply)]
         message = Message(**args)
         mailer.send(message)
 

@@ -14,7 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import logging
 from email.utils import formataddr
 from operator import attrgetter
@@ -26,7 +25,6 @@ from cioc.core import viewbase, validators as ciocvalidators
 from cioc.core.i18n import gettext as _
 from cioc.core.email import send_email
 from cioc.core.rootfactories import BasicRootFactory
-import six
 
 template = "cioc.web.gbl:templates/emaillist.mak"
 log = logging.getLogger(__name__)
@@ -54,7 +52,7 @@ class EmailListContext(BasicRootFactory):
 def parse_access_url(value):
     if value is None:
         return value
-    if isinstance(value, six.string_types):
+    if isinstance(value, str):
         listval = value.split(" ")
     elif isinstance(value, (list, tuple)):
         listval = value
@@ -218,7 +216,7 @@ class EmailRecordListBase(viewbase.ViewBase):
         model_state = request.model_state
 
         access_url = model_state.value("AccessURL")
-        if isinstance(access_url, six.string_types):
+        if isinstance(access_url, str):
             # on validation error, we get raw values rather than parsed values
             try:
                 access_url = parse_access_url(access_url)
@@ -235,9 +233,7 @@ class EmailRecordListBase(viewbase.ViewBase):
             access_url = [None] + access_url
 
         exclude_keys = "Use%sVw" % request.pageinfo.DbAreaS
-        view_param = (
-            {} if not access_url[0] else {exclude_keys: six.text_type(access_url[0])}
-        )
+        view_param = {} if not access_url[0] else {exclude_keys: str(access_url[0])}
         urlprefix = "https://%s" % (access_url[-1])
         link_tmpl = self.get_link_template("%s", view_param, exclude_keys)
 
@@ -290,7 +286,7 @@ class EmailRecordListBase(viewbase.ViewBase):
             # form error
             ErrMsg = _("There were validation errors.", request)
             idlist = model_state.value("IDList")
-            if idlist and isinstance(idlist, six.string_types):
+            if idlist and isinstance(idlist, str):
                 # on error we get unparsed values, need to check for Comma Separated Values
                 idlist = idlist.split(",")
                 model_state.form.data["IDList"] = idlist
@@ -321,9 +317,7 @@ class EmailRecordListBase(viewbase.ViewBase):
             for x in urloptions
         ]
 
-        model_state.form.data["AccessURL"] = " ".join(
-            six.text_type(x or "") for x in access_url
-        )
+        model_state.form.data["AccessURL"] = " ".join(str(x or "") for x in access_url)
         model_state.form.data["PDF"] = "on" if model_state.value("PDF") else ""
         model_state.form.data["IDList"] = ",".join(model_state.value("IDList"))
 

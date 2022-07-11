@@ -14,13 +14,12 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 from . import constants as const
 
 viewbase = None
 
 
-class BaseRootFactory(object):
+class BaseRootFactory:
     force_print_mode = False
     allow_api_login = False
 

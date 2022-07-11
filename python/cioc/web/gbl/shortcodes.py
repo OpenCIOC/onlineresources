@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,6 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 
 
@@ -26,7 +25,6 @@ from pyramid.view import view_config, view_defaults
 # this app
 from cioc.core.i18n import gettext as _
 from cioc.core.viewbase import ViewBase
-from six.moves import map
 
 log = logging.getLogger(__name__)
 
@@ -36,8 +34,8 @@ templateprefix = "cioc.web.gbl:templates/"
 def make_url(x):
 
     data = {
-        "url": "%s://%s" % (x.Protocol, x.AccessURL),
-        "name": "%s (%s)" % (x.AccessURL, x.ViewName),
+        "url": f"{x.Protocol}://{x.AccessURL}",
+        "name": f"{x.AccessURL} ({x.ViewName})",
     }
     if x.URLViewType is not None:
         data["viewtype"] = x.URLViewType
@@ -69,11 +67,11 @@ class ShortcodesView(ViewBase):
         if user.SuperUser:
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				DECLARE @MemberID int
-				SET @MemberID = ?
-				EXEC sp_VOL_View_DomainMap_l @MemberID
-				EXEC sp_CIC_View_DomainMap_l @MemberID
-				EXEC sp_GBL_FeedAPIKey_l @MemberID, 1"""
+                DECLARE @MemberID int
+                SET @MemberID = ?
+                EXEC sp_VOL_View_DomainMap_l @MemberID
+                EXEC sp_CIC_View_DomainMap_l @MemberID
+                EXEC sp_GBL_FeedAPIKey_l @MemberID, 1"""
                 cursor = conn.execute(sql, request.dboptions.MemberID)
 
                 vol_view_types = list(map(make_url, cursor.fetchall()))

@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,10 +16,9 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 from collections import namedtuple
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 
 # 3rd party
@@ -31,8 +30,6 @@ from cioc.core import validators
 
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
-import six
-from six.moves import map
 
 log = logging.getLogger(__name__)
 
@@ -85,12 +82,12 @@ class DomainMapView(viewbase.AdminViewBase):
                     continue
 
                 el = ET.SubElement(domains, "Domain")
-                for key, val in six.iteritems(domain):
+                for key, val in domain.items():
                     if isinstance(val, bool):
-                        ET.SubElement(el, key).text = six.text_type(int(val))
+                        ET.SubElement(el, key).text = str(int(val))
 
                     if val:
-                        ET.SubElement(el, key).text = six.text_type(val)
+                        ET.SubElement(el, key).text = str(val)
 
             args = [
                 request.dboptions.MemberID,
@@ -102,13 +99,13 @@ class DomainMapView(viewbase.AdminViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-					DECLARE @ErrMsg as nvarchar(500),
-					@RC as int
+                    DECLARE @ErrMsg as nvarchar(500),
+                    @RC as int
 
-					EXECUTE @RC = dbo.sp_GBL_View_DomainMap_u ?,?,?,?, ?, @ErrMsg=@ErrMsg OUTPUT
+                    EXECUTE @RC = dbo.sp_GBL_View_DomainMap_u ?,?,?,?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-					SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				"""
+                    SELECT @RC as [Return], @ErrMsg AS ErrMsg
+                """
 
                 cursor = conn.execute(sql, args)
                 result = cursor.fetchone()

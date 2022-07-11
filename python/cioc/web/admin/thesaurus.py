@@ -16,10 +16,9 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 # third party
 from pyramid.view import view_config, view_defaults
@@ -30,7 +29,6 @@ from cioc.core import validators, rootfactories, constants as const
 from cioc.core.i18n import gettext as _
 from cioc.core.viewbase import security_failure, init_page_info, error_page
 from cioc.web.admin.viewbase import AdminViewBase
-import six
 
 log = logging.getLogger(__name__)
 
@@ -88,13 +86,13 @@ class ThesaurusContext(rootfactories.BasicRootFactory):
 
 
 AuthorizedOptions = {"F": False, "T": True}
-RAuthorizedOptions = dict((v, k) for k, v in six.iteritems(AuthorizedOptions))
+RAuthorizedOptions = {v: k for k, v in AuthorizedOptions.items()}
 
 UsedOptions = {"U": True, "N": False}
-RUsedOptions = dict((v, k) for k, v in six.iteritems(UsedOptions))
+RUsedOptions = {v: k for k, v in UsedOptions.items()}
 
 UseAllOptions = {"ALL": True, "ANY": False}
-RUseAllOptions = dict((v, k) for k, v in six.iteritems(UseAllOptions))
+RUseAllOptions = {v: k for k, v in UseAllOptions.items()}
 
 
 class ThesaurusInactivateSchema(Schema):
@@ -219,10 +217,10 @@ class Thesaurus(AdminViewBase):
             ):
                 root = ET.Element("DESCS")
 
-                for culture, data in six.iteritems(form_data["descriptions"]):
+                for culture, data in form_data["descriptions"].items():
                     desc = ET.SubElement(root, "DESC")
                     ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                    for name, value in six.iteritems(data):
+                    for name, value in data.items():
                         if value:
                             ET.SubElement(desc, name).text = value
 
@@ -232,7 +230,7 @@ class Thesaurus(AdminViewBase):
                 for field in ["UseSubj_ID", "BroaderSubj_ID", "RelatedSubj_ID"]:
                     root = ET.Element("SUBJS")
                     for value in form_data[field] or []:
-                        ET.SubElement(root, "SUBJ").text = six.text_type(value)
+                        ET.SubElement(root, "SUBJ").text = str(value)
 
                     args.append(ET.tostring(root, encoding="unicode"))
 
@@ -247,16 +245,16 @@ class Thesaurus(AdminViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int,
-				@SubjID as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int,
+                @SubjID as int
 
-				SET @SubjID = ?
+                SET @SubjID = ?
 
-				EXECUTE @RC = dbo.sp_THS_Subject_u%s @SubjID %s, ?, ?, %s, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_THS_Subject_u{} @SubjID {}, ?, ?, {}, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @SubjID as SubjID
-				""" % (
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg, @SubjID as SubjID
+                """.format(
                     stored_proc_variant,
                     subj_id_output,
                     kwargstr,
@@ -345,15 +343,15 @@ class Thesaurus(AdminViewBase):
                     "EXEC dbo.sp_THS_Subject_s ?, 1", request.POST.get("SubjID")
                 )
 
-                usesubjects = set(six.text_type(x[0]) for x in cursor.fetchall())
+                usesubjects = {str(x[0]) for x in cursor.fetchall()}
 
                 cursor.nextset()
 
-                broadersubjects = set(six.text_type(x[0]) for x in cursor.fetchall())
+                broadersubjects = {str(x[0]) for x in cursor.fetchall()}
 
                 cursor.nextset()
 
-                relatedsubjects = set(six.text_type(x[0]) for x in cursor.fetchall())
+                relatedsubjects = {str(x[0]) for x in cursor.fetchall()}
 
                 cursor.close()
 
@@ -436,15 +434,15 @@ class Thesaurus(AdminViewBase):
 
                 cursor.nextset()
 
-                usesubjects = set(six.text_type(x[0]) for x in cursor.fetchall())
+                usesubjects = {str(x[0]) for x in cursor.fetchall()}
 
                 cursor.nextset()
 
-                broadersubjects = set(six.text_type(x[0]) for x in cursor.fetchall())
+                broadersubjects = {str(x[0]) for x in cursor.fetchall()}
 
                 cursor.nextset()
 
-                relatedsubjects = set(six.text_type(x[0]) for x in cursor.fetchall())
+                relatedsubjects = {str(x[0]) for x in cursor.fetchall()}
 
                 cursor.close()
 
@@ -571,13 +569,13 @@ class Thesaurus(AdminViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_THS_Subject_d ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_THS_Subject_d ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             cursor = conn.execute(
                 sql,

@@ -15,13 +15,10 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 from formencode import Schema, validators, variabledecode
 from pyramid.view import view_config, view_defaults
@@ -32,14 +29,15 @@ from cioc.core.i18n import gettext as _
 from cioc.core.listformat import format_list, format_pub_list
 from cioc.web.admin.viewbase import AdminViewBase
 
+log = logging.getLogger(__name__)
 
 RecordNoteSettings = {"N": 0, "A": 1, "S": 2}
-RRecordNoteSettings = dict((v, k) for k, v in six.iteritems(RecordNoteSettings))
+RRecordNoteSettings = {v: k for k, v in RecordNoteSettings.items()}
 
 PreventDuplicateOrgNamesSettings = {"A": 0, "W": 1, "D": 2}
-RPreventDuplicateOrgNamesSettings = dict(
-    (v, k) for k, v in six.iteritems(PreventDuplicateOrgNamesSettings)
-)
+RPreventDuplicateOrgNamesSettings = {
+    v: k for k, v in PreventDuplicateOrgNamesSettings.items()
+}
 
 DefaultGCTypeSettings = {
     "B": const.GC_BLANK,
@@ -47,7 +45,7 @@ DefaultGCTypeSettings = {
     "I": const.GC_INTERSECTION,
     "M": const.GC_MANUAL,
 }
-RDefaultGCTypeSettings = dict((v, k) for k, v in six.iteritems(DefaultGCTypeSettings))
+RDefaultGCTypeSettings = {v: k for k, v in DefaultGCTypeSettings.items()}
 
 
 def IsCICSuperUser(value_dict, state):
@@ -208,14 +206,14 @@ class GeneralSetup(AdminViewBase):
 
             kwargs = ", ".join(k.join(("@", "=?")) for k in fields)
 
-            args.extend((settings.get(k) for k in fields))
+            args.extend(settings.get(k) for k in fields)
 
             root = ET.Element("DESCS")
 
-            for culture, data in six.iteritems(model_state.form.data["descriptions"]):
+            for culture, data in model_state.form.data["descriptions"].items():
                 desc = ET.SubElement(root, "DESC")
                 ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                for name, value in six.iteritems(data):
+                for name, value in data.items():
                     if value:
                         ET.SubElement(desc, name).text = value
 
@@ -223,13 +221,13 @@ class GeneralSetup(AdminViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int
 
-				EXECUTE @RC = dbo.sp_STP_Member_u ?,?,?,?,?, %s, @Descriptions=?, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_STP_Member_u ?,?,?,?,?, %s, @Descriptions=?, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				""" % (
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg
+                """ % (
                     kwargs
                 )
 

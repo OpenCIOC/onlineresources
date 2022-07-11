@@ -14,23 +14,19 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
-from __future__ import print_function
 import argparse
 import pprint
 import json
 import time
 import re
-from six.moves.queue import Queue
+from queue import Queue
 from collections import namedtuple
-from six.moves import cStringIO as StringIO
+from io import StringIO
 import os
 import sys
 import tempfile
 import traceback
-import six.moves.urllib.request
-import six.moves.urllib.parse
-import six.moves.urllib.error
+import urllib.parse
 import pyodbc
 from collections import OrderedDict
 from datetime import datetime
@@ -38,8 +34,6 @@ from threading import Thread
 from operator import itemgetter
 
 import isodate
-from six.moves import map
-import six
 
 import requests
 
@@ -393,7 +387,7 @@ def get_record_list(args, modifiedSince=None, lang="en"):
     if modifiedSince:
         params["updatedOn"] = modifiedSince
 
-    url = url + "?" + six.moves.urllib.parse.urlencode(params)
+    url = url + "?" + urllib.parse.urlencode(params)
 
     response = args.session.get(url)
     response.raise_for_status()
@@ -414,12 +408,12 @@ def get_records(args, id, lang="en"):
 
     id_str = list(map(str, id))
     params = {"id": ",".join(id_str), "key": args.key, "service": "0", "lang": lang}
-    url = url + "?" + six.moves.urllib.parse.urlencode(params)
+    url = url + "?" + urllib.parse.urlencode(params)
     start = time.time()
     response = args.session.get(url)
     duration = time.time() - start
     if args.test:
-        print("requested {} records in {}s".format(len(id), duration))
+        print(f"requested {len(id)} records in {duration}s")
     response.raise_for_status()
     tmp = {
         x["ResourceAgencyNum"]: x
@@ -434,15 +428,14 @@ def get_records(args, id, lang="en"):
 
 def fetch_record_batches(args, record_ids, lang):
     for page in pager(record_ids, 500):
-        for record in get_records(args, page, lang.language_name):
-            yield record
+        yield from get_records(args, page, lang.language_name)
 
 
 def _to_unicode(value):
     if value is None:
         return ""
 
-    value = six.text_type(value)
+    value = str(value)
     return invalid_xml_chars.sub("", value).strip()
 
 
@@ -454,7 +447,7 @@ def to_csv(records, target_file, headings):
     writer.writerows(out_stream)
 
 
-class CsvFileWriter(object):
+class CsvFileWriter:
     def __init__(self, context, headings):
         self.target_dir = context.csv_target_dir
         self.source_dir = context.csv_source_dir
@@ -463,14 +456,9 @@ class CsvFileWriter(object):
         self.headings = headings
 
     def __enter__(self):
-        if six.PY3:
-            self.fd = tempfile.NamedTemporaryFile(
-                "w", encoding="utf-8", suffix=".csv", dir=self.target_dir, delete=False
-            )
-        else:
-            self.fd = tempfile.NamedTemporaryFile(
-                suffix=".csv", dir=self.target_dir, delete=False
-            )
+        self.fd = tempfile.NamedTemporaryFile(
+            "w", encoding="utf-8", suffix=".csv", dir=self.target_dir, delete=False
+        )
         self.full_name = self.fd.name
         return self
 
@@ -508,8 +496,8 @@ def push_bulk(context, conn, sql, headings, batch, *args):
 
 def push_to_database(context, lang, queue):
     sql = """
-	EXEC sp_CIC_iCarolImport_Incremental ?, ?
-	"""
+    EXEC sp_CIC_iCarolImport_Incremental ?, ?
+    """
     next_modified = context.args.next_modified_since
     with get_bulk_connection(language=lang.sql_language) as conn:
 
@@ -528,8 +516,8 @@ def push_to_database(context, lang, queue):
 
 def push_all_records(conext, lang, all_records):
     sql = """
-	EXEC sp_CIC_iCarolImport_AllRecords ?
-	"""
+    EXEC sp_CIC_iCarolImport_AllRecords ?
+    """
     with get_bulk_connection(language=lang.sql_language) as conn:
         cursor = push_bulk(conext, conn, sql, AllRecordsFieldOrder, all_records)
         stats = cursor.fetchall()
@@ -646,7 +634,7 @@ def generate_and_upload_import(context):
                 member_name = (
                     member.DefaultEmailNameCIC or member.BaseURLCIC or member.MemberID
                 )
-                print("Generating sharing file for %s.\n" % (member_name,), file=stdout)
+                print(f"Generating sharing file for {member_name}.\n", file=stdout)
 
                 cursor = conn.execute(
                     "EXEC sp_CIC_iCarolImport_CreateSharing ?", member.MemberID
@@ -654,26 +642,22 @@ def generate_and_upload_import(context):
                 batch = cursor.fetchmany(5000)
 
                 if not batch:
-                    print(
-                        "No Records for %s, skipping.\n" % (member_name,), file=stdout
-                    )
+                    print(f"No Records for {member_name}, skipping.\n", file=stdout)
                     cursor.close()
                     continue
                 else:
-                    print("Processing Imports for %s." % (member_name,), file=stdout)
+                    print(f"Processing Imports for {member_name}.", file=stdout)
 
                 with tempfile.TemporaryFile() as fd:
                     fd.write(
-                        """<?xml version="1.0" encoding="UTF-8"?>
-					<root xmlns="urn:ciocshare-schema"><SOURCE_DB CD="ICAROL"/><DIST_CODE_LIST/><PUB_CODE_LIST/>""".encode(
-                            "utf8"
-                        )
+                        b"""<?xml version="1.0" encoding="UTF-8"?>
+                    <root xmlns="urn:ciocshare-schema"><SOURCE_DB CD="ICAROL"/><DIST_CODE_LIST/><PUB_CODE_LIST/>"""
                     )
                     while batch:
                         fd.write("".join(x.record for x in batch).encode("utf8"))
                         batch = cursor.fetchmany(5000)
 
-                    fd.write("</root>".encode("utf8"))
+                    fd.write(b"</root>")
                     fd.seek(0)
                     cursor.close()
 
@@ -727,7 +711,7 @@ def generate_and_upload_import(context):
                 else:
                     print(stdout.getvalue())
 
-    print("Completed Processing Imports: %s Records imported." % (total_import_count,))
+    print(f"Completed Processing Imports: {total_import_count} Records imported.")
 
 
 def main(argv):

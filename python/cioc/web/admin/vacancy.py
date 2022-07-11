@@ -16,12 +16,8 @@
 
 
 # std lib
-from __future__ import absolute_import
 import logging
-import six
-from six.moves import map
 
-log = logging.getLogger(__name__)
 
 from operator import attrgetter
 import itertools
@@ -39,6 +35,7 @@ from cioc.core.bufferedzip import BufferedZipFile
 from cioc.core.utf8csv import write_csv_to_zip
 from cioc.core.webobfiletool import FileIterator
 
+log = logging.getLogger(__name__)
 templateprefix = "cioc.web.admin:templates/vacancy/"
 
 
@@ -87,7 +84,7 @@ class Community(viewbase.AdminViewBase):
         getter = attrgetter(*fields)
 
         def row_getter(x):
-            return tuple("" if y is None else six.text_type(y) for y in getter(x))
+            return tuple("" if y is None else str(y) for y in getter(x))
 
         file = tempfile.TemporaryFile()
         with BufferedZipFile(file, "w", zipfile.ZIP_DEFLATED) as zip:

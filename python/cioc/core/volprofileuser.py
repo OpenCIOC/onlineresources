@@ -15,12 +15,10 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 from pyramid.decorator import reify
-import six
 
 
-class VolProfileUser(object):
+class VolProfileUser:
     def __init__(self, request):
         self.request = request
 
@@ -60,8 +58,8 @@ class VolProfileUser(object):
 
         with self.request.connmgr.get_connection("admin") as conn:
             sql = """DECLARE @RC int, @ProfileID uniqueidentifier, @ErrMsg nvarchar(500)
-					EXEC @RC = dbo.sp_VOL_Profile_s_Login ?, ?, ?, @ProfileID OUTPUT, @ErrMsg OUTPUT
-					SELECT @RC AS [Return], @ProfileID AS ProfileID, @ErrMsg AS ErrMsg"""
+                    EXEC @RC = dbo.sp_VOL_Profile_s_Login ?, ?, ?, @ProfileID OUTPUT, @ErrMsg OUTPUT
+                    SELECT @RC AS [Return], @ProfileID AS ProfileID, @ErrMsg AS ErrMsg"""
 
             result = conn.execute(
                 sql, request.dboptions.MemberID, email_addr, profile_key
@@ -104,10 +102,10 @@ def get_auth_principal(request):
 
 
 def remember(request, principal, **kw):
-    request.session[_userid_key] = six.text_type(principal)
+    request.session[_userid_key] = str(principal)
     login_key = kw.get("login_key")
     if login_key:
-        request.session[_login_key] = six.text_type(login_key)
+        request.session[_login_key] = str(login_key)
     return []
 
 

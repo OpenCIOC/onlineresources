@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import zipfile, tempfile
 
 from pyramid.response import Response

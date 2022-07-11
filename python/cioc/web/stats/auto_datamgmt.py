@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
 from itertools import groupby
 from operator import attrgetter
@@ -39,7 +38,7 @@ StatType = namedtuple("StatType", "name hasother hascriteria")
 @view_defaults(renderer=templateprefix + "auto_datamgmt.mak")
 class Stats1View(viewbase.ViewBase):
     def __init__(self, request, login_required=True):
-        super(Stats1View, self).__init__(request, True)
+        super().__init__(request, True)
 
     @view_config(route_name="stats_auto_datamgmt_cic")
     @view_config(route_name="stats_auto_datamgmt_vol")

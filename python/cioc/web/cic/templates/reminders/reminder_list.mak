@@ -18,15 +18,14 @@
 
 <%!
 from itertools import groupby
-from datetime import datetime 
+from datetime import datetime
 
 from markupsafe import Markup
-import six
 
 from cioc.core.format import textToHTML
 %>
-<% 
-SuperUser = request.user.SuperUser 
+<%
+SuperUser = request.user.SuperUser
 User_ID = request.user.User_ID
 add_query = []
 if VNUM:
@@ -58,9 +57,9 @@ makeLink = request.passvars.makeLink
 %endif
 <div>
 <strong>${_('For:')}</strong>
-<% 
+<%
 for_targets = []
-not_me = [x for x in reminder.Users if x['User_ID'] != six.text_type(request.user.User_ID)] 
+not_me = [x for x in reminder.Users if x['User_ID'] != str(request.user.User_ID)]
 if len(not_me) != len(reminder.Users) or (not reminder.Users and not reminder.Agencies):
 	for_targets.append(Markup('<em>%s</em>' % request.user.UserName))
 for_targets.extend(x['UserName'] for x in not_me)
@@ -86,7 +85,7 @@ ${Markup(', ').join(for_targets)}
 <div class="reminder-section" id="reminder-section-${groupid}">
 <h3 id="reminder-header-${groupid}">${icon}${name}</h3>
 <div id="reminder-items-${groupid}">
-%for for_others, group in groupby(section, key=lambda x: x.ForOthers): 
+%for for_others, group in groupby(section, key=lambda x: x.ForOthers):
 <div class="reminder-section" id="reminder-section-${groupid}-${'others' if for_others else 'me'}">
 %if for_others:
 	<h4 id="reminder-section-${groupid}-others">${_('Created for Others:')}</h4>
@@ -132,4 +131,3 @@ ${textToHTML(reminder.Notes)}
 </div>
 </div>
 %endfor
-

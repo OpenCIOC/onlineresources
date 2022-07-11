@@ -1,8 +1,7 @@
-from __future__ import absolute_import
 from babel.messages.extract import extract_python
 
 
-class ReadlineCountingProxy(object):
+class ReadlineCountingProxy:
     def __init__(self, fileobj):
         self.fileobj = fileobj
         self.count = 0

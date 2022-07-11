@@ -14,7 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import os
 import time
 import logging.handlers
@@ -69,7 +68,7 @@ class TimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
     def doRollover(self):
         """
         do a rollover; in this case, a date/time stamp is appended to the filename
-        when the rollover happens.	However, you want the file to be named for the
+        when the rollover happens.  However, you want the file to be named for the
         start of the interval, not the current time.  If there is a backup count,
         then we have to get a list of matching filenames, sort them and remove
         the one with the oldest suffix.

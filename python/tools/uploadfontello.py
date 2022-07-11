@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-from __future__ import print_function
 import argparse
 import hashlib
 import os
@@ -36,7 +34,7 @@ bootstrap_files = [
 ]
 
 
-class DEFAULT(object):
+class DEFAULT:
     pass
 
 
@@ -59,7 +57,7 @@ def parse_args(argv):
 
 
 def upload_file(bucket, location, filename, mime_type, content=None, filebase=None):
-    print("Uploading %s " % (filename,), end=" ")
+    print(f"Uploading {filename} ", end=" ")
 
     def percent_cb(complete, total):
         sys.stdout.write(".")
@@ -129,12 +127,12 @@ def main(argv):
     upload_file(bucket, location, "fontello.css", "text/css", css)
 
     scss = """
-	$bootstrap-sass-asset-helper: false;
-	$icon-font-path: "./";
-	$icon-font-name:          "glyphicons-halflings-regular" !default;
-	$icon-font-svg-id:        "glyphicons_halflingsregular" !default;
-	@import "bootstrap/glyphicons";
-	"""
+    $bootstrap-sass-asset-helper: false;
+    $icon-font-path: "./";
+    $icon-font-name:          "glyphicons-halflings-regular" !default;
+    $icon-font-svg-id:        "glyphicons_halflingsregular" !default;
+    @import "bootstrap/glyphicons";
+    """
     location = "bootstrap-3.3.5/"
     filebase = os.path.join(const._app_path, "fonts", "bootstrap")
 

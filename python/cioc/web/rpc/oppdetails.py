@@ -16,10 +16,10 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 from collections import OrderedDict
-from xml.etree import cElementTree as ET
+
+from xml.etree import ElementTree as ET
 
 # 3rd party
 from pyramid.httpexceptions import (
@@ -113,19 +113,19 @@ class RpcOrgDetails(viewbase.VolViewBase):
 
             sql = [
                 """DECLARE @ViewType int
-					SET @ViewType = ?
-					SELECT bt.MemberID, vo.OP_ID, vod.OPD_ID,
-					dbo.fn_VOL_RecordInView(vo.VNUM,@ViewType,vod.LangID,0,GETDATE()) AS IN_VIEW,
-					dbo.fn_CIC_RecordInView(bt.NUM,?,btd.LangID,0,GETDATE()) AS IN_CIC_VIEW,
-					vo.VNUM, vod.OPD_ID, vo.RECORD_OWNER, vo.NUM,
-					vod.NON_PUBLIC,
-					cioc_shared.dbo.fn_SHR_GBL_DateString(vod.MODIFIED_DATE) AS MODIFIED_DATE,
-					cioc_shared.dbo.fn_SHR_GBL_DateString(vod.UPDATE_DATE) AS UPDATE_DATE,
-					cioc_shared.dbo.fn_SHR_GBL_DateString(vod.UPDATE_SCHEDULE) AS UPDATE_SCHEDULE,
-					cioc_shared.dbo.fn_SHR_GBL_DateString(vod.DELETION_DATE) AS DELETION_DATE,
-					cioc_shared.dbo.fn_SHR_GBL_DateString(vo.DISPLAY_UNTIL) AS DISPLAY_UNTIL,
-					(SELECT Culture,LangID,LanguageName,LanguageAlias,LCID,Active
-						FROM STP_Language LANG WHERE LangID<>@@LANGID AND dbo.fn_VOL_RecordInView(vo.VNUM,@ViewType,LangID,0,GETDATE())=1 AND """,
+                    SET @ViewType = ?
+                    SELECT bt.MemberID, vo.OP_ID, vod.OPD_ID,
+                    dbo.fn_VOL_RecordInView(vo.VNUM,@ViewType,vod.LangID,0,GETDATE()) AS IN_VIEW,
+                    dbo.fn_CIC_RecordInView(bt.NUM,?,btd.LangID,0,GETDATE()) AS IN_CIC_VIEW,
+                    vo.VNUM, vod.OPD_ID, vo.RECORD_OWNER, vo.NUM,
+                    vod.NON_PUBLIC,
+                    cioc_shared.dbo.fn_SHR_GBL_DateString(vod.MODIFIED_DATE) AS MODIFIED_DATE,
+                    cioc_shared.dbo.fn_SHR_GBL_DateString(vod.UPDATE_DATE) AS UPDATE_DATE,
+                    cioc_shared.dbo.fn_SHR_GBL_DateString(vod.UPDATE_SCHEDULE) AS UPDATE_SCHEDULE,
+                    cioc_shared.dbo.fn_SHR_GBL_DateString(vod.DELETION_DATE) AS DELETION_DATE,
+                    cioc_shared.dbo.fn_SHR_GBL_DateString(vo.DISPLAY_UNTIL) AS DISPLAY_UNTIL,
+                    (SELECT Culture,LangID,LanguageName,LanguageAlias,LCID,Active
+                        FROM STP_Language LANG WHERE LangID<>@@LANGID AND dbo.fn_VOL_RecordInView(vo.VNUM,@ViewType,LangID,0,GETDATE())=1 AND """,
                 "ActiveRecord=1"
                 if viewdata.ViewOtherLangs
                 else "EXISTS(SELECT * FROM VOL_View_Description WHERE ViewType=@ViewType AND LangID=LANG.LangID)",
@@ -157,12 +157,12 @@ class RpcOrgDetails(viewbase.VolViewBase):
 
             sql.append(
                 """, vod.POSITION_TITLE, vod.VNUM AS LangVNUM
-					FROM VOL_Opportunity vo
-					LEFT JOIN VOL_Opportunity_Description vod ON vo.VNUM=vod.VNUM AND vod.LangID=@@LANGID
-					INNER JOIN GBL_BaseTable bt ON vo.NUM=bt.NUM
-					LEFT JOIN GBL_BaseTable_Description btd ON bt.NUM=btd.NUM AND btd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=btd.NUM ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
-					WHERE vo.VNUM=?
-					"""
+                    FROM VOL_Opportunity vo
+                    LEFT JOIN VOL_Opportunity_Description vod ON vo.VNUM=vod.VNUM AND vod.LangID=@@LANGID
+                    INNER JOIN GBL_BaseTable bt ON vo.NUM=bt.NUM
+                    LEFT JOIN GBL_BaseTable_Description btd ON bt.NUM=btd.NUM AND btd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=btd.NUM ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
+                    WHERE vo.VNUM=?
+                    """
             )
 
             sql = "".join(sql)

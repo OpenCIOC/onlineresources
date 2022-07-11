@@ -15,13 +15,10 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 # import elementtree.ElementTree as ET
 
@@ -35,6 +32,7 @@ from cioc.core import validators as ciocvalidators
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 
+log = logging.getLogger(__name__)
 templateprefix = "cioc.web.admin:templates/naics/"
 
 EditValues = collections.namedtuple("EditValues", "Code codeinfo exclusions")
@@ -130,9 +128,9 @@ class NaicsExclusion(viewbase.AdminViewBase):
                     continue
 
                 exclusion_el = ET.SubElement(root, "Exclusion")
-                ET.SubElement(exclusion_el, "CNT").text = six.text_type(i)
+                ET.SubElement(exclusion_el, "CNT").text = str(i)
 
-                for key, value in six.iteritems(exclusion):
+                for key, value in exclusion.items():
                     if key == "Exclusion_ID" and value == "NEW":
                         value = -1
 
@@ -141,27 +139,27 @@ class NaicsExclusion(viewbase.AdminViewBase):
 
                     if key != "UseCodes":
                         if value is not None:
-                            ET.SubElement(exclusion_el, key).text = six.text_type(value)
+                            ET.SubElement(exclusion_el, key).text = str(value)
 
                         continue
 
                     # Use Codes
                     usecodes = ET.SubElement(exclusion_el, key)
                     for usecode in value or []:
-                        ET.SubElement(usecodes, "UseCode").text = six.text_type(usecode)
+                        ET.SubElement(usecodes, "UseCode").text = str(usecode)
 
             args = [Code, user.Mod, ET.tostring(root, encoding="unicode")]
 
             # raise Exception
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				DECLARE @ErrMsg as nvarchar(500), 
-				@RC as int 
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int
 
-				EXECUTE @RC = dbo.sp_NAICS_Exclusion_u ?, ?, ?, @ErrMsg OUTPUT  
+                EXECUTE @RC = dbo.sp_NAICS_Exclusion_u ?, ?, ?, @ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg
+                """
 
                 cursor = conn.execute(sql, *args)
                 result = cursor.fetchone()
@@ -203,7 +201,7 @@ class NaicsExclusion(viewbase.AdminViewBase):
 
         for exclusion in exclusions:
             use_codes = exclusion["UseCodes"]
-            if isinstance(use_codes, six.string_types):
+            if isinstance(use_codes, str):
                 exclusion["UseCodes"] = [use_codes]
 
         model_state.form.data["exclusion"] = exclusions

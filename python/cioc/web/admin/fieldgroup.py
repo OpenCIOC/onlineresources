@@ -15,13 +15,10 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 # import elementtree.ElementTree as ET
 
@@ -33,6 +30,7 @@ from cioc.core import validators as ciocvalidators, constants as const, syslangu
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 
+log = logging.getLogger(__name__)
 templateprefix = "cioc.web.admin:templates/"
 
 
@@ -162,32 +160,32 @@ class FieldGroup(viewbase.AdminViewBase):
 
                 if all(
                     not v
-                    for k, v in six.iteritems(group)
+                    for k, v in group.items()
                     if not (k == "DisplayFieldGroupID" and v == "NEW")
                 ):
                     continue
 
                 group_el = ET.SubElement(root, "GROUP")
-                ET.SubElement(group_el, "CNT").text = six.text_type(i)
+                ET.SubElement(group_el, "CNT").text = str(i)
 
-                for key, value in six.iteritems(group):
+                for key, value in group.items():
                     if key == "DisplayFieldGroupID" and value == "NEW":
                         value = -1
 
                     if key != "Descriptions":
                         if value is not None:
-                            ET.SubElement(group_el, key).text = six.text_type(value)
+                            ET.SubElement(group_el, key).text = str(value)
                         continue
 
                     descs = ET.SubElement(group_el, "DESCS")
-                    for culture, data in six.iteritems(value):
+                    for culture, data in value.items():
                         culture = culture.replace("_", "-")
                         if culture not in shown_cultures:
                             continue
 
                         desc = ET.SubElement(descs, "DESC")
                         ET.SubElement(desc, "Culture").text = culture
-                        for key, value in six.iteritems(data):
+                        for key, value in data.items():
                             if value:
                                 ET.SubElement(desc, key).text = value
 
@@ -203,13 +201,13 @@ class FieldGroup(viewbase.AdminViewBase):
             with request.connmgr.get_connection("admin") as conn:
                 sql = (
                     """
-				DECLARE @ErrMsg as nvarchar(500), 
-				@RC as int 
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int
 
-				EXECUTE @RC = dbo.sp_%s_View_DisplayFieldGroup_u ?, ?, ?, ?, ?, @ErrMsg OUTPUT  
+                EXECUTE @RC = dbo.sp_%s_View_DisplayFieldGroup_u ?, ?, ?, ?, ?, @ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg
+                """
                     % domain.str
                 )
 

@@ -16,7 +16,6 @@
 
 
 # std library
-from __future__ import absolute_import
 import os
 import logging
 import subprocess
@@ -95,7 +94,7 @@ def get_help_content(request, strHelpFileName):
             e.args[0],
         )
         last_mod_date = "%s" % _("Unknown")
-    except WindowsError as e:
+    except OSError as e:
         log.exception("Error getting last change timestamp.")
         last_mod_date = "%s" % _("Unknown")
 

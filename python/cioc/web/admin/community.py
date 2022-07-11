@@ -16,15 +16,10 @@
 
 
 # std lib
-from __future__ import absolute_import
 import logging
-import six
-from six.moves import map
-from six.moves import zip
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 import collections
 from operator import attrgetter
 import itertools
@@ -47,6 +42,7 @@ from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 
 templateprefix = "cioc.web.admin:templates/community/"
+log = logging.getLogger(__name__)
 
 EditValues = collections.namedtuple(
     "EditValues",
@@ -185,15 +181,13 @@ class Community(viewbase.AdminViewBase):
 
             root = ET.Element("DESCS")
 
-            for culture, description in six.iteritems(
-                model_state.form.data["descriptions"]
-            ):
+            for culture, description in (model_state.form.data["descriptions"]).items():
                 if culture.replace("_", "-") not in shown_cultures:
                     continue
 
                 desc = ET.SubElement(root, "DESC")
                 ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                for name, value in six.iteritems(description):
+                for name, value in description.items():
                     if value:
                         ET.SubElement(desc, name).text = value
 
@@ -221,7 +215,7 @@ class Community(viewbase.AdminViewBase):
             if is_alt_area:
                 root = ET.Element("ALTAREAS")
                 for area in data.get("alt_areas") or []:
-                    ET.SubElement(root, "CM_ID").text = six.text_type(area)
+                    ET.SubElement(root, "CM_ID").text = str(area)
 
                 args.append(ET.tostring(root, encoding="unicode"))
 
@@ -235,16 +229,16 @@ class Community(viewbase.AdminViewBase):
             args.append(ET.tostring(root, encoding="unicode"))
 
             sql = """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int,
-				@CM_ID as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int,
+                @CM_ID as int
 
-				SET @CM_ID = ?
+                SET @CM_ID = ?
 
-				EXECUTE @RC = dbo.sp_GBL_Community_u @CM_ID OUTPUT, %s, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_GBL_Community_u @CM_ID OUTPUT, %s, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @CM_ID as CM_ID
-				""" % ", ".join(
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg, @CM_ID as CM_ID
+                """ % ", ".join(
                 "?" * (len(args) - 1)
             )
             with request.connmgr.get_connection("admin") as conn:
@@ -471,13 +465,13 @@ class Community(viewbase.AdminViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_GBL_Community_d ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_GBL_Community_d ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             cursor = conn.execute(sql, CM_ID)
             result = cursor.fetchone()
@@ -640,7 +634,7 @@ class Community(viewbase.AdminViewBase):
 
             def row_getter(x):
                 return tuple(
-                    "" if y is None else six.text_type(y)
+                    "" if y is None else str(y)
                     for y in x[0:0] + name_field_getter(x) + base_field_getter(x)
                 )
 

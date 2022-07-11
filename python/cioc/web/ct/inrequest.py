@@ -15,14 +15,11 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
-from six import BytesIO as StringIO
+import xml.etree.ElementTree as ET
+from io import BytesIO as StringIO
 
 from pyramid.view import view_config
 import requests
@@ -30,6 +27,8 @@ import requests
 from cioc.core.i18n import gettext as _
 from cioc.core.clienttracker import has_been_launched
 from cioc.web.cic import viewbase
+
+log = logging.getLogger(__name__)
 
 
 class InRequest(viewbase.CicViewBase):
@@ -59,9 +58,9 @@ class InRequest(viewbase.CicViewBase):
         ctid, login, key = vals
 
         root = ET.Element("isInRequest", xmlns="http://clienttracker.cioc.ca/schema/")
-        ET.SubElement(root, "login").text = six.text_type(login)
-        ET.SubElement(root, "key").text = six.text_type(key)
-        ET.SubElement(root, "ctid").text = six.text_type(ctid)
+        ET.SubElement(root, "login").text = str(login)
+        ET.SubElement(root, "key").text = str(key)
+        ET.SubElement(root, "ctid").text = str(ctid)
 
         fd = StringIO()
         ET.ElementTree(root).write(fd, "utf-8", True)

@@ -5,7 +5,7 @@
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
-# 	   http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,8 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
-from __future__ import print_function
 
 import os
 import sys
@@ -24,14 +22,14 @@ import win32serviceutil
 import win32service
 import win32event
 import getopt
-import six.moves.configparser
+import configparser
 
 
 def getServiceClassString(o, argv):
     return win32serviceutil.GetServiceClassString(o, argv)
 
 
-class ServiceSettings(object):
+class ServiceSettings:
     _wssection_ = "winservice"
 
     def __init__(self, cfg_file_name, override=None):
@@ -41,16 +39,16 @@ class ServiceSettings(object):
 
         self.override = override
 
-        c = six.moves.configparser.SafeConfigParser()
+        c = configparser.ConfigParser()
         c.read(cfg_file_name)
 
         self.cfg_file_name = cfg_file_name
         self.c = c
 
-    # 		 try:
-    # 			 c.get(self._wssection_,"svc_name")
-    # 		 except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
-    # 				 raise Exception("No \"svc_name\" in the % section of %s" % (self._wssection_,cfg_file_name))
+    #        try:
+    #            c.get(self._wssection_,"svc_name")
+    #        except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
+    #                raise Exception("No \"svc_name\" in the % section of %s" % (self._wssection_,cfg_file_name))
 
     def getCfgFileDir(self):
         return os.path.dirname(self.cfg_file_name)
@@ -66,8 +64,8 @@ class ServiceSettings(object):
         try:
             return self.c.get(self._wssection_, "svc_name")
         except (
-            six.moves.configparser.NoOptionError,
-            six.moves.configparser.NoSectionError,
+            configparser.NoOptionError,
+            configparser.NoSectionError,
         ):
             return os.path.splitext(os.path.basename(self.cfg_file_name))[0]
 
@@ -79,8 +77,8 @@ class ServiceSettings(object):
         try:
             return self.c.get(self._wssection_, "svc_display_name")
         except (
-            six.moves.configparser.NoOptionError,
-            six.moves.configparser.NoSectionError,
+            configparser.NoOptionError,
+            configparser.NoSectionError,
         ):
             return "%s Paste Service" % self.getSvcName()
 
@@ -92,8 +90,8 @@ class ServiceSettings(object):
         try:
             return self.c.get(self._wssection_, "http_port").strip()
         except (
-            six.moves.configparser.NoOptionError,
-            six.moves.configparser.NoSectionError,
+            configparser.NoOptionError,
+            configparser.NoSectionError,
         ):
             return None
 
@@ -101,11 +99,11 @@ class ServiceSettings(object):
         try:
             desc = self.c.get(self._wssection_, "svc_description") + "; "
         except (
-            six.moves.configparser.NoOptionError,
-            six.moves.configparser.NoSectionError,
+            configparser.NoOptionError,
+            configparser.NoSectionError,
         ):
             desc = ""
-        return desc + "wsgi_ini_file: %s" % (self.getCfgFileName(),)
+        return desc + f"wsgi_ini_file: {self.getCfgFileName()}"
 
     def getVirtualEnv(self):
         # NOTE also update includes/core/incInitPython.asp
@@ -283,7 +281,7 @@ def handle_command_line(argv):
     try:
         ds = ServiceSettings(os.path.abspath(cmd_cfg_file), override)
 
-        class A(object):
+        class A:
             pass
 
         ds.transferEssential(A)

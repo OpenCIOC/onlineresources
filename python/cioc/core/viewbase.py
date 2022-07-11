@@ -14,8 +14,7 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 from pyramid.renderers import render_to_response, render
 from pyramid.httpexceptions import HTTPFound
@@ -24,7 +23,6 @@ from cioc.core import pageinfo, template, asset, modelstate, security
 from cioc.core.rootfactories import BasicRootFactory
 
 import logging
-from six.moves import zip
 
 log = logging.getLogger(__name__)
 
@@ -37,7 +35,7 @@ def init_page_info(request, domain, db_area):
 _page_whitelist = []
 
 
-class ViewBase(object):
+class ViewBase:
     """Base class for views."""
 
     __autoexpose__ = None
@@ -150,7 +148,7 @@ class ViewBase(object):
     @staticmethod
     def _culture_dict_from_xml(txt, base_element):
         items = ViewBase._dict_list_from_xml(txt, base_element)
-        return dict((x["Culture"].replace("-", "_"), x) for x in items)
+        return {x["Culture"].replace("-", "_"): x for x in items}
 
     @staticmethod
     def _list_from_xml(txt, base_element):

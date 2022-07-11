@@ -15,13 +15,10 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 import collections
 
 from formencode import Schema
@@ -32,6 +29,7 @@ from cioc.core import validators as ciocvalidators
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 
+log = logging.getLogger(__name__)
 templateprefix = "cioc.web.admin:templates/pagetitle/"
 
 EditValues = collections.namedtuple("EditValues", "PageName page descriptions")
@@ -101,10 +99,10 @@ class PageTitle(viewbase.AdminViewBase):
 
             root = ET.Element("DESCS")
 
-            for culture, data in six.iteritems(model_state.form.data["descriptions"]):
+            for culture, data in model_state.form.data["descriptions"].items():
                 desc = ET.SubElement(root, "DESC")
                 ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                for name, value in six.iteritems(data):
+                for name, value in data.items():
                     if value:
                         ET.SubElement(desc, name).text = value
 
@@ -115,13 +113,13 @@ class PageTitle(viewbase.AdminViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				DECLARE @ErrMsg as nvarchar(500), 
-				@RC as int 
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int
 
-				EXEC @RC = dbo.sp_GBL_PageTitle_u ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT  
+                EXEC @RC = dbo.sp_GBL_PageTitle_u ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg
+                """
 
                 cursor = conn.execute(sql, *args)
                 result = cursor.fetchone()

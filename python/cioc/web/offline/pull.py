@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import zipfile
 import tempfile
 import os
@@ -33,8 +32,6 @@ from cioc.web.offline.auth import AuthFailure, verify_auth
 
 
 import logging
-import six
-from six.moves import zip
 
 log = logging.getLogger(__name__)
 
@@ -194,13 +191,11 @@ class Pull2(viewbase.CicViewBase):
 
         new_fields = model_state.value("NewFields")
         if new_fields:
-            new_fields = ",".join(six.text_type(x) for x in sorted(set(new_fields)))
+            new_fields = ",".join(str(x) for x in sorted(set(new_fields)))
 
         new_records = model_state.value("NewRecords")
         if new_records:
-            new_records = ",".join(
-                six.text_type(x).upper() for x in sorted(set(new_records))
-            )
+            new_records = ",".join(str(x).upper() for x in sorted(set(new_records)))
 
         data = {}
         log.debug("Machine id: %d", user_type.MachineID)
@@ -226,7 +221,7 @@ def _get_record_data(cursor):
     file = os.fdopen(fd, "w+b")
     log.debug("file name: %s", file.name)
 
-    file.write("<record_data>".encode("utf-8"))
+    file.write(b"<record_data>")
     cols = None
     while True:
         rows = cursor.fetchmany(5000)
@@ -239,7 +234,7 @@ def _get_record_data(cursor):
         rows = "".join(x[0] for x in rows)
         file.write(rows.encode("utf-8"))
 
-    file.write("</record_data>".encode("utf-8"))
+    file.write(b"</record_data>")
 
     file.close()
 

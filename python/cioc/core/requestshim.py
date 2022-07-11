@@ -1,11 +1,11 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
-# 	   http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,7 @@
 # =========================================================================================
 
 
-from datetime import datetime, date
+from datetime import datetime
 
 # 3rd party
 from pyramid.decorator import reify
@@ -24,14 +24,13 @@ import pywintypes
 # this app
 from cioc.core import syslanguage
 from cioc.core.request import CiocRequestMixin
-import six
 
 
-class FakeRegistry(object):
+class FakeRegistry:
     pass
 
 
-class CollectionShim(object):
+class CollectionShim:
     def __init__(self, collection):
         self._collection = collection
 
@@ -42,7 +41,7 @@ class CollectionShim(object):
         if val is None:
             raise KeyError(key)
 
-        return six.text_type(val)
+        return str(val)
 
     def __iter__(self):
         return iter(self._collection)
@@ -54,7 +53,7 @@ class CollectionShim(object):
             return default
 
 
-class MultiCollectionShim(object):
+class MultiCollectionShim:
     def __init__(self, collections):
         self._collections = [CollectionShim(x) for x in collections]
 
@@ -74,7 +73,7 @@ class MultiCollectionShim(object):
             return default
 
 
-class HeaderShim(object):
+class HeaderShim:
     def __init__(self, collection):
         self._collection = CollectionShim(collection)
 
@@ -85,7 +84,7 @@ class HeaderShim(object):
 
         val = self._collection[tmpkey]
 
-        return six.text_type(val)
+        return str(val)
 
     def get(self, key, default=None):
         try:
@@ -111,8 +110,8 @@ class RequestShim(CiocRequestMixin):
 
     @reify
     def application_url(self):
-        applpath = six.text_type(self.appvars.get("APPL_PHYSICAL_PATH"))
-        scriptpath = six.text_type(self.appvars.get("PATH_TRANSLATED"))
+        applpath = str(self.appvars.get("APPL_PHYSICAL_PATH"))
+        scriptpath = str(self.appvars.get("PATH_TRANSLATED"))
         scripturl = scriptpath[len(applpath) :]
 
         return self.host_url + self.path[: -len(scripturl)]
@@ -143,31 +142,28 @@ class RequestShim(CiocRequestMixin):
 
     @reify
     def method(self):
-        return six.text_type(self.appvars.get("REQUEST_METHOD"))
+        return str(self.appvars.get("REQUEST_METHOD"))
 
     @reify
     def host(self):
-        return six.text_type(self.appvars.get("SERVER_NAME"))
+        return str(self.appvars.get("SERVER_NAME"))
 
     @reify
     def path(self):
-        return six.text_type(self.appvars.get("PATH_INFO"))
+        return str(self.appvars.get("PATH_INFO"))
 
     @reify
     def query_string(self):
-        return six.text_type(self.appvars.get("QUERY_STRING"))
+        return str(self.appvars.get("QUERY_STRING"))
 
     @reify
     def remote_addr(self):
-        return six.text_type(self.appvars.get("REMOTE_ADDR"))
+        return str(self.appvars.get("REMOTE_ADDR"))
 
     def cioc_set_cookie(self, key, value, **args):
         if value is None:
             value = ""
-            if six.PY3:
-                expires = pywintypes.Time(datetime(1997, 1, 1, 0, 0, 0).timestamp())
-            else:
-                expires = date(1997, 1, 1)
+            expires = pywintypes.Time(datetime(1997, 1, 1, 0, 0, 0).timestamp())
             args["expires"] = expires
 
         self.response.Cookies[key] = value

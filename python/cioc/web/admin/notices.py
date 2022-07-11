@@ -16,7 +16,6 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 from collections import namedtuple
 
@@ -29,7 +28,6 @@ from pyramid.view import view_config, view_defaults
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 from cioc.core import constants as const, validators
-from six.moves import map
 
 log = logging.getLogger(__name__)
 
@@ -168,10 +166,10 @@ class Notice(viewbase.AdminViewBase):
             with request.connmgr.get_connection("admin") as conn:
                 result = conn.execute(
                     """
-						DECLARE @ErrMsg nvarchar(500), @RC int
-						EXEC @RC = sp_GBL_Admin_Notice_i ?,?,?,?, @ErrMsg OUTPUT
+                        DECLARE @ErrMsg nvarchar(500), @RC int
+                        EXEC @RC = sp_GBL_Admin_Notice_i ?,?,?,?, @ErrMsg OUTPUT
 
-						SELECT @RC AS [Return], @ErrMsg AS ErrMsg""",
+                        SELECT @RC AS [Return], @ErrMsg AS ErrMsg""",
                     *args
                 ).fetchone()
 
@@ -255,12 +253,12 @@ class Notice(viewbase.AdminViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-					DECLARE @RC int, @ErrMsg nvarchar(500)
+                    DECLARE @RC int, @ErrMsg nvarchar(500)
 
-					EXEC @RC = dbo.sp_GBL_Admin_Notice_u ?, ?, ?, ?, ?, @ErrMsg OUTPUT
+                    EXEC @RC = dbo.sp_GBL_Admin_Notice_u ?, ?, ?, ?, ?, @ErrMsg OUTPUT
 
-					SELECT @RC AS [Return], @ErrMsg AS ErrMsg
-					"""
+                    SELECT @RC AS [Return], @ErrMsg AS ErrMsg
+                    """
 
                 result = conn.execute(sql, args).fetchone()
                 if not result.Return:

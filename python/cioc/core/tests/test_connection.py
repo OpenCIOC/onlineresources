@@ -14,10 +14,10 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import os
 
-import mock
+
+from unittest import mock
 
 
 from cioc.core import connection, syslanguage, config, constants as const
@@ -40,7 +40,7 @@ fake_settings.update(
 )
 
 
-class Test_ConnectionMgr(object):
+class Test_ConnectionMgr:
     @classmethod
     def setUpAll(self):
         self.request = DummyObject()

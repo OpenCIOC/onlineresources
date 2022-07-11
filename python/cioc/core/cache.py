@@ -5,7 +5,7 @@
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
-# 	   http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,6 @@
 # =========================================================================================
 
 # std lib
-from __future__ import absolute_import
 import json
 import datetime
 import decimal
@@ -95,14 +94,12 @@ class EnhancedJSONEncoder(json.JSONEncoder):
         elif isinstance(obj, RecentSearches):
             return {"__type__": "RecentSearches", "args": [obj.values()]}
         else:
-            return super(EnhancedJSONEncoder, self).default(obj)
+            return super().default(obj)
 
 
 class EnhancedJSONDecoder(json.JSONDecoder):
     def __init__(self, *args, **kwargs):
-        super(EnhancedJSONDecoder, self).__init__(
-            *args, object_hook=self.object_hook, **kwargs
-        )
+        super().__init__(*args, object_hook=self.object_hook, **kwargs)
 
     def object_hook(self, d):
         if "__type__" not in d:

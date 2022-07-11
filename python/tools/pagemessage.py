@@ -14,7 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import argparse
 import os
 import sys
@@ -31,7 +30,7 @@ from cioc.core import constants as const, request, config
 const.update_cache_values()
 
 
-class ContextBase(object):
+class ContextBase:
     def __init__(self, args):
         self.params = {}
         self.args = args
@@ -47,8 +46,8 @@ def toggle(args, context):
     with context.connmgr.get_connection("admin") as conn:
         for msg_id in args.message_ids:
             sql = """
-			EXEC sp_%(type)s_PageMsg_Toggle ?, ?, ?
-			"""
+            EXEC sp_%(type)s_PageMsg_Toggle ?, ?, ?
+            """
             conn.execute(
                 sql % {"type": args.domain}, args.member_id, msg_id, args.turn_on
             )

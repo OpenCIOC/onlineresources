@@ -15,8 +15,7 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
-import six.moves.urllib.request, six.moves.urllib.parse, six.moves.urllib.error
+import urllib.parse
 
 
 def hasGoogleMapsAPI(request):
@@ -48,6 +47,6 @@ def getGoogleMapsKeyArg(request):
         params["key"] = api_key
 
     if params:
-        return six.moves.urllib.parse.urlencode(params)
+        return urllib.parse.urlencode(params)
 
     return ""

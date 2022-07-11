@@ -15,12 +15,8 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-from six.moves import map
-import six
 
-log = logging.getLogger(__name__)
 
 from pyramid.view import view_config, view_defaults
 from formencode import Invalid
@@ -30,6 +26,8 @@ from cioc.web.cic import viewbase
 from cioc.core import validators as ciocvalidators
 from cioc.core.i18n import gettext as _
 from cioc.core.vacancyscript import make_history_table
+
+log = logging.getLogger(__name__)
 
 idlist_validator = ciocvalidators.CSVForEach(ciocvalidators.IDValidator(not_emtpy=True))
 
@@ -41,8 +39,8 @@ class IncrementSchema(ciocvalidators.RootSchema):
 
 _change_global_template = Markup(
     """
-	<h3>%(title)s</h3>
-	%(changes)s
+    <h3>%(title)s</h3>
+    %(changes)s
 """
 )
 
@@ -72,7 +70,7 @@ class Vacancy(viewbase.CicViewBase):
         if not ids:
             return []
 
-        ids = ",".join(map(six.text_type, ids))
+        ids = ",".join(map(str, ids))
 
         with request.connmgr.get_connection() as conn:
             editable = conn.execute(
@@ -102,7 +100,7 @@ class Vacancy(viewbase.CicViewBase):
         if not ids:
             return {"success": False}
 
-        ids = ",".join(map(six.text_type, ids))
+        ids = ",".join(map(str, ids))
 
         with request.connmgr.get_connection("admin") as conn:
             updates = conn.execute(
@@ -133,9 +131,9 @@ class Vacancy(viewbase.CicViewBase):
 
         if model_state.validate():
             sql = """DECLARE @RC int, @ErrMsg nvarchar(500)
-			EXEC @RC = sp_CIC_Vacancy_u_Increment ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXEC @RC = sp_CIC_Vacancy_u_Increment ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC AS [Return], @ErrMsg AS ErrMsg """
+            SELECT @RC AS [Return], @ErrMsg AS ErrMsg """
             with request.connmgr.get_connection("admin") as conn:
                 cursor = conn.execute(
                     sql,

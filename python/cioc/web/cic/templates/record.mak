@@ -25,7 +25,6 @@ from cioc.core.format import textToHTML
 from cioc.core.modelstate import convert_options
 
 from webhelpers2.html import tags
-import six
 %>
 <%
 viewdata = request.viewdata
@@ -197,7 +196,7 @@ ${gtranslate.render_ui(request)}
 				</table>
 
 			</div> <!-- record-details-action -->
-			
+
 
 			<table class="BasicBorder cell-padding-3 record-data">
 			%for group_name, fields in field_groups:
@@ -206,7 +205,7 @@ ${gtranslate.render_ui(request)}
 						%if field_contents:
 							%if field.CheckMultiline or field.CheckHTML:
 								<% field_contents = textToHTML(field_contents) %>
-							%elif field.FieldName.endswith('_DATE') and not isinstance(field_contents, six.string_types):
+							%elif field.FieldName.endswith('_DATE') and not isinstance(field_contents, str):
 								<% field_contents = format_date(field_contents) %>
 							%endif
 							<% field_display = field.FieldDisplay %>
@@ -215,7 +214,7 @@ ${gtranslate.render_ui(request)}
 							%endif
 							<tr>
 								<td class="FieldLabelLeft">${field_display|n}</td>
-								<td class="field-detail clearfix">${six.text_type(field_contents)|n}</td>
+								<td class="field-detail clearfix">${str(field_contents)|n}</td>
 							</tr>
 						%endif
 					%endfor
@@ -263,7 +262,7 @@ ${gtranslate.render_ui(request)}
 							%endif
 						%endif
 					</div>
-					<div class="details" 
+					<div class="details"
 					%if (j or i) and not force_open:
 					style="display: none;"
 					%endif
@@ -290,7 +289,7 @@ ${gtranslate.render_ui(request)}
 						%if related_record.NON_PUBLIC and request.user:
 							<div class="Alert NoWrap SmallNote">${_('NON PUBLIC')}</div>
 						%endif
-						${six.text_type(related_record.SUMMARY if not related_record.CheckHTML else textToHTML(related_record.SUMMARY))|n}
+						${str(related_record.SUMMARY if not related_record.CheckHTML else textToHTML(related_record.SUMMARY))|n}
 					</div>
 					%endif
 					%endfor
@@ -379,5 +378,3 @@ var addthis_config = {
 %endif
 <% request.language.setSystemLanguage(restore_culture) %>
 </%def>
-
-

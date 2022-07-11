@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,6 @@
 # =========================================================================================
 
 # std library
-from __future__ import absolute_import
 import json
 import os
 
@@ -36,13 +35,13 @@ def _get_asset_versions():
     mtime = os.stat(_version_file).st_mtime
     if not _last_load or _last_load < mtime:
         _last_load = mtime
-        _assetversions = json.load(open(_version_file, "r"))
+        _assetversions = json.load(open(_version_file))
         _assetversions_other = {}
 
     return _assetversions, _assetversions_other
 
 
-class AssetManager(object):
+class AssetManager:
     def __init__(self, request):
         self.request = request
         self.assetversions, self.assetversions_other = _get_asset_versions()
@@ -127,9 +126,9 @@ class AssetManager(object):
         ):
             bootstrap = markupsafe.Markup(
                 """
-				<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha256-Sk3nkD6mLTMOF0EOpNtsIry+s1CsaqQC1rVLTAy+0yc= sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
-				<script src="https://cdn.jsdelivr.net/bootstrap.jasny/3.13/js/jasny-bootstrap.min.js"></script>
-			"""
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha256-Sk3nkD6mLTMOF0EOpNtsIry+s1CsaqQC1rVLTAy+0yc= sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/bootstrap.jasny/3.13/js/jasny-bootstrap.min.js"></script>
+            """
             )
         else:
             bootstrap = ""
@@ -137,12 +136,12 @@ class AssetManager(object):
         html = (
             markupsafe.Markup(
                 """
-				<script src="//ajax.googleapis.com/ajax/libs/jquery/%(jquery_version)s/jquery.min.js"></script>
-				<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-				<script src="//ajax.googleapis.com/ajax/libs/jqueryui/%(jquery_ui_version)s/jquery-ui.min.js"></script>
-				<script type="text/javascript">$.widget.bridge("uibutton", jQuery.ui.button);$.widget.bridge("uitooltip", jQuery.ui.tooltip);</script>
-				%(bootstrap)s
-			"""
+                <script src="//ajax.googleapis.com/ajax/libs/jquery/%(jquery_version)s/jquery.min.js"></script>
+                <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+                <script src="//ajax.googleapis.com/ajax/libs/jqueryui/%(jquery_ui_version)s/jquery-ui.min.js"></script>
+                <script type="text/javascript">$.widget.bridge("uibutton", jQuery.ui.button);$.widget.bridge("uitooltip", jQuery.ui.tooltip);</script>
+                %(bootstrap)s
+            """
             )
             % {
                 "root": self.request.pageinfo.PathToStart,

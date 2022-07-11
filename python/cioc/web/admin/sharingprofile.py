@@ -16,12 +16,9 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
-import six
-from six.moves import map
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 from datetime import timedelta, date, datetime
 
 from itertools import groupby
@@ -407,10 +404,10 @@ class SharingProfile(AdminViewBase):
 
             root = ET.Element("DESCS")
 
-            for culture, data in six.iteritems(model_state.form.data["descriptions"]):
+            for culture, data in model_state.form.data["descriptions"].items():
                 desc = ET.SubElement(root, "DESC")
                 ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                for name, value in six.iteritems(data):
+                for name, value in data.items():
                     if value:
                         ET.SubElement(desc, name).text = value
 
@@ -419,14 +416,14 @@ class SharingProfile(AdminViewBase):
 
             root = ET.Element("VIEWS")
             for view_type in model_state.value("profile.Views") or []:
-                ET.SubElement(root, "VIEW").text = six.text_type(view_type)
+                ET.SubElement(root, "VIEW").text = str(view_type)
 
             args.append(ET.tostring(root, encoding="unicode"))
             kwnames.append("Views")
 
             root = ET.Element("FIELDS")
             for field in model_state.value("profile.Fields") or []:
-                ET.SubElement(root, "FIELD").text = six.text_type(field)
+                ET.SubElement(root, "FIELD").text = str(field)
 
             args.append(ET.tostring(root, encoding="unicode"))
             kwnames.append("Fields")
@@ -438,16 +435,16 @@ class SharingProfile(AdminViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				Declare @ErrMsg as nvarchar(500),
-				@RC as int,
-				@ProfileID as int
+                Declare @ErrMsg as nvarchar(500),
+                @RC as int,
+                @ProfileID as int
 
-				SET @ProfileID = ?
+                SET @ProfileID = ?
 
-				EXECUTE @RC = dbo.sp_%s_SharingProfile_u @ProfileID OUTPUT, ?, ?, %s, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_{}_SharingProfile_u @ProfileID OUTPUT, ?, ?, {}, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @ProfileID as ProfileID
-				""" % (
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg, @ProfileID as ProfileID
+                """.format(
                     domain.str,
                     kwnames,
                 )
@@ -686,7 +683,7 @@ class SharingProfile(AdminViewBase):
         )
 
         if is_add:
-            for desc in six.itervalues(profile_descriptions):
+            for desc in profile_descriptions.values():
                 desc.Name = None
 
         always_shared_fields = []
@@ -844,13 +841,13 @@ class SharingProfile(AdminViewBase):
         with request.connmgr.get_connection("admin") as conn:
             sql = (
                 """
-			Declare @ErrMsg as nvarchar(500),
-			@RC as int
+            Declare @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_%s_SharingProfile_d ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_%s_SharingProfile_d ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
                 % domain.str
             )
 
@@ -920,13 +917,13 @@ class SharingProfile(AdminViewBase):
         with request.connmgr.get_connection("admin") as conn:
             sql = (
                 """
-			Declare @ErrMsg as nvarchar(500),
-			@RC as int
+            Declare @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_%s_SharingProfile_u_Send ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_%s_SharingProfile_u_Send ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
                 % context.domain.str
             )
 
@@ -1012,13 +1009,13 @@ class SharingProfile(AdminViewBase):
             with request.connmgr.get_connection("admin") as conn:
                 sql = (
                     """
-				Declare @ErrMsg as nvarchar(500),
-				@RC as int
+                Declare @ErrMsg as nvarchar(500),
+                @RC as int
 
-				EXECUTE @RC = dbo.sp_%s_SharingProfile_u_Revoke ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_%s_SharingProfile_u_Revoke ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg
+                """
                     % context.domain.str
                 )
 
@@ -1148,13 +1145,13 @@ class SharingProfile(AdminViewBase):
         with request.connmgr.get_connection("admin") as conn:
             sql = (
                 """
-			Declare @ErrMsg as nvarchar(500),
-			@RC as int
+            Declare @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_%s_SharingProfile_u_Accept ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_%s_SharingProfile_u_Accept ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
                 % context.domain.str
             )
 
@@ -1278,11 +1275,11 @@ class SharingProfile(AdminViewBase):
             with request.connmgr.get_connection("admin") as conn:
                 result = conn.execute(
                     """
-					DECLARE @RC int, @RecordsAdded int, @ErrMsg nvarchar(500)
-					EXEC @RC = dbo.sp_%s_SharingProfile_u_RecordAdd ?, ?, ?, ?, @RecordsAdded OUTPUT, @ErrMsg OUTPUT
+                    DECLARE @RC int, @RecordsAdded int, @ErrMsg nvarchar(500)
+                    EXEC @RC = dbo.sp_%s_SharingProfile_u_RecordAdd ?, ?, ?, ?, @RecordsAdded OUTPUT, @ErrMsg OUTPUT
 
-					SELECT @RC AS [Return], @ErrMsg AS ErrMsg, @RecordsAdded AS RecordsAdded
-					"""
+                    SELECT @RC AS [Return], @ErrMsg AS ErrMsg, @RecordsAdded AS RecordsAdded
+                    """
                     % domain.str,
                     request.dboptions.MemberID,
                     context.ProfileID,
@@ -1483,11 +1480,11 @@ class SharingProfile(AdminViewBase):
             with request.connmgr.get_connection("admin") as conn:
                 sql = (
                     """
-					DECLARE @RC int, @ErrMsg nvarchar(500)
-					EXEC @RC = dbo.sp_%s_SharingProfile_u_RecordRemove ?, ?, ?, ?, @ErrMsg OUTPUT
+                    DECLARE @RC int, @ErrMsg nvarchar(500)
+                    EXEC @RC = dbo.sp_%s_SharingProfile_u_RecordRemove ?, ?, ?, ?, @ErrMsg OUTPUT
 
-					SELECT @RC AS [Return], @ErrMsg AS ErrMsg
-				"""
+                    SELECT @RC AS [Return], @ErrMsg AS ErrMsg
+                """
                     % domain.str
                 )
 
@@ -1646,13 +1643,13 @@ class SharingProfile(AdminViewBase):
             with request.connmgr.get_connection("admin") as conn:
                 sql = (
                     """
-				Declare @ErrMsg as nvarchar(500),
-				@RC as int
+                Declare @ErrMsg as nvarchar(500),
+                @RC as int
 
-				EXECUTE @RC = dbo.sp_%s_SharingProfile_u_ShareEmailAddresses ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_%s_SharingProfile_u_ShareEmailAddresses ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg
+                """
                     % context.domain.str
                 )
 

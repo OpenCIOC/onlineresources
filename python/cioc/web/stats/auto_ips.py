@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
 
 from pyramid.view import view_config, view_defaults
@@ -33,7 +32,7 @@ templateprefix = "cioc.web.stats:templates/"
 @view_defaults(renderer=templateprefix + "auto_ips.mak")
 class Stats1View(viewbase.ViewBase):
     def __init__(self, request, login_required=True):
-        super(Stats1View, self).__init__(request, True)
+        super().__init__(request, True)
 
     @view_config(route_name="stats_auto_ips_cic")
     @view_config(route_name="stats_auto_ips_vol")

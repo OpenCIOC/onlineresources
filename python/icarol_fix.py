@@ -14,7 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import sys
 
 sys.path.append(".")
@@ -41,7 +40,7 @@ def run_update(argv, dest, files):
         kwargs = icarol_sync.download_kwargs(args)
         kwargs["params"]["Field"] = field
         headers = {"content-type": "application/json"}
-        data = open(os.path.join(args.dest, file), "r").read()
+        data = open(os.path.join(args.dest, file)).read()
 
         url = icarol_sync.download_url(args.url)
         r = requests.post(url, data=data, headers=headers, **kwargs)
@@ -63,7 +62,7 @@ run_update(
 # print 'Done Ontario- press enter to continue'
 # raw_input()
 # run_update(
-# 	'--config-prefix nvt --nosslverify https://fizban-m2/ tools'.split(), r'Y:\work\other clients\O211SC\iCarolLoads\NVT',
-# 	['NVFull20141121T024000_counts.json']
+#   '--config-prefix nvt --nosslverify https://fizban-m2/ tools'.split(), r'Y:\work\other clients\O211SC\iCarolLoads\NVT',
+#   ['NVFull20141121T024000_counts.json']
 # )
 # print 'Done nunavut'

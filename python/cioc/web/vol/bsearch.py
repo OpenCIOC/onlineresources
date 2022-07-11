@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import os
 import itertools
 from functools import partial
@@ -30,9 +29,6 @@ from cioc.core.browselist import makeAlphaList, makeAlphaListItems
 from cioc.core.format import textToHTML
 from cioc.core.modelstate import convert_options
 from cioc.core.utils import read_file
-import six
-from six.moves import map
-from six.moves import zip
 
 _system_layout_dir = template._system_layout_dir
 encode_link_values = template.encode_link_values
@@ -59,7 +55,7 @@ _spotlight_duties_template = """<h3><span class="glyphicon glyphicon-ok-circle" 
 def _generic_feed(request, item_template, sp, sp_args):
     with request.connmgr.get_connection() as conn:
         cursor = conn.execute(
-            "EXEC %s %s" % (sp, ",".join("?" * len(sp_args))), sp_args
+            "EXEC {} {}".format(sp, ",".join("?" * len(sp_args))), sp_args
         )
         cols = [t[0] for t in cursor.description]
 
@@ -140,7 +136,7 @@ def make_popular_org_feed(request):
     )
 
 
-class SpotlightFeed(object):
+class SpotlightFeed:
     def __init__(self, request):
         self.request = request
 
@@ -172,7 +168,7 @@ class SpotlightFeed(object):
         return self.request.passvars.makeVOLDetailsLink(self.data["VNUM"])
 
 
-class LayoutSearch(object):
+class LayoutSearch:
     def __init__(
         self, request, template_values, search_info, viewslist, menu_items_custom
     ):
@@ -193,8 +189,8 @@ class LayoutSearch(object):
         browse_by_org = ""
         browse_by_org_items = []
         if search_info.BSrchBrowseByOrg:
-            browse_by_org = """<tr><th class="RevTitleBox" colspan="2">%s</th></tr>
-						<tr><td align="center" colspan="2">%s</td></tr>""" % (
+            browse_by_org = """<tr><th class="RevTitleBox" colspan="2">{}</th></tr>
+                        <tr><td align="center" colspan="2">{}</td></tr>""".format(
                 _("Browse Organizations with Opportunities"),
                 makeAlphaList(True, "browsebyorg.asp", "MenuText", request),
             )
@@ -205,9 +201,9 @@ class LayoutSearch(object):
         if search_info.BSrchBrowseByInterest:
             browse_op_items = makeAlphaListItems(False, "browsebyinterest.asp", request)
             browse_by_interest = """
-				<tr><th class="RevTitleBox" colspan="2">%s</th></tr>
-				<tr><td align="center" colspan="2">%s</td></tr>
-				""" % (
+                <tr><th class="RevTitleBox" colspan="2">{}</th></tr>
+                <tr><td align="center" colspan="2">{}</td></tr>
+                """.format(
                 _("Browse by Area of Interest"),
                 makeAlphaList(False, "browsebyinterest.asp", "MenuText", request),
             )
@@ -233,7 +229,7 @@ class LayoutSearch(object):
 
         other_langs = []
         if user or self.menu_items_custom:
-            for key, val in six.iteritems(viewdata.Cultures):
+            for key, val in viewdata.Cultures.items():
                 if key == Culture:
                     continue
                 httpvals = {}
@@ -339,7 +335,7 @@ class LayoutSearch(object):
 
                 cv_params = "".join(
                     tags.hidden(n, value=v)
-                    for n, v in six.iteritems(request.params)
+                    for n, v in request.params.items()
                     if n != "UseVOLVw"
                 )
 
@@ -354,13 +350,13 @@ class LayoutSearch(object):
                 )
                 change_view = (
                     """
-				<form action="%(action)s">
-				<div style="display:none;">
-				%(params)s
-				</div>
-				%(title)s
-				<br>%(select)s %(submit)s
-				</form>"""
+                <form action="%(action)s">
+                <div style="display:none;">
+                %(params)s
+                </div>
+                %(title)s
+                <br>%(select)s %(submit)s
+                </form>"""
                     % cv_namespace
                 )
 
@@ -466,7 +462,7 @@ class LayoutSearch(object):
             "PROFILE_LINKS": kwargs["searchform_profilelinks"],
             "MAKE_LINK": template.make_linkify_fn(request),
             "VIEWS_LIST": [
-                {"VIEWTYPE": six.text_type(x.ViewType), "VIEWNAME": x.ViewName}
+                {"VIEWTYPE": str(x.ViewType), "VIEWNAME": x.ViewName}
                 for x in self.viewslist
             ]
             if self.viewslist

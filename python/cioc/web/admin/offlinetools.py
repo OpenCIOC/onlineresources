@@ -14,10 +14,9 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 from collections import namedtuple
 from operator import itemgetter
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 from formencode import Schema, ForEach, variabledecode
 from pyramid.view import view_config
@@ -28,8 +27,6 @@ from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 
 import logging
-from six.moves import map
-import six
 
 log = logging.getLogger(__name__)
 
@@ -77,23 +74,23 @@ class OfflineTools(viewbase.AdminViewBase):
             root = ET.Element("Data")
 
             for machine in machines:
-                machine_id = six.text_type(machine["MachineID"])
+                machine_id = str(machine["MachineID"])
                 for sl in machine["SecurityLevels"]:
                     ET.SubElement(
-                        root, "MachineSL", MachineID=machine_id, SL_ID=six.text_type(sl)
+                        root, "MachineSL", MachineID=machine_id, SL_ID=str(sl)
                     )
 
             args = [user.Agency, ET.tostring(root, encoding="unicode")]
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-					DECLARE @ErrMsg as nvarchar(500), 
-					@RC as int
+                    DECLARE @ErrMsg as nvarchar(500),
+                    @RC as int
 
-					EXECUTE @RC = dbo.sp_CIC_Offline_Machines_u ?, ?, @ErrMsg=@ErrMsg OUTPUT  
+                    EXECUTE @RC = dbo.sp_CIC_Offline_Machines_u ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-					SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				"""
+                    SELECT @RC as [Return], @ErrMsg AS ErrMsg
+                """
 
                 cursor = conn.execute(sql, *args)
                 result = cursor.fetchone()

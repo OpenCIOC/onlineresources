@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import os
 import logging
 import itertools
@@ -31,8 +30,6 @@ from cioc.core.utils import read_file
 from pyramid.view import view_config
 
 from .csearch import ChildCareSearch
-import six
-from six.moves import map
 
 _system_layout_dir = template._system_layout_dir
 encode_link_values = template.encode_link_values
@@ -42,7 +39,7 @@ gettext = i18n.gettext
 log = logging.getLogger(__name__)
 
 
-class LayoutSearch(object):
+class LayoutSearch:
     def __init__(
         self,
         request,
@@ -88,7 +85,7 @@ class LayoutSearch(object):
         makeLink = passvars.makeLink
 
         browse_row_tmpl = """<tr><th class="RevTitleBox" colspan="2">%s</th></tr>
-							<tr><td align="center" colspan="2">%s</td></tr>"""
+                            <tr><td align="center" colspan="2">%s</td></tr>"""
 
         browse = []
         browse_org_items = []
@@ -153,7 +150,7 @@ class LayoutSearch(object):
 
                 service_category_list = service_category
             else:
-                service_category = '%s <a href="%s">%s</a>' % (
+                service_category = '{} <a href="{}">{}</a>'.format(
                     viewdata.FindAnOrgBy
                     or _("Find an Organization or Program by type of service:"),
                     makeLink("servcat.asp"),
@@ -196,7 +193,7 @@ class LayoutSearch(object):
         # main menu:
         other_langs = []
         if user or self.menu_items_custom:
-            for key, val in six.iteritems(viewdata.Cultures):
+            for key, val in viewdata.Cultures.items():
                 if key == Culture:
                     continue
                 httpvals = {}
@@ -329,7 +326,7 @@ class LayoutSearch(object):
 
                 cv_params = "".join(
                     tags.hidden(n, value=v)
-                    for n, v in six.iteritems(request.params)
+                    for n, v in request.params.items()
                     if n != "UseCICVw"
                 )
 
@@ -344,12 +341,12 @@ class LayoutSearch(object):
                 )
                 change_view = (
                     """
-				<form action="%(action)s">
-				<div style="display:none;">
-				%(params)s
-				</div>
-				%(select)s %(submit)s
-				</form>"""
+                <form action="%(action)s">
+                <div style="display:none;">
+                %(params)s
+                </div>
+                %(select)s %(submit)s
+                </form>"""
                     % cv_namespace
                 )
 
@@ -601,7 +598,7 @@ class LayoutSearch(object):
             or _("Organizations with Volunteer Opportunities"),
             "MAKE_LINK": template.make_linkify_fn(request),
             "VIEWS_LIST": [
-                {"VIEWTYPE": six.text_type(x.ViewType), "VIEWNAME": x.ViewName}
+                {"VIEWTYPE": str(x.ViewType), "VIEWNAME": x.ViewName}
                 for x in self.viewslist
             ]
             if self.viewslist
@@ -680,10 +677,10 @@ class BasicSearch(CicViewBase):
             cursor.close()
 
             sql = """
-				DECLARE @ViewType int = ?, @PreviewTemplateID int = ?, @MemberID int = ?
-				EXEC dbo.sp_CIC_View_s_BSrch_Template @ViewType, @PreviewTemplateID
-				EXEC dbo.sp_CIC_View_Community_l @ViewType
-			"""
+                DECLARE @ViewType int = ?, @PreviewTemplateID int = ?, @MemberID int = ?
+                EXEC dbo.sp_CIC_View_s_BSrch_Template @ViewType, @PreviewTemplateID
+                EXEC dbo.sp_CIC_View_Community_l @ViewType
+            """
             args = [cic_view.ViewType, preview_template_id, request.dboptions.MemberID]
             if search_info.BSrchAges:
                 sql += "\nEXEC dbo.sp_GBL_AgeGroup_l @MemberID, 0"

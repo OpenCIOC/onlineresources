@@ -19,7 +19,6 @@
 <%!
 from datetime import date
 import json
-import six
 
 from markupsafe import Markup
 
@@ -76,7 +75,7 @@ ${map_search_form()}
 	%if request.user:
 	<br>${renderer.radio("AgeType", id="AgeTypeS", value="S", label=Markup(_("Match programs that serve <strong>child #</strong>")))}
 		%for i in range(4):
-		${renderer.radio("AgeTypeSpecific", value=six.text_type(i), checked=not i, id="AgeTypeSpecific%d" % i, label=six.text_type(i+1))}
+		${renderer.radio("AgeTypeSpecific", value=str(i), checked=not i, id="AgeTypeSpecific%d" % i, label=str(i+1))}
 		%endfor
 	%endif
 	</p>

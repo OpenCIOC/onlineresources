@@ -17,12 +17,11 @@
 </%doc>
 
 <%inherit file="cioc.web:templates/master.mak" />
-<%! 
+<%!
 from markupsafe import Markup
-import six
 %>
-<% 
-makeLink = request.passvars.makeLink 
+<%
+makeLink = request.passvars.makeLink
 PrintMode = request.viewdata.PrintMode
 HeaderClass = '' if PrintMode else Markup('class="RevTitleBox"')
 SuperUserGlobal = _context.SuperUserGlobal
@@ -31,7 +30,7 @@ SuperUserGlobal = _context.SuperUserGlobal
 
 
 %if not PrintMode:
-<p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> 
+<p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a>
 %if not SuperUserGlobal:
 | <a href="${request.passvars.route_path('admin_notices', action='new', _query=[('AreaCode', list_type.AdminAreaCode)])}">${_('Request Change')}</a>
 %endif
@@ -47,8 +46,8 @@ ${make_table_header()}
 
 <% index = -1 %>
 %for index, listitem in enumerate(listitems):
-<% 
-	prefix = 'listitem-' + str(index) + '.' 
+<%
+	prefix = 'listitem-' + str(index) + '.'
 	id_field = list_type.ID or list_type.NameField
 	if isinstance(listitem, dict):
 		list_id = listitem.get(id_field)
@@ -64,7 +63,7 @@ ${make_row(prefix, listitem, list_id)}
 
 <%def name="make_row(prefix, listitem, itemid)">
 <tr>
-	<td> 
+	<td>
 	${getattr(listitem,list_type.NameField)}
 	</td>
 
@@ -86,24 +85,24 @@ ${make_row(prefix, listitem, list_id)}
 %endif #Print Mode
 
 %if list_type.Usage:
-	<% 
-		usage = list_type.Usage.get(six.text_type(getattr(listitem, list_type.ID or list_type.NameField)))
+	<%
+		usage = list_type.Usage.get(str(getattr(listitem, list_type.ID or list_type.NameField)))
 		usage1 = getattr(usage, 'Usage1', None)
 		usage2 = getattr(usage, 'Usage2', None)
 	%>
 	<td>
 	%if usage1:
-	${'' if not list_type.SearchLinkTitle1 else _(list_type.SearchLinkTitle1)} 
+	${'' if not list_type.SearchLinkTitle1 else _(list_type.SearchLinkTitle1)}
 		${usage1}
-	
+
 	%endif
 	%if usage1 and usage2:
 	<br>
 	%endif
 	%if usage2:
-	${'' if not list_type.SearchLinkTitle2 else _(list_type.SearchLinkTitle2)} 
+	${'' if not list_type.SearchLinkTitle2 else _(list_type.SearchLinkTitle2)}
 		${usage2}
-	
+
 	%endif
 	</td>
 %endif
@@ -114,7 +113,7 @@ ${make_row(prefix, listitem, list_id)}
 <tr>
 
 	<th ${HeaderClass}>${_('Name')}</th>
-	
+
 ## extra fields
 %for field in list_type.ExtraFields or []:
 		<th ${HeaderClass}>${_(field['title'])}</th>

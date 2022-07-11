@@ -16,9 +16,7 @@
 
 
 # Logging
-from __future__ import absolute_import
 import logging
-from six.moves import map
 
 log = logging.getLogger(__name__)
 
@@ -65,7 +63,7 @@ class SearchValidators(Schema):
     GHID_GRP_2 = ForEach(ciocvalidators.IDValidator(), if_invalid=None)
 
 
-class NOT_FROM_DB(object):
+class NOT_FROM_DB:
     pass
 
 
@@ -128,31 +126,31 @@ class TopicSearch(CicViewBase):
         log.debug("heading1_ids %s", heading1_ids)
 
         sql = """
-			DECLARE
-				@GHIDList1 varchar(max),
-				@GHIDList2 varchar(max),
-				@GHGroupList1 varchar(max),
-				@GHGroupList2 varchar(max),
-				@CMIDList varchar(max),
-				@AgeGroupID int,
-				@LN_ID int,
-				@ViewType int
+            DECLARE
+                @GHIDList1 varchar(max),
+                @GHIDList2 varchar(max),
+                @GHGroupList1 varchar(max),
+                @GHGroupList2 varchar(max),
+                @CMIDList varchar(max),
+                @AgeGroupID int,
+                @LN_ID int,
+                @ViewType int
 
-			SET @GHIDList1 = ?
-			SET @GHIDList2 = ?
-			SET @GHGroupList1 = ?
-			SET @GHGroupList2 = ?
-			SET @CMIDList = ?
-			SET @AgeGroupID = ?
-			SET @LN_ID = ?
-			SET @ViewType = ?
+            SET @GHIDList1 = ?
+            SET @GHIDList2 = ?
+            SET @GHGroupList1 = ?
+            SET @GHGroupList2 = ?
+            SET @CMIDList = ?
+            SET @AgeGroupID = ?
+            SET @LN_ID = ?
+            SET @ViewType = ?
 
-			EXEC dbo.sp_CIC_View_s_TSrch @ViewType, ?, ?, @GHIDList1=@GHIDList1 OUTPUT, @GHGroupList1=@GHGroupList1 OUTPUT, @GHIDList2=@GHIDList2 OUTPUT, @GHGroupList2=@GHGroupList2 OUTPUT, @CMIDList=@CMIDList OUTPUT, @CMType=?, @AgeGroupID=@AgeGroupID OUTPUT, @LN_ID=@LN_ID OUTPUT
+            EXEC dbo.sp_CIC_View_s_TSrch @ViewType, ?, ?, @GHIDList1=@GHIDList1 OUTPUT, @GHGroupList1=@GHGroupList1 OUTPUT, @GHIDList2=@GHIDList2 OUTPUT, @GHGroupList2=@GHGroupList2 OUTPUT, @CMIDList=@CMIDList OUTPUT, @CMType=?, @AgeGroupID=@AgeGroupID OUTPUT, @LN_ID=@LN_ID OUTPUT
 
-			SELECT @GHIDList1 AS GHID, @GHIDList2 AS GHID_2, @CMIDList AS CMID, @AgeGroupID AS AgeGroup, @LN_ID AS LNID, @GHGroupList1 AS GHID_GRP, @GHGroupList2 AS GHID_GRP_2
+            SELECT @GHIDList1 AS GHID, @GHIDList2 AS GHID_2, @CMIDList AS CMID, @AgeGroupID AS AgeGroup, @LN_ID AS LNID, @GHGroupList1 AS GHID_GRP, @GHGroupList2 AS GHID_GRP_2
 
-			EXEC dbo.sp_CIC_View_s_BSrch @ViewType
-			"""
+            EXEC dbo.sp_CIC_View_s_BSrch @ViewType
+            """
 
         with request.connmgr.get_connection() as conn:
             cursor = conn.execute(

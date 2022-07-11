@@ -16,12 +16,11 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 
 from itertools import groupby
 from operator import attrgetter
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 import collections
 
 # 3rd party
@@ -36,15 +35,13 @@ from cioc.core import validators, constants as const
 
 from cioc.core.i18n import gettext as _
 from cioc.web.cic.viewbase import CicViewBase
-import six
-from six.moves import map
 
 log = logging.getLogger(__name__)
 
 templateprefix = "cioc.web.cic:templates/generalheading/"
 
 UsedOptions = {"Y": True, "N": False, "T": None}
-RUsedOptions = dict((v, k) for k, v in six.iteritems(UsedOptions))
+RUsedOptions = {v: k for k, v in UsedOptions.items()}
 
 
 class GeneralHeadingBaseSchema(Schema):
@@ -224,10 +221,10 @@ class GeneralHeading(CicViewBase):
 
             root = ET.Element("DESCS")
 
-            for culture, data in six.iteritems((form_data["descriptions"] or {})):
+            for culture, data in (form_data["descriptions"] or {}).items():
                 desc = ET.SubElement(root, "DESC")
                 ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                for name, value in six.iteritems(data):
+                for name, value in data.items():
                     if value:
                         ET.SubElement(desc, name).text = value
 
@@ -237,7 +234,7 @@ class GeneralHeading(CicViewBase):
             root = ET.Element("HEADINGS")
 
             for value in form_data["RelatedHeadings"] or []:
-                desc = ET.SubElement(root, "HEADING").text = six.text_type(value)
+                desc = ET.SubElement(root, "HEADING").text = str(value)
 
             args.append(ET.tostring(root, encoding="unicode"))
             kwargs.append("RelatedHeadings")
@@ -258,16 +255,16 @@ class GeneralHeading(CicViewBase):
             with request.connmgr.get_connection("admin") as conn:
                 sql = (
                     """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int,
-				@GH_ID as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int,
+                @GH_ID as int
 
-				SET @GH_ID = ?
+                SET @GH_ID = ?
 
-				EXECUTE @RC = dbo.sp_CIC_GeneralHeading_u @GH_ID OUTPUT, ?, ?, ?, ?, %s, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_CIC_GeneralHeading_u @GH_ID OUTPUT, ?, ?, ?, ?, %s, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @GH_ID as GH_ID
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg, @GH_ID as GH_ID
+                """
                     % kwargstr
                 )
 
@@ -408,9 +405,7 @@ class GeneralHeading(CicViewBase):
 
                     cursor.nextset()
 
-                    relatedheadings = set(
-                        six.text_type(x[0]) for x in cursor.fetchall()
-                    )
+                    relatedheadings = {str(x[0]) for x in cursor.fetchall()}
 
                     cursor.nextset()
 
@@ -422,17 +417,17 @@ class GeneralHeading(CicViewBase):
                     # not found
                     self._error_page(_("Heading Not Found", request))
 
-            codes = set(x.Code for x in terms)
+            codes = {x.Code for x in terms}
             if extra_codes:
                 codes.update(extra_codes)
 
             cursor = conn.execute(
                 """
-						DECLARE @PB_ID int=?
-						SELECT PubCode,MemberID, CanEditHeadingsShared FROM CIC_Publication WHERE PB_ID=@PB_ID
-						EXEC dbo.sp_CIC_GeneralHeading_l_Related ?, @PB_ID
-						EXEC dbo.sp_CIC_GeneralHeading_Group_l @PB_ID
-						EXEC dbo.sp_TAX_Term_l_GeneralHeading ?""",
+                        DECLARE @PB_ID int=?
+                        SELECT PubCode,MemberID, CanEditHeadingsShared FROM CIC_Publication WHERE PB_ID=@PB_ID
+                        EXEC dbo.sp_CIC_GeneralHeading_l_Related ?, @PB_ID
+                        EXEC dbo.sp_CIC_GeneralHeading_Group_l @PB_ID
+                        EXEC dbo.sp_TAX_Term_l_GeneralHeading ?""",
                 PB_ID,
                 GH_ID,
                 ",".join(codes),
@@ -571,13 +566,13 @@ class GeneralHeading(CicViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_CIC_GeneralHeading_d ?, ?, ?,?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_CIC_GeneralHeading_d ?, ?, ?,?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             # XXX Enforce only delete general headings belonging to LimitedView users.
             cursor = conn.execute(

@@ -15,13 +15,10 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 from formencode import Schema, validators, foreach, variabledecode
 from pyramid.view import view_config, view_defaults
@@ -32,6 +29,7 @@ from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 
 templateprefix = "cioc.web.admin:templates/"
+log = logging.getLogger(__name__)
 
 
 class FieldDescriptionSchema(Schema):
@@ -102,7 +100,7 @@ class FieldDisplay(viewbase.AdminViewBase):
 
         record_cultures = syslanguage.active_record_cultures()
 
-        fieldinfo_map = dict((str(f.FieldID), f) for f in fields)
+        fieldinfo_map = {str(f.FieldID): f for f in fields}
         request.model_state.form.data["field"] = fields
 
         title = _("Change Field Display", request)
@@ -148,9 +146,9 @@ class FieldDisplay(viewbase.AdminViewBase):
             root = ET.Element("FIELDS")
             for field in model_state.form.data["field"]:
                 field_el = ET.SubElement(root, "Field")
-                for key, value in six.iteritems(field):
+                for key, value in field.items():
                     if key != "Descriptions":
-                        ET.SubElement(field_el, key).text = six.text_type(value)
+                        ET.SubElement(field_el, key).text = str(value)
                         continue
 
                     descs = ET.SubElement(field_el, "DESCS")
@@ -158,9 +156,9 @@ class FieldDisplay(viewbase.AdminViewBase):
 
                         desc = ET.SubElement(descs, "DESC")
                         ET.SubElement(desc, "Culture").text = culture
-                        for key, val in six.iteritems(
-                            (value.get(culture.replace("-", "_")) or {})
-                        ):
+                        for key, val in (
+                            value.get(culture.replace("-", "_")) or {}
+                        ).items():
                             if val:
                                 ET.SubElement(desc, key).text = val
 
@@ -174,13 +172,13 @@ class FieldDisplay(viewbase.AdminViewBase):
 
             sql = (
                 """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_%s_Fields_u ?, ?, ?, ?, @ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_%s_Fields_u ?, ?, ?, ?, @ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
                 % domain.str
             )
 
@@ -218,7 +216,7 @@ class FieldDisplay(viewbase.AdminViewBase):
         # raise Exception()
         # XXX should we refetch the basic info?
 
-        fieldinfo_map = dict((str(f.FieldID), f) for f in fields)
+        fieldinfo_map = {str(f.FieldID): f for f in fields}
 
         fields = variabledecode.variable_decode(request.POST)["field"]
 

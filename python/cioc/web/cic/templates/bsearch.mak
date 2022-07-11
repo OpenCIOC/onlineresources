@@ -24,7 +24,6 @@ from functools import partial
 from itertools import groupby
 from operator import attrgetter
 
-import six
 from markupsafe import Markup
 from webhelpers2.html import tags
 
@@ -80,9 +79,9 @@ subitem_prefix = Markup('&nbsp;&nbsp;&nbsp;&nbsp;')
 	%if search_info.BSrchKeywords and search_info.BSrchAutoComplete:
 		<% makeLink = request.passvars.makeLink %>
 		init_find_box({
-				A: '${ makeLink("~/jsonfeeds/cic_keyword_generator.asp", "SearchType=A")|n}', 
-				O: '${ makeLink("~/jsonfeeds/cic_keyword_generator.asp", "SearchType=O")|n}', 
-				S: '${ makeLink("~/jsonfeeds/cic_keyword_generator.asp", "SearchType=S")|n}', 
+				A: '${ makeLink("~/jsonfeeds/cic_keyword_generator.asp", "SearchType=A")|n}',
+				O: '${ makeLink("~/jsonfeeds/cic_keyword_generator.asp", "SearchType=O")|n}',
+				S: '${ makeLink("~/jsonfeeds/cic_keyword_generator.asp", "SearchType=S")|n}',
 				T: '${ makeLink("~/jsonfeeds/cic_keyword_generator.asp", "SearchType=T")|n}'
 				});
 	%endif
@@ -171,14 +170,14 @@ ${tags.select("AgeGroup", None, convert_options([('', _('Select an age group'))]
 		%endif
 		<div class="inline-checkbox-list">
 		<table class="NoBorder checkbox-list-table">
-		<% 
+		<%
 			wrap_at = request.viewdata.cic.QuickListWrapAt
 		%>
 		%for i, ((grpid, grpname), items) in enumerate(quicklist):
 			%if grpid is not None:
 			<tr><td colspan="${wrap_at}" class="search-group-header">
 			%if search_groups:
-				${tags.checkbox(field_name + "_GRP" + six.text_type(field_suffix), value=grpid, label=grpname)} 
+				${tags.checkbox(field_name + "_GRP" + str(field_suffix), value=grpid, label=grpname)}
 			%else:
 				${grpname}
 			%endif

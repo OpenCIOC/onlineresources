@@ -17,12 +17,11 @@
 </%doc>
 
 <%inherit file="cioc.web:templates/master.mak" />
-<%! 
+<%!
 from markupsafe import Markup
-import six
 %>
-<% 
-makeLink = request.passvars.makeLink 
+<%
+makeLink = request.passvars.makeLink
 route_path = request.passvars.route_path
 HeaderClass = Markup('class="RevTitleBox"')
 
@@ -32,7 +31,7 @@ if list_type.ExtraFields and any(x['type'] == 'language' for x in list_type.Extr
 <h2>${renderinfo.doc_title}</h2>
 
 
-<p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> 
+<p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a>
 | <a href="${route_path('admin_listvalues',_query=[('list',list_type.FieldCode), ('PrintMd', 'on')])}" target="_blank">${_('Print Version (New Window)')}</a>
 ]</p>
 
@@ -56,8 +55,8 @@ ${make_table_header()}
 
 <% index = -1 %>
 %for index, listitem in enumerate(listitems):
-<% 
-	prefix = 'listitem-' + str(index) + '.' 
+<%
+	prefix = 'listitem-' + str(index) + '.'
 	id_field = list_type.ID or list_type.NameField
 	if isinstance(listitem, dict):
 		listid = listitem.get(id_field)
@@ -74,7 +73,7 @@ ${make_row(prefix, listitem, listid)}
 	<% colspan = 2 + bool(list_type.Usage) + len(list_type.ExtraFields or []) %>
 	<td colspan="${colspan}">
 	<button class="add-row" data-count="${index+1}" data-action-col="true">${_('Add New Item')}</button>
-	<input type="submit" name="Submit" value="${_('Update')}"> 
+	<input type="submit" name="Submit" value="${_('Update')}">
 	<input type="reset" value="${_('Reset Form')}"></td>
 </tr>
 
@@ -126,7 +125,7 @@ jQuery(function($) {
 	%endif
 	${renderer.hidden(prefix + (list_type.ID or 'OldValue'), itemid)}
 	</td>
-	<td> 
+	<td>
 	${renderer.errorlist(prefix + list_type.NameField)}
 	${renderer.text(prefix+list_type.NameField, title=_('Item Name: ') + title_suffix, maxlength=list_type.NameFieldMaxLength, size=list_type.NameFieldSize)}
 	</td>
@@ -150,24 +149,24 @@ jQuery(function($) {
 
 
 %if list_type.Usage:
-	<% 
-		usage = list_type.Usage.get(six.text_type(renderer.value(prefix + (list_type.ID or list_type.NameField))))
+	<%
+		usage = list_type.Usage.get(str(renderer.value(prefix + (list_type.ID or list_type.NameField))))
 		usage1 = getattr(usage, 'Usage1', None)
 		usage2 = getattr(usage, 'Usage2', None)
 	%>
 	<td>
 %if usage1:
-	${'' if not list_type.SearchLinkTitle1 else _(list_type.SearchLinkTitle1)} 
-		<a href="${makeLink(*list_type.SearchLink1).replace('IDIDID', six.text_type(itemid).replace("'", "''"))}"><img src="${request.static_url('cioc:images/zoom.gif')}" width="17", height="14", border="0", title="${_('Usage: %d') % usage1}"></a>
-	
+	${'' if not list_type.SearchLinkTitle1 else _(list_type.SearchLinkTitle1)}
+		<a href="${makeLink(*list_type.SearchLink1).replace('IDIDID', str(itemid).replace("'", "''"))}"><img src="${request.static_url('cioc:images/zoom.gif')}" width="17", height="14", border="0", title="${_('Usage: %d') % usage1}"></a>
+
 	%endif
 	%if usage1 and usage2:
 	<br>
 	%endif
 	%if usage2:
-	${'' if not list_type.SearchLinkTitle2 else _(list_type.SearchLinkTitle2)} 
-		<a href="${makeLink(*list_type.SearchLink2).replace('IDIDID', six.text_type(itemid).replace("'", "''"))}"><img src="${request.static_url('cioc:images/zoom.gif')}" width="17", height="14", border="0", title="${_('Usage: %d') % usage2}"></a>
-	
+	${'' if not list_type.SearchLinkTitle2 else _(list_type.SearchLinkTitle2)}
+		<a href="${makeLink(*list_type.SearchLink2).replace('IDIDID', str(itemid).replace("'", "''"))}"><img src="${request.static_url('cioc:images/zoom.gif')}" width="17", height="14", border="0", title="${_('Usage: %d') % usage2}"></a>
+
 	%endif
 	</td>
 %endif
@@ -181,7 +180,7 @@ jQuery(function($) {
 	<th ${HeaderClass}>${_('Delete')}</th>
 
 	<th ${HeaderClass}>${_('Name')}</th>
-	
+
 ## extra fields
 %for field in list_type.ExtraFields or []:
 		<th ${HeaderClass}>${_(field['title'])}</th>

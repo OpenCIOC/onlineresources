@@ -15,12 +15,11 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 from collections import deque
 from binascii import crc32
 
 
-class RecentSearches(object):
+class RecentSearches:
     def __init__(self, items=None):
         if items:
             self.items = {v["key"]: v for v in items}
@@ -87,7 +86,7 @@ class RecentSearches(object):
         return len(self.lru)
 
     def __repr__(self):
-        return "%s: %s" % (self.__class__.__name__, self.items)
+        return f"{self.__class__.__name__}: {self.items}"
 
     def __nonzero__(self):
         return not not self.items
@@ -95,7 +94,7 @@ class RecentSearches(object):
     __bool__ = __nonzero__
 
 
-class RecentSearchManager(object):
+class RecentSearchManager:
     def __init__(self, request):
         self.request = request
 

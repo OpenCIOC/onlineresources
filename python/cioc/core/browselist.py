@@ -15,7 +15,6 @@
 # =========================================================================================
 
 # std library
-from __future__ import absolute_import
 import string
 
 try:
@@ -45,7 +44,7 @@ def makeAlphaListItems(include_nums, link_url, request):
 def makeAlphaList(include_nums, link_url, href_class, request):
     templ = '<a class="%s" href="%%(LINK)s">%%(DISPLAY)s</a>' % href_class
     letters = (templ % l for l in makeAlphaListItems(include_nums, link_url, request))
-    return """<div class="browse-by-list">%s<br>%s</div>""" % (
+    return """<div class="browse-by-list">{}<br>{}</div>""".format(
         _("Select Letter", request),
         "&nbsp;&nbsp;".join(letters),
     )

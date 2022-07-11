@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,6 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import os
 import re
 import posixpath
@@ -25,9 +24,10 @@ from datetime import datetime, timedelta
 import time
 import json
 import glob
-from xml.etree import cElementTree as ET
-from six.moves.urllib.parse import urlparse, parse_qs, urlunparse
-from six.moves.urllib.parse import urlencode
+
+from xml.etree import ElementTree as ET
+from urllib.parse import urlparse, parse_qs, urlunparse
+from urllib.parse import urlencode
 from functools import partial
 
 import logging
@@ -48,9 +48,6 @@ import cioc.core.clienttracker as clienttracker
 from cioc.core.i18n import gettext, ngettext, format_date
 from cioc.core.security import sanitize_html_passvars
 from cioc.core.utils import read_file
-import six
-from six.moves import map
-from six.moves import zip
 
 log = logging.getLogger(__name__)
 
@@ -155,14 +152,14 @@ def get_view_template_info(request):
     )
 
     template_values["VersionDate"] = max(version_dates)
-    template_values["menus"] = dict(
-        (k, list(g)) for k, g in itertools.groupby(menu_items, lambda x: x.MenuType)
-    )
+    template_values["menus"] = {
+        k: list(g) for k, g in itertools.groupby(menu_items, lambda x: x.MenuType)
+    }
 
     request.template_values = template_values
 
 
-class RenderInfo(object):
+class RenderInfo:
     def __init__(
         self,
         request,
@@ -356,7 +353,7 @@ def get_css_template_info(request):
                 layout.LayoutCSS = read_file(
                     os.path.join(_system_layout_dir, layout.LayoutCSSURL)
                 )
-            except IOError:
+            except OSError:
                 log.error("Error Loading template css")
 
     layout_css = "\n".join(x.LayoutCSS for x in layout_css) + (values.ExtraCSS or "")
@@ -459,7 +456,7 @@ _css_values_re = re.compile(r"\s+\S+\/\*\{([^\\*\/]+)\}\*\/")
 
 def apply_css_values(css, values):
     """Apply template values as exist in jQueryUI 1.8 base/theme.css file"""
-    values = dict((k.upper(), k) for k in values.keys())
+    values = {k.upper(): k for k in values.keys()}
 
     def repl(matchobj):
         key = matchobj.group(1).upper()
@@ -497,7 +494,7 @@ _url_re = re.compile(r'url\(["\']?([^"\'\)]+)["\']?\)')
 
 def _inline_css_file(root_dir, out, fname, relative="."):
     """recurse into file, inline any imports and fix up url() directives"""
-    input = open(os.path.join(root_dir, relative, fname), "rU")
+    input = open(os.path.join(root_dir, relative, fname))
     for line in input:
         if relative != ".":
             line = _url_re.sub(r'url("' + relative + r'/\1")', line)
@@ -609,7 +606,7 @@ _html_values_re = re.compile(r"\[([^]\s]+)\]")
 
 
 def apply_html_values(text, values):
-    values = dict((k.upper(), v) for k, v in six.iteritems(values))
+    values = {k.upper(): v for k, v in values.items()}
 
     def block_repl(matchobj):
         oper = matchobj.group(1).upper()
@@ -649,7 +646,7 @@ def apply_html_values(text, values):
             val = values[key]
             if callable(val):
                 val = values[key] = val()
-            return six.text_type(val)
+            return str(val)
 
         return matchobj.group(0)
 
@@ -671,7 +668,7 @@ def encode_link_values(row):
 _domain_root = {const.DM_CIC: "", const.DM_VOL: "volunteer/"}
 
 
-class LayoutHeader(object):
+class LayoutHeader:
     """utility class to render header portion of template from layout/template settings"""
 
     def __init__(self, request, renderinfo):
@@ -809,7 +806,7 @@ class LayoutHeader(object):
         ):
             site_bar_menu = []
             if vd_dom:
-                view_info_text = "%s%s %s" % (
+                view_info_text = "{}{} {}".format(
                     gettext("View", request),
                     gettext(":", request),
                     vd_dom.ViewName,
@@ -1079,7 +1076,7 @@ class LayoutHeader(object):
         return apply_html_values(header_layout_template, namespace)
 
 
-class LayoutFooter(object):
+class LayoutFooter:
     """utility class to render footer portion of template from layout/template settings"""
 
     def __init__(self, request, renderinfo):

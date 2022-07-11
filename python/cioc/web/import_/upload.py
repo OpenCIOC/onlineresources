@@ -21,8 +21,6 @@
 # software, please contact CIOC via their website above.
 # ==================================================================
 
-from __future__ import absolute_import
-from __future__ import print_function
 import os
 import copy
 import logging
@@ -75,20 +73,18 @@ def get_xmlschema():
                 del to_add.attrib["maxOccurs"]
 
             doc_root.append(to_add)
-            doc_root.remove(
-                doc_root.find("./%(xsd)selement[@name='ROOT']" % {"xsd": XSD})
-            )
+            doc_root.remove(doc_root.find(f"./{XSD}element[@name='ROOT']"))
             _xmlschema_elements[CIOC_NS + element.attrib["name"]] = etree.XMLSchema(
                 new_doc
             )
 
         inner = etree.XML(
             """<xsd:complexType xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-					<xsd:sequence>
-						<xsd:any namespace="##any" minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
-					</xsd:sequence>
-					<xsd:anyAttribute namespace="##any" processContents="skip"/>
-					</xsd:complexType>"""
+                    <xsd:sequence>
+                        <xsd:any namespace="##any" minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+                    </xsd:sequence>
+                    <xsd:anyAttribute namespace="##any" processContents="skip"/>
+                    </xsd:complexType>"""
         )
 
         for element in schema_doc.iterfind(
@@ -108,7 +104,7 @@ class UploadSchema(validators.RootSchema):
     DisplayName = validators.String(max=255, if_empty=None)
 
 
-class Context(object):
+class Context:
     pass
 
 
@@ -223,9 +219,9 @@ def process_import(
 
         EFID = conn.execute(
             """
-				DECLARE @EF_ID int
-				EXEC dbo.sp_%s_ImportEntry_i ?,?,?,?, @EF_ID OUTPUT
-				SELECT @EF_ID"""
+                DECLARE @EF_ID int
+                EXEC dbo.sp_%s_ImportEntry_i ?,?,?,?, @EF_ID OUTPUT
+                SELECT @EF_ID"""
             % domain_str,
             member_id,
             user_mod,
@@ -324,9 +320,9 @@ def _handle_record(self, element, conn, EFID, dm, id_column="NUM"):
 
     ERID = conn.execute(
         """
-				DECLARE @ER_ID int
-				EXEC dbo.sp_%s_ImportEntry_Data_i ?, ?, ?, ?, ?, ?, @ER_ID OUTPUT
-				SELECT @ER_ID"""
+                DECLARE @ER_ID int
+                EXEC dbo.sp_%s_ImportEntry_Data_i ?, ?, ?, ?, ?, ?, @ER_ID OUTPUT
+                SELECT @ER_ID"""
         % dm,
         EFID,
         num,

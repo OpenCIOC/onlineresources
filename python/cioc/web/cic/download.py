@@ -16,7 +16,6 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import zipfile
 import tempfile
 import os
@@ -75,7 +74,7 @@ def get_mimetype(ext):
 
 def strip_accents(s):
     return "".join(
-        (c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn")
+        c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn"
     )
 
 
@@ -180,7 +179,7 @@ class DownloadView(viewbase.ViewBase):
             res.app_iter = FileIterable(fullpath)
             res.content_length = os.path.getsize(fullpath)
             res.last_modified = os.path.getmtime(fullpath)
-            res.etag = "%s-%s-%s" % (
+            res.etag = "{}-{}-{}".format(
                 os.path.getmtime(fullpath),
                 os.path.getsize(fullpath),
                 hash(fullpath),

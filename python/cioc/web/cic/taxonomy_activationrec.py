@@ -16,7 +16,6 @@
 
 
 # Logging
-from __future__ import absolute_import
 import logging
 
 log = logging.getLogger(__name__)
@@ -102,15 +101,15 @@ class activationRecView(CicViewBase):
             cursor.close()
 
         data = request.model_state.form.data
-        data["InactivateRollupIDList"] = set(
+        data["InactivateRollupIDList"] = {
             x.Code
             for x in chain(globaltermchanges, localtermchanges)
             if not x.PreferredTerm
-        )
+        }
         if options.RecommendActivations:
-            data["RecommendActivationIDList"] = set(
+            data["RecommendActivationIDList"] = {
                 x.Code for x in activationsuggestions if x.PreferredTerm
-            )
+            }
 
         data.update(options._asdict())
 

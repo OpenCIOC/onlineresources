@@ -16,7 +16,6 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import re
 import logging
 
@@ -37,7 +36,6 @@ from cioc.core.i18n import (
     TranslationStringFactory,
 )
 import cioc.core.constants as const
-import six
 
 log = logging.getLogger(__name__)
 
@@ -62,7 +60,7 @@ def convert_options(options):
     return opts
 
 
-class DefaultModel(object):
+class DefaultModel:
     pass
 
 
@@ -117,9 +115,7 @@ class CiocFormRenderer(FormRenderer):
         Outputs radio input.
         """
         try:
-            checked = six.text_type(
-                traverse_object_for_value(self.form.data, name)
-            ) == six.text_type(value)
+            checked = str(traverse_object_for_value(self.form.data, name)) == str(value)
         except (KeyError, AttributeError):
             pass
 
@@ -156,15 +152,15 @@ class CiocFormRenderer(FormRenderer):
         """
         Outputs checkbox in radio style (i.e. multi select)
         """
-        checked = six.text_type(value) in self.value(name, []) or checked
-        id = self._fix_id(id or ("_".join((name, six.text_type(value)))))
+        checked = str(value) in self.value(name, []) or checked
+        id = self._fix_id(id or ("_".join((name, str(value)))))
         return tags.checkbox(name, value, checked, label, id, **attrs)
 
     def label(self, name, label=None, **attrs):
         """
         Outputs a <label> element.
 
-        `name`	: field name. Automatically added to "for" attribute.
+        `name`  : field name. Automatically added to "for" attribute.
 
         `label` : if **None**, uses the capitalized field name.
         """
@@ -333,7 +329,7 @@ class CiocFormRenderer(FormRenderer):
 fe_tsf = TranslationStringFactory("FormEncode")
 
 
-class ModelState(object):
+class ModelState:
     def __init__(self, request):
         def formencode_translator(x):
             if not isinstance(x, TranslationString):
@@ -417,18 +413,18 @@ class ModelState(object):
 _date_search_template = Markup(
     """
 <table class="NoBorder cell-padding-2">
-	<tr>
-		<td class="FieldLabelLeftClr">%(date_range_label)s</td>
-		<td>%(date_range_error)s%(date_range)s <strong>%(or_label)s</strong></td>
-	</tr>
-	<tr>
-		<td class="FieldLabelLeftClr">%(first_date_label)s</td>
-		<td>%(first_date_error)s%(first_date)s</td>
-	</tr>
-	<tr>
-		<td class="FieldLabelLeftClr">%(last_date_label)s</td>
-		<td>%(last_date_error)s%(last_date)s</td>
-	</tr>
-	</table>
+    <tr>
+        <td class="FieldLabelLeftClr">%(date_range_label)s</td>
+        <td>%(date_range_error)s%(date_range)s <strong>%(or_label)s</strong></td>
+    </tr>
+    <tr>
+        <td class="FieldLabelLeftClr">%(first_date_label)s</td>
+        <td>%(first_date_error)s%(first_date)s</td>
+    </tr>
+    <tr>
+        <td class="FieldLabelLeftClr">%(last_date_label)s</td>
+        <td>%(last_date_error)s%(last_date)s</td>
+    </tr>
+    </table>
 """
 )

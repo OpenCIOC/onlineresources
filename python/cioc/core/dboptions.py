@@ -16,7 +16,6 @@
 
 
 # std lib
-from __future__ import absolute_import
 import logging
 from datetime import datetime
 
@@ -25,13 +24,11 @@ from pyramid.decorator import reify
 
 # this app
 from . import constants as const
-import six
-from six.moves import zip
 
 log = logging.getLogger(__name__)
 
 
-class DbOptionsDescription(object):
+class DbOptionsDescription:
     def __init__(self, dbopts_desc):
         self.dbopts_desc = dbopts_desc
 
@@ -48,7 +45,7 @@ class DbOptionsDescription(object):
         return self.dbopts_desc.get(key, default)
 
 
-class DbOptions(object):
+class DbOptions:
     def __init__(self, domain_info, request, force_load):
         self.dbopts = None
         self.domain_info = domain_info
@@ -78,7 +75,7 @@ class DbOptions(object):
             raise
 
         self._last_modified, self.dbopts, rows = data
-        self.dbopts_lang = {k: DbOptionsDescription(v) for k, v in six.iteritems(rows)}
+        self.dbopts_lang = {k: DbOptionsDescription(v) for k, v in rows.items()}
 
     def _get_data(self):
         # log.debug('getting member data')
@@ -86,12 +83,12 @@ class DbOptions(object):
         with connmgr.get_connection("admin") as conn:
             cursor = conn.execute(
                 """
-						DECLARE @RC int, @ErrMsg nvarchar(500)
+                        DECLARE @RC int, @ErrMsg nvarchar(500)
 
-						EXEC @RC = dbo.sp_STP_Member_sb ?, @ErrMsg OUTPUT
+                        EXEC @RC = dbo.sp_STP_Member_sb ?, @ErrMsg OUTPUT
 
-						-- SELECT @RC AS [Return], @ErrMsg AS ErrMsg
-						""",
+                        -- SELECT @RC AS [Return], @ErrMsg AS ErrMsg
+                        """,
                 self.member_id,
             )
 

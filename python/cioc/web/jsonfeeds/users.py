@@ -16,7 +16,6 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 
 # 3rd party
@@ -49,17 +48,17 @@ class JsonFeedsUsers(viewbase.CicViewBase):
         args = [request.dboptions.MemberID, term]
 
         sql = """
-			SELECT User_ID, UserName, Agency FROM GBL_Users WHERE Inactive = 0 AND
-			MemberID_Cache = ? AND UserName LIKE '%' + ? + '%' COLLATE Latin1_General_100_CI_AI
-		"""
+            SELECT User_ID, UserName, Agency FROM GBL_Users WHERE Inactive = 0 AND
+            MemberID_Cache = ? AND UserName LIKE '%' + ? + '%' COLLATE Latin1_General_100_CI_AI
+        """
         if not user.SuperUser:
             sql += " AND Agency = ?"
             args.append(user.Agency)
 
         sql += """
-			ORDER BY CASE WHEN UserName LIKE ? + '%' COLLATE Latin1_General_100_CI_AI THEN 0 ELSE 1 END,
-			UserName COLLATE Latin1_General_100_CI_AI
-		"""
+            ORDER BY CASE WHEN UserName LIKE ? + '%' COLLATE Latin1_General_100_CI_AI THEN 0 ELSE 1 END,
+            UserName COLLATE Latin1_General_100_CI_AI
+        """
 
         args.append(term)
 

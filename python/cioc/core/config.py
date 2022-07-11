@@ -19,7 +19,7 @@ import typing as t
 from configparser import ConfigParser
 
 
-class ConfigManager(object):
+class ConfigManager:
     app_name: str
     config_dict: dict
 

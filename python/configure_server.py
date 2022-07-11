@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-from __future__ import print_function
 import os
 import sys
 import subprocess
@@ -7,7 +5,7 @@ import argparse
 from cioc.core.utils import write_file
 
 site_root = os.path.abspath(
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+    os.path.join(os.path.dirname(__file__), "..")
 )
 
 config_tmpl = """

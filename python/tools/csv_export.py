@@ -14,16 +14,14 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
-from __future__ import print_function
 import argparse
-from six.moves import cStringIO as StringIO
+from io import StringIO
 import datetime
 import os
 import subprocess
 import sys
 import traceback
-from six.moves.urllib.parse import urljoin
+from urllib.parse import urljoin
 from zipfile import ZipFile
 
 import requests
@@ -40,7 +38,7 @@ from cioc.core import constants as const, config, email
 const.update_cache_values()
 
 
-class FileWriteDetector(object):
+class FileWriteDetector:
     def __init__(self, obj):
         self.__obj = obj
         self.__dirty = False
@@ -56,7 +54,7 @@ class FileWriteDetector(object):
         return getattr(self.__obj, key)
 
 
-class DEFAULT(object):
+class DEFAULT:
     pass
 
 
@@ -221,7 +219,7 @@ def email_log(args, outputstream, is_error, success_email, error_email):
         fakerequest(args.config),
         author,
         to,
-        "Automated CSV Export%s%s" % (name, " -- ERRORS!" if is_error else ""),
+        "Automated CSV Export{}{}".format(name, " -- ERRORS!" if is_error else ""),
         outputstream.getvalue(),
     )
 
@@ -263,7 +261,7 @@ def main(argv):
             body = ""
             if e.response:
                 body = ": " + e.response.text
-            sys.stderr.write("Unable to download file: %s%s\n" % (e, body))
+            sys.stderr.write(f"Unable to download file: {e}{body}\n")
             retval = 1
 
     except requests.HTTPError:

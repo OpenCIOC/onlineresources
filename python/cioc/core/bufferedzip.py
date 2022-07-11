@@ -14,14 +14,12 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import time
 import zipfile
 import zlib
 import binascii
 import struct
 import shutil
-import six
 
 
 # From https://stackoverflow.com/a/299830/108518
@@ -29,10 +27,9 @@ class BufferedZipFile(zipfile.ZipFile):
     """Version of zipfile.ZipFile that can take a buffer to read from"""
 
     def writebuffer(self, buffer, zinfo_or_arcname, compress_type=None):
-        if six.PY3:
-            with self.open(zinfo_or_arcname, "w") as dest:
-                shutil.copyfileobj(buffer, dest)
-            return
+        with self.open(zinfo_or_arcname, "w") as dest:
+            shutil.copyfileobj(buffer, dest)
+        return
 
         if not isinstance(zinfo_or_arcname, zipfile.ZipInfo):
             zinfo = zipfile.ZipInfo(

@@ -15,16 +15,12 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
-from six.moves import map
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
-from six.moves.urllib.parse import parse_qsl
-from six.moves.urllib.parse import urlencode
+import xml.etree.ElementTree as ET
+from urllib.parse import parse_qsl
+from urllib.parse import urlencode
 
 from formencode import Schema, validators, foreach, variabledecode, Any, schema
 from pyramid.view import view_config, view_defaults
@@ -34,6 +30,7 @@ from cioc.core import validators as ciocvalidators, constants as const
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 
+log = logging.getLogger(__name__)
 templateprefix = "cioc.web.admin:templates/"
 
 
@@ -59,7 +56,7 @@ def should_skip_item(quicksearch):
         log.debug("quicksearch: %s", quicksearch)
         if all(
             not v
-            for k, v in six.iteritems(quicksearch)
+            for k, v in quicksearch.items()
             if k not in ["PageName", "Descriptions", "QuickSearchID", "DisplayOrder"]
         ):
             descriptions = quicksearch.get("Descriptions") or {}
@@ -178,7 +175,7 @@ class QuickSearch(viewbase.AdminViewBase):
                     continue
 
                 quicksearch_el = ET.SubElement(root, "QuickSearch")
-                ET.SubElement(quicksearch_el, "CNT").text = six.text_type(i)
+                ET.SubElement(quicksearch_el, "CNT").text = str(i)
 
                 qp = quicksearch["QueryParameters"]
                 if "?" in qp:
@@ -203,24 +200,22 @@ class QuickSearch(viewbase.AdminViewBase):
 
                 quicksearch["QueryParameters"] = qp
 
-                for key, value in six.iteritems(quicksearch):
+                for key, value in quicksearch.items():
                     if key == "QuickSearchID" and value == "NEW":
                         value = -1
 
                     if key != "Descriptions":
                         if value is not None:
-                            ET.SubElement(quicksearch_el, key).text = six.text_type(
-                                value
-                            )
+                            ET.SubElement(quicksearch_el, key).text = str(value)
                         continue
 
                     descs = ET.SubElement(quicksearch_el, "DESCS")
-                    for culture, data in six.iteritems((value or {})):
+                    for culture, data in (value or {}).items():
                         culture = culture.replace("_", "-")
 
                         desc = ET.SubElement(descs, "DESC")
                         ET.SubElement(desc, "Culture").text = culture
-                        for key, value in six.iteritems(data):
+                        for key, value in data.items():
                             if value:
                                 ET.SubElement(desc, key).text = value
 
@@ -235,13 +230,13 @@ class QuickSearch(viewbase.AdminViewBase):
             with request.connmgr.get_connection("admin") as conn:
                 sql = (
                     """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int
 
-				EXECUTE @RC = dbo.sp_%s_View_QuickSearch_u ?, ?, ?, ?, ?, @ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_%s_View_QuickSearch_u ?, ?, ?, ?, ?, @ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg
+                """
                     % domain.str
                 )
 

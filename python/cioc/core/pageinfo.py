@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import cioc.core.constants as const
 from cioc.core.i18n import gettext as _
 
@@ -24,7 +23,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class PageInfo(object):
+class PageInfo:
     def __init__(self, request, domain, db_area):
         self.request = request
         self.Domain = domain

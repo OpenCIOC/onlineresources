@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +15,11 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import itertools
 import tempfile
 from xml.sax.saxutils import quoteattr
-from xml.etree import cElementTree as ET
+
+from xml.etree import ElementTree as ET
 import zipfile
 
 from pyramid.response import Response
@@ -31,11 +31,7 @@ from cioc.core.utf8csv import write_csv_to_zip
 from cioc.core.webobfiletool import FileIterator
 from cioc.web.cic import viewbase
 
-
 import logging
-import six
-from six.moves import zip
-from six.moves import map
 
 log = logging.getLogger(__name__)
 
@@ -152,13 +148,11 @@ def _zip_stream(request, model_state):
 
 def _get_record_data(root_parameters, cursor, zipfile, fname):
     names = [t[0] for t in root_parameters.cursor_description]
-    values = [
-        quoteattr(six.text_type(x) if x is not None else "") for x in root_parameters
-    ]
+    values = [quoteattr(str(x) if x is not None else "") for x in root_parameters]
     root_parameters = " ".join("=".join(x) for x in zip(names, values))
 
     with tempfile.TemporaryFile() as file:
-        file.write('<?xml version="1.0" encoding="UTF-8"?>\n'.encode("utf-8"))
+        file.write(b'<?xml version="1.0" encoding="UTF-8"?>\n')
         file.write(("<Source %s>\n" % root_parameters).encode("utf-8"))
         while True:
             rows = cursor.fetchmany(2000)
@@ -168,7 +162,7 @@ def _get_record_data(root_parameters, cursor, zipfile, fname):
             rows = "\n".join(x[0] for x in rows) + "\n"
             file.write(rows.encode("utf-8"))
 
-        file.write("</Source>\n".encode("utf-8"))
+        file.write(b"</Source>\n")
 
         file.seek(0)
         zipfile.writebuffer(file, fname)
@@ -205,7 +199,7 @@ class AIRSExportUpdateCount(viewbase.CicViewBase):
                 msg = "Invalid Field"
             else:
                 msg = "An unknown error occurred:\n"
-                msg += "\n".join(unicode(x) for x in model_state.renderer.all_errors())
+                msg += "\n".join(str(x) for x in model_state.renderer.all_errors())
 
             return make_internal_server_error(msg)
 
@@ -215,8 +209,8 @@ class AIRSExportUpdateCount(viewbase.CicViewBase):
             return make_internal_server_error("Error getting request body as JSON")
 
         counts = ET.Element("root")
-        for num, count in six.iteritems(data["counts"]):
-            ET.SubElement(counts, "row", {"num": num, "count": six.text_type(count)})
+        for num, count in data["counts"].items():
+            ET.SubElement(counts, "row", {"num": num, "count": str(count)})
 
         sent = ET.Element("sent")
         for num in data["sent"]:
@@ -232,12 +226,12 @@ class AIRSExportUpdateCount(viewbase.CicViewBase):
         with request.connmgr.get_connection("admin") as conn:
             cursor = conn.execute(
                 """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int
 
-				EXEC @RC = sp_GBL_AIRS_Export_u_Counts ?, @@LANGID, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
-				SELECT @RC AS [Return], @ErrMsg AS ErrMsg
-				""",
+                EXEC @RC = sp_GBL_AIRS_Export_u_Counts ?, @@LANGID, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+                SELECT @RC AS [Return], @ErrMsg AS ErrMsg
+                """,
                 request.viewdata.cic.ViewType,
                 field,
                 datefield,

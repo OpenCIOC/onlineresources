@@ -16,7 +16,6 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 
 # 3rd party
@@ -28,7 +27,6 @@ from formencode import validators, ForEach
 # this app
 from cioc.core import i18n, validators as ciocvalidators
 from cioc.web.admin import viewbase
-import six
 
 log = logging.getLogger(__name__)
 
@@ -43,7 +41,7 @@ def make_headers(extra_headers=None):
 def make_internal_server_error(message):
     error = HTTPInternalServerError()
     error.content_type = "text/plain"
-    error.text = six.text_type(message)
+    error.text = str(message)
     return error
 
 
@@ -70,7 +68,7 @@ class BillingInfoSchemaFull(BillingInfoSchema):
 @view_config(route_name="admin_billinginfo", renderer="json")
 class BillingInfo(viewbase.AdminViewBase):
     def __init__(self, request):
-        super(BillingInfo, self).__init__(request, require_login=False)
+        super().__init__(request, require_login=False)
 
     def __call__(self):
         request = self.request

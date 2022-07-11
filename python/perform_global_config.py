@@ -1,8 +1,7 @@
-from __future__ import absolute_import
 import os
 import sys
 import subprocess
-from six.moves.urllib.request import urlretrieve
+from urllib.request import urlretrieve
 from tempfile import gettempdir
 
 
@@ -65,11 +64,11 @@ def main():
     # redis_dir = os.path.join('c:\\program files\\', 'redis')
 
     # subprocess.call(
-    # 	[
-    # 		os.path.join(redis_dir, 'redis-server.exe'),
-    # 	'--service-install', 'redis.windows.conf', '--service-name', 'redis'
-    # 	],
-    # 	cwd=redis_dir
+    #   [
+    #       os.path.join(redis_dir, 'redis-server.exe'),
+    #   '--service-install', 'redis.windows.conf', '--service-name', 'redis'
+    #   ],
+    #   cwd=redis_dir
     # )
 
     webpi_exe = os.path.join(

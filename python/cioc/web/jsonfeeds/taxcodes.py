@@ -16,7 +16,6 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 
 # 3rd party
@@ -45,8 +44,8 @@ class JsonFeedsIcons(viewbase.CicViewBase):
         args = [request.dboptions.MemberID, term]
 
         sql = """
-			EXEC sp_CIC_TaxCode_Finder ?, ?
-		"""
+            EXEC sp_CIC_TaxCode_Finder ?, ?
+        """
 
         with request.connmgr.get_connection("cic") as conn:
             codes = conn.execute(sql, args).fetchall()

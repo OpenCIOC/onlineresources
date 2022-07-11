@@ -16,9 +16,8 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 # 3rd party
 from formencode import Schema, validators
@@ -29,7 +28,6 @@ from cioc.core import validators as ciocvalidators, syslanguage
 
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
-import six
 
 log = logging.getLogger(__name__)
 
@@ -131,13 +129,13 @@ class SocialMedia(viewbase.AdminViewBase):
 
             root = ET.Element("DESCS")
 
-            for culture, data in six.iteritems(model_state.form.data["descriptions"]):
+            for culture, data in model_state.form.data["descriptions"].items():
                 if culture.replace("_", "-") not in shown_cultures:
                     continue
 
                 desc = ET.SubElement(root, "DESC")
                 ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                for name, value in six.iteritems(data):
+                for name, value in data.items():
                     if value:
                         ET.SubElement(desc, name).text = value
 
@@ -145,16 +143,16 @@ class SocialMedia(viewbase.AdminViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int,
-				@SM_ID as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int,
+                @SM_ID as int
 
-				SET @SM_ID = ?
+                SET @SM_ID = ?
 
-				EXECUTE @RC = dbo.sp_GBL_SocialMedia_u @SM_ID OUTPUT, %s, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_GBL_SocialMedia_u @SM_ID OUTPUT, %s, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @SM_ID as SM_ID
-				""" % ", ".join(
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg, @SM_ID as SM_ID
+                """ % ", ".join(
                     "?" * (len(args) - 1)
                 )
 
@@ -331,13 +329,13 @@ class SocialMedia(viewbase.AdminViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_GBL_SocialMedia_d ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_GBL_SocialMedia_d ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             cursor = conn.execute(sql, SM_ID)
             result = cursor.fetchone()

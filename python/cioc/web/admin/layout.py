@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,19 +15,16 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 try:
     from cgi import escape
 except ImportError:
     from html import escape
-import six.moves.urllib.request, six.moves.urllib.error, six.moves.urllib.parse
+import urllib.request, urllib.error, urllib.parse
 import codecs
 import os
 
@@ -40,6 +37,8 @@ from cioc.core.utils import read_file
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 from cioc.core.template import _system_layout_dir
+
+log = logging.getLogger(__name__)
 
 templateprefix = "cioc.web.admin:templates/layout/"
 
@@ -177,10 +176,10 @@ class TemplateLayout(viewbase.AdminViewBase):
 
             root = ET.Element("DESCS")
 
-            for culture, data in six.iteritems(model_state.form.data["descriptions"]):
+            for culture, data in model_state.form.data["descriptions"].items():
                 desc = ET.SubElement(root, "DESC")
                 ET.SubElement(desc, "LANG").text = culture.replace("_", "-")
-                for name, value in six.iteritems(data):
+                for name, value in data.items():
                     if value:
                         ET.SubElement(desc, name).text = value
 
@@ -188,16 +187,16 @@ class TemplateLayout(viewbase.AdminViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int,
-				@LayoutID as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int,
+                @LayoutID as int
 
-				SET @LayoutID = ?
+                SET @LayoutID = ?
 
-				EXECUTE @RC = dbo.sp_GBL_Template_Layout_u @LayoutID OUTPUT, %s, @ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_GBL_Template_Layout_u @LayoutID OUTPUT, %s, @ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @LayoutID as LayoutID
-				""" % (
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg, @LayoutID as LayoutID
+                """ % (
                     ", ".join(["?"] * (len(args) - 1))
                 )
                 log.debug("sql, args: %s, %s", sql, args)
@@ -316,7 +315,7 @@ class TemplateLayout(viewbase.AdminViewBase):
                 )
                 layout.LayoutCSSURL = None
 
-            for desc in six.itervalues(layout_descriptions):
+            for desc in layout_descriptions.values():
                 if desc.LayoutHTMLURL:
                     desc.LayoutHTML = read_file(
                         os.path.join(_system_layout_dir, desc.LayoutHTMLURL)
@@ -326,7 +325,7 @@ class TemplateLayout(viewbase.AdminViewBase):
         templates = None
         if is_add and layout:
             layout.SystemLayout = False
-            for desc in six.itervalues(layout_descriptions):
+            for desc in layout_descriptions.values():
                 desc.LayoutName = None
         else:
             if is_add:
@@ -357,7 +356,7 @@ class TemplateLayout(viewbase.AdminViewBase):
 
         retval = []
         xml = ET.fromstring(layout.RELATED_TEMPLATE.encode("utf8"))
-        MemberID = six.text_type(self.request.dboptions.MemberID)
+        MemberID = str(self.request.dboptions.MemberID)
         for template in xml.findall("./TMPL"):
 
             if (
@@ -443,13 +442,13 @@ class TemplateLayout(viewbase.AdminViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_GBL_Template_Layout_d ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_GBL_Template_Layout_d ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             cursor = conn.execute(
                 sql, LayoutID, request.dboptions.MemberID, user.Agency
@@ -502,9 +501,7 @@ class TemplateLayout(viewbase.AdminViewBase):
             }
 
         try:
-            response = six.moves.urllib.request.urlopen(
-                "http://" + model_state.form.data["url"]
-            )
+            response = urllib.request.urlopen("http://" + model_state.form.data["url"])
 
             headers = response.info()
             contenttype = headers["Content-Type"].split(";")
@@ -521,5 +518,5 @@ class TemplateLayout(viewbase.AdminViewBase):
             log.debug(data)
 
             return {"fail": False, "data": data}
-        except six.moves.urllib.error.HTTPError as e:
+        except urllib.error.HTTPError as e:
             return {"fail": True, "message": str(e)}

@@ -15,14 +15,13 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 from pyramid import testing, url
 
 from cioc.core import syslanguage
 from cioc.core.passvars import PassVars
 
 
-class Test_PassVars(object):
+class Test_PassVars:
     def setUp(self):
 
         self.config = testing.setUp()

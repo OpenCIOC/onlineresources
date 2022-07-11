@@ -16,10 +16,9 @@
 
 
 # std library
-from __future__ import absolute_import
 import logging
 import collections
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 # 3rd party libs
 from pyramid.view import view_config, view_defaults
@@ -28,7 +27,6 @@ from pyramid.view import view_config, view_defaults
 from cioc.core import validators, constants as const
 from cioc.core.i18n import gettext as _
 from cioc.web.admin.viewbase import AdminViewBase, domain_validator
-import six
 
 log = logging.getLogger(__name__)
 
@@ -164,29 +162,27 @@ class EmailValues(AdminViewBase):
             ]
 
             root = ET.Element("DESCS")
-            for culture, data in six.iteritems(
-                (model_state.value("descriptions") or {})
-            ):
+            for culture, data in (model_state.value("descriptions") or {}).items():
                 desc = ET.SubElement(root, "DESC")
                 ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
-                for name, value in six.iteritems(data):
+                for name, value in data.items():
                     if value:
-                        ET.SubElement(desc, name).text = six.text_type(value)
+                        ET.SubElement(desc, name).text = str(value)
 
             args.append(ET.tostring(root, encoding="unicode"))
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-				DECLARE @ErrMsg as nvarchar(500),
-				@RC as int,
-				@EmailID as int
+                DECLARE @ErrMsg as nvarchar(500),
+                @RC as int,
+                @EmailID as int
 
-				SET @EmailID = ?
+                SET @EmailID = ?
 
-				EXECUTE @RC = dbo.sp_GBL_StandardEmailUpdate_u @EmailID OUTPUT, ?, ?, ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_GBL_StandardEmailUpdate_u @EmailID OUTPUT, ?, ?, ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-				SELECT @RC as [Return], @ErrMsg AS ErrMsg, @EmailID as EmailID
-				"""
+                SELECT @RC as [Return], @ErrMsg AS ErrMsg, @EmailID as EmailID
+                """
                 cursor = conn.execute(sql, *args)
                 result = cursor.fetchone()
                 cursor.close()
@@ -419,13 +415,13 @@ class EmailValues(AdminViewBase):
 
         with request.connmgr.get_connection("admin") as conn:
             sql = """
-			DECLARE @ErrMsg as nvarchar(500),
-			@RC as int
+            DECLARE @ErrMsg as nvarchar(500),
+            @RC as int
 
-			EXECUTE @RC = dbo.sp_GBL_StandardEmailUpdate_d ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+            EXECUTE @RC = dbo.sp_GBL_StandardEmailUpdate_d ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
-			SELECT @RC as [Return], @ErrMsg AS ErrMsg
-			"""
+            SELECT @RC as [Return], @ErrMsg AS ErrMsg
+            """
 
             cursor = conn.execute(
                 sql, EmailID, request.dboptions.MemberID, options.DM.id, options.MR

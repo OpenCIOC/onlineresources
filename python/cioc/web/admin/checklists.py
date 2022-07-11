@@ -15,14 +15,10 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import logging
-import six
-from six.moves import map
 
-log = logging.getLogger(__name__)
 
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 
 from formencode import schema, Schema, validators, foreach, variabledecode, Any
 from pyramid.view import view_config
@@ -39,9 +35,11 @@ from cioc.core.viewbase import init_page_info, error_page, security_failure
 from cioc.core.i18n import gettext as _
 from cioc.web.admin import viewbase
 
-templateprefix = "cioc.web.admin:templates/checklists/"
 
 from .checklist_model import checklists, ChkExtraChecklist, ChkExtraDropDown
+
+log = logging.getLogger(__name__)
+templateprefix = "cioc.web.admin:templates/checklists/"
 
 
 def should_skip_item(chk_type, chkitem):
@@ -50,7 +48,7 @@ def should_skip_item(chk_type, chkitem):
 
     if all(
         not v
-        for k, v in six.iteritems(chkitem)
+        for k, v in chkitem.items()
         if k != "Descriptions" and not (k == chk_type.ID and v == "NEW")
     ):
 
@@ -235,7 +233,7 @@ class Checklists(viewbase.AdminViewBase):
             if chk_type.UsageSQL:
                 cursor.nextset()
 
-                chkusage = dict((six.text_type(x[0]), x) for x in cursor.fetchall())
+                chkusage = {str(x[0]): x for x in cursor.fetchall()}
 
             if chk_type.NameSQL:
                 cursor.nextset()
@@ -342,25 +340,25 @@ class Checklists(viewbase.AdminViewBase):
         if model_state.validate():
             extra_delete_condition = chk_type.ExtraHideDeleteCondition or ""
             sql = """
-					DECLARE @MemberID int
-					SET @MemberID = ?
+                    DECLARE @MemberID int
+                    SET @MemberID = ?
 
-					MERGE INTO %(Table)s_InactiveByMember chk
-					USING (SELECT DISTINCT ItemID AS %(ID)s FROM
-							dbo.fn_GBL_ParseIntIDList(?, ',') nt
-							INNER JOIN %(Table)s c
-								ON c.%(ID)s=nt.ItemID AND c.MemberID IS NULL) nt
-					ON nt.%(ID)s=chk.%(ID)s AND chk.MemberID=@MemberID
-					WHEN NOT MATCHED BY TARGET THEN
-						INSERT (%(ID)s, MemberID) VALUES (nt.%(ID)s, @MemberID)
-					WHEN NOT MATCHED BY SOURCE AND chk.MemberID=@MemberID%(ExtraDeleteCondition)s THEN
-						DELETE
-						;
-					""" % {
-                "Table": chk_type.Table,
-                "ID": chk_type.ID,
-                "ExtraDeleteCondition": extra_delete_condition,
-            }
+                    MERGE INTO {Table}_InactiveByMember chk
+                    USING (SELECT DISTINCT ItemID AS {ID} FROM
+                            dbo.fn_GBL_ParseIntIDList(?, ',') nt
+                            INNER JOIN {Table} c
+                                ON c.{ID}=nt.ItemID AND c.MemberID IS NULL) nt
+                    ON nt.{ID}=chk.{ID} AND chk.MemberID=@MemberID
+                    WHEN NOT MATCHED BY TARGET THEN
+                        INSERT ({ID}, MemberID) VALUES (nt.{ID}, @MemberID)
+                    WHEN NOT MATCHED BY SOURCE AND chk.MemberID=@MemberID{ExtraDeleteCondition} THEN
+                        DELETE
+                        ;
+                    """.format(
+                Table=chk_type.Table,
+                ID=chk_type.ID,
+                ExtraDeleteCondition=extra_delete_condition,
+            )
 
             with request.connmgr.get_connection("admin") as conn:
                 conn.execute(
@@ -418,9 +416,7 @@ class Checklists(viewbase.AdminViewBase):
         request = self.request
         if chk_type.Shared == "partial":
             request.model_state.form.data["ChkHide"] = [
-                six.text_type(getattr(x, chk_type.ID))
-                for x in retval["chkitems"]
-                if x.Hidden
+                str(getattr(x, chk_type.ID)) for x in retval["chkitems"] if x.Hidden
             ]
         return retval
 
@@ -562,9 +558,9 @@ class Checklists(viewbase.AdminViewBase):
                     continue
 
                 chk_el = ET.SubElement(root, "CHK")
-                ET.SubElement(chk_el, "CNT").text = six.text_type(i)
+                ET.SubElement(chk_el, "CNT").text = str(i)
 
-                for key, value in six.iteritems(chkitem):
+                for key, value in chkitem.items():
                     if key == chk_type.ID and value == "NEW":
                         value = -1
 
@@ -573,18 +569,18 @@ class Checklists(viewbase.AdminViewBase):
 
                     if key != "Descriptions":
                         if value is not None:
-                            ET.SubElement(chk_el, key).text = six.text_type(value)
+                            ET.SubElement(chk_el, key).text = str(value)
                         continue
 
                     descs = ET.SubElement(chk_el, "DESCS")
-                    for culture, data in six.iteritems(value):
+                    for culture, data in value.items():
                         culture = culture.replace("_", "-")
                         if culture not in shown_cultures:
                             continue
 
                         desc = ET.SubElement(descs, "DESC")
                         ET.SubElement(desc, "Culture").text = culture
-                        for key, value in six.iteritems(data):
+                        for key, value in data.items():
                             if value:
                                 ET.SubElement(desc, key).text = value
 
@@ -715,22 +711,22 @@ class Checklists(viewbase.AdminViewBase):
         # shared = model_state.value('state')=='shared'
 
         sql = """
-			DECLARE @OldMemberID int, @MemberID int, @ChkID int
+            DECLARE @OldMemberID int, @MemberID int, @ChkID int
 
-			SET @MemberID=?
-			SET @ChkID=?
+            SET @MemberID=?
+            SET @ChkID=?
 
-			SELECT @OldMemberID=MemberID FROM %(Table)s WHERE %(ID)s=@ChkID
+            SELECT @OldMemberID=MemberID FROM {Table} WHERE {ID}=@ChkID
 
-			UPDATE %(Table)s SET MODIFIED_BY=?, MODIFIED_DATE=GETDATE(), MemberID=NULL WHERE %(ID)s=@ChkID
+            UPDATE {Table} SET MODIFIED_BY=?, MODIFIED_DATE=GETDATE(), MemberID=NULL WHERE {ID}=@ChkID
 
-			INSERT INTO %(Table)s_InactiveByMember (%(ID)s, MemberID)
-			SELECT @ChkID, MemberID FROM STP_Member m WHERE MemberID NOT IN (ISNULL(@OldMemberID, 0), @MemberID)
-				AND NOT EXISTS(SELECT * FROM %(Table)s_InactiveByMember  WHERE %(ID)s=@ChkID AND MemberID=m.MemberID)
-		""" % {
-            "Table": chk_type.Table,
-            "ID": chk_type.ID,
-        }
+            INSERT INTO {Table}_InactiveByMember ({ID}, MemberID)
+            SELECT @ChkID, MemberID FROM STP_Member m WHERE MemberID NOT IN (ISNULL(@OldMemberID, 0), @MemberID)
+                AND NOT EXISTS(SELECT * FROM {Table}_InactiveByMember  WHERE {ID}=@ChkID AND MemberID=m.MemberID)
+        """.format(
+            Table=chk_type.Table,
+            ID=chk_type.ID,
+        )
 
         with request.connmgr.get_connection("admin") as conn:
             conn.execute(sql, [request.dboptions.MemberID, ID, request.user.Mod])

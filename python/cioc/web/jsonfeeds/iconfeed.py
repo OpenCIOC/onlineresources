@@ -16,7 +16,6 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 
 # 3rd party
@@ -55,8 +54,8 @@ class JsonFeedsIcons(viewbase.CicViewBase):
         args = [limit, term[-1]]
 
         sql = """
-			EXEC sp_STP_Icon_ls ?, ?
-		"""
+            EXEC sp_STP_Icon_ls ?, ?
+        """
 
         with request.connmgr.get_connection("admin") as conn:
             icons = conn.execute(sql, args).fetchall()

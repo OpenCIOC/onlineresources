@@ -14,12 +14,10 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
-from __future__ import print_function
 import argparse
 from collections import namedtuple, defaultdict, Counter
 import copy
-from six.moves import cStringIO as StringIO
+from io import StringIO
 import datetime
 from glob import glob
 import itertools
@@ -29,11 +27,9 @@ import subprocess
 import sys
 import tempfile
 import traceback
-from six.moves.urllib.parse import urljoin
+from urllib.parse import urljoin
 from zipfile import ZipFile
 import zipfile
-from six.moves import map
-import six
 
 import requests
 from lxml import etree
@@ -52,7 +48,7 @@ CREATE_NO_WINDOW = 0x08000000
 creationflags = 0
 
 
-class FileWriteDetector(object):
+class FileWriteDetector:
     def __init__(self, obj):
         self.__obj = obj
         self.__dirty = False
@@ -139,7 +135,7 @@ def calculate_destination_name(lang, type, dest_dir, previous, now, prefix):
     )
 
 
-class DEFAULT(object):
+class DEFAULT:
     pass
 
 
@@ -243,7 +239,7 @@ def remove_exclusions(reader_to_exclude_from, url, args, **kwargs):
         csv_file = open_zipfile(fd)
         reader = open_csv_reader(csv_file)
         next(reader)
-        exclusion_set = set((x[0] for x in reader))
+        exclusion_set = {x[0] for x in reader}
 
     for row in reader_to_exclude_from:
         if row[0] in exclusion_set:
@@ -426,7 +422,7 @@ def init_xmlschema():
         xmlschema_elements[type] = schema_part_prep(schema_doc, name, type)
 
     element = schema_doc.getroot().find(
-        "./%(xs)selement[@name='Source']//%(xs)ssequence" % {"xs": XSD}
+        "./{xs}element[@name='Source']//{xs}sequence".format(xs=XSD)
     )
     element.getparent().remove(element)
     element = element[0]
@@ -460,7 +456,7 @@ def _validate_part(error_log, counts, iterable, root, tagname, schema, elements)
                 iterable,
                 element,
                 schema_parts[type],
-                *xmlschema_elements[type]
+                *xmlschema_elements[type],
             )
 
         elif event == "end" and element.tag == "Key" and element.getparent() == root:
@@ -571,15 +567,13 @@ def email_log(args, outputstream, report, validation_errors, is_error):
         )
     except Exception as e:
         raise Exception(
-            "unable to send email log: {},{}".format(
-                outputstream.getvalue(), six.text_type(e)
-            ),
+            "unable to send email log: {},{}".format(outputstream.getvalue(), str(e)),
             e,
         )
 
 
 def generate_report(args, counts):
-    return 'AIRS export generated as "%s" with the following counts:\n%s\n' % (
+    return 'AIRS export generated as "{}" with the following counts:\n{}\n'.format(
         os.path.basename(args.dest_file),
         "".join(
             "%s: %d\n" % (schema_parts_display_name[x], counts[x])
@@ -618,7 +612,7 @@ def process_language(args, lang):
                 body = ""
                 if e.response:
                     body = ": " + e.response.text
-                sys.stderr.write("Unable to download file: %s%s\n" % (e, body))
+                sys.stderr.write(f"Unable to download file: {e}{body}\n")
         else:
             args.dest_file = args.file
 
@@ -645,7 +639,7 @@ def process_language(args, lang):
             body = ""
             if e.response:
                 body = ": " + e.response.text
-            sys.stderr.write("Unable to calculate deletion list: %s%s\n" % (e, body))
+            sys.stderr.write(f"Unable to calculate deletion list: {e}{body}\n")
         else:
             if to_delete_count >= 50 and to_delete_percent >= 2:
                 error_log.append("trigger warning subject")
@@ -664,13 +658,13 @@ def process_language(args, lang):
                 record_counts,
                 db_count_field,
                 args.dest_file,
-                **download_kwargs(lang, args)
+                **download_kwargs(lang, args),
             )
         except requests.HTTPError as e:
             body = ""
             if e.response:
                 body = ": " + e.response.text
-            sys.stderr.write("Unable to upload NUM counts: %s%s\n" % (e, body))
+            sys.stderr.write(f"Unable to upload NUM counts: {e}{body}\n")
 
     report = generate_report(args, counts)
 

@@ -174,7 +174,7 @@ _culture_cache: t.Optional[dict[str, CultureDescription]] = None
 def update_culture_map() -> None:
     global _culture_cache
 
-    _culture_cache = dict((x.Culture, x) for x in _culture_list)
+    _culture_cache = {x.Culture: x for x in _culture_list}
 
 
 update_culture_map()
@@ -220,7 +220,7 @@ class SupportsConnmgr(t.Protocol):
     params: t.Mapping[str, str]
 
 
-class SystemLanguage(object):
+class SystemLanguage:
     listeners: list[t.Callable[[CultureDescription], None]]
 
     def __init__(self, request: SupportsConnmgr):

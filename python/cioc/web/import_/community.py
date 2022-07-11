@@ -15,10 +15,9 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import os
 import logging
-from six.moves import cStringIO as StringIO
+from io import StringIO
 from zipfile import ZipFile
 
 from pyramid.view import view_config, view_defaults

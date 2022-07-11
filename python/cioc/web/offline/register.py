@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 from formencode import Schema
 
 from pyramid.view import view_config
@@ -73,11 +72,11 @@ class Register(viewbase.CicViewBase):
         with request.connmgr.get_connection("admin") as conn:
             result = conn.execute(
                 """
-						 SET NOCOUNT ON
-						 DECLARE @RC int, @ErrMsg nvarchar(500)
-						 EXEC @RC = sp_CIC_Offline_Machine_i ?,?,?, @ErrMsg OUTPUT
-						 SELECT @RC AS [Return], @ErrMsg AS ErrMsg
-							""",
+                         SET NOCOUNT ON
+                         DECLARE @RC int, @ErrMsg nvarchar(500)
+                         EXEC @RC = sp_CIC_Offline_Machine_i ?,?,?, @ErrMsg OUTPUT
+                         SELECT @RC AS [Return], @ErrMsg AS ErrMsg
+                            """,
                 request.user.cic.SL_ID,
                 model_state.value("MachineName"),
                 model_state.value("PublicKey"),

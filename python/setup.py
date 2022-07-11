@@ -14,7 +14,6 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import os
 import sys
 
@@ -53,9 +52,9 @@ setup(
         ]
     },
     entry_points="""\
-	  [paste.app_factory]
-	  main = cioc.web:main
-	  [babel.extractors]
+      [paste.app_factory]
+      main = cioc.web:main
+      [babel.extractors]
       asp = cioc.core.aspextractor:extract_asp
       """,
     dependency_links=[

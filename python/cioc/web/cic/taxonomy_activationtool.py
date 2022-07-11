@@ -16,9 +16,7 @@
 
 
 # Logging
-from __future__ import absolute_import
 import logging
-from six.moves import map
 
 log = logging.getLogger(__name__)
 
@@ -87,22 +85,22 @@ class ActivtionsView(CicViewBase):
         with request.connmgr.get_connection("admin") as conn:
             cursor = conn.execute(
                 """
-			DECLARE @MemberID int
-			SET @MemberID = ?
-			SELECT tm.Code,ISNULL(tmd.AltTerm,tmd.Term) AS Term,
-			PreferredTerm,
-			CAST(CASE WHEN EXISTS(SELECT * FROM TAX_Term_ParentList WHERE ParentCode=tm.Code) THEN 1 ELSE 0 END AS bit) AS HAS_CHILDREN,
-			0 AS CountRecords,
-			CAST(0 AS bit) AS CAN_ACTIVATE,
-			CAST(0 AS bit) AS CAN_ROLLUP,
-			CAST(CASE WHEN tm.Active = 1 THEN 1 ELSE 0 END AS bit) AS CAN_DEACTIVATE,
-			%s
-			FROM TAX_Term tm
-			INNER JOIN TAX_Term_Description tmd
-				ON tm.Code=tmd.Code AND tmd.LangID=@@LANGID
-			WHERE tm.CdLvl=1
-			ORDER BY tm.Code
-			"""
+            DECLARE @MemberID int
+            SET @MemberID = ?
+            SELECT tm.Code,ISNULL(tmd.AltTerm,tmd.Term) AS Term,
+            PreferredTerm,
+            CAST(CASE WHEN EXISTS(SELECT * FROM TAX_Term_ParentList WHERE ParentCode=tm.Code) THEN 1 ELSE 0 END AS bit) AS HAS_CHILDREN,
+            0 AS CountRecords,
+            CAST(0 AS bit) AS CAN_ACTIVATE,
+            CAST(0 AS bit) AS CAN_ROLLUP,
+            CAST(CASE WHEN tm.Active = 1 THEN 1 ELSE 0 END AS bit) AS CAN_DEACTIVATE,
+            %s
+            FROM TAX_Term tm
+            INNER JOIN TAX_Term_Description tmd
+                ON tm.Code=tmd.Code AND tmd.LangID=@@LANGID
+            WHERE tm.CdLvl=1
+            ORDER BY tm.Code
+            """
                 % active_sql,
                 request.dboptions.MemberID,
             )
@@ -142,11 +140,11 @@ class ActivtionsView(CicViewBase):
 
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
-					DECLARE @RC int, @ErrMsg nvarchar(500)
-					EXEC @RC = dbo.sp_Tax_Term_u_Activate ?,?,?,?, @ErrMsg OUTPUT
+                    DECLARE @RC int, @ErrMsg nvarchar(500)
+                    EXEC @RC = dbo.sp_Tax_Term_u_Activate ?,?,?,?, @ErrMsg OUTPUT
 
-					SELECT @RC AS [Return], @ErrMsg AS ErrMsg
-					"""
+                    SELECT @RC AS [Return], @ErrMsg AS ErrMsg
+                    """
                 cursor = conn.execute(sql, args)
 
                 states = cursor.fetchall()
@@ -223,26 +221,26 @@ class ActivtionsView(CicViewBase):
             records_criteria = ""
             # Has an active parent or child, or there is nothing active on the branch
             can_activate = """CAST(CASE
-					WHEN EXISTS(SELECT * FROM TAX_Term WHERE Code=tm.ParentCode AND Active=1)
-					OR EXISTS(SELECT * FROM TAX_Term WHERE ParentCode=tm.Code AND Active=1)
-					OR (
-						NOT EXISTS(SELECT * FROM TAX_Term WHERE CdLvl1=tm.CdLvl1 AND CdLvl>tm.CdLvl AND Code LIKE tm.Code+'%' AND Active=1)
-						AND NOT EXISTS(SELECT * FROM TAX_Term WHERE CdLvl1=tm.CdLvl1 AND CdLvl<tm.CdLvl AND tm.Code LIKE Code+'%' AND Active=1)
-					) THEN 1 ELSE 0 END AS bit)"""
+                    WHEN EXISTS(SELECT * FROM TAX_Term WHERE Code=tm.ParentCode AND Active=1)
+                    OR EXISTS(SELECT * FROM TAX_Term WHERE ParentCode=tm.Code AND Active=1)
+                    OR (
+                        NOT EXISTS(SELECT * FROM TAX_Term WHERE CdLvl1=tm.CdLvl1 AND CdLvl>tm.CdLvl AND Code LIKE tm.Code+'%' AND Active=1)
+                        AND NOT EXISTS(SELECT * FROM TAX_Term WHERE CdLvl1=tm.CdLvl1 AND CdLvl<tm.CdLvl AND tm.Code LIKE Code+'%' AND Active=1)
+                    ) THEN 1 ELSE 0 END AS bit)"""
             # Has an inactive or rolled-up parent or child, or is the termination of the branch; no records
             can_deactivate = """CAST(CASE WHEN COUNT(tl.NUM)=0 AND
-					(tm.CdLvl = 6
-					OR NOT EXISTS(SELECT * FROM TAX_Term WHERE ParentCode=tm.Code)
-					OR EXISTS(SELECT * FROM TAX_Term WHERE Code=tm.ParentCode AND NOT Active=1)
-					OR EXISTS(SELECT * FROM TAX_Term WHERE ParentCode=tm.Code AND NOT Active=1)
-					)
-					THEN 1 ELSE 0 END AS bit)"""
+                    (tm.CdLvl = 6
+                    OR NOT EXISTS(SELECT * FROM TAX_Term WHERE ParentCode=tm.Code)
+                    OR EXISTS(SELECT * FROM TAX_Term WHERE Code=tm.ParentCode AND NOT Active=1)
+                    OR EXISTS(SELECT * FROM TAX_Term WHERE ParentCode=tm.Code AND NOT Active=1)
+                    )
+                    THEN 1 ELSE 0 END AS bit)"""
             # Has an active parent (at some level) and no active children; no records
             can_rollup = """CAST(CASE
-					WHEN COUNT(tl.NUM)=0
-					AND EXISTS(SELECT * FROM TAX_Term WHERE CdLvl1=tm.CdLvl1 AND CdLvl<tm.CdLvl AND tm.Code LIKE Code+'%' AND Active=1)
-					AND NOT EXISTS(SELECT * FROM TAX_Term WHERE CdLvl1=tm.CdLvl1 AND CdLvl>tm.CdLvl AND Code LIKE tm.Code+'%' AND Active=1)
-					THEN 1 ELSE 0 END AS bit)"""
+                    WHEN COUNT(tl.NUM)=0
+                    AND EXISTS(SELECT * FROM TAX_Term WHERE CdLvl1=tm.CdLvl1 AND CdLvl<tm.CdLvl AND tm.Code LIKE Code+'%' AND Active=1)
+                    AND NOT EXISTS(SELECT * FROM TAX_Term WHERE CdLvl1=tm.CdLvl1 AND CdLvl>tm.CdLvl AND Code LIKE tm.Code+'%' AND Active=1)
+                    THEN 1 ELSE 0 END AS bit)"""
 
         else:
             active_sql = "CAST(CASE WHEN EXISTS(SELECT * FROM TAX_Term_ActivationByMember WHERE Code=tm.Code AND MemberID=@MemberID) THEN 1 ELSE 0 END AS bit) AS Active"
@@ -260,32 +258,32 @@ class ActivtionsView(CicViewBase):
             can_rollup = """CAST(0 AS bit)"""
 
         sql = """
-			DECLARE @MemberID int
-			SET @MemberID = ?
-			SELECT tm.Code,ISNULL(tmd.AltTerm,tmd.Term) AS Term,
-			PreferredTerm,
-			%s,
-			%s AS CAN_ACTIVATE,
-			%s AS CAN_DEACTIVATE,
-			%s AS CAN_ROLLUP,
-			CAST(CASE WHEN EXISTS(SELECT * FROM TAX_Term WHERE ParentCode=tm.Code) THEN 1 ELSE 0 END AS bit) AS HAS_CHILDREN,
-			COUNT(DISTINCT tl.NUM) AS CountRecords
-			FROM TAX_Term tm
-			INNER JOIN TAX_Term_Description tmd
-				ON tm.Code=tmd.Code AND tmd.LangID=@@LANGID
-			LEFT JOIN CIC_BT_TAX_TM tlt
-				ON tlt.Code=tm.Code
-			LEFT JOIN CIC_BT_TAX tl
-				ON tlt.BT_TAX_ID=tl.BT_TAX_ID
-					AND EXISTS(SELECT *
-						FROM GBL_BaseTable bt
-						WHERE bt.NUM=tl.NUM
-						%s
-						)
-			WHERE tm.ParentCode = ?
-			GROUP BY tm.Code, tm.CdLvl, tm.CdLvl1, ISNULL(tmd.AltTerm,tmd.Term), tm.Active, tm.PreferredTerm, tm.ParentCode
-			ORDER BY tm.Code
-		""" % (
+            DECLARE @MemberID int
+            SET @MemberID = ?
+            SELECT tm.Code,ISNULL(tmd.AltTerm,tmd.Term) AS Term,
+            PreferredTerm,
+            {},
+            {} AS CAN_ACTIVATE,
+            {} AS CAN_DEACTIVATE,
+            {} AS CAN_ROLLUP,
+            CAST(CASE WHEN EXISTS(SELECT * FROM TAX_Term WHERE ParentCode=tm.Code) THEN 1 ELSE 0 END AS bit) AS HAS_CHILDREN,
+            COUNT(DISTINCT tl.NUM) AS CountRecords
+            FROM TAX_Term tm
+            INNER JOIN TAX_Term_Description tmd
+                ON tm.Code=tmd.Code AND tmd.LangID=@@LANGID
+            LEFT JOIN CIC_BT_TAX_TM tlt
+                ON tlt.Code=tm.Code
+            LEFT JOIN CIC_BT_TAX tl
+                ON tlt.BT_TAX_ID=tl.BT_TAX_ID
+                    AND EXISTS(SELECT *
+                        FROM GBL_BaseTable bt
+                        WHERE bt.NUM=tl.NUM
+                        {}
+                        )
+            WHERE tm.ParentCode = ?
+            GROUP BY tm.Code, tm.CdLvl, tm.CdLvl1, ISNULL(tmd.AltTerm,tmd.Term), tm.Active, tm.PreferredTerm, tm.ParentCode
+            ORDER BY tm.Code
+        """.format(
             active_sql,
             can_activate,
             can_deactivate,
@@ -312,7 +310,7 @@ class ActivtionsView(CicViewBase):
 
         plus_minus_tmpl = Markup(
             """<span class="SimulateLink taxPlusMinus" data-taxcode="%(Code)s" data-url="{}" data-level="%(level)d" data-closed="true"><img border="0" align="bottom" src="{}"></span>
-						"""
+                        """
         ).format(
             route_path(
                 "cic_taxonomy", action="activation_ddrows", _query=query
@@ -329,13 +327,13 @@ class ActivtionsView(CicViewBase):
 
         base_tmpl = Markup(
             """<tr valign="top" class="TaxRowLevel%(level)d">
-					<td class="%(levelclass)s"><span%(PreferredTerm)s>%(Code)s</span></td>
-					<td class="%(levelclass)s"><div class="CodeLevel%(level)d" id="tax-code-%(CodeID)s">{}&nbsp;<span class="taxExpandTerm SimulateLink TaxLink%(Inactive)s" data-closed="true" data-taxcode="%(Code)s" data-url="{}" data-state="%(State)s"><span class="rollup-indicator %(Rollup)s">&uArr;&nbsp;</span>%(Term)s&nbsp;%(Count)s</span>
-					<a class="action-icon activate %(can_activate)s" data-action="activate" title="%(activate)s">%(activate)s</a>
-					<a class="action-icon deactivate %(can_deactivate)s" data-action="deactivate" title="%(deactivate)s">%(deactivate)s</a>
-					<a class="action-icon rollup %(can_rollup)s" data-action="rollup" title="%(rollup)s">%(rollup)s</a></div>
-					<div class="taxDetail"></div>
-					</td></tr>"""
+                    <td class="%(levelclass)s"><span%(PreferredTerm)s>%(Code)s</span></td>
+                    <td class="%(levelclass)s"><div class="CodeLevel%(level)d" id="tax-code-%(CodeID)s">{}&nbsp;<span class="taxExpandTerm SimulateLink TaxLink%(Inactive)s" data-closed="true" data-taxcode="%(Code)s" data-url="{}" data-state="%(State)s"><span class="rollup-indicator %(Rollup)s">&uArr;&nbsp;</span>%(Term)s&nbsp;%(Count)s</span>
+                    <a class="action-icon activate %(can_activate)s" data-action="activate" title="%(activate)s">%(activate)s</a>
+                    <a class="action-icon deactivate %(can_deactivate)s" data-action="deactivate" title="%(deactivate)s">%(deactivate)s</a>
+                    <a class="action-icon rollup %(can_rollup)s" data-action="rollup" title="%(rollup)s">%(rollup)s</a></div>
+                    <div class="taxDetail"></div>
+                    </td></tr>"""
         )
 
         level_class = ("TaxLevel%d" % level) if level <= 2 else "TaxBasic"

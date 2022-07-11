@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,15 +14,15 @@
 #  limitations under the License.
 # =========================================================================================
 
-from __future__ import absolute_import
 import logging
 import itertools
 import tempfile
 import os
-from six.moves.urllib.parse import urlencode
+from urllib.parse import urlencode
 
 import pyodbc
-from xml.etree import cElementTree as ET
+
+from xml.etree import ElementTree as ET
 from lxml import html
 from markupsafe import Markup
 from pyramid.view import view_config
@@ -38,7 +38,6 @@ from cioc.core import (
 )
 from cioc.web.cic.viewbase import CicViewBase
 from cioc.core.stat import insert_stat
-from six.moves import range
 
 gettext = i18n.gettext
 ngettext = i18n.ngettext
@@ -431,18 +430,18 @@ def build_nav_dropdown(
 
 _first_prev_template = Markup(
     """<span style="white-space: nowrap"><a id="first_link_top" class="NoLineLink DetailsLink" data-num="%(first_num)s" href="%(first_url)s"><img src="/images/first.gif" aria-hidden="true" border="0">&nbsp;%(first)s</a></span>
-				<span class="NoWrap"><a id="prev_link_top" class="NoLineLink DetailsLink" data-num="%(prev_num)s" href="%(prev_url)s"><img src="/images/previous.gif" aria-hidden="true" border="0">&nbsp;%(previous)s</a></span>"""
+                <span class="NoWrap"><a id="prev_link_top" class="NoLineLink DetailsLink" data-num="%(prev_num)s" href="%(prev_url)s"><img src="/images/previous.gif" aria-hidden="true" border="0">&nbsp;%(previous)s</a></span>"""
 )
 _next_last_template = Markup(
     """<span class="NoWrap"><a id="next_link_top" class="NoLineLink DetailsLink" data-num="%(next_num)s" href="%(next_url)s">%(next)s&nbsp;<img src="/images/next.gif" aria-hidden="true" border="0"></a></span>
-				<span class="NoWrap"><a id="last_link_top" class="NoLineLink DetailsLink" data-num="%(last_num)s" href="%(last_url)s">%(last)s&nbsp;<img src="/images/last.gif" aria-hidden="true" border="0"></a></span>"""
+                <span class="NoWrap"><a id="last_link_top" class="NoLineLink DetailsLink" data-num="%(last_num)s" href="%(last_url)s">%(last)s&nbsp;<img src="/images/last.gif" aria-hidden="true" border="0"></a></span>"""
 )
 _other_results_template = Markup(
     """<strong>%(other_results)s</strong><br class="visible-xs-inline visible-sm-inline"> """
 )
 _total_template = Markup(
     """<span class="NoWrap">(%(human_number)s %(of)s %(length)s
-		<a id="total_link_top" class="NoLineLink SearchTotalLink" href="%(total_url)s">%(total)s</a>)</span>"""
+        <a id="total_link_top" class="NoLineLink SearchTotalLink" href="%(total_url)s">%(total)s</a>)</span>"""
 )
 
 
@@ -604,7 +603,7 @@ dbo.fn_CIC_RecordInView(bt.NUM,@ViewTypeCIC,@@LangID,0,GETDATE()) AS InView,
 ISNULL(CMP_OrgDescriptionShort, CMP_DescriptionShort) + CASE WHEN RIGHT(ISNULL(btd.CMP_OrgDescriptionShort, btd.CMP_DescriptionShort), 4) = ' ...' AND bt.NUM<>@NUM THEN ' ' + cioc_shared.dbo.fn_SHR_GBL_Link_Record(bt.NUM,'[' + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('More',@@LANGID) + ']',@HTTPVals,@PathToStart) ELSE '' END AS SUMMARY, 0 AS CheckHTML, 0 AS Deleted, btd.NON_PUBLIC
 FROM GBL_BaseTable bt
 INNER JOIN GBL_BaseTable_Description btd
-	ON bt.NUM=btd.NUM AND btd.LangID=@@LANGID
+    ON bt.NUM=btd.NUM AND btd.LangID=@@LANGID
 WHERE bt.NUM=@ORG_NUM
 
 SELECT bt.*, 1 AS CheckHTML
@@ -648,12 +647,12 @@ FROM dbo.fn_GBL_NUMToSimilarServices_rst(@NUM, ISNULL(@ORG_NUM, @NUM), @ViewType
                 logged_in_sql = """\
 dbo.fn_CIC_CanUpdateRecord(bt.NUM,@UserID,@ViewTypeCIC,@@LANGID,GETDATE()) AS CAN_UPDATE,
 CASE WHEN ((btd.E_MAIL IS NOT NULL OR bt.UPDATE_EMAIL IS NOT NULL) AND bt.NO_UPDATE_EMAIL=0)
-	THEN 1 ELSE 0 END AS CAN_EMAIL,
+    THEN 1 ELSE 0 END AS CAN_EMAIL,
 CASE WHEN EXISTS(SELECT * FROM GBL_FeedbackEntry fbe WHERE fbe.NUM=bt.NUM
-		AND (EXISTS(SELECT * FROM GBL_Feedback fb WHERE fbe.FB_ID=fb.FB_ID) OR EXISTS(SELECT * FROM CIC_Feedback fb WHERE fbe.FB_ID=fb.FB_ID)))
-	THEN 1 ELSE 0 END AS HAS_FEEDBACK,
+        AND (EXISTS(SELECT * FROM GBL_Feedback fb WHERE fbe.FB_ID=fb.FB_ID) OR EXISTS(SELECT * FROM CIC_Feedback fb WHERE fbe.FB_ID=fb.FB_ID)))
+    THEN 1 ELSE 0 END AS HAS_FEEDBACK,
 CASE WHEN EXISTS(SELECT * FROM CIC_BT_PB pbr INNER JOIN CIC_Feedback_Publication pf ON pbr.BT_PB_ID=pf.BT_PB_ID WHERE pbr.NUM=bt.NUM)
-	THEN 1 ELSE 0 END AS HAS_PUB_FEEDBACK,
+    THEN 1 ELSE 0 END AS HAS_PUB_FEEDBACK,
 dbo.fn_CIC_CanIndexRecord(bt.NUM,@UserID,@ViewTypeCIC,@@LANGID,GETDATE()) AS CAN_INDEX,
 dbo.fn_CIC_Reminders(bt.NUM,@UserID,@@LANGID,GETDATE()) AS REMINDERS,
 """
@@ -674,10 +673,10 @@ dbo.fn_CIC_LinkOrgLevel(@ViewTypeCIC,bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.
 dbo.fn_CIC_LinkLocationName(@ViewTypeCIC,bt.NUM,bt.ORG_NUM,btd.LOCATION_NAME,GETDATE()) AS LINK_LOCATION_NAME,
 dbo.fn_CIC_LinkServiceNameLevel(@ViewTypeCIC,bt.NUM,bt.ORG_NUM,btd.SERVICE_NAME_LEVEL_1,GETDATE()) AS LINK_SERVICE_NAME_1,
 dbo.fn_CIC_LinkServiceNameLevel(@ViewTypeCIC,bt.NUM,bt.ORG_NUM,btd.SERVICE_NAME_LEVEL_2,GETDATE()) AS LINK_SERVICE_NAME_2,
-%(submit_changes_to)s
+{submit_changes_to}
 dbo.fn_CIC_RecordInView(bt.NUM,@ViewTypeCIC,btd.LangID,0,GETDATE()) AS IN_VIEW,
-%(in_default_view)s
-%(logged_in_sql)s
+{in_default_view}
+{logged_in_sql}
 /* SQL information for all required display fields */
 bt.RSN, bt.NUM, bt.RECORD_OWNER,
 dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM,btd.ORG_LEVEL_1,btd.ORG_LEVEL_2,btd.ORG_LEVEL_3,btd.ORG_LEVEL_4,btd.ORG_LEVEL_5,btd.LOCATION_NAME,btd.SERVICE_NAME_LEVEL_1,btd.SERVICE_NAME_LEVEL_2, bt.DISPLAY_LOCATION_NAME, bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL,
@@ -692,18 +691,18 @@ cioc_shared.dbo.fn_SHR_GBL_DateString(btd.MODIFIED_DATE) AS MODIFIED_DATE,
 cioc_shared.dbo.fn_SHR_GBL_DateString(btd.UPDATE_DATE) AS UPDATE_DATE,
 btd.UPDATE_SCHEDULE AS UPDATE_SCHEDULE,
 btd.DELETION_DATE AS DELETION_DATE,
-%(data_mgmt_fields)s
-%(can_request_update)s
-%(can_update_pub)s
-%(vol_ops)s
+{data_mgmt_fields}
+{can_request_update}
+{can_update_pub}
+{vol_ops}
 (SELECT Culture,LangID,LanguageName,LanguageAlias,LCID,Active,
 CASE WHEN EXISTS(SELECT * FROM GBL_BaseTable_Description WHERE NUM=bt.NUM AND LangID=LANG.LangID) THEN 1 ELSE 0 END AS HAS_LANG,
 dbo.fn_CIC_RecordInView(bt.NUM,@ViewTypeCIC,LangID,0,GETDATE()) AS CAN_SEE
-%(lang_can_update)s
+{lang_can_update}
 FROM STP_Language LANG WHERE
-%(other_lang_condition)s
+{other_lang_condition}
 ORDER BY CASE WHEN Active=1 THEN 0 ELSE 1 END, LanguageName FOR XML AUTO) AS RECORD_LANG,
-%(field_sql)s
+{field_sql}
 btd.NUM AS LangNUM
 FROM GBL_BaseTable bt
 LEFT JOIN GBL_BaseTable_Description btd ON bt.NUM=btd.NUM AND btd.LangID=@@LANGID
@@ -713,34 +712,34 @@ LEFT JOIN CCR_BaseTable ccbt ON bt.NUM=ccbt.NUM
 LEFT JOIN CCR_BaseTable_Description ccbtd ON ccbt.NUM=ccbtd.NUM AND ccbtd.LangID=@@LANGID
 WHERE bt.NUM=@NUM
 
-%(sidebar_sql)s
+{sidebar_sql}
 
 SET NOCOUNT OFF
-			""" % {
-                "submit_changes_to": "ISNULL(btd.SUBMIT_CHANGES_TO_PROTOCOL, 'https://') + btd.SUBMIT_CHANGES_TO AS FEEDBACK_LINK,"
+            """.format(
+                submit_changes_to="ISNULL(btd.SUBMIT_CHANGES_TO_PROTOCOL, 'https://') + btd.SUBMIT_CHANGES_TO AS FEEDBACK_LINK,"
                 if viewdata.UseSubmitChangesTo
                 else "",
-                "in_default_view": "dbo.fn_CIC_RecordInView(bt.NUM,?,@@LANGID,0,GETDATE()) AS IN_DEFAULT_VIEW,"
+                in_default_view="dbo.fn_CIC_RecordInView(bt.NUM,?,@@LANGID,0,GETDATE()) AS IN_DEFAULT_VIEW,"
                 if user_cic
                 else "0 AS IN_DEFAULT_VIEW,",
-                "logged_in_sql": logged_in_sql,
-                "lang_can_update": lang_can_update,
-                "data_mgmt_fields": "cioc_shared.dbo.fn_SHR_GBL_DateString(btd.CREATED_DATE) AS CREATED_DATE,"
+                logged_in_sql=logged_in_sql,
+                lang_can_update=lang_can_update,
+                data_mgmt_fields="cioc_shared.dbo.fn_SHR_GBL_DateString(btd.CREATED_DATE) AS CREATED_DATE,"
                 if viewdata.DataMgmtFields
                 else "",
-                "can_request_update": "cioc_shared.dbo.fn_SHR_GBL_DateString(bt.EMAIL_UPDATE_DATE) AS EMAIL_UPDATE_DATE,"
+                can_request_update="cioc_shared.dbo.fn_SHR_GBL_DateString(bt.EMAIL_UPDATE_DATE) AS EMAIL_UPDATE_DATE,"
                 if user_cic.CanRequestUpdate
                 else "",
                 # Information for updating publication data
-                "can_update_pub": "dbo.fn_CIC_PubRelationID(bt.NUM,@PB_ID) AS BT_PB_ID, dbo.fn_CIC_CanUpdatePub(bt.NUM,@PB_ID,@UserID,@ViewTypeCIC,@@LANGID,GETDATE()) AS CAN_UPDATE_PUB,"
+                can_update_pub="dbo.fn_CIC_PubRelationID(bt.NUM,@PB_ID) AS BT_PB_ID, dbo.fn_CIC_CanUpdatePub(bt.NUM,@PB_ID,@UserID,@ViewTypeCIC,@@LANGID,GETDATE()) AS CAN_UPDATE_PUB,"
                 if check_update_pub
                 else "CAST(0 AS bit) AS CAN_UPDATE_PUB,",
                 # Does this record have an Equivalent Record
-                "other_lang_condition": "ActiveRecord=1"
+                other_lang_condition="ActiveRecord=1"
                 if viewdata.ViewOtherLangs
                 else "EXISTS(SELECT * FROM CIC_View_Description WHERE ViewType=@ViewTypeCIC AND LangID=LANG.LangID)",
                 # Does this record have Volunteer Opportunities?
-                "vol_ops": (
+                vol_ops=(
                     "CASE WHEN EXISTS(SELECT vo.VNUM FROM VOL_Opportunity vo INNER JOIN VOL_Opportunity_Description vod ON vo.VNUM=vod.VNUM WHERE vo.NUM=bt.NUM AND "
                     + (
                         "(vo.DISPLAY_UNTIL IS NULL OR vo.DISPLAY_UNTIL >= GETDATE()) AND "
@@ -752,9 +751,9 @@ SET NOCOUNT OFF
                 )
                 if request.dboptions.UseVOL and viewdata.VolunteerLink
                 else "",
-                "field_sql": field_sql,
-                "sidebar_sql": sidebar_sql,
-            }
+                field_sql=field_sql,
+                sidebar_sql=sidebar_sql,
+            )
 
             params = [
                 num,

@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,6 @@
 
 
 # stdlib
-from __future__ import absolute_import
 import logging
 
 # 3rd party
@@ -100,10 +99,10 @@ class BaseFeedView(viewbase.CicViewBase):
         with request.connmgr.get_connection() as conn:
             cursor = conn.execute(
                 """
-				DECLARE @RC as int
-				EXECUTE @RC = %s ?, %s
-				SELECT @RC as [Return]
-				"""
+                DECLARE @RC as int
+                EXECUTE @RC = %s ?, %s
+                SELECT @RC as [Return]
+                """
                 % (self.stored_proc, ",".join("?" * len(args))),
                 request.viewdata.cic.ViewType,
                 *args

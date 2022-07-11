@@ -15,7 +15,6 @@
 # =========================================================================================
 
 
-from __future__ import absolute_import
 import zipfile
 import tempfile
 import logging
@@ -26,8 +25,6 @@ from pyramid.view import view_config
 from cioc.core import i18n
 from cioc.core.webobfiletool import FileIterator
 from cioc.web.cic import viewbase
-from six.moves import map
-import six
 
 log = logging.getLogger(__name__)
 
@@ -58,9 +55,7 @@ class VOLExport(viewbase.CicViewBase):
 
         log.debug("sql: %s", sql)
         data = [
-            '<?xml version="1.0" encoding="UTF-8"?>\r\n<ROOT xmlns="urn:ciocshare-schema-vol">'.encode(
-                "utf8"
-            )
+            b'<?xml version="1.0" encoding="UTF-8"?>\r\n<ROOT xmlns="urn:ciocshare-schema-vol">'
         ]
         with request.connmgr.get_connection("admin") as conn:
             cursor = conn.execute(sql)
@@ -69,16 +64,16 @@ class VOLExport(viewbase.CicViewBase):
                 "".join(
                     [
                         '<RECORD VNUM="',
-                        six.text_type(x.VNUM),
+                        str(x.VNUM),
                         '" RECORD_OWNER="',
-                        six.text_type(x.RECORD_OWNER),
+                        str(x.RECORD_OWNER),
                         '" HAS_ENGLISH="',
-                        six.text_type(x.HAS_ENGLISH),
+                        str(x.HAS_ENGLISH),
                         '" HAS_FRENCH="',
-                        six.text_type(x.HAS_FRENCH),
+                        str(x.HAS_FRENCH),
                         '">',
                     ]
-                    + list(map(six.text_type, x[7:]))
+                    + list(map(str, x[7:]))
                     + ["</RECORD>"]
                 ).encode("utf8")
                 for x in cursor.fetchall()
@@ -86,8 +81,8 @@ class VOLExport(viewbase.CicViewBase):
 
             cursor.close()
 
-        data.append("</ROOT>".encode("utf8"))
-        data = "\r\n".encode("utf8").join(data)
+        data.append(b"</ROOT>")
+        data = b"\r\n".join(data)
 
         file = tempfile.TemporaryFile()
         zip = zipfile.ZipFile(file, "w", zipfile.ZIP_DEFLATED)

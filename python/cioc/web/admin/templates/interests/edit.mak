@@ -16,10 +16,6 @@
 =========================================================================================
 </%doc>
 
-<%!
-import six
-%>
-
 <%inherit file="cioc.web:templates/master.mak" />
 <%namespace file="cioc.web.admin:templates/shown_cultures.mak" name="sc" />
 <p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> | <a href="${request.passvars.route_path('admin_interests_index')}">${_('Return to Specific Areas of Interest')}</a> ]</p>
@@ -44,7 +40,7 @@ ${sc.shown_cultures_ui()}
 	<td class="FieldLabelLeft NoWrap">${_('Status')}</td>
 	<td>
 	%if interest.UsageCount:
-		${_('This Specific Area of Interest is <strong>being used</strong> by %d record(s).') % interest.UsageCount |n} [ <a href="${request.passvars.makeLink('~/volunteer/results.asp', dict(incDel="on", DisplayStatus="A", AIID=interest.AI_ID))}">${_('Search')}</a> ] 
+		${_('This Specific Area of Interest is <strong>being used</strong> by %d record(s).') % interest.UsageCount |n} [ <a href="${request.passvars.makeLink('~/volunteer/results.asp', dict(incDel="on", DisplayStatus="A", AIID=interest.AI_ID))}">${_('Search')}</a> ]
 		<br>${_('Because this Specific Area of Interest is being used, you cannot currently delete it.')}
 	%else:
 		${_('This Specific Area of Interest is <strong>not</strong> being used by any records.')|n}
@@ -88,16 +84,16 @@ ${self.makeMgmtInfo(interest)}
 		%if i:
 		<br>
 		%endif
-		${renderer.ms_checkbox('groups', six.text_type(group_desc.IG_ID), label=group_desc.Name)}
+		${renderer.ms_checkbox('groups', str(group_desc.IG_ID), label=group_desc.Name)}
 	%endfor
 	</td>
 </tr>
 %endif
 <tr>
 	<td colspan="2">
-	<input type="submit" name="Submit" value="${_('Add') if is_add else _('Update')}"> 
+	<input type="submit" name="Submit" value="${_('Add') if is_add else _('Update')}">
 	%if not is_add and context.get('interest') is not None and not interest.UsageCount:
-	<input type="submit" name="Delete" value="${_('Delete')}"> 
+	<input type="submit" name="Delete" value="${_('Delete')}">
 	%endif
 	<input type="reset" value="${_('Reset Form')}"></td>
 </tr>
@@ -108,4 +104,3 @@ ${self.makeMgmtInfo(interest)}
 <%def name="bottomjs()">
 ${sc.shown_cultures_js()}
 </%def>
-
