@@ -17,6 +17,7 @@
 
 # std lib
 import binascii
+import copy
 import hashlib
 import re
 from datetime import datetime
@@ -517,10 +518,14 @@ def do_login(request, principal, login_key):
     remember(request, principal, login_key=login_key)
 
 
+description_allowed_attributes = copy.deepcopy(bleach.ALLOWED_ATTRIBUTES)
+description_allowed_attributes["a"].append("target")
+
 sanitize_html_description = partial(
     bleach.clean,
     tags=bleach.sanitizer.ALLOWED_TAGS
     + ["p", "br", "div", "h1", "h2", "h3", "h4", "h5", "h6"],
+    attributes=description_allowed_attributes,
 )
 
 
