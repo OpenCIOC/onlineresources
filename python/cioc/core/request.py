@@ -50,7 +50,7 @@ log = logging.getLogger(__name__)
 
 class CiocRequestMixin:
     added_gtranslate: bool = False
-    pageinfo: t.Optional["PageInfo"] = None
+    pageinfo: t.Optional["PageInfo"]
 
     @reify
     def app_name(self) -> str:

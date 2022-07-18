@@ -83,7 +83,7 @@ class ConnectionManager:
             language = self.request.language.LanguageAlias
 
         if not perm:
-            pageinfo = self.request.pageinfo
+            pageinfo = getattr(self.request, "pageinfo", None)
             if pageinfo and pageinfo.DbArea == const.DM_VOL:
                 perm = PERMISSION_VOL
             else:
