@@ -45,7 +45,7 @@ class InRequest(viewbase.CicViewBase):
                 ),
             }
 
-        vals = request.cioc_get_cookie("ctlaunched").split(":")
+        vals = (request.session.get("ctlaunched") or "").split(":")
         if len(vals) != 3:
             return {
                 "fail": True,

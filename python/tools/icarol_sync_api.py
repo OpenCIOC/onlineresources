@@ -1,7 +1,6 @@
 import argparse
 import os
 import operator
-import pprint
 import sys
 import traceback
 import typing as t
@@ -53,7 +52,7 @@ class MyArgsType(ArgsType):
     dbinfo: t.Optional[list[dict]] = None
     dbid: t.Optional[int] = None
     fields: t.Optional[model.ResourceDefinition] = None
-    idmap: dict[tuple[str, str], t.Optional[int]] = None
+    idmap: t.Optional[dict[tuple[str, str], t.Optional[int]]] = None
     id_generator: t.Optional[t.Iterator[int]] = None
 
 
@@ -63,6 +62,8 @@ def prepare_client(args) -> None:
     if not token:
         raise Exception("No API Token Configured")
 
+    assert host
+
     args.client = ICarolClient(host, token)
     args.dbinfo = args.client.database_info()
     args.dbid = args.dbinfo[0]["id"]
@@ -71,7 +72,7 @@ def prepare_client(args) -> None:
     args.idmap = {}
 
 
-def get_changes_to_send(args, conn: "Connection") -> list["Row"]:
+def get_changes_to_send(conn: "Connection") -> list["Row"]:
     sql = "EXEC sp_CIC_iCarolExport_l"
     return conn.execute(sql).fetchall()
 
@@ -80,7 +81,10 @@ def parse_sub_xml(
     element: etree.Element,
 ) -> t.Union[list[t.Union[dict[str, t.Any], str]], dict[str, t.Any]]:
     if len(element) and element[0].tag == "item":
-        return [parse_sub_xml(sub) for sub in element]
+        return t.cast(
+            list[t.Union[dict[str, t.Any], str]],
+            [parse_sub_xml(sub) for sub in element],
+        )
 
     if element.text and not element.keys() and not len(element):
         return element.text
@@ -102,9 +106,9 @@ def fix_custom_fields(args: MyArgsType, records: list[dict], num: str):
                 continue
 
             try:
-                custom["selectedValues"] = {
-                    str(field.label_to_id[x]) for x in selected_values.values()
-                }
+                custom["selectedValues"] = list(
+                    {str(field.label_to_id[x]) for x in selected_values.values()}
+                )
             except KeyError as e:
                 raise Exception(
                     f"Unable to map value '{e.args[0]}' to a custom field selection for {custom['label']} on {record['type']} {num}."
@@ -112,7 +116,7 @@ def fix_custom_fields(args: MyArgsType, records: list[dict], num: str):
 
 
 def parse_related_records(
-    args: MyArgsType, record: model.ResourceDetails, num: str
+    args: MyArgsType, record: dict[str, t.Any], num: str
 ) -> RecordInfo:
     related_sites = []
     agency_related = []
@@ -148,7 +152,7 @@ def parse_change_to_model(
 ) -> list[RecordInfo]:
     xdoc = etree.fromstring(datachange)
 
-    records = parse_sub_xml(xdoc)
+    records = t.cast(list[dict[str, t.Any]], parse_sub_xml(xdoc))
     fix_custom_fields(args, records, num)
 
     return [parse_related_records(args, x, num) for x in records]
@@ -302,10 +306,12 @@ def sync_record(
                 print(isnew, record.to_dict())
 
         except Exception as e:
+            traceback.print_exc(file=sys.stderr)
             print(
-                f"Failed to create/update {record['type']} {record_num}/{record_id} due to an error.",
+                f"Failed to create/update {record.type} {record_num}/{record_id} due to an error.",
                 "This may have leaked record.",
                 e,
+                record.to_dict(),
                 file=sys.stderr,
             )
 
@@ -341,7 +347,7 @@ def mark_change_completed(
     args: MyArgsType,
     conn: "Connection",
     record_num: str,
-    external_id: str,
+    external_id: t.Optional[str],
     olscode: str,
 ) -> None:
     if args.test:
@@ -353,7 +359,7 @@ def mark_change_completed(
 
 
 def sync_iteration(args: MyArgsType, conn: "Connection") -> int:
-    changes = get_changes_to_send(args, conn)
+    changes = get_changes_to_send(conn)
     for change in changes:
         new_external_id = sync_record(
             args, change.NUM, change.EXTERNAL_ID, change.OLSCode, change.datachange

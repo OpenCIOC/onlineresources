@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%><%Option Explicit%><?xml version="1.0" encoding="UTF-8"?>
+﻿<%@LANGUAGE="VBSCRIPT"%><%Option Explicit%><?xml version="1.0" encoding="UTF-8"?>
 
 <%
 ' =========================================================================================
@@ -47,7 +47,7 @@ Call setPageInfo(False, DM_CIC, DM_CIC, "../", "ct/", vbNullString)
 
 <script language="python" runat="server">
 def set_launch_values(ctid, login, key):
-	pyrequest.cioc_set_cookie('ctlaunched', ':'.join([ctid, login, key]))
+	pyrequest.session['ctlaunched'] = ':'.join([ctid, login, key])
 </script>
 <%
 

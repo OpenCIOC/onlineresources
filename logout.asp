@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -39,11 +39,6 @@ Call setPageInfo(False, DM_GLOBAL, DM_GLOBAL, vbNullString, vbNullString, vbNull
 <!--#include file="includes/core/incSecurity.asp" -->
 <% 'End Base includes %>
 <%
-	' These cookies are not used anymore but clear them out anyway
-	Response.Cookies(g_strDatabaseCode & "_Login") = " "
-	Response.Cookies(g_strDatabaseCode & "_Login").Expires = Date() - 1
-	Response.Cookies(g_strDatabaseCode & "_Key") = " "
-	Response.Cookies(g_strDatabaseCode & "_Key").Expires = Date() - 1
 	Call do_logout()
 	Call goToPage("login.asp",vbNullString,"UseCICVw,UseVOLVw")
 %>

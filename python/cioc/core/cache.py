@@ -23,7 +23,6 @@ import sys
 # 3rd party
 from dogpile.cache import make_region
 from dogpile.cache.api import CachedValue
-import dogpile_backend_redis_advanced  # noqa
 
 # this app
 from cioc.core import constants as const
@@ -46,14 +45,15 @@ def get_cache(request):
             "connection_pool": request.redispool,
             "redis_expiration_time": 60 * 60 * 2,  # 2 hours
             "distributed_lock": True,
+            "thread_local_lock": False,
             "lock_timeout": 0.5,
             "lock_sleep": 0.1,
-            "dumps": cache_dumps,
-            "loads": cache_loads,
+            "serializer": cache_dumps,
+            "deserializer": cache_loads,
         }
         args.update(request.redispool.connection_kwargs)
         _region.configure(
-            "dogpile_backend_redis_advanced",
+            "dogpile.cache.redis",
             expiration_time=3600,
             arguments=args,
         )

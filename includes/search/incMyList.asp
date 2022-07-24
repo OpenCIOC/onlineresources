@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -44,7 +44,7 @@ def ip_in_networks(networks, remote_addr):
 	return any(ipaddr in x for x in network_list)
 
 def get_ct_session_vars():
-	vals = pyrequest.cioc_get_cookie('ctlaunched').split(':')
+	vals = (pyrequest.session.get('ctlaunched') or '').split(':')
 	if len(vals) != 3:
 		return None, None, None
 
@@ -84,7 +84,7 @@ Function myListResultsAddRecord(strID, bEnableListViewMode, strPrefix, strSuffix
 		If bEnableListViewMode Then
 			myListResultsAddRecord = myListResultsAddRecord & _
 					"<span id=""remove_from_list_" & strID & """ class=""SimulateLink remove_from_list"" data-id=""" & strID & """><img src=""" & ps_strPathToStart & "images/" & IIf(g_bEnableListModeCT, "referral", "list") & "remove.gif"" width=""17"" height=""17"" border=""0"">" & TXT_LIST_REMOVE & "</span>"
-		Else 
+		Else
 			myListResultsAddRecord = myListResultsAddRecord & _
 					myListAddRecordBasicUI(strID)
 		End If
@@ -95,7 +95,7 @@ End Function
 Function myListGenerateCriteria()
 	Dim strRecordListIDs, _
 		aRecordListIDs, _
-		bInRequest 
+		bInRequest
 
 	bInRequest = False
 	strRecordListIDs = vbNullString
@@ -113,7 +113,7 @@ Function myListGenerateCriteria()
 		"</isInRequest>"
 
 		Set objCtHttp = Server.CreateObject("MSXML2.ServerXMLHTTP")
-		objCtHttp.setTimeouts 5000, 15000, 10000, 10000 
+		objCtHttp.setTimeouts 5000, 15000, 10000, 10000
 		objCtHttp.Open "POST", g_strClientTrackerRpcURL & "is_in_request", False
 		objCtHttp.SetRequestHeader "Content-Type", "application/xml"
 		objCtHttp.Send strXML

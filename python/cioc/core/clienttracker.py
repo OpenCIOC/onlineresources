@@ -21,7 +21,7 @@ from cioc.core.i18n import gettext as _
 
 def has_been_launched(request):
     return not not (
-        request.dboptions.ClientTrackerIP and request.cioc_get_cookie("ctlaunched")
+        request.dboptions.ClientTrackerIP and "ctlaunched" in request.session
     )
 
 

@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -102,11 +102,11 @@ Else
 	Dim strErrorMessage
 	strErrorMessage = Replace(TXT_INVALID_USERNAME_PASSWORD, "[USER]", Request.Form("LoginName"))
 
-	Dim strSingleLoginKey		
+	Dim strSingleLoginKey
 	strSingleLoginKey = Null
 
 	With rsLoginCheck
-			
+
 		If Not .EOF Then
 			If Not Nl(g_intLoginRetryLimit) And (.Fields("LoginAttempts") >= g_intLoginRetryLimit) Then
 				strErrorMessage = TXT_ACCOUNT_IS_LOCKED
@@ -142,7 +142,7 @@ Else
 								TXT_REPEATED_ATTEMPTS_BLOCKS_IP
 							Call sendEmail(True, strFrom, strTo, TXT_LOCKED_ACCOUNT, strMessage)
 						End If
-					End If 
+					End If
 				End If
 			End If
 		End If
@@ -175,14 +175,14 @@ Else
 		End If
 
 		If Not bFailedLogin Then
-			Call clearVProfileCookies()
+			Call clearVProfileSession()
 			Dim strUserUID
 			strUserUID = .Fields("UserUID").Value
 
 			Call do_login(strLoginName, strUserUID & strLoginName & strSingleLoginKey)
 
 			If IsSecurePassword(strLoginPwd) Then
-				
+
 				Call goToPage( _
 					ps_strPathToStart & StringIf(.Fields("StartModule") = DM_VOL,"volunteer/"), _
 					StringIf(g_objCurrentLang.Culture<>.Fields("StartCulture"),"Ln=" & .Fields("StartCulture")), _
@@ -195,10 +195,6 @@ Else
 			%><!--#include file="includes/core/incClose.asp" --><%
 			Response.End()
 		Else
-			Response.Cookies(g_strDatabaseCode & "_Login") = " "
-			Response.Cookies(g_strDatabaseCode & "_Login").Expires = Date() - 1
-			Response.Cookies(g_strDatabaseCode & "_Key") = " "
-			Response.Cookies(g_strDatabaseCode & "_Key").Expires = Date() - 1
 			Call handleError(TXT_LOGIN_FAILED & TXT_COLON & strErrorMessage, _
 				"login.asp", _
 				"TriesLeft=" & intTriesLeft)

@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -48,30 +48,12 @@ Sub handleDBConnetionError()
 	<body>
 	<p><%=TXT_SERVICE_UNAVAILABLE_BODY%></p>
 	<!-- <%= ErrMsg %> -->
-<%
-	Dim indCookie, _
-		bLogin
-
-	bLogin = False
-	For Each indCookie in Request.Cookies
-		If reEquals(indCookie,".*_Login", False, False, True, False) Then
-			bLogin = True
-			Exit For
-		End If
-	Next
-
-	If bLogin Then
-%>
-	<p><a href="http://community.cioc.ca/resources/how-to/google-search"><%=TXT_USING_GOOGLE_SEARCH%></a></p>
-<%
-	End If
-%>
 	</body>
 	</html>
 	<%
 	%><!--#include file="../../includes/core/incClose.asp" --><%
 	Response.End()
-	
+
 End Sub
 
 Dim cnnCICEn, _
@@ -85,12 +67,12 @@ Dim cnnCICEn, _
 	cnnAdminEn, _
 	cnnAdminFr, _
 	cnnAdminOt, _
-	strAdminOt 
+	strAdminOt
 
 Sub makeNewConnection(ByRef cnnNew, strPerm)
 	Err.Clear
 	On Error Resume Next
-	
+
 	Set cnnNew = Server.CreateObject("ADODB.Connection")
 	cnnNew.Open get_connection_string(strPerm, g_objCurrentLang.LanguageAlias)
 

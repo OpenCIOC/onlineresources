@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -88,9 +88,6 @@ def l_get_session_value(key):
 	except KeyError:
 		return None
 
-def finalize_session():
-	pyrequest.session.save()
-
 def run_response_callbacks():
 	for fn in pyrequest.response_callbacks:
 		fn(pyrequest, pyrequest.response)
@@ -138,4 +135,3 @@ End Sub
 Call initialize_pass_vars()
 Call initialize_session()
 %>
-

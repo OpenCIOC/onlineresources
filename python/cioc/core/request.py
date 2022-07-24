@@ -16,8 +16,6 @@
 
 
 # Python STD Lib
-from http import cookies as http_cookies
-import urllib.parse
 import logging
 import typing as t
 
@@ -137,35 +135,12 @@ class CiocRequestMixin:
         self.email_messages.append(message)
         self.session["email_messages"] = self.email_messages
 
-    def cioc_delete_cookie(self, name, path="/", domain=None):
-        self.cioc_set_cookie(name, None, path=path, domain=domain)
-
 
 class CiocRequest(CiocRequestMixin, Request):
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
 
         self.passvars
-
-    def cioc_get_cookie(self, name):
-        val = self.cookies.get(urllib.parse.quote(name).replace("_", "%5F"))
-        if val:
-            val = urllib.parse.unquote(val)
-        return val
-
-    def cioc_set_cookie(self, name, value, **args):
-        cookie = http_cookies.SimpleCookie()
-        key = urllib.parse.quote(name).replace("_", "%5F")
-        if value is None:
-            # deleting value
-            value = ""
-            args["max_age"] = 0
-            args["expires"] = "Wed, 31-Dec-97 23:59:59 GMT"
-        cookie[key] = urllib.parse.quote(value)
-        morsel = cookie[key]
-        morsel.update((x, y) for x, y in args.items() if y is not None)
-
-        self.response.headerlist.append(("Set-Cookie", cookie.output(header="")))
 
     def current_route_url(self, *elements, **kw):
         if "_query" not in kw:
