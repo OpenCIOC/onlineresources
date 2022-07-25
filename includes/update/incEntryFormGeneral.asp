@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -686,7 +686,7 @@ Dim	bFullUpdate
 bFullUpdate = (ps_intDbArea = DM_CIC And user_bFullUpdateCIC) Or _
 	(ps_intDbArea = DM_VOL And user_bFullUpdateVOL)
 
-Function getFeedback(strFieldName,bUpdateButton)
+Function getFeedback(strFieldName,bUpdateButton,bWYSIWYG)
 	Dim strReturn, strContent, strDisplay, i
 	If bFeedback Then
 		i = 1
@@ -770,13 +770,17 @@ Function getFeedback(strFieldName,bUpdateButton)
 							"<span class=""Info"">" & TXT_FEEDBACK_NUM & i & StringIf(g_bMultiLingual," (" & .Fields("LanguageName") & ")") & TXT_COLON & "</span>" & _
 							" <span class=""Alert"">" & textToHTML(strDisplay)
 					If bUpdateButton Then
-						strReturn = strReturn & " <input type=""button"" value=""" & TXT_UPDATE & """ onClick=""document.EntryForm." & strFieldName & ".value="
+						If bWYSIWYG Then
+							strReturn = strReturn & " <input type=""button"" value=""" & TXT_UPDATE & """ onClick=""tinymce.get(" & JsQs(strFieldName) & ").setContent("
+						Else
+							strReturn = strReturn & " <input type=""button"" value=""" & TXT_UPDATE & """ onClick=""document.EntryForm." & strFieldName & ".value="
+						End If
 						If Not reEquals(.Fields(strFieldName),CONTENT_DELETED_PATTERN,False,False,True,False) Then
 							strReturn = strReturn & JsQs(Server.HTMLEncode(strContent))
 						Else
 							strReturn = strReturn & SQUOTE & SQUOTE
 						End If
-						strReturn = strReturn & ";"" class=""ui-state-default ui-corner-all"">"
+						strReturn = strReturn & StringIf(bWYSIWYG,")") & ";"" class=""ui-state-default ui-corner-all"">"
 					End If
 					strReturn = strReturn & _
 							"</span>" & _
@@ -916,24 +920,27 @@ Function getGeoCodeFeedback()
 	getGeoCodeFeedback = strReturn
 End Function
 
-Function makeMemoFieldVal(strFieldName,strFieldContents,intSuggestedLength,bCheckForFeedback)
+Function makeMemoFieldVal(strFieldName,strFieldContents,intSuggestedLength,bCheckForFeedback,bWYSIWYG)
 	Dim strReturn
 	Dim intFieldLen
 	If Nl(strFieldContents) Then
 		intFieldLen = 0
 	Else
 		intFieldLen = Len(strFieldContents)
+		If bWYSIWYG Then
+			strFieldContents = textToHTML(strFieldContents)
+		End If
 		strFieldContents = Server.HTMLEncode(strFieldContents)
 	End If
 	strReturn = strReturn & "<textarea" & _
 		" id=" & AttrQs(strFieldName) & _
 		" name=" & AttrQs(strFieldName) & _
 		" rows=" & AttrQs(getTextAreaRows(intFieldLen,intSuggestedLength)) & _
-		" class=""form-control""" & _
+		" class=""form-control" & IIf(bWYSIWYG," WYSIWYG",vbNullString) & """" & _
 		" autocomplete=""off""" & _
 		">" & strFieldContents & "</textarea>"
 	If bFeedback And bCheckForFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,True)
 	End If
 	makeMemoFieldVal = strReturn
 End Function
@@ -957,7 +964,7 @@ Function makeValidatedTextFieldVal(strFieldName,strFieldContents,intMaxLength,bC
 			" value=" & AttrQs(strFieldContents) & ">" & _
 		"</div>"
 	If bFeedback And bCheckForFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 	makeValidatedTextFieldVal = strReturn
 End Function
@@ -979,7 +986,7 @@ Function makeWebFieldVal(strFieldName,strFieldContents,intMaxLength,bCheckForFee
 	End If
 	strReturn = strReturn & " value=" & AttrQs(Replace(Ns(strProtocol), "http://", vbNullString) & strFieldContents) & ">"
 	If bFeedback And bCheckForFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 	makeWebFieldVal = strReturn
 End Function
@@ -1157,7 +1164,7 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 						"</tr>" & _
 						"</table>"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strContactType & "_NAME",False)
+		strReturn = strReturn & getFeedback(strContactType & "_NAME",False,False)
 	End If
 	strReturn = strReturn & _
 					"</div>" & _
@@ -1172,7 +1179,7 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 					"<div class=""col-sm-9 col-lg-10"">" & _
 						"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("TITLE")) & ">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strContactType & "_TITLE",True)
+		strReturn = strReturn & getFeedback(strContactType & "_TITLE",True,False)
 	End If
 	strReturn = strReturn & _
 					"</div>" & _
@@ -1187,7 +1194,7 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 					"<div class=""col-sm-9 col-lg-10"">" & _
 						"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("ORG")) & ">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strContactType & "_ORG",True)
+		strReturn = strReturn & getFeedback(strContactType & "_ORG",True,False)
 	End If
 	strReturn = strReturn & _
 					"</div>" & _
@@ -1218,7 +1225,7 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 						"</tr>" & _
 						"</table>"
 		If bFeedback Then
-			strReturn = strReturn & getFeedback(strContactType & "_PHONE" & i,False)
+			strReturn = strReturn & getFeedback(strContactType & "_PHONE" & i,False,False)
 		End If
 		strReturn = strReturn & _
 						"</div>" & _
@@ -1246,7 +1253,7 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 					"</tr>" & _
 					"</table>"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strContactType & "_FAX",False)
+		strReturn = strReturn & getFeedback(strContactType & "_FAX",False,False)
 	End If
 	strReturn = strReturn & _
 					"</div>" & _
@@ -1261,7 +1268,7 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 					"<div class=""col-sm-9 col-lg-10"">" & _
 						"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strContactType & "_EMAIL",True)
+		strReturn = strReturn & getFeedback(strContactType & "_EMAIL",True,False)
 	End If
 	strReturn = strReturn & _
 					"</div>" & _
@@ -1337,7 +1344,7 @@ Function makeExtraCheckListContents(rst,bUseContent,bFbForm)
 	End If
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 
 	makeExtraCheckListContents = strReturn
@@ -1358,7 +1365,7 @@ Function makeExtraDropDownContents(rst,bUseContent,bFbForm)
 	Call closeExtraDropDownListRst(strFieldName)
 	
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 
 	makeExtraDropDownContents = strReturn
@@ -1430,7 +1437,7 @@ Function makeUserFieldVal(strFieldName,strFieldContents,bCheckForFeedback)
 		strReturn = strReturn & " <input type=""button"" class=""btn btn-default"" value=""" & TXT_ME & """ onClick=""document.EntryForm." & strFieldName & ".value='" & user_strMod & "';"">"
 	End If
 	If bFeedback And bCheckForFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 	strReturn = strReturn & "</div>"
 	makeUserFieldVal = strReturn
@@ -1632,7 +1639,7 @@ Function makeRecordNoteFieldVal(rst,strField,bUseContent)
 	End If
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strField, False)
+		strReturn = strReturn & getFeedback(strField,False,False)
 	End If		
 
 	makeRecordNoteFieldVal = strReturn

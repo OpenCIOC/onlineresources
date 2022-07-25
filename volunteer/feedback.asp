@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -544,7 +544,8 @@ End If
 								strFieldVal = makeMemoFieldVal(strFieldName, _
 									strFieldContents, _
 									TEXTAREA_ROWS_SHORT, _
-									False _
+									False, _
+									rsFields.Fields("WYSIWYG") _
 									)
 						End Select
 				End Select
@@ -553,7 +554,8 @@ End If
 				strFieldVal = makeMemoFieldVal(strFieldName, _
 					strFieldContents, _
 					TEXTAREA_ROWS_SHORT, _
-					False _
+					False, _
+					rsFields.Fields("WYSIWYG") _
 					)
 		End Select
 		bHasLabel = False
@@ -772,6 +774,30 @@ If bHasSchedule Then
 End If
 %>
 });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.1.0/tinymce.min.js" integrity="sha512-dr3qAVHfaeyZQPiuN6yce1YuH7YGjtUXRFpYK8OfQgky36SUfTfN3+SFGoq5hv4hRXoXxAspdHw4ITsSG+Ud/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript">
+        tinymce.init({
+            selector: '.WYSIWYG',
+            plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table paste',
+            toolbar: 'undo redo styles bullist numlist link | bold italic underline | cut copy paste searchreplace',
+			menubar: false,
+			statusbar: false,
+            convert_urls: false,
+            cleanup: true,
+			schema: 'html5',
+            formats: {
+                underline: { inline: 'u', exact: true }
+            },
+            style_formats: [
+                { title: 'Paragraph', format: 'p' },
+                { title: 'Heading 1', format: 'h1' },
+                { title: 'Heading 2', format: 'h2' },
+                { title: 'Heading 3', format: 'h3' },
+                { title: 'Heading 4', format: 'h4' }
+			]
+        });
 </script>
 <%
 
