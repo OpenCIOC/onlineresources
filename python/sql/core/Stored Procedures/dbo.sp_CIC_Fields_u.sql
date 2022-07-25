@@ -13,13 +13,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.7.4
-	Checked by: CL
-	Checked on: 19-Jun-2016
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE	@Error		int
 SET @Error = 0
 
@@ -32,6 +25,7 @@ SET @LanguageObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Language')
 DECLARE @FieldTable TABLE (
 	FieldID int NOT NULL,
 	Required bit NOT NULL,
+	WYSIWYG BIT NOT NULL,
 	DisplayOrder tinyint NOT NULL
 )
 
@@ -48,6 +42,7 @@ INSERT INTO @FieldTable
 SELECT 
 	N.value('FieldID[1]', 'int') AS FieldID,
 	CASE WHEN N.query('Required').value('/', 'varchar(4)') = 'True' THEN 1 ELSE 0 END AS Required,
+	CASE WHEN N.query('WYSIWYG').value('/', 'varchar(4)') = 'True' THEN 1 ELSE 0 END AS WYSIWYG,
 	N.value('DisplayOrder[1]', 'int') AS DisplayOrder
 FROM @Data.nodes('//Field') as T(N)
 EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @FieldObjectName, @ErrMsg
@@ -85,9 +80,10 @@ IF @Error = 0 BEGIN
 		UPDATE fo
 		SET	MODIFIED_DATE		= GETDATE(),
 			MODIFIED_BY			= @MODIFIED_BY,
-			AllowNulls			= CASE WHEN nf.Required = 1 THEN 0 ELSE 1 END,
+			AllowNulls			= CASE WHEN nf.Required=1 THEN 0 ELSE 1 END,
+			WYSIWYG				= CASE WHEN nf.WYSIWYG=1 THEN 1 ELSE 0 END,
 			DisplayOrder		= nf.DisplayOrder
-		FROM GBL_FieldOption fo
+		FROM dbo.GBL_FieldOption fo
 		INNER JOIN @FieldTable nf
 			ON fo.FieldID=nf.FieldID
 
@@ -99,13 +95,13 @@ IF @Error = 0 BEGIN
 			FieldDisplay = CASE WHEN nf.FieldDisplay ='' THEN NULL ELSE nf.FieldDisplay END,
 			MODIFIED_BY = @MODIFIED_BY,
 			MODIFIED_DATE = GETDATE()
-		FROM GBL_FieldOption_Description fod
+		FROM dbo.GBL_FieldOption_Description fod
 		INNER JOIN @DescTable nf
 			ON fod.LangID=nf.LangID AND fod.FieldID=nf.FieldID
-		WHERE @SuperUserGlobal=1 OR EXISTS(SELECT * FROM GBL_FieldOption fo WHERE fo.FieldID=fod.FieldID AND fo.MemberID=@MemberID)
+		WHERE @SuperUserGlobal=1 OR EXISTS(SELECT * FROM dbo.GBL_FieldOption fo WHERE fo.FieldID=fod.FieldID AND fo.MemberID=@MemberID)
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @FieldObjectName, @ErrMsg
 	
-		INSERT INTO GBL_FieldOption_Description (
+		INSERT INTO dbo.GBL_FieldOption_Description (
 			CREATED_BY,
 			CREATED_DATE,
 			MODIFIED_BY,
@@ -119,13 +115,13 @@ IF @Error = 0 BEGIN
 			@MODIFIED_BY,
 			GETDATE(),
 			nf.FieldID,
-			LangID,
-			FieldDisplay
+			nf.LangID,
+			nf.FieldDisplay
 		FROM @DescTable nf
-		INNER JOIN GBL_FieldOption fo
+		INNER JOIN dbo.GBL_FieldOption fo
 			ON fo.FieldID = nf.FieldID
-		WHERE FieldDisplay != '' AND FieldDisplay IS NOT NULL AND 
-			NOT EXISTS(SELECT * FROM GBL_FieldOption_Description WHERE FieldID=nf.FieldID AND LangID=nf.LangID)
+		WHERE nf.FieldDisplay <> '' AND nf.FieldDisplay IS NOT NULL AND 
+			NOT EXISTS(SELECT * FROM dbo.GBL_FieldOption_Description WHERE FieldID=nf.FieldID AND LangID=nf.LangID)
 			AND (@SuperUserGlobal=1 OR fo.MemberID=@MemberID)
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @FieldObjectName, @ErrMsg
 

@@ -32,6 +32,7 @@ CREATE TABLE [dbo].[GBL_FieldOption]
 [CanUseExport] [bit] NOT NULL CONSTRAINT [DF_GBL_FieldOption_CanUseExport] DEFAULT ((0)),
 [CheckMultiLine] [bit] NOT NULL CONSTRAINT [DF_GBL_FieldOption_CheckMultiLine] DEFAULT ((0)),
 [CheckHTML] [bit] NOT NULL CONSTRAINT [DF_GBL_FieldOption_CheckHTML] DEFAULT ((0)),
+[WYSIWYG] [bit] NOT NULL CONSTRAINT [DF_GBL_FieldOption_WYSIWIG] DEFAULT ((0)),
 [ValidateType] [char] (1) COLLATE Latin1_General_100_CI_AI NULL,
 [AllowNulls] [bit] NOT NULL CONSTRAINT [DF_GBL_FieldOption_AllowNulls] DEFAULT ((1)),
 [FullTextIndex] [bit] NOT NULL CONSTRAINT [DF_GBL_FieldOption_FullTextIndex] DEFAULT ((0)),
@@ -70,9 +71,9 @@ SET NOCOUNT OFF
 GO
 ALTER TABLE [dbo].[GBL_FieldOption] ADD CONSTRAINT [CK_GBL_FieldOption_CanShare] CHECK (([CanShare]=(0) OR [MemberSpecific]=(0)))
 GO
-ALTER TABLE [dbo].[GBL_FieldOption] ADD CONSTRAINT [PK_GBL_FieldOption] PRIMARY KEY CLUSTERED  ([FieldID]) ON [PRIMARY]
+ALTER TABLE [dbo].[GBL_FieldOption] ADD CONSTRAINT [PK_GBL_FieldOption] PRIMARY KEY CLUSTERED ([FieldID]) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[GBL_FieldOption] ADD CONSTRAINT [IX_GBL_BaseTable_FieldName] UNIQUE NONCLUSTERED  ([FieldName]) ON [PRIMARY]
+ALTER TABLE [dbo].[GBL_FieldOption] ADD CONSTRAINT [IX_GBL_BaseTable_FieldName] UNIQUE NONCLUSTERED ([FieldName]) ON [PRIMARY]
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [IX_GBL_FieldOption_FieldNameInclFieldID] ON [dbo].[GBL_FieldOption] ([FieldName]) INCLUDE ([FieldID]) ON [PRIMARY]
 GO

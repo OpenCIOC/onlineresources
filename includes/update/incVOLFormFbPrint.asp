@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -263,6 +263,7 @@ Function makeAreaOfInterestContents(rst,bUseContent)
 	strReturn = makeMemoFieldVal("INTERESTS", _
 							strInterests, _
 							TEXTAREA_ROWS_SHORT, _
+							False, _
 							False _
 							) & _
 		"<br>" & TXT_NOT_SURE_ENTER & " <a href=""javascript:openWin('" & makeLinkB("interestfind.asp") & "','sFind')"">" & TXT_AREA_OF_INTEREST_FINDER & "</a>."

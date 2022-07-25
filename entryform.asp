@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -679,12 +679,6 @@ While Not rsFields.EOF
 						strFieldVal = makeContactFieldVal(rsOrg, strFieldName, Not bNew)
 					Case "CONTRACT_SIGNATURE"
 						strFieldVal = makeContractSignatureContents(rsOrg, Not bNew)
-					Case "DESCRIPTION"
-						strFieldVal = makeMemoFieldVal(strFieldName, _
-							strFieldContents, _
-							TEXTAREA_ROWS_SHORT, _
-							rsFields.Fields("CanUseFeedback") _
-							)
 					Case "DISTRIBUTION"
 						strFieldVal = makeDistributionContents(rsOrg, Not bNew)
 					Case "ELIGIBILITY"
@@ -818,7 +812,8 @@ While Not rsFields.EOF
 									strFieldVal = makeMemoFieldVal(strFieldName, _
 										strFieldContents, _
 										TEXTAREA_ROWS_SHORT, _
-										rsFields.Fields("CanUseFeedback") _
+										rsFields.Fields("CanUseFeedback"), _
+										rsFields.Fields("WYSIWYG") _
 										)
 								End If
 						End Select
@@ -827,7 +822,8 @@ While Not rsFields.EOF
 				strFieldVal = makeMemoFieldVal(strFieldName, _
 					strFieldContents, _
 					TEXTAREA_ROWS_SHORT, _
-					rsFields.Fields("CanUseFeedback") _
+					rsFields.Fields("CanUseFeedback"), _
+					rsFields.Fields("WYSIWYG") _
 					)
 		End Select
 		strFieldDisplay = rsFields.Fields("FieldDisplay")
@@ -1110,6 +1106,28 @@ ef_node.show();
 $('html').scrollTop(scrollTop);
 });
 
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.1.0/tinymce.min.js" integrity="sha512-dr3qAVHfaeyZQPiuN6yce1YuH7YGjtUXRFpYK8OfQgky36SUfTfN3+SFGoq5hv4hRXoXxAspdHw4ITsSG+Ud/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript">
+    tinymce.init({
+        selector: '.WYSIWYG',
+        plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table',
+        toolbar: 'undo redo styles bullist numlist link | bold italic underline removeformat image table | copy cut paste searchreplace fullscreen',
+		menubar: false,
+        convert_urls: false,
+		schema: 'html5',
+        formats: {
+            underline: { inline: 'u', exact: true }
+        },
+        style_formats: [
+			{ title: 'Paragraph', format: 'p' },
+            { title: 'Heading 1', format: 'h1' },
+            { title: 'Heading 2', format: 'h2' },
+            { title: 'Heading 3', format: 'h3' },
+            { title: 'Heading 4', format: 'h4' }
+		]
+    });
 </script>
 <%
 'End writing form data

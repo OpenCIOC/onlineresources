@@ -11,15 +11,8 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.7
-	Checked by: ND
-	Checked on: 06-Oct-2015
-	Action: TESTING REQUIRED
-*/
-
 DECLARE @MemberID int
-SELECT @MemberID=MemberID FROM VOL_View WHERE ViewType=@ViewType
+SELECT @MemberID=MemberID FROM dbo.VOL_View WHERE ViewType=@ViewType
 
 SELECT	fo.FieldName,
 		fo.EquivalentSource,
@@ -49,24 +42,25 @@ SELECT	fo.FieldName,
 			ELSE REPLACE(REPLACE(ISNULL(FeedbackFieldList,UpdateFieldList), '[LANGID]', @@LANGID), '[MEMBER]', @MemberID)
 		END AS FieldSelect,
 		ISNULL(FieldDisplay, FieldName) AS FieldDisplay,
+		fo.WYSIWYG,
 		CASE WHEN fod.HelpText IS NULL AND foh.HelpText IS NULL THEN 0 ELSE 1 END AS HasHelp
-	FROM VOL_FieldOption fo
-	LEFT JOIN VOL_FieldOption_Description fod
+	FROM dbo.VOL_FieldOption fo
+	LEFT JOIN dbo.VOL_FieldOption_Description fod
 		ON fo.FieldID=fod.FieldID AND fod.LangID=@@LANGID
-	INNER JOIN VOL_View_FeedbackField ff
+	INNER JOIN dbo.VOL_View_FeedbackField ff
 		ON fo.FieldID = ff.FieldID
-	LEFT JOIN VOL_FieldOption_HelpByMember foh
+	LEFT JOIN dbo.VOL_FieldOption_HelpByMember foh
 		ON foh.FieldID = fod.FieldID AND foh.LangID = fod.LangID AND foh.MemberID=@MemberID
 WHERE	(CanUseFeedback = 1)
 	AND (ff.ViewType = @ViewType)
 	AND (
 		@VNUM IS NULL
-		OR (SELECT MemberID FROM VOL_Opportunity WHERE VNUM=@VNUM)=@MemberID
+		OR (SELECT MemberID FROM dbo.VOL_Opportunity WHERE VNUM=@VNUM)=@MemberID
 		OR CanShare=0
 		OR EXISTS(SELECT * FROM GBL_SharingProfile shp WHERE ShareMemberID=@MemberID AND shp.Active=1
 			AND (shp.CanUseAnyView=1 OR EXISTS(SELECT * FROM GBL_SharingProfile_VOL_View shpv WHERE shpv.ProfileID=shp.ProfileID AND shpv.ViewType=@ViewType))
-			AND EXISTS(SELECT * FROM GBL_SharingProfile_CIC_Fld shpf WHERE shpf.ProfileID=shp.ProfileID AND shpf.FieldID=fo.FieldID)
-			AND EXISTS(SELECT * FROM VOL_OP_SharingProfile shpr WHERE shpr.ProfileID=shp.ProfileID AND shpr.VNUM=@VNUM)
+			AND EXISTS(SELECT * FROM dbo.GBL_SharingProfile_CIC_Fld shpf WHERE shpf.ProfileID=shp.ProfileID AND shpf.FieldID=fo.FieldID)
+			AND EXISTS(SELECT * FROM dbo.VOL_OP_SharingProfile shpr WHERE shpr.ProfileID=shp.ProfileID AND shpr.VNUM=@VNUM)
 		)
 	)
 ORDER BY DisplayOrder, ISNULL(FieldDisplay, FieldName)

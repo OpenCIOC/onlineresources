@@ -53,18 +53,19 @@ ${sc.shown_cultures_ui()}
 
 <table class="BasicBorder cell-padding-3 sortable_table" data-sortdisabled="[0]">
 <thead>
-<tr>
-	%if domain.id != const.DM_VOL:
-	<th class="RevTitleBox"></th>
-	%endif
-	<th class="RevTitleBox">${_('Name')}</th>
-%for culture in record_cultures:
-<% lang = culture_map[culture] %>
-	<th ${sc.shown_cultures_attrs(culture, "RevTitleBox")}>${_('Display')} (${lang.LanguageName})</th>
-%endfor
-	<th class="RevTitleBox">${_('Order')}</th>
-	<th class="RevTitleBox">${_('Required')}</th>
-</tr>
+	<tr>
+		%if domain.id != const.DM_VOL:
+		<th class="RevTitleBox"></th>
+		%endif
+		<th class="RevTitleBox">${_('Name')}</th>
+		%for culture in record_cultures:
+		<% lang = culture_map[culture] %>
+		<th ${sc.shown_cultures_attrs(culture, "RevTitleBox" )}>${_('Display')} (${lang.LanguageName})</th>
+		%endfor
+		<th class="RevTitleBox">${_('Order')}</th>
+		<th class="RevTitleBox">${_('Required')}</th>
+		<th class="RevTitleBox">${_('HTML Editor')}</th>
+	</tr>
 </thead>
 <tbody>
 %for index, field in enumerate(fields):
@@ -72,48 +73,57 @@ ${sc.shown_cultures_ui()}
 	prefix = 'field-' + str(index) + '.' 
 	fieldinfo = fieldinfo_map[str(renderer.value(prefix + 'FieldID'))]
 %>
-<tr>
-	%if domain.id != const.DM_VOL:
-	<td class="Alert" align="center">${ u'*' if  fieldinfo.Shared else u'&nbsp;' |n}</td>
-	%endif
-
-	<td class="FieldLabelLeft"> ${ fieldinfo.FieldName }
-	%if SuperUserGlobal or fieldinfo.MemberID == member_id:
-	<div style="display:none;">${renderer.hidden(prefix + 'FieldID')}</div>
-	%endif
-	</td>
-
-	%for culture in record_cultures:
-	<% 
-		lang = culture_map[culture]
-	%>
-	<td ${sc.shown_cultures_attrs(culture)}>
-		<% field_name = prefix + 'Descriptions.' + lang.FormCulture + '.FieldDisplay' %>
-		%if SuperUserGlobal or fieldinfo.MemberID == member_id:
-		${renderer.errorlist(field_name)}${renderer.text(field_name, maxlength=100, size=30, title=lang.LanguageName + _(' Display Text for: ') + fieldinfo.FieldName)}
-		%else:
-			${renderer.value(field_name)}
+	<tr>
+		%if domain.id != const.DM_VOL:
+		<td class="Alert" align="center">${ u'*' if  fieldinfo.Shared else u'&nbsp;' |n}</td>
 		%endif
-	</td>
-	%endfor
-	<td style="text-align: right">
-	%if SuperUserGlobal or fieldinfo.MemberID == member_id:
-		${renderer.errorlist(prefix + 'DisplayOrder')}${renderer.text(prefix + 'DisplayOrder', size=3, maxlength=3, title=fieldinfo.FieldName + _(': Display Order'))}
-	%else:
-		${renderer.value(prefix + 'DisplayOrder')}
-	%endif
-	</td>
-	<td style="text-align: center">
-	%if SuperUserGlobal or fieldinfo.MemberID == member_id:
-		${renderer.errorlist(prefix + 'Required')}${renderer.checkbox(prefix + 'Required', title=fieldinfo.FieldName + _(': Required'))}
-	%elif fieldinfo.Required:
-		*
-	%endif
-	</td>
-</tr>
+
+		<td class="FieldLabelLeft">
+			${ fieldinfo.FieldName }
+			%if SuperUserGlobal or fieldinfo.MemberID == member_id:
+			<div style="display:none;">${renderer.hidden(prefix + 'FieldID')}</div>
+			%endif
+		</td>
+
+		%for culture in record_cultures:
+		<%
+		lang = culture_map[culture]
+		%>
+		<td ${sc.shown_cultures_attrs(culture)}>
+			<% field_name = prefix + 'Descriptions.' + lang.FormCulture + '.FieldDisplay' %>
+			%if SuperUserGlobal or fieldinfo.MemberID == member_id:
+			${renderer.errorlist(field_name)}${renderer.text(field_name, maxlength=100, size=30, title=lang.LanguageName + _(' Display Text for: ') + fieldinfo.FieldName)}
+			%else:
+			${renderer.value(field_name)}
+			%endif
+		</td>
+		%endfor
+		<td style="text-align: right">
+			%if SuperUserGlobal or fieldinfo.MemberID == member_id:
+			${renderer.errorlist(prefix + 'DisplayOrder')}${renderer.text(prefix + 'DisplayOrder', size=3, maxlength=3, title=fieldinfo.FieldName + _(': Display Order'))}
+			%else:
+			${renderer.value(prefix + 'DisplayOrder')}
+			%endif
+		</td>
+		<td style="text-align: center">
+			%if SuperUserGlobal or fieldinfo.MemberID == member_id:
+			${renderer.errorlist(prefix + 'Required')}${renderer.checkbox(prefix + 'Required', title=fieldinfo.FieldName + _(': Required'))}
+			%elif fieldinfo.Required:
+			*
+			%endif
+		</td>
+		<td style="text-align: center">
+			%if fieldinfo.WYSIWYG is not None:
+				%if SuperUserGlobal or fieldinfo.MemberID == member_id:
+			${renderer.errorlist(prefix + 'WYSIWYG')}${renderer.checkbox(prefix + 'WYSIWYG', title=fieldinfo.FieldName + _(': HTML Editor'))}
+				%elif fieldinfo.WYSIWYG:
+			*
+				%endif
+			%endif
+		</td>
+	</tr>
 %endfor
 </tbody>
-
 
 <tr>
 	<td colspan="${4 + len(record_cultures) + (domain.id != const.DM_VOL)}">

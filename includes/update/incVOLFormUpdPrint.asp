@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -57,7 +57,7 @@ Function makeAgesContents(rst, bUseContent)
 			"<div class=""col-xs-9 col-lg-10 form-inline"">" & _
 				"<input type=""text"" name=""MIN_AGE"" id=""MIN_AGE"" size=""5"" maxlength=""5"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(decMinAge) & "> (" & TXT_IN_YEARS & ")"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("MIN_AGE",True)
+		strReturn = strReturn & getFeedback("MIN_AGE",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -67,7 +67,7 @@ Function makeAgesContents(rst, bUseContent)
 			"<div class=""col-xs-9 col-lg-10 form-inline"">" & _
 				"<input type=""text"" name=""MAX_AGE"" id=""MAX_AGE"" size=""5"" maxlength=""5"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(decMaxAge) & "> (" & TXT_IN_YEARS & ")"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("MAX_AGE",True)
+		strReturn = strReturn & getFeedback("MAX_AGE",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -146,7 +146,7 @@ Function makeInterestsContents(rst,bUseContent)
 	End If
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("Interests",False)
+		strReturn = strReturn & getFeedback("INTERESTS",False,False)
 	End If
 	makeInterestsContents = strReturn
 End Function
@@ -165,7 +165,7 @@ Function makeMinHoursContents(rst, bUseContent)
 			"<input type=""text"" id=""MINIMUM_HOURS"" name=""MINIMUM_HOURS""" & _
 			" size=""5"" maxlength=""5"" value=""" & intMinHours & """>"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("MINIMUM_HOURS",True)
+		strReturn = strReturn & getFeedback("MINIMUM_HOURS",True,False)
 	End If
 
 	Call openMinHoursPerListRst()
@@ -174,7 +174,7 @@ Function makeMinHoursContents(rst, bUseContent)
 			"<tr><td class=""FieldLabelLeftClr""><label for=""MINIMUM_HOURS_PER"">" & TXT_MIN_HOURS_PER & "</label></td><td>" & _
 			makeMinHoursPerList(strMinHoursPer,"MINIMUM_HOURS_PER",True)
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("MINIMUM_HOURS_PER",True)
+		strReturn = strReturn & getFeedback("MINIMUM_HOURS_PER",True,False)
 	End If
 	strReturn = strReturn & "</td></tr>" & _
 			"</table>"
@@ -224,7 +224,7 @@ Function makeNumNeededContents(rst,bUseContent)
 		"<input type=""text"" name=""NUM_NEEDED_TOTAL"" id=""NUM_NEEDED_TOTAL"" size=""5"" maxlength=""4"" value=""" & intNumNeededTotal & """>"
 		
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("NUM_NEEDED_TOTAL",True)
+		strReturn = strReturn & getFeedback("NUM_NEEDED_TOTAL",True,False)
 	End If
 
 	strReturn = strReturn & vbCrLf & _
@@ -258,7 +258,7 @@ Function makeNumNeededContents(rst,bUseContent)
 	strReturn = strReturn & "</table>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("NUM_NEEDED",False)
+		strReturn = strReturn & getFeedback("NUM_NEEDED",False,False)
 	End If
 
 	If Nl(strNotes) Then
@@ -276,7 +276,7 @@ Function makeNumNeededContents(rst,bUseContent)
 			">" & strNotes & "</textarea>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("NUM_NEEDED_NOTES",True)
+		strReturn = strReturn & getFeedback("NUM_NEEDED_NOTES",True,False)
 	End If
 	makeNumNeededContents = strReturn
 End Function
@@ -306,8 +306,8 @@ Function makeNUMContents(strNUM, rsOrg, bUseData)
 		IIf(Not Nl(strNUM),"value=" & AttrQs(strNUM),vbNullString) & "> " & _
 		TXT_INST_NUM_FINDER	
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("NUM", True)
-		strReturn = strReturn & getFeedback("ORG_NAME", False)
+		strReturn = strReturn & getFeedback("NUM", True,False)
+		strReturn = strReturn & getFeedback("ORG_NAME", False,False)
 	End If
 	makeNUMContents = strReturn
 End Function
@@ -360,7 +360,7 @@ Function makeScheduleContents(rst,bUseContent)
 	strReturn = strReturn & "</table>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SCHEDULE_GRID",False)
+		strReturn = strReturn & getFeedback("SCHEDULE_GRID",False,False)
 	End If
 
 	If Nl(strNotes) Then
@@ -376,7 +376,7 @@ Function makeScheduleContents(rst,bUseContent)
 			">" & strNotes & "</textarea>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SCHEDULE_NOTES",True)
+		strReturn = strReturn & getFeedback("SCHEDULE_NOTES",True,False)
 	End If
 
 	makeScheduleContents = strReturn
@@ -411,7 +411,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_PUBLICATION"" id=""SOURCE_PUBLICATION"" maxlength=""100"" value=" & AttrQs(strPub) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_PUBLICATION",True)
+		strReturn = strReturn & getFeedback("SOURCE_PUBLICATION",True,False)
 	End If
 	strReturn = strReturn &  _
 			"</div>" & _
@@ -421,7 +421,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_PUBLICATION_DATE"" id=""SOURCE_PUBLICATION_DATE"" maxlength=""50"" value=" & AttrQs(dPub) & " class=""DatePicker form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_PUBLICATION_DATE",True)
+		strReturn = strReturn & getFeedback("SOURCE_PUBLICATION_DATE",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -431,7 +431,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_NAME"" id=""SOURCE_NAME"" maxlength=""100"" value=" & AttrQs(strName) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_NAME",True)
+		strReturn = strReturn & getFeedback("SOURCE_NAME",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -441,7 +441,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_TITLE"" id=""SOURCE_TITLE"" maxlength=""255"" value=" & AttrQs(strTitle) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_TITLE",True)
+		strReturn = strReturn & getFeedback("SOURCE_TITLE",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -451,7 +451,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_ORG"" id=""SOURCE_ORG"" maxlength=""100"" value=" & AttrQs(strOrg) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_ORG",True)
+		strReturn = strReturn & getFeedback("SOURCE_ORG",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -461,7 +461,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_PHONE"" id=""SOURCE_PHONE"" maxlength=""100"" value=" & AttrQs(strPhone) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_PHONE",True)
+		strReturn = strReturn & getFeedback("SOURCE_PHONE",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -471,7 +471,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_FAX"" id=""SOURCE_FAX"" maxlength=""100"" value=" & AttrQs(strFax) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_FAX",True)
+		strReturn = strReturn & getFeedback("SOURCE_FAX",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -481,7 +481,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_EMAIL"" id=""SOURCE_EMAIL"" maxlength=""100"" value=" & AttrQs(strEmail) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_EMAIL",True)
+		strReturn = strReturn & getFeedback("SOURCE_EMAIL",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _

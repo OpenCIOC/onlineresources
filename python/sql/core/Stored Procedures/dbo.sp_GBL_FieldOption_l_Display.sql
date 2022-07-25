@@ -11,13 +11,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 12-May-2011
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE	@Error	int
 SET @Error = 0
 
@@ -34,6 +27,7 @@ SELECT	fo.FieldID,
 		fo.DisplayOrder,
 		CASE WHEN fo.FieldType = 'GBL' THEN 1 ELSE 0 END AS  Shared, 
 		CASE WHEN fo.AllowNulls = 1 THEN 0 ELSE 1 END AS Required,
+		CASE WHEN fo.CheckHTML=1 AND fo.FormFieldType='m' THEN fo.WYSIWYG ELSE NULL END AS WYSIWYG,
 		fo.CannotRequire,
 		fo.MemberID,
 		(SELECT fod.FieldDisplay, l.Culture

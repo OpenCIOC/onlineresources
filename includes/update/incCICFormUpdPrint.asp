@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -110,7 +110,7 @@ Function makeAccessibilityContents(rst,bUseContent)
 	Set cmdAccessibility = Nothing
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 	makeAccessibilityContents = strReturn
 End Function
@@ -250,7 +250,7 @@ Function makeActivityInfoContents(rst, bUseContent)
 			">" & strNotes & "</textarea>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 
 	makeActivityInfoContents = strReturn
@@ -314,7 +314,7 @@ Function makeAddress(rst,bMail,bUseContent)
 				"<div class=""col-sm-9 col-lg-10"">" & _
 					"<input type=""text"" name=""MAIL_CARE_OF"" id=""MAIL_CARE_OF"" maxlength=""150"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strCO) & ">"
 		If bFeedback Then
-			strReturn = strReturn & getFeedback("MAIL_CARE_OF",True)
+			strReturn = strReturn & getFeedback("MAIL_CARE_OF",True,False)
 		End If
 		strReturn = strReturn & _
 				"</div>" & _
@@ -325,7 +325,7 @@ Function makeAddress(rst,bMail,bUseContent)
 				"<div class=""col-sm-9 col-lg-3"">" & _
 					makeBoxTypeList(strBoxType, "MAIL_BOX_TYPE", True)
 		If bFeedback Then
-			strReturn = strReturn & getFeedback("MAIL_BOX_TYPE",True)
+			strReturn = strReturn & getFeedback("MAIL_BOX_TYPE",True,False)
 		End If
 		strReturn = strReturn & _
 				"</div>" & _
@@ -333,7 +333,7 @@ Function makeAddress(rst,bMail,bUseContent)
 				"<div class=""col-sm-9 col-lg-4"">" & _
 					"<input type=""text"" name=""MAIL_PO_BOX"" id=""MAIL_PO_BOX"" maxlength=""20"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strPO) & ">"
 		If bFeedback Then
-			strReturn = strReturn & getFeedback("MAIL_PO_BOX",True)
+			strReturn = strReturn & getFeedback("MAIL_PO_BOX",True,False)
 		End If	
 		strReturn = strReturn & _
 				"</div>" & _
@@ -347,7 +347,7 @@ Function makeAddress(rst,bMail,bUseContent)
 				"<div class=""col-sm-9 col-lg-10"">" & _
 					"<input type=""text"" name=""" & strAddrPrefix & "LINE_1"" id=""" & strAddrPrefix & "LINE_1"" maxlength=""255"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strLine1) & ">"
 		If bFeedback Then
-			strReturn = strReturn & getFeedback(strAddrPrefix & "LINE_1",True)
+			strReturn = strReturn & getFeedback(strAddrPrefix & "LINE_1",True,False)
 		End If
 		strReturn = strReturn & _
 				"</div>" & _
@@ -357,7 +357,7 @@ Function makeAddress(rst,bMail,bUseContent)
 				"<div class=""col-sm-9 col-lg-10"">" & _
 					"<input type=""text"" name=""" & strAddrPrefix & "LINE_2"" id=""" & strAddrPrefix & "LINE_2"" maxlength=""255"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strLine2) & ">"
 		If bFeedback Then
-			strReturn = strReturn & getFeedback(strAddrPrefix & "LINE_2",True)
+			strReturn = strReturn & getFeedback(strAddrPrefix & "LINE_2",True,False)
 		End If
 		strReturn = strReturn & _
 				"</div>" & _
@@ -370,7 +370,7 @@ Function makeAddress(rst,bMail,bUseContent)
 			"<div class=""col-sm-9 col-lg-10"">" & _
 				"<input type=""text"" name=""" & strAddrPrefix & "BUILDING"" id=""" & strAddrPrefix & "BUILDING"" maxlength=""150"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strBuilding) & ">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strAddrPrefix & "BUILDING",True)
+		strReturn = strReturn & getFeedback(strAddrPrefix & "BUILDING",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -380,7 +380,7 @@ Function makeAddress(rst,bMail,bUseContent)
 			"<div class=""col-sm-9 col-lg-10 form-inline"">" & _
 				"<input type=""text"" name=""" & strAddrPrefix & "STREET_NUMBER"" id=""" & strAddrPrefix & "STREET_NUMBER"" maxlength=""30"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strNumber) & ">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strAddrPrefix & "STREET_NUMBER",True)
+		strReturn = strReturn & getFeedback(strAddrPrefix & "STREET_NUMBER",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -390,7 +390,7 @@ Function makeAddress(rst,bMail,bUseContent)
 			"<div class=""col-sm-9 col-lg-10"">" & _
 				"<input type=""text"" name=""" & strAddrPrefix & "STREET"" id=""" & strAddrPrefix & "STREET"" maxlength=""150"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strStreet) & ">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strAddrPrefix & "STREET",True)
+		strReturn = strReturn & getFeedback(strAddrPrefix & "STREET",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -400,7 +400,7 @@ Function makeAddress(rst,bMail,bUseContent)
 			"<div class=""col-sm-9 col-md-3 col-lg-4"">" & _
 				makeStreetTypeList(strType,bTypeAfter,strAddrPrefix & "STREET_TYPE",True)
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strAddrPrefix & "STREET_TYPE",True)
+		strReturn = strReturn & getFeedback(strAddrPrefix & "STREET_TYPE",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -408,7 +408,7 @@ Function makeAddress(rst,bMail,bUseContent)
 			"<div class=""col-sm-9 col-md-3 col-lg-4 form-inline"">" & _
 				makeStreetDirList(strDir,strAddrPrefix & "STREET_DIR",True)
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strAddrPrefix & "STREET_DIR",True)
+		strReturn = strReturn & getFeedback(strAddrPrefix & "STREET_DIR",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -419,7 +419,7 @@ Function makeAddress(rst,bMail,bUseContent)
 				"<input type=""text"" name=""" & strAddrPrefix & "SUFFIX"" id=""" & strAddrPrefix & "SUFFIX"" maxlength=""150"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strSuffix) & ">" & _
 				"<div class=""SmallNote"">" & TXT_SUFFIX_DESC & "</div>"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strAddrPrefix & "SUFFIX",True)
+		strReturn = strReturn & getFeedback(strAddrPrefix & "SUFFIX",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -429,7 +429,7 @@ Function makeAddress(rst,bMail,bUseContent)
 			"<div class=""col-sm-9 col-lg-10"">" & _
 				"<input type=""text"" name=""" & strAddrPrefix & "CITY"" id=""" & strAddrPrefix & "CITY"" maxlength=""100"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strCity) & ">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strAddrPrefix & "CITY",True)
+		strReturn = strReturn & getFeedback(strAddrPrefix & "CITY",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -439,7 +439,7 @@ Function makeAddress(rst,bMail,bUseContent)
 			"<div class=""col-sm-9 col-md-3 col-lg-4"">" & _
 				"<input type=""text"" name=""" & strAddrPrefix & "PROVINCE"" id=""" & strAddrPrefix & "PROVINCE"" maxlength=""2"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strProv) & ">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strAddrPrefix & "PROVINCE",True)
+		strReturn = strReturn & getFeedback(strAddrPrefix & "PROVINCE",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -447,7 +447,7 @@ Function makeAddress(rst,bMail,bUseContent)
 			"<div class=""col-sm-9 col-md-3 col-lg-4"">" & _
 				"<input type=""text"" name=""" & strAddrPrefix & "COUNTRY"" id=""" & strAddrPrefix & "COUNTRY"" maxlength=""40"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strCountry) & ">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strAddrPrefix & "COUNTRY",True)
+		strReturn = strReturn & getFeedback(strAddrPrefix & "COUNTRY",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -457,7 +457,7 @@ Function makeAddress(rst,bMail,bUseContent)
 			"<div class=""col-sm-9 col-lg-10 form-inline"">" & _
 				"<input type=""text"" name=""" & strAddrPrefix & "POSTAL_CODE"" id=""" & strAddrPrefix & "POSTAL_CODE"" maxlength=""10"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strPC) & ">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strAddrPrefix & "POSTAL_CODE",True)
+		strReturn = strReturn & getFeedback(strAddrPrefix & "POSTAL_CODE",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -518,7 +518,7 @@ Function makeAltOrgContents(rst,bUseContent,strFieldDisplay)
 	strReturn = strReturn & "</table>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 
 	makeAltOrgContents = strReturn
@@ -604,7 +604,7 @@ Function makeAreasServedContents(rst,bUseContent)
 			Checked(bOnlyDisplayNotes) & "></div>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 	makeAreasServedContents = strReturn
 End Function
@@ -624,7 +624,7 @@ Function makeAccreditationContents(rst,bUseContent)
 	Call closeAccreditationListRst()
 	
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 
 	makeAccreditationContents = strReturn
@@ -759,7 +759,7 @@ Function makeBillingAddressContents(rst,bUseContent)
 	Call closeBillingAddressTypeListRst()
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 
 	makeBillingAddressContents = strReturn
@@ -823,7 +823,7 @@ Function makeBusRouteContents(rst,bUseContent)
 		"</div>"
 	Call closeBusRouteListRst()
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 	makeBusRouteContents = strReturn
 End Function
@@ -873,42 +873,42 @@ Function makeCCLicenseInfoContents(rst,bUseContent)
 				"<tr><td class=""FieldLabelLeftClr"">" & TXT_TOTAL & "</td><td>" & _
 				"<input type=""text"" name=""LC_TOTAL"" size=""3"" maxlength=""3"" value=""" & intLCTotal & """ class=""form-inline form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("LC_TOTAL",True)
+		strReturn = strReturn & getFeedback("LC_TOTAL",True,False)
 	End If
 	strReturn = strReturn & _
 				"</td></tr>" & _
 				"<tr><td class=""FieldLabelLeftClr"">" & TXT_INFANT & "</td><td>" & _
 				"<input type=""text"" name=""LC_INFANT"" size=""3"" maxlength=""3"" value=""" & intLCInfant & """ class=""form-inline form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("LC_INFANT",True)
+		strReturn = strReturn & getFeedback("LC_INFANT",True,False)
 	End If
 	strReturn = strReturn & _
 				"</td></tr>" & _
 				"<tr><td class=""FieldLabelLeftClr"">" & TXT_TODDLER & "</td><td>" & _
 				"<input type=""text"" name=""LC_TODDLER"" size=""3"" maxlength=""3"" value=""" & intLCToddler & """ class=""form-inline form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("LC_TODDLER",True)
+		strReturn = strReturn & getFeedback("LC_TODDLER",True,False)
 	End If
 	strReturn = strReturn & _
 				"</td></tr>" & _
 				"<tr><td class=""FieldLabelLeftClr"">" & TXT_PRESCHOOL & "</td><td>" & _
 				"<input type=""text"" name=""LC_PRESCHOOL"" size=""3"" maxlength=""3"" value=""" & intLCPreschool & """ class=""form-inline form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("LC_PRESCHOOL",True)
+		strReturn = strReturn & getFeedback("LC_PRESCHOOL",True,False)
 	End If
 	strReturn = strReturn & _
 				"</td></tr>" & _
 				"<tr><td class=""FieldLabelLeftClr"">" & TXT_KINDERGARTEN & "</td><td>" & _
 				"<input type=""text"" name=""LC_KINDERGARTEN"" size=""3"" maxlength=""3"" value=""" & intLCKindergarten & """ class=""form-inline form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("LC_KINDERGARTEN",True)
+		strReturn = strReturn & getFeedback("LC_KINDERGARTEN",True,False)
 	End If
 	strReturn = strReturn & _
 				"</td></tr>" & _
 				"<tr><td class=""FieldLabelLeftClr"">" & TXT_SCHOOL_AGE & "</td><td>" & _
 				"<input type=""text"" name=""LC_SCHOOLAGE"" size=""3"" maxlength=""3"" value=""" & intLCSchoolAge & """ class=""form-inline form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("LC_SCHOOLAGE",True)
+		strReturn = strReturn & getFeedback("LC_SCHOOLAGE",True,False)
 	End If
 	strReturn = strReturn & _
 				"</td></tr>" & _
@@ -932,7 +932,7 @@ Function makeCCLicenseInfoContents(rst,bUseContent)
 					" class=""form-control""" & _
 					">" & strLCNotes & "</textarea>"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("LC_NOTES",True)
+		strReturn = strReturn & getFeedback("LC_NOTES",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -955,7 +955,7 @@ Function makeCertificationContents(rst,bUseContent)
 	Call closeCertificationListRst()
 	
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 
 	makeCertificationContents = strReturn
@@ -1075,7 +1075,7 @@ Function makeContractSignatureContents(rst,bUseContent)
 	Call closeSignatureStatusListRst()
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 
 	makeContractSignatureContents = strReturn
@@ -1135,7 +1135,7 @@ Function makeDistributionContents(rst,bUseContent)
 	Set cmdDistribution = Nothing
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 	makeDistributionContents = strReturn
 End Function
@@ -1162,7 +1162,7 @@ Function makeEligibilityContents(rst,bUseContent)
 			"<div class=""col-xs-9 form-inline"">" & _
 				"<input type=""text"" name=""MIN_AGE"" id=""MIN_AGE"" size=""5"" maxlength=""5"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(decMinAge) & "> (" & TXT_IN_YEARS & ")"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("MIN_AGE", True)
+		strReturn = strReturn & getFeedback("MIN_AGE",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -1174,7 +1174,7 @@ Function makeEligibilityContents(rst,bUseContent)
 			"<div class=""col-xs-9 form-inline"">" & _
 				"<input type=""text"" name=""MAX_AGE"" id=""MAX_AGE"" size=""5"" maxlength=""5"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(decMaxAge) & "> (" & TXT_IN_YEARS & ")"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("MAX_AGE", True)
+		strReturn = strReturn & getFeedback("MAX_AGE",True,False)
 	End If
 		strReturn = strReturn & _
 			"</div>" & _
@@ -1188,7 +1188,7 @@ Function makeEligibilityContents(rst,bUseContent)
 			" class=""form-control""" & _
 			">" & strNotes & "</textarea>"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("ELIGIBILITY_NOTES",True)
+		strReturn = strReturn & getFeedback("ELIGIBILITY_NOTES",True,False)
 	End If
 	makeEligibilityContents = strReturn
 End Function
@@ -1209,7 +1209,7 @@ Function makeEmployeesContents(rst,bUseContent)
 			"<div class=""col-xs-9 form-inline"">" & _
 				"<input type=""text"" name=""EMPLOYEES_FT"" id=""EMPLOYEES_FT"" size=""6"" maxlength=""6"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(intEmpFt) & ">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("EMPLOYEES_FT",True)
+		strReturn = strReturn & getFeedback("EMPLOYEES_FT",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -1219,7 +1219,7 @@ Function makeEmployeesContents(rst,bUseContent)
 			"<div class=""col-xs-9 form-inline"">" & _
 				"<input type=""text"" name=""EMPLOYEES_PT"" id=""EMPLOYEES_PT"" size=""6"" maxlength=""6"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(intEmpPt) & ">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("EMPLOYEES_PT",True)
+		strReturn = strReturn & getFeedback("EMPLOYEES_PT",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -1229,7 +1229,7 @@ Function makeEmployeesContents(rst,bUseContent)
 			"<div class=""col-xs-9 form-inline"">" & _
 				"<input type=""text"" name=""EMPLOYEES_TOTAL"" id=""EMPLOYEES_TOTAL"" size=""6"" maxlength=""6"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(intEmpTotal) & ">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("EMPLOYEES_TOTAL",True)
+		strReturn = strReturn & getFeedback("EMPLOYEES_TOTAL",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -1248,7 +1248,7 @@ Function makeEmployeesRangeContents(rst,bUseContent)
 	End If
 	Call closeEmployeeRangeListRst()
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 	makeEmployeesRangeContents = strReturn
 End Function
@@ -1268,7 +1268,7 @@ Function makeFiscalYearEndContents(rst,bUseContent)
 	Call closeFiscalYearEndListRst()
 	
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 
 	makeFiscalYearEndContents = strReturn
@@ -1372,7 +1372,7 @@ Function makeFeeContents(rst,bUseContent)
 	Set cmdFees = Nothing
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 	makeFeeContents = strReturn
 End Function
@@ -1433,7 +1433,7 @@ Function makeFormerOrgContents(rst,bUseContent,strFieldDisplay)
 	strReturn = strReturn & "</table>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 
 	makeFormerOrgContents = strReturn
@@ -1509,7 +1509,7 @@ Function makeFundingContents(rst,bUseContent)
 	Set cmdFunding = Nothing
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 	makeFundingContents = strReturn
 End Function
@@ -1588,7 +1588,7 @@ Function makeGeneralHeadingFieldVal(rst,bUseContent,intPBID)
 	End If
 
 	If bFeedback Then
-		strReturn = strReturn & "<br>" & getFeedback(strFieldName,False)
+		strReturn = strReturn & "<br>" & getFeedback(strFieldName,False,False)
 	End If
 
 	If bHasTaxonomyHeading Then
@@ -1640,7 +1640,7 @@ Function makeGeoCodeContents(rst,bUseContent)
 					"<div class=""col-sm-9 col-md-8"">" & _
 						"<input type=""text"" name=""LATITUDE"" id=""LATITUDE"" maxlength=""12"" value=" & AttrQs(decLat) & " class=""form-control"" readonly>"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("LATITUDE",True)
+		strReturn = strReturn & getFeedback("LATITUDE",True,False)
 	End If
 	strReturn = strReturn & _
 					"</div>" & _
@@ -1650,7 +1650,7 @@ Function makeGeoCodeContents(rst,bUseContent)
 					"<div class=""col-sm-9 col-md-8"">" & _
 						"<input type=""text"" name=""LONGITUDE"" id=""LONGITUDE"" maxlength=""12"" value=" & AttrQs(decLong) & " class=""form-control"" readonly>"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("LONGITUDE",True)
+		strReturn = strReturn & getFeedback("LONGITUDE",True,False)
 	End If
 	Call openMappingCategoryListRst()
 	strReturn = strReturn & _
@@ -1698,7 +1698,7 @@ Function makeGeoCodeContents(rst,bUseContent)
 				"<input type=""text"" name=""GEOCODE_NOTES"" id=""GEOCODE_NOTES"" maxlength=""255"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(strNotes) & ">" & _
 			"</div>" & _
 		"</div>" & _
-		StringIf(bFeedback,getFeedback("GEOCODE_NOTES",True))
+		StringIf(bFeedback,getFeedback("GEOCODE_NOTES",True,False))
 
 
 	makeGeoCodeContents = strReturn
@@ -1805,7 +1805,7 @@ Function makeLocatedInContents(rst,bUseContent)
 		StringIf(user_bLoggedIn, "<br>" & TXT_INFO_LOCATED)
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("LOCATED_IN_CM",True)
+		strReturn = strReturn & getFeedback("LOCATED_IN_CM",True,False)
 	End If
 	makeLocatedInContents = strReturn
 End Function
@@ -1842,7 +1842,7 @@ Function makeLogoAddressContents(rst, bUseContent)
 		"<div class=""col-md-9""><input type=""text"" id=""LOGO_ADDRESS_ALT_TEXT"" name=""LOGO_ADDRESS_ALT_TEXT"" maxlength=""255"" class=""form-control"" value=" & AttrQs(strLogoAltText) & ">"
 	
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("LOGO_ADDRESS_ALT_TEXT",True)
+		strReturn = strReturn & getFeedback("LOGO_ADDRESS_ALT_TEXT",True,False)
 	End If
 
 	strReturn = strReturn & "</div></div><div class=""row form-group"">" & _
@@ -1850,7 +1850,7 @@ Function makeLogoAddressContents(rst, bUseContent)
 		"<div class=""col-md-9""><textarea id=""LOGO_ADDRESS_HOVER_TEXT"" name=""LOGO_ADDRESS_HOVER_TEXT"" rows=""3"" maxlength=""500"" class=""form-control"">" & strLogoHoverText & "</textarea>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("LOGO_ADDRESS_HOVER_TEXT",True)
+		strReturn = strReturn & getFeedback("LOGO_ADDRESS_HOVER_TEXT",True,False)
 	End If
 
 	strReturn = strReturn & "</div></div>"
@@ -1957,7 +1957,7 @@ Function makeMappingSystemContents(rst,bUseContent)
 	Set cmdMappingSystem = Nothing
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 	makeMappingSystemContents = strReturn
 End Function
@@ -2017,7 +2017,7 @@ Function makeMembershipTypeContents(rst,bUseContent)
 	Set cmdMembershipType = Nothing
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 	makeMembershipTypeContents = strReturn
 End Function
@@ -2034,7 +2034,7 @@ Function makeNAICSContents(rst,bUseContent)
 		"<input type=""text"" name=""NAICS"" id=""NAICS"" size=""" & TEXT_SIZE & """ maxlength=""100"" value=" & AttrQs(strNAICS) & " class=""form-control"">" & _
 		"<p>" & TXT_NOT_SURE_ENTER & " <a href=""javascript:openWin('" & makeLinkB("naicsfind.asp") & "','nFind')"">" & TXT_NAICS_FINDER & "</a>.</p>"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 
 	makeNAICSContents = strReturn
@@ -2095,7 +2095,7 @@ Function makeOrgLocationServiceContents(rst,bUseContent)
 	Set cmdExtraCheckList = Nothing
 
 	'If bFeedback Then
-	'	strReturn = strReturn & getFeedback(strFieldName,False)
+	'	strReturn = strReturn & getFeedback(strFieldName,False,False)
 	'End If
 	makeOrgLocationServiceContents = strReturn
 End Function
@@ -2115,7 +2115,7 @@ Function makeOrgNameContents(rst,strName,strPublish,bUseContent)
 		"</tr></table>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strName,True)
+		strReturn = strReturn & getFeedback(strName,True,False)
 	End If
 
 	makeOrgNameContents = strReturn
@@ -2136,7 +2136,7 @@ Function makeLocationNameContents(rst,bUseContent)
 		"</div>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("LOCATION_NAME",True)
+		strReturn = strReturn & getFeedback("LOCATION_NAME",True,False)
 	End If
 
 	strReturn = strReturn & _
@@ -2359,7 +2359,7 @@ Function makeOtherAddressContents(rst,bUseContent)
 		AttrQs(strIDs) & "></div><button class=""ui-state-default ui-corner-all EntryFormItemAdd"" type=""button"" id=""OA_add_button"">" & TXT_ADD & "</button>" 
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 
 	makeOtherAddressContents = strReturn
@@ -2380,7 +2380,7 @@ Function makePaymentTermsContents(rst,bUseContent)
 	Call closePaymentTermsListRst()
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 
 	makePaymentTermsContents = strReturn
@@ -2401,7 +2401,7 @@ Function makePrefCurrencyContents(rst,bUseContent)
 	Call closeCurrencyListRst()
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 
 	makePrefCurrencyContents = strReturn
@@ -2422,7 +2422,7 @@ Function makePrefPaymentMethodContents(rst,bUseContent)
 	Call closePaymentMethodListRst()
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 
 	makePrefPaymentMethodContents = strReturn
@@ -2445,7 +2445,7 @@ Function makeQualityContents(rst,bUseContent)
 	End If
 	Call closeQualityListRst()
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 	makeQualityContents = strReturn
 End Function
@@ -2535,7 +2535,7 @@ Function makeRecordTypeContents(rst,bUseContent)
 	End If
 	Call closeRecordTypeListRst()
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 	makeRecordTypeContents = strReturn
 End Function
@@ -2617,7 +2617,7 @@ Function makeSchoolsInAreaContents(rst,bUseContent)
 			">" & strNotes & "</textarea>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 	makeSchoolsInAreaContents = strReturn
 End Function
@@ -2699,7 +2699,7 @@ Function makeSchoolEscortContents(rst,bUseContent)
 			">" & strNotes & "</textarea>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 	makeSchoolEscortContents = strReturn
 End Function
@@ -2745,7 +2745,7 @@ Function makeServiceLevelContents(rst,bUseContent)
 	Set cmdServiceLevel = Nothing
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SERVICE_LEVEL",False)
+		strReturn = strReturn & getFeedback("SERVICE_LEVEL",False,False)
 	End If
 	makeServiceLevelContents = strReturn
 End Function
@@ -2807,7 +2807,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_NAME"" id=""SOURCE_NAME"" maxlength=""100"" value=" & AttrQs(strName) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_NAME",True)
+		strReturn = strReturn & getFeedback("SOURCE_NAME",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -2817,7 +2817,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_TITLE"" id=""SOURCE_TITLE"" maxlength=""255"" value=" & AttrQs(strTitle) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_TITLE",True)
+		strReturn = strReturn & getFeedback("SOURCE_TITLE",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -2827,7 +2827,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_ORG"" id=""SOURCE_ORG"" maxlength=""100"" value=" & AttrQs(strOrg) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_ORG",True)
+		strReturn = strReturn & getFeedback("SOURCE_ORG",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -2837,7 +2837,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_PHONE"" id=""SOURCE_PHONE"" maxlength=""100"" value=" & AttrQs(strPhone) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_PHONE",True)
+		strReturn = strReturn & getFeedback("SOURCE_PHONE",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -2847,7 +2847,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_FAX"" id=""SOURCE_FAX"" maxlength=""100"" value=" & AttrQs(strFax) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_FAX",True)
+		strReturn = strReturn & getFeedback("SOURCE_FAX",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -2857,7 +2857,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_EMAIL"" id=""SOURCE_EMAIL"" maxlength=""100"" value=" & AttrQs(strEmail) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_EMAIL",True)
+		strReturn = strReturn & getFeedback("SOURCE_EMAIL",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -2867,7 +2867,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_BUILDING"" id=""SOURCE_BUILDING"" maxlength=""150"" value=" & AttrQs(strBuilding) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_BUILDING",True)
+		strReturn = strReturn & getFeedback("SOURCE_BUILDING",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -2877,7 +2877,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_ADDRESS"" id=""SOURCE_ADDRESS"" maxlength=""150"" value=" & AttrQs(strAddress) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_ADDRESS",True)
+		strReturn = strReturn & getFeedback("SOURCE_ADDRESS",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -2887,7 +2887,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input type=""text"" name=""SOURCE_CITY"" id=""SOURCE_CITY"" maxlength=""100"" value=" & AttrQs(strCity) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_CITY",True)
+		strReturn = strReturn & getFeedback("SOURCE_CITY",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -2897,7 +2897,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<div class=""form-inline""><input type=""text"" name=""SOURCE_PROVINCE"" id=""SOURCE_PROVINCE"" size=""3"" maxlength=""2"" value=" & AttrQs(strProvince) & " class=""form-control""></div>"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_PROVINCE",True)
+		strReturn = strReturn & getFeedback("SOURCE_PROVINCE",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -2907,7 +2907,7 @@ Function makeSourceContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<div class=""form-inline""><input type=""text"" name=""SOURCE_POSTAL_CODE"" id=""SOURCE_POSTAL_CODE"" size=""20"" maxlength=""20"" value=" & AttrQs(strPostalCode) & " class=""form-control""></div>"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SOURCE_POSTAL_CODE",True)
+		strReturn = strReturn & getFeedback("SOURCE_POSTAL_CODE",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -2948,7 +2948,7 @@ Function makeSpaceAvailableContents(rst,bUseContent)
 			"<div class=""col-sm-9"">" & _
 				"<input name=""SPACE_AVAILABLE_NOTES"" type=""text"" maxlength=""255"" autocomplete=""off"" value=" & AttrQs(strNotes) & " class=""form-control"">"
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SPACE_AVAILABLE_NOTES",True)
+		strReturn = strReturn & getFeedback("SPACE_AVAILABLE_NOTES",True,False)
 	End If
 	strReturn = strReturn & _
  			"</div>" & _
@@ -2958,7 +2958,7 @@ Function makeSpaceAvailableContents(rst,bUseContent)
 			"<div class=""col-sm-9 form-inline"">" & _
 				makeDateFieldVal("SPACE_AVAILABLE_DATE",dSpaceAvailable,True,False,False,False,False,True)
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("SPACE_AVAILABLE_DATE",True)
+		strReturn = strReturn & getFeedback("SPACE_AVAILABLE_DATE",True,False)
 	End If
 	strReturn = strReturn & _
 			"</div>" & _
@@ -3039,7 +3039,7 @@ Function makeSubjectContents(rst,bUseContent)
 		"</div>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 	makeSubjectContents = strReturn
 End Function
@@ -3112,7 +3112,7 @@ Function makeTypeOfCareContents(rst,bUseContent)
 	Set cmdTypeOfCare = Nothing
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 	makeTypeOfCareContents = strReturn
 End Function
@@ -3133,7 +3133,7 @@ Function makeTypeOfProgramContents(rst,bUseContent)
 	Call closeTypeOfProgramListRst()
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 
 	makeTypeOfProgramContents = strReturn
@@ -3403,7 +3403,7 @@ Function makeVacancyInfoContents(rst, bUseContent)
 			">" & strNotes & "</textarea>"
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,False)
+		strReturn = strReturn & getFeedback(strFieldName,False,False)
 	End If
 
 	makeVacancyInfoContents = strReturn
@@ -3429,7 +3429,7 @@ Function makeWardContents(rst,bUseContent)
 	Call closeWardListRst()
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
 	makeWardContents = strReturn
 End Function
