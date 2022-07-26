@@ -5502,7 +5502,7 @@ window['init_schedule'] = function($) {
 };
 
 })();
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -5696,7 +5696,7 @@ var init_client_validation = function(selector, txt_validation_error) {
 			}
 		});
 
-		return matches.length == 0;	
+		return matches.length == 0;
 	}, 'A unique value is required.');
 
 	$.validator.addMethod('require-group', function(value, element) {
@@ -5705,6 +5705,18 @@ var init_client_validation = function(selector, txt_validation_error) {
 		var fieldname = module.parent().children('td:first').prop('id');
 		fieldname = fieldname.slice(-(fieldname.length - 6));
 		var fields = module.find(':input').not('[type=hidden]').not('button');
+		console.log('About to tinymce check', fieldname);
+		if (window['tinymce']) {
+			var wysiwyg_id = module.find('.WYSIWYG').prop('id');
+			console.log('in tinymce check', wysiwyg_id);
+			if (wysiwyg_id) {
+				var editor = window.tinymce.get(wysiwyg_id);
+				if(editor) {
+					editor.save();
+					console.log('did save');
+				}
+			}
+		}
 		// alterations to field list
 		switch(fieldname) {
 			case 'ACCESSIBILITY':
@@ -5972,7 +5984,7 @@ var init_validate_duplicate_org_names = function(options) {
 	var form = $(opt.selector).submit(function(event) {
 		var i, val, changed=false,
 			new_values = $(opt.fields).serializeArray();
-		
+
 		if (opt.num) {
 			new_values.push({name: 'NUM', value: opt.num});
 		}
