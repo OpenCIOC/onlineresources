@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -57,7 +57,7 @@ End If
 Dim strLoginName, _
 	strLoginPwd, _
 	strHashedPwd, _
-	strLoginKey, _ 
+	strLoginKey, _
 	strRedirectPage, _
 	strRedirectArgs, _
 	strStartCulture, _
@@ -90,7 +90,7 @@ ElseIf Nl(strLoginPwd) Then
 			"login.asp", vbNullString)
 Else
 	strLoginKey = LCase(getRandomString(32))
-	
+
 	Dim cmdLoginCheck, rsLoginCheck
 	Set cmdLoginCheck = Server.CreateObject("ADODB.Command")
 	With cmdLoginCheck
@@ -171,19 +171,18 @@ Else
 		End With
 
 		cmdLoginCheckUpdate.Execute , , adExecuteNoRecords
-			
-		
+
+
 		Dim strParamOverride
 		strParamOverride = vbNullString
 		If bUseStartCulture Then
 			strRedirectArgs = StringIf(g_objCurrentLang.Culture<>strStartCulture, "Ln=" & strStartCulture)
 			strParamOverride = StringIf(g_objCurrentLang.Culture<>strStartCulture, "Ln")
 		End If
-		Call setVProfileCookies(strLoginName, strLoginKey)
+		Call setVProfileSession(strLoginName, strLoginKey)
 		Call goToPage(ps_strRootPath & strRedirectPage, strRedirectArgs, strParamOverride)
 
 	Else
-		Call clearVProfileCookies()
 		Call handleError(TXT_LOGIN_FAILED & TXT_COLON & strErrorMessage, _
 			"login.asp", _
 			"page=" & Server.URLEncode(strRedirectPage) & "&args=" & Server.URLEncode(strRedirectArgs))
@@ -193,5 +192,3 @@ End If
 
 
 <!--#include file="../../includes/core/incClose.asp" -->
-
-

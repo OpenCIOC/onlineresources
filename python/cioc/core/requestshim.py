@@ -15,11 +15,9 @@
 # =========================================================================================
 
 
-from datetime import datetime
-
 # 3rd party
 from pyramid.decorator import reify
-import pywintypes
+from webob.cookies import make_cookie
 
 # this app
 from cioc.core import syslanguage
@@ -93,6 +91,25 @@ class HeaderShim:
             return default
 
 
+class ResponseShim:
+    def __init__(self, request, response):
+        self._response = response
+        self._request = request
+        self.vary = None
+
+    def __getattr__(self, name):
+        return getattr(self._response, name)
+
+    def set_cookie(self, name, value="", **args):
+        if isinstance(value, str):
+            value = value.encode("utf-8")
+        cookie = make_cookie(name, value, **args)
+        self._response.AddHeader("Set-Cookie", cookie)
+
+    def delete_cookie(self, name, path="/", domain=None):
+        self.set_cookie(name, None, path=path, domain=domain)
+
+
 class RequestShim(CiocRequestMixin):
     def __init__(self, req, response):
         self.req = req
@@ -102,7 +119,7 @@ class RequestShim(CiocRequestMixin):
         self.cookies = CollectionShim(req.Cookies)
         self.headers = HeaderShim(req.ServerVariables)
         self.appvars = CollectionShim(req.ServerVariables)
-        self.response = response
+        self.response = ResponseShim(self, response)
 
     @reify
     def language(self):
@@ -134,7 +151,7 @@ class RequestShim(CiocRequestMixin):
 
     @reify
     def scheme(self):
-        return "https" if self.headers.get("CIOC_USING_SSL") else "http"
+        return "https" if self.headers.get("CIOC-USING-SSL") else "http"
 
     @reify
     def url(self):
@@ -160,20 +177,6 @@ class RequestShim(CiocRequestMixin):
     def remote_addr(self):
         return str(self.appvars.get("REMOTE_ADDR"))
 
-    def cioc_set_cookie(self, key, value, **args):
-        if value is None:
-            value = ""
-            expires = pywintypes.Time(datetime(1997, 1, 1, 0, 0, 0).timestamp())
-            args["expires"] = expires
-
-        self.response.Cookies[key] = value
-        for x, y in args.items():
-            if y and x in ["path", "domain", "expires", "secure"]:
-                setattr(self.response.Cookies[key], x.capitalize(), y)
-
-    def cioc_get_cookie(self, key):
-        return self.cookies.get(key)
-
     def add_response_callback(self, fn):
         """
         Fake method to provide api compatibility.
@@ -194,6 +197,8 @@ class RequestShim(CiocRequestMixin):
     @reify
     def finished_callbacks(self):
         return []
+
+    exception = None
 
     registry = FakeRegistry
 

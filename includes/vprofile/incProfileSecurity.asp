@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -26,17 +26,17 @@ vprofile_strEmail = ''
 
 def vprofile_check_login():
 	global vprofile_bLoggedIn, vprofile_strID, vprofile_strEmail
-	
+
 	user = volprofileuser.VolProfileUser(pyrequest)
 
 	vprofile_bLoggedIn = user.LoggedIn
 	vprofile_strID = user.ProfileID
 	vprofile_strEmail = user.Email
 
-def setVProfileCookies(strLoginName, strLoginKey):
+def setVProfileSession(strLoginName, strLoginKey):
 	volprofileuser.do_login(pyrequest, strLoginName, strLoginKey)
 
-def clearVProfileCookies():
+def clearVProfileSession():
 	volprofileuser.do_logout(pyrequest)
 
 def update_user_id_l(strEmail):
@@ -52,4 +52,3 @@ End Sub
 
 Call vprofile_check_login()
 %>
-

@@ -514,7 +514,7 @@ def do_logout(request):
 
 def do_login(request, principal, login_key):
     # bump session timeout to 5 days
-    request.session.adjust_timeout_for_session(3600 * 24 * 5)
+    request.session.adjust_session_timeout(3600 * 24 * 5)
     remember(request, principal, login_key=login_key)
 
 

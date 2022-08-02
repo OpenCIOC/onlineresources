@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -82,7 +82,7 @@ Else
 	Dim strErrorMessage
 	strErrorMessage = Replace(TXT_INVALID_USERNAME_PASSWORD, "[USER]", Server.HTMLEncode(Request("LoginName")))
 
-	Dim strSingleLoginKey		
+	Dim strSingleLoginKey
 	strSingleLoginKey = Null
 
 	With rsLoginCheck
@@ -119,7 +119,7 @@ Else
 
 			cmdLoginCheckUpdate.Execute , , adExecuteNoRecords
 
-			Call clearVProfileCookies()
+			Call clearVProfileSession()
 			Dim strUserUID
 			strUserUID = .Fields("UserUID").Value
 
@@ -133,7 +133,7 @@ Else
 
 			%><!--#include file="includes/core/incClose.asp" --><%
 			Response.End()
-		Else		
+		Else
 			Call handleError(TXT_LOGIN_FAILED & TXT_COLON & strErrorMessage, _
 				"login.asp", _
 				vbNullString)

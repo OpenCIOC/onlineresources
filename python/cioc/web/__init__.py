@@ -133,9 +133,8 @@ def main(global_config, **settings):
 
 
 def connection_error(request):
-    logged_in = not not [x for x in request.cookies if x.endswith("%5FLogin")]
     request.response.status = "503 Service Unavailable"
-    return {"logged_in": logged_in}
+    return {}
 
 
 @view_config(

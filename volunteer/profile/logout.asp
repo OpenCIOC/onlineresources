@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -44,11 +44,9 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../../", "volunteer/profile/", vbNullSt
 <% 'End Base includes %>
 <!--#include file="../../includes/vprofile/incProfileSecurity.asp" -->
 <%
-Call clearVProfileCookies()
+Call clearVProfileSession()
 Call goToPageB("login.asp")
 %>
 
 
 <!--#include file="../../includes/core/incClose.asp" -->
-
-

@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -67,7 +67,7 @@ Dim bConfirmed
 bConfirmed = Request("Confirmed") = "on"
 
 
-If Not bConfirmed Or Request.ServerVariables("REQUEST_METHOD") <> "POST" Then 
+If Not bConfirmed Or Request.ServerVariables("REQUEST_METHOD") <> "POST" Then
 	Call makePageHeader(TXT_CONFIRM_DEACTIVATE_ACCOUNT, TXT_CONFIRM_DEACTIVATE_ACCOUNT, True, False, True, True)
 	%>
 	<p><span class="AlertBubble"><%=TXT_ARE_YOU_SURE_DEACTIVATE_ACCOUNT%></span></p>
@@ -111,7 +111,7 @@ Else
 	If Not Nl(strErrorList) Then
 		Call handleError(strErrorList, vbNullString, vbNullString)
 	Else
-		Call clearVProfileCookies()
+		Call clearVProfileSession()
 		Call handleMessage(TXT_SUCCESS_DEACTIVATE, vbNullString, vbNullString, False)
 	End If
 	Call makePageFooter(False)
@@ -119,5 +119,3 @@ End If
 
 %>
 <!--#include file="../../includes/core/incClose.asp" -->
-
-

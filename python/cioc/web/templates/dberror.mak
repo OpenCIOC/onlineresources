@@ -20,18 +20,12 @@
 <%!
 from cioc.core.i18n import gettext as _
 %>
-	<html>
-	<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<title>${_('System temporarily unavailable', request)}</title>
-	</head>
-	<body>
-	<p>${_("The database is temporarily unavailable. Please check back later.", request)}</p>
-	<!-- ${repr(_context)} -->
-
-	%if logged_in:
-	<p><a href="http://community.cioc.ca/resources/how-to/google-search">${_('Using Google to search when CIOC is offline', request)}</a></p>
-	%endif
-	</body>
-	</html>
-
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>${_('System temporarily unavailable', request)}</title>
+</head>
+<body>
+<p>${_("The database is temporarily unavailable. Please check back later.", request)}</p>
+</body>
+</html>
