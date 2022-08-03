@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -19,6 +19,7 @@
 <script language="python" runat="server">
 
 from xml.etree import cElementTree as ET
+from cioc.core.security import sanitize_html_description
 
 def getEventScheduleFields_l(
 		strFieldDisplay, rsOrg, bSuggest,
@@ -65,6 +66,10 @@ def getEventScheduleFields_l(
 		scheduleAddInsertField(u'<SCHEDULES>{}</SCHEDULES>'.format(xml)) 
 	if lines:
 		addEmailField(strFieldDisplay, u'\n'.join(lines))
+
+def sanitizeHTML(html):
+	if html:
+		return sanitize_html_description(html)
 
 </script>
 

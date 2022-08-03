@@ -1151,6 +1151,9 @@ While Not rsFields.EOF
 				Else
 					strFieldVal = getStrSetValue(strFieldName)
 				End If
+				If rsFields.Fields("WYSIWYG") Then
+					strFieldVal = sanitizeHTML(strFieldVal)
+				End If
 				If reEquals(rsFields.Fields("ExtraFieldType"),"a|d|e|l|p|r|t|w",False,False,True,False) Then
 					If Not Nl(strFieldVal) Then
 						dicExtraFb.Add strFieldName, strFieldVal

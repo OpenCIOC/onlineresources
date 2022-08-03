@@ -524,7 +524,7 @@ description_allowed_attributes["a"].append("target")
 sanitize_html_description = partial(
     bleach.clean,
     tags=bleach.sanitizer.ALLOWED_TAGS
-    + ["p", "br", "div", "h1", "h2", "h3", "h4", "h5", "h6"],
+    + ["p", "br", "h1", "h2", "h3", "h4"],
     attributes=description_allowed_attributes,
 )
 

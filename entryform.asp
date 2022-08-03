@@ -1110,10 +1110,10 @@ $('html').scrollTop(scrollTop);
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.1.0/tinymce.min.js" integrity="sha512-dr3qAVHfaeyZQPiuN6yce1YuH7YGjtUXRFpYK8OfQgky36SUfTfN3+SFGoq5hv4hRXoXxAspdHw4ITsSG+Ud/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="text/javascript">
-    tinymce.init({
+	tinymce.init({
         selector: '.WYSIWYG',
-        plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table',
-        toolbar: 'undo redo styles bullist numlist link | bold italic underline removeformat image table | copy cut paste searchreplace fullscreen',
+		plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table',
+        toolbar: 'undo redo styles bullist numlist link | bold italic removeformat image table | copy cut paste searchreplace fullscreen',
 		menubar: false,
         convert_urls: false,
 		schema: 'html5',
