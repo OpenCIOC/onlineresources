@@ -59,7 +59,7 @@ def parse_access_url(value):
     else:
         raise ValueError()
 
-    if not len(listval) == 3:
+    if len(listval) != 3:
         raise ValueError()
 
     urlviewtype, viewtype, accessurl = listval
@@ -185,7 +185,7 @@ class EmailRecordListBase(viewbase.ViewBase):
                 " ".join(
                     [x for x in [request.user.FirstName, request.user.LastName] if x]
                 )
-                or False
+                or None
             )
             args["author"] = formataddr((name, user.Email))
         try:
@@ -306,8 +306,7 @@ class EmailRecordListBase(viewbase.ViewBase):
 
         urloptions = [
             (
-                "%s %s %s %s"
-                % (x.URLViewType or "", x.ViewType, x.AccessURL, x.Protocol),
+                "%s %s %s" % (x.URLViewType or "", x.ViewType, x.AccessURL),
                 ("* " if x.DEFAULT_VIEW else "")
                 + x.ViewName
                 + " ("
