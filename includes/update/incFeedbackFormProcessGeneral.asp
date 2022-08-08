@@ -78,8 +78,20 @@ def sanitizeHTML(html):
 Dim strEmailContents
 	
 Sub addEmailField(strFldName,strInsert)
-	strEmailContents = strEmailContents & vbCrLf & strFldName & TXT_COLON & strInsert
+	strEmailContents = strEmailContents & vbCrLf & vbCrLf & strFldName & TXT_COLON & strInsert
 End Sub
+
+Function stripHTMLBreaks(strVal)
+	Dim strReturn
+	strReturn = reReplace(strVal,"(</p>)|(<br/?>)|(</li>)|(</?[ou]l>)", vbNullString, True, False, True, False)
+	strReturn = reReplace(strReturn,"</?((strong)|(b))>","*", True, False, True, False)
+	strReturn = reReplace(strReturn,"</?((em)|(i)|(u))>","//", True, False, True, False)
+	strReturn = Replace(strReturn,"<p>",vbCrLf)
+	strReturn = Replace(strReturn,"<li>","    -> ")
+	strReturn = reReplace(strReturn,"<h[0-6]>",vbCrLf & "{{ ", True, False, True, False)
+	strReturn = reReplace(strReturn,"</h[0-6]>"," }}", True, False, True, False)
+	stripHTMLBreaks = strReturn
+End Function
 
 Function addInsertField(strFldName, _
 		strInsert, _
@@ -353,6 +365,7 @@ Sub sendNotifyEmails(intID, strRecName, strOldEmail, strNewEmail, bInView, strAc
 		If Not Nl(strNewEmail) And strNewEmail <> TXT_DELETED Then
 			strRecipient = strNewEmail
 			strSubject = TXT_REVIEW_NEW_EMAIL & get_db_option_current_lang("DatabaseName" & ps_strDbArea)
+
 			Call sendEmail(False, strSender, strRecipient, strSubject, strMessageHeader & vbCrLf & vbCrLf & Replace(strMessageFooter,"&Key=[FBKEY]",StringIf(Not Nl(strFbKey),"&Key=" & strFbKey)))
 		End If
 	End If
@@ -389,7 +402,7 @@ Sub sendNotifyEmails(intID, strRecName, strOldEmail, strNewEmail, bInView, strAc
 
 		strRecipient = strRecipient & Ns(strAlsoNotify)
 
-		strSubject = TXT_FEEDBACK_FOR & strRecName & " (" & TXT_VOL_ID & " " & intID & ")"
+		strSubject = TXT_FEEDBACK_FOR & strRecName & " (" & TXT_ID & " " & intID & ")"
 	
 		Call sendEmail(False, strSender, strRecipient, strSubject, strMessageHeader & vbCrLf & vbCrLf & Replace(strMessageFooter,"&Key=[FBKEY]",vbNullString))
 	End If

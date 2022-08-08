@@ -498,7 +498,7 @@ Sub getMailAddressFields(strFieldDisplay)
 			Set rsAddress = .Execute
 		End With
 		Set rsAddress = rsAddress.NextRecordset
-		Call addEmailField("Mailing Address",cmdAddress.Parameters("@RETURN_VALUE").Value)
+		Call addEmailField(TXT_MAIL_ADDRESS,cmdAddress.Parameters("@RETURN_VALUE").Value)
 		Set rsAddress = Nothing
 		Set cmdAddress = Nothing
 	End If
@@ -604,7 +604,7 @@ Sub getSiteAddressFields(strFieldDisplay)
 			Set rsAddress = .Execute
 		End With
 		Set rsAddress = rsAddress.NextRecordset
-		Call addEmailField("Site Address",cmdAddress.Parameters("@RETURN_VALUE").Value)
+		Call addEmailField(TXT_SITE_ADDRESS,cmdAddress.Parameters("@RETURN_VALUE").Value)
 		Set rsAddress = Nothing
 		Set cmdAddress = Nothing
 	End If
@@ -1169,7 +1169,8 @@ While Not rsFields.EOF
 								If strFieldName = "ORG_LEVEL_1" Or strFieldName = "ORG_LEVEL_2" Or strFieldName = "ORG_LEVEL_3" Then
 									strFieldDisplay = Nz(get_view_data_cic("OrgLevel" & Right(strFieldName, 1) & "Name"), strFieldDisplay)
 								End If
-								Call addEmailField(strFieldDisplay,strFieldVal)
+								strFieldValDisplay = IIf(rsFields.Fields("WYSIWYG"),stripHTMLBreaks(strFieldVal),strFieldVal)
+								Call addEmailField(strFieldDisplay,strFieldValDisplay)
 							End If
 						Case "CIC"
 							If addInsertField(strFieldName, _
@@ -1217,6 +1218,7 @@ While Not rsFields.EOF
 									Case Else
 										strFieldValDisplay = strFieldVal
 								End Select
+								strFieldValDisplay = IIf(rsFields.Fields("WYSIWYG"),stripHTMLBreaks(strFieldValDisplay),strFieldValDisplay)
 								Call addEmailField(rsFields.Fields("FieldDisplay"),strFieldValDisplay)
 							End If
 						Case "CCR"
@@ -1229,6 +1231,7 @@ While Not rsFields.EOF
 									Case Else
 										strFieldValDisplay = strFieldVal
 								End Select
+								strFieldValDisplay = IIf(rsFields.Fields("WYSIWYG"),stripHTMLBreaks(strFieldValDisplay),strFieldValDisplay)
 								Call addEmailField(rsFields.Fields("FieldDisplay"),strFieldValDisplay)
 							End If
 					End Select

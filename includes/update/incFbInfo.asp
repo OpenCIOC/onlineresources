@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -510,7 +510,7 @@ Sub printFeedbackInfo(intFBID,intDbAreaID,intFBType)
 								Else
 									If Not bHidePrivateData Then
 										Response.Write("<td class=""FieldLabelLeftClr"">" & Nz(dicFieldNames(fld.Name),fld.Name) & "</td>")
-										Response.Write("<td>" & Server.HTMLEncode(fld.Value) & "</td>")
+										Response.Write("<td>" & Replace(Server.HTMLEncode(fld.Value),vbCrLf,"<br>") & "</td>")
 									End If
 								End If
 						End Select
