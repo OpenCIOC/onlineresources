@@ -5705,15 +5705,12 @@ var init_client_validation = function(selector, txt_validation_error) {
 		var fieldname = module.parent().children('td:first').prop('id');
 		fieldname = fieldname.slice(-(fieldname.length - 6));
 		var fields = module.find(':input').not('[type=hidden]').not('button');
-		console.log('About to tinymce check', fieldname);
 		if (window['tinymce']) {
 			var wysiwyg_id = module.find('.WYSIWYG').prop('id');
-			console.log('in tinymce check', wysiwyg_id);
 			if (wysiwyg_id) {
 				var editor = window.tinymce.get(wysiwyg_id);
 				if(editor) {
 					editor.save();
-					console.log('did save');
 				}
 			}
 		}
