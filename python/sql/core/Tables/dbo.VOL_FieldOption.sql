@@ -26,6 +26,7 @@ CREATE TABLE [dbo].[VOL_FieldOption]
 [CanUseFeedback] [bit] NOT NULL CONSTRAINT [DF_VOL_Opportunity_FieldOption_CanUseFeedback] DEFAULT ((0)),
 [CheckMultiLine] [bit] NOT NULL CONSTRAINT [DF_VOL_Opportunity_FieldOption_CheckMultiLine] DEFAULT ((0)),
 [CheckHTML] [bit] NOT NULL CONSTRAINT [DF_VOL_Opportunity_FieldOption_CheckHTML] DEFAULT ((0)),
+[WYSIWYG] [bit] NOT NULL CONSTRAINT [DF_VOL_FieldOption_WYSIWIG] DEFAULT ((0)),
 [ValidateType] [char] (1) COLLATE Latin1_General_100_CI_AI NULL,
 [AllowNulls] [bit] NOT NULL CONSTRAINT [DF_VOL_Opportunity_FieldOption_AllowNulls] DEFAULT ((1)),
 [FullTextIndex] [bit] NOT NULL CONSTRAINT [DF_VOL_FieldOption_FullTextIndex] DEFAULT ((0)),
@@ -35,20 +36,19 @@ CREATE TABLE [dbo].[VOL_FieldOption]
 [ChangeHistory] [tinyint] NOT NULL CONSTRAINT [DF_VOL_FieldOption_ChangeHistory] DEFAULT ((0)),
 [DevNotes] [varchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
 [MemberID] [int] NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-ALTER TABLE [dbo].[VOL_FieldOption] ADD
-CONSTRAINT [FK_VOL_FieldOption_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_FieldOption] ADD CONSTRAINT [CK_VOL_FieldOption_CanShare] CHECK (([CanShare]=(0) OR [MemberSpecific]=(0)))
+GO
+ALTER TABLE [dbo].[VOL_FieldOption] ADD CONSTRAINT [PK_VOL_Opportunity_FieldOption] PRIMARY KEY CLUSTERED ([FieldID]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_FieldOption] ADD CONSTRAINT [IX_VOL_Opportunity_FieldOption] UNIQUE NONCLUSTERED ([FieldName]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VOL_FieldOption] ADD CONSTRAINT [FK_VOL_FieldOption_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
 GO
 GRANT SELECT ON  [dbo].[VOL_FieldOption] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[VOL_FieldOption] TO [cioc_login_role]
+GO
 GRANT SELECT ON  [dbo].[VOL_FieldOption] TO [cioc_vol_search_role]
-GO
-
-ALTER TABLE [dbo].[VOL_FieldOption] ADD 
-CONSTRAINT [PK_VOL_Opportunity_FieldOption] PRIMARY KEY CLUSTERED  ([FieldID]) ON [PRIMARY]
-GO
-ALTER TABLE [dbo].[VOL_FieldOption] ADD CONSTRAINT [IX_VOL_Opportunity_FieldOption] UNIQUE NONCLUSTERED  ([FieldName]) ON [PRIMARY]
-
-ALTER TABLE [dbo].[VOL_FieldOption] ADD
-CONSTRAINT [CK_VOL_FieldOption_CanShare] CHECK (([CanShare]=(0) OR [MemberSpecific]=(0)))
 GO

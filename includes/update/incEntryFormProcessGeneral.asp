@@ -1,4 +1,4 @@
-<%
+﻿<%
 'File:			$HeadURL$
 'Last Modified:	$Date$
 'Last Mod By:	$Author$
@@ -42,6 +42,10 @@ def getEventScheduleSQL_l(checkDate, checkInteger, checkID, checkLength, checkAd
 		output = u''
 
 	return output
+
+def sanitizeHTML(html):
+	if html:
+		return sanitize_html_description(html)
 
 </script>
 

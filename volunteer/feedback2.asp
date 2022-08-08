@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -802,7 +802,7 @@ While Not rsFields.EOF
 				End If									
 			Else
 				If addInsertField(strFieldName,QsNNl(strFieldVal),strInsertInto,strInsertValue) Then
-					Call addEmailField(rsFields.Fields("FieldDisplay"),strFieldVal)
+					Call addEmailField(rsFields.Fields("FieldDisplay"),IIf(rsFields.Fields("WYSIWYG"),stripHTMLBreaks(strFieldVal),strFieldVal))
 				End If
 			End If
 			If Not bSuggest Then

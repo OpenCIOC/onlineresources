@@ -35,7 +35,7 @@ required_field_marker = Markup('<span class="Alert" title="%s">*</span>') % _('R
 <div class="hidden">
 ${request.passvars.cached_form_vals}
 </div>
-	
+
 	<% languages = [(x, culture_map[x].LanguageName) for x in active_cultures] %>
 	<table class="BasicBorder cell-padding-4 max-width-md" style="display: none; min-width: 40%;" data-bind="visible: true">
 		<tr>
@@ -342,7 +342,7 @@ var ViewModel = function(key_list, cic_domains, vol_domains) {
 		}
 
 		return [];
-		
+
 	});
 	self.shortCode = ko.computed(function() {
 		var listing = self.listingType(), key = self.selectedKey(),
@@ -424,7 +424,7 @@ var ViewModel = function(key_list, cic_domains, vol_domains) {
 	});
 
 	ko.computed(function() {
-		console.log(self.selectedKey(), self.selectedLanguage(), self.listingType(), self.selectedDomainName());
+		//console.log(self.selectedKey(), self.selectedLanguage(), self.listingType(), self.selectedDomainName());
 	});
 
 };

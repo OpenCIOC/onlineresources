@@ -55,7 +55,7 @@ SCRIPTS :=  \
 	savedSearchInfo.js \
 	taxAdvSearch.js \
 	taxBuildList.js \
-	taxIndex.js 
+	taxIndex.js
 
 .PHONY: default clean cleancomposit
 	#debug release
@@ -63,88 +63,88 @@ SCRIPTS :=  \
 default: ../python/cioc/core/assetversions.json
 
 %.min.js: %.js
-	java -jar c:/bin/compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js $< --create_source_map ./$<.map --source_map_format=V3 --js_output_file $@
+	java -jar c:/bin/closure-compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js $< --create_source_map ./$<.map --source_map_format=V3 --js_output_file $@
 	unix2dos $@
 
 admin.js: ciocbasic.js jquery.bgiframe.js autocomplete.js autocomplete_extra.js entryform_common.js admin_base.js
-	cat $^ > $@
+	type $^ > $@
 
 advsrch.js: ciocbasic.js jquery.bgiframe.js formNewWindow.js autocomplete.js keyword_autocomplete.js advsrch_base.js globalize.js mapcommon.js mapsearch.js search_params.js
-	cat $^ > $@
+	type $^ > $@
 
 bsearch.js: ciocbasic.js jquery.bgiframe.js jquery.blockUI.js formNewWindow.js globalize.js autocomplete.js keyword_autocomplete.js bsearch_base.js mapcommon.js mapsearch.js search_params.js vacancy_base.js
-	cat $^ > $@
+	type $^ > $@
 
 checklists.js: ciocbasic.js json2.js autocomplete.js checklists_base.js
-	cat $^ > $@
+	type $^ > $@
 
 ciocbasic.js: core.js checkAll.js mylist.js json2.js cached_state.js autodatepicker.js
-	cat $^ > $@
+	type $^ > $@
 
 community.js: ciocbasic.js jquery.bgiframe.js autocomplete.js autocomplete_extra.js entryform_common.js checklists_base.js community_base.js
-	cat $^ > $@
+	type $^ > $@
 
 copy.js: ciocbasic.js jquery.validate.js copy_base.js
-	cat $^ > $@
+	type $^ > $@
 
 datepicker.js: ciocbasic.js
-	cat $^ > $@
+	type $^ > $@
 
 details.js: ciocbasic.js jquery.bgiframe.js jquery.validate.js jquery.ba-throttle-debounce.js jquery.blockUI.js autocomplete.js autocomplete_extra.js reminders_common.js details_base.js vacancy_base.js related_record_sidebar_base.js
-	cat $^ > $@
+	type $^ > $@
 
 entryform.js: ciocbasic.js jquery.bgiframe.js jquery-ui-combobox.js jquery.validate.js globalize.js mapcommon.js mapentryform.js history.js autocomplete.js autocomplete_extra.js entryform_common.js copy_base.js feedback_base.js record_note.js entryform_base.js province-combo.js
-	cat $^ > $@
+	type $^ > $@
 
 feedback.js: ciocbasic.js globalize.js mapcommon.js mapentryform.js jquery-ui-combobox.js province-combo.js autocomplete.js autocomplete_extra.js entryform_common.js feedback_base.js
-	cat $^ > $@
+	type $^ > $@
 
 findreplace.js: ciocbasic.js findandreplace_base.js
-	cat $^ > $@
+	type $^ > $@
 
 generalheading.js: ciocbasic.js jquery.bgiframe.js autocomplete.js iconautocomplete.js generalheading_base.js
-	cat $^ > $@
+	type $^ > $@
 
-publication.js: ciocbasic.js jquery.bgiframe.js autocomplete.js iconautocomplete.js 
-	cat $^ > $@
+publication.js: ciocbasic.js jquery.bgiframe.js autocomplete.js iconautocomplete.js
+	type $^ > $@
 
 geocode.js: ciocbasic.js  globalize.js geocode_base.js
-	cat $^ > $@
+	type $^ > $@
 
 printmap.js: ciocbasic.js markerclusterer.js globalize.js printmap_base.js
-	cat $^ > $@
+	type $^ > $@
 
 referralsearch.js: tablesort.js referralsearch_base.js
-	cat $^ > $@
+	type $^ > $@
 
 reminders.js: ciocbasic.js jquery.bgiframe.js jquery.validate.js jquery.ba-throttle-debounce.js autocomplete.js autocomplete_extra.js reminders_common.js
-	cat $^ > $@
+	type $^ > $@
 
 results.js: ciocbasic.js markerclusterer.js globalize.js jquery.ba-scrollbarwidth.js jquery.ba-bbq.js jquery.ba-throttle-debounce.js jquery.blockUI.js results_base.js vacancy_base.js related_record_sidebar_base.js
-	cat $^ > $@
+	type $^ > $@
 
 tablesort.js: ciocbasic.js jquery.tablesorter.js tablesort_base.js
-	cat $^ > $@
+	type $^ > $@
 
 tax.js: ciocbasic.js autocomplete.js tax_base.js
-	cat $^ > $@
+	type $^ > $@
 
 taxrecords.js: bsearch.js tax_base.js
-	cat $^ > $@
+	type $^ > $@
 
 taxsrch.js: ciocbasic.js jquery.bgiframe.js autocomplete.js search_params.js
-	cat $^ > $@
+	type $^ > $@
 
 ventryform.js: ciocbasic.js jquery.bgiframe.js jquery-ui-combobox.js history.js autocomplete.js autocomplete_extra.js feedback_base.js entryform_common.js copy_base.js ventryform_base.js record_note.js
-	cat $^ > $@
+	type $^ > $@
 
 vfeedback.js: ciocbasic.js jquery-ui-combobox.js autocomplete.js autocomplete_extra.js entryform_common.js feedback_base.js
-	cat $^ > $@
+	type $^ > $@
 
 vprofiles.js: tablesort.js cached_state.js vprofiles_base.js
-	cat $^ > $@
+	type $^ > $@
 
-../python/cioc/core/assetversions.json: $(patsubst %.js,%.min.js, $(SCRIPTS)) ../styles/*.css 
+../python/cioc/core/assetversions.json: $(patsubst %.js,%.min.js, $(SCRIPTS)) ../styles/*.css
 	python build_versions.py $(patsubst %.min.js,%.js, $^) > $@
 
 
@@ -152,4 +152,4 @@ cleancomposit:
 	rm -rf entryform.js bsearch.js ventryform.js
 
 clean: cleancomposit
-	rm -rf $(patsubst %.js,%.min.js, $(SCRIPTS)) 
+	rm -rf $(patsubst %.js,%.min.js, $(SCRIPTS))

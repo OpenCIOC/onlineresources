@@ -1,4 +1,4 @@
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@
 
 	window['init_general_heading_icons'] = function(url, input_el) {
 		input_el = input_el || $('#generalheading_IconNameFull');
-		console.log(input_el);
+		//console.log(input_el);
 		input_el.autocomplete({
 			focus:function(event,ui) {
 				return false;

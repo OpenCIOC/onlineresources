@@ -179,7 +179,7 @@ jQuery(function($){
 
 		if (src[0].value) {
 			var failfn = function(xhr, textStatus, errorThrown, what) {
-				console.log(textStatus, what)
+				//console.log(textStatus, what)
 			};
 			$.ajax(	{
 					url: '${request.passvars.makeLink("fetch")|n}',

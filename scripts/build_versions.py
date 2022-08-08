@@ -19,18 +19,20 @@ import json
 
 
 def main(files):
-	version_dict = {}
-	for file in files:
-		st = os.stat(file)
-		if file.startswith('../'):
-			file = file[3:]
-		else:
-			file = 'scripts/' + file
+    version_dict = {}
+    for file in files:
+        st = os.stat(file)
+        if file.startswith("../"):
+            file = file[3:]
+        else:
+            file = "scripts/" + file
 
-		version_dict[file] = str(int(st.st_mtime))
+        version_dict[file] = str(int(st.st_mtime))
 
-	print json.dumps(version_dict, sort_keys=True, indent=4)
+    print(json.dumps(version_dict, sort_keys=True, indent=4))
 
-if __name__ == '__main__':
-	import sys
-	main(sys.argv[1:])
+
+if __name__ == "__main__":
+    import sys
+
+    main(sys.argv[1:])

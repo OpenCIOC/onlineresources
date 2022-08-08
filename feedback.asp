@@ -546,13 +546,7 @@ If (Not Nl(strUpdatePassword) Or Nl(bUpdatePasswordRequired) Or Not bUpdatePassw
 					Case "CONTACT_1"
 						strFieldVal = makeContactContents(rsOrg, strFieldName, Not bSuggest)
 					Case "CONTACT_2"
-						strFieldVal = makeContactContents(rsOrg, strFieldName, Not bSuggest)
-					Case "DESCRIPTION"
-						strFieldVal = makeMemoFieldVal(strFieldName, _
-							strFieldContents, _
-							TEXTAREA_ROWS_LONG, _
-							False _
-							)					
+						strFieldVal = makeContactContents(rsOrg, strFieldName, Not bSuggest)			
 					Case "ELIGIBILITY"
 						strFieldVal = makeEligibilityContents(rsOrg, Not bSuggest)
 					Case "EMPLOYEES"
@@ -658,7 +652,8 @@ If (Not Nl(strUpdatePassword) Or Nl(bUpdatePasswordRequired) Or Not bUpdatePassw
 								strFieldVal = makeMemoFieldVal(strFieldName, _
 									strFieldContents, _
 									TEXTAREA_ROWS_SHORT, _
-									False _
+									False, _
+									rsFields.Fields("WYSIWYG") _
 									)
 						End Select
 				End Select
@@ -667,7 +662,8 @@ If (Not Nl(strUpdatePassword) Or Nl(bUpdatePasswordRequired) Or Not bUpdatePassw
 				strFieldVal = makeMemoFieldVal(strFieldName, _
 					strFieldContents, _
 					TEXTAREA_ROWS_SHORT, _
-					False _
+					False, _
+					rsFields.Fields("WYSIWYG") _
 					)
 		End Select
 		bHasLabel = False
@@ -928,6 +924,30 @@ End If
 	initialize_maps(pageconstants.culture, <%= JSONQs(getGoogleMapsKeyArg(), True)%>, entryform_maps_loaded);
 <% End If %>
 });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.1.0/tinymce.min.js" integrity="sha512-dr3qAVHfaeyZQPiuN6yce1YuH7YGjtUXRFpYK8OfQgky36SUfTfN3+SFGoq5hv4hRXoXxAspdHw4ITsSG+Ud/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript">
+        tinymce.init({
+			selector: '.WYSIWYG',
+            plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table',
+            toolbar: 'undo redo styles bullist numlist link | bold italic | cut copy paste searchreplace',
+			menubar: false,
+			statusbar: false,
+            convert_urls: false,
+            cleanup: true,
+			schema: 'html5',
+            formats: {
+                underline: { inline: 'u', exact: true }
+            },
+            style_formats: [
+                { title: 'Paragraph', format: 'p' },
+                { title: 'Heading 1', format: 'h1' },
+                { title: 'Heading 2', format: 'h2' },
+                { title: 'Heading 3', format: 'h3' },
+                { title: 'Heading 4', format: 'h4' }
+            ]
+        });
 </script>
 <%
 

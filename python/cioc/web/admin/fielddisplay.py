@@ -44,6 +44,7 @@ class FieldBaseSchema(Schema):
     FieldID = ciocvalidators.IDValidator()
     DisplayOrder = validators.Int(min=0, max=256, not_empty=True)
     Required = validators.Bool()
+    WYSIWYG = validators.Bool()
 
     Descriptions = ciocvalidators.CultureDictSchema(
         FieldDescriptionSchema(),

@@ -1,4 +1,4 @@
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -162,7 +162,7 @@ jQuery(function($) {
 	$(document).on('click', 'a.poplink', function() {
 		var args = $(this).data('popargs'), link = this.href,
 			fn = (popfns[args.size || 'sm'] || openWin);
-		
+
 		fn(link, args.name || 'popwin');
 
 		return false;
@@ -238,7 +238,7 @@ var add_to_list_clicked = function(evt) {
 
 	$.ajax({
 			success: item_added_to_list(id),
-			dataType: 'json', 
+			dataType: 'json',
 			error: function() {alert("Error");},
 			data: {id:id},
 			type: 'POST',
@@ -285,7 +285,7 @@ var remove_from_list_clicked = function(evt) {
 
 	$.ajax({
 			success: item_removed_from_list(id),
-			dataType: 'json', 
+			dataType: 'json',
 			error: function() {alert("Error");},
 			data: {ID:id, RemoveItem: options.domain},
 			type: 'POST',
@@ -296,7 +296,7 @@ var remove_from_list_clicked = function(evt) {
 var remove_all_from_list_clicked = function(evt) {
 	$.ajax({
 			success: item_removed_from_list(),
-			dataType: 'json', 
+			dataType: 'json',
 			error: function() {alert("Error");},
 			data: {ID:'all', RemoveItem: options.domain},
 			type: 'POST',
@@ -331,7 +331,7 @@ var init_ct_list_ui = function(result) {
 				});
 		}
 
-		$('.ListUI img').prop('src', function(index, src) { 
+		$('.ListUI img').prop('src', function(index, src) {
 				return src.replace('list', 'referral');
 				} );
 
@@ -361,7 +361,7 @@ var init_base_list_ui = function() {
 
 	if (!options.list_view_mode && !options.has_session) {
 		$.ajax({
-			dataType: 'json', 
+			dataType: 'json',
 			error: null,
 			url: options.list_update_url,
 			data: { SessionTest: 'on' },
@@ -384,7 +384,7 @@ var finalize_init = function() {
 		removeClass('HideListUI');
 
 	$("#remove_all_from_list").click(remove_all_from_list_clicked);
-	
+
 
 	if($.browser.msie && $.browser.msie < "8.0") {
 		$(".ListUI").removeClass("FixIE");
@@ -398,7 +398,7 @@ var init_list_adder = function(opt)
 	if (opt.in_request) {
 		$.ajax({
 			success: init_ct_list_ui,
-			dataType: 'json', 
+			dataType: 'json',
 			error: null,
 			type: 'POST',
 			url: opt.in_request
@@ -927,7 +927,7 @@ window['get_form_values'] = function(selector) {
 				});
 			return;
 		}
-		if ( this.nodeName.toLowerCase() === 'input' && (this.type === 'checkbox' || 
+		if ( this.nodeName.toLowerCase() === 'input' && (this.type === 'checkbox' ||
 				this.type === 'radio') && !this.checked ) {
 			return;
 		}
@@ -946,7 +946,7 @@ window['restore_form_values'] = function(selector, form_values) {
 		if ( typeof(val) == 'undefined' || val === null) {
 			return;
 		}
-		
+
 		var length = val.length;
 		if ( this.nodeName.toLowerCase() === 'input' && ( this.type === 'checkbox' ||
 				this.type === 'radio') )  {
@@ -1081,7 +1081,7 @@ window['init_cached_state'] = function(formselector) {
 				var self = $(this), culture = self.data('culture'),
 					format = dateformat[culture] || $.datepicker.regional[culture].dateFormat,
 					args = {};
-				
+
 				if (self.hasClass('NoYear')) {
 					format = format.replace(/[\- .\/]*yy[\/]?/, '');
 					args = {
@@ -1109,9 +1109,9 @@ window['init_cached_state'] = function(formselector) {
 				});
 		};
 
-	
+
 	$.datepicker.regional['en-CA'] = $.extend({},$.datepicker.regional['']);
-	
+
 
 
 	$.fn.extend({
@@ -1123,7 +1123,7 @@ window['init_cached_state'] = function(formselector) {
 					load_datepicker.call(this);
 					return;
 				}
-				
+
 				var arr = loading[culture];
 				if (!arr) {
 					arr = loading[culture] = [];
@@ -3431,7 +3431,7 @@ var string_ci_ai = function(s) {
 	r = r.replace(new RegExp("ç","g"),"c");
 	r = r.replace(new RegExp("[èéêë]","g"),"e");
 	r = r.replace(new RegExp("[ìíîï]","g"),"i");
-	r = r.replace(new RegExp("ñ","g"),"n");                
+	r = r.replace(new RegExp("ñ","g"),"n");
 	r = r.replace(new RegExp("[òóôõö]","g"),"o");
 	r = r.replace(new RegExp("","g"),"oe");
 	r = r.replace(new RegExp("[ùúûü]","g"),"u");
@@ -3562,7 +3562,7 @@ var init_community_autocomplete = function($, id, url, minLength, cmidfield) {
 		});
 	}
 
-	
+
 
 };
 
@@ -3598,7 +3598,7 @@ function keyword_cache_search_fn(cache) {
 					matchers.push(new RegExp($.ui.autocomplete.escapeRegex(terms[i]), "i"));
 				}
 			}
-			
+
 			response($.grep(cache.content, function(value) {
 				var retval = true;
 				value = string_ci_ai(value.value);
@@ -3641,7 +3641,7 @@ var init_find_box = function(urls, search_form) {
 				cache.type = typeval;
 				response(data);
 			}, url);
-			
+
 		},
 		minLength: 4
 		});
@@ -3723,7 +3723,7 @@ window["init_find_box"] = init_find_box;
 			$('.fix-group-single, .fix-group-multi').each(function() {
 				quicklist[this.id] = this.name;
 			});
-			
+
 			cache['QuickList'] = quicklist;
 		});
 		cache_register_onbeforerestorevalues(function(cache) {
@@ -3772,7 +3772,7 @@ window["init_find_box"] = init_find_box;
 		hash = /^#search-tab-(\d+)/.exec(hash);
 		if (hash) {
 			default_tab = parseInt(hash[1], 10);
-			
+
 		}
 
 		if (tabs.length) {
@@ -3792,7 +3792,7 @@ window["init_find_box"] = init_find_box;
 						href = href + '?' + jQuery.param(params);
 					}
 					elem.href = href;
-					
+
 				});
 			tabs.tabs({
 				active: default_tab,
@@ -3801,7 +3801,7 @@ window["init_find_box"] = init_find_box;
 					event.preventDefault();
 					return;
 				}
- 
+
 				ui.jqXHR.success(function() {
 					ui.tab.data( "loaded", true );
 				});
@@ -3892,7 +3892,7 @@ window["init_find_box"] = init_find_box;
 				var form = autocomplete_input.parents('form').submit(function(evt) {
 					if (autocomplete_input.data('last-location') == autocomplete_input.val() || !$.trim(autocomplete_input.val())) {
 						return;
-					} 
+					}
 					if (!google) {
 						return;
 					}
@@ -3900,7 +3900,7 @@ window["init_find_box"] = init_find_box;
 						geocoder = new google.maps.Geocoder();
 					}
 					evt.preventDefault()
-					console.log('geocode')
+					//console.log('geocode')
 					geocoder.geocode({address: autocomplete_input.val()}, handle_geocode(function(results, status) {
 						if (! results) {
 							alert(get_response_message(status));
@@ -3913,7 +3913,7 @@ window["init_find_box"] = init_find_box;
 					}));
 				});
 				initialize_maps(pageconstants.culture, pageconstants.maps_key_arg, function() {
-					var autocomplete = new google.maps.places.Autocomplete(autocomplete_input[0]);	
+					var autocomplete = new google.maps.places.Autocomplete(autocomplete_input[0]);
 					autocomplete.addListener('place_changed', function() {
 						var place = autocomplete.getPlace();
 						if (!place.geometry) {
@@ -3928,7 +3928,7 @@ window["init_find_box"] = init_find_box;
 					});
 				}, true);
 			})
-			
+
 		}
 		selectors.each(change);
 	};
@@ -4000,7 +4000,7 @@ window["init_find_box"] = init_find_box;
 			clickable:false,
 			draggable: draggable
 		});
-		
+
 		clear_overlay();
 
 		current_overlay = marker;
@@ -4056,7 +4056,7 @@ window["init_find_box"] = init_find_box;
 			} else {
 				callback(results[0].geometry.location, status);
 			}
-			
+
 		};
 	};
 	window['handle_geocode'] = handle_geocode;
@@ -4071,7 +4071,7 @@ window["init_find_box"] = init_find_box;
 		}
 		geocoder.geocode({address: address}, callback);
 	};
-	
+
 	var create_geocoder = function() {
 		if (!geocoder) {
 			geocoder = new google.maps.Geocoder();
@@ -4098,7 +4098,7 @@ window["init_find_box"] = init_find_box;
 
 
 	var maps_loaded_callbacks = [], maps_loaded_done = false;
-	
+
 
 	window['maps_loaded'] = function() {
 		maps_loaded_done = true;
@@ -4172,7 +4172,7 @@ window['searchform_map_loaded'] = function() {
 	var located_near_check_button = $('#located_near_check_button').click(search_do_geocode);
 	var autocomplete_input = $('#located_near_address').keydown(handle_address_enter).blur( function() { located_near_check_button.click(); });
 	if (google.maps.places) {
-		var autocomplete = new google.maps.places.Autocomplete(autocomplete_input[0]);	
+		var autocomplete = new google.maps.places.Autocomplete(autocomplete_input[0]);
 		autocomplete.addListener('place_changed', function() {
 			var place = autocomplete.getPlace();
 			if (place.geometry && place.geometry.location) {
@@ -4251,7 +4251,7 @@ var handle_address_enter = function(e)
 					update_info_for_td($(this));
 				});
 			};
-			
+
 			$('form > table, .form-table').on('change keyup click', fields_selector, function() {
 				update_info_for_td($(this).parents(td_selector));
 			});
@@ -4608,7 +4608,7 @@ var handle_address_enter = function(e)
 			var url = me.data('url');
 			$.ajax({success: add_rows(parent_row), data: {LV: me.data('level') + 1}, dataType:'json', url:url});
 			me.data('closed', false);
-			me.find('img').prop('src', function(i, src) { return src.replace('plus', 'minus'); }); 
+			me.find('img').prop('src', function(i, src) { return src.replace('plus', 'minus'); });
 		} else {
 			//close
 			parent_classes = ['.TaxRowLevel' + me.data('level')];
@@ -4617,7 +4617,7 @@ var handle_address_enter = function(e)
 			}
 			parent_row.nextUntil(parent_classes.join(",")).remove();
 			me.data('closed', true);
-			me.find('img').prop('src', function(i, src) { return src.replace('minus', 'plus'); }); 
+			me.find('img').prop('src', function(i, src) { return src.replace('minus', 'plus'); });
 		}
 	},
 
@@ -4691,12 +4691,12 @@ var handle_address_enter = function(e)
 		}
 		return function() {
 			var self=$(this), tax_container = self.parent().find('span:first'), code=tax_container.data('taxcode');
-			$.ajax({url: activation_url, type: 'POST', dataType: 'json', 
+			$.ajax({url: activation_url, type: 'POST', dataType: 'json',
 				data: $.extend({}, activation_base, {TC: code, action: self.data('action'), LV: tax_container.data('level') + 1}),
 				success: function(data) {
 					if (data.buttonstates) {
 						$.each(data.buttonstates, function(index, value) {
-							var code_item = $('#tax-code-' + value.code.replace(/\./, '-')), 
+							var code_item = $('#tax-code-' + value.code.replace(/\./, '-')),
 								tax_span = code_item.find('.taxExpandTerm').first();
 							if (value.active === null) {
 								code_item.find('.rollup-indicator').removeClass('hidden');
@@ -4728,7 +4728,7 @@ var handle_address_enter = function(e)
 							} else {
 								code_item.find('.rollup').addClass('hidden');
 							}
-							
+
 						});
 					}
 

@@ -112,19 +112,17 @@ $(document).ready(function(){
     $('[data-toggle="popover"]').popover();
 });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.6.2/tinymce.min.js" integrity="sha512-sOO7yng64iQzv/uLE8sCEhca7yet+D6vPGDEdXCqit1elBUAJD1jYIYqz0ov9HMd/k30e4UVFAovmSG92E995A==" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.1.0/tinymce.min.js" integrity="sha512-dr3qAVHfaeyZQPiuN6yce1YuH7YGjtUXRFpYK8OfQgky36SUfTfN3+SFGoq5hv4hRXoXxAspdHw4ITsSG+Ud/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="text/javascript">
-tinymce.init({
-	selector: '#page_PageContent',
-	plugins: [
-		'advlist anchor autolink lists link image charmap print preview anchor',
-		'searchreplace visualblocks code fullscreen',
-		'insertdatetime media table contextmenu paste code'
-	],
-	toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link anchor image',
-	extended_valid_elements: 'span[*],i[*],script[*]',
-	convert_urls: false,
-	schema: 'html5'
-});
+    tinymce.init({
+        selector: '#page_PageContent',
+        plugins: 'anchor autolink link advlist lists image charmap preview searchreplace paste visualblocks code fullscreen insertdatetime media table contextmenu help',
+        menubar: 'edit view insert format table help',
+        toolbar: 'undo redo styles bullist numlist link | bold italic underline removeformat | copy cut paste searchreplace code',
+        extended_valid_elements: 'span[*],i[*],script[*]',
+        convert_urls: false,
+        schema: 'html5'
+	});
 </script>
 </%def>

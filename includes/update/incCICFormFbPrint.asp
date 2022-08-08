@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -55,6 +55,7 @@ Function makeSubjectContentsFb(rst,bUseContent)
 	strReturn = strReturn & strCon & makeMemoFieldVal("SUBJECTS", _
 							vbNullString, _
 							TEXTAREA_ROWS_SHORT, _
+							False, _
 							False) & _
 		"<br>" & TXT_NOT_SURE_ENTER & " <a href=""javascript:openWin('" & makeLinkB("subjfind.asp") & "','sFind')"">" & TXT_SUBJECT_FINDER & "</a>."
 	
@@ -72,6 +73,7 @@ Function makeTaxonomyContentsFb(rst,bUseContent)
 	strReturn = makeMemoFieldVal("TAXONOMY", _
 							strTaxonomy, _
 							TEXTAREA_ROWS_LONG, _
+							False, _
 							False) & _
 		IIf(user_bLoggedIn,"<br>" & TXT_NOT_SURE_ENTER & " <a href=""javascript:openWinL('" & makeLink("tax.asp","MD=2",vbNullString) & "','tFind')"">" & TXT_TAXONOMY_FINDER & "</a>.", vbNullString)
 	

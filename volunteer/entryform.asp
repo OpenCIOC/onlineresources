@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -548,7 +548,8 @@ While Not rsFields.EOF
 				strFieldVal = makeMemoFieldVal(strFieldName, _
 					strFieldContents, _
 					TEXTAREA_ROWS_LONG, _
-					rsFields.Fields("CanUseFeedback") _
+					rsFields.Fields("CanUseFeedback"), _
+					rsFields.Fields("WYSIWYG") _
 					)
 			Case "t"
 				If rsFields.Fields("ValidateType") = "w" Then
@@ -638,7 +639,9 @@ While Not rsFields.EOF
 								strFieldVal = makeMemoFieldVal(strFieldName, _
 									strFieldContents, _
 									TEXTAREA_ROWS_LONG, _
-									True)
+									True, _
+									rsFields.Fields("WYSIWYG") _
+									)
 						End Select
 				End Select
 		End Select
@@ -750,6 +753,29 @@ Call printHistoryDialogJavaScript(False)
 End If
 %>
 });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.1.0/tinymce.min.js" integrity="sha512-dr3qAVHfaeyZQPiuN6yce1YuH7YGjtUXRFpYK8OfQgky36SUfTfN3+SFGoq5hv4hRXoXxAspdHw4ITsSG+Ud/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript">
+    tinymce.init({
+        selector: '.WYSIWYG',
+        plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table',
+        toolbar: 'undo redo styles bullist numlist link | bold italic underline removeformat image table | copy cut paste searchreplace fullscreen',
+		menubar: false,
+		convert_urls: false,
+		cleanup: true,
+        schema: 'html5',
+        formats: {
+            underline: { inline: 'u', exact: true }
+        },
+		style_formats: [
+            { title: 'Paragraph', format: 'p' },
+            { title: 'Heading 1', format: 'h1' },
+            { title: 'Heading 2', format: 'h2' },
+            { title: 'Heading 3', format: 'h3' },
+            { title: 'Heading 4', format: 'h4' }
+		]
+    });
 </script>
 <%
 Call makePageFooter(True)
