@@ -940,7 +940,7 @@ Function makeMemoFieldVal(strFieldName,strFieldContents,intSuggestedLength,bChec
 		" autocomplete=""off""" & _
 		">" & strFieldContents & "</textarea>"
 	If bFeedback And bCheckForFeedback Then
-		strReturn = strReturn & getFeedback(strFieldName,True,True)
+		strReturn = strReturn & getFeedback(strFieldName,True,bWYSIWYG)
 	End If
 	makeMemoFieldVal = strReturn
 End Function
