@@ -119,10 +119,17 @@ $(document).ready(function(){
         selector: '#page_PageContent',
         plugins: 'anchor autolink link advlist lists image charmap preview searchreplace paste visualblocks code fullscreen insertdatetime media table contextmenu help',
         menubar: 'edit view insert format table help',
-        toolbar: 'undo redo styles bullist numlist link | bold italic underline removeformat | copy cut paste searchreplace code',
+        toolbar: 'undo redo styles bullist numlist link | bold italic underline forecolor removeformat | copy cut paste searchreplace code',
         extended_valid_elements: 'span[*],i[*],script[*]',
         convert_urls: false,
-        schema: 'html5'
+        schema: 'html5',
+		color_map: [
+        '#D3273E', 'Red',
+        '#DC582A', 'Orange',
+        '#007A78', 'Turquoise',
+        '#1D4289', 'Blue',
+        '#666666', 'Gray',
+		]
 	});
 </script>
 </%def>
