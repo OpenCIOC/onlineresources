@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -18,18 +18,16 @@
 %>
 
 <script language="python" runat="server">
-from cioc.core.email import send_email,DeliveryException
+from cioc.core.email import send_email
 def l_send_email(author, to, subject, message, ignore_block, domain_override=None):
 	args = {}
 	if domain_override:
 		args['domain_override'] = domain_override
 
-	try:
-		send_email(pyrequest, author, to, subject, message, ignore_block, **args)
-	except Exception:
-		return False
+	send_email(pyrequest, author, to, subject, message, ignore_block, **args)
 
 	return True
+
 </script>
 
 <%

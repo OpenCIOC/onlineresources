@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -52,12 +52,8 @@ If Not user_bSuperUser Then
 End If
 
 If Nl(Request("NumEmail")) Then
-'Call sendEmail(bIgnoreBlock,strFrom,strTo,strSubject,strMessage)
-If sendEmail(True,CIOC_TASK_NOTIFY_EMAIL,CIOC_TASK_NOTIFY_EMAIL,"CIOC Email test","This is a test email message") Then
-Response.Write("Success")
-Else
-Response.Write("Failure")
-End If
+	'Call sendEmail(bIgnoreBlock,strFrom,strTo,strSubject,strMessage)
+	Call sendEmail(True,CIOC_TASK_NOTIFY_EMAIL,CIOC_TASK_NOTIFY_EMAIL,"CIOC Email test","This is a test email message")
 Else
 	Dim intNumEmail, i, strTargetEmail
 	intNumEmail = CInt(Request("NumEmail"))

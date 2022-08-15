@@ -43,14 +43,14 @@ def initialize_python(app_dir):
 	activate_this = os.path.join(os.environ.get('CIOC_ENV_ROOT', os.path.join(app_dir, '..', '..')), env, 'scripts', 'activate_this.py')
 	activate_this = os.path.normpath(activate_this)
 	with open(activate_this, 'rb') as f:
-		code = compile(f.read(), activate_this, 'exec') 
+		code = compile(f.read(), activate_this, 'exec')
 	exec(code, {'__file__': activate_this})
 
     # local application
 	sys.path.insert(0, os.path.join(app_dir, 'python'))
 
 	# without this other imports break
-	import pkg_resources 
+	import pkg_resources
 
 	from cioc.core import constants as const
 	const.update_cache_values()

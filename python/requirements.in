@@ -38,3 +38,4 @@ libsass
 cryptography
 bleach[css]
 pyramid-exclog
+dkimpy
