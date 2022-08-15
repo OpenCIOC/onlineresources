@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -799,6 +799,9 @@ If Not bOPIDError Then
 						Call checkWebWithProtocol(rsFields.Fields("FieldDisplay"),strFieldVal,strProtocol)
 					End If
 					Call checkLength(rsFields.Fields("FieldDisplay"),strFieldVal, rsFields.Fields("MaxLength"))
+					If rsFields.Fields("WYSIWYG") Then
+						strFieldVal = sanitizeHTML(strFieldVal)
+					End If
 					If Nl(strErrorList) Then
 						If reEquals(rsFields.Fields("ExtraFieldType"),"a|d|e|r|t|w",False,False,True,False) Then
 							Call getExtraFieldSQL(fldName.Value, strFieldVal, rsFields.Fields("ExtraFieldType"), strProtocol)

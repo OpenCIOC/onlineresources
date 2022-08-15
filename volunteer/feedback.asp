@@ -780,8 +780,8 @@ End If
 <script type="text/javascript">
         tinymce.init({
             selector: '.WYSIWYG',
-            plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table paste',
-            toolbar: 'undo redo styles bullist numlist link | bold italic underline | cut copy paste searchreplace',
+            plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen paste',
+            toolbar: 'undo redo styles bullist numlist link | bold italic | searchreplace',
 			menubar: false,
 			statusbar: false,
             convert_urls: false,
@@ -789,7 +789,12 @@ End If
 			schema: 'html5',
             formats: {
                 underline: { inline: 'u', exact: true }
-            },
+			},
+            valid_classes: 'Alert',
+			valid_styles: {
+				'span': 'color'
+			},
+			paste_data_images: false,
             style_formats: [
                 { title: 'Paragraph', format: 'p' },
                 { title: 'Heading 1', format: 'h1' },
