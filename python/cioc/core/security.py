@@ -27,6 +27,7 @@ from os import urandom as get_random_bytes
 
 # 3rd party
 import bleach
+from bleach.css_sanitizer import CSSSanitizer
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC as PBKDF2
 from pyramid.decorator import reify
@@ -518,14 +519,18 @@ def do_login(request, principal, login_key):
     remember(request, principal, login_key=login_key)
 
 
+description_css_sanitizer = CSSSanitizer(allowed_css_properties=["color"])
+
 description_allowed_attributes = copy.deepcopy(bleach.ALLOWED_ATTRIBUTES)
 description_allowed_attributes["a"].append("target")
+description_allowed_attributes["span"] = ["style"]
 
 sanitize_html_description = partial(
     bleach.clean,
-    tags=bleach.sanitizer.ALLOWED_TAGS
-    + ["p", "br", "h1", "h2", "h3", "h4"],
+    tags=bleach.sanitizer.ALLOWED_TAGS + ["p", "br", "h1", "h2", "h3", "h4", "span"],
     attributes=description_allowed_attributes,
+    strip=True,
+    css_sanitizer=description_css_sanitizer,
 )
 
 
