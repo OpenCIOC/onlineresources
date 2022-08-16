@@ -1113,7 +1113,7 @@ $('html').scrollTop(scrollTop);
 	tinymce.init({
         selector: '.WYSIWYG',
 		plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table',
-        toolbar: 'undo redo styles bullist numlist link | bold italic removeformat image table | copy cut paste searchreplace fullscreen',
+        toolbar: 'undo redo styles bullist numlist link | bold italic removeformat forecolor image table | copy cut paste searchreplace fullscreen',
 		menubar: false,
         convert_urls: false,
 		schema: 'html5',
@@ -1131,7 +1131,14 @@ $('html').scrollTop(scrollTop);
             { title: 'Heading 2', format: 'h2' },
             { title: 'Heading 3', format: 'h3' },
             { title: 'Heading 4', format: 'h4' }
-		]
+        ],
+        color_map: [
+            '#D3273E', 'Red',
+            '#DC582A', 'Orange',
+            '#007A78', 'Turquoise',
+            '#1D4289', 'Blue',
+            '#666666', 'Gray',
+        ]
     });
 </script>
 <%
