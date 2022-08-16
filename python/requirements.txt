@@ -8,7 +8,7 @@ async-timeout==4.0.2
     # via redis
 babel==2.10.3
     # via -r requirements.in
-bleach==5.0.1
+bleach[css]==5.0.1
     # via -r requirements.in
 certifi==2022.6.15
     # via requests
@@ -116,6 +116,8 @@ six==1.16.0
     #   webhelpers2
 stevedore==4.0.0
     # via dogpile-cache
+tinycss2==1.1.1
+    # via bleach
 translationstring==1.4
     # via pyramid
 urllib3==1.26.11
@@ -123,7 +125,9 @@ urllib3==1.26.11
 venusian==3.0.0
     # via pyramid
 webencodings==0.5.1
-    # via bleach
+    # via
+    #   bleach
+    #   tinycss2
 webhelpers2==2.0
     # via
     #   -r requirements.in

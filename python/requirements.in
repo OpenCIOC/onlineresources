@@ -36,5 +36,5 @@ lxml
 pdfkit
 libsass
 cryptography
-bleach
+bleach[css]
 pyramid-exclog
