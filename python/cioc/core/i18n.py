@@ -82,6 +82,10 @@ def get_locale(request):
     return _locales[request.language.Culture]
 
 
+def get_date_locale(request):
+    return _locales[request.language.Culture.replace("-CA", "")]
+
+
 _locale_date_format = {
     "en-CA": "d MMM yyyy",
     "fr-CA": "d MMM yyyy",
@@ -118,7 +122,7 @@ def format_date(d, request):
     if not isinstance(d, (date, datetime, time)):
         return d
 
-    l = get_locale(request)
+    l = get_date_locale(request)
     format = _locale_date_format.get(request.language.Culture, "medium")
     d_out = dates.format_date(d, locale=l, format=format)
     return d_out
