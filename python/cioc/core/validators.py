@@ -345,7 +345,7 @@ class DateConverter(FancyValidator):
     def _parse_date(self, value, state):
         locale = state.request.language.FormCulture
 
-        locale_data = babel.Locale.parse(locale)
+        locale_data = babel.Locale.parse(locale.replace("_CA", ""))
         months = locale_data.months["format"]["wide"]
         shortmonths = locale_data.months["format"]["abbreviated"]
         date_re = (
@@ -358,7 +358,7 @@ class DateConverter(FancyValidator):
             }
         )
         time_re = r"""(?P<hour>\d?\d):(?P<minute>\d\d)(:(?P<second>\d\d))?(\s+(?P<ampm>(pm|am)))?"""
-        log.debug(f"parse date, {date_re=!r}, {time_re=!r}")
+        # log.debug(f"parse date, {date_re=!r}, {time_re=!r}")
         date_match = re.search(date_re, value.lower())
         if date_match is None:
             return None
