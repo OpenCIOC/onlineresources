@@ -1120,14 +1120,21 @@ $('html').scrollTop(scrollTop);
         formats: {
             underline: { inline: 'u', exact: true }
 		},
-        valid_classes: 'Alert',
+        valid_classes: 'img-responsive',
         valid_styles: {
             'span': 'color'
 		},
-        paste_data_images: false,
+		paste_data_images: false,
+		table_advtab: false,
+		table_cell_advtab: false,
+		image_dimensions: false,
+        image_advtab: true,
+		image_class_list: [
+			{ title: ' - ', value: '' },
+            { title: 'Size to Fit', value: 'img-responsive' }
+		],
         style_formats: [
 			{ title: 'Paragraph', format: 'p' },
-            { title: 'Heading 1', format: 'h1' },
             { title: 'Heading 2', format: 'h2' },
             { title: 'Heading 3', format: 'h3' },
             { title: 'Heading 4', format: 'h4' }

@@ -797,7 +797,6 @@ End If
 			paste_data_images: false,
             style_formats: [
                 { title: 'Paragraph', format: 'p' },
-                { title: 'Heading 1', format: 'h1' },
                 { title: 'Heading 2', format: 'h2' },
                 { title: 'Heading 3', format: 'h3' },
                 { title: 'Heading 4', format: 'h4' }
