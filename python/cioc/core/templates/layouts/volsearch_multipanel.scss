@@ -21,6 +21,7 @@
 #vol-search-area {
 	#CIOC_volsearch {
 		padding: 8px;
+		color: $fcActive;
 		background-color: $bgColorActive;
 		background-image: linear-gradient(to top, $borderColorActive 0px, $bgColorActive 100%);
 
@@ -35,6 +36,7 @@
 	}
 
 	.CIOC_search_button {
+		color: $LinkColour;
 		background-color: $BackgroundColour;
 		background-image: linear-gradient(to bottom, $BackgroundColour 0px, darken($BackgroundColour,10%) 100%);
 		border-color: darken($BackgroundColour,15%)
