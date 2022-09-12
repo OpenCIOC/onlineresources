@@ -230,17 +230,17 @@ If Not bNew And Not bRSError Then
 			.MoveFirst
 		End If
 	End With
-	
+
 	strSQL = strSQL & vbCrLf & _
 		"FROM VOL_Opportunity vo" & vbCrLf & _
 		"LEFT JOIN VOL_Opportunity_Description vod ON vo.VNUM = vod.VNUM AND vod.LangID=@@LANGID" & vbCrLf & _
 		"INNER JOIN GBL_BaseTable bt ON vo.NUM=bt.NUM" & vbCrLf & _
 		"LEFT JOIN GBL_BaseTable_Description btd ON bt.NUM=btd.NUM AND btd.LangID=(SELECT TOP 1 LangID FROM GBL_BaseTable_Description WHERE NUM=bt.NUM ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)" & _
 		"WHERE vo.VNUM=" & QsN(strVNUM)
-		
+
 	'Response.Write("<pre>" & strSQL & "</pre>")
 	'Response.Flush()
-	
+
 	Dim cmdOrg, rsOrg, strVersions
 	Set cmdOrg = Server.CreateObject("ADODB.Command")
 	With cmdOrg
@@ -253,7 +253,7 @@ If Not bNew And Not bRSError Then
 	If Err.Number <> 0 Then
 		bRSError = True
 		Call handleError(TXT_ERROR & Nz(Err.Description, TXT_UNKNOWN_ERROR_OCCURED), vbNullString, vbNullString)
-	Else	
+	Else
 		Dim strVersionCon
 		strVersionCon = vbNullString
 		strVersions = "[ "
@@ -302,7 +302,7 @@ If intFormType = EF_CREATEFB Then
 		.CursorLocation = adUseClient
 		.CursorType = adOpenStatic
 		.Open cmdFb
-	
+
 		If Not .EOF Then
 			If .Fields("Error") <> 0 Then
 				bFbError = True
@@ -699,7 +699,7 @@ End If
 %>
 <%= makeJQueryScriptTags() %>
 <%= JSVerScriptTag("scripts/ventryform.js") %>
-<% 
+<%
 g_bListScriptLoaded = True
 If Not bNew Then
 Call printHistoryDialogHTML(strVNUM, False)
@@ -713,7 +713,7 @@ End If
 %>
 <script type="text/javascript">
 jQuery(function($) {
-	
+
 	configure_entry_form_button();
 
 	init_cached_state();
@@ -721,8 +721,8 @@ jQuery(function($) {
 	init_entryform_notes($('.EntryFormNotesContainer'), '<%= TXT_VIEW_CANCELLED %>', '<%= TXT_HIDE_CANCELLED %>');
 <%
 If bHasSchedule Then
-%> 
-	init_entryform_items($('.EntryFormItemContainer'),'<%= TXT_DELETE %>', '<%= TXT_RESTORE %>'); 
+%>
+	init_entryform_items($('.EntryFormItemContainer'),'<%= TXT_DELETE %>', '<%= TXT_RESTORE %>');
 <%
 End If
 If bInterests Then
@@ -768,13 +768,16 @@ End If
         formats: {
             underline: { inline: 'u', exact: true }
 		},
-        valid_classes: 'img-responsive',
+        valid_classes: {'img': 'img-responsive'},
         valid_styles: {
             'span': 'color'
 		},
 		paste_data_images: false,
 		table_advtab: false,
 		table_cell_advtab: false,
+		table_row_advtab: false,
+		table_use_colgroups: false,
+		table_style_by_css: false,
         image_advtab: true,
         image_class_list: [
             { title: ' - ', value: '' },
@@ -799,4 +802,3 @@ End If
 Call makePageFooter(True)
 %>
 <!--#include file="../includes/core/incClose.asp" -->
-

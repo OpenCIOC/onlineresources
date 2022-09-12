@@ -519,20 +519,43 @@ def do_login(request, principal, login_key):
     remember(request, principal, login_key=login_key)
 
 
-description_css_sanitizer = CSSSanitizer(allowed_css_properties=["color","padding","border-width"])
+description_css_sanitizer = CSSSanitizer(
+    allowed_css_properties=["color", "padding", "border-width"]
+)
 
 description_allowed_attributes = copy.deepcopy(bleach.ALLOWED_ATTRIBUTES)
 description_allowed_attributes["a"].append("target")
-description_allowed_attributes["img"] = ["src","alt","title","max-width","class"]
+description_allowed_attributes["img"] = ["src", "alt", "title", "max-width", "class"]
 description_allowed_attributes["span"] = ["style"]
-description_allowed_attributes["table"] = ["border","cellpadding","cellspacing"]
-description_allowed_attributes["th"] = ["style"]
-description_allowed_attributes["td"] = ["style"]
+description_allowed_attributes["table"] = [
+    "border",
+    "cellpadding",
+    "cellspacing",
+    "width",
+]
+description_allowed_attributes["th"] = ["style", "rowspan", "colspan"]
+description_allowed_attributes["td"] = ["style", "rowspan", "colspan"]
 
 
 sanitize_html_description = partial(
     bleach.clean,
-    tags=bleach.sanitizer.ALLOWED_TAGS + ["p", "br", "h1", "h2", "h3", "h4", "span", "table", "tr", "td", "th", "thead", "tbody","img"],
+    tags=bleach.sanitizer.ALLOWED_TAGS
+    + [
+        "p",
+        "br",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "span",
+        "table",
+        "tr",
+        "td",
+        "th",
+        "thead",
+        "tbody",
+        "img",
+    ],
     attributes=description_allowed_attributes,
     strip=True,
     css_sanitizer=description_css_sanitizer,

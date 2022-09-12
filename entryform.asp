@@ -274,7 +274,7 @@ If Not bNew And Not bRSError Then
 		"LEFT JOIN CCR_BaseTable ccbt ON bt.NUM=ccbt.NUM" & vbCrLf & _
 		"LEFT JOIN CCR_BaseTable_Description ccbtd ON ccbt.NUM=ccbtd.NUM AND ccbtd.LangID=@@LANGID" & vbCrLf & _
 		"WHERE bt.NUM=" & QsNl(strNUM)
-	
+
 	'Response.Write("<pre>" & Server.HTMLEncode(strSQL) & "</pre>")
 	'Response.Flush()
 
@@ -290,7 +290,7 @@ If Not bNew And Not bRSError Then
 	If Err.Number <> 0 Then
 		bRSError = True
 		Call handleError(TXT_ERROR & Nz(Err.Description, TXT_UNKNOWN_ERROR_OCCURED), vbNullString, vbNullString)
-	Else	
+	Else
 		Dim strVersionCon
 		strVersionCon = vbNullString
 		strVersions = "[ "
@@ -308,8 +308,8 @@ If Not bNew And Not bRSError Then
 		strVersions = strVersions & " ]"
 		Set rsOrg = rsOrg.NextRecordSet
 	End If
-	
-	
+
+
 
 	If Not bRSError And rsOrg.EOF Then
 		bNUMError = True
@@ -502,7 +502,7 @@ Select Case .Fields("AUTH_TYPE")
 	Case "E"
 %>
 <br><%=TXT_AUTH_INQUIRIES_ONLY%>
-<%			
+<%
 	Case "N"
 %>
 <br><%=TXT_AUTH_NOT_RECEIVED%>
@@ -558,7 +558,7 @@ If intFormType <> EF_UPDATE Then
 		True,True,False,True,bEnforceReqFields,False,False)
 End If
 %>
-	
+
 		</table>
 	</div>
 </div>
@@ -902,7 +902,7 @@ End If
 <%= makeJQueryScriptTags() %>
 <%= JSVerScriptTag("scripts/entryform.js") %>
 <%= JSVerScriptTag("scripts/cultures/globalize.culture." & objUpdateLang.Culture & ".js") %>
-<% 
+<%
 g_bListScriptLoaded = True
 If Not bNew And g_bUseCIC Then
 	Call printHistoryDialogHTML(strNUM, False)
@@ -918,7 +918,7 @@ jQuery(function($) {
 	if ($('html.no-js').length) {
 		return;
 	}
-	
+
 	var scrollTop = $('html').scrollTop();
 	var ef_node = $('#EntryForm').hide();
 
@@ -931,7 +931,7 @@ jQuery(function($) {
 			Dim key,values
 			key = Array("ORG_LEVEL_1", "ORG_LEVEL_2", "ORG_LEVEL_3", "ORG_LEVEL_4", "ORG_LEVEL_5", "LOCATION_NAME", "SERVICE_NAME_LEVEL_1", "SERVICE_NAME_LEVEL_2")
 			values = Array("OL1", "OL2", "OL3", "OL4", "OL5", "LN", "SERVICE_NAME_LEVEL_1", "SERVICE_NAME_LEVEL_2")
-			For i = 0 to 7 
+			For i = 0 to 7
 				Response.Write(StringIf(i <> 0, ",") & JSONQs(key(i),True) & ": " & JSONQs(rsOrg(values(i)), True))
 			Next
 		End If
@@ -960,8 +960,8 @@ jQuery(function($) {
 	init_locations_services($, <%=JSONQs(TXT_INVALID_RECORD_NUM, True) %>);
 <%
 If bOtherAddressesAdded or bActivityInfoAdded or bBillingAddressesAdded or bContractSignatureAdded or bVacancyAdded or bHasSchedule Then
-%> 
-	init_entryform_items($('.EntryFormItemContainer'),'<%= TXT_DELETE %>', '<%= TXT_RESTORE %>'); 
+%>
+	init_entryform_items($('.EntryFormItemContainer'),'<%= TXT_DELETE %>', '<%= TXT_RESTORE %>');
 <%
 End If
 If bAreasServed Or bLocatedIn Or bSiteAddress Then
@@ -971,7 +971,7 @@ If bAreasServed Or bLocatedIn Or bSiteAddress Then
 End If
 If bAreasServed Then
 %>
-	init_areas_served($, "<%= TXT_NOT_FOUND %>"); 
+	init_areas_served($, "<%= TXT_NOT_FOUND %>");
 <%
 End If
 If bLocatedIn Then
@@ -1120,13 +1120,16 @@ $('html').scrollTop(scrollTop);
         formats: {
             underline: { inline: 'u', exact: true }
 		},
-        valid_classes: 'img-responsive',
+		valid_classes: {'img': 'img-responsive'},
         valid_styles: {
             'span': 'color'
 		},
 		paste_data_images: false,
 		table_advtab: false,
 		table_cell_advtab: false,
+		table_row_advtab: false,
+		table_use_colgroups: false,
+		table_style_by_css: false,
 		image_dimensions: false,
         image_advtab: true,
 		image_class_list: [
@@ -1158,4 +1161,3 @@ Call makePageFooter(True)
 %>
 
 <!--#include file="includes/core/incClose.asp" -->
-

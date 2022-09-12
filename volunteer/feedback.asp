@@ -65,7 +65,7 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../includes/update/incEntryFormGeneral.asp" -->
 <!--#include file="../includes/update/incVOLFormFbPrint.asp" -->
 <!--#include file="../includes/update/incVOLFormUpdPrint.asp" -->
-<% 
+<%
 'On Error Resume Next
 
 Dim objUpdateLang, _
@@ -760,8 +760,8 @@ jQuery(function($) {
 	init_cached_state();
 <%
 If bHasSchedule Then
-%> 
-	init_entryform_items($('.EntryFormItemContainer'),'<%= TXT_DELETE %>', '<%= TXT_RESTORE %>'); 
+%>
+	init_entryform_items($('.EntryFormItemContainer'),'<%= TXT_DELETE %>', '<%= TXT_RESTORE %>');
 <%
 End If
 %>
@@ -790,11 +790,17 @@ End If
             formats: {
                 underline: { inline: 'u', exact: true }
 			},
-            valid_classes: 'Alert',
+            //valid_classes: 'Alert',
+			valid_classes: {'img': 'img-responsive'},
 			valid_styles: {
 				'span': 'color'
 			},
 			paste_data_images: false,
+			table_advtab: false,
+			table_cell_advtab: false,
+			table_row_advtab: false,
+			table_use_colgroups: false,
+			table_style_by_css: false,
             style_formats: [
                 { title: 'Paragraph', format: 'p' },
                 { title: 'Heading 2', format: 'h2' },
@@ -813,4 +819,3 @@ Call makePageFooter(True)
 %>
 
 <!--#include file="../includes/core/incClose.asp" -->
-

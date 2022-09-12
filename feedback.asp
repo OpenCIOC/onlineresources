@@ -546,7 +546,7 @@ If (Not Nl(strUpdatePassword) Or Nl(bUpdatePasswordRequired) Or Not bUpdatePassw
 					Case "CONTACT_1"
 						strFieldVal = makeContactContents(rsOrg, strFieldName, Not bSuggest)
 					Case "CONTACT_2"
-						strFieldVal = makeContactContents(rsOrg, strFieldName, Not bSuggest)			
+						strFieldVal = makeContactContents(rsOrg, strFieldName, Not bSuggest)
 					Case "ELIGIBILITY"
 						strFieldVal = makeEligibilityContents(rsOrg, Not bSuggest)
 					Case "EMPLOYEES"
@@ -629,7 +629,7 @@ If (Not Nl(strUpdatePassword) Or Nl(bUpdatePasswordRequired) Or Not bUpdatePassw
 					Case "SUBJECTS"
 						strFieldVal = makeSubjectContentsFb(rsOrg, Not bSuggest)
 					Case "TAXONOMY"
-						strFieldVal = makeTaxonomyContentsFb(rsOrg, Not bSuggest)			
+						strFieldVal = makeTaxonomyContentsFb(rsOrg, Not bSuggest)
 					Case "TYPE_OF_PROGRAM"
 						strFieldVal = makeTypeOfProgramContents(rsOrg, Not bSuggest)
 					Case "VOLCONTACT"
@@ -880,8 +880,8 @@ If bLanguages Then
 <%
 End If
 If bHasSchedule Then
-%> 
-	init_entryform_items($('.EntryFormItemContainer'),'<%= TXT_DELETE %>', '<%= TXT_RESTORE %>'); 
+%>
+	init_entryform_items($('.EntryFormItemContainer'),'<%= TXT_DELETE %>', '<%= TXT_RESTORE %>');
 <%
 End If
 If bLocatedIn Or bSiteAddress Then
@@ -940,11 +940,17 @@ End If
             formats: {
                 underline: { inline: 'u', exact: true }
 			},
-            valid_classes: 'Alert',
+			// valid_classes: 'Alert',
+			valid_classes: {'img': 'img-responsive'},
             valid_styles: {
                 'span': 'color'
 			},
 			paste_data_images: false,
+			table_advtab: false,
+			table_cell_advtab: false,
+			table_row_advtab: false,
+			table_use_colgroups: false,
+			table_style_by_css: false,
             style_formats: [
                 { title: 'Paragraph', format: 'p' },
                 { title: 'Heading 2', format: 'h2' },
@@ -962,4 +968,3 @@ Call makePageFooter(True)
 %>
 
 <!--#include file="includes/core/incClose.asp" -->
-
