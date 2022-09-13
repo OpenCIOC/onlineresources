@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -45,16 +45,22 @@ def get_numeric_extension(value):
 	if mod == 3:
 		return _('rd')
 	return _('th')
-		
+
 def format_date_if_iso(value):
-	if u'-' in value:
+	try:
 		value = format_date(isodate.parse_date(value), pyrequest)
+	except isodate.ISO8601Error:
+		# already parsed iso date
+		pass
 	return value
 
 
 def format_time_if_iso(value):
-	if not 'am' in value.lower() and not 'pm' in value.lower():
+	try:
 		value = format_time(isodate.parse_time(value), pyrequest).replace(':00 ', '')
+	except isodate.ISO8601Error:
+		# already parsed iso time
+		pass
 	return value
 
 
@@ -160,7 +166,7 @@ def getEventScheduleEntryValues(sched_no, sched_id, vals, checkDate, checkIntege
 
 	if is_new and not start_date:
 		return None
-	
+
 	if not is_new:
 		try:
 			sched_id = int(sched_id, 10)
@@ -206,10 +212,10 @@ def getEventScheduleEntryValues(sched_no, sched_id, vals, checkDate, checkIntege
 
 	def get_none(label, value, name=None):
 		vals[name] = None
-		
+
 	def get_false(label, value, name=None):
 		vals[name] = False
-	
+
 	def get_true(label, value, name=None):
 		vals[name] = True
 
@@ -221,7 +227,7 @@ def getEventScheduleEntryValues(sched_no, sched_id, vals, checkDate, checkIntege
 
 	def get_one(label, value, name=None):
 		vals[name] = 1
-	
+
 	def get_and_check_int(label, value, name=None):
 		checkInteger(label, value)
 		if value == '' or value is None:
@@ -258,12 +264,12 @@ def getEventScheduleEntryValues(sched_no, sched_id, vals, checkDate, checkIntege
 		to_check.append((_('Week of Month'), 'RECURS_XTH_WEEKDAY_OF_MONTH', partial(get_and_check_int_min_1, name='RECURS_XTH_WEEKDAY_OF_MONTH')))
 	else:
 		to_check.append((None, 'RECURS_XTH_WEEKDAY_OF_MONTH', partial(get_none, name='RECURS_XTH_WEEKDAY_OF_MONTH')))
-	
+
 	if recur_type in ['1', '3']:
 		to_check.extend((None, 'RECURS_WEEKDAY_%d' % i, partial(get_bool, name='RECURS_WEEKDAY_%d' % i)) for i in range(1, 8))
 	else:
-		to_check.extend((None, 'RECURS_WEEKDAY_%d' % i, partial(get_false, name='RECURS_WEEKDAY_%d' % i)) for i in range (1, 8)) 
-	
+		to_check.extend((None, 'RECURS_WEEKDAY_%d' % i, partial(get_false, name='RECURS_WEEKDAY_%d' % i)) for i in range (1, 8))
+
 	changes = []
 	for label, field, check in to_check:
 		value = vals.get(field)
@@ -280,10 +286,10 @@ def getEventScheduleEntryValues(sched_no, sched_id, vals, checkDate, checkIntege
 	if label_val:
 		checkLength(validation_label_prefix + _('Label'), label_val, const.TEXT_SIZE)
 		changes.append(('Label', label_val))
-		
+
 	if not is_new:
 		changes.append(('SchedID', sched_id))
-	
+
 	return (sched_id, changes)
 
 
@@ -300,7 +306,7 @@ def getEventScheduleValues(checkDate, checkInteger, checkID, checkLength, checkA
 
 	else:
 		sched_ids = []
-	
+
 	for sched_no, sched in enumerate(sched_ids, 1) :
 		prefix = 'Sched_%s_' % sched
 		vals = {x: pyrequest.POST.get(prefix + x) for x in fields}
