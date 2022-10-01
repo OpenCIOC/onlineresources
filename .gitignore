@@ -37,6 +37,8 @@ pythonport.config
 /import/convert2old.zip
 /import/*.xsx
 
+/python/node_modules
+
 # /python/
 /python/.cov
 /python/.coverage
