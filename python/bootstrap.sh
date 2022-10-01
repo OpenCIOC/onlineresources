@@ -152,6 +152,9 @@ vol_pwd=$vol_passwd
 EOF
 fi
 
+# install node.js tools like google-closure-compiler
+npm install
+
 env_python="$USERPROFILE/Envs/ciocenv4py3/Scripts/python.exe"
 [[ -e $env_python ]] || "/c/Program Files/Python39/scripts/mkvirtualenv.bat"  --system-site-packages ciocenv4py3
 $env_python -m pip install -U pip

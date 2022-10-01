@@ -66,6 +66,8 @@ fi
 
 ( echo "Checking for Web Plaform installer" && winget list -e --id Microsoft.webpicmd -s winget > /dev/null ) || ( echo "installing Web Platform installer" &&  winget install -e --id Microsoft.webpicmd -s winget )
 ( echo "Checking for WkHtmlToPDF" && winget list -e --id wkhtmltopdf.wkhtmltox -s winget > /dev/null) || ( echo "Installing WkHtmlToPDF" && winget install -e --id wkhtmltopdf.wkhtmltox -s winget )
+( echo "Checking for GNU Make" && winget list -e --id GnuWin32.Make -s winget > /dev/null) || ( echo "Installing GNU Make" && winget install -e --id GnuWin32.Make -s winget )
+( echo "Checking for Node.js LTS" && winget list -e --id OpenJS.NodeJS.LTS -s winget > /dev/null) || ( echo "Installing Node.js LTS" && winget install -e --id OpenJS.NodeJS.LTS -s winget )
 
 echo "Checking for Microsoft Application Request Routing 3.0"
 if ! wmic product get name | grep "Microsoft Application Request Routing 3.0" > /dev/null ; then
@@ -103,7 +105,7 @@ for gencache in "'{2A75196C-D9EB-4129-B803-931327F72D5C}', 0, 2, 8" "'{00000600-
 done
 
 mkdir -p "$USERPROFILE/Envs"
-for identity in "IIS_IUSRS" "IUSR"  ; do 
+for identity in "IIS_IUSRS" "IUSR"  ; do
 	MSYS_NO_PATHCONV=1 $SYSTEMROOT/system32/icacls.exe "c:\\Program Files\\Python39/Lib/site-packages/win32com/gen_py" /grant "$identity:(OI)(CI)F"
 	MSYS_NO_PATHCONV=1 $SYSTEMROOT/system32/icacls.exe "$USERPROFILE/Envs" /grant "$identity:(OI)(CI)RX" /T
 done
@@ -133,4 +135,3 @@ for header in "${headers[@]}"; do
 	done
 	[[ -n $skip ]] || $appcmd set config $sitename -section:system.webServer/rewrite/allowedServerVariables /+"[name='$header']" /commit:apphost
 done
-
