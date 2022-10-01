@@ -30,6 +30,10 @@ input[type="checkbox"], input[type="radio"] {
   margin-right: 0.5em;
 }
 
+.legend-button-icon {
+	margin-right: 0px !important;
+}
+
 input.input-expand, select.input-expand, textarea.input-expand {
 	width: 100%;
 	-webkit-box-sizing: border-box;
@@ -110,7 +114,6 @@ div.row-border-bottom {
 		margin-top: $form-group-margin-bottom/2;
 		margin-bottom: $form-group-margin-bottom/2;
 	}
-	border-bottom: thin solid $borderColorContent;
 }
 
 .field-label-basic {
@@ -141,7 +144,22 @@ div.row-border-bottom {
 }
 
 .feedback-item {
-	padding-top: 0.25em;
+	margin-top: 0.25em;
+	margin-bottom: 0.25em;
+	padding: 0.5em;
+	background: darken($bgColorContent,3%);
+	border: thin solid $borderColorError;
+	-moz-border-radius: $cornerRadius;
+	-webkit-border-radius: $cornerRadius;
+	border-radius: $cornerRadius;
+}
+
+.fb-data-label {
+	font-weight: bold;
+	font-style: italic;
+}
+.fb-data-value {
+	padding-right: 0.5em;
 }
 
 .form-horizontal .control-label.control-label-left {

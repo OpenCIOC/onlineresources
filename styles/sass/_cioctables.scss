@@ -147,10 +147,10 @@ table.responsive-table {
 table.form-table {
 	.field-icon-cell {
 		&.icon-2 {
-			width: 60px;
+			width: 85px;
 		}
 		&.icon-1 {
-			width: 38px;
+			width: 47px;
 		}
 		.glyphicon, .fa {
 			margin-right: 0;
@@ -169,7 +169,7 @@ table.form-table {
 
 	@media (max-width: $screen-sm-max) {
 		.field-icon-cell.icon-2 {
-			width: 38px;
+			width: 47px;
 		}
 	}
 }

@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -208,7 +208,7 @@ Else
 	Call closeIndexFieldRst()
 %>
 	<td>&nbsp;</td>
-	<td class="FieldLabelLeftClr"><%=TXT_HISTORY%></td><td><img src="<%=ps_strPathToStart%>images/versions.gif" width="17" height="17" class="ShowVersions SimulateLink" data-ciocid="<%= strNUM %>" data-ciocfield="TAXONOMY" data-ciocfielddisplay="<%= TXT_SERVICE_CATEGORIES %>" border="0"></td>
+	<td class="FieldLabelLeftClr"><%=TXT_HISTORY & TXT_COLON%></td><td><img src="<%=ps_strPathToStart%>images/versions.gif" width="17" height="17" class="ShowVersions SimulateLink" data-ciocid="<%= strNUM %>" data-ciocfield="TAXONOMY" data-ciocfielddisplay="<%= TXT_SERVICE_CATEGORIES %>" border="0"></td>
 </tr></table>
 <span id="FieldContents"></span>
 <br>

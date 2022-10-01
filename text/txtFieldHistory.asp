@@ -20,6 +20,7 @@
 <%
 Dim TXT_FIELD_HISTORY, _
 	TXT_FIELD_HISTORY_FOR_RECORD, _
+	TXT_HISTORY, _
 	TXT_REVISION_DATE, _
 	TXT_COMPARE_WITH
 
@@ -28,11 +29,13 @@ Sub setTxtFieldHistory()
 		Case CULTURE_FRENCH_CANADIAN
 			TXT_FIELD_HISTORY = "Historique des champs"
 			TXT_FIELD_HISTORY_FOR_RECORD = "Historique des champs de ce dossier" & TXT_COLON
+			TXT_HISTORY = "Histoire"
 			TXT_REVISION_DATE = "Date de révision"
 			TXT_COMPARE_WITH = "Comparer au"
 		Case Else
 			TXT_FIELD_HISTORY = "Field History"
 			TXT_FIELD_HISTORY_FOR_RECORD = "Field History for Record" & TXT_COLON
+			TXT_HISTORY = "History"
 			TXT_REVISION_DATE = "Revision Date"
 			TXT_COMPARE_WITH = "Compare With"
 	End Select

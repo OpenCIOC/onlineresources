@@ -64,6 +64,7 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_CONTRACT_NUMBER, _
 	TXT_COMMUNITY, _
 	TXT_COMMUNITY_DATABASE, _
+	TXT_COMMUNITY_SET_MANAGEMENT, _
 	TXT_COUNTRY, _
 	TXT_CREATE_NEW_RECORD, _
 	TXT_CREATE_RECORD_FEEDBACK, _
@@ -145,7 +146,7 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_OTHER_ADDRESS_TITLE, _
 	TXT_OTHER_NOTES, _
 	TXT_PART_TIME, _
-	TXT_PAST_CHANGES_TO_THIS_RECORD, _
+	TXT_PAST_CHANGES_SUMMARY, _
 	TXT_POSITIONS, _
 	TXT_POSTAL_CODE, _
 	TXT_PUBLICATION, _
@@ -264,6 +265,7 @@ Sub setTxtEntryForm()
 			TXT_CITY = "Municipalité"
 			TXT_COMMUNITY = "Communauté"
 			TXT_COMMUNITY_DATABASE = "la base de données d'information communautaire"
+			TXT_COMMUNITY_SET_MANAGEMENT = "Gerer les ensembles de communautés"
 			TXT_CONTENT_DELETED = "[supprimé]"
 			TXT_CONTRACT_NUMBER = "Signature du contrat no."
 			TXT_COUNTRY = "Pays"
@@ -351,8 +353,8 @@ Sub setTxtEntryForm()
 			TXT_OTHER_ADDRESS_TITLE = "Titre de l'adresse"
 			TXT_OTHER_NOTES = "Autre / Notes générales"
 			TXT_PART_TIME = "Temps partiel / Saisonnier"
-			TXT_PAST_CHANGES_TO_THIS_RECORD = "Historique des changements de ce dossier" & TXT_COLON
-			TXT_POSITIONS = "TR_FR -- Number of Positions for"
+			TXT_PAST_CHANGES_SUMMARY = "Changements historiques" & TXT_COLON
+			TXT_POSITIONS = "Nombre de postes pour"
 			TXT_POSTAL_CODE = "Code postal"
 			TXT_PUBLICATION = "Publication"
 			TXT_PUBLICATION_DATE = "Date de publication"
@@ -469,6 +471,7 @@ Sub setTxtEntryForm()
 			TXT_CITY = "City"
 			TXT_COMMUNITY = "Community"
 			TXT_COMMUNITY_DATABASE = "the Community Information database"
+			TXT_COMMUNITY_SET_MANAGEMENT = "Manage Community Sets"
 			TXT_CONTENT_DELETED = "[deleted]"
 			TXT_CONTRACT_NUMBER = "Contract Signature #"
 			TXT_COMMUNITY = "Community"
@@ -501,7 +504,7 @@ Sub setTxtEntryForm()
 			TXT_INACTIVE_DATE = "Inactive Date"
 			TXT_INDICATES_SET_CANT_BE_CHANGED = "<span class=""Alert"">*</span> indicates that this Community Set is required (because it is used in the current View, or belongs to another CIOC Member in this database with whom this record is shared)."
 			TXT_INFANT = "Infants"
-			TXT_INFO_COMMUNITIES_1 = "You must use a valid name from the global list of communities." & _
+			TXT_INFO_COMMUNITIES_1 = "You must use a valid name from the available list of communities." & _
 				"<br>You can search for an appropriate value using the "
 			TXT_INFO_COMMUNITIES_2 = "For accurate searching, use the most broad Community applicable." & _
 				"<br>All broader and narrower communities are included in searches automatically. " & _
@@ -557,7 +560,7 @@ Sub setTxtEntryForm()
 			TXT_OTHER_ADDRESS_TITLE = "Address Title"
 			TXT_OTHER_NOTES = "Other / General Notes"
 			TXT_PART_TIME = "Part Time / Seasonal"
-			TXT_PAST_CHANGES_TO_THIS_RECORD = "Past changes to this record" & TXT_COLON
+			TXT_PAST_CHANGES_SUMMARY = "Past record changes" & TXT_COLON
 			TXT_POSITIONS = "Number of Positions for"
 			TXT_POSTAL_CODE = "Postal Code"
 			TXT_PUBLICATION = "Publication"

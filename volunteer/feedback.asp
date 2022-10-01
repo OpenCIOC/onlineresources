@@ -780,12 +780,15 @@ End If
 <script type="text/javascript">
         tinymce.init({
             selector: '.WYSIWYG',
-            plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen paste',
-            toolbar: 'undo redo styles bullist numlist link | bold italic | searchreplace',
+            plugins: 'lists autolink link image charmap preview visualblocks fullscreen paste autoresize',
+            toolbar: 'undo redo styles bullist numlist link bold italic',
+            mobile: {
+                toolbar: 'styles bullist numlist link bold italic'
+            },
 			menubar: false,
 			statusbar: false,
-            convert_urls: false,
-            cleanup: true,
+			convert_urls: false,
+			cleanup: true,
 			schema: 'html5',
             formats: {
                 underline: { inline: 'u', exact: true }

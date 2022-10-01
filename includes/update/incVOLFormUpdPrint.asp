@@ -55,7 +55,10 @@ Function makeAgesContents(rst, bUseContent)
 		"<div class=""form-group"">" & _
 			"<label for=""MIN_AGE"" class=""control-label col-xs-3 col-lg-2"">" & TXT_MIN_AGE & "</label>" & _
 			"<div class=""col-xs-9 col-lg-10 form-inline"">" & _
-				"<input type=""text"" name=""MIN_AGE"" id=""MIN_AGE"" size=""5"" maxlength=""5"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(decMinAge) & "> (" & TXT_IN_YEARS & ")"
+				"<div class=""input-group"">" & _
+					"<input type=""text"" name=""MIN_AGE"" id=""MIN_AGE"" size=""5"" maxlength=""5"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(decMinAge) & ">" & _
+					"<span class=""input-group-addon"">" & TXT_AGE_YEARS_AFTER & "</span>" & _
+				"</div>"
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("MIN_AGE",True,False)
 	End If
@@ -65,7 +68,10 @@ Function makeAgesContents(rst, bUseContent)
 		"<div class=""form-group"">" & _
 			"<label for=""MAX_AGE"" class=""control-label col-xs-3 col-lg-2"">" & TXT_MAX_AGE & "</label>" & _
 			"<div class=""col-xs-9 col-lg-10 form-inline"">" & _
-				"<input type=""text"" name=""MAX_AGE"" id=""MAX_AGE"" size=""5"" maxlength=""5"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(decMaxAge) & "> (" & TXT_IN_YEARS & ")"
+				"<div class=""input-group"">" & _
+					"<input type=""text"" name=""MAX_AGE"" id=""MAX_AGE"" size=""5"" maxlength=""5"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(decMaxAge) & ">" & _
+					"<span class=""input-group-addon"">" & TXT_AGE_YEARS_AFTER & "</span>" & _
+				"</div>"
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("MAX_AGE",True,False)
 	End If
@@ -131,8 +137,14 @@ Function makeInterestsContents(rst,bUseContent)
 	End If
 		
 	strReturn = strReturn & TXT_NOT_SURE_ENTER & "<a href=""javascript:openWinL('" & makeLink("interestfind.asp","Ln=" & g_objCurrentLang.Culture,"Ln") & "','aiFind')"">" & TXT_AREA_OF_INTEREST_FINDER & "</a>." & vbCrLf & _
-		"<br><input type=""text"" id=""NEW_AI"" size=""" & TEXT_SIZE & """ maxlength=""200"">" & _
-		"&nbsp;<button type=""button"" class=""ui-state-default ui-corner-all"" id=""add_AI"">" & TXT_ADD & "</button></p>"
+		"<div class=""entryform-checklist-add-wrapper"">" & _
+			"<div class=""entryform-checklist-add-left"">" & _
+					"<input type=""text"" id=""NEW_AI"" class=""form-control"">" & _
+			"</div>" & _
+			"<div class=""entryform-checklist-add-right"">" & _
+				"<button type=""button"" class=""btn btn-default"" id=""add_AI"">" & TXT_ADD & "</button>" & _
+			"</div>" & _
+		"</div>"
 			
 	If Not g_bOnlySpecificInterests Then
 		strReturn = strReturn & _
@@ -160,24 +172,28 @@ Function makeMinHoursContents(rst, bUseContent)
 		strMinHoursPer = rst("MINIMUM_HOURS_PER")
 	End If
 	
-	strReturn = "<table class=""NoBorder cell-padding-2"">" & _
-			"<tr><td class=""FieldLabelLeftClr""><label for=""MINIMUM_HOURS"">" & TXT_MIN_HOURS & "</label></td><td>" & _
-			"<input type=""text"" id=""MINIMUM_HOURS"" name=""MINIMUM_HOURS""" & _
-			" size=""5"" maxlength=""5"" value=""" & intMinHours & """>"
+	strReturn = "<div class=""form-group"">" & _
+					"<label for=""MINIMUM_HOURS"" class=""control-label col-xs-4 col-lg-3"">" & TXT_MIN_HOURS & "</label>" & _
+					"<div class=""col-xs-8 col-lg-9 form-inline"">" & _
+						"<input type=""text"" name=""MINIMUM_HOURS"" id=""MINIMUM_HOURS"" size=""5"" maxlength=""5"" class=""form-control"" autocomplete=""off"" value=" & AttrQs(intMinHours) & ">" & _
+					"</div>" & _
+				"</div>"
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("MINIMUM_HOURS",True,False)
 	End If
 
 	Call openMinHoursPerListRst()
 
-	strReturn = strReturn & "</td></tr>" & _
-			"<tr><td class=""FieldLabelLeftClr""><label for=""MINIMUM_HOURS_PER"">" & TXT_MIN_HOURS_PER & "</label></td><td>" & _
-			makeMinHoursPerList(strMinHoursPer,"MINIMUM_HOURS_PER",True)
+	strReturn = strReturn & _
+			"<div class=""form-group"">" & _
+				"<label for=""MINIMUM_HOURS_PER"" class=""control-label col-xs-4 col-lg-3"">" & TXT_MIN_HOURS_PER & "</label>" & _
+				"<div class=""col-xs-8 col-lg-9 form-inline"">" & _
+					makeMinHoursPerList(strMinHoursPer,"MINIMUM_HOURS_PER",True) & _
+				"</div>" & _
+			"</div>"
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("MINIMUM_HOURS_PER",True,False)
 	End If
-	strReturn = strReturn & "</td></tr>" & _
-			"</table>"
 
 	Call closeMinHoursPerListRst()
 
@@ -246,16 +262,17 @@ Function makeNumNeededContents(rst,bUseContent)
 
 	strReturn = strReturn & "</table>" & _
 		"<h4>" & TXT_ADD_COMMUNITIES & "</h4>" & _
-		"<p>" & TXT_NOT_SURE_ENTER & "<a href=""javascript:openWin('" & makeLinkB(ps_strPathToStart & "comfind.asp") & "','cFind')"">" & TXT_COMMUNITY_FINDER & "</a>.</p>" & _
-		"<table id=""CM_new_input_table"" class=""NoBorder cell-padding-2"">"
+		"<p id=""CM_new_input_table"">" & TXT_INFO_COMMUNITIES_1 & _
+		"<a href=""javascript:openWin('" & makeLinkB(ps_strPathToStart & "comfind.asp") & "','cFind')"">" & TXT_COMMUNITY_FINDER & "</a></p>" & _
 
-	strReturn = strReturn & "<tr>" & _
-			"<td class=""FieldLabelClr""><label for=""NEW_CM"">" & TXT_NAME & "</label></td>" & _
-			"<td><input type=""text"" id=""NEW_CM"" " & _
-			"size=""" & TEXT_SIZE & """ maxlength=""100""></td>" & _
-			"<td><button type=""button"" class=""ui-state-default ui-corner-all"" id=""add_CM"">" & TXT_ADD & "</button></td>" & _
-			"</tr>"
-	strReturn = strReturn & "</table>"
+		"<div class=""entryform-checklist-add-wrapper"">" & _
+			"<div class=""entryform-checklist-add-left"">" & _
+					"<input type=""text"" id=""NEW_CM"" class=""form-control"">" & _
+			"</div>" & _
+			"<div class=""entryform-checklist-add-right"">" & _
+				"<button type=""button"" class=""btn btn-default"" id=""add_CM"">" & TXT_ADD & "</button>" & _
+			"</div>" & _
+		"</div>"
 
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("NUM_NEEDED",False,False)
@@ -269,11 +286,10 @@ Function makeNumNeededContents(rst,bUseContent)
 	End If
 
 	strReturn = strReturn & vbCrLf & _
-			"<div class=""FieldLabelLeftClr""><label for=""NUM_NEEDED_NOTES"">" & TXT_OTHER_NOTES & "</label></div>" & _
-			"<textarea id=""NUM_NEEDED_NOTES"" name=""NUM_NEEDED_NOTES""" & _
-			" cols=""" & TEXTAREA_COLS & """" & _
-			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
-			">" & strNotes & "</textarea>"
+			strReturn = strReturn & "<h4><label for=""NUM_NEEDED_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
+				"<textarea class=""form-control"" id=""NUM_NEEDED_NOTES"" name=""NUM_NEEDED_NOTES""" & _
+				" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
+				">" & strNotes & "</textarea>"
 
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("NUM_NEEDED_NOTES",True,False)
@@ -302,9 +318,11 @@ Function makeNUMContents(strNUM, rsOrg, bUseData)
 		
 	End if
 	
-	strReturn = strReturn & "<input type=""text"" id=""NUM"" title=" & AttrQs(TXT_RECORD_NUM) & " name=""NUM"" size=""20"" maxlength=""20""" & _
-		IIf(Not Nl(strNUM),"value=" & AttrQs(strNUM),vbNullString) & "> " & _
-		TXT_INST_NUM_FINDER	
+	strReturn = strReturn & "<div class=""form-inline"">" & _
+			"<input type=""text"" class=""form-control"" id=""NUM"" title=" & AttrQs(TXT_RECORD_NUM) & " name=""NUM"" size=""20"" maxlength=""20""" & _
+			IIf(Not Nl(strNUM)," value=" & AttrQs(strNUM),vbNullString) & "> " & TXT_INST_NUM_FINDER	& _
+			"</div>"
+
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("NUM", True,False)
 		strReturn = strReturn & getFeedback("ORG_NAME", False,False)
@@ -324,33 +342,40 @@ Function makeScheduleContents(rst,bUseContent)
 		strNotes = rsOrg("SCHEDULE_NOTES")
 	End If
 
-	strReturn = "<table class=""NoBorder cell-padding-2"">" & _
-		"<tr class=""FieldLabelCenterClr""><td>&nbsp;</td><td>" & TXT_TIME_MORNING & "<br>" & TXT_TIME_BEFORE_12 & "</td><td>" & TXT_TIME_AFTERNOON & "<br>" & TXT_TIME_12_6 & "</td><td>" & TXT_TIME_EVENING & "<br>" & TXT_TIME_AFTER_6 & "</td><td>" & TXT_TIME_SPECIFIC & "</td></tr>"
+	strReturn = "<table class=""BasicBorder cell-padding-2 responsive-table"">" & _
+		"<tr class=""FieldLabelCenterClr hidden-xs"">" &  _
+		"<td>&nbsp;</td>" & _
+		"<td>" & TXT_TIME_MORNING & "<br>" & TXT_TIME_BEFORE_12 & "</td>" & _
+		"<td>" & TXT_TIME_AFTERNOON & "<br>" & TXT_TIME_12_6 & "</td>" & _ 
+		"<td>" & TXT_TIME_EVENING & "<br>" & TXT_TIME_AFTER_6 & "</td>" & _
+		"<td>" & TXT_TIME_SPECIFIC & "</td>" & _
+		"</tr>"
+
 	For i = 0 to 6
 		strReturn = strReturn & "<tr>" & _
-			"<td class=""FieldLabelClr"">" & aLongs(i) & "</td>" & _
-			"<td ALIGN=""CENTER""><input title=" & AttrQs(aLongs(i) & TXT_COLON & TXT_TIME_MORNING) & " name=""SCH_" & aShorts(i) & "_Morning"" TYPE=""checkbox"" "
+			"<td class=""field-label-cell-clr"">" & aLongs(i) & "</td>" & _
+			"<td class=""text-left-xs text-center field-data-cell""><label for=""SCH_" & aShorts(i) & "_Morning""><input name=""SCH_" & aShorts(i) & "_Morning"" id=""SCH_" & aShorts(i) & "_Morning"" title=" & AttrQs(aLongs(i) & TXT_COLON & TXT_TIME_MORNING) & " TYPE=""checkbox"" "
 			If bUseContent Then
 				If rst("SCH_" & aShorts(i) & "_Morning") Then
 					strReturn = strReturn & " checked"
 				End If
 			End If
-		strReturn = strReturn & "></td>" & _
-			"<td ALIGN=""CENTER""><input title=" & AttrQs(aLongs(i) & TXT_COLON & TXT_TIME_AFTERNOON) & " name=""SCH_" & aShorts(i) & "_Afternoon"" TYPE=""checkbox"" "
+		strReturn = strReturn & "> <span class=""visible-xs-inline"">" & TXT_TIME_MORNING & " - " & TXT_TIME_BEFORE_12 & "</span></label></td>" & _
+			"<td class=""text-left-xs text-center field-data-cell""><label for=""SCH_" & aShorts(i) & "_Afternoon""><input name=""SCH_" & aShorts(i) & "_Afternoon"" id=""SCH_" & aShorts(i) & "_Afternoon"" title=" & AttrQs(aLongs(i) & TXT_COLON & TXT_TIME_AFTERNOON) & " TYPE=""checkbox"" "
 			If bUseContent Then
 				If rst("SCH_" & aShorts(i) & "_Afternoon") Then
 					strReturn = strReturn & " checked"
 				End If
 			End If
-		strReturn = strReturn & "></td>" & _
-			"<td ALIGN=""CENTER""><input title=" & AttrQs(aLongs(i) & TXT_COLON & TXT_TIME_EVENING) & " name=""SCH_" & aShorts(i) & "_Evening"" TYPE=""checkbox"" "
+		strReturn = strReturn & "> <span class=""visible-xs-inline"">" & TXT_TIME_AFTERNOON & " - " & TXT_TIME_12_6 & " </span></label></td>" & _
+			"<td class=""text-left-xs text-center field-data-cell""><label for=""SCH_" & aShorts(i) & "_Evening""><input name=""SCH_" & aShorts(i) & "_Evening"" id=""SCH_" & aShorts(i) & "_Evening"" title=" & AttrQs(aLongs(i) & TXT_COLON & TXT_TIME_EVENING) & " TYPE=""checkbox"" "
 			If bUseContent Then
 				If rst("SCH_" & aShorts(i) & "_Evening") Then
 					strReturn = strReturn & " checked"
 				End If
 			End If
-		strReturn = strReturn & "></td>" & _
-			"<td><input title=" & AttrQs(aLongs(i) & TXT_COLON & TXT_TITLE_SPECIFIC) & " name=""SCH_" & aShorts(i) & "_Time"" TYPE=""text"" size=""25"" maxlength=""50"" "
+		strReturn = strReturn & "> <span class=""visible-xs-inline"">" & TXT_TIME_EVENING & " - " & TXT_TIME_AFTER_6 & " </span></label></td>" & _
+			"<td class=""field-data-cell""><label for=""SCH_" & aShorts(i) & "_Time""><span class=""visible-xs-inline"">" & Replace(TXT_TIME_SPECIFIC, "<br>", " ") & " </span></label><input name=""SCH_" & aShorts(i) & "_Time"" id=""SCH_" & aShorts(i) & "_Time"" TYPE=""text"" title=" & AttrQs(aLongs(i) & TXT_COLON & TXT_TITLE_SPECIFIC) & " size=""25"" maxlength=""50"" class=""form-control"""
 			If bUseContent Then
 				strReturn = strReturn & " value=" & AttrQs(rst("SCH_" & aShorts(i) & "_Time"))
 			End If
@@ -371,8 +396,8 @@ Function makeScheduleContents(rst,bUseContent)
 	End If
 	strReturn = strReturn & "<h4><label for=""SCHEDULE_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
 			"<textarea id=""SCHEDULE_NOTES"" name=""SCHEDULE_NOTES""" & _
-			" cols=""" & TEXTAREA_COLS & """" & _
 			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
+			" class=""form-control""" & _
 			">" & strNotes & "</textarea>"
 
 	If bFeedback Then
@@ -499,27 +524,30 @@ Function makeStartDateContents(rst,bUseContent)
 		dStartLast = DateString(rst("START_DATE_LAST"),True)
 	End If
 	
-	strReturn = "<table class=""NoBorder cell-padding-3"">" & _
-			"<tr><td class=""FieldLabelLeftClr""><label for=""START_DATE_FIRST"">" & TXT_ON_OR_AFTER_DATE & "</label></td><td>" & _
-			"<input type=""text"" class=""DatePicker"" name=""START_DATE_FIRST"" id=""START_DATE_FIRST""" & _
-			" size=""20"" maxlength=""25"" value=""" & dStartFirst & """>"
+	strReturn = "<div class=""form-group"">" & _
+			"<label for=""START_DATE_FIRST"" class=""control-label col-sm-4 col-lg-3"">" & TXT_ON_OR_AFTER_DATE & "</label>" & _
+			"<div class=""col-sm-8 col-lg-9 form-inline"">" & _
+				"<input type=""text"" name=""START_DATE_FIRST"" id=""START_DATE_FIRST"" maxlength=""25"" value=" & AttrQs(dStartFirst) & " class=""DatePicker form-control"">" & _
+			"</div>" & _
+		"</div>"
 	If bFeedback Then
 		strReturn = strReturn & getDateFeedback("START_DATE_FIRST",True,False)
 	End If
-	strReturn = strReturn & "</td></tr>" & _
-			"<tr><td class=""FieldLabelLeftClr""><label for=""START_DATE_LAST"">" & TXT_ON_OR_BEFORE_DATE & "</label></td><td>" & _
-			"<input type=""text"" class=""DatePicker"" name=""START_DATE_LAST"" id=""START_DATE_LAST""" & _
-			" size=""20"" maxlength=""25"" value=""" & dStartLast & """>"
+	strReturn = strReturn & _
+		"<div class=""form-group"">" & _
+			"<label for=""START_DATE_LAST"" class=""control-label col-sm-4 col-lg-3"">" & TXT_ON_OR_BEFORE_DATE & "</label>" & _
+			"<div class=""col-sm-8 col-lg-9 form-inline"">" & _
+				"<input type=""text"" name=""START_DATE_LAST"" id=""START_DATE_LAST"" maxlength=""25"" value=" & AttrQs(dStartLast) & " class=""DatePicker form-control"">" & _
+			"</div>" & _
+		"</div>"
 	If bFeedback Then
 		strReturn = strReturn & getDateFeedback("START_DATE_LAST",True,False)
 	End If
-	strReturn = strReturn & "</td></tr>" & _
-			"</table>"
 
 	makeStartDateContents = strReturn
 End Function
 
-Function makeStdChecklistContents(rst,bUseContent, strSP, strPrefix, strFieldName, strNameField, bItemNotes, bGeneralNotes)
+Function makeStdChecklistContents(rst, bUseContent, strSP, strPrefix, strFieldName, strNameField, bItemNotes, bGeneralNotes)
 	Dim strReturn
 	Dim strVNUM, strNotes, intNotesLen, strItemNote, strJunk
 	If bUseContent Then
@@ -534,8 +562,6 @@ Function makeStdChecklistContents(rst,bUseContent, strSP, strPrefix, strFieldNam
 	If bFeedback Then
 		bFieldHasFeedback = prepStdChecklistFeedback(rsFb, bGeneralNotes, strFieldName)
 	End If
-
-
 	
 	Dim cnnChecklist, cmdChecklist, rsChecklist
 	Call makeNewAdminConnection(cnnChecklist)
@@ -549,30 +575,41 @@ Function makeStdChecklistContents(rst,bUseContent, strSP, strPrefix, strFieldNam
 		.Parameters.Append .CreateParameter("@VNUM", adVarChar, adParamInput, 10, strVNUM)
 	End With
 	Set rsChecklist = cmdChecklist.Execute
-	
-	With rsChecklist
-		strReturn = "<table class=""NoBorder cell-padding-2"">"
-		While Not .EOF
-			strReturn = strReturn & "<tr><td><label for=""" & strPrefix & "_ID_" & .Fields(strPrefix & "_ID") & """><input name=""" & strPrefix & "_ID"" id=""" & strPrefix & "_ID_" & .Fields(strPrefix & "_ID") & """ type=""checkbox"" value=""" & .Fields(strPrefix & "_ID") & """"
-			If .Fields("IS_SELECTED") Then
-				strReturn = strReturn & " checked"
-			End If
-			strReturn = strReturn & ">&nbsp;" & .Fields(strNameField) & "</label></td>"
-			If bItemNotes Then
-				strItemNote = .Fields("Notes")
-				strReturn = strReturn & "<td><input type=""text"" title=" & AttrQs(.Fields(strNameField) & TXT_COLON & TXT_NOTES) & " name=""" & strPrefix & "_NOTES_" & .Fields(strPrefix & "_ID") & """ " & _
-				"ID=""" & strPrefix & "_NOTES_" & .Fields(strPrefix & "_ID") & """ " & _
-				"value=""" & strItemNote & """ " & _
-				"size=""" & TEXT_SIZE - 20 & """ maxlength=""" & MAX_LENGTH_CHECKLIST_NOTES & """></td>"
 
+	With rsChecklist
+		While Not .EOF
+			strReturn = strReturn & vbCrLf & _
+				"<div class=""row-border-bottom"">" & _
+					"<div class=""row form-group"">" & _
+						"<label for=" & AttrQs(strPrefix & "_ID_" & .Fields(strPrefix & "_ID")) & " class=""control-label control-label-left col-md-4"">" & _
+							"<input name=" & AttrQs(strPrefix & "_ID") & _
+								" id=" & AttrQs(strPrefix & "_ID_" & .Fields(strPrefix & "_ID")) & _
+								" type=""checkbox"" value=" & AttrQs(.Fields(strPrefix & "_ID")) & Checked(.Fields("IS_SELECTED")) & ">" & _
+							Server.HTMLEncode(.Fields(strNameField)) & _
+						"</label>" & _
+						"<div class=""col-md-8"">"
+
+			If bItemNotes And (.Fields("LangID") = g_objCurrentLang.LangID) Then
+				strReturn = strReturn & _
+							"<input type=""text"" title=" & AttrQs(TXT_NOTES & TXT_COLON & .Fields(strNameField)) & _
+								" name=" & AttrQs(strPrefix & "_NOTES_" & .Fields(strPrefix & "_ID")) & _
+								" id=" & AttrQs(strPrefix & "_NOTES_" & .Fields(strPrefix & "_ID")) & _
+								" value=" & AttrQs(.Fields("Notes")) & _
+								" maxlength=" & AttrQs(MAX_LENGTH_CHECKLIST_NOTES) & _
+								" class=""form-control""" & _
+							">"
 			End If
-			strReturn = strReturn & "</tr>"
+
+			strReturn = strReturn & _
+						"</div>" & _
+					"</div>"
 			If bFeedback Then
 				strReturn = strReturn & getStdChecklistFeedback(strPrefix, strFieldName, bItemNotes, .Fields(strPrefix & "_ID"), .Fields("IS_SELECTED"), strItemNote, .Fields(strNameField), TXT_FEEDBACK_NUM, TXT_COLON, TXT_UPDATE, TXT_CONTENT_DELETED)
 			End If
+			strReturn = strReturn & _
+				"</div>"
 			.MoveNext
 		Wend
-		strReturn = strReturn & "</table>"
 	End With
 	
 	If bGeneralNotes Then
@@ -582,9 +619,8 @@ Function makeStdChecklistContents(rst,bUseContent, strSP, strPrefix, strFieldNam
 			intNotesLen = Len(strNotes)
 			strNotes = Server.HTMLEncode(strNotes)
 		End If
-		strReturn = strReturn & "<h4><label for=""" & strFieldName & "_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
-				"<textarea id=""" & strFieldName & "_NOTES"" name=""" & strFieldName & "_NOTES""" & _
-				" cols=""" & TEXTAREA_COLS & """" & _
+		strReturn = strReturn & "<h4><label for=" & AttrQs(strFieldName & "_NOTES") & ">" & TXT_OTHER_NOTES & "</label></h4>" & _
+				"<textarea class=""form-control"" id=" & AttrQs(strFieldName & "_NOTES") & " name=" & AttrQs(strFieldName & "_NOTES") & _
 				" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
 				">" & strNotes & "</textarea>"
 		If bFeedback Then

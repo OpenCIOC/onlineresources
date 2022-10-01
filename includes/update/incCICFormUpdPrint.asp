@@ -67,7 +67,7 @@ Function makeAccessibilityContents(rst,bUseContent)
 			strReturn = strReturn & _
 				"<div class=""row-border-bottom"">" & _
 					"<div class=""row form-group"">" & _
-						"<label for=" & AttrQs("AC_ID_" & .FieldS("AC_ID")) & " class=""control-label control-label-left col-md-4"">" & _
+						"<label for=" & AttrQs("AC_ID_" & .Fields("AC_ID")) & " class=""control-label control-label-left col-md-4"">" & _
 							"<input name=""AC_ID"" id=""AC_ID_" & .FieldS("AC_ID") & """ type=""checkbox"" value=" & AttrQs(.Fields("AC_ID")) & Checked(.Fields("IS_SELECTED")) & ">" & _
 							.Fields("AccessibilityType") & _
 						"</label>" & _
@@ -139,15 +139,15 @@ Function makeActivityInfoEntry(dicBTACT, strHeading, strPrefix)
 		"</tr>" & _
 		"<tr>" & _
 			"<td class=""FieldLabelLeftClr"">" & TXT_ACTIVITY_INFO_NAME & "</td>" & _
-			"<td><input type=""text"" class=""ui-autocomplete-input"" name=""" & strPrefix & "ActivityName"" maxlength=""100"" size=""" & TEXT_SIZE-20 & """ value=""" & Server.HTMLEncode(Ns(dicBTACT("ActivityName"))) & """ id=""" & strPrefix &"activity_name""></td>" & _
+			"<td><input type=""text"" class=""ui-autocomplete-input form-control"" name=""" & strPrefix & "ActivityName"" maxlength=""100"" size=""" & TEXT_SIZE-20 & """ value=""" & Server.HTMLEncode(Ns(dicBTACT("ActivityName"))) & """ id=""" & strPrefix &"activity_name""></td>" & _
 		"</tr>" & _
 		"<tr>" & _
 			"<td class=""FieldLabelLeftClr"">" & TXT_ACTIVITY_INFO_DESCRIPTION & "</td>" & _
-			"<td><textarea name=""" & strPrefix & "ActivityDescription"" cols=""" & TEXTAREA_COLS-15 & """ rows=""" & TEXTAREA_ROWS_SHORT & """ "" id=""" & strPrefix & "activity_description"">" & Server.HTMLEncode(Ns(dicBTACT("ActivityDescription"))) & "</textarea>" & _
+			"<td><textarea name=""" & strPrefix & "ActivityDescription"" cols=""" & TEXTAREA_COLS-15 & """ rows=""" & TEXTAREA_ROWS_SHORT & """ class=""form-control"" id=""" & strPrefix & "activity_description"">" & Server.HTMLEncode(Ns(dicBTACT("ActivityDescription"))) & "</textarea>" & _
 		"</tr>" & _
 		"<tr>" & _
 			"<td class=""FieldLabelLeftClr"">" & TXT_NOTES & "</td>" & _
-			"<td><textarea name=""" & strPrefix & "ActivityNotes"" cols=""" & TEXTAREA_COLS-15 & """ rows=""" & TEXTAREA_ROWS_SHORT & """>" & Server.HTMLEncode(Ns(dicBTACT("Notes"))) & "</textarea></td>" & _
+			"<td><textarea name=""" & strPrefix & "ActivityNotes"" cols=""" & TEXTAREA_COLS-15 & """ rows=""" & TEXTAREA_ROWS_SHORT & """ class=""form-control"">" & Server.HTMLEncode(Ns(dicBTACT("Notes"))) & "</textarea></td>" & _
 		"</tr>" & _
 		"</table></div><div style=""clear: both;""></div></div>"
 
@@ -244,7 +244,7 @@ Function makeActivityInfoContents(rst, bUseContent)
 		strNotes = Server.HTMLEncode(strNotes)
 	End If
 	strReturn = strReturn & "<h4><label for=""ACTIVITY_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
-			"<textarea id=""ACTIVITY_NOTES"" name=""ACTIVITY_NOTES""" & _
+			"<textarea id=""ACTIVITY_NOTES"" name=""ACTIVITY_NOTES"" class=""form-control""" & _
 			" cols=""" & TEXTAREA_COLS & """" & _
 			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
 			">" & strNotes & "</textarea>"
@@ -2936,12 +2936,8 @@ Function makeSpaceAvailableContents(rst,bUseContent)
 		"<div class=""form-group row"">" & _
 			"<label for=""SPACE_AVAILABLE"" class=""control-label col-sm-3"">" & TXT_SPACE_AVAILABLE & "</label>" & _
 			"<div class=""col-sm-9"">" & _
-				makeCBFieldVal("SPACE_AVAILABLE",bSpaceAvailable,TXT_YES,TXT_NO,TXT_UNKNOWN,True,True)
-	If bFeedback Then
-		strReturn = strReturn & getCbFeedback("SPACE_AVAILABLE",TXT_YES,TXT_NO)
-	End If
-	strReturn = strReturn & _
- 			"</div>" & _
+				makeCBFieldVal("SPACE_AVAILABLE",bSpaceAvailable,TXT_YES,TXT_NO,TXT_UNKNOWN,True,True) & _
+			"</div>" & _
 		"</div>" & _
 		"<div class=""form-group row"">" & _
 			"<label for=""SPACE_AVAILABLE_NOTES"" class=""control-label col-sm-3"">" & TXT_NOTES & "</label>" & _
@@ -3397,7 +3393,7 @@ Function makeVacancyInfoContents(rst, bUseContent)
 		strNotes = Server.HTMLEncode(strNotes)
 	End If
 	strReturn = strReturn & "<h4><label for=""VACANCY_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
-			"<textarea id=""VACANCY_NOTES"" name=""VACANCY_NOTES""" & _
+			"<textarea id=""VACANCY_NOTES"" name=""VACANCY_NOTES"" class=""form-control""" & _
 			" cols=""" & TEXTAREA_COLS & """" & _
 			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
 			">" & strNotes & "</textarea>"

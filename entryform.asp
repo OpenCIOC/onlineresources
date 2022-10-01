@@ -462,55 +462,79 @@ If bFeedback Then
 	Set dicFb = Server.CreateObject("Scripting.Dictionary")
 	i=1
 %>
-<p><span class="AlertBubble"><%=TXT_CHECK_FEEDBACK%></span></p>
-<table class="NoBorder cell-padding-3 max-width-lg clear-line-below">
+<div class="panel panel-danger">
+	<div class="panel-heading">
+		<h3><%=TXT_CHECK_FEEDBACK%></h3>
+	</div>
+	<div class="panel-body">
 <%
 	With rsFb
 		.MoveFirst
 		While Not .EOF
 %>
-<tr>
-	<td class="FieldLabelLeftClr"><%=TXT_FEEDBACK_NUM%><%=i%><%If g_bMultiLingual Then%> (<%=.Fields("LanguageName")%>)<%End If%><%=TXT_COLON%></td>
-	<td class="Alert"><%=TXT_SUBMITTED_BY & TXT_COLON%><%=.Fields("SUBMITTED_BY")%>
-	<%If Not Nl(.Fields("SUBMITTED_BY_EMAIL")) Then%><br><%=TXT_SUBMITTER_EMAIL & TXT_COLON%><a href="mailto:<%=.Fields("SUBMITTED_BY_EMAIL")%>"><%=.Fields("SUBMITTED_BY_EMAIL")%></a><%End If%>
-	<br><%=TXT_SUBMIT_DATE & .Fields("SUBMIT_DATE")%>
+	<div class="row row-border-top">
+		<div class="col-sm-3 col-md-3 fb-data-label">
+			<%=TXT_FEEDBACK_NUM%><%=i%><%If g_bMultiLingual Then%> (<%=.Fields("LanguageName")%>)<%End If%><%=TXT_COLON%>
+		</div>
+		<div class="col-sm-9 col-md-9">
+			<table class="NoBorder cell-padding-2">
+				<tr>
+					<td><%=TXT_SUBMITTED_BY & TXT_COLON%></td>
+					<td><strong><%=.Fields("SUBMITTED_BY")%></strong><%If Not Nl(.Fields("SUBMITTED_BY_EMAIL")) Then%>, <a href="mailto:<%=.Fields("SUBMITTED_BY_EMAIL")%>"><%=.Fields("SUBMITTED_BY_EMAIL")%></a><%End If%>, <%=.Fields("SUBMIT_DATE")%></td>
+				</tr>
+				<tr>
+					<td><%=TXT_STATUS & TXT_COLON%></td>
+					<td>
 <%If .Fields("REMOVE_RECORD") Then%>
-	<br><%=TXT_REMOVE_RECORD_REQUEST%>
+						<span class="Alert"><%=TXT_REMOVE_RECORD_REQUEST%></span>
 <%Else%>
-	<br><%=TXT_FULL_UPDATE & TXT_COLON%><%If .Fields("FULL_UPDATE") Then%><%=TXT_YES%><%If .Fields("NO_CHANGES") Then%> (<%=TXT_NO_CHANGES_REQUIRED%>)<%End If%><%Else%><%=TXT_NO%><%End If%>
+						<%=TXT_FULL_UPDATE & TXT_COLON%><%If .Fields("FULL_UPDATE") Then%><%=TXT_YES%><%If .Fields("NO_CHANGES") Then%> (<%=TXT_NO_CHANGES_REQUIRED%>)<%End If%><%Else%><%=TXT_NO%><%End If%>
 <%End If%>
 <%
 Select Case .Fields("AUTH_TYPE")
 	Case "A"
 		If Not Nl(.Fields("User_ID")) Then
 %>
-<br><%=TXT_AUTH_GIVEN_FOR & IIf(rsFb.Fields("AUTH_INQUIRY"),TXT_USE_INQUIRY & "; ",vbNullString) & IIf(.Fields("AUTH_ONLINE"),TXT_USE_ONLINE & "; ",vbNullString) & IIf(rsFb.Fields("AUTH_PRINT"),TXT_USE_PRINT & "; ",vbNullString) & IIf(Not (rsFb.Fields("AUTH_INQUIRY") Or rsFb.Fields("AUTH_ONLINE") Or rsFb.Fields("AUTH_ONLINE")), TXT_NONE_SELECTED, vbNullString)%>
+			<br><%=TXT_AUTH_GIVEN_FOR & IIf(rsFb.Fields("AUTH_INQUIRY"),TXT_USE_INQUIRY & "; ",vbNullString) & IIf(.Fields("AUTH_ONLINE"),TXT_USE_ONLINE & "; ",vbNullString) & IIf(rsFb.Fields("AUTH_PRINT"),TXT_USE_PRINT & "; ",vbNullString) & IIf(Not (rsFb.Fields("AUTH_INQUIRY") Or rsFb.Fields("AUTH_ONLINE") Or rsFb.Fields("AUTH_ONLINE")), TXT_NONE_SELECTED, vbNullString)%>
 <%
 		Else
 %>
-<br><%=TXT_AUTH_GIVEN%>
+			<br><%=TXT_AUTH_GIVEN%>
 <%
 		End If
 	Case "C"
 %>
-<br><%=TXT_CONTACT_SUBMITTER%>
+			<br><span class="Alert"><%=TXT_CONTACT_SUBMITTER%></span>
 <%
 	Case "I"
 %>
-<br><%=TXT_INTERNAL_REVIEW%>
+			<br><%=TXT_INTERNAL_REVIEW%>
 <%
 	Case "E"
 %>
-<br><%=TXT_AUTH_INQUIRIES_ONLY%>
+			<br><%=TXT_AUTH_INQUIRIES_ONLY%>
 <%
 	Case "N"
 %>
-<br><%=TXT_AUTH_NOT_RECEIVED%>
+			<br><span class="Alert"><%=TXT_AUTH_NOT_RECEIVED%></span>
 <%
 End Select
 %>
-	<%If Not Nl(.Fields("FB_NOTES")) Then%><br><%=TXT_NOTES & TXT_COLON%><%=.Fields("FB_NOTES")%><%End If%></td>
-</tr>
+						</td>
+				</tr>
+<%
+If Not Nl(.Fields("FB_NOTES")) Then
+%>
+				<tr>
+					<td><%=TXT_NOTES & TXT_COLON%></td>
+					<td><span class="Alert"><%=.Fields("FB_NOTES")%></span></td>
+				</tr>
+<%
+End If
+%>
+			</table>
+		</div>
+	</div>
 <%
 			i = i+1
 			dicFb(.Fields("Culture").Value) = .Fields("LanguageName")
@@ -518,14 +542,16 @@ End Select
 		Wend
 	End With
 %>
-</table>
-<br>
+
+	</div>
+</div>
+
 <%
 End If
 
 If Not bNew Then
 %>
-<p class="Info"><%=TXT_PAST_CHANGES_TO_THIS_RECORD & strVersions%>
+<p class="Info"><%=TXT_PAST_CHANGES_SUMMARY & strVersions%>
 </p>
 <%
 End If
@@ -1112,7 +1138,7 @@ $('html').scrollTop(scrollTop);
 <script type="text/javascript">
 	tinymce.init({
         selector: '.WYSIWYG',
-		plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table',
+        plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table autoresize',
         toolbar: 'undo redo styles bullist numlist link | bold italic removeformat forecolor image table | copy cut paste searchreplace fullscreen',
 		menubar: false,
         convert_urls: false,

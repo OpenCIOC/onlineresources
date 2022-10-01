@@ -154,6 +154,17 @@
 	font-size: 32px;
 }
 
+div.row-border-bottom {
+    border-bottom: thin solid $borderColorContent;
+}
+
+div.row-border-top:not(:first-of-type) {
+    border-top: thin solid $borderColorContent;
+    margin-top: 0.5em;
+    padding-top: 0.5em;
+}
+
+
 // LIST STYLES
 
 ul, ol {
@@ -267,7 +278,7 @@ dd {
 
 .EntryFormItemBox {
 	background: white;
-	padding: 5px 5px 5px 15px;
+	padding: 10px;
 	border: 1px solid black;
 
 	zoom: 1;
@@ -293,6 +304,11 @@ dd {
 
 .EntryFormItemHeader {
 	margin-top: 0px;
+}
+
+.EntryFormItemContent {
+    clear: both;
+    margin-top: 10px;
 }
 
 .VacancyInfoEditArea {
