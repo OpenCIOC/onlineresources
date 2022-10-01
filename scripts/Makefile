@@ -135,10 +135,10 @@ taxrecords.js: bsearch.js tax_base.js
 taxsrch.js: ciocbasic.js jquery.bgiframe.js autocomplete.js search_params.js
 	type $^ > $@
 
-ventryform.js: ciocbasic.js jquery.bgiframe.js jquery-ui-combobox.js history.js autocomplete.js autocomplete_extra.js feedback_base.js entryform_common.js copy_base.js ventryform_base.js record_note.js
+ventryform.js: ciocbasic.js jquery-ui-combobox.js jquery.bgiframe.js autocomplete.js autocomplete_extra.js feedback_base.js entryform_common.js ventryform_base.js record_note.js history.js copy_base.js
 	type $^ > $@
 
-vfeedback.js: ciocbasic.js jquery-ui-combobox.js autocomplete.js autocomplete_extra.js entryform_common.js feedback_base.js
+vfeedback.js: ciocbasic.js jquery-ui-combobox.js jquery.bgiframe.js autocomplete.js autocomplete_extra.js feedback_base.js entryform_common.js ventryform_base.js 
 	type $^ > $@
 
 vprofiles.js: tablesort.js cached_state.js vprofiles_base.js
