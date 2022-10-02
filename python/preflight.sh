@@ -67,7 +67,7 @@ fi
 ( echo "Checking for Web Plaform installer" && winget list -e --id Microsoft.webpicmd -s winget > /dev/null ) || ( echo "installing Web Platform installer" &&  winget install -e --id Microsoft.webpicmd -s winget )
 ( echo "Checking for WkHtmlToPDF" && winget list -e --id wkhtmltopdf.wkhtmltox -s winget > /dev/null) || ( echo "Installing WkHtmlToPDF" && winget install -e --id wkhtmltopdf.wkhtmltox -s winget )
 ( echo "Checking for GNU Make" && winget list -e --id GnuWin32.Make -s winget > /dev/null) || ( echo "Installing GNU Make" && winget install -e --id GnuWin32.Make -s winget )
-( echo "Checking for Node.js LTS" && winget list -e --id OpenJS.NodeJS.LTS -s winget > /dev/null) || ( echo "Installing Node.js LTS" && winget install -e --id OpenJS.NodeJS.LTS -s winget )
+( echo "Checking for Node.js" && winget list -e --id OpenJS.NodeJS -s winget > /dev/null) || ( echo "Installing Node.js" && winget install -e --id OpenJS.NodeJS -s winget )
 
 echo "Checking for Microsoft Application Request Routing 3.0"
 if ! wmic product get name | grep "Microsoft Application Request Routing 3.0" > /dev/null ; then

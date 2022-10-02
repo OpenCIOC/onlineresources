@@ -47,11 +47,12 @@ def get_numeric_extension(value):
 	return _('th')
 
 def format_date_if_iso(value):
-	try:
-		value = format_date(isodate.parse_date(value), pyrequest)
-	except isodate.ISO8601Error:
-		# already parsed iso date
-		pass
+	if '-' in value:
+		try:
+			value = format_date(isodate.parse_date(value), pyrequest)
+		except isodate.ISO8601Error:
+			# already parsed iso date
+			pass
 	return value
 
 
