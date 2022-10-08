@@ -315,6 +315,11 @@ dd {
 	line-height: 1.4em;
 }
 
+.DatePicker {
+    position: relative;
+    z-index: 2;
+}
+
 .NoYearDatePicker .ui-datepicker-year
 {
 	 display:none;   

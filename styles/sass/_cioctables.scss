@@ -24,9 +24,15 @@ table.BasicBorder {
 	border-spacing: 0px;
 	border-collapse: collapse;
 	border: none;
-	
+
 	&, & > tr > td, & > tr > th, & > thead > tr > th, & > tbody > tr > td, & > tbody > tr > th {
-		border: 1px solid $borderColorContent;
+		border: thin solid $borderColorContent;
+	}
+
+	&.form-table {
+		&, & > tr > td, & > tr > th, & > thead > tr > th, & > tbody > tr > td, & > tbody > tr > th {
+			border-top-width: 2px;
+		}
 	}
 }
 
@@ -35,6 +41,12 @@ table.NoBorder {
 	border-collapse: collapse;
 	&, & > tr > td, & > tr > th, & > thead > tr > th, & > tbody > tr > td, & > tbody > tr > th {
 		border: 0 none;
+	}
+}
+
+table.cell-padding-5 {
+	& > tr > td, & > tr > th, & > thead > tr > th, & > tbody > tr > td, & > tbody > tr > th {
+		padding: 5px 7px;
 	}
 }
 
@@ -135,11 +147,15 @@ table.responsive-table {
 
 	@media (max-width: $screen-xs-max) {
 		.field-data-cell, &.form-table .field-data-cell,
-			.field-label-cell, &.form-table .field-label-cell,
-			.field-label-cell-widelabel, &.form-table .field-label-cell-widelabel,
-			.field-label-cell-clr, &.form-table .field-label-cell-clr {
+		.field-label-cell, &.form-table .field-label-cell,
+		.field-label-cell-widelabel, &.form-table .field-label-cell-widelabel,
+		.field-label-cell-clr, &.form-table .field-label-cell-clr {
 			width: 100%;
 			display: inline-block;
+		}
+
+		&.BasicBorder.form-table .field-data-cell {
+			border-top-width: 1px;
 		}
 	}
 }
@@ -147,10 +163,10 @@ table.responsive-table {
 table.form-table {
 	.field-icon-cell {
 		&.icon-2 {
-			width: 85px;
+			width: 87px;
 		}
 		&.icon-1 {
-			width: 47px;
+			width: 49px;
 		}
 		.glyphicon, .fa {
 			margin-right: 0;
@@ -169,7 +185,7 @@ table.form-table {
 
 	@media (max-width: $screen-sm-max) {
 		.field-icon-cell.icon-2 {
-			width: 47px;
+			width: 49px;
 		}
 	}
 }

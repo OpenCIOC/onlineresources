@@ -53,7 +53,7 @@ Sub setTxtExportProfile()
 		Case CULTURE_FRENCH_CANADIAN
 			TXT_ADD_PUB_CODE_FAILED = "L'ajout du code de publication a échoué."
 			TXT_CHOOSE_PUBLICATION = "Veuillez sélectionner une publication dans la liste ci-dessous."
-			TXT_CONVERT_LINE1_LINE2_ADDRESSES_FOR_COMPATIBILITY = "TRANSLATE_FR -- Convert Line 1/Line 2 addresses for compatibility"
+			TXT_CONVERT_LINE1_LINE2_ADDRESSES_FOR_COMPATIBILITY = "Convertir les adresses Ligne 1/Ligne 2 pour compatibilité"
 			TXT_DB_NAME = "Nom de la base de données"
 			TXT_DB_URL = "URL de la base de données"
 			TXT_DIST_LIST_NOT_UPDATED = "La mise à jour de la liste des codes de distribution a échoué" & TXT_COLON
@@ -67,7 +67,7 @@ Sub setTxtExportProfile()
 			TXT_INCLUDE_HEADINGS = "Inclure<br>les en-têtes"
 			TXT_INCLUDE_HEADINGS_NO_HTML = "Inclure les en-têtes"
 			TXT_INST_EXPORT_IN_LANGUAGES = "Exporter les données dans les langues suivantes" & TXT_COLON
-			TXT_LINE1_LINE2_HANDLING = "TRANSLATE_FR -- Line 1/Line 2 Address Handling"
+			TXT_LINE1_LINE2_HANDLING = "Gestion des adresses de la ligne 1/ligne 2"
 			TXT_MANAGE_DISTRIBUTIONS = "Gérer les distributions"
 			TXT_MANAGE_DISTS_TITLE = "Gérer les codes de distribution pour l'exportation"
 			TXT_MANAGE_FIELDS_TITLE = "Gérer les champs d'exportation"

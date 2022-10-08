@@ -91,8 +91,10 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_FULL_TIME, _
 	TXT_HIDE, _
 	TXT_HIDE_CANCELLED, _
+	TXT_IMPORTANT, _
 	TXT_INACTIVE_DATE, _
 	TXT_INDICATES_SET_CANT_BE_CHANGED, _
+	TXT_INDIVIDUALS_WANTED, _
 	TXT_INFANT, _
 	TXT_INFO_COMMUNITIES_1, _
 	TXT_INFO_COMMUNITIES_2, _
@@ -102,6 +104,12 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_INFO_LANGUAGES, _
 	TXT_INFO_LOCATED, _
 	TXT_INST_COPY_OP, _
+	TXT_INST_DISPLAY_UNTIL, _
+	TXT_INST_IMPORTANT_CHECK_ALL, _
+	TXT_INST_NUM_NEEDED_COMMUNITIES, _
+	TXT_INST_NUM_NEEDED_NOTES, _
+	TXT_INST_NUM_NEEDED_TOTAL, _
+	TXT_INST_VOL_CONTACT, _
 	TXT_INVALID_RECORD_NUM, _
 	TXT_IS, _
 	TXT_KINDERGARTEN, _
@@ -138,7 +146,7 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_NOT_GIVEN, _
 	TXT_NOTE_NUMBER, _
 	TXT_NOTE_TYPE, _
-	TXT_NUM_POSITIONS, _
+	TXT_NUM_NEEDED_TOTAL, _
 	TXT_OLS_USE_WARNING, _
 	TXT_ON_OR_AFTER_DATE, _
 	TXT_ON_OR_BEFORE_DATE, _
@@ -247,7 +255,7 @@ Sub setTxtEntryForm()
 			TXT_AFTER_NAME = "Après le nom"
 			TXT_AGENCY_WARNING = "Pas une agence"
 			TXT_ALL_AGENCIES = "toutes les agences"
-			TXT_AREAS_SERVED_DISPLAY_ONLY_NOTES = "TRANSLATE_FR -- Only Display Notes"
+			TXT_AREAS_SERVED_DISPLAY_ONLY_NOTES = "Afficher uniquement les notes"
 			TXT_AUTO_ASSIGN_LOWEST_NUM = "Assigner automatiquement le numéro de dossier disponible le plus bas"
 			TXT_AVAILABLE = "Disponible"
 			TXT_BEFORE_NAME = "Avant le nom"
@@ -294,11 +302,14 @@ Sub setTxtEntryForm()
 			TXT_FULL_TIME = "Temps plein"
 			TXT_HIDE = "Cacher"
 			TXT_HIDE_CANCELLED = "Cacher les notes supprimées"
+			TXT_IMPORTANT = "Importante"
 			TXT_INACTIVE_DATE = "Date inactive"
 			TXT_INDICATES_SET_CANT_BE_CHANGED = "<span class=""""Alerte"""">*</span> signifie que cet ensemble des communautés est requis (parce qu'il est utilisé dans la vue actuelle, ou appartient à un autre membre CIOC dans cette base de données avec qui ce dossier est partagé)."
+			TXT_INDIVIDUALS_WANTED = "personnes sont recherchées"
 			TXT_INFANT = "Nourrissons"
-			TXT_INFO_COMMUNITIES_1 = "Vous devez utiliser un nom valide compris dans la liste complète des communautés." & _
-				"<br>Vous pouvez rechercher une valeur appropriée en utilisant le "
+			TXT_INFO_COMMUNITIES_1 = "Vous devez utiliser un nom valide compris dans la liste complète des communautés. " & _
+				"Commencez à saisir un nom de communauté pour afficher une liste de correspondances possibles ; " & _
+				"sélectionnez une communauté et cliquez sur &quot;Ajouter&quot;." & _
 			TXT_INFO_COMMUNITIES_2 = "Pour une recherche exacte, utilisez le niveau de communauté le plus large possible." & _
 				"<br>Les communautés de niveau supérieur et inférieur sont automatiquement comprises dans la recherche. " & _
 				"<br>Vous pouvez préciser la définition de la région desservie en utilisant le champ Notes ou bien le champ Frontières."
@@ -309,6 +320,14 @@ Sub setTxtEntryForm()
 			TXT_INFO_LOCATED = "Pour une recherche exacte, utilisez le niveau de communauté le plus précis possible." & _
 				"<br>Si le champ est vide, le dossier apparaîtra dans <em>toutes</em> les recherches basées sur le champ &quot;Situé dans la communauté &quot;."
 			TXT_INST_COPY_OP = "Veuillez faire les changements appropriés avant de soumettre."
+			TXT_INST_DISPLAY_UNTIL = "Si vous choisissez de fournir une date &quot;Afficher jusqu'au&quot;, l'enregistrement sera supprimé des nouvelles recherches à cette date." & _
+				"Le dossier peut toujours être consulté via un lien direct, mais sera marqué comme expiré et n'acceptera pas les candidatures."
+			TXT_INST_IMPORTANT_CHECK_ALL = "Cette information est nécessaire pour certains types de recherches. Veuillez prendre soin de sélectionner TOUTES les valeurs applicables."
+			TXT_INST_NUM_NEEDED_COMMUNITIES = "Dans quelle(s) zone(s) géographique(s) comptez-vous chercher des volontaires pour ce poste ? Si un nombre spécifique de bénévoles est nécessaire dans une communauté particulière, vous pouvez fournir un nombre de personnes recherchées dans cette communauté."
+			TXT_INST_NUM_NEEDED_NOTES = "Indiquez toute autre information pertinente sur le nombre de personnes dont vous avez besoin pour le poste de bénévole et les communautés où vous recherchez des bénévoles"
+			TXT_INST_NUM_NEEDED_TOTAL = "Indiquez le nombre de bénévoles individuels recherchés pour ce poste"
+			TXT_INST_VOL_CONTACT = "Ces informations de contact sont fournies aux candidats pour compléter le processus de candidature, et la personne de contact recevra un e-mail de notification lorsque les volontaires manifesteront leur intérêt pour un poste." & _
+				"Veuillez vous assurer que le nom et l'adresse e-mail sont exacts et à jour."
 			TXT_INVALID_RECORD_NUM = "No de dossier invalide"
 			TXT_IS = "est"
 			TXT_KINDERGARTEN = "École maternelle"
@@ -328,7 +347,7 @@ Sub setTxtEntryForm()
 			TXT_MAIL_CO = "Aux soins de"
 			TXT_MAIN_NAME_ONLY = "du nom de dossier principal"
 			TXT_MAP_LINK = "Lien de la carte"
-			TXT_MAPPING_CATEGORY = "TRANSLATE_FR -- Mapping Category"
+			TXT_MAPPING_CATEGORY = "Catégorie de mappage"
 			TXT_MAX_AGE = "Âge maximal"
 			TXT_ME = "Moi"
 			TXT_MIN_AGE = "Âge minimal"
@@ -345,7 +364,7 @@ Sub setTxtEntryForm()
 			TXT_NOT_GIVEN = "[non précisé]"
 			TXT_NOTE_NUMBER = "Note # "
 			TXT_NOTE_TYPE = "Type de note"
-			TXT_NUM_POSITIONS = "Nombre de postes"
+			TXT_NUM_NEEDED_TOTAL = "Nombre de bénévoles recherchés"
 			TXT_OLS_USE_WARNING = "Attention : Ce dossier est utilisé dans cette capacité !"
 			TXT_ON_OR_AFTER_DATE = "À cette date ou après"
 			TXT_ON_OR_BEFORE_DATE = "À cette date ou avant"
@@ -503,19 +522,30 @@ Sub setTxtEntryForm()
 			TXT_HIDE_CANCELLED = "Hide Cancelled Notes"
 			TXT_INACTIVE_DATE = "Inactive Date"
 			TXT_INDICATES_SET_CANT_BE_CHANGED = "<span class=""Alert"">*</span> indicates that this Community Set is required (because it is used in the current View, or belongs to another CIOC Member in this database with whom this record is shared)."
+			TXT_INDIVIDUALS_WANTED = "individuals wanted"
+			TXT_IMPORTANT = "Important"
 			TXT_INFANT = "Infants"
-			TXT_INFO_COMMUNITIES_1 = "You must use a valid name from the available list of communities." & _
-				"<br>You can search for an appropriate value using the "
+			TXT_INFO_COMMUNITIES_1 = "You must use a valid name from the available list of communities. " & _
+				"Begin typing a community name to see a list of possible matches; " & _
+				"select a community and click the &quot;Add&quot; button."
 			TXT_INFO_COMMUNITIES_2 = "For accurate searching, use the most broad Community applicable." & _
 				"<br>All broader and narrower communities are included in searches automatically. " & _
 				"<br>You can refine the definition of the area served in the notes field provided or in the Boundaries field."
 			TXT_INFO_COPY = "Please make the appropriate changes before submitting. You <em>must</em> give this record a new record number."
 			TXT_INFO_COPY_OP = "You are copying a record with Opportunity ID: "
 			TXT_INFO_CREATE_OP = "You are creating a new opportunity for the organization: "
+			TXT_INST_VOL_CONTACT = "This contact information is provided to potential volunteers to complete the application process, and the contact will receive a notification email when volunteers express their interest in a position. " & _
+				"Please ensure that the posting includes an accurate and up-to-date name and Email."
+			TXT_INST_DISPLAY_UNTIL = "If you choose to provide a &quot;Display Until&quot; date, the record will be removed from new searches on that date. " & _
+				"The record may still be viewed through a direct link, but will be marked as expired, and will not accept applications."
 			TXT_INFO_LANGUAGES = "You must use a valid language name from the languages checklists."
 			TXT_INFO_LOCATED = "For accurate searching, use the most narrow Community applicable." & _
 				"<br>If you leave this field blank, this record will come up in <em>all</em> &quot;Located In Community&quot; searches."
 			TXT_INST_COPY_OP = "Please make the appropriate changes before submitting."
+			TXT_INST_IMPORTANT_CHECK_ALL = "This information is required for some types of searches. Please take care to select ALL applicable values."
+			TXT_INST_NUM_NEEDED_COMMUNITIES = "From which geographic area(s) do expect to seek volunteers for this position? If a specific number of volunteers are needed from a particular community, you may optionally provide a count of individuals wanted from that community."
+			TXT_INST_NUM_NEEDED_NOTES = "Indicate any other relevant information about the number of individuals you need for the volunteer position, and the communities where you are seeking volunteers"
+			TXT_INST_NUM_NEEDED_TOTAL = "Indicate the number of individual volunteers being sought for this position"
 			TXT_INVALID_RECORD_NUM = "Invalid Record #"
 			TXT_IS = "is"
 			TXT_KINDERGARTEN = "Kindergarten"
@@ -552,7 +582,7 @@ Sub setTxtEntryForm()
 			TXT_NOT_GIVEN = "[not given]"
 			TXT_NOTE_NUMBER = "Note #"
 			TXT_NOTE_TYPE = "Note Type"
-			TXT_NUM_POSITIONS = "# Positions"
+			TXT_NUM_NEEDED_TOTAL = "Number of Volunteers Wanted"
 			TXT_OLS_USE_WARNING = "Warning: This record is being used in this capacity!"
 			TXT_ON_OR_AFTER_DATE = "On or after the date"
 			TXT_ON_OR_BEFORE_DATE = "On or before the date"

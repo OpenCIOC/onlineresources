@@ -299,7 +299,7 @@ Sub getChecklistFeedback(strFieldDisplay, strSP, strPrefix, strFieldName, strNam
 			bThisChanged = False
 			bChecked = InStr(strIDList, "<" & .Fields(strPrefix & "_ID") & ">") > 0 
 			If bChecked Then
-				If .Fields("IS_SELECTED") <> 1 Then
+				If .Fields("IS_SELECTED") <> SQL_TRUE Then
 					bChanged = True
 					bThisChanged = True
 				End If
@@ -322,7 +322,7 @@ Sub getChecklistFeedback(strFieldDisplay, strSP, strPrefix, strFieldName, strNam
 				strXML = strXML & "<" & strPrefix & " ID=" & XMLQs(.Fields(strPrefix & "_ID")) & StringIf(Not Nl(strNote), " NOTE=" & XMLQs(strNote)) & "/>"
 			End If
 					
-			If .Fields("IS_SELECTED") <> IIf(bChecked, 1, 0) Then
+			If .Fields("IS_SELECTED") <> IIf(bChecked, SQL_TRUE, SQL_FALSE) Then
 				bChanged = True
 				If Not bChecked Then
 					strEmailText = strEmailText & strEmailCon & .Fields(strNameField) & TXT_COLON & TXT_CONTENT_DELETED
@@ -743,6 +743,8 @@ While Not rsFields.EOF
 			Call getEventScheduleFields(rsFields.Fields("FieldDisplay"))
 		Case "INTERACTION_LEVEL"
 			Call getChecklistFeedback(strFieldName, "dbo.sp_VOL_VNUMInteractionLevel_s", "IL", "INTERACTION_LEVEL", "InteractionLevel", strInsertInto, strInsertValue, True)
+		Case "INTERESTS"
+			Call getChecklistFeedback(strFieldName, "dbo.sp_VOL_VNUMInterest_s", "AI", "INTERESTS", "InterestName", strInsertInto, strInsertValue, False)
 		Case "MINIMUM_HOURS"
 			strFieldVal = getStrSetValue("MINIMUM_HOURS")
 			If addInsertField("MINIMUM_HOURS",QsNNl(strFieldVal),strInsertInto,strInsertValue) Then

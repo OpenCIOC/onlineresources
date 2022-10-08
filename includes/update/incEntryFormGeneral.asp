@@ -82,7 +82,11 @@ def prepSocialMediaFeedback(rsFb):
 
 				
 def getSocialMediaFeedback(sm_id, txt_feeback_num, txt_colon,txt_update, txt_content_deleted):
-	template = u'<br><span class="Info">{}%d{}{}</span> <span class="Alert">%s</span> <input type="button" value="{}" onClick="document.EntryForm.SOCIAL_MEDIA_%s.value=%s;">'.format(txt_feeback_num, " (%s)" if pyrequest.multilingual else '%s', txt_colon, txt_update)
+	template = u'''<div class="feedback-item">
+			<span class="fb-data-label">{}%d{}{}</span>
+			<span class="fb">%s</span>
+			<input type="button" class="btn btn-info" value="{}" onClick="document.EntryForm.SOCIAL_MEDIA_%s.value=%s;">
+			</div>'''.format(txt_feeback_num, " (%s)" if pyrequest.multilingual else '%s', txt_colon, txt_update)
 	escape = cgiescape
 	dumps = json.dumps
 
@@ -487,6 +491,7 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 		for no, l in weekdays)
 
 	ns = {
+		'txt_eg': _('e.g.'),
 		'txt_repeats': _('Repeats'),
 		'txt_delete': _('Delete'),
 		'date_text_size': const.DATE_TEXT_SIZE,
@@ -545,11 +550,21 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 		</div>
 		<div class="form-group">
 			<label for="{prefix}START_TIME" class="control-label col-sm-3">{txt_start_time}</label>
-			<div class="col-sm-9"><input type="text" class="form-control" name="{prefix}START_TIME" size="{time_text_size}" maxlength="{time_text_size}" value="{START_TIME}"></div>
+			<div class="col-sm-9">
+				<div class="input-group">
+					<input type="text" class="form-control" name="{prefix}START_TIME" size="{time_text_size}" maxlength="{time_text_size}" value="{START_TIME}">
+					<span class="input-group-addon">({txt_eg} 23:00, 08:30, 4:00PM)</span>
+				</div>
+			</div>
 		</div>
 		<div class="form-group">
 			<label for="{prefix}END_TIME" class="control-label col-sm-3">{txt_end_time}</label>
-			<div class="col-sm-9"><input type="text" class="form-control" name="{prefix}END_TIME" size="{time_text_size}" maxlength="{time_text_size}" value="{END_TIME}"></div>
+			<div class="col-sm-9">
+				<div class="input-group">
+					<input type="text" class="form-control" name="{prefix}END_TIME" size="{time_text_size}" maxlength="{time_text_size}" value="{END_TIME}">
+					<span class="input-group-addon">({txt_eg} 23:00, 08:30, 4:00PM)</span>
+				</div>
+			</div>
 		</div>
 		<div class="form-group">
 			<label for="{prefix}LABEL" class="control-label col-sm-3">{txt_label}</label>
@@ -664,6 +679,66 @@ def makeEventScheduleContents_l(rst, bUseContent, has_feedback=False, rsFb=None,
 Dim bFieldHasFeedback
 bFieldHasFeedback = False
 
+Function getChecklistXMLFeedbackSimpleValue(strValue, strPrefix, strTable)
+	Dim strReturn
+
+	If InStr(1,Ns(strValue),"<" & strPrefix & "S>") Then
+		Dim strSQL
+		strSQL = _
+		"DECLARE @conStr nvarchar(3), @returnStr nvarchar(max), @Notes nvarchar(MAX), @data xml = " & QsN(strValue) & vbCrLf & _
+		"SET @conStr = cioc_shared.dbo.fn_SHR_STP_ObjectName(' ; ')" & vbCrLf & _
+		"SET @Notes = @data.value('*[1]/NOTE[1]', 'nvarchar(max)')" & vbCrLf & _
+		"SELECT @returnStr =  COALESCE(@returnStr + @conStr,'') " & vbCrLf & _
+		"	+ chkn.Name" & vbCrLf & _
+		"	+ CASE WHEN prn.Notes IS NULL THEN '' ELSE cioc_shared.dbo.fn_SHR_STP_ObjectName(' - ') + prn.Notes END" & vbCrLf & _
+		"FROM (" & vbCrLf & _
+		"SELECT N.value('@ID', 'int') AS pk, N.value('@NOTE', 'nvarchar(255)') AS Notes FROM @data.nodes('*/*/*') AS T(N)" & vbCrLf & _
+		") AS prn" & vbCrLf & _
+		"" & vbCrLf & _
+		"	INNER JOIN " & strTable & " chk" & vbCrLf & _
+		"		ON prn.pk=chk." & strPrefix & "_ID" & vbCrLf & _
+		"	INNER JOIN " & strTable & "_Name chkn" & vbCrLf & _
+		"		ON chk." & strPrefix & "_ID=chkn." & strPrefix & "_ID AND chkn.LangID=@@LANGID" & vbCrLf & _
+		"ORDER BY chk.DisplayOrder, chkn.Name" & vbCrLf & _
+		"" & vbCrLf & _
+		"IF @returnStr IS NULL SET @returnStr = ''" & vbCrLf & _
+		"IF @returnStr = '' SET @conStr = ''" & vbCrLf & _
+		"" & vbCrLf & _
+		"IF @Notes IS NOT NULL BEGIN" & vbCrLf & _
+		"	SET @returnStr = @returnStr + @conStr + @Notes" & vbCrLf & _
+		"END" & vbCrLf & _
+		"" & vbCrLf & _
+		"IF @returnStr = '' SET @returnStr = NULL" & vbCrLf & _
+		"SELECT @returnStr as CheckList"
+
+		Dim cmdDropDown, rsDropDown
+		Set cmdDropDown = Server.CreateObject("ADODB.Command")
+		With cmdDropDown
+			.ActiveConnection = getCurrentAdminCnn()
+			.CommandText = strSQL
+			.CommandType = adCmdText
+			.CommandTimeout = 0
+		End With
+		Set rsDropDown = Server.CreateObject("ADODB.Recordset")
+		With rsDropDown
+			.CursorLocation = adUseClient
+			.CursorType = adOpenStatic
+			.Open cmdDropDown
+			If Not .EOF Then
+				strReturn = .Fields("CheckList")
+			End If
+			.Close
+		End With
+		Set rsDropDown = Nothing
+		Set cmdDropDown = Nothing
+
+	Else
+		strReturn = Server.HTMLEncode(strValue)
+	End If
+
+	getChecklistXMLFeedbackSimpleValue = strReturn
+End Function
+
 Function getDropDownValue(strValue, strFunction, bLangID, strFieldName)
 	Dim strReturn
 	strReturn = vbNullString
@@ -751,6 +826,8 @@ Function getFeedback(strFieldName,bUpdateButton,bWYSIWYG)
 							End If
 						Case "FISCAL_YEAR_END"
 							strDisplay = getDropDownValue(strContent,"dbo.fn_CIC_DisplayFiscalYearEnd",True,Null)
+						Case "INTERESTS"
+							strDisplay = getChecklistXMLFeedbackSimpleValue(strContent,"AI","VOL_Interest")
 						Case "PAYMENT_TERMS"
 							strDisplay = getDropDownValue(strContent,"dbo.fn_GBL_DisplayPaymentTerms",True,Null)
 						Case "PREF_CURRENCY"
@@ -1513,8 +1590,8 @@ Function makeRecordNoteEntryTemplate(strNoteType)
 			"</tr></table>"
 	End If
 	
-	strReturn = strReturn & _
-			"<textarea name=""" & strPrefix & "RecordNoteValue"" title=" & AttrQs(TXT_NOTES) & " cols=""" & TEXTAREA_COLS-5 & """ rows=""" & TEXTAREA_ROWS_SHORT & """>[NOTE_VALUE]</textarea>" & _
+	strReturn = strReturn & vbCrLf & _
+		"<textarea class=""form-control"" name=""" & strPrefix & "RecordNoteValue"" title=" & AttrQs(TXT_NOTES) & " cols=""" & TEXTAREA_COLS-5 & """ rows=""" & TEXTAREA_ROWS_SHORT & """>[NOTE_VALUE]</textarea>" & _
 		"</div><div style=""clear: both;""></div></div>"
 
 	makeRecordNoteEntryTemplate = strReturn
@@ -1562,13 +1639,29 @@ Function makeRecordNoteEntry(xmlNoteNode, strField)
 	strReturn = strReturn & _
 		"<div class=""EntryFormNotesItem block-border-top" & StringIf(Not Nl(dCancelled), " RNCanceled") & """ id=""" & strPrefix & "CONTAINER"">" 
 	If Nl(dCancelled) Then
-		strReturn = strReturn & _
-			"<div style=""float: right; margin-right: 4px; display: none;""><button type=""button"" class=""EntryFormItemRestoreAction ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"" id=""" & strPrefix & "RESTOREDELETE""><span class=""ui-button-text"" style=""padding-top: 0px; padding-bottom: 0px; padding-left: 1em;"">" & TXT_RESTORE & "</span></button></div>" & _
-			"<div style=""float: right; margin-right: 4px;""><button type=""button"" class=""EntryFormItemAction ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icons"" id=""" & strPrefix & "ACTION""><span class=""ui-button-text"" style=""padding-top: 0px; padding-bottom: 0px; padding-left: 1em;"">" & TXT_ACTION & "</span><span class=""ui-button-icon-secondary ui-icon ui-icon-triangle-1-s""></span></button></div>"
+		strReturn = strReturn & vbCrLf & _
+			"<div style=""float: right; margin-right: 4px; display: none;"">" & _
+			"<button type=""button"" class=""EntryFormItemRestoreAction btn btn-default btn-xs"" id=""" & strPrefix & "RESTOREDELETE"">" & _
+			"<span class=""glyphicon glyphicon-share"" aria-hidden=""true""></span> " & TXT_RESTORE & _
+			"</button>" & _
+			"</div>" & vbCrLf & _
+			"<div style=""float: right; margin-right: 4px;"">" & _
+			"<button type=""button"" class=""EntryFormItemAction btn btn-default btn-xs"" id=""" & strPrefix & "ACTION"">" & _
+			TXT_ACTION & " <span class=""glyphicon glyphicon-chevron-down"" aria-hidden=""true""></span> " & _
+			"</button>" & _
+			"</div>"
 	Else
-		strReturn = strReturn & _
-			"<div style=""float: right; margin-right: 4px; display: none;""><button type=""button"" class=""EntryFormItemDontRestoreCancel ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"" id=""" & strPrefix & "RESTOREDELETE""><span class=""ui-button-text"" style=""padding-top: 0px; padding-bottom: 0px; padding-left: 1em;"">" & TXT_DONT_RESTORE & "</span></button></div>" & _
-			"<div style=""float: right; margin-right: 4px;""><button type=""button"" class=""EntryFormItemRestoreCancel ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"" id=""" & strPrefix & "RESTORECANCEL""><span class=""ui-button-text"" style=""padding-top: 0px; padding-bottom: 0px; padding-left: 1em;"">" & TXT_RESTORE & "</span></button></div>"
+		strReturn = strReturn & vbCrLf & _
+			"<div style=""float: right; margin-right: 4px; display: none;"">" & _
+			"<button type=""button"" class=""EntryFormItemDontRestoreCancel btn btn-default btn-xs"" id=""" & strPrefix & "RESTOREDELETE"">" & _
+			"<span class=""glyphicon glyphicon-remove"" aria-hidden=""true""></span> " & TXT_DONT_RESTORE & _
+			"</button>" & _
+			"</div>" & vbCrLf & _
+			"<div style=""float: right; margin-right: 4px;"">" & _
+			"<button type=""button"" class=""EntryFormItemRestoreCancel btn btn-default btn-xs"" id=""" & strPrefix & "RESTORECANCEL"">" & _
+			"<span class=""glyphicon glyphicon-share"" aria-hidden=""true""></span> " & TXT_RESTORE & _
+			"</button>" & _
+			"</div>"
 	End IF
 
 	strReturn = strReturn & _
@@ -1735,7 +1828,8 @@ Function printRow(strFieldName,strFieldDisplay,strFieldVal,bFieldColumn,bHasHelp
 	<%If bFieldColumn Then%>
 	<td class="field-icon-cell icon-<%=IIf(bFeedbackForm,1,2)%>">
 		<%If bHasHelp Then%>
-			<a class="btn btn-xs btn-default" href="javascript:openWin('<%=makeLink("fieldhelp.asp","field=" & strFieldName & "&amp;Ln=" & g_objCurrentLang.Culture,"Ln")%>','fHelp')"><span class="glyphicon glyphicon-question-sign medium-icon legend-button-icon" title="<%=TXT_HELP%>"></span></a>
+			<a class="btn btn-xs btn-default" href="javascript:openWin('<%=makeLink("fieldhelp.asp","field=" & strFieldName & "&amp;Ln=" & g_objCurrentLang.Culture,"Ln")%>','fHelp')">
+				<span class="glyphicon glyphicon-question-sign medium-icon legend-button-icon" title="<%=strFieldDisplay & TXT_COLON & TXT_HELP%>"></span></a>
 		<%End If%>
 		<%If bHasVersions Then%>
 			<span class="btn btn-xs btn-default">

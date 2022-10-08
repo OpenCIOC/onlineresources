@@ -60,11 +60,11 @@ Sub setTxtProcessRecordList()
 		Case CULTURE_FRENCH_CANADIAN
 			TXT_BULK_EMAIL_REQUEST = "Demande de mise à jour par courriel en nombre"
 			TXT_CREATE_NEW_REMINDER = "Créer un nouveau Rappel"
-			TXT_EMAIL_RECORD_LIST = "TRANSLATE_FR -- Email Record List"
+			TXT_EMAIL_RECORD_LIST = "Envoyer la liste des dossiers par courriel"
 			TXT_GENERATE_REPORT = "Générer le rapport"
 			TXT_NEXT_STEP = "Prochain &gt;&gt;"
 			TXT_PREPARE_EMAIL = "Utiliser les pages suivantes pour préparer une demande de mise à jour par courriel pour les dossiers sélectionnés."
-			TXT_PREPARE_EMAIL_RECORD_LIST = "TRANSLATE_FR -- Use the following page to prepare an Email of the list of selected records."
+			TXT_PREPARE_EMAIL_RECORD_LIST = "Utilisez la page suivante pour préparer un e-mail de la liste des dossiers sélectionnés."
 			TXT_PREPARE_EXPORT = "Utiliser les pages suivantes pour préparer un export des dossiers sélectionnés."
 			TXT_PREPARE_STATS_REPORT = "Veuillez préciser vos préférences pour le rapport statistique sur les dossiers sélectionnés."
 			TXT_RESTORE_RECORDS = "Restaurer les dossiers"

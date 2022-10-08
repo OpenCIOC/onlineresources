@@ -112,16 +112,24 @@ Function makeInterestsContents(rst,bUseContent)
 		.CommandText = "dbo.sp_VOL_VNUMInterest_s"
 		.CommandType = adCmdStoredProc
 		.CommandTimeout = 0
+		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
 		.Parameters.Append .CreateParameter("@VNUM", adVarChar, adParamInput, 10, strVNUM)
 	End With
 	Set rsInterests = cmdInterests.Execute
 	
 	With rsInterests
-		strReturn = strReturn & "<div id=""AI_existing_add_container"">"
-		While Not .EOF
-			strReturn = strReturn & "<input name=""AI_ID"" id=""AI_ID_" & .Fields("AI_ID") & """ type=""checkbox"" value=""" & .Fields("AI_ID") & """ checked>&nbsp;<label for=""AI_ID_" & .Fields("AI_ID") & """>" & .Fields("InterestName") & "</label> ; "
-			.MoveNext
-		Wend
+		strReturn = _
+			"<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_IMPORTANT & "</span>" & TXT_COLON & _
+				TXT_INST_IMPORTANT_CHECK_ALL & "</p><hr>" & vbCrLf & _
+			"<div id=""AI_existing_add_container"">"
+		Do Until .EOF
+			If .Fields("IS_SELECTED") = SQL_TRUE Then
+				strReturn = strReturn & "<input name=""AI_ID"" id=""AI_ID_" & .Fields("AI_ID") & """ type=""checkbox"" value=""" & .Fields("AI_ID") & """ checked>&nbsp;<label for=""AI_ID_" & .Fields("AI_ID") & """>" & .Fields("InterestName") & "</label> ; "
+				.MoveNext
+			Else
+				Exit Do
+			End If
+		Loop
 		strReturn = strReturn & "</div>"
 	End With
 	
@@ -130,16 +138,16 @@ Function makeInterestsContents(rst,bUseContent)
 	Set cmdInterests = Nothing
 
 	strReturn = strReturn & vbCrLf & _
-		"<h4>" & TXT_ADD_INTERESTS & "</h4><p id=""AI_new_input_table"">"
+		"<h4>" & TXT_ADD_INTERESTS & "</h4><div id=""AI_new_input_table"">"
 
 	If Not g_bOnlySpecificInterests Then
 		strReturn = strReturn & "<strong><label for=""NEW_AI"">" & TXT_FIND_BY_KEYWORD & "</label></strong>" & vbCrLf & "<br>"
 	End If
 		
-	strReturn = strReturn & TXT_NOT_SURE_ENTER & "<a href=""javascript:openWinL('" & makeLink("interestfind.asp","Ln=" & g_objCurrentLang.Culture,"Ln") & "','aiFind')"">" & TXT_AREA_OF_INTEREST_FINDER & "</a>." & vbCrLf & _
+	strReturn = strReturn & vbCrLf & _
 		"<div class=""entryform-checklist-add-wrapper"">" & _
 			"<div class=""entryform-checklist-add-left"">" & _
-					"<input type=""text"" id=""NEW_AI"" class=""form-control"">" & _
+				"<input type=""text"" id=""NEW_AI"" class=""form-control"">" & _
 			"</div>" & _
 			"<div class=""entryform-checklist-add-right"">" & _
 				"<button type=""button"" class=""btn btn-default"" id=""add_AI"">" & TXT_ADD & "</button>" & _
@@ -154,11 +162,11 @@ Function makeInterestsContents(rst,bUseContent)
 		strReturn = strReturn & makeInterestGroupList(vbNullString, "InterestGroup", True)
 		Call closeInterestGroupListRst()
 
-		strReturn = strReturn & "</p>"
+		strReturn = strReturn & "</div>"
 	End If
 
 	If bFeedback Then
-		strReturn = strReturn & getFeedback("INTERESTS",False,False)
+		strReturn = strReturn & getFeedback(strFieldName, False, False)
 	End If
 	makeInterestsContents = strReturn
 End Function
@@ -236,38 +244,55 @@ Function makeNumNeededContents(rst,bUseContent)
 	End With
 	Set rsNumNeeded = cmdNumNeeded.Execute
 	
-	strReturn = "<span class=""FieldLabelLeftClr""><label for=""NUM_NEEDED_TOTAL"">" & TXT_NUM_POSITIONS & " (" & TXT_TOTAL & ")</label></span> " & _
-		"<input type=""text"" name=""NUM_NEEDED_TOTAL"" id=""NUM_NEEDED_TOTAL"" size=""5"" maxlength=""4"" value=""" & intNumNeededTotal & """>"
+	strReturn = _
+		"<h4><label for=""NUM_NEEDED_NOTES"">" & TXT_NUM_NEEDED_TOTAL & "</label></h4>" & vbCrLf & _
+		"<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>. " & TXT_INST_NUM_NEEDED_TOTAL & "</p>" & vbCrLf & _
+		"<div class=""form-inline form-inline-always"">" & _
+			"<div class=""input-group"">" & _
+				"<input type=""text"" name=""NUM_NEEDED_TOTAL"" id=""NUM_NEEDED_TOTAL"" size=""5"" maxlength=""4"" value=""" & intNumNeededTotal & """ class=""form-control"">" & _
+				"<span class=""input-group-addon""><label for=""NUM_NEEDED_TOTAL"">" & TXT_INDIVIDUALS_WANTED & " (" & TXT_TOTAL & ")</label></span>" & _
+			"</div>" & _
+		"</div>"
 		
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("NUM_NEEDED_TOTAL",True,False)
 	End If
 
 	strReturn = strReturn & vbCrLf & _
-		"<br>&nbsp;<table id=""CM_existing_add_table"" class=""BasicBorder cell-padding-2"">" & _
-		"<tr><th class=""RevTitleBox"">&nbsp;</th><th class=""RevTitleBox"">" & TXT_COMMUNITY & "</th><th class=""RevTitleBox"">" & TXT_NUM_POSITIONS & "</th></tr>"
+		"<hr>" & _
+		"<h4><label for=""NUM_NEEDED_NOTES"">" & TXT_COMMUNITIES & "</label></h4>" & vbCrLf & _
+		"<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>. " & TXT_INST_NUM_NEEDED_COMMUNITIES & "</p>" & vbCrLf & _
+		"<div id=""CM_existing_add_container"" data-addon-label=" & AttrQs(TXT_INDIVIDUALS_WANTED & " " & TXT_OPTIONAL) & ">"
 
 	With rsNumNeeded
 		If Not .EOF Then
 			While Not .EOF
-				strReturn = strReturn & "<tr>" & _
-					"<td><input type=""checkbox"" id=""CM_ID_" & .Fields("CM_ID") & """ name=""CM_ID"" value=" & AttrQs(.Fields("CM_ID")) & Checked(Not Nl(.Fields("OP_CM_ID"))) & "></td>" & _
-					"<td class=""FieldLabelLeftClr""><label for=""CM_ID_" & .Fields("CM_ID") & """>" & .Fields("Community") & "</label></td>" & _
-					"<td align=""center""><input type=""text"" title=" & AttrQs(.Fields("Community") & TXT_COLON & TXT_NUM_POSITIONS) & " name=""CM_NUM_NEEDED_" & .Fields("CM_ID") & """" & _
-					" size=""3"" maxlength=""3"" value=" & AttrQs(.Fields("NUM_NEEDED")) & "></td></tr>"
+				strReturn = strReturn & vbCrLf & _
+					"<div class=""row-border-bottom""><div class=""row form-group"">" & vbCrLf & _
+					"<label class=""control-label control-label-left col-md-4"" for=""CM_ID_" & .Fields("CM_ID") & """>" & _
+					"<input type=""checkbox"" id=""CM_ID_" & .Fields("CM_ID") & """ name=""CM_ID"" value=" & AttrQs(.Fields("CM_ID")) & Checked(Not Nl(.Fields("OP_CM_ID"))) & "> " & .Fields("Community") & _
+					"</label>" & vbCrLf & _
+					"<div class=""col-md-8 form-inline"">" & _
+						"<div class=""input-group"">" & _
+							"<input type=""text"" class=""form-control"" title=" & AttrQs(.Fields("Community") & TXT_COLON & TXT_INDIVIDUALS_WANTED) & _
+								" name=""CM_NUM_NEEDED_" & .Fields("CM_ID") & """" & _
+								" size=""3"" maxlength=""3"" value=" & AttrQs(.Fields("NUM_NEEDED")) & ">" & _
+							"<span class=""input-group-addon"">" &TXT_INDIVIDUALS_WANTED & " " & TXT_OPTIONAL & "</span>" & _
+						"</div>" & _
+					"</div>" & vbCrLf & _
+					"</div></div>" & vbCrLf & _
 				.MoveNext
 			Wend
 		End If
 	End With
 
-	strReturn = strReturn & "</table>" & _
+	strReturn = strReturn & vbCrLf & _
+		"</div>" & vbCrLf & _
 		"<h4>" & TXT_ADD_COMMUNITIES & "</h4>" & _
-		"<p id=""CM_new_input_table"">" & TXT_INFO_COMMUNITIES_1 & _
-		"<a href=""javascript:openWin('" & makeLinkB(ps_strPathToStart & "comfind.asp") & "','cFind')"">" & TXT_COMMUNITY_FINDER & "</a></p>" & _
-
+		"<p id=""CM_new_input_table"">" & TXT_INFO_COMMUNITIES_1 & "</p>" & vbCrLf & _
 		"<div class=""entryform-checklist-add-wrapper"">" & _
 			"<div class=""entryform-checklist-add-left"">" & _
-					"<input type=""text"" id=""NEW_CM"" class=""form-control"">" & _
+				"<input type=""text"" id=""NEW_CM"" class=""form-control"">" & _
 			"</div>" & _
 			"<div class=""entryform-checklist-add-right"">" & _
 				"<button type=""button"" class=""btn btn-default"" id=""add_CM"">" & TXT_ADD & "</button>" & _
@@ -286,10 +311,12 @@ Function makeNumNeededContents(rst,bUseContent)
 	End If
 
 	strReturn = strReturn & vbCrLf & _
-			strReturn = strReturn & "<h4><label for=""NUM_NEEDED_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
-				"<textarea class=""form-control"" id=""NUM_NEEDED_NOTES"" name=""NUM_NEEDED_NOTES""" & _
-				" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
-				">" & strNotes & "</textarea>"
+			"<hr>" & vbCrLf & _
+			"<h4><label for=""NUM_NEEDED_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & vbCrLf & _
+			"<p>" & TXT_INST_NUM_NEEDED_NOTES & "</p>" & vbCrLf & _
+			"<textarea class=""form-control"" id=""NUM_NEEDED_NOTES"" name=""NUM_NEEDED_NOTES""" & _
+			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
+			">" & strNotes & "</textarea>"
 
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("NUM_NEEDED_NOTES",True,False)
@@ -313,15 +340,16 @@ Function makeNUMContents(strNUM, rsOrg, bUseData)
 		End If
 		
 		If Not Nl(strReturn) Then
-			strReturn = "<span class=""Alert"">" & strReturn & "</span><br>"
+			strReturn = "<div class=""AlertBubble"">" & strReturn & "</div>"
 		End If
 		
 	End if
 	
 	strReturn = strReturn & "<div class=""form-inline"">" & _
 			"<input type=""text"" class=""form-control"" id=""NUM"" title=" & AttrQs(TXT_RECORD_NUM) & " name=""NUM"" size=""20"" maxlength=""20""" & _
-			IIf(Not Nl(strNUM)," value=" & AttrQs(strNUM),vbNullString) & "> " & TXT_INST_NUM_FINDER	& _
-			"</div>"
+			IIf(Not Nl(strNUM)," value=" & AttrQs(strNUM),vbNullString) & "> " & _
+			"</div>" & _
+			"<p>" & TXT_INST_NUM_FINDER & "</p>"
 
 	If bFeedback Then
 		strReturn = strReturn & getFeedback("NUM", True,False)
@@ -579,27 +607,28 @@ Function makeStdChecklistContents(rst, bUseContent, strSP, strPrefix, strFieldNa
 	With rsChecklist
 		While Not .EOF
 			strReturn = strReturn & vbCrLf & _
-				"<div class=""row-border-bottom"">" & _
+				"<div class=" & AttrQs(IIf(bGeneralNotes,"row-border-bottom","row-border-top")) & ">" & _
 					"<div class=""row form-group"">" & _
-						"<label for=" & AttrQs(strPrefix & "_ID_" & .Fields(strPrefix & "_ID")) & " class=""control-label control-label-left col-md-4"">" & _
+						"<label for=" & AttrQs(strPrefix & "_ID_" & .Fields(strPrefix & "_ID")) & " class=""control-label control-label-left " & IIf(bItemNotes,"col-md-4","col-md-12") & """>" & _
 							"<input name=" & AttrQs(strPrefix & "_ID") & _
 								" id=" & AttrQs(strPrefix & "_ID_" & .Fields(strPrefix & "_ID")) & _
 								" type=""checkbox"" value=" & AttrQs(.Fields(strPrefix & "_ID")) & Checked(.Fields("IS_SELECTED")) & ">" & _
 							Server.HTMLEncode(.Fields(strNameField)) & _
-						"</label>" & _
+						"</label>"
+			If bItemNotes Then
+				strReturn = strReturn & vbCrLf & _
 						"<div class=""col-md-8"">"
-
-			If bItemNotes And (.Fields("LangID") = g_objCurrentLang.LangID) Then
-				strReturn = strReturn & _
-							"<input type=""text"" title=" & AttrQs(TXT_NOTES & TXT_COLON & .Fields(strNameField)) & _
-								" name=" & AttrQs(strPrefix & "_NOTES_" & .Fields(strPrefix & "_ID")) & _
-								" id=" & AttrQs(strPrefix & "_NOTES_" & .Fields(strPrefix & "_ID")) & _
-								" value=" & AttrQs(.Fields("Notes")) & _
-								" maxlength=" & AttrQs(MAX_LENGTH_CHECKLIST_NOTES) & _
-								" class=""form-control""" & _
-							">"
+				If .Fields("LangID") = g_objCurrentLang.LangID Then
+					strReturn = strReturn & _
+						"<input type=""text"" title=" & AttrQs(TXT_NOTES & TXT_COLON & .Fields(strNameField)) & _
+							" name=" & AttrQs(strPrefix & "_NOTES_" & .Fields(strPrefix & "_ID")) & _
+							" id=" & AttrQs(strPrefix & "_NOTES_" & .Fields(strPrefix & "_ID")) & _
+							" value=" & AttrQs(.Fields("Notes")) & _
+							" maxlength=" & AttrQs(MAX_LENGTH_CHECKLIST_NOTES) & _
+							" class=""form-control""" & _
+						">"
+				End If
 			End If
-
 			strReturn = strReturn & _
 						"</div>" & _
 					"</div>"
@@ -636,7 +665,13 @@ Function makeStdChecklistContents(rst, bUseContent, strSP, strPrefix, strFieldNa
 
 End Function
 Function makeSuitabilityContents(rst,bUseContent)
-	makeSuitabilityContents = makeStdChecklistContents(rst, bUseContent, "dbo.sp_VOL_VNUMSuitability_s", "SB", "SUITABILITY", "SuitableFor", False, False)
+	Dim strReturn
+
+	strReturn = _
+		"<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_IMPORTANT & "</span>" & TXT_COLON & _
+		TXT_INST_IMPORTANT_CHECK_ALL & "</p><hr>" & vbCrLf & _
+		makeStdChecklistContents(rst, bUseContent, "dbo.sp_VOL_VNUMSuitability_s", "SB", "SUITABILITY", "SuitableFor", False, False)
+	makeSuitabilityContents = strReturn
 End Function
 
 Function makeTrainingContents(rst,bUseContent)

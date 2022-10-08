@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -31,7 +31,7 @@ Select Case strActionType
 			strDropDownContents = makeInterestGroupTableList("IGID")
 			Call closeInterestGroupListRst()
 		Else
-			Call openInterestListRst(intIGID, True)
+			Call openInterestListRst(intIGID, False, True)
 			strDropDownContents = makeInterestTableList("ActionID")
 			Call closeInterestListRst()
 		End If

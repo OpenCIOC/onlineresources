@@ -60,11 +60,13 @@ SCRIPTS :=  \
 .PHONY: default clean cleancomposit
 	#debug release
 
+export PATH := ../python/node_modules/.bin;$(PATH)
+
 default: ../python/cioc/core/assetversions.json
 
 %.min.js: %.js
-	../python/node_modules/.bin/google-closure-compiler --compilation_level SIMPLE_OPTIMIZATIONS --js $< --create_source_map ./$<.map --source_map_format=V3 --js_output_file $@
-	unix2dos $@
+	google-closure-compiler --compilation_level SIMPLE_OPTIMIZATIONS --js $< --create_source_map ./$<.map --source_map_format=V3 --js_output_file $@
+
 
 admin.js: ciocbasic.js jquery.bgiframe.js autocomplete.js autocomplete_extra.js entryform_common.js admin_base.js
 	type $^ > $@

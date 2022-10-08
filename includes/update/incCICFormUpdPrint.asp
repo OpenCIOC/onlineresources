@@ -539,7 +539,7 @@ Function makeAreasServedContents(rst,bUseContent)
 		strNUM = Null
 	End If
 	
-	strReturn = TXT_INFO_COMMUNITIES_2
+	strReturn = "<p>" & TXT_INFO_COMMUNITIES_2 & "</p>"
 	
 	strReturn = strReturn & "<table id=""CM_existing_add_table"" class=""NoBorder cell-padding-2"">"
 	If Not Nl(strNUM) Then
@@ -576,8 +576,7 @@ Function makeAreasServedContents(rst,bUseContent)
 
 	strReturn = strReturn & "</table>"
 	strReturn = strReturn & "<h4>" & TXT_ADD_COMMUNITIES & "</h4>" & _
-		"<p id=""CM_new_input_table"">" & TXT_INFO_COMMUNITIES_1 & _
-		"<a href=""javascript:openWin('" & makeLinkB(ps_strPathToStart & "comfind.asp") & "','cFind')"">" & TXT_COMMUNITY_FINDER & "</a></p>" & _
+		"<p id=""CM_new_input_table"">" & TXT_INFO_COMMUNITIES_1 & "</p>" & _
 
 		"<div class=""entryform-checklist-add-wrapper"">" & _
 			"<div class=""entryform-checklist-add-left"">" & _

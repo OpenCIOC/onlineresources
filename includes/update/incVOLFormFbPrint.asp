@@ -18,7 +18,7 @@
 %>
 
 <%
-Function makeNumNeededContents(rst,bUseContent)
+Function makeNumNeededFbContents(rst,bUseContent)
 	Dim strReturnCONTACT_NAME
 	Dim strVNUM, _
 		intNumNeededTotal, _
@@ -98,25 +98,6 @@ Function makeNumNeededContents(rst,bUseContent)
 			" class=""form-control""" & _
 			">" & strNotes & "</textarea>"
 
-	makeNumNeededContents = strReturn
-End Function
-
-Function makeAreaOfInterestContents(rst,bUseContent)
-	Dim strReturn
-	Dim strInterests
-	
-	If bUseContent Then
-		strInterests = rst("INTERESTS")
-	End If
-	
-	strReturn = makeMemoFieldVal("INTERESTS", _
-							strInterests, _
-							TEXTAREA_ROWS_SHORT, _
-							False, _
-							False _
-							) & _
-		"<br>" & TXT_NOT_SURE_ENTER & " <a href=""javascript:openWin('" & makeLinkB("interestfind.asp") & "','sFind')"">" & TXT_AREA_OF_INTEREST_FINDER & "</a>."
-	
-	makeAreaOfInterestContents = strReturn
+	makeNumNeededFbContents = strReturn
 End Function
 %>

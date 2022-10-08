@@ -537,7 +537,7 @@ End If
 		<%End If%>
 	</div>
 	<div class="panel-body no-padding">
-		<table class="BasicBorder cell-padding-4 full-width inset-table form-table responsive-table">
+		<table class="BasicBorder cell-padding-5 full-width inset-table form-table responsive-table">
 <%
 Dim strFieldName, _
 	strFieldContents, _
@@ -550,12 +550,17 @@ Call printUpdatedFields(rsOrg, intFormType = EF_UPDATE, False)
 Call printRecordOwner(rsOrg, Not bNew)
 If intFormType <> EF_UPDATE Then
 	Call printRow("VNUM", TXT_RECORD_NUM, _
-		"<input type=""checkbox"" name=""AutoAssignVNUM"" id=""AutoAssignVNUM"" checked onClick=""changeAutoAssign(this, document.EntryForm.VNUM, document.EntryForm.VNUMButton);"">&nbsp;<label for=""AutoAssignVNUM"">" & TXT_AUTO_ASSIGN_LOWEST_NUM & "</label>" & _
-		"<br><input type=""text"" name=""VNUM"" title=" & AttrQs(TXT_RECORD_NUM) & " size=""11"" maxlength=""10"" disabled class=""record-num"">" & _
-		" <input type=""button"" id=""VNUMButton"" value=""" & TXT_LOWEST_UNUSED_FOR & "" & user_strAgency & """ onClick=""document.EntryForm.VNUM.value='" & strNewVNUM & "';"" disabled>" & _
+		"<label for=" & AttrQs("AutoAssignNUM") & ">" & _
+		"<input type=""checkbox"" id=" & AttrQs("AutoAssignVNUM") & " name=""AutoAssignVNUM"" checked onClick=""changeAutoAssign(this, document.EntryForm.VNUM, document.EntryForm.VNUMButton);"">" & TXT_AUTO_ASSIGN_LOWEST_NUM & _
+		"</label>" & vbCrLf & _
+		"<div class=""form-inline"">" & _
+		"<input type=""text"" name=""VNUM"" title=" & AttrQs(TXT_RECORD_NUM) & " size=""11"" maxlength=""10"" disabled class=""record-num form-control"">" & _
+		" <input type=""button"" id=""VNUMButton"" value=""" & TXT_LOWEST_UNUSED_FOR & "" & user_strAgency & """ onClick=""document.EntryForm.VNUM.value='" & strNewVNUM & "';"" class=""btn btn-default"" disabled>" & _
+		"</div>" & _
 		" [ <a href=""javascript:openWin('" & makeLinkB("vnumfind.asp") & "','aFind')"">" & TXT_LOWEST_UNUSED_FOR & TXT_ALL_AGENCIES & "</a> ]", _
 		True,True,False,True,bEnforceReqFields,False,False)
 End If
+
 If intFormType <> EF_UPDATE Then
 	strFieldVal = makeNUMContents(strNUM, Null, False)
 	Call printRow("NUM",TXT_ORG_RECORD_NUM, _
@@ -596,6 +601,12 @@ While Not rsFields.EOF
 					IIf(strFieldName="REQUEST_DATE",True,False),False,False,False,False, _
 					rsFields.Fields("CanUseFeedback") _
 					)
+				Select Case strFieldName
+					Case "DISPLAY_UNTIL"
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_IMPORTANT & "</span>" & TXT_COLON & _
+							TXT_INST_DISPLAY_UNTIL & "</p>" & vbCrLf & _
+							strFieldVal
+				End Select
 			Case "m"
 				strFieldVal = makeMemoFieldVal(strFieldName, _
 					strFieldContents, _
@@ -638,7 +649,9 @@ While Not rsFields.EOF
 					Case "COMMITMENT_LENGTH"
 						strFieldVal = makeCommitmentLengthContents(rsOrg, Not bNew)
 					Case "CONTACT"
-						strFieldVal = makeContactFieldVal(rsOrg, strFieldName, Not bNew)
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>. " & _
+							TXT_INST_VOL_CONTACT & "</p>" & vbCrLf & _
+							makeContactFieldVal(rsOrg, strFieldName, Not bNew)
 					Case "EVENT_SCHEDULE"
 						strFieldVal = makeEventScheduleContentsEntryForm(rsOrg, Not bNew)
 					Case "INTERACTION_LEVEL"
@@ -811,7 +824,7 @@ End If
 <script type="text/javascript">
     tinymce.init({
         selector: '.WYSIWYG',
-        plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table autoresize',
+        plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table autoresize paste',
         toolbar: 'undo redo styles bullist numlist link | bold italic forecolor removeformat image table | copy cut paste searchreplace fullscreen',
         mobile: {
             toolbar: 'styles bullist numlist link bold italic'

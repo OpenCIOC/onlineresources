@@ -1197,6 +1197,45 @@ window['init_cached_state'] = function(formselector) {
 })(jQuery);
 		
 
+/*! Copyright (c) 2010 Brandon Aaron (http://brandonaaron.net)
+ * Licensed under the MIT License (LICENSE.txt).
+ *
+ * Version 2.1.2
+ */
+
+(function($){
+
+$.fn.bgiframe = ($.browser.msie && /msie 6\.0/i.test(navigator.userAgent) ? function(s) {
+    s = $.extend({
+        top     : 'auto', // auto == .currentStyle.borderTopWidth
+        left    : 'auto', // auto == .currentStyle.borderLeftWidth
+        width   : 'auto', // auto == offsetWidth
+        height  : 'auto', // auto == offsetHeight
+        opacity : true,
+        src     : 'javascript:false;'
+    }, s);
+    var html = '<iframe class="bgiframe"frameborder="0"tabindex="-1"src="'+s.src+'"'+
+                   'style="display:block;position:absolute;z-index:-1;'+
+                       (s.opacity !== false?'filter:Alpha(Opacity=\'0\');':'')+
+                       'top:'+(s.top=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderTopWidth)||0)*-1)+\'px\')':prop(s.top))+';'+
+                       'left:'+(s.left=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderLeftWidth)||0)*-1)+\'px\')':prop(s.left))+';'+
+                       'width:'+(s.width=='auto'?'expression(this.parentNode.offsetWidth+\'px\')':prop(s.width))+';'+
+                       'height:'+(s.height=='auto'?'expression(this.parentNode.offsetHeight+\'px\')':prop(s.height))+';'+
+                '"/>';
+    return this.each(function() {
+        if ( $(this).children('iframe.bgiframe').length === 0 )
+            this.insertBefore( document.createElement(html), this.firstChild );
+    });
+} : function() { return this; });
+
+// old alias
+$.fn.bgIframe = $.fn.bgiframe;
+
+function prop(n) {
+    return n && n.constructor === Number ? n + 'px' : n;
+}
+
+})(jQuery);
 // =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
@@ -1677,6 +1716,64 @@ window['init_languages'] = function($, txt_not_found) {
 // limitations under the License.
 // =========================================================================================
 
+(function(){
+var $ = jQuery;
+var configure_entry_form_button = function() {
+	$("#SUBMIT_BUTTON").click(function(evt) { 
+		var btn = $('#SUBMIT_BUTTON');
+		if (btn.prop('disabled')) {
+			return;
+		}
+		btn.prop('disabled', true);
+		setTimeout(function() {
+			$("#EntryForm").submit();
+		}, 1);
+	});
+
+	$(document).bind('keydown', function(evt) {
+		if (evt.ctrlKey && String.fromCharCode( evt.which).toLowerCase() === 's') {
+			setTimeout(function() {
+				$('#SUBMIT_BUTTON').click();
+			}, 1);
+			evt.preventDefault();
+			evt.stopPropagation();
+			return false;
+		}
+	});
+	$("#SUBMIT_BUTTON").prop('disabled',false);
+}
+window['configure_entry_form_button'] = configure_entry_form_button;
+
+var configure_feedback_submit_button = function() {
+	 var value = $("#SUBMIT_BUTTON").prop('value');
+	$("#SUBMIT_BUTTON").replaceWith($('<input type="button" class="btn btn-default" id="SUBMIT_BUTTON">').prop('value', value));
+	$('#EntryForm').submit(function() {
+		var retval = validateForm();
+		if (retval === false) {
+			$("#SUBMIT_BUTTON").prop('disabled', false);
+		}
+		return retval;
+	});
+}
+window['configure_feedback_submit_button'] = configure_feedback_submit_button;
+
+})();
+﻿// =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// =========================================================================================
+
 (function() {
 /*global
 	confirm:true
@@ -2046,7 +2143,7 @@ window['init_schedule'] = function($) {
 };
 
 })();
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -2062,45 +2159,141 @@ window['init_schedule'] = function($) {
 // limitations under the License.
 // =========================================================================================
 
-(function(){
+(function() {
+
 var $ = jQuery;
-var configure_entry_form_button = function() {
-	$("#SUBMIT_BUTTON").click(function(evt) { 
-		var btn = $('#SUBMIT_BUTTON');
-		if (btn.prop('disabled')) {
-			return;
-		}
-		btn.prop('disabled', true);
-		setTimeout(function() {
-			$("#EntryForm").submit();
-		}, 1);
+var add_new_community = function(chkid, display) {
+	var existing_container = $('#CM_existing_add_container'),
+		addon_label = existing_container.data('addonLabel');
+	existing_container.
+		append($('<div>').
+			addClass('row-border-bottom').
+			append($('<div>').
+				addClass('row form-group').
+				append($('<label>').
+					addClass('control-label control-label-left col-md-4').
+					prop({
+						for: 'CM_ID_' + chkid,
+					}).
+					append($('<input>').
+						prop({
+							id: 'CM_ID_' + chkid,
+							type: 'checkbox',
+							checked: true,
+							defaultChecked: true,
+							name: 'CM_ID',
+							value: chkid
+							})
+					).
+					append(document.createTextNode(' ' + display))
+				).
+				append($('<div>').
+					addClass('col-md-8 form-inline').
+					append($('<div>').
+						addClass('input-group').
+						append($('<input>').
+							addClass('form-control').
+							prop({
+								id: 'CM_NUM_NEEDED_' + chkid,
+								name: 'CM_NUM_NEEDED_' + chkid,
+								size: 3,
+								maxlength: 3
+							})
+						).
+						append($('<span>').
+							addClass('input-group-addon').
+							text(addon_label)
+						)
+					)
+
+				)
+			)
+		);
+};
+var init_num_needed = function(txt_not_found){
+	init_autocomplete_checklist($, {
+		field: 'CM',
+		source: entryform.community_complete_url,
+		add_new_html: add_new_community,
+		minLength: 3,
+		txt_not_found: txt_not_found
+		});
+};
+window['init_num_needed'] = init_num_needed;
+
+var init_interests = function(txt_not_found) {
+	var added_values = [];
+	var add_item_fn = only_items_chk_add_html($, 'AI');
+	init_autocomplete_checklist($, {field: 'AI',
+			source: entryform.interest_complete_url,
+			add_new_html: add_item_fn,
+			added_values: added_values,
+			txt_not_found: txt_not_found
 	});
 
-	$(document).bind('keydown', function(evt) {
-		if (evt.ctrlKey && String.fromCharCode( evt.which).toLowerCase() === 's') {
-			setTimeout(function() {
-				$('#SUBMIT_BUTTON').click();
-			}, 1);
-			evt.preventDefault();
-			evt.stopPropagation();
-			return false;
-		}
-	});
-	$("#SUBMIT_BUTTON").prop('disabled',false);
-}
-window['configure_entry_form_button'] = configure_entry_form_button;
+	var interest_group;
+	var update_interest_list = function (data) {
+		var ai_list_old = $("#AreaOfInterestList");
+		if (ai_list_old.length) {
+			ai_list_old.prop('id', 'AreaOfInterestListOld');
 
-var configure_feedback_submit_button = function() {
-	 var value = $("#SUBMIT_BUTTON").prop('value');
-	$("#SUBMIT_BUTTON").replaceWith($('<input type="button" class="btn btn-default" id="SUBMIT_BUTTON">').prop('value', value));
-	$('#EntryForm').submit(function() {
-		var retval = validateForm();
-		if (retval === false) {
-			$("#SUBMIT_BUTTON").prop('disabled', false);
 		}
-		return retval;
-	});
-}
-window['configure_feedback_submit_button'] = configure_feedback_submit_button;
+		var ai_list = $('<ul>').hide().
+			insertAfter(interest_group).
+			prop('id', 'AreaOfInterestList').
+			append($($.map(data, function(item, index) {
+				var el = $('<li>').append(
+						$('<label>').append(
+							$('<input>').
+								prop({
+								type: 'checkbox',
+								value: item.chkid
+									}).
+								data('cioc_chk_display', item.value)
+							).
+							append(document.createTextNode(' ' + item.value)
+						)
+					)[0];
+					return el;
+					})));
+
+
+		ai_list.show('slow');
+		if (ai_list_old.length) {
+			ai_list_old.hide('slow', function ()
+						{
+							ai_list_old.remove();
+						});
+		}
+
+
+	};
+	interest_group = $('#InterestGroup').
+		change(function() {
+			$.getJSON(entryform.interest_complete_url,
+				{IGID: interest_group.prop('value')},
+				update_interest_list);
+		});
+
+
+	$("#FIELD_INTERESTS").next().on('click', "#AreaOfInterestList input:checkbox",
+		{added_values: added_values, add_item_fn: add_item_fn}, function (event) {
+			var me = $(this);
+			var existing_chk = document.getElementById('AI_ID_' + this.value);
+			if (existing_chk) {
+				existing_chk.checked = true;
+			} else {
+
+				var display = me.data('cioc_chk_display');
+
+				event.data.added_values.push({chkid: this.value, display: display});
+				event.data.add_item_fn(this.value, display);
+			}
+
+			me.parent().parent().hide('slow',function () { me.remove(); });
+
+		});
+};
+window['init_interests'] = init_interests;
 
 })();

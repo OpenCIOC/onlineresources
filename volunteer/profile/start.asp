@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -445,7 +445,7 @@ Call VOLProfilePersonalForm(False, dicBasicInfo)
 	%>
 		<tr>
 			<td class="FieldLabelLeft"><%= TXT_AREA_OF_INTEREST %></td>
-			<td><%=makeInterestGroupList(vbNullString,"IGID",False)%>&nbsp;<input type="submit" value="<%=TXT_SEARCH%>"></td>
+			<td><%=makeInterestGroupList(vbNullString,"IGID",True)%>&nbsp;<input type="submit" value="<%=TXT_SEARCH%>"></td>
 		</tr>
 	<%
 		Call closeInterestGroupListRst() 
@@ -456,7 +456,7 @@ Call VOLProfilePersonalForm(False, dicBasicInfo)
 	<% End If %>
 
 <div>
-	<h3><%=TXT_AREA_OF_INTEREST_SEARCH_RESULTS%></h3>
+	<h3><%=TXT_AREA_OF_INTEREST_LIST%></h3>
 	<div id="results_area">
 	<p><%=TXT_NOTHING_TO_SEARCH%></p>
 	</div>

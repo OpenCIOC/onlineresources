@@ -1142,45 +1142,6 @@ window['init_cached_state'] = function(formselector) {
 })();
 
 
-/*! Copyright (c) 2010 Brandon Aaron (http://brandonaaron.net)
- * Licensed under the MIT License (LICENSE.txt).
- *
- * Version 2.1.2
- */
-
-(function($){
-
-$.fn.bgiframe = ($.browser.msie && /msie 6\.0/i.test(navigator.userAgent) ? function(s) {
-    s = $.extend({
-        top     : 'auto', // auto == .currentStyle.borderTopWidth
-        left    : 'auto', // auto == .currentStyle.borderLeftWidth
-        width   : 'auto', // auto == offsetWidth
-        height  : 'auto', // auto == offsetHeight
-        opacity : true,
-        src     : 'javascript:false;'
-    }, s);
-    var html = '<iframe class="bgiframe"frameborder="0"tabindex="-1"src="'+s.src+'"'+
-                   'style="display:block;position:absolute;z-index:-1;'+
-                       (s.opacity !== false?'filter:Alpha(Opacity=\'0\');':'')+
-                       'top:'+(s.top=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderTopWidth)||0)*-1)+\'px\')':prop(s.top))+';'+
-                       'left:'+(s.left=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderLeftWidth)||0)*-1)+\'px\')':prop(s.left))+';'+
-                       'width:'+(s.width=='auto'?'expression(this.parentNode.offsetWidth+\'px\')':prop(s.width))+';'+
-                       'height:'+(s.height=='auto'?'expression(this.parentNode.offsetHeight+\'px\')':prop(s.height))+';'+
-                '"/>';
-    return this.each(function() {
-        if ( $(this).children('iframe.bgiframe').length === 0 )
-            this.insertBefore( document.createElement(html), this.firstChild );
-    });
-} : function() { return this; });
-
-// old alias
-$.fn.bgIframe = $.fn.bgiframe;
-
-function prop(n) {
-    return n && n.constructor === Number ? n + 'px' : n;
-}
-
-})(jQuery);
 // =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
@@ -1236,173 +1197,45 @@ function prop(n) {
 })(jQuery);
 		
 
-// =========================================================================================
-// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// =========================================================================================
+/*! Copyright (c) 2010 Brandon Aaron (http://brandonaaron.net)
+ * Licensed under the MIT License (LICENSE.txt).
+ *
+ * Version 2.1.2
+ */
 
-(function() {
-/*global diff_match_patch:true */
-var init_history_dialog = function($, field_history) {
-    var diff_match_patch_loaded = false;
-	var dmp = null;
+(function($){
 
-	var current_revision = null;
-	var current_compare = null;
-	
-	var replace_history = function(data) {
-		if (data.fail) {
-			$('#HistoryFieldContent').html('<em>' + data.errinfo + '</em>');
-		} else if (data.compare) {
-			if (dmp === null) {
-				dmp = new diff_match_patch();
-			}
+$.fn.bgiframe = ($.browser.msie && /msie 6\.0/i.test(navigator.userAgent) ? function(s) {
+    s = $.extend({
+        top     : 'auto', // auto == .currentStyle.borderTopWidth
+        left    : 'auto', // auto == .currentStyle.borderLeftWidth
+        width   : 'auto', // auto == offsetWidth
+        height  : 'auto', // auto == offsetHeight
+        opacity : true,
+        src     : 'javascript:false;'
+    }, s);
+    var html = '<iframe class="bgiframe"frameborder="0"tabindex="-1"src="'+s.src+'"'+
+                   'style="display:block;position:absolute;z-index:-1;'+
+                       (s.opacity !== false?'filter:Alpha(Opacity=\'0\');':'')+
+                       'top:'+(s.top=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderTopWidth)||0)*-1)+\'px\')':prop(s.top))+';'+
+                       'left:'+(s.left=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderLeftWidth)||0)*-1)+\'px\')':prop(s.left))+';'+
+                       'width:'+(s.width=='auto'?'expression(this.parentNode.offsetWidth+\'px\')':prop(s.width))+';'+
+                       'height:'+(s.height=='auto'?'expression(this.parentNode.offsetHeight+\'px\')':prop(s.height))+';'+
+                '"/>';
+    return this.each(function() {
+        if ( $(this).children('iframe.bgiframe').length === 0 )
+            this.insertBefore( document.createElement(html), this.firstChild );
+    });
+} : function() { return this; });
 
-			var d = dmp.diff_main(data.text2, data.text1);
-			dmp.diff_cleanupSemantic(d);
-			var ds = dmp.diff_prettyHtml(d);
-			$('#HistoryFieldContent').html(ds);
-		} else {
-			$('#HistoryFieldContent').html(data.text1);
-		}
-	};
-	var history_select_changed = function(field, display, id) {
-		return function() {
-			var lang = $('#HistoryLanguage').prop('value');
-			var revision = $('#HistoryRevision').prop('value');
-			var compare = $('#HistoryCompare').prop('value');
+// old alias
+$.fn.bgIframe = $.fn.bgiframe;
 
-			if (compare !== current_compare && (
-					(current_compare === '' && compare === revision) ||
-					(compare === '' && current_compare === current_revision))) {
-				current_revision = revision;
-				current_compare = compare;
-				return;
-			}
+function prop(n) {
+    return n && n.constructor === Number ? n + 'px' : n;
+}
 
-			var comp = compare;
-			if (compare === '' || compare === revision) {
-				comp = '';
-			}
-			$.getJSON(field_history.fielddiff_url.
-					replace('[ID]', id).
-					replace('[LANG]', lang).
-					replace('[FIELD]', field).
-					replace('[REV]', revision).
-					replace('[COMP]', comp), replace_history);
-
-			current_revision = revision;
-			current_compare = compare;
-		};
-	};
-
-	var add_history_events = null;
-	var change_language = function(field, display, id, lang) {
-		$('select.HistorySelect').unbind('change');
-		$('#HistoryLanguage').unbind('change');
-
-		$("#field_history").
-			html('<p class="Info">' + field_history.txt_loading + '</p>').
-			dialog('close').
-			dialog('open').
-			dialog('option', 'title', field_history.txt_fielddifftitle +
-					id + " (" + display + ')').
-			load(field_history.fielddiffui_url.
-				replace("[ID]", id).
-				replace('[FIELD]', field).
-				replace('[LANG]', lang),
-				add_history_events(field, display, id));
-	};
-
-	var language_changed = function(field, display, id) {
-		return function() {
-			var lang = $(this).prop('value');
-			change_language(field, display, id, lang);
-		};
-	};
-	
-	add_history_events = function(field, display, id) {
-		return function() {
-			$('select.HistorySelect').
-				change(history_select_changed(field, display, id));
-
-			$('#HistoryLanguage').
-				change(language_changed(field, display, id));
-
-			current_revision = $('#HistoryRevision').prop('value');
-			current_compare = $('#HistoryCompare').prop('value');
-		};
-	};
-
-
-	$(".ShowVersions").click(function() {
-		var field = $(this).data('ciocfield');
-		var display = $(this).data('ciocfielddisplay');
-		var id = $(this).data('ciocid');
-
-		if (!diff_match_patch_loaded) {
-			diff_match_patch_loaded = true;
-			$.getScript(field_history.path_to_start + "scripts/diff_match_patch.min.js");
-		}
-
-		change_language(field, display, id, '');
-
-	});
-
-	var toggle_history_fields = function(e) {
-
-
-		$(e.currentTarget).parent().children('ul').toggle("fast");
-	};
-	var go_to_field = function(e) {
-		var field = $(e.currentTarget).data('fieldname');
-		var td = document.getElementById('FIELD_' + field);
-		if (td) {
-			td.scrollIntoView(true);
-		}
-	};
-	$(document).on('click', '.FieldHistoryJump', go_to_field);
-	$(document).on('click', '.HistoryFieldsToggle', toggle_history_fields);
-
-	var hide_children = function() {
-		$('.HistoryFieldsToggle').
-			parent().children('ul').hide();
-	};
-	$(".HistorySummary").click(function() {
-		var lang = $(this).data('cioclang');
-		var id = $(this).data('ciocid');
-
-		$('#revision_history').
-			html('Loading...').
-			load(field_history.revhistory_url.
-				replace('[ID]', id).
-				replace('[LANG]', lang), hide_children).
-			dialog('open');
-
-	});
-
-	$("#revision_history").dialog({autoOpen: false, width: 330, height: 280, position: ['right', 'top' ], resizable: false, dialogClass: 'RevHistory'});
-	$("#field_history").dialog({autoOpen: false, width: 620, height: 280, position: ['right', 'bottom']});
-
-	$(".RevHistory.ui-dialog").css({position:"fixed"});
-
-};
-
-window['init_history_dialog'] = init_history_dialog;
-})();
-
-
+})(jQuery);
 // =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
@@ -1925,7 +1758,7 @@ var configure_feedback_submit_button = function() {
 window['configure_feedback_submit_button'] = configure_feedback_submit_button;
 
 })();
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -2310,6 +2143,604 @@ window['init_schedule'] = function($) {
 };
 
 })();
+﻿// =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// =========================================================================================
+
+(function() {
+
+var $ = jQuery;
+var add_new_community = function(chkid, display) {
+	var existing_container = $('#CM_existing_add_container'),
+		addon_label = existing_container.data('addonLabel');
+	existing_container.
+		append($('<div>').
+			addClass('row-border-bottom').
+			append($('<div>').
+				addClass('row form-group').
+				append($('<label>').
+					addClass('control-label control-label-left col-md-4').
+					prop({
+						for: 'CM_ID_' + chkid,
+					}).
+					append($('<input>').
+						prop({
+							id: 'CM_ID_' + chkid,
+							type: 'checkbox',
+							checked: true,
+							defaultChecked: true,
+							name: 'CM_ID',
+							value: chkid
+							})
+					).
+					append(document.createTextNode(' ' + display))
+				).
+				append($('<div>').
+					addClass('col-md-8 form-inline').
+					append($('<div>').
+						addClass('input-group').
+						append($('<input>').
+							addClass('form-control').
+							prop({
+								id: 'CM_NUM_NEEDED_' + chkid,
+								name: 'CM_NUM_NEEDED_' + chkid,
+								size: 3,
+								maxlength: 3
+							})
+						).
+						append($('<span>').
+							addClass('input-group-addon').
+							text(addon_label)
+						)
+					)
+
+				)
+			)
+		);
+};
+var init_num_needed = function(txt_not_found){
+	init_autocomplete_checklist($, {
+		field: 'CM',
+		source: entryform.community_complete_url,
+		add_new_html: add_new_community,
+		minLength: 3,
+		txt_not_found: txt_not_found
+		});
+};
+window['init_num_needed'] = init_num_needed;
+
+var init_interests = function(txt_not_found) {
+	var added_values = [];
+	var add_item_fn = only_items_chk_add_html($, 'AI');
+	init_autocomplete_checklist($, {field: 'AI',
+			source: entryform.interest_complete_url,
+			add_new_html: add_item_fn,
+			added_values: added_values,
+			txt_not_found: txt_not_found
+	});
+
+	var interest_group;
+	var update_interest_list = function (data) {
+		var ai_list_old = $("#AreaOfInterestList");
+		if (ai_list_old.length) {
+			ai_list_old.prop('id', 'AreaOfInterestListOld');
+
+		}
+		var ai_list = $('<ul>').hide().
+			insertAfter(interest_group).
+			prop('id', 'AreaOfInterestList').
+			append($($.map(data, function(item, index) {
+				var el = $('<li>').append(
+						$('<label>').append(
+							$('<input>').
+								prop({
+								type: 'checkbox',
+								value: item.chkid
+									}).
+								data('cioc_chk_display', item.value)
+							).
+							append(document.createTextNode(' ' + item.value)
+						)
+					)[0];
+					return el;
+					})));
+
+
+		ai_list.show('slow');
+		if (ai_list_old.length) {
+			ai_list_old.hide('slow', function ()
+						{
+							ai_list_old.remove();
+						});
+		}
+
+
+	};
+	interest_group = $('#InterestGroup').
+		change(function() {
+			$.getJSON(entryform.interest_complete_url,
+				{IGID: interest_group.prop('value')},
+				update_interest_list);
+		});
+
+
+	$("#FIELD_INTERESTS").next().on('click', "#AreaOfInterestList input:checkbox",
+		{added_values: added_values, add_item_fn: add_item_fn}, function (event) {
+			var me = $(this);
+			var existing_chk = document.getElementById('AI_ID_' + this.value);
+			if (existing_chk) {
+				existing_chk.checked = true;
+			} else {
+
+				var display = me.data('cioc_chk_display');
+
+				event.data.added_values.push({chkid: this.value, display: display});
+				event.data.add_item_fn(this.value, display);
+			}
+
+			me.parent().parent().hide('slow',function () { me.remove(); });
+
+		});
+};
+window['init_interests'] = init_interests;
+
+})();
+// =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// =========================================================================================
+
+(function() {
+var init_entryform_notes = function(jqarray, show_text, hide_text) {
+	var $= jQuery;
+	jqarray.each(function() {
+		var sortable = null;
+		var obj = this;
+		var order = [];
+		var jqobj = $(obj);
+		var parent = jqobj.parent();
+		var next_new_id = 1;
+		var updates_dom = jqobj.find('.EntryFormNotesUpdateIds')[0];
+		if (!updates_dom) {
+			return;
+		}
+		var deletes_dom = jqobj.find('.EntryFormNotesDeleteIds')[0];
+		var cancels_dom = jqobj.find('.EntryFormNotesCancelIds')[0];
+		var restores_dom = jqobj.find('.EntryFormNotesRestoreIds')[0];
+
+		var updates = [];
+		var deletes = [];
+		var cancels = [];
+		var cancel_reason = {};
+		var restores = [];
+
+		var add_templated = function(data, isnew) {
+			updates.push(data.id);
+			updates_dom.value = updates.join(',');
+			var count = jqobj.find('.EntryFormItemBox').length + 1;
+				template = jqobj.data('addTmpl'),
+				new_item = $(template.replace(/\[COUNT\]/g, count).
+						replace(/\[ID\]/g, data.id).
+						replace(/\[MODIFIED_DATE\]/g, data.modified_date || '').
+						replace(/\[MODIFIED_BY\]/g, data.modified_by || '').
+						replace(/\[CREATED_DATE\]/g, data.created_date || '').
+						replace(/\[CREATED_BY\]/g, data.created_by || '').
+						replace(/\[NOTE_VALUE\]/g, data.note_value || ''));
+			if (data.note_type) {
+				new_item.find("option[value='" + data.note_type + "']").prop('selected', true);
+			}
+
+			if (data.created_date) {
+				new_item.find('tr.CreatedField').show();
+			}
+			if (data.modified_date && (data.modified_date !== data.created_date || data.modified_by !== data.created_by)) {
+				new_item.find('tr.ModifiedField').show();
+			}
+
+			if (isnew) {
+				new_item.find('.NewFlag').show();
+			}
+
+			jqobj.append(new_item);
+
+		};
+
+		var add = function() {
+			var id = "NEW" + next_new_id++;
+
+			add_templated({id: id}, true);
+		};
+
+		var add_button = parent.find(".EntryFormItemAdd").click(function() { add(false); });
+
+		var do_update = function(button) {
+			var container = $(button).parents('.EntryFormNotesItem'),
+				entry = container.find('.EntryFormItemContent');
+
+			add_templated(entry.data('formValues'));
+			container.hide(); // remove?
+
+		};
+		var do_delete = function(button) {
+			var id = button.id.split('_'), btn = $(button),
+				container = btn.parents('.EntryFormNotesItem'),
+				entry = container.find('.EntryFormItemContent');
+
+			entry.css('text-decoration', 'line-through');
+			deletes.push(id[id.length-2]);
+			deletes_dom.value = deletes.join(',');
+			container.data('actionToRestore', 'delete');
+
+			// hide button, show restore button
+			btn.parent().hide().prev().show();
+			
+		};
+		var do_cancel = function(button, selected_action) {
+			var id = button.id.split('_'), btn = $(button),
+				container = btn.parents('.EntryFormNotesItem'),
+				entry = container.find('.EntryFormItemContent'),
+				splitpoint = button.id.lastIndexOf('_'),
+				fieldname = button.id.substring(0,splitpoint) + '_CANCEL_REASON';
+
+			id = id[id.length-2];
+			entry.prepend(selected_action.data('cancelTemplate'));
+			cancels.push(id);
+			cancels_dom.value = cancels.join(',');
+			cancel_reason[id] = selected_action.data('cancelType');
+			jqobj.append($('<input>').prop({
+				type: 'hidden', 
+				id: fieldname, 
+				name: fieldname, 
+				value: selected_action.data('cancelType')
+			}));
+			container.data('actionToRestore', 'cancel');
+
+			// hide button, show restore button
+			btn.parent().hide().prev().show();
+		};
+		var menu_actions = { 
+			'update': do_update, 
+			'delete': do_delete, 
+			'cancel': do_cancel
+		};
+		var menu = parent.find('.EntryFormItemActionMenu').menu({
+			select: function(event, ui) {
+				$(this).hide();
+				menu_actions[ui.item.data('action')](menu.data('activeButton'), ui.item);
+			}
+		}).hide().css({position: 'absolute', zIndex: 1});
+		parent.on('click', '.EntryFormItemAction', function(event) {
+			menu.data('activeButton', this);
+			if (menu.is(':visible') ){
+				menu.hide();
+				return false;
+			}
+			menu.menu('blur').show();
+			menu.position({
+				my: "right top",
+				at: "right bottom",
+				of: this
+			});
+			$(document).one("click", function() {
+				menu.hide();
+			});
+			return false;
+		});
+
+		parent.find('.EntryFormItemViewHidden').click(function(event) {
+			var self = $(this), hide_target = self.next();
+			if (hide_target.is(':visible')) {
+				self.text(show_text);
+				hide_target.hide();
+			} else {
+				self.text(hide_text);
+				hide_target.show();
+			}	
+
+		});
+
+		var restore_delete = function(id, btn, container, entry) {
+			entry.css('text-decoration', 'none');
+			deletes = $.grep(deletes, function(value) { return value !== id;});
+			deletes_dom.value = deletes.join(',');
+
+			// hide button, show restore button
+			btn.parent().hide().next().show();
+		};
+		var restore_cancel = function(id, btn, container, entry) {
+			var button = btn[0],
+				splitpoint = button.id.lastIndexOf('_'),
+				fieldname = button.id.substring(0,splitpoint) + '_CANCEL_REASON';
+
+			entry.find('.EntryFormItemCancelledDetails').remove();
+			cancels = $.grep(cancels, function(value) { return value !== id;}),
+			cancels_dom.value = cancels.join(',');
+			delete cancel_reason[id];
+			$('#' + fieldname).remove();
+
+			btn.parent().hide().next().show();
+		};
+		var restore_fns = {
+			'delete': restore_delete,
+			'cancel': restore_cancel
+		};
+
+		parent.on('click', '.EntryFormItemRestoreAction', function(event) {
+			var id = this.id.split('_'), btn = $(this),
+				container = btn.parents('.EntryFormNotesItem'),
+				entry = container.find('.EntryFormItemContent');
+
+			restore_fns[container.data('actionToRestore')](id[id.length-2], btn, container, entry);
+		});
+
+		var do_restore_cancel = function(event) {
+			var id = this.id.split('_'), btn = $(this),
+				container = btn.parents('.EntryFormNotesItem'),
+				entry = container.find('.EntryFormItemCancelledDetails');
+
+			entry.css('text-decoration', 'line-through');
+			btn.parent().hide().prev().show();
+
+			restores.push(id[id.length-2]);
+			restores_dom.value = restores.join(',');
+
+		};
+		parent.on('click', '.EntryFormItemRestoreCancel', do_restore_cancel);
+
+		parent.on('click', '.EntryFormItemDontRestoreCancel', function(event) {
+			var id = this.id.split('_'), btn = $(this),
+				container = btn.parents('.EntryFormNotesItem'),
+				entry = container.find('.EntryFormItemCancelledDetails');
+
+			entry.css('text-decoration', 'none');
+			btn.parent().hide().next().show();
+			id = id[id.length - 2];
+			restores = $.grep(restores, function(value) { return value !== id;}),
+			restores_dom.value = restores.join(',');
+
+		});
+
+		var onbeforeunload = function(cache) {
+			cache[obj.id + '_updates'] = updates;
+			cache[obj.id + '_deletes'] = deletes;
+			cache[obj.id + '_restores'] = restores;
+			cache[obj.id + '_cancels'] = cancels;
+			cache[obj.id + '_cancel_reason'] = cancel_reason;
+		};
+		cache_register_onbeforeunload(onbeforeunload);
+
+		var onbeforerestorevalues = function(cache) {
+			var id_prefix = obj.id.substring(0, obj.id.lastIndexOf('_')) + '_';
+			if (cache[obj.id + '_updates']) {
+				
+				$.each(cache[obj.id + '_updates'], function(index, value) {
+					if (value.indexOf('NEW') === 0) {
+						next_new_id++;
+						add_templated({id: value}, true);
+					} else {
+						var entry = $('#' + id_prefix + value + '_DISPLAY');
+						add_templated(entry.data('formValues'));
+						$('#' + id_prefix + value + '_CONTAINER').hide();
+					}
+				});
+			}
+			if (cache[obj.id + '_deletes']) {
+				$.each(cache[obj.id + '_deletes'], function(index, value) {
+					do_delete(document.getElementById(id_prefix + value + '_ACTION'));
+				});
+			}
+			if (cache[obj.id + '_restores']) {
+				$.each(cache[obj.id + '_restores'], function(index, value) {
+					do_restore_cancel.call(document.getElementById(id_prefix + value + '_RESTORECANCEL'));
+				});
+				parent.find('.EntryFormItemViewHidden').click();
+			}
+
+			if (cache[obj.id + '_cancels']) {
+				var cancel_reason = cache[obj.id + '_cancel_reason'];
+				$.each(cache[obj.id + '_cancels'], function(index, value) {
+					do_cancel(document.getElementById(id_prefix + value + '_ACTION'), menu.find("li[data-cancel-type='" + cancel_reason[value] + "']"));
+				});
+				
+			}
+		};
+
+		cache_register_onbeforerestorevalues(onbeforerestorevalues);
+	});
+};
+window['init_entryform_notes'] = init_entryform_notes;
+})();
+
+// =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// =========================================================================================
+
+(function() {
+/*global diff_match_patch:true */
+var init_history_dialog = function($, field_history) {
+    var diff_match_patch_loaded = false;
+	var dmp = null;
+
+	var current_revision = null;
+	var current_compare = null;
+	
+	var replace_history = function(data) {
+		if (data.fail) {
+			$('#HistoryFieldContent').html('<em>' + data.errinfo + '</em>');
+		} else if (data.compare) {
+			if (dmp === null) {
+				dmp = new diff_match_patch();
+			}
+
+			var d = dmp.diff_main(data.text2, data.text1);
+			dmp.diff_cleanupSemantic(d);
+			var ds = dmp.diff_prettyHtml(d);
+			$('#HistoryFieldContent').html(ds);
+		} else {
+			$('#HistoryFieldContent').html(data.text1);
+		}
+	};
+	var history_select_changed = function(field, display, id) {
+		return function() {
+			var lang = $('#HistoryLanguage').prop('value');
+			var revision = $('#HistoryRevision').prop('value');
+			var compare = $('#HistoryCompare').prop('value');
+
+			if (compare !== current_compare && (
+					(current_compare === '' && compare === revision) ||
+					(compare === '' && current_compare === current_revision))) {
+				current_revision = revision;
+				current_compare = compare;
+				return;
+			}
+
+			var comp = compare;
+			if (compare === '' || compare === revision) {
+				comp = '';
+			}
+			$.getJSON(field_history.fielddiff_url.
+					replace('[ID]', id).
+					replace('[LANG]', lang).
+					replace('[FIELD]', field).
+					replace('[REV]', revision).
+					replace('[COMP]', comp), replace_history);
+
+			current_revision = revision;
+			current_compare = compare;
+		};
+	};
+
+	var add_history_events = null;
+	var change_language = function(field, display, id, lang) {
+		$('select.HistorySelect').unbind('change');
+		$('#HistoryLanguage').unbind('change');
+
+		$("#field_history").
+			html('<p class="Info">' + field_history.txt_loading + '</p>').
+			dialog('close').
+			dialog('open').
+			dialog('option', 'title', field_history.txt_fielddifftitle +
+					id + " (" + display + ')').
+			load(field_history.fielddiffui_url.
+				replace("[ID]", id).
+				replace('[FIELD]', field).
+				replace('[LANG]', lang),
+				add_history_events(field, display, id));
+	};
+
+	var language_changed = function(field, display, id) {
+		return function() {
+			var lang = $(this).prop('value');
+			change_language(field, display, id, lang);
+		};
+	};
+	
+	add_history_events = function(field, display, id) {
+		return function() {
+			$('select.HistorySelect').
+				change(history_select_changed(field, display, id));
+
+			$('#HistoryLanguage').
+				change(language_changed(field, display, id));
+
+			current_revision = $('#HistoryRevision').prop('value');
+			current_compare = $('#HistoryCompare').prop('value');
+		};
+	};
+
+
+	$(".ShowVersions").click(function() {
+		var field = $(this).data('ciocfield');
+		var display = $(this).data('ciocfielddisplay');
+		var id = $(this).data('ciocid');
+
+		if (!diff_match_patch_loaded) {
+			diff_match_patch_loaded = true;
+			$.getScript(field_history.path_to_start + "scripts/diff_match_patch.min.js");
+		}
+
+		change_language(field, display, id, '');
+
+	});
+
+	var toggle_history_fields = function(e) {
+
+
+		$(e.currentTarget).parent().children('ul').toggle("fast");
+	};
+	var go_to_field = function(e) {
+		var field = $(e.currentTarget).data('fieldname');
+		var td = document.getElementById('FIELD_' + field);
+		if (td) {
+			td.scrollIntoView(true);
+		}
+	};
+	$(document).on('click', '.FieldHistoryJump', go_to_field);
+	$(document).on('click', '.HistoryFieldsToggle', toggle_history_fields);
+
+	var hide_children = function() {
+		$('.HistoryFieldsToggle').
+			parent().children('ul').hide();
+	};
+	$(".HistorySummary").click(function() {
+		var lang = $(this).data('cioclang');
+		var id = $(this).data('ciocid');
+
+		$('#revision_history').
+			html('Loading...').
+			load(field_history.revhistory_url.
+				replace('[ID]', id).
+				replace('[LANG]', lang), hide_children).
+			dialog('open');
+
+	});
+
+	$("#revision_history").dialog({autoOpen: false, width: 330, height: 280, position: ['right', 'top' ], resizable: false, dialogClass: 'RevHistory'});
+	$("#field_history").dialog({autoOpen: false, width: 620, height: 280, position: ['right', 'bottom']});
+
+	$(".RevHistory.ui-dialog").css({position:"fixed"});
+
+};
+
+window['init_history_dialog'] = init_history_dialog;
+})();
+
+
 ﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
@@ -2865,416 +3296,3 @@ var init_validate_duplicate_org_names = function(options) {
 
 window['init_validate_duplicate_org_names'] = init_validate_duplicate_org_names;
 })();
-// =========================================================================================
-// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// =========================================================================================
-
-(function() {
-
-var $ = jQuery;
-var add_new_community = function(chkid, display) {
-	$('#CM_existing_add_table').
-		removeClass('NotVisible').
-		append($('<tr>').
-			append($('<td>').
-				append($('<input>').
-					prop({
-						id: 'CM_ID_' + chkid,
-						type: 'checkbox',
-						checked: true,
-						defaultChecked: true,
-						name: 'CM_ID',
-						value: chkid
-						})
-				)
-			).
-			append($('<td>').
-				addClass('FieldLabelLeftClr').
-				append(document.createTextNode(' ' + display))
-			).
-			append($('<td>').
-				prop('align', 'center').
-				append($('<input>').
-					prop({
-						id: 'CM_NUM_NEEDED_' + chkid,
-						name: 'CM_NUM_NEEDED_' + chkid,
-						size: 3,
-						maxlength: 3
-						})
-				)
-			)
-		);
-};
-var init_num_needed = function(txt_not_found){
-	init_autocomplete_checklist($, {
-		field: 'CM',
-		source: entryform.community_complete_url,
-		add_new_html: add_new_community,
-		minLength: 3,
-		txt_not_found: txt_not_found
-		});
-};
-window['init_num_needed'] = init_num_needed;
-
-var init_interests = function(txt_not_found) {
-	var added_values = [];
-	var add_item_fn = only_items_chk_add_html($, 'AI');
-	init_autocomplete_checklist($, {field: 'AI',
-			source: entryform.interest_complete_url,
-			add_new_html: add_item_fn,
-			added_values: added_values,
-			txt_not_found: txt_not_found
-	});
-
-	var interest_group;
-	var update_interest_list = function (data) {
-		var ai_list_old = $("#AreaOfInterestList");
-		if (ai_list_old.length) {
-			ai_list_old.prop('id', 'AreaOfInterestListOld');
-
-		}
-		var ai_list = $('<ul>').hide().
-			insertAfter(interest_group).
-			prop('id', 'AreaOfInterestList').
-			append($($.map(data, function(item, index) {
-					var el =  $('<li>').append(
-						$('<input>').
-							prop({
-							type: 'checkbox',
-							value: item.chkid
-								}).
-							data('cioc_chk_display', item.value)
-						).
-						append(document.createTextNode(' ' + item.value))[0];
-					return el;
-					})));
-
-
-		ai_list.show('slow');
-		if (ai_list_old.length) {
-			ai_list_old.hide('slow', function ()
-						{
-							ai_list_old.remove();
-						});
-		}
-
-
-	};
-	interest_group = $('#InterestGroup').
-		change(function() {
-			$.getJSON(entryform.interest_complete_url,
-				{IGID: interest_group.prop('value')},
-				update_interest_list);
-		});
-
-
-	$("#FIELD_INTERESTS").next().on('click', "#AreaOfInterestList input:checkbox",
-		{added_values: added_values, add_item_fn: add_item_fn}, function (event) {
-			var me = $(this);
-			var existing_chk = document.getElementById('AI_ID_' + this.value);
-			if (existing_chk) {
-				existing_chk.checked = true;
-			} else {
-
-				var display = me.data('cioc_chk_display');
-
-				event.data.added_values.push({chkid: this.value, display: display});
-				event.data.add_item_fn(this.value, display);
-			}
-
-			me.parent().hide('slow',function () { me.remove(); });
-
-		});
-};
-window['init_interests'] = init_interests;
-
-})();
-// =========================================================================================
-// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// =========================================================================================
-
-(function() {
-var init_entryform_notes = function(jqarray, show_text, hide_text) {
-	var $= jQuery;
-	jqarray.each(function() {
-		var sortable = null;
-		var obj = this;
-		var order = [];
-		var jqobj = $(obj);
-		var parent = jqobj.parent();
-		var next_new_id = 1;
-		var updates_dom = jqobj.find('.EntryFormNotesUpdateIds')[0];
-		if (!updates_dom) {
-			return;
-		}
-		var deletes_dom = jqobj.find('.EntryFormNotesDeleteIds')[0];
-		var cancels_dom = jqobj.find('.EntryFormNotesCancelIds')[0];
-		var restores_dom = jqobj.find('.EntryFormNotesRestoreIds')[0];
-
-		var updates = [];
-		var deletes = [];
-		var cancels = [];
-		var cancel_reason = {};
-		var restores = [];
-
-		var add_templated = function(data, isnew) {
-			updates.push(data.id);
-			updates_dom.value = updates.join(',');
-			var count = jqobj.find('.EntryFormItemBox').length + 1;
-				template = jqobj.data('addTmpl'),
-				new_item = $(template.replace(/\[COUNT\]/g, count).
-						replace(/\[ID\]/g, data.id).
-						replace(/\[MODIFIED_DATE\]/g, data.modified_date || '').
-						replace(/\[MODIFIED_BY\]/g, data.modified_by || '').
-						replace(/\[CREATED_DATE\]/g, data.created_date || '').
-						replace(/\[CREATED_BY\]/g, data.created_by || '').
-						replace(/\[NOTE_VALUE\]/g, data.note_value || ''));
-			if (data.note_type) {
-				new_item.find("option[value='" + data.note_type + "']").prop('selected', true);
-			}
-
-			if (data.created_date) {
-				new_item.find('tr.CreatedField').show();
-			}
-			if (data.modified_date && (data.modified_date !== data.created_date || data.modified_by !== data.created_by)) {
-				new_item.find('tr.ModifiedField').show();
-			}
-
-			if (isnew) {
-				new_item.find('.NewFlag').show();
-			}
-
-			jqobj.append(new_item);
-
-		};
-
-		var add = function() {
-			var id = "NEW" + next_new_id++;
-
-			add_templated({id: id}, true);
-		};
-
-		var add_button = parent.find(".EntryFormItemAdd").click(function() { add(false); });
-
-		var do_update = function(button) {
-			var container = $(button).parents('.EntryFormNotesItem'),
-				entry = container.find('.EntryFormItemContent');
-
-			add_templated(entry.data('formValues'));
-			container.hide(); // remove?
-
-		};
-		var do_delete = function(button) {
-			var id = button.id.split('_'), btn = $(button),
-				container = btn.parents('.EntryFormNotesItem'),
-				entry = container.find('.EntryFormItemContent');
-
-			entry.css('text-decoration', 'line-through');
-			deletes.push(id[id.length-2]);
-			deletes_dom.value = deletes.join(',');
-			container.data('actionToRestore', 'delete');
-
-			// hide button, show restore button
-			btn.parent().hide().prev().show();
-			
-		};
-		var do_cancel = function(button, selected_action) {
-			var id = button.id.split('_'), btn = $(button),
-				container = btn.parents('.EntryFormNotesItem'),
-				entry = container.find('.EntryFormItemContent'),
-				splitpoint = button.id.lastIndexOf('_'),
-				fieldname = button.id.substring(0,splitpoint) + '_CANCEL_REASON';
-
-			id = id[id.length-2];
-			entry.prepend(selected_action.data('cancelTemplate'));
-			cancels.push(id);
-			cancels_dom.value = cancels.join(',');
-			cancel_reason[id] = selected_action.data('cancelType');
-			jqobj.append($('<input>').prop({
-				type: 'hidden', 
-				id: fieldname, 
-				name: fieldname, 
-				value: selected_action.data('cancelType')
-			}));
-			container.data('actionToRestore', 'cancel');
-
-			// hide button, show restore button
-			btn.parent().hide().prev().show();
-		};
-		var menu_actions = { 
-			'update': do_update, 
-			'delete': do_delete, 
-			'cancel': do_cancel
-		};
-		var menu = parent.find('.EntryFormItemActionMenu').menu({
-			select: function(event, ui) {
-				$(this).hide();
-				menu_actions[ui.item.data('action')](menu.data('activeButton'), ui.item);
-			}
-		}).hide().css({position: 'absolute', zIndex: 1});
-		parent.on('click', '.EntryFormItemAction', function(event) {
-			menu.data('activeButton', this);
-			if (menu.is(':visible') ){
-				menu.hide();
-				return false;
-			}
-			menu.menu('blur').show();
-			menu.position({
-				my: "right top",
-				at: "right bottom",
-				of: this
-			});
-			$(document).one("click", function() {
-				menu.hide();
-			});
-			return false;
-		});
-
-		parent.find('.EntryFormItemViewHidden').click(function(event) {
-			var self = $(this), hide_target = self.next();
-			if (hide_target.is(':visible')) {
-				self.text(show_text);
-				hide_target.hide();
-			} else {
-				self.text(hide_text);
-				hide_target.show();
-			}	
-
-		});
-
-		var restore_delete = function(id, btn, container, entry) {
-			entry.css('text-decoration', 'none');
-			deletes = $.grep(deletes, function(value) { return value !== id;});
-			deletes_dom.value = deletes.join(',');
-
-			// hide button, show restore button
-			btn.parent().hide().next().show();
-		};
-		var restore_cancel = function(id, btn, container, entry) {
-			var button = btn[0],
-				splitpoint = button.id.lastIndexOf('_'),
-				fieldname = button.id.substring(0,splitpoint) + '_CANCEL_REASON';
-
-			entry.find('.EntryFormItemCancelledDetails').remove();
-			cancels = $.grep(cancels, function(value) { return value !== id;}),
-			cancels_dom.value = cancels.join(',');
-			delete cancel_reason[id];
-			$('#' + fieldname).remove();
-
-			btn.parent().hide().next().show();
-		};
-		var restore_fns = {
-			'delete': restore_delete,
-			'cancel': restore_cancel
-		};
-
-		parent.on('click', '.EntryFormItemRestoreAction', function(event) {
-			var id = this.id.split('_'), btn = $(this),
-				container = btn.parents('.EntryFormNotesItem'),
-				entry = container.find('.EntryFormItemContent');
-
-			restore_fns[container.data('actionToRestore')](id[id.length-2], btn, container, entry);
-		});
-
-		var do_restore_cancel = function(event) {
-			var id = this.id.split('_'), btn = $(this),
-				container = btn.parents('.EntryFormNotesItem'),
-				entry = container.find('.EntryFormItemCancelledDetails');
-
-			entry.css('text-decoration', 'line-through');
-			btn.parent().hide().prev().show();
-
-			restores.push(id[id.length-2]);
-			restores_dom.value = restores.join(',');
-
-		};
-		parent.on('click', '.EntryFormItemRestoreCancel', do_restore_cancel);
-
-		parent.on('click', '.EntryFormItemDontRestoreCancel', function(event) {
-			var id = this.id.split('_'), btn = $(this),
-				container = btn.parents('.EntryFormNotesItem'),
-				entry = container.find('.EntryFormItemCancelledDetails');
-
-			entry.css('text-decoration', 'none');
-			btn.parent().hide().next().show();
-			id = id[id.length - 2];
-			restores = $.grep(restores, function(value) { return value !== id;}),
-			restores_dom.value = restores.join(',');
-
-		});
-
-		var onbeforeunload = function(cache) {
-			cache[obj.id + '_updates'] = updates;
-			cache[obj.id + '_deletes'] = deletes;
-			cache[obj.id + '_restores'] = restores;
-			cache[obj.id + '_cancels'] = cancels;
-			cache[obj.id + '_cancel_reason'] = cancel_reason;
-		};
-		cache_register_onbeforeunload(onbeforeunload);
-
-		var onbeforerestorevalues = function(cache) {
-			var id_prefix = obj.id.substring(0, obj.id.lastIndexOf('_')) + '_';
-			if (cache[obj.id + '_updates']) {
-				
-				$.each(cache[obj.id + '_updates'], function(index, value) {
-					if (value.indexOf('NEW') === 0) {
-						next_new_id++;
-						add_templated({id: value}, true);
-					} else {
-						var entry = $('#' + id_prefix + value + '_DISPLAY');
-						add_templated(entry.data('formValues'));
-						$('#' + id_prefix + value + '_CONTAINER').hide();
-					}
-				});
-			}
-			if (cache[obj.id + '_deletes']) {
-				$.each(cache[obj.id + '_deletes'], function(index, value) {
-					do_delete(document.getElementById(id_prefix + value + '_ACTION'));
-				});
-			}
-			if (cache[obj.id + '_restores']) {
-				$.each(cache[obj.id + '_restores'], function(index, value) {
-					do_restore_cancel.call(document.getElementById(id_prefix + value + '_RESTORECANCEL'));
-				});
-				parent.find('.EntryFormItemViewHidden').click();
-			}
-
-			if (cache[obj.id + '_cancels']) {
-				var cancel_reason = cache[obj.id + '_cancel_reason'];
-				$.each(cache[obj.id + '_cancels'], function(index, value) {
-					do_cancel(document.getElementById(id_prefix + value + '_ACTION'), menu.find("li[data-cancel-type='" + cancel_reason[value] + "']"));
-				});
-				
-			}
-		};
-
-		cache_register_onbeforerestorevalues(onbeforerestorevalues);
-	});
-};
-window['init_entryform_notes'] = init_entryform_notes;
-})();
-

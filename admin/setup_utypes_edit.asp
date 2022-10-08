@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -306,44 +306,30 @@ With rsSecurityLevel
 	Wend
 End With
 
-Dim strEditAgencyCode, intMaxColHt, intCurColHt
+Dim strEditAgencyCode
 
 Set rsSecurityLevel = rsSecurityLevel.NextRecordset
 With rsSecurityLevel
-	If .RecordCount > 1 Or .RecordCount = 1 And Nz(.Fields("SELECTED"), False) Then
-		intMaxColHt = Int(Sqr(.RecordCount)) + 1
-		If .RecordCount Mod intMaxColHt = 1 Then
-			intMaxColHt = intMaxColHt + 1
-		End If
-		intCurColHt = intMaxColHt
-		strEditAgencies = "<table class=""NoBorder cell-padding-2"">" & vbCrLf & _
-			"<tr>" & vbCrLf & _
-				"<td><ul>"
-		strVacancyEditAgencies = "<table class=""NoBorder cell-padding-2"">" & vbCrLf & _
-			"<tr>" & vbCrLf & _
-				"<td><ul>"
+	If .RecordCount > 1 Or (.RecordCount = 1 And Nz(.Fields("SELECTED"), False)) Then
+		strEditAgencies = "<div class=""row clear-line-below"">"
 		While Not .EOF
 			strEditAgencyCode = .Fields("AgencyCode")
-			If intCurColHt = 0 Then
-				strEditAgencies = strEditAgencies & "</ul></td>" & vbCrLf & "<td><ul>"
-				strVacancyEditAgencies = strVacancyEditAgencies & "</ul></td>" & vbCrLf & "<td><ul>"
-				intCurColHt = intMaxColHt	
-			End If
-			strEditAgencies = strEditAgencies & _
-				"<li><label for=""EditAgency_" & strEditAgencyCode & """><input type=""checkbox"" name=""EditAgency"" id=""EditAgency_" & strEditAgencyCode & """ value=""" & strEditAgencyCode & """" & Checked(.Fields("SELECTED")) & ">&nbsp;" & strEditAgencyCode & "</label></li>"
+			strEditAgencies = strEditAgencies & vbCrLf & _
+				"<div class=""col-xs-4 col-sm-3 col-md-2"">" & _
+				"<label class=""control-label"" for=" & AttrQs("EditAgency_" & strEditAgencyCode) & ">" & _
+				"<input type=""checkbox"" name=""EditAgency""" & _
+					" id=" & AttrQs("EditAgency_" & strEditAgencyCode) & _
+					" value=" & AttrQs(strEditAgencyCode) & _
+					" " & Checked(.Fields("SELECTED")) & "> " & strEditAgencyCode & "</label>" & _
+				"</div>"
 			If intDomain = DM_CIC Then
 				strVacancyEditAgencies = strVacancyEditAgencies & _
 					"<li><label for=""VacancyEditAgency_" & strEditAgencyCode & """><input type=""checkbox"" name=""VacancyEditAgency"" id=""VacancyEditAgency_" & strEditAgencyCode & """ value=""" & strEditAgencyCode & """" & Checked(.Fields("VacancySelected")) & ">&nbsp;" & strEditAgencyCode & "</label></li>"
 			End If
-			intCurColHt = intCurColHt - 1
 			.MoveNext
 		Wend
-		strEditAgencies = strEditAgencies & "</ul></td>" & vbCrLf & _
-			"</tr>" & vbCrLf & _
-			"</table>"
-		strVacancyEditAgencies = strVacancyEditAgencies & "</ul></td>" & vbCrLf & _
-			"</tr>" & vbCrLf & _
-			"</table>"
+		strEditAgencies = strEditAgencies & "</div>"
+		strVacancyEditAgencies = Replace(strEditAgencies,"EditAgency","VacancyEditAgency")
 	End If
 End With
 
@@ -405,44 +391,51 @@ Else
 End If
 %>
 
-<p style="font-weight:bold">[ <a href="<%=makeLinkB("setup.asp")%>"><%=TXT_RETURN_TO_SETUP%></a> | <a href="<%=makeLink("setup_utypes.asp","DM=" & intDomain,vbNullString)%>"><%=TXT_RETURN_USER_TYPES%> (<%=strType%>)</a>]</p>
+<div class="btn-group" role="group">
+	<a role="button" class="btn btn-default" href="<%=makeLinkB("setup.asp")%>"><%=TXT_RETURN_TO_SETUP%></a>
+	<a role="button" class="btn btn-default" href="<%=makeLink("setup_utypes.asp","DM=" & intDomain,vbNullString)%>"><%=TXT_RETURN_USER_TYPES%> (<%=strType%>)</a>
+</div>
+<div class="clear-line-below"></div>
+
 <form action="setup_utypes_edit2.asp" method="GET">
 <%=g_strCacheFormVals%>
 <input type="hidden" name="DM" value="<%=intDomain%>">
 <input type="hidden" name="SLID" value="<%=intSLID%>">
-<table class="BasicBorder cell-padding-4">
-<tr>
-	<th colspan="2" class="RevTitleBox"><%=TXT_CREATE_EDIT_USER_TYPE%></th>
-</tr>
+
+
+<div class="panel panel-default max-width-lg">
+<div class="panel-heading"><h2><%=TXT_CREATE_EDIT_USER_TYPE%></h2></div>
+<div class="panel-body no-padding">
+<table class="BasicBorder cell-padding-4 full-width form-table inset-table responsive-table">
 <%
 If Not bNew Then
 %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_STATUS%></td>
-	<td><%=strUserTypeStatus%></td>
+	<td class="field-label-cell"><%=TXT_STATUS%></td>
+	<td class="field-data-cell"><%=strUserTypeStatus%></td>
 </tr>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_DATE_CREATED%></td>
-	<td><%=strCreatedDate%></td>
+	<td class="field-label-cell"><%=TXT_DATE_CREATED%></td>
+	<td class="field-data-cell"><%=strCreatedDate%></td>
 </tr>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CREATED_BY%></td>
-	<td><%=strCreatedBy%></td>
+	<td class="field-label-cell"><%=TXT_CREATED_BY%></td>
+	<td class="field-data-cell"><%=strCreatedBy%></td>
 </tr>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_LAST_MODIFIED%></td>
-	<td><%=strModifiedDate%></td>
+	<td class="field-label-cell"><%=TXT_LAST_MODIFIED%></td>
+	<td class="field-data-cell"><%=strModifiedDate%></td>
 </tr>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_MODIFIED_BY%></td>
-	<td><%=strModifiedBy%></td>
+	<td class="field-label-cell"><%=TXT_MODIFIED_BY%></td>
+	<td class="field-data-cell"><%=strModifiedBy%></td>
 </tr>
 <%
 End If
 %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_RECORD_OWNER%></td>
-	<td><label for="Owner"><input type="checkbox" id="Owner" name="Owner"<%=Checked(Not Nl(strOwner))%>> <%=TXT_EXCLUSIVELY_OWNED_BY & user_strAgency%></label></td>
+	<td class="field-label-cell"><%=TXT_RECORD_OWNER%></td>
+	<td class="field-data-cell"><label for="Owner"><input type="checkbox" id="Owner" name="Owner"<%=Checked(Not Nl(strOwner))%>> <%=TXT_EXCLUSIVELY_OWNED_BY & user_strAgency%></label></td>
 </tr>
 <%
 	For Each strCulture In active_cultures()
@@ -458,8 +451,8 @@ End If
 	End If
 %>
 <tr>
-	<td class="FieldLabelLeft"><label for="SecurityLevel_<%= strCulture %>"><%=TXT_USER_TYPE_NAME%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label> <span class="Alert">*</span></td>
-	<td><input type="text" name="SecurityLevel_<%= strCulture %>" id="SecurityLevel_<%= strCulture %>" value=<%=AttrQs(strSecurityLevel)%> size="50" maxlength="100"> 
+	<td class="field-label-cell"><label for="SecurityLevel_<%= strCulture %>"><%=TXT_USER_TYPE_NAME%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label> <span class="Alert">*</span></td>
+	<td class="field-data-cell"><input class="form-control" type="text" name="SecurityLevel_<%= strCulture %>" id="SecurityLevel_<%= strCulture %>" value=<%=AttrQs(strSecurityLevel)%> size="50" maxlength="100"> 
 	<p><%=TXT_INST_USER_TYPE_NAME%></p></td>
 </tr>
 <%
@@ -467,16 +460,16 @@ End If
 Call openViewListRst(intDomain, user_strAgency, intViewType)
 %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_DEFAULT_VIEW%> <span class="Alert">*</span></td>
-	<td><%=makeViewList(intViewType,"ViewType",True, False)%>
+	<td class="field-label-cell"><%=TXT_DEFAULT_VIEW%> <span class="Alert">*</span></td>
+	<td class="field-data-cell"><%=makeViewList(intViewType,"ViewType",True, False)%>
 	<p><%=TXT_INST_VIEW_TYPE%></p>
 	<%If Not Nl(strCanSeeViews) Then%>
 	<p><%=TXT_BASED_ON_EXISTING_VIEW_1%><em>#<%=intCurrentViewType & " - " & strCurrentViewName%></em><%=TXT_BASED_ON_EXISTING_VIEW_2%><em><%=strCanSeeViews%></em><%=TXT_BASED_ON_EXISTING_VIEW_3%></p>
 	<%End If%></td>
 </tr>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_EDITORIAL_VIEW%></td>
-	<td>
+	<td class="field-label-cell"><%=TXT_EDITORIAL_VIEW%></td>
+	<td class="field-data-cell">
 	<%=TXT_INST_VIEW_TYPE_EDITORIAL_1%>
 	<br><label for="EditByViewList_Default"><input type="radio" name="EditByViewList" id="EditByViewList_Default" value="" <%If Nl(bEditByViewList) Then%>checked<%End If%>> <%=TXT_DEFAULT_VIEW%></label>
 	<br><label for="EditByViewList_AnyViewCanAccess"><input type="radio" name="EditByViewList" id="EditByViewList_AnyViewCanAccess" value="<%=SQL_FALSE%>" <%If Not Nl(bEditByViewList) And Not bEditByViewList Then%>checked<%End If%>> <%=TXT_ANY_VIEW_THE_USER_CAN_ACCESS%></label>
@@ -492,8 +485,8 @@ Call openViewListRst(intDomain, user_strAgency, intViewType)
 </tr>
 <% If intDomain = DM_CIC And offline_tools_enabled() Then %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_VIEW_OFFLINE%> <span class="Alert">*</span></td>
-	<td><%=makeViewList(intViewTypeOffline,"ViewTypeOffline",True, False)%>
+	<td class="field-label-cell"><%=TXT_VIEW_OFFLINE%> <span class="Alert">*</span></td>
+	<td class="field-data-cell"><%=makeViewList(intViewTypeOffline,"ViewTypeOffline",True, False)%>
 	<p><%=TXT_INST_VIEW_TYPE_OFFLINE%></p></td>
 </tr>
 <%
@@ -501,20 +494,20 @@ End If
 Call closeViewListRst()
 %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_ADD_RECORD%></td>
-	<td><p><label for="CanAddRecord"><input type="checkbox" name="CanAddRecord" id="CanAddRecord" <%If bCanAddRecord Then%>checked<%End If%>> <%=TXT_INST_ADD_RECORD_1%></label></p>
+	<td class="field-label-cell"><%=TXT_CAN_ADD_RECORD%></td>
+	<td class="field-data-cell"><p><label for="CanAddRecord"><input type="checkbox" name="CanAddRecord" id="CanAddRecord" <%If bCanAddRecord Then%>checked<%End If%>> <%=TXT_INST_ADD_RECORD_1%></label></p>
 	<p class="Alert"><%=TXT_INST_ADD_RECORD_2%></p></td>
 </tr>
 <% If intDomain = DM_VOL Or g_bUseCIC Then %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_COPY_RECORD%></td>
-	<td><p><label for="CanCopyRecord"><input type="checkbox" name="CanCopyRecord" id="CanCopyRecord" <%If bCanCopyRecord Then%>checked<%End If%>> <%=TXT_INST_COPY_RECORD_1%></label></p>
+	<td class="field-label-cell"><%=TXT_CAN_COPY_RECORD%></td>
+	<td class="field-data-cell"><p><label for="CanCopyRecord"><input type="checkbox" name="CanCopyRecord" id="CanCopyRecord" <%If bCanCopyRecord Then%>checked<%End If%>> <%=TXT_INST_COPY_RECORD_1%></label></p>
 	<p class="Alert"><%=TXT_INST_COPY_RECORD_2%></p></td>
 </tr>
 <% End If %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_UPDATE_RECORD%></td>
-	<td><label for="CanEditRecord_UPDATE_NONE"><input type="radio" name="CanEditRecord" id="CanEditRecord_UPDATE_NONE" value="<%=UPDATE_NONE%>" <%If intCanEditRecord=UPDATE_NONE Then%>checked<%End If%>> <%=TXT_INST_UPDATE_RECORD_OPT_1%></label>
+	<td class="field-label-cell"><%=TXT_CAN_UPDATE_RECORD%></td>
+	<td class="field-data-cell"><label for="CanEditRecord_UPDATE_NONE"><input type="radio" name="CanEditRecord" id="CanEditRecord_UPDATE_NONE" value="<%=UPDATE_NONE%>" <%If intCanEditRecord=UPDATE_NONE Then%>checked<%End If%>> <%=TXT_INST_UPDATE_RECORD_OPT_1%></label>
 	<br><label for="CanEditRecord_UPDATE_ALL"><input type="radio" name="CanEditRecord" id="CanEditRecord_UPDATE_ALL" value="<%=UPDATE_ALL%>" <%If intCanEditRecord=UPDATE_ALL Then%>checked<%End If%>> <%=TXT_INST_UPDATE_RECORD_OPT_2%></label>
 	<br><label for="CanEditRecord_UPDATE_OWNED"><input type="radio" name="CanEditRecord" id="CanEditRecord_UPDATE_OWNED" value="<%=UPDATE_OWNED%>" <%If intCanEditRecord=UPDATE_OWNED Then%>checked<%End If%>> <%=TXT_INST_UPDATE_RECORD_OPT_3%></label>
 	<%If Not Nl(strEditAgencies) Then%>
@@ -544,15 +537,15 @@ End If
 	<p class="Alert"><%=TXT_INST_UPDATE_RECORD_2%></p></td>
 </tr>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_FULL_UPDATE%></td>
-	<td><label for="CanDoFullUpdate"><input type="checkbox" name="CanDoFullUpdate" id="CanDoFullUpdate" <%If bCanDoFullUpdate Then%>checked<%End If%>> <%=TXT_INST_FULL_UPDATE_1%></label>
+	<td class="field-label-cell"><%=TXT_FULL_UPDATE%></td>
+	<td class="field-data-cell"><label for="CanDoFullUpdate"><input type="checkbox" name="CanDoFullUpdate" id="CanDoFullUpdate" <%If bCanDoFullUpdate Then%>checked<%End If%>> <%=TXT_INST_FULL_UPDATE_1%></label>
 	<p><%=TXT_INST_FULL_UPDATE_2%></p><p class="Alert"><%=TXT_INST_FULL_UPDATE_3%></p></td>
 </tr>
 
 <% If g_bUseCIC And intDomain = DM_CIC Then %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_UPDATE_VACANCY%></td>
-	<td><%=TXT_INST_UPDATE_VACANCY_1%>
+	<td class="field-label-cell"><%=TXT_CAN_UPDATE_VACANCY%></td>
+	<td class="field-data-cell"><%=TXT_INST_UPDATE_VACANCY_1%>
 	<p>
 	<label for="CanEditVacancy_UPDATE_NONE"><input type="radio" name="CanEditVacancy" id="CanEditVacancy_UPDATE_NONE" value="<%=UPDATE_NONE%>" <%If intCanEditVacancy=UPDATE_NONE Then%>checked<%End If%>> <%=TXT_INST_UPDATE_VACANCY_OPT_1%></label>
 	<br><label for="CanEditVacancy_UPDATE_ALL"><input type="radio" name="CanEditVacancy" id="CanEditVacancy_UPDATE_ALL" value="<%=UPDATE_ALL%>" <%If intCanEditVacancy=UPDATE_ALL Then%>checked<%End If%>> <%=TXT_INST_UPDATE_VACANCY_OPT_2%></label>
@@ -592,39 +585,39 @@ End If
 
 <% If intDomain = DM_VOL Or g_bUseCIC  Then %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_DO_BULK%></td>
-	<td><p><label for="CanDoBulkOps"><input type="checkbox" name="CanDoBulkOps" id="CanDoBulkOps" <%If bCanDoBulkOps Then%>checked<%End If%>> <%=TXT_INST_DO_BULK_1%></label></p>
+	<td class="field-label-cell"><%=TXT_CAN_DO_BULK%></td>
+	<td class="field-data-cell"><p><label for="CanDoBulkOps"><input type="checkbox" name="CanDoBulkOps" id="CanDoBulkOps" <%If bCanDoBulkOps Then%>checked<%End If%>> <%=TXT_INST_DO_BULK_1%></label></p>
 	<p class="Alert"><%=TXT_INST_DO_BULK_2%></p></td>
 </tr>
 <% End If %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_DELETE%></td>
-	<td><p><label for="CanDeleteRecord"><input type="checkbox" name="CanDeleteRecord" id="CanDeleteRecord" <%If bCanDeleteRecord Then%>checked<%End If%>> <%=TXT_INST_DELETE_1%></label></p>
+	<td class="field-label-cell"><%=TXT_CAN_DELETE%></td>
+	<td class="field-data-cell"><p><label for="CanDeleteRecord"><input type="checkbox" name="CanDeleteRecord" id="CanDeleteRecord" <%If bCanDeleteRecord Then%>checked<%End If%>> <%=TXT_INST_DELETE_1%></label></p>
 	<p class="Alert"><%=TXT_INST_DELETE_2%></p></td>
 </tr>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_SUPPRESS_EMAIL%></td>
-	<td><label for="SuppressNotifyEmail"><input type="checkbox" name="SuppressNotifyEmail" id="SuppressNotifyEmail" <%If bSuppressNotifyEmail Then%>checked<%End If%>> <%=TXT_INST_SUPPRESS_EMAIL_1%></label>
+	<td class="field-label-cell"><%=TXT_SUPPRESS_EMAIL%></td>
+	<td class="field-data-cell"><label for="SuppressNotifyEmail"><input type="checkbox" name="SuppressNotifyEmail" id="SuppressNotifyEmail" <%If bSuppressNotifyEmail Then%>checked<%End If%>> <%=TXT_INST_SUPPRESS_EMAIL_1%></label>
 	<p><%=TXT_INST_SUPPRESS_EMAIL_2%></p><p class="Alert"><%=TXT_INST_SUPPRESS_EMAIL_3%></p></td>
 </tr>
 <% If intDomain = DM_VOL Or g_bUseCIC  Then %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_REQUEST_UPDATE%></td>
-	<td><p><label for="CanRequestUpdate"><input type="checkbox" name="CanRequestUpdate" id="CanRequestUpdate" <%If bCanRequestUpdate Then%>checked<%End If%>> <%=TXT_INST_REQUEST_UPDATE_1%></label></p>
+	<td class="field-label-cell"><%=TXT_CAN_REQUEST_UPDATE%></td>
+	<td class="field-data-cell"><p><label for="CanRequestUpdate"><input type="checkbox" name="CanRequestUpdate" id="CanRequestUpdate" <%If bCanRequestUpdate Then%>checked<%End If%>> <%=TXT_INST_REQUEST_UPDATE_1%></label></p>
 	<p class="Alert"><%=TXT_INST_REQUEST_UPDATE_2%></p></td>
 </tr>
 <% End If %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_ASSIGN_FEEDBACK%></td>
-	<td><p><label for="CanAssignFeedback"><input type="checkbox" name="CanAssignFeedback" id="CanAssignFeedback" <%If bCanAssignFeedback Then%>checked<%End If%>> <%=TXT_INST_ASSIGN_FEEDBACK_1%></label></p>
+	<td class="field-label-cell"><%=TXT_CAN_ASSIGN_FEEDBACK%></td>
+	<td class="field-data-cell"><p><label for="CanAssignFeedback"><input type="checkbox" name="CanAssignFeedback" id="CanAssignFeedback" <%If bCanAssignFeedback Then%>checked<%End If%>> <%=TXT_INST_ASSIGN_FEEDBACK_1%></label></p>
 	<p class="Alert"><%=TXT_INST_ASSIGN_FEEDBACK_2%></p></td>
 </tr>
 <%
 If intDomain = DM_CIC And g_bUseCIC Then
 %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_EXPORT_PERMISSIONS%></td>
-	<td><p><label for="ExportPermission_NONE"><input type="radio" name="ExportPermission" id="ExportPermission_NONE" value="<%=EXPORT_NONE%>" <%If intExportPermission=EXPORT_NONE Then%>checked<%End If%>> <%=TXT_INST_EXPORT_1%></label>
+	<td class="field-label-cell"><%=TXT_EXPORT_PERMISSIONS%></td>
+	<td class="field-data-cell"><p><label for="ExportPermission_NONE"><input type="radio" name="ExportPermission" id="ExportPermission_NONE" value="<%=EXPORT_NONE%>" <%If intExportPermission=EXPORT_NONE Then%>checked<%End If%>> <%=TXT_INST_EXPORT_1%></label>
 	<br><label for="ExportPermission_OWNED"><input type="radio" name="ExportPermission" id="ExportPermission_OWNED" value="<%=EXPORT_OWNED%>" <%If intExportPermission=EXPORT_OWNED Then%>checked<%End If%>> <%=TXT_INST_EXPORT_2%></label>
 	<br><label for="ExportPermission_VIEW"><input type="radio" name="ExportPermission" id="ExportPermission_VIEW" value="<%=EXPORT_VIEW%>" <%If intExportPermission=EXPORT_VIEW Then%>checked<%End If%>> <%=TXT_INST_EXPORT_3%></label>
 	<br><label for="ExportPermission_ALL"><input type="radio" name="ExportPermission" id="ExportPermission_ALL" value="<%=EXPORT_ALL%>" <%If intExportPermission=EXPORT_ALL Then%>checked<%End If%>> <%=TXT_INST_EXPORT_4%></label></p>
@@ -632,8 +625,8 @@ If intDomain = DM_CIC And g_bUseCIC Then
 
 </tr>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_IMPORT_PERMISSIONS%></td>
-	<td><p><label for="ImportPermission"><input type="checkbox" name="ImportPermission" id="ImportPermission" <%If bImportPermission Then%>checked<%End If%>> <%=TXT_INST_IMPORT_1%></label></p>
+	<td class="field-label-cell"><%=TXT_IMPORT_PERMISSIONS%></td>
+	<td class="field-data-cell"><p><label for="ImportPermission"><input type="checkbox" name="ImportPermission" id="ImportPermission" <%If bImportPermission Then%>checked<%End If%>> <%=TXT_INST_IMPORT_1%></label></p>
 	<p class="Alert"><%=TXT_INST_IMPORT_2%></p>
 	</td>
 </tr>
@@ -646,8 +639,8 @@ End If
 If Not Nl(strExternalAPIs) Then
 If intDomain = DM_VOL Or g_bUseCIC  Then %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_EXTERNAL_APIS%></td>
-	<td><%= TXT_INST_EXTERNAL_API %> <br>
+	<td class="field-label-cell"><%=TXT_EXTERNAL_APIS%></td>
+	<td class="field-data-cell"><%= TXT_INST_EXTERNAL_API %> <br>
 	<%= strExternalAPIs %>
 	</td>
 </tr>
@@ -660,8 +653,8 @@ If intDomain = DM_CIC Then
 	If g_bUseCIC Then
 %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_UPDATE_PUBS%></td>
-	<td><label for="CanUpdatePubs_NONE"><input type="radio" name="CanUpdatePubs" id="CanUpdatePubs_NONE" value="<%=UPDATE_NONE%>" <%If intCanUpdatePubs=UPDATE_NONE Then%>checked<%End If%>> <%=TXT_INST_UPDATE_PUBS_1%></label>
+	<td class="field-label-cell"><%=TXT_CAN_UPDATE_PUBS%></td>
+	<td class="field-data-cell"><label for="CanUpdatePubs_NONE"><input type="radio" name="CanUpdatePubs" id="CanUpdatePubs_NONE" value="<%=UPDATE_NONE%>" <%If intCanUpdatePubs=UPDATE_NONE Then%>checked<%End If%>> <%=TXT_INST_UPDATE_PUBS_1%></label>
 	<br><label for="CanUpdatePubs_RECORD"><input type="radio" name="CanUpdatePubs" id="CanUpdatePubs_RECORD" value="<%=UPDATE_RECORD%>" <%If intCanUpdatePubs=UPDATE_RECORD Then%>checked<%End If%>> <%=TXT_INST_UPDATE_PUBS_2%></label>
 	<br><label for="CanUpdatePubs_ALL"><input type="radio" name="CanUpdatePubs" id="CanUpdatePubs_ALL" value="<%=UPDATE_ALL%>" <%If intCanUpdatePubs=UPDATE_ALL Then%>checked<%End If%>> <%=TXT_INST_UPDATE_PUBS_3%></label>
 	<p><%=TXT_INST_UPDATE_PUBS_4%></p><p class="Alert"><%=TXT_INST_UPDATE_PUBS_5%></p></td>
@@ -670,8 +663,8 @@ If intDomain = DM_CIC Then
 		If g_bUseTaxonomy Then
 %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_INDEX_TAXONOMY%></td>
-	<td><p><label for="CanIndexTaxonomy_NONE"><input type="radio" name="CanIndexTaxonomy" id="CanIndexTaxonomy_NONE" value="<%=UPDATE_NONE%>" <%If intCanIndexTaxonomy=UPDATE_NONE Then%>checked<%End If%>> <%=TXT_INST_INDEX_TAXONOMY_1%></label>
+	<td class="field-label-cell"><%=TXT_CAN_INDEX_TAXONOMY%></td>
+	<td class="field-data-cell"><p><label for="CanIndexTaxonomy_NONE"><input type="radio" name="CanIndexTaxonomy" id="CanIndexTaxonomy_NONE" value="<%=UPDATE_NONE%>" <%If intCanIndexTaxonomy=UPDATE_NONE Then%>checked<%End If%>> <%=TXT_INST_INDEX_TAXONOMY_1%></label>
 	<br><label for="CanIndexTaxonomy_OWNED"><input type="radio" name="CanIndexTaxonomy" id="CanIndexTaxonomy_OWNED" value="<%=UPDATE_OWNED%>" <%If intCanIndexTaxonomy=UPDATE_OWNED Then%>checked<%End If%>> <%=TXT_INST_INDEX_TAXONOMY_2%></label>
 	<br><label for="CanIndexTaxonomy_ALL"><input type="radio" name="CanIndexTaxonomy" id="CanIndexTaxonomy_ALL" value="<%=UPDATE_ALL%>" <%If intCanIndexTaxonomy=UPDATE_ALL Then%>checked<%End If%>> <%=TXT_INST_INDEX_TAXONOMY_3%></label></p>
 	<p class="Alert"><%=TXT_INST_INDEX_TAXONOMY_4%></p></td>
@@ -692,39 +685,39 @@ End If
 %>
 <%If intDomain = DM_VOL Or g_bUseCIC  Then %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_ADD_SQL%></td>
-	<td><p><label for="CanAddSQL"><input type="checkbox" name="CanAddSQL" id="CanAddSQL" <%If bCanAddSQL Then%>checked<%End If%>> <%=TXT_INST_ADD_SQL_1%></label></p>
+	<td class="field-label-cell"><%=TXT_CAN_ADD_SQL%></td>
+	<td class="field-data-cell"><p><label for="CanAddSQL"><input type="checkbox" name="CanAddSQL" id="CanAddSQL" <%If bCanAddSQL Then%>checked<%End If%>> <%=TXT_INST_ADD_SQL_1%></label></p>
 	<p class="Alert"><%=TXT_INST_ADD_SQL_2%></p></td>
 </tr>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_VIEW_STATS%></td>
-	<td><label for="CanViewStatsN"><input type="radio" name="CanViewStats" id="CanViewStatsN" value="<%=STATS_NONE%>" <%If intCanViewStats=STATS_NONE Then%>checked<%End If%>> <%=TXT_INST_VIEW_STATS_1%></label>
+	<td class="field-label-cell"><%=TXT_CAN_VIEW_STATS%></td>
+	<td class="field-data-cell"><label for="CanViewStatsN"><input type="radio" name="CanViewStats" id="CanViewStatsN" value="<%=STATS_NONE%>" <%If intCanViewStats=STATS_NONE Then%>checked<%End If%>> <%=TXT_INST_VIEW_STATS_1%></label>
 	<br><label for="CanViewStatsV"><input type="radio" name="CanViewStats" id="CanViewStatsV" value="<%=STATS_VIEW%>" <%If intCanViewStats=STATS_VIEW Then%>checked<%End If%>> <%=TXT_INST_VIEW_STATS_2%></label>
 	<br><label for="CanViewStatsA"><input type="radio" name="CanViewStats" id="CanViewStatsA" value="<%=STATS_ALL%>" <%If intCanViewStats=STATS_ALL Then%>checked<%End If%>> <%=TXT_INST_VIEW_STATS_3%></label>
 	<p class="Alert"><%=TXT_INST_VIEW_STATS_4%></p></td>
 </tr>
 <%End If%>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_MANAGE_USERS%></td>
-	<td><p><label for="CanManageUsers"><input type="checkbox" name="CanManageUsers" id="CanManageUsers" <%If bCanManageUsers Then%>checked<%End If%>> <%=TXT_INST_MANAGE_USERS_1%></label></p>
+	<td class="field-label-cell"><%=TXT_CAN_MANAGE_USERS%></td>
+	<td class="field-data-cell"><p><label for="CanManageUsers"><input type="checkbox" name="CanManageUsers" id="CanManageUsers" <%If bCanManageUsers Then%>checked<%End If%>> <%=TXT_INST_MANAGE_USERS_1%></label></p>
 	<p class="Alert"><%=TXT_INST_MANAGE_USERS_2%></p></td>
 </tr>
 <%
 If intDomain = DM_VOL Then
 %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_MANAGE_MEMBERS%></td>
-	<td><label for="CanManageMembers"><input type="checkbox" name="CanManageMembers" id="CanManageMembers" <%If bCanManageMembers Then%>checked<%End If%>> <%=TXT_INST_MANAGE_MEMBERS_1%></label>
+	<td class="field-label-cell"><%=TXT_CAN_MANAGE_MEMBERS%></td>
+	<td class="field-data-cell"><label for="CanManageMembers"><input type="checkbox" name="CanManageMembers" id="CanManageMembers" <%If bCanManageMembers Then%>checked<%End If%>> <%=TXT_INST_MANAGE_MEMBERS_1%></label>
 	<p class="Alert"><%=TXT_INST_MANAGE_MEMBERS_2%></p></td>
 </tr>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_MANAGE_REFERRALS%></td>
-	<td><label for="CanManageReferrals"><input type="checkbox" name="CanManageReferrals" id="CanManageReferrals" <%If bCanManageReferrals Then%>checked<%End If%>> <%=TXT_INST_MANAGE_REFERRALS_1%></label>
+	<td class="field-label-cell"><%=TXT_CAN_MANAGE_REFERRALS%></td>
+	<td class="field-data-cell"><label for="CanManageReferrals"><input type="checkbox" name="CanManageReferrals" id="CanManageReferrals" <%If bCanManageReferrals Then%>checked<%End If%>> <%=TXT_INST_MANAGE_REFERRALS_1%></label>
 	<p class="Alert"><%=TXT_INST_MANAGE_REFERRALS_2%></p></td>
 </tr>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_CAN_ACCESS_PROFILES%></td>
-	<td><label for="CanAccessProfiles"><input type="checkbox" name="CanAccessProfiles" id="CanAccessProfiles" <%If bCanAccessProfiles Then%>checked<%End If%>> <%=TXT_INST_ACCESS_PROFILES_1%></label>
+	<td class="field-label-cell"><%=TXT_CAN_ACCESS_PROFILES%></td>
+	<td class="field-data-cell"><label for="CanAccessProfiles"><input type="checkbox" name="CanAccessProfiles" id="CanAccessProfiles" <%If bCanAccessProfiles Then%>checked<%End If%>> <%=TXT_INST_ACCESS_PROFILES_1%></label>
 	<p><%=TXT_INST_ACCESS_PROFILES_2%></p>
 	<p class="Alert"><%=TXT_INST_ACCESS_PROFILES_3%></p></td>
 </tr>
@@ -732,24 +725,24 @@ If intDomain = DM_VOL Then
 End If
 %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_VIEW_FEEDBACK%></td>
-	<td><p><label for="FeedbackAlert"><input type="checkbox" name="FeedbackAlert" id="FeedbackAlert" <%If bFeedbackAlert Then%>checked<%End If%>> <%=TXT_INST_FEEDBACK_1%></label></p>
+	<td class="field-label-cell"><%=TXT_VIEW_FEEDBACK%></td>
+	<td class="field-data-cell"><p><label for="FeedbackAlert"><input type="checkbox" name="FeedbackAlert" id="FeedbackAlert" <%If bFeedbackAlert Then%>checked<%End If%>> <%=TXT_INST_FEEDBACK_1%></label></p>
 	<p class="Alert"><%=TXT_INST_FEEDBACK_2%></p></td>
 </tr>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_COMMENT_ALERT%></td>
-	<td><label for="CommentAlert"><input type="checkbox" name="CommentAlert" id="CommentAlert" <%If bCommentAlert Then%>checked<%End If%>> <%=TXT_INST_COMMENT%></label></td>
+	<td class="field-label-cell"><%=TXT_COMMENT_ALERT%></td>
+	<td class="field-data-cell"><label for="CommentAlert"><input type="checkbox" name="CommentAlert" id="CommentAlert" <%If bCommentAlert Then%>checked<%End If%>> <%=TXT_INST_COMMENT%></label></td>
 </tr>
 <%If intDomain = DM_VOL Or g_bUseCIC  Then %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_WEB_DEVELOPER%></td>
-	<td><label for="WebDeveloper"><input type="checkbox" name="WebDeveloper" id="WebDeveloper" <%If bWebDeveloper Then%>checked<%End If%>> <%=TXT_INST_WEB_DEVELOPER_1%></label>
+	<td class="field-label-cell"><%=TXT_WEB_DEVELOPER%></td>
+	<td class="field-data-cell"><label for="WebDeveloper"><input type="checkbox" name="WebDeveloper" id="WebDeveloper" <%If bWebDeveloper Then%>checked<%End If%>> <%=TXT_INST_WEB_DEVELOPER_1%></label>
 	<p><%=TXT_INST_WEB_DEVELOPER_2%></p></td>
 </tr>
 <%End If%>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_SUPER_USER%></td>
-	<td><label for="SuperUser"><input type="checkbox" name="SuperUser<%=StringIf(Not g_bOtherMembersActive,"Global")%>" id="SuperUser" <%If bSuperUser Then%>checked<%End If%>> <%=TXT_INST_SUPER_USER_1%></label>
+	<td class="field-label-cell"><%=TXT_SUPER_USER%></td>
+	<td class="field-data-cell"><label for="SuperUser"><input type="checkbox" name="SuperUser<%=StringIf(Not g_bOtherMembersActive,"Global")%>" id="SuperUser" <%If bSuperUser Then%>checked<%End If%>> <%=TXT_INST_SUPER_USER_1%></label>
 	<p><%=TXT_INST_SUPER_USER_2%></p>
 	<% If g_bOtherMembersActive Then %>
 	<p><%=TXT_INST_SUPER_USER_3%></p>
@@ -758,8 +751,8 @@ End If
 </tr>
 <% If user_bSuperUserGlobalDOM And g_bOtherMembersActive Then %>
 <tr>
-	<td class="FieldLabelLeft"><%=TXT_SUPER_USER_GLOBAL%></td>
-	<td><label for="SuperUserGlobal"><input type="checkbox" name="SuperUserGlobal" id="SuperUserGlobal" <%If bSuperUserGlobal Then%>checked<%End If%>> <%=TXT_INST_SUPER_USER_GLOBAL_1%></label>
+	<td class="field-label-cell"><%=TXT_SUPER_USER_GLOBAL%></td>
+	<td class="field-data-cell"><label for="SuperUserGlobal"><input type="checkbox" name="SuperUserGlobal" id="SuperUserGlobal" <%If bSuperUserGlobal Then%>checked<%End If%>> <%=TXT_INST_SUPER_USER_GLOBAL_1%></label>
 	<p><%=TXT_INST_SUPER_USER_GLOBAL_2%></p></td>
 </tr>
 <% End If %>
@@ -767,6 +760,8 @@ End If
 	<td colspan="2"><input type="submit" name="Submit" value="<%=TXT_SUBMIT_UPDATES%>"> <%If bOkDelete Then%><input type="submit" name="Submit" value="<%=TXT_DELETE%>"> <%End If%><input type="reset" value="<%=TXT_RESET_FORM%>"></td>
 </tr>
 </table>
+</div>
+</div>
 </form>
 
 <%

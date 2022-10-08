@@ -577,9 +577,11 @@ If intFormType <> EF_UPDATE Then
 	Call printRow("NUM", TXT_RECORD_NUM, _
 		"<label for=" & AttrQs("AutoAssignNUM") & ">" & _
 		"<input type=""checkbox"" id=" & AttrQs("AutoAssignNUM") & " name=""AutoAssignNUM"" checked onClick=""changeAutoAssign(this, document.EntryForm.NUM, document.EntryForm.NUMButton);"">" & TXT_AUTO_ASSIGN_LOWEST_NUM & _
-		"</label>" & _
-		"<div class=""form-inline""><input type=""text"" name=""NUM"" title=" & AttrQs(TXT_RECORD_NUM) & " size=""9"" maxlength=""8"" disabled class=""record-num form-control"">" & _
-		" <input type=""button"" id=""NUMButton"" value=""" & TXT_LOWEST_UNUSED_FOR & "" & user_strAgency & """ onClick=""document.EntryForm.NUM.value='" & strNewNUM & "';"" class=""btn btn-default"" disabled></div>" & _
+		"</label>" & vbCrLf & _
+		"<div class=""form-inline"">" & _
+		"<input type=""text"" name=""NUM"" title=" & AttrQs(TXT_RECORD_NUM) & " size=""9"" maxlength=""8"" disabled class=""record-num form-control"">" & _
+		" <input type=""button"" id=""NUMButton"" value=""" & TXT_LOWEST_UNUSED_FOR & "" & user_strAgency & """ onClick=""document.EntryForm.NUM.value='" & strNewNUM & "';"" class=""btn btn-default"" disabled>" & _
+		"</div>" & _
 		" [ <a href=""javascript:openWin('" & makeLinkB("numfind.asp") & "','aFind')"">" & TXT_LOWEST_UNUSED_FOR & TXT_ALL_AGENCIES & "</a> ]", _
 		True,True,False,True,bEnforceReqFields,False,False)
 End If
@@ -1138,7 +1140,7 @@ $('html').scrollTop(scrollTop);
 <script type="text/javascript">
 	tinymce.init({
         selector: '.WYSIWYG',
-        plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table autoresize',
+        plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table autoresize paste',
         toolbar: 'undo redo styles bullist numlist link | bold italic removeformat forecolor image table | copy cut paste searchreplace fullscreen',
 		menubar: false,
         convert_urls: false,

@@ -23,7 +23,6 @@ Dim TXT_ADD_PROFILE_FAILED, _
 	TXT_AND_WILL_BE_TOMORROW, _
 	TXT_ARCHIVE_DATASET, _
 	TXT_ARCHIVE, _
-	TXT_ARCHIVED, _
 	TXT_ARE_YOU_SURE_ARCHIVE, _
 	TXT_ARE_YOU_SURE_UNARCHIVE, _
 	TXT_ARE_YOU_SURE_RESCHEDULE, _
@@ -145,7 +144,6 @@ Sub setTxtImport()
 			TXT_AND_WILL_BE_TOMORROW = " and will be in a new import tomorrow."
 			TXT_ARCHIVE_DATASET = "Archive Dataset"
 			TXT_ARCHIVE = "Archive"
-			TXT_ARCHIVED = "Archived"
 			TXT_ARE_YOU_SURE_ARCHIVE = "Are you sure you want to archive this item?" & _
 				"<br>Use your back button to return to the form if you do not want to archive."
 			TXT_ARE_YOU_SURE_UNARCHIVE = "Are you sure you want to unarchive this item?" & _
@@ -213,7 +211,7 @@ Sub setTxtImport()
 			TXT_QUEUE_ALL = "Queue All"
 			TXT_QUEUE_RECORDS_FOR_LATER = "Queue records for later import"
 			TXT_RECORD_WAS_SUCCESSFULLY = "The record was successfully "
-			TXT_RECORD_WAS_NOT = "The records was not "
+			TXT_RECORD_WAS_NOT = "The record was not "
 			TXT_RECORDS_IMPORTED = " records in this dataset that have been imported."
 			TXT_RECORDS_OWNED_BY_OTHERS = " records in this dataset that correspond to existing records owned by other CIOC Members in this database. You cannot import these records."
 			TXT_RECORDS_THAT_DONT_MATCH = " records in this dataset that do not match existing records."
@@ -267,9 +265,8 @@ Sub setTxtImport()
 			TXT_ADD_PROFILE_FAILED = "L'ajout du Profil de confidentialité a échoué."
 			TXT_ALL_RECORDS = "Tous les dossiers"
 			TXT_AND_WILL_BE_TOMORROW = "TRANSLATE_FR --  and will be in a new import tomorrow."
-			TXT_ARCHIVE_DATASET = "TRANSLATE_FR -- Archive Dataset"
-			TXT_ARCHIVE = "TRANSLATE_FR -- Archive"
-			TXT_ARCHIVED = "TRANSLATE_FR -- Archived"
+			TXT_ARCHIVE_DATASET = "Archiver le fichier de données"
+			TXT_ARCHIVE = "Archive"
 			TXT_ARE_YOU_SURE_ARCHIVE = "TRANSLATE_FR -- Are you sure you want to archive this item?" & _
 				"<br>Use your back button to return to the form if you do not want to archive."
 			TXT_ARE_YOU_SURE_UNARCHIVE = "TRANSLATE_FR -- Are you sure you want to unarchive this item?" & _
@@ -336,8 +333,8 @@ Sub setTxtImport()
 			TXT_PUBLICATION_LIST = "Liste des publications"
 			TXT_QUEUE_ALL = "Mettre tous les dossiers dans la file d'attente"
 			TXT_QUEUE_RECORDS_FOR_LATER = "Mettre les dossiers dans la file d'attente et les importer plus tard"
-			TXT_RECORD_WAS_SUCCESSFULLY = "TRANSLATE_FR -- The record was successfully "
-			TXT_RECORD_WAS_NOT = "TRANSLATE_FR -- The records was not "
+			TXT_RECORD_WAS_SUCCESSFULLY = "Le dossier a bien été "
+			TXT_RECORD_WAS_NOT = "Le dossier n'était pas "
 			TXT_RECORDS_IMPORTED = " dossiers dans cet ensemble de données qui ont été importés."
 			TXT_RECORDS_OWNED_BY_OTHERS = " dossiers dans cet ensemble de données qui correspondent à des dossiers existants appartenant à d'autres membres CIOC dans cette base de données. Vous ne pouvez pas importer ces dossiers."
 			TXT_RECORDS_THAT_DONT_MATCH = " dossiers dans cet ensemble de données qui ne concordent pas avec des dossiers existants."
