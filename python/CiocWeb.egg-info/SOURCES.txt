@@ -173,7 +173,6 @@ cioc/web/admin/fieldhide.py
 cioc/web/admin/fieldradio.py
 cioc/web/admin/ganalytics.py
 cioc/web/admin/general.py
-cioc/web/admin/getinvolvedapi.py
 cioc/web/admin/interests.py
 cioc/web/admin/layout.py
 cioc/web/admin/listvalues.py
@@ -204,7 +203,6 @@ cioc/web/admin/templates/fieldhide.mak
 cioc/web/admin/templates/fieldradio.mak
 cioc/web/admin/templates/ganalytics.mak
 cioc/web/admin/templates/generalsetup.mak
-cioc/web/admin/templates/getinvolvedapi.mak
 cioc/web/admin/templates/offlinetools.mak
 cioc/web/admin/templates/pagehelp.mak
 cioc/web/admin/templates/quicksearch.mak
