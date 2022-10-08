@@ -570,6 +570,9 @@ If intFormType <> EF_UPDATE Then
 			vbNullString, _
 			150, _
 			True)
+	strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>" & TXT_COLON & _
+		TXT_INST_POSITION_TITLE & "</p>" & vbCrLf & _
+		strFieldVal
 	Call printRow("POSITION_TITLE",TXT_POSITION_TITLE, _
 		strFieldVal, _
 		True,True,False,True,False,False,True)
@@ -614,6 +617,12 @@ While Not rsFields.EOF
 					rsFields.Fields("CanUseFeedback"), _
 					rsFields.Fields("WYSIWYG") _
 					)
+				Select Case strFieldName
+					Case "DUTIES"
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_IMPORTANT & "</span>" & TXT_COLON & _
+							TXT_INST_DUTIES & "</p>" & vbCrLf & _
+							strFieldVal
+				End Select
 			Case "t"
 				If rsFields.Fields("ValidateType") = "w" Then
 					Dim strProtocol
@@ -635,6 +644,12 @@ While Not rsFields.EOF
 							rsFields.Fields("CanUseFeedback") _
 							)
 				End If
+				Select Case strFieldName
+					Case "POSITION_TITLE"
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>" & TXT_COLON & _
+							TXT_INST_POSITION_TITLE & "</p>" & vbCrLf & _
+							strFieldVal
+				End Select
 			Case "u"
 				strFieldVal = makeUserFieldVal(strFieldName, _
 					strFieldContents, _

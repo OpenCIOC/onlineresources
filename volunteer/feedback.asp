@@ -474,6 +474,12 @@ End If
 						False _
 						)
 				End If
+				Select Case strFieldName
+					Case "POSITION_TITLE"
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>" & TXT_COLON & _
+							TXT_INST_POSITION_TITLE & "</p>" & vbCrLf & _
+							strFieldVal
+				End Select
 			' "User" field type, holds a user's name or initials
 			Case "u"
 				strFieldVal = makeUserFieldVal(strFieldName, _
@@ -554,6 +560,12 @@ End If
 					False, _
 					rsFields.Fields("WYSIWYG") _
 					)
+				Select Case strFieldName
+					Case "DUTIES"
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_IMPORTANT & "</span>" & TXT_COLON & _
+							TXT_INST_DUTIES & "</p>" & vbCrLf & _
+							strFieldVal
+				End Select
 		End Select
 		bHasLabel = False
 		If rsFields.Fields("UseDisplayForFeedback") _

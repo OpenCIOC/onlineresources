@@ -165,6 +165,9 @@ Function makeInterestsContents(rst,bUseContent)
 		strReturn = strReturn & "</div>"
 	End If
 
+	strReturn = strReturn & "<p class=""hidden-xs hidden-sm"">" & _
+		TXT_NOT_SURE_ENTER & "<a href=""javascript:openWin('" & makeLink(ps_strPathToStart & "volunteer/interestfind.asp","Ln=" & g_objCurrentLang.Culture,"Ln") & "','cFind')"">" & TXT_AREA_OF_INTEREST_LIST & "</a>.</p>"
+
 	If bFeedback Then
 		strReturn = strReturn & getFeedback(strFieldName, False, False)
 	End If
@@ -370,13 +373,16 @@ Function makeScheduleContents(rst,bUseContent)
 		strNotes = rsOrg("SCHEDULE_NOTES")
 	End If
 
-	strReturn = "<table class=""BasicBorder cell-padding-2 responsive-table"">" & _
-		"<tr class=""FieldLabelCenterClr hidden-xs"">" &  _
-		"<td>&nbsp;</td>" & _
-		"<td>" & TXT_TIME_MORNING & "<br>" & TXT_TIME_BEFORE_12 & "</td>" & _
-		"<td>" & TXT_TIME_AFTERNOON & "<br>" & TXT_TIME_12_6 & "</td>" & _ 
-		"<td>" & TXT_TIME_EVENING & "<br>" & TXT_TIME_AFTER_6 & "</td>" & _
-		"<td>" & TXT_TIME_SPECIFIC & "</td>" & _
+	strReturn = _
+		"<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_IMPORTANT & "</span>" & TXT_COLON & _
+				TXT_INST_DATES_AND_TIMES & "</p>" & _
+		"<table class=""BasicBorder cell-padding-2 responsive-table"">" & _
+		"<tr class=""hidden-xs"">" &  _
+		"<th class=""RevTitleBox"">" & TXT_DAY_OF_WEEK & "</th>" & _
+		"<th class=""RevTitleBox"">" & TXT_TIME_MORNING & "<br>" & TXT_TIME_BEFORE_12 & "</th>" & _
+		"<th class=""RevTitleBox"">" & TXT_TIME_AFTERNOON & "<br>" & TXT_TIME_12_6 & "</th>" & _ 
+		"<th class=""RevTitleBox"">" & TXT_TIME_EVENING & "<br>" & TXT_TIME_AFTER_6 & "</th>" & _
+		"<th class=""RevTitleBox"">" & TXT_TIME_SPECIFIC & "</td>" & _
 		"</tr>"
 
 	For i = 0 to 6

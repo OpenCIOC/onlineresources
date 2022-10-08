@@ -72,7 +72,7 @@ Sub setTxtFinder()
 			TXT_ORG_SEARCH_RESULTS = "Organization Search Results..."
 			TXT_RESULTS = " result(s)"
 			TXT_SEARCH_IN_NAME = "Search Name" & TXT_COLON
-			TXT_AREA_OF_INTEREST_LIST = "List of Interests"
+			TXT_AREA_OF_INTEREST_LIST = "Areas of Interest List"
 			TXT_SUBJECT_FINDER = "Subject Finder"
 			TXT_SUBJECT_SEARCH_RESULTS = "Subject Search Results..."
 			TXT_TAXONOMY_FINDER = "Service Category Finder"

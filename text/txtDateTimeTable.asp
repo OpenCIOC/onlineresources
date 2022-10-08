@@ -64,7 +64,7 @@ Sub setTxtDateTimeTable()
 			TXT_TIME_AFTERNOON = "Après-midi"
 			TXT_TIME_EVENING = "Soir"
 			TXT_TIME_MORNING = "Matin"
-			TXT_TIME_SPECIFIC = "Horaires spécifiques<br>(facultatif)"
+			TXT_TIME_SPECIFIC = "Horaires spécifiques (facultatif)"
 			TXT_TITLE_SPECIFIC = "Horaires spécifiques"
 		Case Else
 			TXT_DAY_FRIDAY = "Friday"
@@ -87,7 +87,7 @@ Sub setTxtDateTimeTable()
 			TXT_TIME_AFTERNOON = "Afternoon"
 			TXT_TIME_EVENING = "Evening"
 			TXT_TIME_MORNING = "Morning"
-			TXT_TIME_SPECIFIC = "Specific Times<br>(Optional)"
+			TXT_TIME_SPECIFIC = "Specific Times (Optional)"
 			TXT_TITLE_SPECIFIC = "Specific Times"
 	End Select
 End Sub
