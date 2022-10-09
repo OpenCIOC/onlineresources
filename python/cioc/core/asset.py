@@ -48,7 +48,7 @@ class AssetManager:
         self.scripts_included = set()
 
     def makeAssetVer(self, script_name):
-        minified = self.request.params.get("Debug") is not None
+        minified = self.request.params.get("Debug") is None
         version_slug = self.assetversions.get(script_name)
 
         if version_slug is None:
