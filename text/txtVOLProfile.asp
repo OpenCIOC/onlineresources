@@ -81,7 +81,7 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_INST_COMMUNITIES, _
 	TXT_INST_CONFIRM_APPLICATION_HIDE, _
 	TXT_INST_DATE_OF_BIRTH, _
-	TXT_INST_DATES_AND_TIMES, _
+	TXT_INST_DATES_AND_TIMES_PROFILE, _
 	TXT_INST_PROFILE_SEARCH, _
 	TXT_INST_PROFILE_VIEWS, _
 	TXT_INST_RESET_PW, _
@@ -265,7 +265,7 @@ Sub setTxtVOLProfile()
 			TXT_INST_COMMUNITIES = "A des occasions dans l'une ou plusieurs des communautés suivantes :"
 			TXT_INST_CONFIRM_APPLICATION_HIDE = "Vous ne pourrez pas réafficher cette candidature ; êtes-vous certain de vouloir la cacher ?"
 			TXT_INST_DATE_OF_BIRTH = "Les correspondances adaptées à votre âge n'ont pas pu être déterminées. (ex. [DATE])"
-			TXT_INST_DATES_AND_TIMES = "Limiter aux dossiers ayant <em>l'une ou plusieurs</em> des dates/heures suivantes :"
+			TXT_INST_DATES_AND_TIMES_PROFILE = "Limiter aux dossiers ayant <em>l'une ou plusieurs</em> des dates/heures suivantes :"
 			TXT_INST_PROFILE_SEARCH = "Utiliser ce formulaire pour rechercher et afficher les détails limités des profils de bénévoles vérifiés, lorsque l'utilisateur du profil a accepté de partager ses informations et d'être contacté."
 			TXT_INST_PROFILE_VIEWS = "Il n'y a aucune vue autorisant les profils de bénévoles."
 			TXT_INST_RESET_PW = "Les mots de passe ne peuvent être retrouvés. Si vous avez oublié votre mot de passe, vous pouvez utiliser ce formulaire pour en recevoir un nouveau par courriel."
@@ -446,7 +446,7 @@ Sub setTxtVOLProfile()
 			TXT_INST_COMMUNITIES = "Has opportunities in any of the following communities:"
 			TXT_INST_CONFIRM_APPLICATION_HIDE = "You will not be able to restore this application once it is hidden; are you sure that you want to hide it?"
 			TXT_INST_DATE_OF_BIRTH = "Used to determine matches suitable for your age. (ex. [DATE])"
-			TXT_INST_DATES_AND_TIMES = "Confine to opportunities having <em>any</em> of the following dates/times:"
+			TXT_INST_DATES_AND_TIMES_PROFILE = "Confine to opportunities having <em>any</em> of the following dates/times:"
 			TXT_INST_PROFILE_SEARCH = "Use this form to search and display limited details of verified Volunteer Profiles where the Profile user has agreed to share their information and be contacted."
 			TXT_INST_PROFILE_VIEWS = "There are no Views allowing Volunteer Profiles."
 			TXT_INST_RESET_PW = "It is not possible to retrieve passwords. If you have forgotten your password you can use this form to have a new one sent to you via Email."

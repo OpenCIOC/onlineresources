@@ -345,7 +345,7 @@ End With
 	</tr>
 	<tr>
 		<td class="FieldLabelLeft"><%= TXT_DATES_AND_TIMES %></td>
-		<td><%= TXT_INST_DATES_AND_TIMES %>
+		<td><%= TXT_INST_DATES_AND_TIMES_PROFILE %>
 		<br>&nbsp;
 		<table class="BasicBorder cell-padding-2">
 			<tr class="FieldLabelCenterClr">

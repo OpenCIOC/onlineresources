@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -80,15 +80,17 @@ Select Case intDomain
 		strErrMessage = TXT_UNABLE_DETERMINE_TYPE
 End Select
 
-Const FORM_ACTION = "<form action=""setup_view_edit_fields2.asp"" METHOD=""POST"">"
+Const FORM_ACTION = "<form action=""setup_view_edit_fields2.asp"" METHOD=""POST"" class=""form"">"
 
 Dim SUBMIT_BUTTON, _
 	DELETE_BUTTON, _
-	ADD_BUTTON
+	ADD_BUTTON, _
+	RESET_BUTTON
 
-SUBMIT_BUTTON = "<input type=""Submit"" name=""Submit"" value=""" & TXT_UPDATE & """>"
-DELETE_BUTTON = "<input type=""Submit"" name=""Submit"" value=""" & TXT_DELETE & """>"
-ADD_BUTTON = "<input type=""Submit"" name=""Submit"" value=""" & TXT_ADD & """>"
+SUBMIT_BUTTON = "<input type=""Submit"" name=""Submit"" value=" & AttrQs(TXT_UPDATE) & " class=""btn btn-default"">"
+DELETE_BUTTON = "<input type=""Submit"" name=""Submit"" value=" & AttrQs(TXT_DELETE) & " class=""btn btn-default"">"
+ADD_BUTTON = "<input type=""Submit"" name=""Submit"" value=" & AttrQs(TXT_ADD) & " class=""btn btn-default"">"
+RESET_BUTTON = "<input type=""Reset"" value=" & AttrQs(TXT_RESET_FORM) & " class=""btn btn-default"">"
 
 Dim intViewType, _
 	strViewName, _
@@ -225,15 +227,17 @@ If strFType = "F" Or strFType = "U" Then
 	Set rsListRecordType = rsListRecordType.NextRecordset
 	If Not rsListRecordType.EOF Then
 %>
-<form action="<%=ps_strThisPage%>">
+<form action="<%=ps_strThisPage%>" class="form form-inline">
 <div style="display:none">
 <%=g_strCacheFormVals%>
 <input type="hidden" name="ViewType" value="<%=intViewType%>">
 <input type="hidden" name="FType" value="<%=strFType%>">
 <input type="hidden" name="DM" value="<%=intDomain%>">
 </div>
-<p><label for="RTID"><%=TXT_CREATE_NEW_FORM_FOR_TYPE%></label><%=makeRecordTypeList(vbNullString, "RTID", False, vbNullString)%>&nbsp;<input type="submit" value="&gt;&gt;"></p>
+<p><label for="RTID"><%=TXT_CREATE_NEW_FORM_FOR_TYPE%></label><%=makeRecordTypeList(vbNullString, "RTID", False, vbNullString)%>&nbsp;<input type="submit" value="<%=TXT_ADD%>" class="btn btn-default"></p>
 </form>
+
+<h3><%=IIf(bRecordTypeHasForm Or Nl(strRecordTypeName),TXT_EDIT_FORM_FOR_TYPE,TXT_CREATE_NEW_FORM_FOR_TYPE) & Nz(strRecordTypeName,TXT_ALL_TYPES)%></h3>
 <%
 	End If
 	Call closeRecordTypeListRst()
@@ -253,17 +257,9 @@ If Not Nl(intRTID) Then
 End If
 %>
 </div>
-<table class="BasicBorder cell-padding-3">
-<%
-If Not Nl(intRTID) Then
-%>
-<tr>
-	<th colspan="2" class="RevTitleBox"><%=IIf(bRecordTypeHasForm,TXT_EDIT_FORM_FOR_TYPE,TXT_CREATE_NEW_FORM_FOR_TYPE) & strRecordTypeName%></th>
-</tr>
-<%
-End If
-%>
-<tr>
+
+<table class="BasicBorder cell-padding-3 clear-line-below">
+<tr class="RevTitleBox">
 	<th><%=TXT_FIELD%></th>
 	<th><%=TXT_DETAIL_FIELD_GROUP%></th>
 </tr>
@@ -287,7 +283,7 @@ End If
 	Call closeDetailFieldGroupsListRst()
 %>
 </table>
-<p><%=SUBMIT_BUTTON%>&nbsp;<%If bRecordTypeHasForm Then%><%=DELETE_BUTTON%><%End If%>&nbsp;<input type="reset" value="<%=TXT_RESET_FORM%>"></p>
+<p><%=SUBMIT_BUTTON%>&nbsp;<%If bRecordTypeHasForm Then%><%=DELETE_BUTTON%><%End If%>&nbsp;<%=RESET_BUTTON%></p>
 </form>
 <p align="center">[ <a href="javascript:parent.close()"><%=TXT_CLOSE_WINDOW%></a> ]</p>
 <%
@@ -311,7 +307,7 @@ Else
 		.Close
 	End With
 %>
-<p><%=SUBMIT_BUTTON%> <input type="reset" value="<%=TXT_RESET_FORM%>"></p>
+<p><%=SUBMIT_BUTTON%>&nbsp;<%=RESET_BUTTON%></p>
 </form>
 <p align="center">[ <a href="javascript:parent.close()"><%=TXT_CLOSE_WINDOW%></a> ]</p>
 <%
