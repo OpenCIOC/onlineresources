@@ -565,7 +565,7 @@ If intFormType <> EF_UPDATE Then
 	strFieldVal = makeNUMContents(strNUM, Null, False)
 	Call printRow("NUM",TXT_ORG_RECORD_NUM, _
 		strFieldVal, _
-		True,True,False,True,False,False,True)
+		True,True,False,True,bEnforceReqFields,False,True)
 	strFieldVal = makeTextFieldVal("POSITION_TITLE", _
 			vbNullString, _
 			150, _
@@ -575,7 +575,7 @@ If intFormType <> EF_UPDATE Then
 		strFieldVal
 	Call printRow("POSITION_TITLE",TXT_POSITION_TITLE, _
 		strFieldVal, _
-		True,True,False,True,False,False,True)
+		True,True,False,True,bEnforceReqFields,False,True)
 End If
 
 While Not rsFields.EOF
@@ -737,7 +737,7 @@ While Not rsFields.EOF
 			bHasLabel = True
 		End If
 		Call printRow(strFieldName,rsFields.Fields("FieldDisplay"),strFieldVal, _
-			True,rsFields.Fields("HasHelp"),Nz(rsFields.Fields("ChangeHistory"), 0) > 0 And Not bNew,Not rsFields.Fields("AllowNulls"),False,bFieldHasFeedback,bHasLabel)
+			True,rsFields.Fields("HasHelp"),Nz(rsFields.Fields("ChangeHistory"), 0) > 0 And Not bNew,Not rsFields.Fields("AllowNulls"),bEnforceReqFields,bFieldHasFeedback,bHasLabel)
 	End If
 	rsFields.MoveNext
 Wend
@@ -826,7 +826,22 @@ If bHasSchedule Then
 <%
 End If
 %>
+	var validator = init_client_validation('#EntryForm', '<%= TXT_VALIDATION_ERRORS_TITLE %>');
+
 	init_check_for_autochecklist(<%=JSONQs(TXT_UNADDED_CHECKLIST_ALERT,True)%>);
+<%
+If Not bNew Then
+%>
+	if (!validator.form()) {
+		ef_node.show();
+		$('html').scrollTop(scrollTop);
+		alert("<%= TXT_VALIDATION_ERRORS_MESSAGE %>");
+		ef_node.hide();
+	}
+
+<%
+End If
+%>
 <%
 If Not bNew Then
 Call printHistoryDialogJavaScript(False)

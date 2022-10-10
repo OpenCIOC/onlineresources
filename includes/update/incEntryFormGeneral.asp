@@ -71,16 +71,16 @@ def prepSocialMediaFeedback(rsFb):
 	for i, row in enumerate(rs_iter(rsFb), 1):
 		if row['SOCIAL_MEDIA']:
 			xml = ET.fromstring(row['SOCIAL_MEDIA'].encode('utf-8'))
-			
+
 			for el in xml.findall('./SM'):
 				sm_id = el.get('SM_ID')
 				url = el.get('URL', None)
 				proto = el.get('Proto', None) or 'http://'
-				
-				sm_feedback_values[sm_id].append({'sm_id': sm_id, 'proto': proto, 'url': url, 'feedback': i, 
+
+				sm_feedback_values[sm_id].append({'sm_id': sm_id, 'proto': proto, 'url': url, 'feedback': i,
 						'language_name': row.get('LanguageName')})
 
-				
+
 def getSocialMediaFeedback(sm_id, txt_feeback_num, txt_colon,txt_update, txt_content_deleted):
 	template = u'''<div class="feedback-item">
 			<span class="fb-data-label">{}%d{}{}</span>
@@ -93,7 +93,7 @@ def getSocialMediaFeedback(sm_id, txt_feeback_num, txt_colon,txt_update, txt_con
 	output = []
 	for fb in sm_feedback_values[sm_id]:
 		output.append(template % (fb['feedback'], fb['language_name'] if pyrequest.multilingual else '', escape((fb['proto'] + fb['url']) if fb['url'] else txt_content_deleted), sm_id, escape(dumps((fb['proto'] + fb['url']) if fb['url'] else '') , True)))
-		
+
 
 	return "".join(output)
 
@@ -117,17 +117,17 @@ def prepLanguagesFeedback(rsFb):
 			for el in xml.findall('./NOTE'):
 				values['NOTE'] = {'note': el.text}
 
-			
+
 			for el in xml.findall('.//LN'):
 				ln_id = el.get('ID')
 				ln_feedback_all_ids.add(ln_id)
 				note = el.get('NOTE', u'')
 				lnds = {x.text.strip() for x in el.findall('.//LND') if x.text.strip()}
-				
+
 				values[ln_id] = {
 					'ln_id': ln_id, 'note': note, 'lnds': lnds
 				}
-	
+
 	return ','.join(ln_feedback_all_ids)
 
 def getLanguagesFeedback(ln_id, language_name, checked, note, txt_feedback_num, txt_colon, txt_update, txt_content_deleted):
@@ -144,7 +144,7 @@ def getLanguagesFeedback(ln_id, language_name, checked, note, txt_feedback_num, 
 		if not fb:
 			if not int(checked):
 				continue
-		
+
 			value = six.text_type(txt_content_deleted)
 			update_values = {'LN_ID': '', 'LN_NOTES_%s' % ln_id: '', 'LND_%s' % ln_id: []}
 		else:
@@ -158,9 +158,9 @@ def getLanguagesFeedback(ln_id, language_name, checked, note, txt_feedback_num, 
 				details.append(escape(fb['note'], True))
 			if details:
 				value += u' (%s)' % u', '.join(details)
-		
+
 		output.append(template % {'no': i + 1, 'language_name': values['LanguageName'], 'id': ln_id, 'update_values': escape(dumps(update_values), True), 'value': value})
-		
+
 	return u"".join(output)
 
 def getLanguageNotesFeedback(note, txt_feedback_num, txt_colon, txt_update, txt_content_deleted):
@@ -178,13 +178,13 @@ def getLanguageNotesFeedback(note, txt_feedback_num, txt_colon, txt_update, txt_
 		if not fb or not fb.get('note'):
 			if not note:
 				continue
-			
+
 			value = six.text_type(txt_content_deleted)
 			update_value = u''
 
 		else:
 			update_value = value = fb['note']
-			
+
 		output.append(template % {'no': i, 'language_name': values['LanguageName'], 'update_value': escape(dumps(six.text_type(update_value)), True), 'value': escape(value)})
 
 	return u''.join(output)
@@ -208,12 +208,12 @@ def languageDetailsUI(lnid, lndids, txt_help):
 	rows = []
 	for detail in language_details:
 		vars = {
-			'lnid': lnid, 'help_ui': u'', 
+			'lnid': lnid, 'help_ui': u'',
 			'LND_ID': detail['LND_ID'], 'Name': escape(detail['Name']),
 			'checked': u'checked' if six.text_type(detail['LND_ID']) in selected_ids else u''
 		}
 		if detail['HelpText']:
-			vars['help_ui'] = _language_detail_help_ui_template % (escape(detail['HelpText']), txt_help) 
+			vars['help_ui'] = _language_detail_help_ui_template % (escape(detail['HelpText']), txt_help)
 
 		rows.append(_language_detail_row_template % vars)
 
@@ -301,7 +301,7 @@ def getStdChecklistFeedback(prefix, field_name, item_notes, item_id, checked, no
 				elif six.text_type(note) == fb['note']:
 					#no change
 					continue
-				
+
 			value = six.text_type(item_name)
 			if item_notes and fb['note']:
 				value += u' - ' + escape(fb['note'])
@@ -334,13 +334,13 @@ def getStdChecklistNotesFeedback(field_name, note, txt_feedback_num, txt_colon, 
 		if not fb or not fb.get('note'):
 			if not note:
 				continue
-			
+
 			value = six.text_type(txt_content_deleted)
 			update_value = u''
 
 		else:
 			update_value = value = fb['note']
-			
+
 		output.append(template % {'no': i, 'language_name': values['language_name'], 'update_value': escape(dumps(six.text_type(update_value)), True), 'value': escape(value)})
 
 	return u''.join(output)
@@ -402,7 +402,7 @@ def prepEventScheduleFeedback(rsFb):
 			attrib['_line'] = schedule_line
 			attrib = convertEventScheduleFeedbackEntry(attrib)
 			values[sched_id] = attrib
-	
+
 	return entries
 
 def makeEventScheduleEntry(entry, label, prefix, feedback=None):
@@ -453,7 +453,7 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 	elif recurs_day_of_week == u'1':
 		ui_select_value = u'1'
 
-	
+
 	recurs_display = u''
 	week_text_display = hide_display
 	month_text_display = u''
@@ -647,7 +647,7 @@ def makeEventScheduleContents_l(rst, bUseContent, has_feedback=False, rsFb=None,
 				feedback
 			)
 		)
-	
+
 	if feedback:
 		for fb_num, fbe in enumerate(feedback):
 			for entry in fbe.get('_order', []):
@@ -670,7 +670,7 @@ def makeEventScheduleContents_l(rst, bUseContent, has_feedback=False, rsFb=None,
 		<button class="btn btn-default EntryFormItemAdd" type="button" id="Sched_add_button">{}</button>
 		''').format(u','.join(ids), _('Add'))
 	)
-	
+
 	return u''.join(output)
 
 </script>
@@ -765,7 +765,7 @@ Function getDropDownValue(strValue, strFunction, bLangID, strFieldName)
 		Set rsDropDown = Nothing
 		Set cmdDropDown = Nothing
 	End If
-	
+
 	getDropDownValue = strReturn
 End Function
 
@@ -933,7 +933,7 @@ Function getDateFeedback(strFieldName,bUpdateButton,bNoYear)
 			Wend
 		End With
 	End If
-	
+
 	If Not Nl(strReturn) Then
 		bFieldHasFeedback = True
 	End If
@@ -991,9 +991,9 @@ End Function
 
 Function getGeoCodeFeedback()
 	Dim strReturn, i
-	
+
 	Dim strJSUpdate
-	
+
 	If bFeedback Then
 		i = 1
 		With rsFb
@@ -1168,20 +1168,20 @@ End Sub
 Function makeContactContents(rst,strContactType,bUseContent)
 	Dim strReturn, strQFldName
 	Dim xmlDoc, xmlNode
-	
+
 	Set xmlDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
 	With xmlDoc
 		.async = False
 		.setProperty "SelectionLanguage", "XPath"
 	End With
-	
+
 	If bUseContent Then
 		xmlDoc.loadXML Nz(rst(strContactType).Value,"<CONTACT/>")
 	Else
 		xmlDoc.loadXML "<CONTACT/>"
 	End If
 	Set xmlNode = xmlDoc.selectSingleNode("/CONTACT")
-	
+
 	strQFldName = AttrQs(strContactType & "_NAME")
 	strReturn = _
 			"<div class=""form-group"">" & _
@@ -1190,7 +1190,7 @@ Function makeContactContents(rst,strContactType,bUseContent)
 					"<input type=""text"" name=" & strQFldName & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("NAME")) & ">" & _
 				"</div>" & _
 			"</div>"
-	strQFldName = AttrQs(strContactType & "_TITLE") 
+	strQFldName = AttrQs(strContactType & "_TITLE")
 	strReturn = strReturn & _
 			"<div class=""form-group"">" & _
 				"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_TITLE & "</label>" & _
@@ -1232,29 +1232,29 @@ Function makeContactContents(rst,strContactType,bUseContent)
 					"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">" & _
 				"</div>" & _
 			"</div>"
-			
+
 	makeContactContents = strReturn
 End Function
 
 Function makeContactFieldVal(rst,strContactType,bUseContent)
 	Dim strReturn, strQFldName
 	Dim xmlDoc, xmlNode
-	
+
 	Call openContactRecordsets()
-	
+
 	Set xmlDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
 	With xmlDoc
 		.async = False
 		.setProperty "SelectionLanguage", "XPath"
 	End With
-	
+
 	If bUseContent Then
 		xmlDoc.loadXML Nz(rst(strContactType).Value,"<CONTACT/>")
 	Else
 		xmlDoc.loadXML "<CONTACT/>"
 	End If
 	Set xmlNode = xmlDoc.selectSingleNode("/CONTACT")
-	
+
 	strReturn = "<input type=""hidden"" name=""" & strContactType & "_ID" & """ value=""" & xmlNode.getAttribute("ContactID") & """>"
 
 	strReturn = strReturn & vbCrLf & _
@@ -1314,7 +1314,7 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 					"</div>" & _
 				"</div>" & _
 			"</div>"
-		
+
 	Dim i
 	For i = 1 to 3
 		strReturn = strReturn & vbCrLf & _
@@ -1380,7 +1380,7 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 				"<div class=""form-group"">" & _
 					"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_EMAIL & "</label>" & _
 					"<div class=""col-sm-9 col-lg-10"">" & _
-						"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">"
+						"<input type=""text"" name=" & strQFldName  & " class=""form-control email"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">"
 	If bFeedback Then
 		strReturn = strReturn & getFeedback(strContactType & "_EMAIL",True,False)
 	End If
@@ -1397,9 +1397,9 @@ Function makeExtraCheckListContents(rst,bUseContent,bFbForm)
 	Dim strReturn, strCon
 	Dim intEXCID, strName, bIsSelected, strFeedback
 	Dim xmlDoc, xmlNode, xmlChildNode
-	
+
 	strCon = vbNullString
-	
+
 	Set xmlDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
 	With xmlDoc
 		.async = False
@@ -1439,7 +1439,7 @@ Function makeExtraCheckListContents(rst,bUseContent,bFbForm)
 	End If
 
 	Set xmlNode = xmlDoc.selectSingleNode("/EXTRA_CHECKLIST")
-	
+
 	If Not xmlNode Is Nothing Then
 		For Each xmlChildNode in xmlNode.childNodes
 			strFeedback = vbNullString
@@ -1467,17 +1467,17 @@ End Function
 Function makeExtraDropDownContents(rst,bUseContent,bFbForm)
 	Dim strReturn, _
 		intCurVal
-		
+
 	If bUseContent Then
 		intCurVal = rst(strFieldName)
 	Else
 		intCurVal = vbNullString
 	End If
-	
+
 	Call openExtraDropDownListRst(ps_strDbArea, strFieldName, False, False, intCurVal)
 	strReturn = makeExtraDropDownList(strFieldName, intCurVal, strFieldName, True, vbNullString)
 	Call closeExtraDropDownListRst(strFieldName)
-	
+
 	If bFeedback Then
 		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
@@ -1570,7 +1570,7 @@ Function makeRecordNoteEntryTemplate(strNoteType)
 
 	strReturn = strReturn & _
 		"<div class=""EntryFormItemBox"" id=""" & strPrefix & "container"">" & _
-		"<h4 class=""EntryFormItemHeader"">" & TXT_NOTE_NUMBER & "<span class=""EntryFormItemCount"">[COUNT]</span><span style=""display:none;"" class=""NewFlag""> " & TXT_NEW & "</span></h4>" & _ 
+		"<h4 class=""EntryFormItemHeader"">" & TXT_NOTE_NUMBER & "<span class=""EntryFormItemCount"">[COUNT]</span><span style=""display:none;"" class=""NewFlag""> " & TXT_NEW & "</span></h4>" & _
 		"<div id=""" & strPrefix & "EDIT"" class=""EntryFormItemContent"">" & _
 		"<table class=""NoBorder cell-padding-2"">" & _
 			"<tr style=""display:none;"" class=""CreatedField"">" & _
@@ -1581,15 +1581,15 @@ Function makeRecordNoteEntryTemplate(strNoteType)
 				"<td class=""FieldLabelLeftClr"">" & TXT_LAST_MODIFIED & "</td>" & _
 				"<td>[MODIFIED_DATE] ([MODIFIED_BY])</td>" & _
 			"</tr>"
-	
-	If rsListRecordNoteType.RecordCount > 0 Then		
+
+	If rsListRecordNoteType.RecordCount > 0 Then
 		strReturn = strReturn & _
 			"<tr>" & _
 				"<td class=""FieldLabelLeftClr"">" & TXT_NOTE_TYPE & "</td>" & _
 				"<td>" & makeRecordNoteTypeList(vbNullString,strPrefix & "NoteTypeID",IIf(ps_intDbArea=DM_CIC,g_bRecordNoteTypeOptionalCIC,g_bRecordNoteTypeOptionalVOL),vbNullString) & "</td>" & _
 			"</tr></table>"
 	End If
-	
+
 	strReturn = strReturn & vbCrLf & _
 		"<textarea class=""form-control"" name=""" & strPrefix & "RecordNoteValue"" title=" & AttrQs(TXT_NOTES) & " cols=""" & TEXTAREA_COLS-5 & """ rows=""" & TEXTAREA_ROWS_SHORT & """>[NOTE_VALUE]</textarea>" & _
 		"</div><div style=""clear: both;""></div></div>"
@@ -1600,7 +1600,7 @@ End Function
 Function makeRecordNoteEntry(xmlNoteNode, strField)
 	Dim strReturn
 	strReturn = vbNullString
-	
+
 	Dim strPrefix, _
 		strHeading, _
 		intNoteTypeID, _
@@ -1614,7 +1614,7 @@ Function makeRecordNoteEntry(xmlNoteNode, strField)
 		dCancelled, _
 		strCancelledBy, _
 		bCancelError
-		
+
 	dCancelled = xmlNoteNode.getAttribute("CANCELLED_DATE")
 	strCancelledBy = Nz(xmlNoteNode.getAttribute("CANCELLED_BY"),TXT_UNKNOWN)
 	bCancelError = xmlNoteNode.getAttribute("CancelError")
@@ -1637,7 +1637,7 @@ Function makeRecordNoteEntry(xmlNoteNode, strField)
 	strModifiedBy = Nz(xmlNoteNode.getAttribute("MODIFIED_BY"),TXT_UNKNOWN)
 
 	strReturn = strReturn & _
-		"<div class=""EntryFormNotesItem block-border-top" & StringIf(Not Nl(dCancelled), " RNCanceled") & """ id=""" & strPrefix & "CONTAINER"">" 
+		"<div class=""EntryFormNotesItem block-border-top" & StringIf(Not Nl(dCancelled), " RNCanceled") & """ id=""" & strPrefix & "CONTAINER"">"
 	If Nl(dCancelled) Then
 		strReturn = strReturn & vbCrLf & _
 			"<div style=""float: right; margin-right: 4px; display: none;"">" & _
@@ -1677,9 +1677,9 @@ Function makeRecordNoteEntry(xmlNoteNode, strField)
 
 	If Not Nl(dCancelled) Then
 		strReturn = strReturn & _
-			"<span class=""EntryFormItemCancelledDetails""><span class=""Alert"">" & IIf(bCancelError,TXT_CANCELLED_ERROR,TXT_NO_LONGER_APPLICABLE) & "</span>" & TXT_COLON & dCancelled & " (" & strCancelledBy & ")</span><br>" & vbCrLf 
+			"<span class=""EntryFormItemCancelledDetails""><span class=""Alert"">" & IIf(bCancelError,TXT_CANCELLED_ERROR,TXT_NO_LONGER_APPLICABLE) & "</span>" & TXT_COLON & dCancelled & " (" & strCancelledBy & ")</span><br>" & vbCrLf
 	End If
-	
+
 	If bHighPriority Then
 		strReturn = strReturn & _
 			"<img src=""/images/alert.gif"" border=""0"">&nbsp;"
@@ -1699,9 +1699,9 @@ End Function
 Function makeRecordNoteFieldVal(rst,strField,bUseContent)
 	Dim strReturn, bHasCancelledSection
 	Dim xmlDoc, xmlNode, xmlNoteNode
-	
+
 	Call openRecordNoteTypeRecordsets()
-	
+
 	Dim intCanDeleteRecordNote, intCanUpdateRecordNote
 	intCanDeleteRecordNote = get_db_option("CanDeleteRecordNote" & ps_strDbArea)
 	intCanUpdateRecordNote = get_db_option("CanUpdateRecordNote" & ps_strDbArea)
@@ -1721,14 +1721,14 @@ Function makeRecordNoteFieldVal(rst,strField,bUseContent)
 		.async = False
 		.setProperty "SelectionLanguage", "XPath"
 	End With
-	
+
 	If bUseContent Then
 		xmlDoc.loadXML Nz(rst(strField).Value,"<" & strField & "/>")
 	Else
 		xmlDoc.loadXML "<" & strField & "/>"
 	End If
 	Set xmlNode = xmlDoc.selectSingleNode("/" & strField)
-	
+
 	Dim intCount
 	intCount = 1
 
@@ -1770,7 +1770,7 @@ Function makeRecordNoteFieldVal(rst,strField,bUseContent)
 
 	If bFeedback Then
 		strReturn = strReturn & getFeedback(strField,False,False)
-	End If		
+	End If
 
 	makeRecordNoteFieldVal = strReturn
 End Function
@@ -1849,15 +1849,15 @@ Function makeSocialMediaFieldVal(rst,bUseContent)
 	Dim strReturn, strCon
 	Dim strName, strGeneralURL, strIcon, strFeedback
 	Dim xmlDoc, xmlNode, xmlChildNode
-	
+
 	strCon = vbNullString
-	
+
 	Set xmlDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
 	With xmlDoc
 		.async = False
 		.setProperty "SelectionLanguage", "XPath"
 	End With
-	
+
 	If bUseContent Then
 		xmlDoc.loadXML Nz(rst("SOCIAL_MEDIA").Value,"<SOCIAL_MEDIA/>")
 	Else
@@ -1893,7 +1893,7 @@ Function makeSocialMediaFieldVal(rst,bUseContent)
 	If bFeedback Then
 		junk = prepSocialMediaFeedback(rsFb)
 	End If
-	
+
 	Set xmlNode = xmlDoc.selectSingleNode("/SOCIAL_MEDIA")
 	If Not xmlNode Is Nothing Then
 		For Each xmlChildNode in xmlNode.childNodes
@@ -1917,7 +1917,7 @@ Function makeSocialMediaFieldVal(rst,bUseContent)
 					" unique=" & AttrQs("SOCIAL_MEDIA") & _
 					" maxlength=""255""" & _
 					" title=" & AttrQs(strName) & _
-					">" 
+					">"
 			If bFeedback Then
 				strFeedback = getSocialMediaFeedback(xmlChildNode.getAttribute("ID"), TXT_FEEDBACK_NUM, TXT_COLON, TXT_UPDATE, TXT_CONTENT_DELETED)
 				If Not Nl(strFeedback) Then
@@ -1984,7 +1984,7 @@ Function makeLanguageContents(rst,bUseContent)
 	If bFeedback Then
 		strFeedbackLNIDs = prepLanguagesFeedback(rsFb)
 	End If
-	
+
 	Dim cmdLanguage, rsLanguage, aLanguageDetails
 	Set cmdLanguage = Server.CreateObject("ADODB.Command")
 	With cmdLanguage
@@ -1997,11 +1997,11 @@ Function makeLanguageContents(rst,bUseContent)
 		.Parameters.Append .CreateParameter("@LNIDS", adVarChar, adParamInput, 5000, strFeedbackLNIDs)
 	End With
 	Set rsLanguage = cmdLanguage.Execute
-	
+
 	junk = makeLanguageDetailList(rsLanguage)
 
 	Set rsLanguage = rsLanguage.NextRecordset
-	
+
 	With rsLanguage
 		strReturn = strReturn & "<table id=""LN_existing_add_table"" class=""NoBorder cell-border-bottom"">"
 		While Not .EOF
@@ -2041,7 +2041,7 @@ Function makeLanguageContents(rst,bUseContent)
 
 	rsLanguage.Close
 	Set rsLanguage = Nothing
-	Set cmdLanguage = Nothing			
+	Set cmdLanguage = Nothing
 
 	If bFeedback Then
 		strReturn = strReturn & getLanguageNotesFeedback(strNotes, TXT_FEEDBACK_NUM, TXT_COLON, TXT_UPDATE, TXT_CONTENT_DELETED)
@@ -2079,7 +2079,7 @@ Sub printAutoFields(rst, bUseContent)
 		strCreatedDate = Nz(DateString(rst.Fields("CREATED_DATE"),True),TXT_UNKNOWN)
 		strCreatedBy = Nz(rst.Fields("CREATED_BY"),TXT_UNKNOWN)
 	End If
-	
+
 	Call printRow("CREATED_DATE", _
 		TXT_DATE_CREATED, _
 		strCreatedDate & " (" & TXT_SET_AUTOMATICALLY & ")", _
