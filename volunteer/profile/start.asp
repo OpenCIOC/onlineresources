@@ -117,13 +117,14 @@ Call makePageHeader(TXT_VOLUNTEER_PROFILE, TXT_VOLUNTEER_PROFILE, True, True, Tr
 </form>
 
 <%
-Dim strCommunityIDs, strInterestIDs, strCommunityHTML, strInterestHTML, bHaveACommunity, bHaveAnInterest
+Dim strCommunityIDs, strInterestIDs, strCommunityHTML, strInterestHTML, bHaveACommunity, bHaveAnInterest, strJoin
 strCommunityIDs = vbNullString
 strInterestIDs = vbNullString
 strCommunityHTML = vbNullString
 strInterestHTML = vbNullString
 bHaveACommunity = False
 bHaveAnInterest = False
+strJoin = vbNullString
 
 Set rsProfileInfo = rsProfileInfo.NextRecordset()
 With rsProfileInfo
@@ -163,14 +164,50 @@ End With
 Dim intAI_ID
 Set rsProfileInfo = rsProfileInfo.NextRecordset()
 With rsProfileInfo
-	While Not .EOF
-		intAI_ID = .Fields("AI_ID")
-		strInterestIDs = strInterestIDs & StringIf(bHaveAnInterest, ",") & intAI_ID
-		bHaveAnInterest = True
-		strInterestHTML = strInterestHTML & "<div data-id=""" & intAI_ID & """ class=""selected_interest"">" & Server.HTMLEncode(.Fields("InterestName")) & " [ <a href=""#"" class=""remove_interest""><img src=""" & ps_strRootPath & "images/redx.gif"" alt=""" & TXT_REMOVE & """></a> ]</div>" & vbCrLf
 
+	strInterestHTML = "<div id=""AI_existing_add_container"">"
+	While Not .EOF
+
+		' this next block of code is the only difference from the volunteer entryform version of
+		' this
+		bHaveAnInterest = True
+		strInterestIDs = strInterestIDs & strJoin & .Fields("AI_ID")
+		strJoin = ","
+		' End of difference from vol entry form
+
+		strInterestHTML = strInterestHTML & "<input name=""AI_ID"" id=""AI_ID_" & .Fields("AI_ID") & """ type=""checkbox"" value=""" & .Fields("AI_ID") & """ checked>&nbsp;<label for=""AI_ID_" & .Fields("AI_ID") & """>" & .Fields("InterestName") & "</label> ; "
 		.MoveNext
 	Wend
+	strInterestHTML = strInterestHTML & "</div>" & vbCrLf & _
+		"<h4>" & TXT_ADD_INTERESTS & "</h4><div id=""AI_new_input_table"">"
+
+	If Not g_bOnlySpecificInterests Then
+		strInterestHTML = strInterestHTML & "<strong><label for=""NEW_AI"">" & TXT_FIND_BY_KEYWORD & "</label></strong>" & vbCrLf & "<br>"
+	End If
+
+	strInterestHTML = strInterestHTML & vbCrLf & _
+		"<div class=""entryform-checklist-add-wrapper"">" & _
+			"<div class=""entryform-checklist-add-left"">" & _
+				"<input type=""text"" id=""NEW_AI"" class=""form-control"">" & _
+			"</div>" & _
+			"<div class=""entryform-checklist-add-right"">" & _
+				"<button type=""button"" class=""btn btn-default"" id=""add_AI"">" & TXT_ADD & "</button>" & _
+			"</div>" & _
+		"</div>"
+
+	If Not g_bOnlySpecificInterests Then
+		strInterestHTML = strInterestHTML & _
+			"<p><strong><label for=""InterestGroup"">" & TXT_FIND_BY_GENERAL_INTEREST & "</label></strong>" & vbCrLf & _
+			"<br>"
+		Call openInterestGroupListRst()
+		strInterestHTML = strInterestHTML & makeInterestGroupList(vbNullString, "InterestGroup", True)
+		Call closeInterestGroupListRst()
+
+		strInterestHTML = strInterestHTML & "</div>"
+	End If
+
+	strInterestHTML = strInterestHTML & "<p class=""hidden-xs hidden-sm"">" & _
+		TXT_NOT_SURE_ENTER & "<a href=""javascript:openWin('" & makeLink(ps_strPathToStart & "volunteer/interestfind.asp","Ln=" & g_objCurrentLang.Culture,"Ln") & "','cFind')"">" & TXT_AREA_OF_INTEREST_LIST & "</a>.</p>"
 End With
 
 Set rsProfileInfo = rsProfileInfo.NextRecordset()
@@ -209,7 +246,7 @@ If Not .EOF Then
 <p>
 <%If Not Nl(strSearchArgs) Then%>
 <%= TXT_USE_MY_SAVED_SEARCH_PROFILE %> <a href="<%=makeLink(ps_strPathToStart & "volunteer/results.asp", strSearchArgs, vbNullString)%>" style="font-weight:bolder"><%= TXT_SEARCH_NOW %></a>
-<em><%= TXT_OR_LC %></em> 
+<em><%= TXT_OR_LC %></em>
 <%End If%>
 <%= TXT_START_A_NEW %><a href="<%=makeLinkB(ps_strPathToStart & "volunteer/")%>" style="font-weight:bolder"><%=TXT_VOLUNTEER_SEARCH%></a>.</p>
 <%If .RecordCount <> 1 Then%>
@@ -399,14 +436,10 @@ End With
 		</table>
 	</tr>
 	<tr>
-		<td class="FieldLabelLeft"><%= TXT_AREAS_OF_INTEREST %></td>
+		<td class="FieldLabelLeft" id="FIELD_INTERESTS"><%= TXT_AREAS_OF_INTEREST %></td>
 		<td class="InterestList">
-			<div class="TermList" id="selected_interests">
-				<%=strInterestHTML%>
-				<span class="NoSelectedInterests<%=StringIf(bHaveAnInterest, " NotVisible")%>"><%= TXT_NO_INTERESTS %></span>
-				<input type="hidden" value="<%=strInterestIDs%>" name="AI_ID" class="selected_interests_input">
-			</div>
-			<p><a href="#javascript" class="btn btn-info" id="interests_button"><%= TXT_FIND_INTERESTS %></a> <a href="#javascript" class="btn btn-info" id="clear_interests"><%= TXT_REMOVE_ALL %></a></p>
+			<%=strInterestHTML%>
+			<p><button type="button" class="btn btn-default" id="clear_interests"><%= TXT_REMOVE_ALL %></button></p>
 		</td>
 	</tr>
 	<tr>
@@ -419,59 +452,10 @@ End With
 </form>
 </div>
 <div id="personal_tab">
-<% 
+<%
 Call VOLProfilePersonalForm(False, dicBasicInfo)
 %>
 </div>
-</div>
-
-<div id="interest_dialog" style="display: none;">
-<div class="InterestList" style="margin: 0px 10px 0px 10px; padding: 0px; float: right;">
-	<div class="TermListTitle"><%= TXT_SELECTED_INTERESTS %></div>
-		<div class="TermList" id="dlg_selected_interests">
-		</div>
-
-		<p><a href="#javascript" class="btn btn-default" id="accept_button"><%= TXT_ACCEPT_AND_CLOSE %></a> <a href="#javascript" class="btn btn-default" id="clear_button"><%= TXT_REMOVE_ALL %></a></p>
-	</div>
-
-	<% If Not g_bOnlySpecificInterests Then %>
-	<div>
-	<form action="<%=ps_strPathToStart & "interestfind.asp"%>" id="interest_search_form">
-	<%=g_strCacheFormVals%>
-	<input type="hidden" name="ProfileSearch" value="on">
-	<table class="BasicBorder cell-padding-2">
-	<%
-		Call openInterestGroupListRst()
-	%>
-		<tr>
-			<td class="FieldLabelLeft"><%= TXT_AREA_OF_INTEREST %></td>
-			<td><%=makeInterestGroupList(vbNullString,"IGID",True)%>&nbsp;<input type="submit" value="<%=TXT_SEARCH%>"></td>
-		</tr>
-	<%
-		Call closeInterestGroupListRst() 
-	%>
-	</table>
-	</form>
-	</div>
-	<% End If %>
-
-<div>
-	<h3><%=TXT_AREA_OF_INTEREST_LIST%></h3>
-	<div id="results_area">
-	<p><%=TXT_NOTHING_TO_SEARCH%></p>
-	</div>
-</div>
-
-</div><!-- dialog -->
-<div id="confirm_hide_dialog" style="display: none;">
-<h3><%= TXT_CONFIRM_APPLICATION_HIDE %></h3>
-<form style="display:none" id="hide_confirm_form">
-<%=g_strCacheFormVals%>
-<input type="hidden" name="RefID" id="hide_confirm_refid" value="">
-<input type="hidden" name="Confirm" value="on">
-</form>
-<p><%= TXT_INST_CONFIRM_APPLICATION_HIDE %></p>
-<input type="button" name="Submit" value="<%= TXT_HIDE %>" id="confirm_okay"> <input type="button" value="<%= TXT_CANCEL %>" id="confirm_cancel">
 </div>
 
 <div id="outcome_dialog" style="display: none;">
@@ -510,12 +494,10 @@ Call VOLProfilePersonalForm(False, dicBasicInfo)
 <%= JSVerScriptTag("scripts/vprofiles.js") %>
 <script type="text/javascript">
 (function() {
-init_vprofiles(<%= intShow %>, "<%= ps_strRootPath %>", "<%= TXT_REMOVE %>", <%= IIf(g_bOnlySpecificInterests, """" & makeLink("~/volunteer/interestfind.asp", "ProfileSearch=on", vbNullString) & """", "null") %>);
+init_vprofiles(<%= intShow %>, "<%= ps_strRootPath %>", "<%= TXT_REMOVE %>", <%= IIf(g_bOnlySpecificInterests, """" & makeLink("~/volunteer/interestfind.asp", "ProfileSearch=on", vbNullString) & """", "null") %>, "<%= TXT_NOT_FOUND %>", "<%= makeLinkB(ps_strPathToStart & "jsonfeeds/interest_generator.asp") %>");
 })();
 </script>
 <%
 Call makePageFooter(True)
 %>
 <!--#include file="../../includes/core/incClose.asp" -->
-
-

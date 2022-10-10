@@ -4951,11 +4951,17 @@ var init_num_needed = function(txt_not_found){
 };
 window['init_num_needed'] = init_num_needed;
 
-var init_interests = function(txt_not_found) {
+
+})();
+﻿(function() {
+
+var $ = jQuery;
+
+var init_interests = function(txt_not_found, interest_complete_url) {
 	var added_values = [];
 	var add_item_fn = only_items_chk_add_html($, 'AI');
 	init_autocomplete_checklist($, {field: 'AI',
-			source: entryform.interest_complete_url,
+			source: interest_complete_url,
 			add_new_html: add_item_fn,
 			added_values: added_values,
 			txt_not_found: txt_not_found
@@ -5000,7 +5006,7 @@ var init_interests = function(txt_not_found) {
 	};
 	interest_group = $('#InterestGroup').
 		change(function() {
-			$.getJSON(entryform.interest_complete_url,
+			$.getJSON(interest_complete_url,
 				{IGID: interest_group.prop('value')},
 				update_interest_list);
 		});

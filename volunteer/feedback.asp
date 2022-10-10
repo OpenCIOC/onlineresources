@@ -632,7 +632,7 @@ Call printRow("SOURCE_TITLE",strSourcePrefix & TXT_JOB_TITLE, _
 		<h3 class="Alert"><label for="FB_NOTES"><%=TXT_SPECIAL_INSTRUCTIONS%></label></h3>
 		<p><%=TXT_ENTER_SPECIAL_INFO%></p>
 		<p><textarea name="FB_NOTES" id="FB_NOTES" rows="<%=TEXTAREA_ROWS_LONG%>" class="form-control"></textarea></p>
-	
+
 		<%	If Not Nl(strTermsOfUseURL) Then%>
 		<h3 class="Alert"><%=TXT_USE_OF_INFO%></h3>
 		<p><a href="<%=strTermsOfUseURL%>" target="_BLANK"><%=TXT_REVIEW_TERMS_OF_USE%>&nbsp;<%=TXT_NEW_WINDOW%></a></p>
@@ -720,8 +720,7 @@ If bHasSchedule Then
 End If
 If bInterests Then
 %>
-    entryform.interest_complete_url = "<%=makeLinkB(ps_strPathToStart & "jsonfeeds/interest_generator.asp")%>";
-    init_interests("<%= TXT_NOT_FOUND %>");
+    init_interests("<%= TXT_NOT_FOUND %>","<%=makeLinkB(ps_strPathToStart & "jsonfeeds/interest_generator.asp")%>");
 <%
 End If
 If bNumNeeded Then
