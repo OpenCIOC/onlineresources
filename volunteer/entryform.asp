@@ -807,8 +807,7 @@ If bHasSchedule Then
 End If
 If bInterests Then
 %>
-	entryform.interest_complete_url = "<%= makeLinkB(ps_strPathToStart & "jsonfeeds/interest_generator.asp") %>";
-	init_interests("<%= TXT_NOT_FOUND %>");
+	init_interests("<%= TXT_NOT_FOUND %>", "<%= makeLinkB(ps_strPathToStart & "jsonfeeds/interest_generator.asp") %>");
 <%
 End If
 If bNumNeeded Then

@@ -137,13 +137,13 @@ taxrecords.js: bsearch.js tax_base.js
 taxsrch.js: ciocbasic.js autocomplete.js search_params.js
 	type $^ > $@
 
-ventryform.js: ciocbasic.js jquery-ui-combobox.js jquery.validate.js globalize.js autocomplete.js autocomplete_extra.js feedback_base.js entryform_common.js ventryform_base.js record_note.js history.js copy_base.js
+ventryform.js: ciocbasic.js jquery-ui-combobox.js jquery.validate.js globalize.js autocomplete.js autocomplete_extra.js feedback_base.js entryform_common.js ventryform_base.js interests_checkbox.js record_note.js history.js copy_base.js
 	type $^ > $@
 
-vfeedback.js: ciocbasic.js jquery-ui-combobox.js jquery.validate.js globalize.js autocomplete.js autocomplete_extra.js feedback_base.js entryform_common.js ventryform_base.js
+vfeedback.js: ciocbasic.js jquery-ui-combobox.js jquery.validate.js globalize.js autocomplete.js autocomplete_extra.js feedback_base.js entryform_common.js ventryform_base.js interests_checkbox.js
 	type $^ > $@
 
-vprofiles.js: tablesort.js cached_state.js vprofiles_base.js
+vprofiles.js: tablesort.js cached_state.js autocomplete.js autocomplete_extra.js entryform_common.js interests_checkbox.js vprofiles_base.js
 	type $^ > $@
 
 ../python/cioc/core/assetversions.json: $(patsubst %.js,%.min.js, $(SCRIPTS)) ../styles/*.css
