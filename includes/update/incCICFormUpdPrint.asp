@@ -973,7 +973,8 @@ End Function
 Function csInputAttrs(strLabelText, strName, strValue, strSize, strMaxLength, strExtraAttrs)
 	Dim strQName
 	strQName = AttrQs(strName)
-	csInputAttrs = csField(strLabelText, strName, "<input type=""text"" id=" & strQName & _
+	csInputAttrs = csField(strLabelText, strName, _
+				"<input class=""form-control"" type=""text"" id=" & strQName & _
 				" name=" & strQName & " size=""" & strSize & """ maxlength=""" & _
 				strMaxLength & """ value=" & AttrQs(strValue) & strExtraAttrs & ">")
 End Function
@@ -1740,7 +1741,11 @@ Function makeLocationsServicesContents(rst, strFieldName, strAddTitle, strTypeWa
 		
 	End If
 	strReturn = strReturn & _
-		"</ul><h4>" & strAddTitle & "</h4><p class=""locations-services-new-container""><strong>" & TXT_RECORD_NUM & "</strong> <input type=""text"" title=" & AttrQs(TXT_RECORD_NUM) & " class=""locations-services-new"" size=""9"" maxlength=""8"" value=""""> <input type=""button"" class=""locations-services-add"" value=""" & TXT_ADD & """><br>" & TXT_INST_NUM_FINDER & "</p>"
+		"</ul><h4>" & strAddTitle & "</h4>" & _
+		"<p class=""locations-services-new-container form-inline""><strong>" & TXT_RECORD_NUM & "</strong> " & _
+		"<input class=""form-control"" type=""text"" title=" & AttrQs(TXT_RECORD_NUM) & " class=""locations-services-new"" size=""9"" maxlength=""8"" value=""""> " & _
+		"<input type=""button"" class=""locations-services-add btn btn-default"" value=""" & TXT_ADD & """></p>" & _
+		"<p>" & TXT_INST_NUM_FINDER & "</p>"
 
 	If bUseContent Then
 		Set xmlDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
