@@ -60,19 +60,21 @@ SCRIPTS :=  \
 .PHONY: default clean cleancomposit
 	#debug release
 
+export PATH := ../python/node_modules/.bin;$(PATH)
+
 default: ../python/cioc/core/assetversions.json
 
 %.min.js: %.js
-	java -jar c:/bin/closure-compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js $< --create_source_map ./$<.map --source_map_format=V3 --js_output_file $@
-	unix2dos $@
+	google-closure-compiler --compilation_level SIMPLE_OPTIMIZATIONS --js $< --create_source_map ./$<.map --source_map_format=V3 --js_output_file $@
 
-admin.js: ciocbasic.js jquery.bgiframe.js autocomplete.js autocomplete_extra.js entryform_common.js admin_base.js
+
+admin.js: ciocbasic.js autocomplete.js autocomplete_extra.js entryform_common.js admin_base.js
 	type $^ > $@
 
-advsrch.js: ciocbasic.js jquery.bgiframe.js formNewWindow.js autocomplete.js keyword_autocomplete.js advsrch_base.js globalize.js mapcommon.js mapsearch.js search_params.js
+advsrch.js: ciocbasic.js formNewWindow.js autocomplete.js keyword_autocomplete.js advsrch_base.js globalize.js mapcommon.js mapsearch.js search_params.js
 	type $^ > $@
 
-bsearch.js: ciocbasic.js jquery.bgiframe.js jquery.blockUI.js formNewWindow.js globalize.js autocomplete.js keyword_autocomplete.js bsearch_base.js mapcommon.js mapsearch.js search_params.js vacancy_base.js
+bsearch.js: ciocbasic.js jquery.blockUI.js formNewWindow.js globalize.js autocomplete.js keyword_autocomplete.js bsearch_base.js mapcommon.js mapsearch.js search_params.js vacancy_base.js
 	type $^ > $@
 
 checklists.js: ciocbasic.js json2.js autocomplete.js checklists_base.js
@@ -81,7 +83,7 @@ checklists.js: ciocbasic.js json2.js autocomplete.js checklists_base.js
 ciocbasic.js: core.js checkAll.js mylist.js json2.js cached_state.js autodatepicker.js
 	type $^ > $@
 
-community.js: ciocbasic.js jquery.bgiframe.js autocomplete.js autocomplete_extra.js entryform_common.js checklists_base.js community_base.js
+community.js: ciocbasic.js autocomplete.js autocomplete_extra.js entryform_common.js checklists_base.js community_base.js
 	type $^ > $@
 
 copy.js: ciocbasic.js jquery.validate.js copy_base.js
@@ -90,10 +92,10 @@ copy.js: ciocbasic.js jquery.validate.js copy_base.js
 datepicker.js: ciocbasic.js
 	type $^ > $@
 
-details.js: ciocbasic.js jquery.bgiframe.js jquery.validate.js jquery.ba-throttle-debounce.js jquery.blockUI.js autocomplete.js autocomplete_extra.js reminders_common.js details_base.js vacancy_base.js related_record_sidebar_base.js
+details.js: ciocbasic.js jquery.validate.js jquery.ba-throttle-debounce.js jquery.blockUI.js autocomplete.js autocomplete_extra.js reminders_common.js details_base.js vacancy_base.js related_record_sidebar_base.js
 	type $^ > $@
 
-entryform.js: ciocbasic.js jquery.bgiframe.js jquery-ui-combobox.js jquery.validate.js globalize.js mapcommon.js mapentryform.js history.js autocomplete.js autocomplete_extra.js entryform_common.js copy_base.js feedback_base.js record_note.js entryform_base.js province-combo.js
+entryform.js: ciocbasic.js jquery-ui-combobox.js jquery.validate.js globalize.js mapcommon.js mapentryform.js history.js autocomplete.js autocomplete_extra.js entryform_common.js copy_base.js feedback_base.js record_note.js entryform_base.js province-combo.js
 	type $^ > $@
 
 feedback.js: ciocbasic.js globalize.js mapcommon.js mapentryform.js jquery-ui-combobox.js province-combo.js autocomplete.js autocomplete_extra.js entryform_common.js feedback_base.js
@@ -102,10 +104,10 @@ feedback.js: ciocbasic.js globalize.js mapcommon.js mapentryform.js jquery-ui-co
 findreplace.js: ciocbasic.js findandreplace_base.js
 	type $^ > $@
 
-generalheading.js: ciocbasic.js jquery.bgiframe.js autocomplete.js iconautocomplete.js generalheading_base.js
+generalheading.js: ciocbasic.js autocomplete.js iconautocomplete.js generalheading_base.js
 	type $^ > $@
 
-publication.js: ciocbasic.js jquery.bgiframe.js autocomplete.js iconautocomplete.js
+publication.js: ciocbasic.js autocomplete.js iconautocomplete.js
 	type $^ > $@
 
 geocode.js: ciocbasic.js  globalize.js geocode_base.js
@@ -117,7 +119,7 @@ printmap.js: ciocbasic.js markerclusterer.js globalize.js printmap_base.js
 referralsearch.js: tablesort.js referralsearch_base.js
 	type $^ > $@
 
-reminders.js: ciocbasic.js jquery.bgiframe.js jquery.validate.js jquery.ba-throttle-debounce.js autocomplete.js autocomplete_extra.js reminders_common.js
+reminders.js: ciocbasic.js jquery.validate.js jquery.ba-throttle-debounce.js autocomplete.js autocomplete_extra.js reminders_common.js
 	type $^ > $@
 
 results.js: ciocbasic.js markerclusterer.js globalize.js jquery.ba-scrollbarwidth.js jquery.ba-bbq.js jquery.ba-throttle-debounce.js jquery.blockUI.js results_base.js vacancy_base.js related_record_sidebar_base.js
@@ -132,16 +134,16 @@ tax.js: ciocbasic.js autocomplete.js tax_base.js
 taxrecords.js: bsearch.js tax_base.js
 	type $^ > $@
 
-taxsrch.js: ciocbasic.js jquery.bgiframe.js autocomplete.js search_params.js
+taxsrch.js: ciocbasic.js autocomplete.js search_params.js
 	type $^ > $@
 
-ventryform.js: ciocbasic.js jquery.bgiframe.js jquery-ui-combobox.js history.js autocomplete.js autocomplete_extra.js feedback_base.js entryform_common.js copy_base.js ventryform_base.js record_note.js
+ventryform.js: ciocbasic.js jquery-ui-combobox.js jquery.validate.js globalize.js autocomplete.js autocomplete_extra.js feedback_base.js entryform_common.js ventryform_base.js interests_checkbox.js record_note.js history.js copy_base.js
 	type $^ > $@
 
-vfeedback.js: ciocbasic.js jquery-ui-combobox.js autocomplete.js autocomplete_extra.js entryform_common.js feedback_base.js
+vfeedback.js: ciocbasic.js jquery-ui-combobox.js jquery.validate.js globalize.js autocomplete.js autocomplete_extra.js feedback_base.js entryform_common.js ventryform_base.js interests_checkbox.js
 	type $^ > $@
 
-vprofiles.js: tablesort.js cached_state.js vprofiles_base.js
+vprofiles.js: tablesort.js cached_state.js autocomplete.js autocomplete_extra.js entryform_common.js interests_checkbox.js vprofiles_base.js
 	type $^ > $@
 
 ../python/cioc/core/assetversions.json: $(patsubst %.js,%.min.js, $(SCRIPTS)) ../styles/*.css

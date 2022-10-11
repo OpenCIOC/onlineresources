@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -44,75 +44,91 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../includes/core/incFooter.asp" -->
 <!--#include file="../text/txtMenu.asp" -->
 <% 'End Base includes %>
-<!--#include file="../text/txtFinder.asp" -->
 <!--#include file="../text/txtBrowse.asp" -->
+<!--#include file="../text/txtFinder.asp" -->
+<!--#include file="../text/txtGeneralSearch1.asp" -->
 <!--#include file="../text/txtSearchBasicVOL.asp" -->
+<!--#include file="../text/txtSearchResults.asp" -->
+<!--#include file="../includes/core/incFormat.asp" -->
 <!--#include file="../includes/list/incInterestList.asp" -->
-<!--#include file="../includes/list/incInterestGroupList.asp" -->
 <!--#include file="../includes/search/incNormalizeSearchTerms.asp" -->
 <%
 Dim bProfileSearch
 bProfileSearch = Not Nl(Trim(Request("ProfileSearch")))
 
-If Not bProfileSearch Then
-Call makePageHeader(TXT_AREA_OF_INTEREST_FINDER, TXT_AREA_OF_INTEREST_FINDER, False, False, True, False)
-	If Not g_bOnlySpecificInterests Then
-%>
-<form action="interestfind.asp" method="post">
-<%=g_strCacheFormVals%>
-<table class="BasicBorder cell-padding-2">
-<%
-	Call openInterestGroupListRst()
-%>
-	<tr>
-		<td class="FieldLabelLeft"><%=TXT_GENERAL_AREA_OF_INTEREST & TXT_COLON%></td>
-		<td><%=makeInterestGroupList(vbNullString,"IGID",False)%>&nbsp;<input type="submit" value="<%=TXT_SEARCH%>">
-		<br><%= TXT_OR_LC %><a href="<%= makeLink("~/volunteer/interestfind.asp", "ShowAll=on", vbNullString) %>"><%= TXT_SHOW_ALL %></a> <%= TXT_AREAS_OF_INTEREST %></td>
-	</tr>
-<%
-	Call closeInterestGroupListRst() 
-%>
-</table>
-</form>
-<%	End If %>
-<h1><%=TXT_AREA_OF_INTEREST_SEARCH_RESULTS%></h1>
-<%
-End If
-
-Dim intIGID, bAllInterests
+Dim intIGID, bGroupByGroup, bGroupInfo
 intIGID = Request("IGID")
-bAllInterests = Not Nl(Trim(Request("ShowAll")))
-If bAllInterests Then
-	intIGID = vbNullString
+If Not IsIDType(intIGID) Then
+	intIGID = Null
 End If
 
+bGroupByGroup = Not g_bOnlySpecificInterests And Nl(intIGID) And Not bProfileSearch
+bGroupInfo = Not (bProfileSearch Or Nl(intIGID))
 
-If Nl(intIGID) And Not g_bOnlySpecificInterests And Not bAllInterests Then
+If Not bProfileSearch Then
+Call makePageHeader(TXT_AREA_OF_INTEREST_LIST, TXT_AREA_OF_INTEREST_LIST, False, False, True, False)
 %>
-<p><%=TXT_NOTHING_TO_SEARCH%></p>
+<h1><%=TXT_AREA_OF_INTEREST_LIST%></h1>
 <%
-Else
-	Call openInterestListRst(intIGID, False)
+End If
+
+Call openInterestListRst(intIGID, bGroupByGroup, bGroupInfo)
+
+	If bGroupInfo Then
+%>
+<h4><%=TXT_YOU_SEARCHED_FOR & Server.HTMLEncode(strListGroupNames)%></h4>
+<%
+	End If
 	
 	With rsListInterest
 		If Not .EOF Then
+			If bGroupByGroup Then
+				intIGID = vbNullString
+			Else
 %>
 <ul id="interest_list">
 <%
+			End If
 			While Not .EOF
+				If bGroupByGroup Then
+					If intIGID <> .Fields("IG_ID") Then
 %>
-	<li<%=StringIf(bProfileSearch, " data-id=""" & .Fields("AI_ID") & """ id=""result_" & .Fields("AI_ID") & """ class=""InterestResult""") %>><%=StringIf(bProfileSearch, "<span class=""source_interest_text"">") & .Fields("InterestName") & StringIf(bProfileSearch, "</span> <span class=""interest_ui"">[ <a class=""interest_add"" href=""#"" id=""interest_add_" & .Fields("AI_ID") & """>" & TXT_ADD & "</a><span class=""interest_added NotVisible"" id=""interest_added_" & .Fields("AI_ID") & """><img src=""" & ps_strRootPath & "images/greencheck.gif"" alt=""" & Server.HTMLEncode(TXT_ADDED) & """></span> ]</span>")%></li>
+	<%=StringIf(Not Nl(intIGID),"</ul>")%>
+	<h4><%=Server.HTMLEncode(.Fields("GroupName"))%></h4>
+	<ul id="interest_list_<%=.Fields("IG_ID")%>">
+<%
+						intIGID = .Fields("IG_ID")
+					End If
+				End If
+%>
+	<li class="InterestResult" <%If bProfileSearch Then%> data-id="<%=.Fields("AI_ID")%>" id="result_<%=.Fields("AI_ID")%>"<%End If%>>
+		<%If bProfileSearch Then %><span class="source_interest_text"><%End If%>
+		<%=Server.HTMLEncode(.Fields("InterestName"))%>
+		<%If bProfileSearch Then %></span>
+			<span class="interest_ui">
+				<a class="btn btn-xs btn-info interest_add" href="#" id="interest_add_<%=.Fields("AI_ID")%>">
+					<%=TXT_ADD%>
+				</a>
+				<span class="interest_added NotVisible" id="interest_added_<%=.Fields("AI_ID")%>">
+					<img src="<%=ps_strRootPath%>images/greencheck.gif" alt=<%=AttrQs(TXT_ADDED)%>>
+				</span>
+			</span>
+		<%End If%>
+	</li>
 <%
 				.MoveNext
 			Wend
 %>
 </ul>
 <%			
+		Else
+%>
+<p><%=TXT_NO_MATCHES%></p>
+<%
 		End If
 	End With
 
-	Call closeInterestListRst()
-End If
+Call closeInterestListRst()
 %>
 <%
 If Not bProfileSearch Then

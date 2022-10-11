@@ -447,7 +447,6 @@ class Publication(CicViewBase):
         request = self.request
         user = request.user
 
-        log.debug("before first check")
         if not user.cic or user.cic.CanUpdatePubs != const.UPDATE_ALL:
             self._security_failure()
 
@@ -463,7 +462,6 @@ class Publication(CicViewBase):
         PB_ID = model_state.form.data.get("PB_ID")
         is_add = not PB_ID
 
-        log.debug("before second security check")
         if user.cic.LimitedView and user.cic.PB_ID != PB_ID:
             self._security_failure()
 

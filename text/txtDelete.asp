@@ -98,10 +98,10 @@ Sub setTxtDelete()
 			TXT_ARE_YOU_SURE = "Êtes-vous sûr de vouloir supprimer définitivement ce(s) dossier(s)? Toutes les informations reliées à ce dossier seront également supprimées."
 			TXT_CANNOT_DELETE_AGENCY_ORG = "Dossiers associés avec un propriétaire du dossier ou une agence de l'utilisateur."
 			TXT_CANNOT_DELETE_ORG_W_OPPS = "Les dossiers avec des occasions de bénévolat associées. Il faut d'abord supprimer les occasions de bénévolat."
-			TXT_CANNOT_DELETE_PARENT_ORG = "TRANSLATE -- Records in use as a Parent Agency."
+			TXT_CANNOT_DELETE_PARENT_ORG = "Dossiers utilisés en tant qu'agence mère."
 			TXT_CANNOT_DELETE_RECORDS_IN_USE = "Vous ne pouvez pas supprimer les dossiers qui sont en cours d'utilisation par d'autres applications dans la base de données, y compris" & TXT_COLON
 			TXT_CANNOT_DELETE_SHARED_RECORDS = "Dossiers partagés avec vous par un autre membre CIOC dans cette base de données (ne comprend pas les dossiers importés)."
-			TXT_CANNOT_DELETE_SITE = "TRANSLATE -- Records in use as a Service Location (Site)."
+			TXT_CANNOT_DELETE_SITE = "Dossiers utilisés en tant qu'emplacement de service (site)."
 			TXT_CANNOT_DELETE_VOL_MEMBER_ORG = "Dossiers associés à un membre de type centre de bénévolat."
 			TXT_CANNOT_DELETE_VOL_W_REFERRAL = "Les occasions avec des mises en relation associées. Utilisez la page de gestion des mises en relation pour supprimer les mises en relation anciennes."
 			TXT_CHANGE_DATE = "Modifier la date"

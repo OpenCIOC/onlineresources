@@ -107,9 +107,9 @@ Sub setTxtDisplay()
 			TXT_SHOW_OPTIONS = "Afficher les options"
 			TXT_SORT = "Tri"
 			TXT_UPDATE_DISPLAY = "Mettre à jour l'affichage"
-			TXT_USE_COMPACT_FORMAT = "TRANSLATE_FR -- Use compact format"
+			TXT_USE_COMPACT_FORMAT = "Utiliser le format compact"
 			TXT_USE_TABLE_FORMAT = "Utiliser le format tableau"
-			TXT_USE_TABLE_SORT = "TRANSLATE_FR -- Show sort options on results page"
+			TXT_USE_TABLE_SORT = "Afficher les options de tri sur la page de résultats"
 			TXT_WEB_ENABLE = "Adapter les champs personnalisés au Web"
 	End Select
 End Sub

@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -39,7 +39,7 @@ If Nl(strID) Then
 	Call handleError(TXT_NO_RECORD_CHOSEN, vbNullString, vbNullString)
 ElseIf ps_intDbArea = DM_CIC And Not IsNUMType(strID) Then
 	Call handleError(TXT_INVALID_ID & Server.HTMLEncode(strID) & ".", vbNullString, vbNullString)
-ElseIf ps_intDbArea = DM_VOL And Not IsIDType(strID) Then
+ElseIf ps_intDbArea = DM_VOL And Not IsVNUMType(strID) Then
 	Call handleError(TXT_INVALID_ID & Server.HTMLEncode(strID) & ".", vbNullString, vbNullString)
 Else
 	If Nl(intLangID) Then

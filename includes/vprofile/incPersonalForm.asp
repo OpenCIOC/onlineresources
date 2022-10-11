@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -174,7 +174,7 @@ Sub VOLProfilePersonalForm(bNew, dicBasicInfo)
 <%If Not bNew Then%>
 	<tr>
 		<td class="FieldLabelLeft"><%= TXT_DEACTIVATE %></td>
-		<td><a style="display: inline-block; padding: 0.25em; text-decoration: none;" class="ui-state-default ui-corner-all" href="<%= makeLinkB("deactivate.asp") %>"><%= TXT_DEACTIVATE %></a>
+		<td><a style="display: inline-block; padding: 0.25em; text-decoration: none;" class="btn" href="<%= makeLinkB("deactivate.asp") %>"><%= TXT_DEACTIVATE %></a>
 			<br><%= TXT_DEACTIVATE_PROMPT %></td>
 	</tr>
 <%End If%>

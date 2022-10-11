@@ -458,7 +458,7 @@ Sub setTxtUsers()
 			TXT_ACCOUNT_NOT_UPDATED = "Le compte n'a pas été mise à jour." & TXT_COLON
 			TXT_ANY_OF_THE_FOLLOWING = "Parmi les suivantes" & TXT_COLON
 			TXT_ANY_VIEW_THE_USER_CAN_ACCESS = "Toutes les vues auxquelles l'utilisateur peut accéder"
-			TXT_API_KEYS = "TRANSLATE_FR -- Manage API Keys"
+			TXT_API_KEYS = "Gérer les clés API"
 			TXT_AGENCY = "Agence"
 			TXT_BASED_ON_EXISTING_VIEW_1 = "Selon la vue par défaut actuelle de "
 			TXT_BASED_ON_EXISTING_VIEW_2 = ", un utilisateur de ce type peut également voir les vues" & TXT_COLON
@@ -587,9 +587,9 @@ Sub setTxtUsers()
 			TXT_INST_UPDATE_VACANCY_OPT_3 = "TRANSLATE_FR -- User can update vacancy information for records from their own Agency"
 			TXT_INST_UPDATE_VACANCY_OPT_4 = "TRANSLATE_FR -- User can update vacancy information for records belonging to specific Agencies:"
 			TXT_INST_USER_TYPE_NAME = "Utilisez un nom descriptif qui clarifie quelles sont la vue et les autorisations. (par ex. &quot;Vue Personnel - Vue Bénévolat seul.&quot;, &quot;Vue Gestionnaire - Admin CIC&quot;)"
-			TXT_INST_VIEW_STATS_1 = "TRANSLATE_FR -- Users cannot view statistics."
+			TXT_INST_VIEW_STATS_1 = "Les utilisateurs ne peuvent pas afficher les statistiques."
 			TXT_INST_VIEW_STATS_2 = "Les utilisateurs peuvent voir les statistiques pour les dossiers dans les vues auxquelles ils ont accès."
-			TXT_INST_VIEW_STATS_3 = "TRANSLATE_FR -- Users can view all statistics on all records."
+			TXT_INST_VIEW_STATS_3 = "Les utilisateurs peuvent afficher toutes les statistiques sur tous les dossiers."
 			TXT_INST_VIEW_STATS_4 = "Les super-utilisateurs peuvent toujours voir les statistiques sur tous les dossiers."
 			TXT_INST_VIEW_TYPE = "TRANLSATE_FR -- The user's Default View is the one they start in when they initially sign in to the database. This View is also used to determine which other Views (if any) that this user may access; this is based on which Views the chosen View &quot;Can See&quot;."
 			TXT_INST_VIEW_TYPE_OFFLINE = "Vue à utiliser avec les outils hors-ligne pour ce type d'utilisateur. Ce type d'utilisateur ne peut pas utiliser les outils hors-ligne lorsqu'il n'y a pas de vue sélectionnée."

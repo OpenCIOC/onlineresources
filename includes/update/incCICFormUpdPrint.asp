@@ -67,7 +67,7 @@ Function makeAccessibilityContents(rst,bUseContent)
 			strReturn = strReturn & _
 				"<div class=""row-border-bottom"">" & _
 					"<div class=""row form-group"">" & _
-						"<label for=" & AttrQs("AC_ID_" & .FieldS("AC_ID")) & " class=""control-label control-label-left col-md-4"">" & _
+						"<label for=" & AttrQs("AC_ID_" & .Fields("AC_ID")) & " class=""control-label control-label-left col-md-4"">" & _
 							"<input name=""AC_ID"" id=""AC_ID_" & .FieldS("AC_ID") & """ type=""checkbox"" value=" & AttrQs(.Fields("AC_ID")) & Checked(.Fields("IS_SELECTED")) & ">" & _
 							.Fields("AccessibilityType") & _
 						"</label>" & _
@@ -139,15 +139,15 @@ Function makeActivityInfoEntry(dicBTACT, strHeading, strPrefix)
 		"</tr>" & _
 		"<tr>" & _
 			"<td class=""FieldLabelLeftClr"">" & TXT_ACTIVITY_INFO_NAME & "</td>" & _
-			"<td><input type=""text"" class=""ui-autocomplete-input"" name=""" & strPrefix & "ActivityName"" maxlength=""100"" size=""" & TEXT_SIZE-20 & """ value=""" & Server.HTMLEncode(Ns(dicBTACT("ActivityName"))) & """ id=""" & strPrefix &"activity_name""></td>" & _
+			"<td><input type=""text"" class=""ui-autocomplete-input form-control"" name=""" & strPrefix & "ActivityName"" maxlength=""100"" size=""" & TEXT_SIZE-20 & """ value=""" & Server.HTMLEncode(Ns(dicBTACT("ActivityName"))) & """ id=""" & strPrefix &"activity_name""></td>" & _
 		"</tr>" & _
 		"<tr>" & _
 			"<td class=""FieldLabelLeftClr"">" & TXT_ACTIVITY_INFO_DESCRIPTION & "</td>" & _
-			"<td><textarea name=""" & strPrefix & "ActivityDescription"" cols=""" & TEXTAREA_COLS-15 & """ rows=""" & TEXTAREA_ROWS_SHORT & """ "" id=""" & strPrefix & "activity_description"">" & Server.HTMLEncode(Ns(dicBTACT("ActivityDescription"))) & "</textarea>" & _
+			"<td><textarea name=""" & strPrefix & "ActivityDescription"" cols=""" & TEXTAREA_COLS-15 & """ rows=""" & TEXTAREA_ROWS_SHORT & """ class=""form-control"" id=""" & strPrefix & "activity_description"">" & Server.HTMLEncode(Ns(dicBTACT("ActivityDescription"))) & "</textarea>" & _
 		"</tr>" & _
 		"<tr>" & _
 			"<td class=""FieldLabelLeftClr"">" & TXT_NOTES & "</td>" & _
-			"<td><textarea name=""" & strPrefix & "ActivityNotes"" cols=""" & TEXTAREA_COLS-15 & """ rows=""" & TEXTAREA_ROWS_SHORT & """>" & Server.HTMLEncode(Ns(dicBTACT("Notes"))) & "</textarea></td>" & _
+			"<td><textarea name=""" & strPrefix & "ActivityNotes"" cols=""" & TEXTAREA_COLS-15 & """ rows=""" & TEXTAREA_ROWS_SHORT & """ class=""form-control"">" & Server.HTMLEncode(Ns(dicBTACT("Notes"))) & "</textarea></td>" & _
 		"</tr>" & _
 		"</table></div><div style=""clear: both;""></div></div>"
 
@@ -244,7 +244,7 @@ Function makeActivityInfoContents(rst, bUseContent)
 		strNotes = Server.HTMLEncode(strNotes)
 	End If
 	strReturn = strReturn & "<h4><label for=""ACTIVITY_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
-			"<textarea id=""ACTIVITY_NOTES"" name=""ACTIVITY_NOTES""" & _
+			"<textarea id=""ACTIVITY_NOTES"" name=""ACTIVITY_NOTES"" class=""form-control""" & _
 			" cols=""" & TEXTAREA_COLS & """" & _
 			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
 			">" & strNotes & "</textarea>"
@@ -539,7 +539,7 @@ Function makeAreasServedContents(rst,bUseContent)
 		strNUM = Null
 	End If
 	
-	strReturn = TXT_INFO_COMMUNITIES_2
+	strReturn = "<p>" & TXT_INFO_COMMUNITIES_2 & "</p>"
 	
 	strReturn = strReturn & "<table id=""CM_existing_add_table"" class=""NoBorder cell-padding-2"">"
 	If Not Nl(strNUM) Then
@@ -576,8 +576,7 @@ Function makeAreasServedContents(rst,bUseContent)
 
 	strReturn = strReturn & "</table>"
 	strReturn = strReturn & "<h4>" & TXT_ADD_COMMUNITIES & "</h4>" & _
-		"<p id=""CM_new_input_table"">" & TXT_INFO_COMMUNITIES_1 & _
-		"<a href=""javascript:openWin('" & makeLinkB(ps_strPathToStart & "comfind.asp") & "','cFind')"">" & TXT_COMMUNITY_FINDER & "</a></p>" & _
+		"<p id=""CM_new_input_table"">" & TXT_INFO_COMMUNITIES_1 & "</p>" & _
 
 		"<div class=""entryform-checklist-add-wrapper"">" & _
 			"<div class=""entryform-checklist-add-left"">" & _
@@ -974,7 +973,8 @@ End Function
 Function csInputAttrs(strLabelText, strName, strValue, strSize, strMaxLength, strExtraAttrs)
 	Dim strQName
 	strQName = AttrQs(strName)
-	csInputAttrs = csField(strLabelText, strName, "<input type=""text"" id=" & strQName & _
+	csInputAttrs = csField(strLabelText, strName, _
+				"<input class=""form-control"" type=""text"" id=" & strQName & _
 				" name=" & strQName & " size=""" & strSize & """ maxlength=""" & _
 				strMaxLength & """ value=" & AttrQs(strValue) & strExtraAttrs & ">")
 End Function
@@ -1741,7 +1741,11 @@ Function makeLocationsServicesContents(rst, strFieldName, strAddTitle, strTypeWa
 		
 	End If
 	strReturn = strReturn & _
-		"</ul><h4>" & strAddTitle & "</h4><p class=""locations-services-new-container""><strong>" & TXT_RECORD_NUM & "</strong> <input type=""text"" title=" & AttrQs(TXT_RECORD_NUM) & " class=""locations-services-new"" size=""9"" maxlength=""8"" value=""""> <input type=""button"" class=""locations-services-add"" value=""" & TXT_ADD & """><br>" & TXT_INST_NUM_FINDER & "</p>"
+		"</ul><h4>" & strAddTitle & "</h4>" & _
+		"<p class=""locations-services-new-container form-inline""><strong>" & TXT_RECORD_NUM & "</strong> " & _
+		"<input class=""form-control"" type=""text"" title=" & AttrQs(TXT_RECORD_NUM) & " class=""locations-services-new"" size=""9"" maxlength=""8"" value=""""> " & _
+		"<input type=""button"" class=""locations-services-add btn btn-default"" value=""" & TXT_ADD & """></p>" & _
+		"<p>" & TXT_INST_NUM_FINDER & "</p>"
 
 	If bUseContent Then
 		Set xmlDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
@@ -2936,12 +2940,8 @@ Function makeSpaceAvailableContents(rst,bUseContent)
 		"<div class=""form-group row"">" & _
 			"<label for=""SPACE_AVAILABLE"" class=""control-label col-sm-3"">" & TXT_SPACE_AVAILABLE & "</label>" & _
 			"<div class=""col-sm-9"">" & _
-				makeCBFieldVal("SPACE_AVAILABLE",bSpaceAvailable,TXT_YES,TXT_NO,TXT_UNKNOWN,True,True)
-	If bFeedback Then
-		strReturn = strReturn & getCbFeedback("SPACE_AVAILABLE",TXT_YES,TXT_NO)
-	End If
-	strReturn = strReturn & _
- 			"</div>" & _
+				makeCBFieldVal("SPACE_AVAILABLE",bSpaceAvailable,TXT_YES,TXT_NO,TXT_UNKNOWN,True,True) & _
+			"</div>" & _
 		"</div>" & _
 		"<div class=""form-group row"">" & _
 			"<label for=""SPACE_AVAILABLE_NOTES"" class=""control-label col-sm-3"">" & TXT_NOTES & "</label>" & _
@@ -3397,7 +3397,7 @@ Function makeVacancyInfoContents(rst, bUseContent)
 		strNotes = Server.HTMLEncode(strNotes)
 	End If
 	strReturn = strReturn & "<h4><label for=""VACANCY_NOTES"">" & TXT_OTHER_NOTES & "</label></h4>" & _
-			"<textarea id=""VACANCY_NOTES"" name=""VACANCY_NOTES""" & _
+			"<textarea id=""VACANCY_NOTES"" name=""VACANCY_NOTES"" class=""form-control""" & _
 			" cols=""" & TEXTAREA_COLS & """" & _
 			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
 			">" & strNotes & "</textarea>"

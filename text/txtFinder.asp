@@ -31,8 +31,7 @@ Dim	TXT_BROWSER_FRAMES, _
 	TXT_ORG_SEARCH_RESULTS, _
 	TXT_RESULTS, _
 	TXT_SEARCH_IN_NAME, _
-	TXT_AREA_OF_INTEREST_FINDER, _
-	TXT_AREA_OF_INTEREST_SEARCH_RESULTS, _
+	TXT_AREA_OF_INTEREST_LIST, _
 	TXT_SUBJECT_FINDER, _
 	TXT_SUBJECT_SEARCH_RESULTS, _
 	TXT_TAXONOMY_FINDER, _
@@ -54,8 +53,7 @@ Sub setTxtFinder()
 			TXT_ORG_SEARCH_RESULTS = "Résultats de la recherche sur les organismes"
 			TXT_RESULTS = " résultat(s)"
 			TXT_SEARCH_IN_NAME = "Nom de la recherche" & TXT_COLON
-			TXT_AREA_OF_INTEREST_FINDER = "Chercher un &quot;Centre d'intérêt&quot;"
-			TXT_AREA_OF_INTEREST_SEARCH_RESULTS = "Résultats de la recherche sur les catégories de bénévolat"
+			TXT_AREA_OF_INTEREST_LIST = "Liste d'intérêts"
 			TXT_SUBJECT_FINDER = "Chercher un sujet"
 			TXT_SUBJECT_SEARCH_RESULTS = "Résultats de la recherche sur les sujets"
 			TXT_TAXONOMY_FINDER = "Chercher une catégorie de service"
@@ -74,8 +72,7 @@ Sub setTxtFinder()
 			TXT_ORG_SEARCH_RESULTS = "Organization Search Results..."
 			TXT_RESULTS = " result(s)"
 			TXT_SEARCH_IN_NAME = "Search Name" & TXT_COLON
-			TXT_AREA_OF_INTEREST_FINDER = "&quot;Area of Interest&quot; Finder"
-			TXT_AREA_OF_INTEREST_SEARCH_RESULTS = "&quot;Areas of Interest&quot; Search Results..."
+			TXT_AREA_OF_INTEREST_LIST = "Areas of Interest List"
 			TXT_SUBJECT_FINDER = "Subject Finder"
 			TXT_SUBJECT_SEARCH_RESULTS = "Subject Search Results..."
 			TXT_TAXONOMY_FINDER = "Service Category Finder"

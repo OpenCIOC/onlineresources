@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -282,7 +282,7 @@ Sub PageContent()
 			Call closeWardListRst()
 	' VOL
 		Case "ai"
-			Call openInterestListRst(vbNullString, False)
+			Call openInterestListRst(vbNullString, False, False)
 			Set objFormatter = New BasicFormatter
 			Call objFormatter.setNameField("InterestName")
 			Response.Write(makeChecklistUI("AIType", "AIID", "AIIDx", True, rsListInterest, "AI_ID", objFormatter, True))

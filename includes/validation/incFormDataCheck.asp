@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -23,8 +23,8 @@ from datetime import time
 from cioc.core.i18n import gettext
 
 _ = lambda x: gettext(x, pyrequest)
-time_re = re.compile(r'''(?P<hour>\d?\d):(?P<minute>\d\d)(:(?P<second>\d\d))?(\s*(?P<ampm>(pm|am)))?''')
- 
+time_re = re.compile(r'''(?P<hour>\d?\d):(?P<minute>\d\d)(:(?P<second>\d\d))?(\s*(?P<ampm>(pm|p\.m\.|am|a\.m\.)))?''')
+
 def check_time(label, value, checkAddValidationError=None):
 	label = label + _(': ')
 	if value is None:
@@ -56,11 +56,11 @@ def check_time(label, value, checkAddValidationError=None):
 		return None
 
 	# includes a time
-	if hour < 12 and ampm.lower() == 'pm':
+	if hour < 12 and ampm.replace('.', '').lower() == 'pm':
 		# log.debug("PM bump up 12 hours")
 		hour += 12
 
-	elif hour == 12 and ampm.lower() == 'am':
+	elif hour == 12 and ampm.replace('.', '').lower() == 'am':
 		# log.debug("AM and 12, make 0")
 		hour = 0
 
@@ -103,7 +103,7 @@ Sub checkDouble(strFldName,strFldVal)
 		Else
 			strFldVal = CDbl(strFldVal)
 			If strFldVal < 0 Then
-				strErrorList = strErrorList & "<li>" & strFldName & TXT_MUST_BE_A_NUMBER & "</li>"	
+				strErrorList = strErrorList & "<li>" & strFldName & TXT_MUST_BE_A_NUMBER & "</li>"
 			End If
 		End If
 	End If
@@ -116,7 +116,7 @@ Sub checkInteger(strFldName,strFldVal)
 		Else
 			strFldVal = CInt(strFldVal)
 			If strFldVal < 0 Then
-				strErrorList = strErrorList & "<li>" & strFldName & TXT_MUST_BE_A_NUMBER & "</li>"		
+				strErrorList = strErrorList & "<li>" & strFldName & TXT_MUST_BE_A_NUMBER & "</li>"
 			End If
 		End If
 	End If
@@ -154,7 +154,7 @@ Const strOneEmailAddressRegex = "[^@\s,]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{
 Sub checkOneEmail(strFldName,strFldVal)
 	If Not Nl(strFldVal) Then
 		If Not reEquals(strFldVal,strOneEmailAddressRegex,True,False,True,False) Then
-			strErrorList = strErrorList & "<li>" & strFldName & TXT_INVALID_EMAIL & "</li>"	
+			strErrorList = strErrorList & "<li>" & strFldName & TXT_INVALID_EMAIL & "</li>"
 		End If
 	End If
 End Sub
@@ -162,7 +162,7 @@ End Sub
 Sub checkEmail(strFldName, strFldVal)
 	If Not Nl(strFldVal) Then
 		If Not reEquals(strFldVal,"(" & strOneEmailAddressRegex & "(\s*,*\s*))*",True,False,True,False) Then
-			strErrorList = strErrorList & "<li>" & strFldName & TXT_INVALID_EMAIL & "</li>"	
+			strErrorList = strErrorList & "<li>" & strFldName & TXT_INVALID_EMAIL & "</li>"
 		End If
 	End If
 End Sub
@@ -170,7 +170,7 @@ End Sub
 Sub checkWeb(strFldName,strFldVal)
 	If Not Nl(strFldVal) Then
 		If Not reEquals(strFldVal,"^(\d{1,3}(\.\d{1,3}){3})|([\w_-]+(\.[\w\._-]+)*)(:[0-9]+)?((\/|\?)[^\s]*)?$",True,False,True,False) Then
-			strErrorList = strErrorList & "<li>" & strFldName & TXT_INVALID_WEBSITE & "</li>"	
+			strErrorList = strErrorList & "<li>" & strFldName & TXT_INVALID_WEBSITE & "</li>"
 		End If
 	End If
 End Sub
@@ -180,10 +180,10 @@ Sub checkWebWithProtocol(strFldName, ByRef strFldVal, ByRef strFldProtocol)
 	If Not Nl(strFldVal) Then
 		strFldProtocol = "http://"
 		If LCase(Left(strFldVal, 7)) = "http://" Then
-			strFldVal = Mid(strFldVal, 8) 
+			strFldVal = Mid(strFldVal, 8)
 		ElseIf LCase(Left(strFldVal, 8)) = "https://" Then
 			strFldProtocol = "https://"
-			strFldVal = Mid(strFldVal, 9) 
+			strFldVal = Mid(strFldVal, 9)
 		End If
 		Call checkWeb(strFldName, strFldVal)
 	End If

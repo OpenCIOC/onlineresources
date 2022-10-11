@@ -22,6 +22,7 @@ Dim TXT_ACTION, _
 	TXT_ACTIVE, _
 	TXT_ADD, _
 	TXT_ADDED, _
+	TXT_AGE_YEARS_AFTER, _
 	TXT_AND, _
 	TXT_AND_LC, _
 	TXT_ANY, _
@@ -131,6 +132,7 @@ Sub setTxtGeneral()
 			TXT_ACTIVE = "Actif"
 			TXT_ADD = "Ajouter"
 			TXT_ADDED = "ajouté(s)"
+			TXT_AGE_YEARS_AFTER = " ans"
 			TXT_AND = "ET"
 			TXT_AND_LC = " et "
 			TXT_ANY = "Tout"
@@ -237,6 +239,7 @@ Sub setTxtGeneral()
 			TXT_ADDED = "added"
 			TXT_AND = "AND"
 			TXT_AND_LC = " and "
+			TXT_AGE_YEARS_AFTER = " years"
 			TXT_ANY = "Any"
 			TXT_ARE_YOU_SURE_DELETE = "Are you sure you want to permanently delete this item?" & _
 				"<br>Use your back button to return to the form if you do not want to delete."

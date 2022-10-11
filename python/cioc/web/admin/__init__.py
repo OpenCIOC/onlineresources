@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -84,9 +84,6 @@ def includeme(config):
 
     # /admin/general
     config.add_route("admin_generalsetup", urlprefix + "general")
-
-    # /admin/getinvolvedapi
-    config.add_route("admin_getinvolvedapi", urlprefix + "getinvolvedapi")
 
     # /admin/icarol/unmatched
     config.add_route("admin_icarolunmatched_index", urlprefix + "icarol/unmatched")

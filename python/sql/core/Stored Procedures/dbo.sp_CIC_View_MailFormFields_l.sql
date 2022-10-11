@@ -12,13 +12,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 01-Jun-2012
-	Action:	NO ACTION REQUIRED
-*/
-
 DECLARE	@Error	int
 SET @Error = 0
 
@@ -26,19 +19,19 @@ SET @Error = 0
 IF @MemberID IS NULL BEGIN
 	SET @Error = 10 -- Required Field
 -- Member ID exists ?
-END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
+END ELSE IF NOT EXISTS(SELECT * FROM dbo.STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
 -- View belongs to Member ?
-END ELSE IF NOT EXISTS (SELECT * FROM CIC_View WHERE ViewType=@ViewType AND MemberID=@MemberID AND (Owner IS NULL OR Owner=@AgencyCode)) BEGIN
+END ELSE IF NOT EXISTS (SELECT * FROM dbo.CIC_View WHERE ViewType=@ViewType AND MemberID=@MemberID AND (Owner IS NULL OR Owner=@AgencyCode)) BEGIN
 	SET @Error = 8 -- Security Failure
 END
 
 SELECT	vw.ViewType,
 		CASE WHEN vwd.LangID=@@LANGID THEN vwd.ViewName ELSE '[' + vwd.ViewName + ']' END AS ViewName
-	FROM CIC_View vw
-	INNER JOIN CIC_View_Description vwd
+	FROM dbo.CIC_View vw
+	INNER JOIN dbo.CIC_View_Description vwd
 		ON vw.ViewType=vwd.ViewType
-			AND vwd.LangID = (SELECT TOP 1 LangID FROM CIC_View_Description WHERE ViewType=vwd.ViewType ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
+			AND vwd.LangID = (SELECT TOP 1 LangID FROM dbo.CIC_View_Description WHERE ViewType=vwd.ViewType ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
 WHERE vw.MemberID=@MemberID
 	AND (vw.Owner IS NULL OR vw.Owner=@AgencyCode)
 	AND vw.ViewType=@ViewType
@@ -47,26 +40,29 @@ SELECT	fo.FieldID,
 		fo.FieldName,
 		ISNULL(fod.FieldDisplay, fo.FieldName) AS FieldDisplay,
 		fg.DisplayFieldGroupID
-	FROM GBL_FieldOption fo
-	LEFT JOIN GBL_FieldOption_Description fod
+	FROM dbo.GBL_FieldOption fo
+	LEFT JOIN dbo.GBL_FieldOption_Description fod
 		ON fo.FieldID=fod.FieldID AND fod.LangID=@@LANGID
-	LEFT JOIN (SELECT mf.FieldID, fg.DisplayOrder, fg.DisplayFieldGroupID
-			FROM CIC_View_MailFormField mf
-			INNER JOIN CIC_View_DisplayFieldGroup fg
-				ON mf.DisplayFieldGroupID=fg.DisplayFieldGroupID AND fg.ViewType=@ViewType) fg
+	LEFT JOIN (SELECT mf.FieldID, fg.DisplayOrder, fg.DisplayFieldGroupID, fgn.Name AS DisplayFieldGroupName
+			FROM dbo.CIC_View_MailFormField mf
+			INNER JOIN dbo.CIC_View_DisplayFieldGroup fg
+				ON mf.DisplayFieldGroupID=fg.DisplayFieldGroupID AND fg.ViewType=@ViewType
+			LEFT JOIN dbo.CIC_View_DisplayFieldGroup_Name fgn
+				ON fgn.LangID=@@LANGID AND fgn.DisplayFieldGroupID=fg.DisplayFieldGroupID) fg
 		ON fo.FieldID=fg.FieldID
-	LEFT JOIN GBL_FieldOption_InactiveByMember fi
+	LEFT JOIN dbo.GBL_FieldOption_InactiveByMember fi
 		ON fo.FieldID=fi.FieldID AND fi.MemberID=@MemberID
-WHERE CanUseFeedback=1
+WHERE fo.CanUseFeedback=1
 	AND (fi.FieldID IS NULL OR fg.DisplayFieldGroupID IS NOT NULL)
 	AND (fo.PB_ID IS NULL
 		OR fg.DisplayFieldGroupID IS NOT NULL
 		OR (
-			EXISTS(SELECT * FROM CIC_Publication pb WHERE pb.PB_ID=fo.PB_ID AND (pb.MemberID IS NULL OR pb.MemberID=@MemberID))
-			AND NOT EXISTS(SELECT * FROM CIC_Publication_InactiveByMember pbi WHERE pbi.PB_ID=fo.PB_ID AND pbi.MemberID=@MemberID)
+			EXISTS(SELECT * FROM dbo.CIC_Publication pb WHERE pb.PB_ID=fo.PB_ID AND (pb.MemberID IS NULL OR pb.MemberID=@MemberID))
+			AND NOT EXISTS(SELECT * FROM dbo.CIC_Publication_InactiveByMember pbi WHERE pbi.PB_ID=fo.PB_ID AND pbi.MemberID=@MemberID)
 		)
 	)
-ORDER BY CASE WHEN fg.DisplayFieldGroupID IS NULL THEN 1 ELSE 0 END, fg.DisplayOrder, fg.DisplayFieldGroupID, fo.DisplayOrder, fo.FieldName
+ORDER BY CASE WHEN fg.DisplayFieldGroupID IS NULL THEN 1 ELSE 0 END,
+	fg.DisplayOrder, fg.DisplayFieldGroupName, fg.DisplayFieldGroupID, fo.DisplayOrder, fo.FieldName
 
 RETURN @Error
 

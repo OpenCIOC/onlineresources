@@ -930,7 +930,7 @@ End If
 <script type="text/javascript">
         tinymce.init({
 			selector: '.WYSIWYG',
-            plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table',
+            plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table autoresize',
             toolbar: 'undo redo styles bullist numlist link | bold italic | searchreplace',
 			menubar: false,
 			statusbar: false,

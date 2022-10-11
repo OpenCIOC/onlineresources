@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -137,7 +137,7 @@ Call makePageHeader(TXT_DATABASE_SETUP, TXT_DATABASE_SETUP, True, True, True, Tr
 </div>
 
 <div class="row">
-	<div class="col-sm-<%If user_bSuperUserVOL And user_bSuperUserCIC Then%>12<%Else%>8<%End If%>">
+	<div class="col-sm-12">
 		<div class="panel panel-default">
 			<div class="panel-heading"><h2><span class="glyphicon glyphicon-modal-window" aria-hidden="true"></span> <%=TXT_VIEWS_TEMPLATES_SEARCH%></h2></div>
 			<div class="panel-body">
@@ -177,7 +177,9 @@ Call makePageHeader(TXT_DATABASE_SETUP, TXT_DATABASE_SETUP, True, True, True, Tr
 			</div>
 		</div>
 	</div>
+</div>
 
+<div class="row">
 	<div class="col-sm-4">
 		<div class="panel panel-default">
 			<div class="panel-heading"><h2><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> <%=TXT_CLASSIFICATION_SYSTEMS%></h2></div>
@@ -236,10 +238,9 @@ Call makePageHeader(TXT_DATABASE_SETUP, TXT_DATABASE_SETUP, True, True, True, Tr
 				</ul>
 				<%End If%>
 
-				<%If user_bSuperUserVOL Then%>
+				<%If user_bSuperUserVOL And g_bOtherMembersActive Then%>
 				<h3><%=TXT_VOLUNTEER%></h3>
 				<ul class="simple-list">
-					<li><a href="<%=makeLinkB("getinvolvedapi")%>"><%=TXT_GET_INVOLVED_API%></a></li>
 					<%If g_bOtherMembersActive Then%>
 					<li><a href="<%=makeLink("sharingprofile","DM=" & DM_VOL,vbNullString)%>"><%=TXT_SHARING_PROFILES%></a></li>
 					<%End If%>
@@ -274,7 +275,9 @@ Call makePageHeader(TXT_DATABASE_SETUP, TXT_DATABASE_SETUP, True, True, True, Tr
 			</div>
 		</div>
 	</div>
+</div>
 
+<div class="row">
 	<div class="col-sm-<%If user_bSuperUserVOL And user_bSuperUserCIC Then%>8<%Else%>4<%End If%>">
 		<div class="panel panel-default">
 			<div class="panel-heading"><h2><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> <%=TXT_FIELD_SETUP%></h2></div>

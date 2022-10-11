@@ -59,11 +59,11 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../text/txtRecordPages.asp" -->
 <!--#include file="../includes/core/incFormat.asp" -->
 <!--#include file="../includes/list/incExtraDropDownList.asp" -->
+<!--#include file="../includes/list/incInterestGroupList.asp" -->
 <!--#include file="../includes/list/incMinHourPerList.asp" -->
 <!--#include file="../includes/list/incMonthList.asp" -->
 <!--#include file="../includes/update/incAgencyUpdateInfo.asp" -->
 <!--#include file="../includes/update/incEntryFormGeneral.asp" -->
-<!--#include file="../includes/update/incVOLFormFbPrint.asp" -->
 <!--#include file="../includes/update/incVOLFormUpdPrint.asp" -->
 <%
 'On Error Resume Next
@@ -238,11 +238,7 @@ Else
 
 Dim strFeedbackBlurb, _
 	strTermsOfUseURL, _
-	bDataUseAuth, _
-	bDataUseAuthPhone, _
 	intInclusionPolicyID
-
-bDataUseAuth = False
 
 Dim cmdViewFb, rsViewFb
 Set cmdViewFb = Server.CreateObject("ADODB.Command")
@@ -256,8 +252,6 @@ End With
 Set rsViewFb = cmdViewFb.Execute
 With rsViewFb
 	If Not .EOF Then
-		bDataUseAuth = .Fields("DataUseAuth")
-		bDataUseAuthPhone = .Fields("DataUseAuthPhone")
 		strFeedbackBlurb = .Fields("FeedbackBlurb")
 		strTermsOfUseURL = .Fields("TermsOfUseURL")
 		intInclusionPolicyID = .Fields("InclusionPolicy")
@@ -281,11 +275,6 @@ Set cmdViewFb = Nothing
 			return false;
 <%Else%>
 		if (false) {
-<%End If%>
-<%If bDataUseAuth Then%>
-		} else	if (!(formObj.Auth[0].checked || formObj.Auth[1].checked || formObj.Auth[2].checked)) {
-			alert(<%=JsQs(TXT_INST_AUTH)%>);
-			return false;
 <%End If%>
 <%If Not bSuggest Then%>
 		} else if (!(formObj.FType[0].checked || formObj.FType[1].checked || formObj.FType[2].checked || formObj.FType[3].checked)) {
@@ -401,7 +390,7 @@ End If
 		<%End If%>
 	</div>
 	<div class="panel-body no-padding">
-		<table class="BasicBorder cell-padding-4 full-width inset-table form-table responsive-table">
+		<table class="BasicBorder cell-padding-5 full-width inset-table form-table responsive-table">
 <%
 	If Not bSuggest Then
 		Dim strModifiedDate, _
@@ -463,6 +452,12 @@ End If
 					False, _
 					Ns(rsFields.Fields("ExtraFieldType"))="a" _
 					)
+					Select Case strFieldName
+						Case "DISPLAY_UNTIL"
+							strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_IMPORTANT & "</span>" & TXT_COLON & _
+								TXT_INST_DISPLAY_UNTIL & "</p>" & vbCrLf & _
+								strFieldVal
+					End Select
 			' "Text" field type, for single-line short text fields < 255 characters.
 			Case "t"
 				If rsFields.Fields("ValidateType") = "w" Then
@@ -479,6 +474,12 @@ End If
 						False _
 						)
 				End If
+				Select Case strFieldName
+					Case "POSITION_TITLE"
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>" & TXT_COLON & _
+							TXT_INST_POSITION_TITLE & "</p>" & vbCrLf & _
+							strFieldVal
+				End Select
 			' "User" field type, holds a user's name or initials
 			Case "u"
 				strFieldVal = makeUserFieldVal(strFieldName, _
@@ -493,7 +494,9 @@ End If
 					Case "AGES"
 						strFieldVal = makeAgesContents(rsOrg, Not bSuggest)
 					Case "CONTACT"
-						strFieldVal = makeContactContents(rsOrg, strFieldName, Not bSuggest)
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>. " & _
+							TXT_INST_VOL_CONTACT & "</p>" & vbCrLf & _
+							makeContactContents(rsOrg, strFieldName, Not bSuggest)
 					Case "COMMITMENT_LENGTH"
 						strFieldVal = makeCommitmentLengthContents(rsOrg, Not bSuggest)
 					Case "DUTIES"
@@ -507,7 +510,7 @@ End If
 					Case "INTERACTION_LEVEL"
 						strFieldVal = makeInteractionLevelContents(rsOrg, Not bSuggest)
 					Case "INTERESTS"
-						strFieldVal = makeAreaOfInterestContents(rsOrg, Not bSuggest)
+						strFieldVal = makeInterestsContents(rsOrg, Not bSuggest)
 					Case "MINIMUM_HOURS"
 						strFieldVal = makeMinHoursContents(rsOrg, Not bSuggest)
 					Case "NUM_NEEDED"
@@ -557,6 +560,12 @@ End If
 					False, _
 					rsFields.Fields("WYSIWYG") _
 					)
+				Select Case strFieldName
+					Case "DUTIES"
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_IMPORTANT & "</span>" & TXT_COLON & _
+							TXT_INST_DUTIES & "</p>" & vbCrLf & _
+							strFieldVal
+				End Select
 		End Select
 		bHasLabel = False
 		If rsFields.Fields("UseDisplayForFeedback") _
@@ -592,7 +601,7 @@ End If
 	<div class="panel-body">
 		<h3 class="Alert"><%=IIf(user_bLoggedIn,TXT_SOURCE_OF_INFO,TXT_ABOUT_YOU)%></h3>
 		<p><%=IIf(user_bLoggedIn,TXT_INST_SOURCE,TXT_INST_YOUR_INFO)%></p>
-		<table class="BasicBorder cell-padding-3 clear-line-below full-width form-table responsive-table">
+		<table class="BasicBorder cell-padding-5 clear-line-below full-width form-table responsive-table">
 <%
 Dim strSourceName, strSourceEmail, strSourcePhone, strSourceOrg, strSourceTitle
 If Not bSuggest And user_bLoggedIn Then
@@ -624,65 +633,10 @@ Call printRow("SOURCE_TITLE",strSourcePrefix & TXT_JOB_TITLE, _
 		<p><%=TXT_ENTER_SPECIAL_INFO%></p>
 		<p><textarea name="FB_NOTES" id="FB_NOTES" rows="<%=TEXTAREA_ROWS_LONG%>" class="form-control"></textarea></p>
 
-		<%If bDataUseAuth Or Not Nl(strTermsOfUseURL) Then%>
-		<h3 class="Alert"><%=TXT_USE_OF_INFO%></h3>
 		<%	If Not Nl(strTermsOfUseURL) Then%>
+		<h3 class="Alert"><%=TXT_USE_OF_INFO%></h3>
 		<p><a href="<%=strTermsOfUseURL%>" target="_BLANK"><%=TXT_REVIEW_TERMS_OF_USE%>&nbsp;<%=TXT_NEW_WINDOW%></a></p>
 		<%	End If%>
-		<%	If bDataUseAuth Then%>
-		<p><%=TXT_PLEASE_SELECT_OPTIONS%></p>
-		<table class="NoBorder cell-padding-2 clear-line-below">
-		<%		If user_bLoggedIn Then%>
-			<tr>
-				<td><input type="radio" name="Auth" value="I"></td>
-				<td><%=TXT_AUTH_INTERNAL%></td>
-			</tr>
-			<tr>
-				<td><input type="radio" name="Auth" value="N"></td>
-				<td><%=TXT_AUTH_NOT_GIVEN%></td>
-			</tr>
-			<tr>
-				<td><input type="radio" name="Auth" value="A"></td>
-				<td><%=TXT_AUTH_APPROVE_LOGIN%></td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td><table class="NoBorder cell-padding-2">
-					<%If bDataUseAuthPhone Then%>
-					<tr>
-						<td><input type="checkbox" name="AuthInquiry"></td>
-						<td><%=TXT_USE_INQUIRY%></td>
-					</tr>
-					<%End If%>
-					<tr>
-						<td><input type="checkbox" name="AuthOnline"></td>
-						<td><%=TXT_USE_ONLINE%></td>
-					</tr>
-					<tr>
-						<td><input type="checkbox" name="AuthPrint"></td>
-						<td><%=TXT_USE_PRINT%></td>
-					</tr>
-				</table></td>
-			</tr>
-		<%		Else%>
-			<tr>
-				<td><input type="radio" name="Auth" value="A"></td>
-				<td><%=TXT_AUTH_APPROVE%></td>
-			</tr>
-			<%If bDataUseAuthPhone Then%>
-			<tr>
-				<td><input type="radio" name="Auth" value="E"></td>
-				<td><%=TXT_AUTH_INQUIRIES%></td>
-			</tr>
-			<%End If%>
-			<tr>
-				<td><input type="radio" name="Auth" value="C"></td>
-				<td><%=TXT_AUTH_CONTACT%></td>
-			</tr>
-		<%		End If%>
-		</table>
-		<%	End If
-		End If%>
 
 		<%If Not bSuggest Then%>
 		<h3 class="Alert"><%=TXT_ABOUT_CHANGES%></h3>
@@ -761,15 +715,26 @@ jQuery(function($) {
 <%
 If bHasSchedule Then
 %>
-	init_entryform_items($('.EntryFormItemContainer'),'<%= TXT_DELETE %>', '<%= TXT_RESTORE %>');
+	init_entryform_items($('.EntryFormItemContainer'), '<%= TXT_DELETE %>', '<%= TXT_RESTORE %>');
+<%
+End If
+If bInterests Then
+%>
+    init_interests("<%= TXT_NOT_FOUND %>","<%=makeLinkB(ps_strPathToStart & "jsonfeeds/interest_generator.asp")%>");
+<%
+End If
+If bNumNeeded Then
+%>
+	entryform.community_complete_url = "<%=makeLinkB(ps_strPathToStart & "jsonfeeds/community_generator.asp")%>";
+    init_num_needed("<%= TXT_NOT_FOUND %>");
 <%
 End If
 %>
-	restore_cached_state();
+    restore_cached_state();
 <%
 If bHasSchedule Then
 %>
-	init_schedule($)
+    init_schedule($)
 <%
 End If
 %>
@@ -780,12 +745,15 @@ End If
 <script type="text/javascript">
         tinymce.init({
             selector: '.WYSIWYG',
-            plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen paste',
-            toolbar: 'undo redo styles bullist numlist link | bold italic | searchreplace',
+            plugins: 'lists autolink link image charmap preview visualblocks fullscreen paste autoresize',
+            toolbar: 'undo redo styles bullist numlist link bold italic',
+            mobile: {
+                toolbar: 'styles bullist numlist link bold italic'
+            },
 			menubar: false,
 			statusbar: false,
-            convert_urls: false,
-            cleanup: true,
+			convert_urls: false,
+			cleanup: true,
 			schema: 'html5',
             formats: {
                 underline: { inline: 'u', exact: true }

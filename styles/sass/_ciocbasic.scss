@@ -154,6 +154,17 @@
 	font-size: 32px;
 }
 
+div.row-border-bottom {
+    border-bottom: thin solid $borderColorContent;
+}
+
+div.row-border-top:not(:first-of-type) {
+    border-top: thin solid $borderColorContent;
+    margin-top: 0.5em;
+    padding-top: 0.5em;
+}
+
+
 // LIST STYLES
 
 ul, ol {
@@ -267,7 +278,7 @@ dd {
 
 .EntryFormItemBox {
 	background: white;
-	padding: 5px 5px 5px 15px;
+	padding: 10px;
 	border: 1px solid black;
 
 	zoom: 1;
@@ -295,8 +306,18 @@ dd {
 	margin-top: 0px;
 }
 
+.EntryFormItemContent {
+    clear: both;
+    margin-top: 10px;
+}
+
 .VacancyInfoEditArea {
 	line-height: 1.4em;
+}
+
+.DatePicker {
+    position: relative;
+    z-index: 2;
 }
 
 .NoYearDatePicker .ui-datepicker-year

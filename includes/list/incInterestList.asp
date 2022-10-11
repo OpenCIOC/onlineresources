@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -40,14 +40,15 @@ Sub openInterestListRstCountInView()
 	strListGroupNames = vbNullString
 End Sub
 
-Sub openInterestListRst(strIGIDList, bIncludeGroup)
+Sub openInterestListRst(strIGIDList, bGroupByGroup, bIncludeGroup)
 	Set cmdListInterest = Server.CreateObject("ADODB.Command")
 	With cmdListInterest
 		.ActiveConnection = getCurrentVOLBasicCnn()
 		.CommandText = "dbo.sp_VOL_Interest_l"
 		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
 		.Parameters.Append .CreateParameter("@IGIDList", adLongVarChar, adParamInput, -1, Nz(strIGIDList,Null))
-		.Parameters.Append .CreateParameter("@IncludeGroupName", adBoolean, adParamInput, 1, IIf(bIncludeGroup,SQL_TRUE,SQL_FALSE))
+		.Parameters.Append .CreateParameter("@GroupByGroup", adBoolean, adParamInput, 1, IIf(bGroupByGroup,SQL_TRUE,SQL_FALSE))
+		.Parameters.Append .CreateParameter("@IncludeIGListNames", adBoolean, adParamInput, 1, IIf(bIncludeGroup,SQL_TRUE,SQL_FALSE))
 		.CommandType = adCmdStoredProc
 		.CommandTimeout = 0
 	End With

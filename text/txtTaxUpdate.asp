@@ -20,7 +20,6 @@
 Dim TXT_ADD_TERMS, _
 	TXT_COULD_NOT_ADD_CODES, _
 	TXT_EDIT_SERVICE_CATEGORIES_FOR, _
-	TXT_HISTORY, _
 	TXT_INVALID_CODE_LIST, _
 	TXT_SHOW_FIELD, _
 	TXT_TERMS_FOR_THIS_RECORD, _
@@ -34,7 +33,6 @@ Sub setTxtTaxUpdate()
 			TXT_ADD_TERMS = "Add Selected Term(s)"
 			TXT_COULD_NOT_ADD_CODES = "Could not add the Code(s)" & TXT_COLON
 			TXT_EDIT_SERVICE_CATEGORIES_FOR = "Edit Service Categories For" & TXT_COLON
-			TXT_HISTORY = "History" & TXT_COLON
 			TXT_INVALID_CODE_LIST = "The given list of Taxonomy Codes is not valid"
 			TXT_SHOW_FIELD = "Show Field" & TXT_COLON
 			TXT_TERMS_FOR_THIS_RECORD = "Terms for this Record"
@@ -47,7 +45,6 @@ Sub setTxtTaxUpdate()
 			TXT_ADD_TERMS = "Ajouter le(s) terme(s) sélectionné(s)"
 			TXT_COULD_NOT_ADD_CODES = "Le(s) code(s) suivant(s) n'a(ont) pu être ajouté(s) : " & TXT_COLON
 			TXT_EDIT_SERVICE_CATEGORIES_FOR = "Modifier les catégories de service pour" & TXT_COLON
-			TXT_HISTORY = "Histoire" & TXT_COLON
 			TXT_INVALID_CODE_LIST = "La liste donnée de codes taxonomiques n'est pas valide"
 			TXT_SHOW_FIELD = "Afficher le champ" & TXT_COLON
 			TXT_TERMS_FOR_THIS_RECORD = "Termes pour ce dossier"

@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -105,7 +104,7 @@ IF @Error = 0 BEGIN
 		DELETE vo 
 			FROM VOL_OP_SharingProfile vo
 			INNER JOIN @VNUMSTable vt
-				ON vo.VNUM=vo.OP_ShareProfile_ID 
+				ON vo.OP_ShareProfile_ID=vt.OP_ShareProfile_ID 
 		DELETE vo
 			FROM VOL_OP_CommunitySet vo
 			INNER JOIN VOL_CommunitySet cs

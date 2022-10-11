@@ -137,6 +137,7 @@
     <Content Include="admin\setup_view_edit_fields.asp" />
     <Content Include="admin\setup_view_edit_fields2.asp" />
     <Content Include="admin\setup_webdev.asp" />
+    <Content Include="admin\sysinfo.asp" />
     <Content Include="admin\thesaurus.asp" />
     <Content Include="admin\thesaurus_results.asp" />
     <Content Include="admin\users.asp" />
@@ -154,6 +155,8 @@
     <Content Include="details.asp" />
     <Content Include="images\email.gif" />
     <Content Include="images\pdf.gif" />
+    <Content Include="import\import_archive.asp" />
+    <Content Include="import\import_reschedule.asp" />
     <Content Include="includes\search\incChecklistSearchForm.asp" />
     <Content Include="includes\search\incSharingProfileSearchForm.asp" />
     <Content Include="includes\update\incEventSchedule.asp" />
@@ -301,10 +304,13 @@
     <Content Include="python\cioc\core\searchlist.py" />
     <Content Include="python\cioc\core\session.py" />
     <Content Include="python\cioc\core\stat.py" />
+    <Content Include="python\cioc\core\systeminfo.py" />
     <Content Include="python\cioc\core\templates\layouts\cicsearch_headingpanel.en_CA.html" />
+    <Content Include="python\cioc\core\templates\layouts\cicsearch_headingpanel2.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\cicsearch_tabbed_bstrap.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\cicsearch_singleform_bstrap.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\cicsearch_headingpanel.scss" />
+    <Content Include="python\cioc\core\templates\layouts\cicsearch_headingpanel2.scss" />
     <None Include="python\cioc\core\templates\layouts\cicsearch_singleform_bstrap.scss" />
     <Content Include="python\cioc\core\templates\layouts\footer_large_narrow.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\footer_large_alternate.en_CA.html" />
@@ -336,18 +342,22 @@
     <Content Include="python\cioc\web\admin\billinginfo.py" />
     <Content Include="python\cioc\web\admin\datafeedapikey.py" />
     <Content Include="python\cioc\web\admin\ganalytics.py" />
+    <Content Include="python\cioc\web\admin\icarolunmatched.py" />
     <Content Include="python\cioc\web\admin\pages.py" />
     <Content Include="python\cioc\web\admin\quicksearch.py" />
+    <Content Include="python\cioc\web\admin\sysinfo.py" />
     <Content Include="python\cioc\web\admin\templates\community\list.mak" />
     <Content Include="python\cioc\web\admin\templates\datafeedapikey\confirm.mak" />
     <Content Include="python\cioc\web\admin\templates\datafeedapikey\edit.mak" />
     <Content Include="python\cioc\web\admin\templates\datafeedapikey\index.mak" />
     <Content Include="python\cioc\web\admin\templates\ganalytics.mak" />
+    <Content Include="python\cioc\web\admin\templates\icarol\unmatched.mak" />
     <Content Include="python\cioc\web\admin\templates\pages\edit.mak" />
     <Content Include="python\cioc\web\admin\templates\pages\index.mak" />
     <Content Include="python\cioc\web\admin\templates\quicksearch.mak" />
     <Content Include="python\cioc\web\admin\templates\sharingprofile\changeemail.mak" />
     <Content Include="python\cioc\web\admin\templates\sharingprofile\records_remove.mak" />
+    <Content Include="python\cioc\web\admin\templates\sysinfo.mak" />
     <Content Include="python\cioc\web\admin\templates\template\colour_set_tmpl.mak" />
     <Content Include="python\cioc\web\admin\templates\userapicreds\add.mak" />
     <Content Include="python\cioc\web\admin\templates\userapicreds\index.mak" />
@@ -359,6 +369,7 @@
     <Content Include="python\cioc\web\cic\record.py" />
     <Content Include="python\cioc\web\cic\templates\csearch.mak" />
     <Content Include="python\cioc\web\cic\templates\csearch_form.mak" />
+    <Content Include="python\cioc\web\cic\templates\publication\clearrecords.mak" />
     <Content Include="python\cioc\web\cic\templates\record.mak" />
     <Content Include="python\cioc\web\cic\templates\record_contact_agency.mak" />
     <Content Include="python\cioc\web\cic\templates\searchcommon.mak" />
@@ -370,6 +381,7 @@
     <Content Include="python\cioc\web\cic\templates\taxonomy\currentactivation.mak" />
     <Content Include="python\cioc\web\cic\templates\taxonomy\preferredcompliance.mak" />
     <Content Include="python\cioc\web\gbl\emaillist.py" />
+    <Content Include="python\cioc\web\gbl\go.py" />
     <Content Include="python\cioc\web\gbl\icons.py" />
     <Content Include="python\cioc\web\gbl\schedules.py" />
     <Content Include="python\cioc\web\gbl\pages.py" />
@@ -406,6 +418,8 @@
     <Content Include="python\cioc\web\templates\agencyinfo.mak" />
     <Content Include="python\cioc\web\templates\pdffooter.mak" />
     <Content Include="python\cioc\web\vol\export.py" />
+    <Content Include="python\configure_server.py" />
+    <Content Include="python\configure_site.py" />
     <Content Include="python\dev-reqs.txt" />
     <Content Include="python\devserver.py" />
     <Content Include="python\icarol_fix.py" />
@@ -414,10 +428,13 @@
     <Content Include="python\tools\.gitignore" />
     <Content Include="python\tools\csv_export.py" />
     <Content Include="python\tools\icarol_delete.py" />
+    <Content Include="python\tools\icarol_fetch.py" />
     <Content Include="python\tools\icarol_sync.py" />
+    <Content Include="python\tools\icarol_sync_api.py" />
     <Content Include="python\tools\pagemessage.py" />
     <Content Include="python\tools\record_categories_export.py" />
     <Content Include="python\tools\test_ciocapi.py" />
+    <Content Include="python\tools\toolslib.py" />
     <Content Include="python\tools\uploadfontello.py" />
     <Content Include="robots.txt" />
     <Content Include="scripts\checklists.js" />
@@ -825,7 +842,6 @@
     <Content Include="includes\update\incRevHistory.asp" />
     <Content Include="includes\update\incUpdateEmail.asp" />
     <Content Include="includes\update\incVOLCopyFormPrint.asp" />
-    <Content Include="includes\update\incVOLFormFbPrint.asp" />
     <Content Include="includes\update\incVOLFormUpdPrint.asp" />
     <Content Include="includes\validation\incBasicTypes.asp" />
     <Content Include="includes\validation\incCheckViewQuickListPublication.asp" />
@@ -1128,7 +1144,6 @@
     <Content Include="python\cioc\web\admin\fieldhide.py" />
     <Content Include="python\cioc\web\admin\fieldradio.py" />
     <Content Include="python\cioc\web\admin\general.py" />
-    <Content Include="python\cioc\web\admin\getinvolvedapi.py" />
     <Content Include="python\cioc\web\admin\interests.py" />
     <Content Include="python\cioc\web\admin\layout.py" />
     <Content Include="python\cioc\web\admin\listvalues.py" />
@@ -1161,7 +1176,6 @@
     <Content Include="python\cioc\web\admin\templates\fieldhide.mak" />
     <Content Include="python\cioc\web\admin\templates\fieldradio.mak" />
     <Content Include="python\cioc\web\admin\templates\generalsetup.mak" />
-    <Content Include="python\cioc\web\admin\templates\getinvolvedapi.mak" />
     <Content Include="python\cioc\web\admin\templates\interests\edit.mak" />
     <Content Include="python\cioc\web\admin\templates\interests\index.mak" />
     <Content Include="python\cioc\web\admin\templates\layout\edit.mak" />
@@ -1711,11 +1725,6 @@
     <Content Include="servcat.asp" />
     <Content Include="set_agency.asp" />
     <Content Include="showfields.asp" />
-    <Content Include="special\cascade.asp" />
-    <Content Include="special\cascade2.asp" />
-    <Content Include="special\cascade_failure.html" />
-    <Content Include="special\cascade_success.html" />
-    <Content Include="special\multilogin.asp" />
     <Content Include="special\O211_records.asp" />
     <Content Include="sql_help.asp" />
     <Content Include="sresults.asp" />
@@ -1898,6 +1907,7 @@
     <Content Include="volunteer\profiles_block.asp" />
     <Content Include="volunteer\profiles_details.asp" />
     <Content Include="volunteer\profiles_results.asp" />
+    <Content Include="volunteer\profiles_unsubscribe.asp" />
     <Content Include="volunteer\profile\confirm.asp" />
     <Content Include="volunteer\profile\create.asp" />
     <Content Include="volunteer\profile\criteria.asp" />
@@ -1914,6 +1924,7 @@
     <Content Include="volunteer\profile\resetpw2.asp" />
     <Content Include="volunteer\profile\save_personal.asp" />
     <Content Include="volunteer\profile\start.asp" />
+    <Content Include="volunteer\profile\unsubscribe.asp" />
     <Content Include="volunteer\recordlist.asp" />
     <Content Include="volunteer\referral.asp" />
     <Content Include="volunteer\referral_days.asp" />
@@ -1966,16 +1977,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="docs\make.bat" />
@@ -2026,10 +2027,6 @@
     <Content Include="python\production.ini" />
     <Content Include="python\setup.cfg" />
     <Content Include="scripts\Makefile" />
-    <Content Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </Content>
     <Content Include="python\tools\test_211etl.sh" />
     <Content Include="web.config" />
     <Content Include="styles\sass\bootstrap\mixins\_alerts.scss" />
@@ -2138,12 +2135,6 @@
   <ItemGroup>
     <Folder Include="python\cioc\locale\fr_CA\fr_from_translate\" />
     <Folder Include="python\cioc\locale\fr_CA\fr_to_translate\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

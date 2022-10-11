@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -63,7 +63,7 @@ Else
 	If bShowAll Then
 		Call openInterestListRstCountInView()
 	ElseIf Not Nl(intIGID) Then
-		Call openInterestListRst(intIGID, False)
+		Call openInterestListRst(intIGID, False, False)
 	Else
 		Dim singleSTerms(), _
 			quotedSTerms(), _

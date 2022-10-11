@@ -79,7 +79,7 @@ Dim strInsSQL, strExtraSQL
 Sub getNumNeeded(strFieldDisplay)
 	Dim strReturn, strCon
 	Dim strVNUM, strNotes, strTotal, bSelected, bSelectedOld, intNumNeeded, intNumNeededOld
-	Dim strNewCommunity1, strNewCommunity2, intNewNumNeeded1, intNewNumNeeded2
+	Dim strCMList
 	Dim bChanged
 	
 	bChanged = False
@@ -90,60 +90,41 @@ Sub getNumNeeded(strFieldDisplay)
 		strVNUM = Null
 	End If
 
+	strCMList = Trim(Request("CM_ID"))
+	If Not IsIDList(strCMList) Then
+		strCMList = Null
+	End If
+
 	Dim cmdNumNeeded, rsNumNeeded
 	Set cmdNumNeeded = Server.CreateObject("ADODB.Command")
 	With cmdNumNeeded
 		.ActiveConnection = getCurrentVOLBasicCnn()
-		.CommandText = "dbo.sp_VOL_VNUMNumNeeded_s"
+		.CommandText = "dbo.sp_VOL_VNUMNumNeeded_s_Diff"
 		.CommandType = adCmdStoredProc
 		.CommandTimeout = 0
 		.Parameters.Append .CreateParameter("@VNUM", adVarChar, adParamInput, 10, strVNUM)
-		.Parameters.Append .CreateParameter("@ViewType", adInteger, adParamInput, 4, g_intViewTypeVOL)
+		.Parameters.Append .CreateParameter("@IncludeCMList", adLongVarChar, adParamInput, -1, strCMList)
 	End With
 	Set rsNumNeeded = cmdNumNeeded.Execute
 
 	With rsNumNeeded
 		While Not .EOF
-			bSelected = Request("CM_ID_" & .Fields("CM_ID"))="on"
-			If bSelected Then
-				intNumNeeded = Trim(Request("CM_NUM_NEEDED_" & .Fields("CM_ID")))
-			Else
-				intNumNeeded = Null
-			End If
-
-			intNumNeededOld = .Fields("NUM_NEEDED")
+			bSelected = Not Nl(.Fields("Selected"))
 			bSelectedOld = Not Nl(.Fields("OP_CM_ID"))
-
-			If Nl(intNumNeededOld) Then
-				If Not Nl(intNumNeeded) Then
-					bChanged = True
-				End If
-			ElseIf CStr(intNumNeededOld) <> intNumNeeded _
-					Or Nl(intNumNeeded) _
-					Or bSelectedOld <> bSelected Then
-				bChanged = True
-			End If
+			bChanged = bChanged Or bSelected <> bSelectedOld
 
 			If bSelected Then
-				strReturn = strReturn & strCon & .Fields("Community") & TXT_COLON & Nz(intNumNeeded,"--")
+				intNumNeeded = Ns(Trim(Request("CM_NUM_NEEDED_" & .Fields("CM_ID"))))
+				intNumNeededOld = Ns(.Fields("NUM_NEEDED"))
+				bChanged = bChanged Or intNumNeeded <> intNumNeededOld
+
+				strReturn = strReturn & strCon & .Fields("Community") & TXT_COLON & Nz(intNumNeeded,"-")
 				strCon = " ; "
 			End If
+
 			.MoveNext
 		Wend
 	End With
-	
-	strNewCommunity1 = Trim(Request("NEW_CM_1"))
-	strNewCommunity2 = Trim(Request("NEW_CM_2"))
-	If Not Nl(strNewCommunity1) Then
-		bChanged = True
-		strReturn = strReturn & strCon & strNewCommunity1 & TXT_COLON & Nz(Trim(Request("NEW_CM_1_NUM_NEEDED")),"--")
-		strCon = " ; "
-	End If
-	If Not Nl(strNewCommunity2) Then
-		bChanged = True
-		strReturn = strReturn & strCon & strNewCommunity2 & TXT_COLON & Nz(Trim(Request("NEW_CM_2_NUM_NEEDED")),"--")
-		strCon = " ; "
-	End If
 	
 	If bChanged Then
 		If addInsertField("NUM_NEEDED",QsNNl(strReturn),strInsertInto,strInsertValue) Then
@@ -299,7 +280,7 @@ Sub getChecklistFeedback(strFieldDisplay, strSP, strPrefix, strFieldName, strNam
 			bThisChanged = False
 			bChecked = InStr(strIDList, "<" & .Fields(strPrefix & "_ID") & ">") > 0 
 			If bChecked Then
-				If .Fields("IS_SELECTED") <> 1 Then
+				If .Fields("IS_SELECTED") <> SQL_TRUE Then
 					bChanged = True
 					bThisChanged = True
 				End If
@@ -322,7 +303,7 @@ Sub getChecklistFeedback(strFieldDisplay, strSP, strPrefix, strFieldName, strNam
 				strXML = strXML & "<" & strPrefix & " ID=" & XMLQs(.Fields(strPrefix & "_ID")) & StringIf(Not Nl(strNote), " NOTE=" & XMLQs(strNote)) & "/>"
 			End If
 					
-			If .Fields("IS_SELECTED") <> IIf(bChecked, 1, 0) Then
+			If .Fields("IS_SELECTED") <> IIf(bChecked, SQL_TRUE, SQL_FALSE) Then
 				bChanged = True
 				If Not bChecked Then
 					strEmailText = strEmailText & strEmailCon & .Fields(strNameField) & TXT_COLON & TXT_CONTENT_DELETED
@@ -743,6 +724,8 @@ While Not rsFields.EOF
 			Call getEventScheduleFields(rsFields.Fields("FieldDisplay"))
 		Case "INTERACTION_LEVEL"
 			Call getChecklistFeedback(strFieldName, "dbo.sp_VOL_VNUMInteractionLevel_s", "IL", "INTERACTION_LEVEL", "InteractionLevel", strInsertInto, strInsertValue, True)
+		Case "INTERESTS"
+			Call getChecklistFeedback(strFieldName, "dbo.sp_VOL_VNUMInterest_s", "AI", "INTERESTS", "InterestName", strInsertInto, strInsertValue, False)
 		Case "MINIMUM_HOURS"
 			strFieldVal = getStrSetValue("MINIMUM_HOURS")
 			If addInsertField("MINIMUM_HOURS",QsNNl(strFieldVal),strInsertInto,strInsertValue) Then

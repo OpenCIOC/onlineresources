@@ -76,7 +76,7 @@ End Sub
 Sub makeChecklistValue(strName, strValue, strPrefix, strTable)
 	Response.Write("<td class=""FieldLabelLeftClr"">" & strName & "</td>")
 	Response.Write("<td>")
-	If Not Nl(strValue) Then
+	If InStr(1,Ns(strValue),"<" & strPrefix & "S>") Then
 		Dim strSQL
 		strSQL = _
 		"DECLARE @conStr nvarchar(3), @returnStr nvarchar(max), @Notes nvarchar(MAX), @data xml = " & QsN(strValue) & vbCrLf & _
@@ -127,7 +127,7 @@ Sub makeChecklistValue(strName, strValue, strPrefix, strTable)
 		Set cmdDropDown = Nothing
 
 	Else
-		Response.Write(strValue)
+		Response.Write(Server.HTMLEncode(strValue))
 	End If
 	Response.Write("</td>")
 
@@ -223,7 +223,7 @@ Sub printFeedbackInfo(intFBID,intDbAreaID,intFBType)
 			dicFieldNames("ORG_NAME") = TXT_ORG_NAMES
 			dicFieldNames("MINIMUM_HOURS_PER") = Nz(dicFieldNames("MINIMUM_HOURS"),"MINIMUM_HOURS") & " / ?"
 			dicFieldNames("NUM_NEEDED_NOTES") = Nz(dicFieldNames("NUM_NEEDED"),"NUM_NEEDED") & " - " & TXT_NOTES
-			dicFieldNames("NUM_NEEDED_TOTAL") = Nz(dicFieldNames("NUM_NEEDED"),"NUM_NEEDED") & " - " & TXT_NUM_POSITIONS & " (" & TXT_TOTAL & ")"
+			dicFieldNames("NUM_NEEDED_TOTAL") = Nz(dicFieldNames("NUM_NEEDED"),"NUM_NEEDED") & " - " & TXT_INDIVIDUALS_WANTED & " (" & TXT_TOTAL & ")"
 			dicFieldNames("SCHEDULE_GRID") = Nz(dicFieldNames("SCHEDULE"),"SCHEDULE")
 			dicFieldNames("START_DATE_FIRST") = Nz(dicFieldNames("START_DATE"),"START_DATE") & " - " & TXT_ON_AFTER_DATE
 			dicFieldNames("START_DATE_LAST") = Nz(dicFieldNames("START_DATE"),"START_DATE") & " - " & TXT_ON_BEFORE_DATE
@@ -382,6 +382,8 @@ Sub printFeedbackInfo(intFBID,intDbAreaID,intFBType)
 								Call makeChecklistValue(Nz(dicFieldNames(fld.Name), fld.Name), fld.Value, "CL", "VOL_CommitmentLength")
 							Case "INTERACTION_LEVEL"
 								Call makeChecklistValue(Nz(dicFieldNames(fld.Name), fld.Name), fld.Value, "IL", "VOL_InteractionLevel")
+							Case "INTERESTS"
+								Call makeChecklistValue(Nz(dicFieldNames(fld.Name), fld.Name), fld.Value, "AI", "VOL_Interest")
 							Case "EMPLOYEES_RANGE"
 								If Not bHidePrivateData Then
 									Response.Write("<td class=""FieldLabelLeftClr"">" & Nz(dicFieldNames(fld.Name),fld.Name) & "</td>")

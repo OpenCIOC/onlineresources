@@ -71,25 +71,29 @@ def prepSocialMediaFeedback(rsFb):
 	for i, row in enumerate(rs_iter(rsFb), 1):
 		if row['SOCIAL_MEDIA']:
 			xml = ET.fromstring(row['SOCIAL_MEDIA'].encode('utf-8'))
-			
+
 			for el in xml.findall('./SM'):
 				sm_id = el.get('SM_ID')
 				url = el.get('URL', None)
 				proto = el.get('Proto', None) or 'http://'
-				
-				sm_feedback_values[sm_id].append({'sm_id': sm_id, 'proto': proto, 'url': url, 'feedback': i, 
+
+				sm_feedback_values[sm_id].append({'sm_id': sm_id, 'proto': proto, 'url': url, 'feedback': i,
 						'language_name': row.get('LanguageName')})
 
-				
+
 def getSocialMediaFeedback(sm_id, txt_feeback_num, txt_colon,txt_update, txt_content_deleted):
-	template = u'<br><span class="Info">{}%d{}{}</span> <span class="Alert">%s</span> <input type="button" value="{}" onClick="document.EntryForm.SOCIAL_MEDIA_%s.value=%s;">'.format(txt_feeback_num, " (%s)" if pyrequest.multilingual else '%s', txt_colon, txt_update)
+	template = u'''<div class="feedback-item">
+			<span class="fb-data-label">{}%d{}{}</span>
+			<span class="fb">%s</span>
+			<input type="button" class="btn btn-info" value="{}" onClick="document.EntryForm.SOCIAL_MEDIA_%s.value=%s;">
+			</div>'''.format(txt_feeback_num, " (%s)" if pyrequest.multilingual else '%s', txt_colon, txt_update)
 	escape = cgiescape
 	dumps = json.dumps
 
 	output = []
 	for fb in sm_feedback_values[sm_id]:
 		output.append(template % (fb['feedback'], fb['language_name'] if pyrequest.multilingual else '', escape((fb['proto'] + fb['url']) if fb['url'] else txt_content_deleted), sm_id, escape(dumps((fb['proto'] + fb['url']) if fb['url'] else '') , True)))
-		
+
 
 	return "".join(output)
 
@@ -113,17 +117,17 @@ def prepLanguagesFeedback(rsFb):
 			for el in xml.findall('./NOTE'):
 				values['NOTE'] = {'note': el.text}
 
-			
+
 			for el in xml.findall('.//LN'):
 				ln_id = el.get('ID')
 				ln_feedback_all_ids.add(ln_id)
 				note = el.get('NOTE', u'')
 				lnds = {x.text.strip() for x in el.findall('.//LND') if x.text.strip()}
-				
+
 				values[ln_id] = {
 					'ln_id': ln_id, 'note': note, 'lnds': lnds
 				}
-	
+
 	return ','.join(ln_feedback_all_ids)
 
 def getLanguagesFeedback(ln_id, language_name, checked, note, txt_feedback_num, txt_colon, txt_update, txt_content_deleted):
@@ -140,7 +144,7 @@ def getLanguagesFeedback(ln_id, language_name, checked, note, txt_feedback_num, 
 		if not fb:
 			if not int(checked):
 				continue
-		
+
 			value = six.text_type(txt_content_deleted)
 			update_values = {'LN_ID': '', 'LN_NOTES_%s' % ln_id: '', 'LND_%s' % ln_id: []}
 		else:
@@ -154,9 +158,9 @@ def getLanguagesFeedback(ln_id, language_name, checked, note, txt_feedback_num, 
 				details.append(escape(fb['note'], True))
 			if details:
 				value += u' (%s)' % u', '.join(details)
-		
+
 		output.append(template % {'no': i + 1, 'language_name': values['LanguageName'], 'id': ln_id, 'update_values': escape(dumps(update_values), True), 'value': value})
-		
+
 	return u"".join(output)
 
 def getLanguageNotesFeedback(note, txt_feedback_num, txt_colon, txt_update, txt_content_deleted):
@@ -174,13 +178,13 @@ def getLanguageNotesFeedback(note, txt_feedback_num, txt_colon, txt_update, txt_
 		if not fb or not fb.get('note'):
 			if not note:
 				continue
-			
+
 			value = six.text_type(txt_content_deleted)
 			update_value = u''
 
 		else:
 			update_value = value = fb['note']
-			
+
 		output.append(template % {'no': i, 'language_name': values['LanguageName'], 'update_value': escape(dumps(six.text_type(update_value)), True), 'value': escape(value)})
 
 	return u''.join(output)
@@ -204,12 +208,12 @@ def languageDetailsUI(lnid, lndids, txt_help):
 	rows = []
 	for detail in language_details:
 		vars = {
-			'lnid': lnid, 'help_ui': u'', 
+			'lnid': lnid, 'help_ui': u'',
 			'LND_ID': detail['LND_ID'], 'Name': escape(detail['Name']),
 			'checked': u'checked' if six.text_type(detail['LND_ID']) in selected_ids else u''
 		}
 		if detail['HelpText']:
-			vars['help_ui'] = _language_detail_help_ui_template % (escape(detail['HelpText']), txt_help) 
+			vars['help_ui'] = _language_detail_help_ui_template % (escape(detail['HelpText']), txt_help)
 
 		rows.append(_language_detail_row_template % vars)
 
@@ -264,7 +268,11 @@ def getStdChecklistFeedback(prefix, field_name, item_notes, item_id, checked, no
 	if item_notes:
 		notes_update = u'$(\'#{prefix}_NOTES_%(id)s\').val(%(note)s);'.format(prefix=prefix)
 
-	template = u'<br><span class="Info">{fbnum}%(no)d{lang}{colon}</span> <span class="Alert">%(value)s</span> <input type="button" value="{update}" onClick="$(\'#{prefix}_ID_%(id)s\').prop(\'checked\', %(chked)s);{notes_update}">'.format(fbnum=txt_feeback_num, lang=" (%(language_name)s)" if pyrequest.multilingual else '', colon=txt_colon, update=txt_update, prefix=prefix, notes_update=notes_update)
+	template = '''<div class="feedback-item">
+		<span class="fb-data-label">{fbnum}%(no)d{lang}{colon}</span>
+		<span class="fb-data-value">%(value)s</span>
+		<input type="button" class="btn btn-info" value="{update}" onClick="$(\'#{prefix}_ID_%(id)s\').prop(\'checked\', %(chked)s);{notes_update}">
+		</div>'''.format(fbnum=txt_feeback_num, lang=" (%(language_name)s)" if pyrequest.multilingual else '', colon=txt_colon, update=txt_update, prefix=prefix, notes_update=notes_update)
 	escape = cgiescape
 	dumps = json.dumps
 
@@ -293,28 +301,26 @@ def getStdChecklistFeedback(prefix, field_name, item_notes, item_id, checked, no
 				elif six.text_type(note) == fb['note']:
 					#no change
 					continue
-				
+
 			value = six.text_type(item_name)
 			if item_notes and fb['note']:
 				value += u' - ' + escape(fb['note'])
 
-			ns['value'] = value
+			ns['value'] = escape(value)
 			ns['chked'] = 'true'
 			ns['note'] = escape(dumps(fb['note']), True)
 
 		output.append(template % ns)
 
-
-	output = u''.join(output)
-	ns = {'fb': output[4:], 'colspan': ''}
-	if item_notes:
-		ns['colspan'] = 'colspan=2'
-
-	return u'<tr><td %(colspan)s>%(fb)s</td></tr>' % ns
+	return ''.join(output)
 
 
 def getStdChecklistNotesFeedback(field_name, note, txt_feedback_num, txt_colon, txt_update, txt_content_deleted):
-	template = u'<br><span class="Info">{txt_feedback_num}%(no)d{txt_multi_lingual}{txt_colon}</span> <span class="Alert">%(value)s</span> <input type="button" value="{txt_update}" onClick="document.EntryForm.{field}_NOTES.value=%(update_value)s;">'.format(txt_feedback_num=txt_feedback_num, txt_multi_lingual=" (%(language_name)s)" if pyrequest.multilingual else '', txt_colon=txt_colon, txt_update=txt_update, field=field_name)
+	template = '''<div class="feedback-item">
+	<span class="fb-data-label">{txt_feedback_num}%(no)d{txt_multi_lingual}{txt_colon}</span>
+	<span class="fb-data-value">%(value)s</span>
+	<input type="button" class="btn btn-info" value="{txt_update}" onClick="document.EntryForm.{field}_NOTES.value=%(update_value)s;">
+	</div>'''.format(txt_feedback_num=txt_feedback_num, txt_multi_lingual=" (%(language_name)s)" if pyrequest.multilingual else '', txt_colon=txt_colon, txt_update=txt_update, field=field_name)
 
 	escape = cgiescape
 	dumps = json.dumps
@@ -328,13 +334,13 @@ def getStdChecklistNotesFeedback(field_name, note, txt_feedback_num, txt_colon, 
 		if not fb or not fb.get('note'):
 			if not note:
 				continue
-			
+
 			value = six.text_type(txt_content_deleted)
 			update_value = u''
 
 		else:
 			update_value = value = fb['note']
-			
+
 		output.append(template % {'no': i, 'language_name': values['language_name'], 'update_value': escape(dumps(six.text_type(update_value)), True), 'value': escape(value)})
 
 	return u''.join(output)
@@ -396,7 +402,7 @@ def prepEventScheduleFeedback(rsFb):
 			attrib['_line'] = schedule_line
 			attrib = convertEventScheduleFeedbackEntry(attrib)
 			values[sched_id] = attrib
-	
+
 	return entries
 
 def makeEventScheduleEntry(entry, label, prefix, feedback=None):
@@ -425,9 +431,9 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 				continue
 
 			this_entry_feedback.append(
-				Markup('''<div>
-						<span class="Info">{txt_fbnum}{fb_num}{language}{txt_colon}</span>
-						<span class="Alert">{line} <input type="button" value="{txt_update}" class="schedule-ui-accept-feedback" data-schedule="{values}"></span>
+				Markup('''<div class="feedback-item">
+						<span class="fb-data-label">{txt_fbnum}{fb_num}{language}{txt_colon}</span>
+						<span class="fb-data-value">{line} <input type="button" value="{txt_update}" class="schedule-ui-accept-feedback btn btn-info" data-schedule="{values}"></span>
 						</div>
 				''').format(
 					txt_fbnum=_('Feedback #'), txt_colon=_(': '), txt_update=_('Update'), fb_num=fb_num, line=line,
@@ -447,7 +453,7 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 	elif recurs_day_of_week == u'1':
 		ui_select_value = u'1'
 
-	
+
 	recurs_display = u''
 	week_text_display = hide_display
 	month_text_display = u''
@@ -481,10 +487,11 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 	]
 
 	weekdays = Markup(u' ').join(
-		tags.checkbox(prefix + 'RECURS_WEEKDAY_' + no, 'on', checked=entry.get('RECURS_WEEKDAY_' + no) == '1', label=l)
+		tags.checkbox(prefix + 'RECURS_WEEKDAY_' + no, 'on', checked=entry.get('RECURS_WEEKDAY_' + no) == '1', label=l, label_class='checkbox-inline')
 		for no, l in weekdays)
 
 	ns = {
+		'txt_eg': _('e.g.'),
 		'txt_repeats': _('Repeats'),
 		'txt_delete': _('Delete'),
 		'date_text_size': const.DATE_TEXT_SIZE,
@@ -499,8 +506,8 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 		'START_TIME': entry.get('START_TIME') or u'',
 		'END_TIME': entry.get('END_TIME') or u'',
 		'RECURS_TYPE': tags.select(prefix + 'RECURS_TYPE', ui_select_value, convert_options([
-				('0', _('Never')), ('1', _('Weekly')), ('2', _('Monthly by Day of Month')), ('3', _('Montly by Week of Month'))]),
-				class_='recur-type-selector'),
+				('0', _('Never')), ('1', _('Weekly')), ('2', _('Monthly by Day of Month')), ('3', _('Monthly by Week of Month'))]),
+				class_='recur-type-selector form-control'),
 		'RECURS_EVERY': recurs_every,
 		'RECURS_DAY_OF_WEEK': recurs_day_of_week,
 		'RECURS_XTH_WEEKDAY_OF_MONTH': recurs_xth_weekday_of_month or u'',
@@ -524,56 +531,86 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 	}
 	output = Markup(u'''
 		<div class="EntryFormItemBox" id="{prefix}container">
-		<div style="float: right;"><button type="button" class="EntryFormItemDelete ui-state-default ui-corner-all" id="{prefix}DELETE">{txt_delete}</button></div>
-		<h4 class="EntryFormItemHeader">{label}</h4>
+		<div class="EntryFormItemHeader">
+			<div style="float: right;">
+				<button type="button" class="btn btn-default btn-xs EntryFormItemDelete" id="{prefix}DELETE">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {txt_delete}
+				</button>
+			</div>
+			<h4 class="EntryFormItemHeader">{label}</h4>
+		</div>
 		<div id="{prefix}DISPLAY" class="EntryFormItemContent">
-		<table class="NoBorder cell-padding-2">
-		<tr>
-			<td class="FieldLabelLeftClr">{txt_start_date}</td>
-			<td><input type="text" name="{prefix}START_DATE" size="{date_text_size}" maxlength="{date_text_size}" value="{START_DATE}" class="DatePicker"></td>
-		</tr>
-		<tr>
-			<td class="FieldLabelLeftClr">{txt_end_date}</td>
-			<td><input type="text" name="{prefix}END_DATE" size="{date_text_size}" maxlength="{date_text_size}" value="{END_DATE}" class="DatePicker"></td>
-		</tr>
-		<tr>
-			<td class="FieldLabelLeftClr">{txt_start_time}</td>
-			<td><input type="text" name="{prefix}START_TIME" size="{time_text_size}" maxlength="{time_text_size}" value="{START_TIME}"></td>
-		</tr>
-		<tr>
-			<td class="FieldLabelLeftClr">{txt_end_time}</td>
-			<td><input type="text" name="{prefix}END_TIME" size="{time_text_size}" maxlength="{time_text_size}" value="{END_TIME}"></td>
-		</tr>
-		<tr>
-			<td class="FieldLabelLeftClr">{txt_label}</td>
-			<td><input type="text" name="{prefix}Label" size="{text_size}" maxlength="{text_size}" value="{Label}"></td>
-		</tr>
-		<tr>
-			<td class="FieldLabelLeftClr">{txt_repeats}</td>
-			<td>{RECURS_TYPE}</td>
-		</tr>
-		<tr class="recurs-ui repeat-every-ui" {recurs_display}">
-			<td class="FieldLabelLeftClr">{txt_repeat_every}</td>
-			<td>
-			<input type="text" name="{prefix}RECURS_EVERY" value="{RECURS_EVERY}" maxlength="2" size="3" class="posint">
-			<span class="recurs-week-label" {week_text_display}>{txt_weeks}</span>
-			<span class="recurs-month-label" {month_text_display}>{txt_months}</span>
-			</td>
-		</tr>
-		<tr class="recurs-ui repeats-on-ui" {day_of_week_display}>
-			<td class="FieldLabelLeftClr">{txt_repeat_on}</td>
-			<td>{weekdays}</td>
-		</tr>
-		<tr class="recurs-ui repeat-week-of-month-ui" {week_of_month_display}>
-			<td class="FieldLabelLeftClr">{txt_week_of_month}</td>
-			<td><input type="text" name="{prefix}RECURS_XTH_WEEKDAY_OF_MONTH" value="{RECURS_XTH_WEEKDAY_OF_MONTH}" maxlength="2" size="3" class="posint"></td>
-		</tr>
-		<tr class="recurs-ui repeat-day-of-month-ui" {day_of_month_display}>
-			<td class="FieldLabelLeftClr">{txt_day_of_month}</td>
-			<td><input type="text" name="{prefix}RECURS_DAY_OF_MONTH" value="{RECURS_DAY_OF_MONTH}" maxlength="2" size="3" class="posint"></td>
-		</tr>
+		<div class="form-group">
+			<label for="{prefix}START_DATE" class="control-label col-sm-3">{txt_start_date}</label>
+			<div class="col-sm-9"><input type="text" class="form-control DatePicker" name="{prefix}START_DATE" size="{date_text_size}" maxlength="{date_text_size}" value="{START_DATE}"></div>
+		</div>
+		<div class="form-group">
+			<label for="{prefix}END_DATE" class="control-label col-sm-3">{txt_end_date}</label>
+			<div class="col-sm-9"><input type="text" class="form-control DatePicker" name="{prefix}END_DATE" size="{date_text_size}" maxlength="{date_text_size}" value="{END_DATE}"></div>
+		</div>
+		<div class="form-group">
+			<label for="{prefix}START_TIME" class="control-label col-sm-3">{txt_start_time}</label>
+			<div class="col-sm-9">
+				<div class="input-group">
+					<input type="text" class="form-control" name="{prefix}START_TIME" size="{time_text_size}" maxlength="{time_text_size}" value="{START_TIME}">
+					<span class="input-group-addon">({txt_eg} 23:00, 08:30, 4:00PM)</span>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="{prefix}END_TIME" class="control-label col-sm-3">{txt_end_time}</label>
+			<div class="col-sm-9">
+				<div class="input-group">
+					<input type="text" class="form-control" name="{prefix}END_TIME" size="{time_text_size}" maxlength="{time_text_size}" value="{END_TIME}">
+					<span class="input-group-addon">({txt_eg} 23:00, 08:30, 4:00PM)</span>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="{prefix}LABEL" class="control-label col-sm-3">{txt_label}</label>
+			<div class="col-sm-9"><input type="text" class="form-control" name="{prefix}Label" size="{text_size}" maxlength="{text_size}" value="{Label}"></div>
+		</div>
+		<div class="form-group">
+			<label for="{prefix}RECURS_TYPE" class="control-label col-sm-3">{txt_repeats}</label>
+			<div class="col-sm-9">{RECURS_TYPE}</div>
+		</div>
+		<div class="recurs-ui repeat-every-ui" {recurs_display}>
+			<div class="form-group">
+				<label for="{prefix}RECURS_EVERY" class="control-label col-sm-3">{txt_repeat_every}</label>
+				<div class="col-sm-9 form-inline">
+					<div class="input-group">
+						<input type="text" class="form-control" name="{prefix}RECURS_EVERY" value="{RECURS_EVERY}" maxlength="2" size="3" class="posint">
+						<span class="input-group-addon">
+							<span class="recurs-week-label{week_text_display}>{txt_weeks}</span>
+							<span class="recurs-month-label" {month_text_display}>{txt_months}</span>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="recurs-ui repeats-on-ui" {day_of_week_display}>
+			<div class="form-group">
+				<label for="{prefix}RECURS_EVERY" class="control-label col-sm-3">{txt_repeat_on}</label>
+				<div class="col-sm-9">{weekdays}</div>
+			</div>
+		</div>
+		<div class="recurs-ui repeat-week-of-month-ui" {week_of_month_display}>
+			<div class="form-group">
+				<label for="{prefix}RECURS_XTH_WEEKDAY_OF_MONTH" class="control-label col-sm-3">{txt_week_of_month}</label>
+				<div class="col-sm-9 form-inline">
+					<input type="text" class="form-control name="{prefix}RECURS_XTH_WEEKDAY_OF_MONTH" value="{RECURS_XTH_WEEKDAY_OF_MONTH}" maxlength="2" size="3" class="posint">
+				</div>
+			</div>
+		</div>
+		<div class="recurs-ui repeat-day-of-month-ui" {day_of_month_display}>
+			<div class="form-group">
+				<label for="{prefix}RECURS_DAY_OF_MONTH" class="control-label col-sm-3">{txt_day_of_month}</label>
+				<div class="col-sm-9 form-inline">
+					<input type="text" class="form-control name="{prefix}RECURS_DAY_OF_MONTH" value="{RECURS_DAY_OF_MONTH}" maxlength="2" size="3" class="posint">
+				</div>
+			</div>
+		</div>
 
-		</table>
 		{feedback}
 		</div><div style="clear: both;"></div></div>
 		''').format(prefix=prefix, label=label, **ns).replace(u'\n', u'')
@@ -610,7 +647,7 @@ def makeEventScheduleContents_l(rst, bUseContent, has_feedback=False, rsFb=None,
 				feedback
 			)
 		)
-	
+
 	if feedback:
 		for fb_num, fbe in enumerate(feedback):
 			for entry in fbe.get('_order', []):
@@ -630,10 +667,10 @@ def makeEventScheduleContents_l(rst, bUseContent, has_feedback=False, rsFb=None,
 	output.append(
 		Markup(u'''
 		<input type="hidden" name="Sched_IDS" class="EntryFormItemContainerIds" id="Sched_IDS" value="{}"></div>
-		<button class="ui-state-default ui-corner-all EntryFormItemAdd" type="button" id="Sched_add_button">{}</button>
+		<button class="btn btn-default EntryFormItemAdd" type="button" id="Sched_add_button">{}</button>
 		''').format(u','.join(ids), _('Add'))
 	)
-	
+
 	return u''.join(output)
 
 </script>
@@ -641,6 +678,66 @@ def makeEventScheduleContents_l(rst, bUseContent, has_feedback=False, rsFb=None,
 <%
 Dim bFieldHasFeedback
 bFieldHasFeedback = False
+
+Function getChecklistXMLFeedbackSimpleValue(strValue, strPrefix, strTable)
+	Dim strReturn
+
+	If InStr(1,Ns(strValue),"<" & strPrefix & "S>") Then
+		Dim strSQL
+		strSQL = _
+		"DECLARE @conStr nvarchar(3), @returnStr nvarchar(max), @Notes nvarchar(MAX), @data xml = " & QsN(strValue) & vbCrLf & _
+		"SET @conStr = cioc_shared.dbo.fn_SHR_STP_ObjectName(' ; ')" & vbCrLf & _
+		"SET @Notes = @data.value('*[1]/NOTE[1]', 'nvarchar(max)')" & vbCrLf & _
+		"SELECT @returnStr =  COALESCE(@returnStr + @conStr,'') " & vbCrLf & _
+		"	+ chkn.Name" & vbCrLf & _
+		"	+ CASE WHEN prn.Notes IS NULL THEN '' ELSE cioc_shared.dbo.fn_SHR_STP_ObjectName(' - ') + prn.Notes END" & vbCrLf & _
+		"FROM (" & vbCrLf & _
+		"SELECT N.value('@ID', 'int') AS pk, N.value('@NOTE', 'nvarchar(255)') AS Notes FROM @data.nodes('*/*/*') AS T(N)" & vbCrLf & _
+		") AS prn" & vbCrLf & _
+		"" & vbCrLf & _
+		"	INNER JOIN " & strTable & " chk" & vbCrLf & _
+		"		ON prn.pk=chk." & strPrefix & "_ID" & vbCrLf & _
+		"	INNER JOIN " & strTable & "_Name chkn" & vbCrLf & _
+		"		ON chk." & strPrefix & "_ID=chkn." & strPrefix & "_ID AND chkn.LangID=@@LANGID" & vbCrLf & _
+		"ORDER BY chk.DisplayOrder, chkn.Name" & vbCrLf & _
+		"" & vbCrLf & _
+		"IF @returnStr IS NULL SET @returnStr = ''" & vbCrLf & _
+		"IF @returnStr = '' SET @conStr = ''" & vbCrLf & _
+		"" & vbCrLf & _
+		"IF @Notes IS NOT NULL BEGIN" & vbCrLf & _
+		"	SET @returnStr = @returnStr + @conStr + @Notes" & vbCrLf & _
+		"END" & vbCrLf & _
+		"" & vbCrLf & _
+		"IF @returnStr = '' SET @returnStr = NULL" & vbCrLf & _
+		"SELECT @returnStr as CheckList"
+
+		Dim cmdDropDown, rsDropDown
+		Set cmdDropDown = Server.CreateObject("ADODB.Command")
+		With cmdDropDown
+			.ActiveConnection = getCurrentAdminCnn()
+			.CommandText = strSQL
+			.CommandType = adCmdText
+			.CommandTimeout = 0
+		End With
+		Set rsDropDown = Server.CreateObject("ADODB.Recordset")
+		With rsDropDown
+			.CursorLocation = adUseClient
+			.CursorType = adOpenStatic
+			.Open cmdDropDown
+			If Not .EOF Then
+				strReturn = .Fields("CheckList")
+			End If
+			.Close
+		End With
+		Set rsDropDown = Nothing
+		Set cmdDropDown = Nothing
+
+	Else
+		strReturn = Server.HTMLEncode(strValue)
+	End If
+
+	getChecklistXMLFeedbackSimpleValue = strReturn
+End Function
 
 Function getDropDownValue(strValue, strFunction, bLangID, strFieldName)
 	Dim strReturn
@@ -668,7 +765,7 @@ Function getDropDownValue(strValue, strFunction, bLangID, strFieldName)
 		Set rsDropDown = Nothing
 		Set cmdDropDown = Nothing
 	End If
-	
+
 	getDropDownValue = strReturn
 End Function
 
@@ -729,6 +826,8 @@ Function getFeedback(strFieldName,bUpdateButton,bWYSIWYG)
 							End If
 						Case "FISCAL_YEAR_END"
 							strDisplay = getDropDownValue(strContent,"dbo.fn_CIC_DisplayFiscalYearEnd",True,Null)
+						Case "INTERESTS"
+							strDisplay = getChecklistXMLFeedbackSimpleValue(strContent,"AI","VOL_Interest")
 						Case "PAYMENT_TERMS"
 							strDisplay = getDropDownValue(strContent,"dbo.fn_GBL_DisplayPaymentTerms",True,Null)
 						Case "PREF_CURRENCY"
@@ -767,8 +866,8 @@ Function getFeedback(strFieldName,bUpdateButton,bWYSIWYG)
 					End If
 					strReturn = strReturn & _
 						"<div class=""feedback-item"">" & _
-							"<span class=""Info"">" & TXT_FEEDBACK_NUM & i & StringIf(g_bMultiLingual," (" & .Fields("LanguageName") & ")") & TXT_COLON & "</span>" & _
-							" <span class=""Alert"">" & textToHTML(strDisplay)
+							"<span class=""fb-data-label"">" & TXT_FEEDBACK_NUM & i & StringIf(g_bMultiLingual," (" & .Fields("LanguageName") & ")") & TXT_COLON & "</span>" & _
+							" <span class=""fb-data-value"">" & textToHTML(strDisplay) & "</span>"
 					If bUpdateButton Then
 						If bWYSIWYG Then
 							strReturn = strReturn & " <input type=""button"" value=""" & TXT_UPDATE & """ onClick=""tinymce.get(" & JsQs(strFieldName) & ").setContent("
@@ -780,10 +879,9 @@ Function getFeedback(strFieldName,bUpdateButton,bWYSIWYG)
 						Else
 							strReturn = strReturn & SQUOTE & SQUOTE
 						End If
-						strReturn = strReturn & StringIf(bWYSIWYG,")") & ";"" class=""ui-state-default ui-corner-all"">"
+						strReturn = strReturn & StringIf(bWYSIWYG,")") & ";"" class=""btn btn-info"">"
 					End If
 					strReturn = strReturn & _
-							"</span>" & _
 						"</div>"
 				End If
 				i = i+1
@@ -816,8 +914,8 @@ Function getDateFeedback(strFieldName,bUpdateButton,bNoYear)
 					End If
 					strReturn = strReturn & _
 						"<div class=""feedback-item"">" & _
-							"<span class=""Info"">" & TXT_FEEDBACK_NUM & i & StringIf(g_bMultiLingual," (" & .Fields("LanguageName") & ")") & TXT_COLON & "</span>" & _
-							" <span class=""Alert"">" & strTmpDate
+							"<span class=""fb-data-label"">" & TXT_FEEDBACK_NUM & i & StringIf(g_bMultiLingual," (" & .Fields("LanguageName") & ")") & TXT_COLON & "</span>" & _
+							" <span class=""fb-data-value"">" & strTmpDate & "</span>"
 					If bUpdateButton Then
 						strReturn = strReturn & " <input type=""button"" value=""" & TXT_UPDATE & """ onClick=""document.EntryForm." & strFieldName & ".value="
 						If rsFb(strFieldName) <> TXT_CONTENT_DELETED Then
@@ -825,10 +923,9 @@ Function getDateFeedback(strFieldName,bUpdateButton,bNoYear)
 						Else
 							strReturn = strReturn & SQUOTE & SQUOTE
 						End If
-						strReturn = strReturn & ";"" class=""ui-state-default ui-corner-all"">"
+						strReturn = strReturn & ";"" class=""btn btn-info"">"
 					End If
 					strReturn = strReturn & _
-							"</span>" & _
 						"</div>"
 				End If
 				i = i+1
@@ -836,7 +933,7 @@ Function getDateFeedback(strFieldName,bUpdateButton,bNoYear)
 			Wend
 		End With
 	End If
-	
+
 	If Not Nl(strReturn) Then
 		bFieldHasFeedback = True
 	End If
@@ -844,23 +941,40 @@ Function getDateFeedback(strFieldName,bUpdateButton,bNoYear)
 	getDateFeedback = strReturn
 End Function
 
-Function getCbFeedback(strFieldName,strOnVal,strOffVal)
-	Dim strReturn, i
+Function getCbFeedback(strFieldName,strOnVal,strOffVal,bAllowNulls)
+	Dim strReturn, i, strDisplayVal, strSetVal, bUpdateButton
 	If bFeedback Then
 		i = 1
 		With rsFb
 			.MoveFirst
 			While Not .EOF
+				bUpdateButton = False
 				If Not Nl(rsFb(strFieldName)) Then
-					strReturn = strReturn & "<br><span class=""Info"">" & _
-						TXT_FEEDBACK_NUM & i & StringIf(g_bMultiLingual," (" & .Fields("LanguageName") & ")") & TXT_COLON & _
-						"</span> <span class=""Alert"">"
-					If rsFb(strFieldName) <> "0" And rsFb(strFieldName) <> "1" Then
-						strReturn = strReturn & rsFb(strFieldName)
-					Else
-						strReturn = strReturn & textToHTML(IIf(rsFb(strFieldName),strOnVal,strOffVal))
+					Select Case rsFb(strFieldName)
+						Case strOffVal
+							bUpdateButton = True
+							strSetVal = strFieldName & "_NO"
+						Case strOnVal
+							bUpdateButton = True
+							strSetVal = strFieldName & "_YES"
+						Case Else
+							strDisplayVal = rsFb(strFieldName)
+							If bAllowNulls And reEquals(rsFb(strFieldName),CONTENT_DELETED_PATTERN,False,False,True,False) Then
+								bUpdateButton = True
+								strSetVal = strFieldName & "_UNKNOWN"
+							End If
+					End Select
+					strReturn = strReturn & _
+						"<div class=""feedback-item"">" & _
+							"<span class=""fb-data-label"">" & TXT_FEEDBACK_NUM & i & StringIf(g_bMultiLingual," (" & .Fields("LanguageName") & ")") & TXT_COLON & "</span>" & _
+							" <span class=""fb-data-value"">" & _
+							Server.HTMLEncode(rsFb(strFieldName)) & _
+							"</span>"
+					If bUpdateButton Then
+						strReturn = strReturn & " <input type=""button"" value=""" & TXT_UPDATE & """ onClick=""document.getElementById(" & JsQs(strSetVal) & ").checked = true;"" class=""btn btn-info"">"
 					End If
-					strReturn = strReturn & "</span>"
+					strReturn = strReturn & _
+						"</div>"
 				End If
 				i = i+1
 				.MoveNext
@@ -877,9 +991,9 @@ End Function
 
 Function getGeoCodeFeedback()
 	Dim strReturn, i
-	
+
 	Dim strJSUpdate
-	
+
 	If bFeedback Then
 		i = 1
 		With rsFb
@@ -910,7 +1024,7 @@ Function getGeoCodeFeedback()
 									Nz(Replace(rsFb("LONGITUDE"),",","."),"document.getElementById('LONGITUDE').value") & ");"
 							End If
 					End Select
-					strReturn = strReturn & " <input type=""button"" value=""" & TXT_UPDATE & """ onClick=""" & strJSUpdate & """ class=""ui-state-default ui-corner-all""></span>"
+					strReturn = strReturn & " <input type=""button"" value=""" & TXT_UPDATE & """ onClick=""" & strJSUpdate & """ class=""btn""></span>"
 				End If
 				i = i+1
 				.MoveNext
@@ -962,7 +1076,7 @@ Function makeValidatedTextFieldVal(strFieldName,strFieldContents,intMaxLength,bC
 			" autocomplete=""off""" & _
 			StringIf(Not Nl(intMaxLength), " maxlength=""" & intMaxLength & """") & _
 			" value=" & AttrQs(strFieldContents) & ">" & _
-		"</div>"
+		StringIf(bSmallField,"</div>")
 	If bFeedback And bCheckForFeedback Then
 		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
@@ -1020,7 +1134,7 @@ Function makeCBFieldVal(strFieldName,strFieldContents,strOnText,strOffText,strNu
 	End If
 	strReturn = strReturn & ">" & strOffText & "</label>"
 	If bFeedback And bCheckForFeedback Then
-		strReturn = strReturn & getCbFeedback(strFieldName,strOnText,strOffText)
+		strReturn = strReturn & getCbFeedback(strFieldName,strOnText,strOffText,bAllowNulls)
 	End If
 	makeCBFieldVal = strReturn
 End Function
@@ -1054,20 +1168,20 @@ End Sub
 Function makeContactContents(rst,strContactType,bUseContent)
 	Dim strReturn, strQFldName
 	Dim xmlDoc, xmlNode
-	
+
 	Set xmlDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
 	With xmlDoc
 		.async = False
 		.setProperty "SelectionLanguage", "XPath"
 	End With
-	
+
 	If bUseContent Then
 		xmlDoc.loadXML Nz(rst(strContactType).Value,"<CONTACT/>")
 	Else
 		xmlDoc.loadXML "<CONTACT/>"
 	End If
 	Set xmlNode = xmlDoc.selectSingleNode("/CONTACT")
-	
+
 	strQFldName = AttrQs(strContactType & "_NAME")
 	strReturn = _
 			"<div class=""form-group"">" & _
@@ -1076,7 +1190,7 @@ Function makeContactContents(rst,strContactType,bUseContent)
 					"<input type=""text"" name=" & strQFldName & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("NAME")) & ">" & _
 				"</div>" & _
 			"</div>"
-	strQFldName = AttrQs(strContactType & "_TITLE") 
+	strQFldName = AttrQs(strContactType & "_TITLE")
 	strReturn = strReturn & _
 			"<div class=""form-group"">" & _
 				"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_TITLE & "</label>" & _
@@ -1118,32 +1232,32 @@ Function makeContactContents(rst,strContactType,bUseContent)
 					"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">" & _
 				"</div>" & _
 			"</div>"
-			
+
 	makeContactContents = strReturn
 End Function
 
 Function makeContactFieldVal(rst,strContactType,bUseContent)
 	Dim strReturn, strQFldName
 	Dim xmlDoc, xmlNode
-	
+
 	Call openContactRecordsets()
-	
+
 	Set xmlDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
 	With xmlDoc
 		.async = False
 		.setProperty "SelectionLanguage", "XPath"
 	End With
-	
+
 	If bUseContent Then
 		xmlDoc.loadXML Nz(rst(strContactType).Value,"<CONTACT/>")
 	Else
 		xmlDoc.loadXML "<CONTACT/>"
 	End If
 	Set xmlNode = xmlDoc.selectSingleNode("/CONTACT")
-	
+
 	strReturn = "<input type=""hidden"" name=""" & strContactType & "_ID" & """ value=""" & xmlNode.getAttribute("ContactID") & """>"
 
-	strReturn = strReturn & _
+	strReturn = strReturn & vbCrLf & _
 		"<div class=""row-border-bottom"">" & _
 			"<div class=""form-group"">" & _
 				"<label class=""control-label col-sm-3 col-lg-2"">" & TXT_NAME & "</label>" & _
@@ -1172,7 +1286,7 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 			"</div>"
 
 	strQFldName = AttrQs(strContactType & "_TITLE")
-	strReturn = strReturn & _
+	strReturn = strReturn & vbCrLf & _
 			"<div class=""row-border-bottom"">" & _
 				"<div class=""form-group"">" & _
 					"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_TITLE & "</label>" & _
@@ -1187,7 +1301,7 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 			"</div>"
 
 	strQFldName = AttrQs(strContactType & "_ORG")
-	strReturn = strReturn & _
+	strReturn = strReturn & vbCrLf & _
 			"<div class=""row-border-bottom"">" & _
 				"<div class=""form-group"">" & _
 					"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_ORGANIZATION & "</label>" & _
@@ -1200,10 +1314,10 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 					"</div>" & _
 				"</div>" & _
 			"</div>"
-		
+
 	Dim i
 	For i = 1 to 3
-		strReturn = strReturn & _
+		strReturn = strReturn & vbCrLf & _
 			"<div class=""row-border-bottom"">" & _
 				"<div class=""form-group"">" & _
 					"<label class=""control-label col-sm-3 col-lg-2"">" & TXT_PHONE & " #" & i & "</label>" & _
@@ -1233,7 +1347,7 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 				"</div>"
 	Next
 
-	strReturn = strReturn & _
+	strReturn = strReturn & vbCrLf & _
 		"<div class=""row-border-bottom"">" & _
 			"<div class=""form-group"">" & _
 				"<label class=""control-label col-sm-3 col-lg-2"">" & TXT_FAX & "</label>" & _
@@ -1266,7 +1380,7 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 				"<div class=""form-group"">" & _
 					"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_EMAIL & "</label>" & _
 					"<div class=""col-sm-9 col-lg-10"">" & _
-						"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">"
+						"<input type=""text"" name=" & strQFldName  & " class=""form-control email"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">"
 	If bFeedback Then
 		strReturn = strReturn & getFeedback(strContactType & "_EMAIL",True,False)
 	End If
@@ -1283,9 +1397,9 @@ Function makeExtraCheckListContents(rst,bUseContent,bFbForm)
 	Dim strReturn, strCon
 	Dim intEXCID, strName, bIsSelected, strFeedback
 	Dim xmlDoc, xmlNode, xmlChildNode
-	
+
 	strCon = vbNullString
-	
+
 	Set xmlDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
 	With xmlDoc
 		.async = False
@@ -1325,7 +1439,7 @@ Function makeExtraCheckListContents(rst,bUseContent,bFbForm)
 	End If
 
 	Set xmlNode = xmlDoc.selectSingleNode("/EXTRA_CHECKLIST")
-	
+
 	If Not xmlNode Is Nothing Then
 		For Each xmlChildNode in xmlNode.childNodes
 			strFeedback = vbNullString
@@ -1353,17 +1467,17 @@ End Function
 Function makeExtraDropDownContents(rst,bUseContent,bFbForm)
 	Dim strReturn, _
 		intCurVal
-		
+
 	If bUseContent Then
 		intCurVal = rst(strFieldName)
 	Else
 		intCurVal = vbNullString
 	End If
-	
+
 	Call openExtraDropDownListRst(ps_strDbArea, strFieldName, False, False, intCurVal)
 	strReturn = makeExtraDropDownList(strFieldName, intCurVal, strFieldName, True, vbNullString)
 	Call closeExtraDropDownListRst(strFieldName)
-	
+
 	If bFeedback Then
 		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
@@ -1456,7 +1570,7 @@ Function makeRecordNoteEntryTemplate(strNoteType)
 
 	strReturn = strReturn & _
 		"<div class=""EntryFormItemBox"" id=""" & strPrefix & "container"">" & _
-		"<h4 class=""EntryFormItemHeader"">" & TXT_NOTE_NUMBER & "<span class=""EntryFormItemCount"">[COUNT]</span><span style=""display:none;"" class=""NewFlag""> " & TXT_NEW & "</span></h4>" & _ 
+		"<h4 class=""EntryFormItemHeader"">" & TXT_NOTE_NUMBER & "<span class=""EntryFormItemCount"">[COUNT]</span><span style=""display:none;"" class=""NewFlag""> " & TXT_NEW & "</span></h4>" & _
 		"<div id=""" & strPrefix & "EDIT"" class=""EntryFormItemContent"">" & _
 		"<table class=""NoBorder cell-padding-2"">" & _
 			"<tr style=""display:none;"" class=""CreatedField"">" & _
@@ -1467,17 +1581,17 @@ Function makeRecordNoteEntryTemplate(strNoteType)
 				"<td class=""FieldLabelLeftClr"">" & TXT_LAST_MODIFIED & "</td>" & _
 				"<td>[MODIFIED_DATE] ([MODIFIED_BY])</td>" & _
 			"</tr>"
-	
-	If rsListRecordNoteType.RecordCount > 0 Then		
+
+	If rsListRecordNoteType.RecordCount > 0 Then
 		strReturn = strReturn & _
 			"<tr>" & _
 				"<td class=""FieldLabelLeftClr"">" & TXT_NOTE_TYPE & "</td>" & _
 				"<td>" & makeRecordNoteTypeList(vbNullString,strPrefix & "NoteTypeID",IIf(ps_intDbArea=DM_CIC,g_bRecordNoteTypeOptionalCIC,g_bRecordNoteTypeOptionalVOL),vbNullString) & "</td>" & _
 			"</tr></table>"
 	End If
-	
-	strReturn = strReturn & _
-			"<textarea name=""" & strPrefix & "RecordNoteValue"" title=" & AttrQs(TXT_NOTES) & " cols=""" & TEXTAREA_COLS-5 & """ rows=""" & TEXTAREA_ROWS_SHORT & """>[NOTE_VALUE]</textarea>" & _
+
+	strReturn = strReturn & vbCrLf & _
+		"<textarea class=""form-control"" name=""" & strPrefix & "RecordNoteValue"" title=" & AttrQs(TXT_NOTES) & " cols=""" & TEXTAREA_COLS-5 & """ rows=""" & TEXTAREA_ROWS_SHORT & """>[NOTE_VALUE]</textarea>" & _
 		"</div><div style=""clear: both;""></div></div>"
 
 	makeRecordNoteEntryTemplate = strReturn
@@ -1486,7 +1600,7 @@ End Function
 Function makeRecordNoteEntry(xmlNoteNode, strField)
 	Dim strReturn
 	strReturn = vbNullString
-	
+
 	Dim strPrefix, _
 		strHeading, _
 		intNoteTypeID, _
@@ -1500,7 +1614,7 @@ Function makeRecordNoteEntry(xmlNoteNode, strField)
 		dCancelled, _
 		strCancelledBy, _
 		bCancelError
-		
+
 	dCancelled = xmlNoteNode.getAttribute("CANCELLED_DATE")
 	strCancelledBy = Nz(xmlNoteNode.getAttribute("CANCELLED_BY"),TXT_UNKNOWN)
 	bCancelError = xmlNoteNode.getAttribute("CancelError")
@@ -1523,15 +1637,31 @@ Function makeRecordNoteEntry(xmlNoteNode, strField)
 	strModifiedBy = Nz(xmlNoteNode.getAttribute("MODIFIED_BY"),TXT_UNKNOWN)
 
 	strReturn = strReturn & _
-		"<div class=""EntryFormNotesItem block-border-top" & StringIf(Not Nl(dCancelled), " RNCanceled") & """ id=""" & strPrefix & "CONTAINER"">" 
+		"<div class=""EntryFormNotesItem block-border-top" & StringIf(Not Nl(dCancelled), " RNCanceled") & """ id=""" & strPrefix & "CONTAINER"">"
 	If Nl(dCancelled) Then
-		strReturn = strReturn & _
-			"<div style=""float: right; margin-right: 4px; display: none;""><button type=""button"" class=""EntryFormItemRestoreAction ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"" id=""" & strPrefix & "RESTOREDELETE""><span class=""ui-button-text"" style=""padding-top: 0px; padding-bottom: 0px; padding-left: 1em;"">" & TXT_RESTORE & "</span></button></div>" & _
-			"<div style=""float: right; margin-right: 4px;""><button type=""button"" class=""EntryFormItemAction ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icons"" id=""" & strPrefix & "ACTION""><span class=""ui-button-text"" style=""padding-top: 0px; padding-bottom: 0px; padding-left: 1em;"">" & TXT_ACTION & "</span><span class=""ui-button-icon-secondary ui-icon ui-icon-triangle-1-s""></span></button></div>"
+		strReturn = strReturn & vbCrLf & _
+			"<div style=""float: right; margin-right: 4px; display: none;"">" & _
+			"<button type=""button"" class=""EntryFormItemRestoreAction btn btn-default btn-xs"" id=""" & strPrefix & "RESTOREDELETE"">" & _
+			"<span class=""glyphicon glyphicon-share"" aria-hidden=""true""></span> " & TXT_RESTORE & _
+			"</button>" & _
+			"</div>" & vbCrLf & _
+			"<div style=""float: right; margin-right: 4px;"">" & _
+			"<button type=""button"" class=""EntryFormItemAction btn btn-default btn-xs"" id=""" & strPrefix & "ACTION"">" & _
+			TXT_ACTION & " <span class=""glyphicon glyphicon-chevron-down"" aria-hidden=""true""></span> " & _
+			"</button>" & _
+			"</div>"
 	Else
-		strReturn = strReturn & _
-			"<div style=""float: right; margin-right: 4px; display: none;""><button type=""button"" class=""EntryFormItemDontRestoreCancel ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"" id=""" & strPrefix & "RESTOREDELETE""><span class=""ui-button-text"" style=""padding-top: 0px; padding-bottom: 0px; padding-left: 1em;"">" & TXT_DONT_RESTORE & "</span></button></div>" & _
-			"<div style=""float: right; margin-right: 4px;""><button type=""button"" class=""EntryFormItemRestoreCancel ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"" id=""" & strPrefix & "RESTORECANCEL""><span class=""ui-button-text"" style=""padding-top: 0px; padding-bottom: 0px; padding-left: 1em;"">" & TXT_RESTORE & "</span></button></div>"
+		strReturn = strReturn & vbCrLf & _
+			"<div style=""float: right; margin-right: 4px; display: none;"">" & _
+			"<button type=""button"" class=""EntryFormItemDontRestoreCancel btn btn-default btn-xs"" id=""" & strPrefix & "RESTOREDELETE"">" & _
+			"<span class=""glyphicon glyphicon-remove"" aria-hidden=""true""></span> " & TXT_DONT_RESTORE & _
+			"</button>" & _
+			"</div>" & vbCrLf & _
+			"<div style=""float: right; margin-right: 4px;"">" & _
+			"<button type=""button"" class=""EntryFormItemRestoreCancel btn btn-default btn-xs"" id=""" & strPrefix & "RESTORECANCEL"">" & _
+			"<span class=""glyphicon glyphicon-share"" aria-hidden=""true""></span> " & TXT_RESTORE & _
+			"</button>" & _
+			"</div>"
 	End IF
 
 	strReturn = strReturn & _
@@ -1547,9 +1677,9 @@ Function makeRecordNoteEntry(xmlNoteNode, strField)
 
 	If Not Nl(dCancelled) Then
 		strReturn = strReturn & _
-			"<span class=""EntryFormItemCancelledDetails""><span class=""Alert"">" & IIf(bCancelError,TXT_CANCELLED_ERROR,TXT_NO_LONGER_APPLICABLE) & "</span>" & TXT_COLON & dCancelled & " (" & strCancelledBy & ")</span><br>" & vbCrLf 
+			"<span class=""EntryFormItemCancelledDetails""><span class=""Alert"">" & IIf(bCancelError,TXT_CANCELLED_ERROR,TXT_NO_LONGER_APPLICABLE) & "</span>" & TXT_COLON & dCancelled & " (" & strCancelledBy & ")</span><br>" & vbCrLf
 	End If
-	
+
 	If bHighPriority Then
 		strReturn = strReturn & _
 			"<img src=""/images/alert.gif"" border=""0"">&nbsp;"
@@ -1569,9 +1699,9 @@ End Function
 Function makeRecordNoteFieldVal(rst,strField,bUseContent)
 	Dim strReturn, bHasCancelledSection
 	Dim xmlDoc, xmlNode, xmlNoteNode
-	
+
 	Call openRecordNoteTypeRecordsets()
-	
+
 	Dim intCanDeleteRecordNote, intCanUpdateRecordNote
 	intCanDeleteRecordNote = get_db_option("CanDeleteRecordNote" & ps_strDbArea)
 	intCanUpdateRecordNote = get_db_option("CanUpdateRecordNote" & ps_strDbArea)
@@ -1591,14 +1721,14 @@ Function makeRecordNoteFieldVal(rst,strField,bUseContent)
 		.async = False
 		.setProperty "SelectionLanguage", "XPath"
 	End With
-	
+
 	If bUseContent Then
 		xmlDoc.loadXML Nz(rst(strField).Value,"<" & strField & "/>")
 	Else
 		xmlDoc.loadXML "<" & strField & "/>"
 	End If
 	Set xmlNode = xmlDoc.selectSingleNode("/" & strField)
-	
+
 	Dim intCount
 	intCount = 1
 
@@ -1613,7 +1743,7 @@ Function makeRecordNoteFieldVal(rst,strField,bUseContent)
 	strReturn = strReturn & _
 		"<li data-action=""cancel"" data-cancel-type=""na"" data-cancel-template=" & AttrQs(Server.HTMLEncode("<span class=""EntryFormItemCancelledDetails""><span class=""Alert"">" & TXT_NO_LONGER_APPLICABLE & "</span>" & TXT_COLON & DateString(Now(), True) & " (" & user_strMod & ")<br></span>")) & "><a style=""cursor: pointer;"">" & TXT_CANCEL & TXT_COLON & TXT_NO_LONGER_APPLICABLE & "</a></li>" & vbCrLf & _
 		"<li data-action=""cancel"" data-cancel-type=""error"" data-cancel-template=" & AttrQs(Server.HTMLEncode("<span class=""EntryFormItemCancelledDetails""><span class=""Alert"">" & TXT_CANCELLED_ERROR & "</span>" & TXT_COLON & DateString(Now(), True) & " (" & user_strMod & ")<br></span>")) & "><a style=""cursor: pointer;"">" & TXT_CANCEL & TXT_COLON & TXT_CANCELLED_ERROR & "</a></li></ul>" & vbCrLf & _
-		"<button class=""ui-state-default ui-corner-all EntryFormItemAdd"" type=""button"" id=""" & strField & "_add_button"">" & TXT_ADD & "</button>" & vbCrLf & _
+		"<button class=""btn btn-default EntryFormItemAdd"" type=""button"" id=""" & strField & "_add_button"">" & TXT_ADD & "</button>" & vbCrLf & _
 		"<div id=""" & strField & "_NoteArea"" class=""EntryFormNotesContainer"" data-add-tmpl=" & AttrQs(Server.HTMLEncode(makeRecordNoteEntryTemplate(strField))) & ">" & vbCrLf & _
 		"<input type=""hidden"" name=""" & strField & "_UPDATE_IDS"" class=""EntryFormNotesUpdateIds"" id=""" & strField & "_UPDATE_IDS"" value="""">" & vbCrLf & _
 		"<input type=""hidden"" name=""" & strField & "_DELETE_IDS"" class=""EntryFormNotesDeleteIds"" id=""" & strField & "_DELETE_IDS"" value="""">" & vbCrLf & _
@@ -1627,7 +1757,7 @@ Function makeRecordNoteFieldVal(rst,strField,bUseContent)
 		If Not bHasCancelledSection Then
 			If Not Nl(xmlNoteNode.getAttribute("CANCELLED_DATE")) Then
 				bHasCancelledSection = True
-				strReturn = strReturn & "<br><button class=""ui-state-default ui-corner-all EntryFormItemViewHidden"" type=""button"">" & TXT_VIEW_CANCELLED & "</button><div style=""display: none;"" class=""EntryFormItemCancelled"">"
+				strReturn = strReturn & "<br><button class=""btn btn-default EntryFormItemViewHidden"" type=""button"">" & TXT_VIEW_CANCELLED & "</button><div style=""display: none;"" class=""EntryFormItemCancelled"">"
 			End If
 		End If
 		strReturn = strReturn & makeRecordNoteEntry(xmlNoteNode, strField)
@@ -1640,7 +1770,7 @@ Function makeRecordNoteFieldVal(rst,strField,bUseContent)
 
 	If bFeedback Then
 		strReturn = strReturn & getFeedback(strField,False,False)
-	End If		
+	End If
 
 	makeRecordNoteFieldVal = strReturn
 End Function
@@ -1697,12 +1827,17 @@ Function printRow(strFieldName,strFieldDisplay,strFieldVal,bFieldColumn,bHasHelp
 	</td>
 	<%If bFieldColumn Then%>
 	<td class="field-icon-cell icon-<%=IIf(bFeedbackForm,1,2)%>">
-		<%If bHasVersions Then%>
-			<span aria-hidden="true" class="glyphicon glyphicon-duplicate medium-icon ShowVersions SimulateLink" title="<%=strFieldDisplay & TXT_COLON & TXT_VERSIONS%>"
-				data-ciocid="<%=IIf(ps_intDbArea=DM_VOL, Request("VNUM"), strNUM)%>" data-ciocfield="<%=strFieldName%>" data-ciocfielddisplay=<%=AttrQs(strFieldDisplay)%>></span>
-		<%End If%>
 		<%If bHasHelp Then%>
-			<a href="javascript:openWin('<%=makeLink("fieldhelp.asp","field=" & strFieldName & "&amp;Ln=" & g_objCurrentLang.Culture,"Ln")%>','fHelp')"><span aria-hidden="true" class="glyphicon glyphicon-question-sign medium-icon" title="<%=TXT_HELP%>"></span></a>
+			<a class="btn btn-xs btn-default" href="javascript:openWin('<%=makeLink("fieldhelp.asp","field=" & strFieldName & "&amp;Ln=" & g_objCurrentLang.Culture,"Ln")%>','fHelp')">
+				<span class="glyphicon glyphicon-question-sign medium-icon legend-button-icon" title="<%=strFieldDisplay & TXT_COLON & TXT_HELP%>"></span></a>
+		<%End If%>
+		<%If bHasVersions Then%>
+			<span class="btn btn-xs btn-default">
+			<span class="glyphicon glyphicon-duplicate medium-icon legend-button-icon ShowVersions"
+				title="<%=strFieldDisplay & TXT_COLON & TXT_VERSIONS%>"
+				data-ciocid="<%=IIf(ps_intDbArea=DM_VOL, Request("VNUM"), strNUM)%>"
+				data-ciocfield="<%=strFieldName%>" data-ciocfielddisplay=<%=AttrQs(strFieldDisplay)%>></span>
+			</span>
 		<%End If%>
 	</td>
 	<%End If%>
@@ -1714,15 +1849,15 @@ Function makeSocialMediaFieldVal(rst,bUseContent)
 	Dim strReturn, strCon
 	Dim strName, strGeneralURL, strIcon, strFeedback
 	Dim xmlDoc, xmlNode, xmlChildNode
-	
+
 	strCon = vbNullString
-	
+
 	Set xmlDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
 	With xmlDoc
 		.async = False
 		.setProperty "SelectionLanguage", "XPath"
 	End With
-	
+
 	If bUseContent Then
 		xmlDoc.loadXML Nz(rst("SOCIAL_MEDIA").Value,"<SOCIAL_MEDIA/>")
 	Else
@@ -1758,7 +1893,7 @@ Function makeSocialMediaFieldVal(rst,bUseContent)
 	If bFeedback Then
 		junk = prepSocialMediaFeedback(rsFb)
 	End If
-	
+
 	Set xmlNode = xmlDoc.selectSingleNode("/SOCIAL_MEDIA")
 	If Not xmlNode Is Nothing Then
 		For Each xmlChildNode in xmlNode.childNodes
@@ -1778,11 +1913,11 @@ Function makeSocialMediaFieldVal(rst,bUseContent)
 					" name=" & AttrQs("SOCIAL_MEDIA_" & xmlChildNode.getAttribute("ID")) & _
 					" class=""protourl unique form-control""" & _
 					" value=" & AttrQs(Replace(Ns(xmlChildNode.getAttribute("Proto")), "http://", vbNullString) & xmlChildNode.getAttribute("URL")) & _
-					" size=" & TEXT_SIZE-25 & _
-					" unique=""SOCIAL_MEDIA""" & _
+					" size=" & AttrQs(TEXT_SIZE-25) & _
+					" unique=" & AttrQs("SOCIAL_MEDIA") & _
 					" maxlength=""255""" & _
 					" title=" & AttrQs(strName) & _
-					">" 
+					">"
 			If bFeedback Then
 				strFeedback = getSocialMediaFeedback(xmlChildNode.getAttribute("ID"), TXT_FEEDBACK_NUM, TXT_COLON, TXT_UPDATE, TXT_CONTENT_DELETED)
 				If Not Nl(strFeedback) Then
@@ -1849,7 +1984,7 @@ Function makeLanguageContents(rst,bUseContent)
 	If bFeedback Then
 		strFeedbackLNIDs = prepLanguagesFeedback(rsFb)
 	End If
-	
+
 	Dim cmdLanguage, rsLanguage, aLanguageDetails
 	Set cmdLanguage = Server.CreateObject("ADODB.Command")
 	With cmdLanguage
@@ -1862,11 +1997,11 @@ Function makeLanguageContents(rst,bUseContent)
 		.Parameters.Append .CreateParameter("@LNIDS", adVarChar, adParamInput, 5000, strFeedbackLNIDs)
 	End With
 	Set rsLanguage = cmdLanguage.Execute
-	
+
 	junk = makeLanguageDetailList(rsLanguage)
 
 	Set rsLanguage = rsLanguage.NextRecordset
-	
+
 	With rsLanguage
 		strReturn = strReturn & "<table id=""LN_existing_add_table"" class=""NoBorder cell-border-bottom"">"
 		While Not .EOF
@@ -1906,7 +2041,7 @@ Function makeLanguageContents(rst,bUseContent)
 
 	rsLanguage.Close
 	Set rsLanguage = Nothing
-	Set cmdLanguage = Nothing			
+	Set cmdLanguage = Nothing
 
 	If bFeedback Then
 		strReturn = strReturn & getLanguageNotesFeedback(strNotes, TXT_FEEDBACK_NUM, TXT_COLON, TXT_UPDATE, TXT_CONTENT_DELETED)
@@ -1944,7 +2079,7 @@ Sub printAutoFields(rst, bUseContent)
 		strCreatedDate = Nz(DateString(rst.Fields("CREATED_DATE"),True),TXT_UNKNOWN)
 		strCreatedBy = Nz(rst.Fields("CREATED_BY"),TXT_UNKNOWN)
 	End If
-	
+
 	Call printRow("CREATED_DATE", _
 		TXT_DATE_CREATED, _
 		strCreatedDate & " (" & TXT_SET_AUTOMATICALLY & ")", _

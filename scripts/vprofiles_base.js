@@ -1,4 +1,4 @@
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +15,8 @@
 // =========================================================================================
 
 (function($) {
-window['init_vprofiles'] = function(show_tab, root_path, strRemove, specific_interest_url) {
-	var tabs, interests, default_results_area=null, dlg_selected_interests,
-	selected_interests, 
+window['init_vprofiles'] = function(show_tab, root_path, strRemove, specific_interest_url, txt_not_found, interest_complete_url) {
+	var tabs, default_results_area=null, initial_interest = null,
 	onbeforeunload = function(cache) {
 		cache['personal_values'] = get_form_values('#personalform');
 		cache['last_tab'] = tabs.tabs('option', 'active');
@@ -122,129 +121,24 @@ window['init_vprofiles'] = function(show_tab, root_path, strRemove, specific_int
 			tabs.tabs( "refresh" );
 		}
 	},
-	find_interests = function(event) {
-		if (specific_interest_url) {
-			$.get(specific_interest_url, null, interests_callback, 'html');
-		} else if (default_results_area) {
-			$('#results_area').html(default_results_area);
-		}
-		dlg_selected_interests.empty().append(selected_interests.children().clone(true));
-		if (!interests) {
-			interests = $('#interest_dialog').dialog({ modal: true, width: 675, height: 400 });
-		} else {
-			interests.dialog('open');
-		}
-		return false;
+	restore_initial_areas_of_interest = function(event) {
+		$('#AI_existing_add_container').html(initial_interests);
 	},
-	interests_callback = function(data) {
-		var results_area = $('#results_area'),
-			interests_input = dlg_selected_interests.find('.selected_interests_input'),
-			val = $.trim(interests_input[0].value), interest_ids = (val && val.split(',')) || [];
-
-		if (! default_results_area) {
-			default_results_area = results_area.html();
-		}
-		results_area.html(data).
-			find('.InterestResult').each(function() {
-				var self = $(this), id=self.data('id');
-				if ($.inArray(id.toString(), interest_ids) !== -1) {
-					self.find('.interest_add').hide();
-					self.find('.interest_added').show();
-				}
-			});
-	},
-	interests_submit = function(event) {
-		var data = $(this).serialize();
-		$.post('../interestfind.asp', data, interests_callback, 'html');
-		return false;
-	},
-	sortfn = function(a,b) {
-		var left = $(a).text().toUpperCase(), right = $(b).text().toUpperCase();
-		if (left < right) { return (-1 * direction); }
-		if (left > right) { return (1 * direction); }
-		return 0;
-	},
-	add_interest = function(event) {
-		var self = $(this), parent = self.parents('li.InterestResult:first');
-			id = parent.data('id'), interests_input = dlg_selected_interests.find('.selected_interests_input'),
-			val = $.trim(interests_input[0].value), interest_ids = (val && val.split(',')) || [];
-
-		if ($.inArray(id.toString(), interest_ids) === -1) {
-			dlg_selected_interests.find('.NoSelectedInterests').hide();
-
-			interest_ids.push(id);
-			interests_input[0].value = interest_ids.join(',');
-			
-			
-			dlg_selected_interests.append($('<div class="selected_interest">' + parent.find('.source_interest_text').html() + ' [ <a href="#" class="remove_interest"><img src="' + root_path + 'images/redx.gif" alt="' + strRemove + '"></a> ]</div>').data('id', id));
-
-			
-			var interests = dlg_selected_interests.find('div.selected_interest').get();
-			$.each(interests, function(index, item) { dlg_selected_interests.append(item); });
-
-		}
-		self.hide();
-		parent.find('.interest_added').show();
-		return false;
-	},
-	remove_interest = function(event) {
-		var self = $(this), parent = self.parents('.selected_interest:first');
-			id = parent.data('id'), term_list= parent.parents('.TermList'), 
-			interests_input = term_list.find('.selected_interests_input'),
-			val = $.trim(interests_input[0].value), interest_ids = (val && val.split(',')) || [];
-
-		interest_ids = $.grep(interest_ids, function(item, index) { return item !== id.toString(); });
-		interests_input[0].value = interest_ids.join(',');
-
-		parent.remove();
-
-		$('#interest_add_' + id).show();
-		$('#interest_added_' + id).hide();
-
-		if (interest_ids.length === 0) {
-			term_list.find('.NoSelectedInterests').show();
-		}
-		
-		return false;
-	},
-	clear_interests = function(event) {
-		var self = $(this), parent = self.parents('.InterestList:first');
-
-		parent.find('.selected_interests_input')[0].value = '';
-		parent.find('.selected_interest').remove();
-		parent.find('.NoSelectedInterests').show();
-		
-		return false;
-	},
-	dlg_clear_interests = function(event) {
-		var results_area = $('#results_area');
-
-		results_area.find('.interest_added').hide();
-		results_area.find('.interest_add').show();
-		clear_interests.call(this);
-
-
-		return false;
-	},
-	accept_interests = function(event){
-		interests.dialog('close');
-		selected_interests.empty().append(dlg_selected_interests.children());
-		return false;
+	do_clear_interests = function(event) {
+		$('#AI_existing_add_container input:checked').prop('checked', false);
 	};
-	
+
 	$(function($) {
 		tabs = $("#TabbedDisplayTabArea").tabs({selected: show_tab});
 		init_cached_state('#criteria_form');
-		
+
 		cache_register_onbeforeunload(onbeforeunload);
 		cache_register_onbeforerestorevalues(onbeforerestore);
 
+		init_interests(txt_not_found, interest_complete_url)
+
 		restore_cached_state();
-
-		dlg_selected_interests = $('#dlg_selected_interests');
-		selected_interests = $('#selected_interests');
-
-
+		initial_interests = $('#AI_existing_add_container').html();
 
 		$(document).on('click', 'input.referral_outcome_edit', edit_outcome);
 		$(document).on('click', 'input.referral_hide', do_referral_hide);
@@ -252,21 +146,9 @@ window['init_vprofiles'] = function(show_tab, root_path, strRemove, specific_int
 		$('#confirm_okay').click(do_referral_hide_okay);
 		$('#outcome_cancel').click(do_outcome_cancel);
 		$('#outcome_form').submit(do_outcome_submit);
-		$('#interests_button').click(find_interests);
-		$('#interest_search_form').submit(interests_submit);
-		$('#interest_dialog').delegate('.interest_add', 'click', add_interest);
-		$('#interest_dialog, #selected_interests').delegate('.remove_interest', 'click', remove_interest);
-		$('#clear_button').click(dlg_clear_interests);
-		$('#clear_interests').click(clear_interests);
-		$('#accept_button').click(accept_interests);
+		$('#criteria_reset_button').click(restore_initial_areas_of_interest);
+		$('#clear_interests').click(do_clear_interests);
 
-		var interests_cache = selected_interests.html();
-		$('#criteria_reset_button').click(function() {
-			$('#criteria_form')[0].reset();
-			selected_interests.html(interests_cache);
-			return false;
-		});
 	});
 };
 })(jQuery);
-

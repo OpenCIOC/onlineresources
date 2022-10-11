@@ -254,21 +254,19 @@ If Not bNew And Not bRSError Then
 		bRSError = True
 		Call handleError(TXT_ERROR & Nz(Err.Description, TXT_UNKNOWN_ERROR_OCCURED), vbNullString, vbNullString)
 	Else
-		Dim strVersionCon
-		strVersionCon = vbNullString
-		strVersions = "[ "
+		strVersions = "<ul>"
 		With rsOrg
 			While Not .EOF
-				strVersions = strVersions & strVersionCon & _
+				strVersions = strVersions & "<li>" & _
 					"<span class=""SimulateLink HistorySummary NoLineLink"" data-cioclang=""" & .Fields("LangID") & """ data-ciocid=""" & strVNUM & """>" & _
-						"<img src=""" & ps_strPathToStart & "images/versions.gif"" width=""17"" height=""17"" alt=" & AttrQs(TXT_FIELD_HISTORY & TXT_COLON) & ">" & _
-						"&nbsp;" & .Fields("LanguageName") & _
-						"</span>"
-				strVersionCon = " | "
+						TXT_PAST_CHANGES_SUMMARY & _
+						.Fields("LanguageName") & _
+					"</span>" & _
+					"</li>"
 				.MoveNext
 			Wend
 		End With
-		strVersions = strVersions & " ]"
+		strVersions = strVersions & "</ul>"
 		Set rsOrg = rsOrg.NextRecordSet
 	End If
 	If Not bRSError And rsOrg.EOF Then
@@ -381,21 +379,6 @@ End Select
 <%= TXT_JAVASCRIPT_REQUIRED %>
 </p>
 <div class="HideNoJs">
-<table aria-hidden="true" class="BasicBorder cell-padding-3 max-width-lg clear-line-below">
-	<tr>
-		<th class="RevTitleBox" colspan="2"><%=TXT_LEGEND%></th>
-	</tr>
-	<tr>
-		<td><span class="glyphicon glyphicon-question-sign medium-icon"></span></td>
-		<td><%=TXT_LEGEND_HELP%></td>
-	</tr>
-	<% If Not bNew Then %>
-	<tr>
-		<td><span class="glyphicon glyphicon-duplicate medium-icon"></span></td>
-		<td><%=TXT_LEGEND_VERSIONS%></td>
-	</tr>
-	<% End If %>
-</table>
 
 <form id="EntryForm" name="EntryForm" action="entryform2.asp" role="form" class="form-horizontal" method="post" lang="<%=objUpdateLang.Culture%>">
 <div style="display: none;">
@@ -403,6 +386,8 @@ End Select
 <%=g_strCacheFormVals%>
 <input type="hidden" name="UpdateLn" value="<%=objUpdateLang.Culture%>">
 </div>
+
+<div class="row clear-line-below">
 <%
 Call openVOLCommunitySetListRst(CSET_RECORD, strVNUM)
 If rsListVOLCommunitySet.RecordCount=1 Then
@@ -411,13 +396,58 @@ If rsListVOLCommunitySet.RecordCount=1 Then
 <%
 Else
 %>
-<p><strong><%=TXT_RECORD_ASSIGNED_TO_SETS%></strong>
-<%=makeVolCommunitySetCheckList("CommunitySetID")%>
-<br><%=TXT_INDICATES_SET_CANT_BE_CHANGED%></p>
+	<div class="col-md-6">
+		<div aria-hidden="true" class="panel panel-default">
+			<div class="panel-heading">
+				<h2><span class="fa fa-gear" aria-hidden="true"></span>
+					<%=TXT_COMMUNITY_SET_MANAGEMENT%></h2>
+			</div>
+			<div class="panel-body">
+				<p><strong><%=TXT_RECORD_ASSIGNED_TO_SETS%></strong>
+				<%=makeVolCommunitySetCheckList("CommunitySetID")%>
+				<br><%=TXT_INDICATES_SET_CANT_BE_CHANGED%></p>
+			</div>
+		</div>
+	</div>
 <%
 End If
 Call closeVOLCommunitySetListRst()
 %>
+	<div class="col-md-6 hidden-xs hidden-sm">
+		<div aria-hidden="true" class="panel panel-default">
+			<div class="panel-heading">
+				<h2><span class="fa fa-map-o"></span><%=TXT_LEGEND%></h2>
+			</div>
+			<div class="panel-body no-padding">
+				<table class="BasicBorder cell-padding-4 full-width inset-table form-table responsive-table">
+					<tbody>
+						<tr>
+							<td><span class="btn btn-xs btn-default"><span class="glyphicon glyphicon-question-sign medium-icon legend-button-icon" title="<%=TXT_HELP%>"></span></span></td>
+							<td><%=TXT_LEGEND_HELP%></td>
+						</tr>
+						<% If Not bNew Then %>
+						<tr>
+							<td><span class="btn btn-xs btn-default"><span class="glyphicon glyphicon-duplicate medium-icon legend-button-icon" title="<%=TXT_HISTORY%>"></span></span></td>
+							<td>
+								<p><%=TXT_LEGEND_VERSIONS%></p>
+<%
+If Not bNew Then
+%>
+								<%=strVersions%>
+<%
+End If
+%>
+
+							</td>
+						</tr>
+						<% End If %>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
 <%If intFormType = EF_UPDATE Then%>
 <input type="hidden" name="OPID" value="<%=rsOrg("OP_ID")%>">
 <%	If intCurSearchNumber >= 0 Then%>
@@ -440,39 +470,61 @@ If bFeedback Then
 	Set dicFb = Server.CreateObject("Scripting.Dictionary")
 	i=1
 %>
-<p><span class="AlertBubble"><%=TXT_CHECK_FEEDBACK%></span></p>
-<table class="NoBorder cell-padding-2 clear-line-below">
+<div class="panel panel-danger">
+	<div class="panel-heading">
+		<h3><%=TXT_CHECK_FEEDBACK%></h3>
+	</div>
+	<div class="panel-body">
 <%
 	With rsFb
 		.MoveFirst
 		While Not .EOF
 %>
-<tr>
-	<td class="FieldLabelLeftClr"><%=TXT_FEEDBACK_NUM%><%=i%><%If g_bMultiLingual Then%> (<%=.Fields("LanguageName")%>)<%End If%><%=TXT_COLON%></td>
-	<td class="Alert"><%=TXT_SUBMITTED_BY & TXT_COLON%><%=.Fields("SUBMITTED_BY")%>
-	<%If Not Nl(.Fields("SUBMITTED_BY_EMAIL")) Then%><br><%=TXT_SUBMITTER_EMAIL & TXT_COLON%><a href="mailto:<%=.Fields("SUBMITTED_BY_EMAIL")%>"><%=.Fields("SUBMITTED_BY_EMAIL")%></a><%End If%>
+	<div class="row row-border-top">
+		<div class="col-sm-3 col-md-3 fb-data-label">
+			<%=TXT_FEEDBACK_NUM%><%=i%><%If g_bMultiLingual Then%> (<%=.Fields("LanguageName")%>)<%End If%><%=TXT_COLON%>
+		</div>
+		<div class="col-sm-9 col-md-9">
+			<table class="NoBorder cell-padding-2">
+				<tr>
+					<td><%=TXT_SUBMITTED_BY & TXT_COLON%></td>
+					<td><strong><%=.Fields("SUBMITTED_BY")%></strong><%If Not Nl(.Fields("SUBMITTED_BY_EMAIL")) Then%>, <a href="mailto:<%=.Fields("SUBMITTED_BY_EMAIL")%>"><%=.Fields("SUBMITTED_BY_EMAIL")%></a><%End If%>, <%=.Fields("SUBMIT_DATE")%></td>
+				</tr>
 <%If .Fields("REMOVE_RECORD") Then%>
-	<br><%=TXT_REMOVE_RECORD_REQUEST%>
+				<tr>
+					<td><%=TXT_STATUS & TXT_COLON%></td>
+					<td><span class="Alert"><%=TXT_REMOVE_RECORD_REQUEST%></span></td>
+				</tr>
 <%Else%>
-	<br><%=TXT_FULL_UPDATE & TXT_COLON%><%If .Fields("FULL_UPDATE") Then%><%=TXT_YES%><%If .Fields("NO_CHANGES") Then%> (<%=TXT_NO_CHANGES_REQUIRED%>)<%End If%><%Else%><%=TXT_NO%><%End If%>
+				<tr>
+					<td><%=TXT_STATUS & TXT_COLON%></td>
+					<td><%=TXT_FULL_UPDATE & TXT_COLON%><%If .Fields("FULL_UPDATE") Then%><%=TXT_YES%><%If .Fields("NO_CHANGES") Then%> (<%=TXT_NO_CHANGES_REQUIRED%>)<%End If%><%Else%><%=TXT_NO%><%End If%></td>
+				</tr>
 <%End If%>
-	<%If Not Nl(.Fields("FB_NOTES")) Then%><br><%=TXT_NOTES & TXT_COLON%><%=.Fields("FB_NOTES")%><%End If%></td>
-</tr>
 <%
-			i=i+1
+If Not Nl(.Fields("FB_NOTES")) Then
+%>
+				<tr>
+					<td><%=TXT_NOTES & TXT_COLON%></td>
+					<td><span class="Alert"><%=.Fields("FB_NOTES")%></span></td>
+				</tr>
+<%
+End If
+%>
+			</table>
+		</div>
+	</div>
+<%
+			i = i+1
 			dicFb(.Fields("Culture").Value) = .Fields("LanguageName")
 			.MoveNext
 		Wend
 	End With
 %>
-</table>
+
+	</div>
+</div>
 <br>
-<%
-End If
-If Not bNew Then
-%>
-<p class="Info"><%=TXT_PAST_CHANGES_TO_THIS_RECORD & strVersions%>
-</p>
 <%
 End If
 %>
@@ -485,7 +537,7 @@ End If
 		<%End If%>
 	</div>
 	<div class="panel-body no-padding">
-		<table class="BasicBorder cell-padding-4 full-width inset-table form-table responsive-table">
+		<table class="BasicBorder cell-padding-5 full-width inset-table form-table responsive-table">
 <%
 Dim strFieldName, _
 	strFieldContents, _
@@ -498,24 +550,32 @@ Call printUpdatedFields(rsOrg, intFormType = EF_UPDATE, False)
 Call printRecordOwner(rsOrg, Not bNew)
 If intFormType <> EF_UPDATE Then
 	Call printRow("VNUM", TXT_RECORD_NUM, _
-		"<input type=""checkbox"" name=""AutoAssignVNUM"" id=""AutoAssignVNUM"" checked onClick=""changeAutoAssign(this, document.EntryForm.VNUM, document.EntryForm.VNUMButton);"">&nbsp;<label for=""AutoAssignVNUM"">" & TXT_AUTO_ASSIGN_LOWEST_NUM & "</label>" & _
-		"<br><input type=""text"" name=""VNUM"" title=" & AttrQs(TXT_RECORD_NUM) & " size=""11"" maxlength=""10"" disabled class=""record-num"">" & _
-		" <input type=""button"" id=""VNUMButton"" value=""" & TXT_LOWEST_UNUSED_FOR & "" & user_strAgency & """ onClick=""document.EntryForm.VNUM.value='" & strNewVNUM & "';"" disabled>" & _
+		"<label for=" & AttrQs("AutoAssignNUM") & ">" & _
+		"<input type=""checkbox"" id=" & AttrQs("AutoAssignVNUM") & " name=""AutoAssignVNUM"" checked onClick=""changeAutoAssign(this, document.EntryForm.VNUM, document.EntryForm.VNUMButton);"">" & TXT_AUTO_ASSIGN_LOWEST_NUM & _
+		"</label>" & vbCrLf & _
+		"<div class=""form-inline"">" & _
+		"<input type=""text"" name=""VNUM"" title=" & AttrQs(TXT_RECORD_NUM) & " size=""11"" maxlength=""10"" disabled class=""record-num form-control"">" & _
+		" <input type=""button"" id=""VNUMButton"" value=""" & TXT_LOWEST_UNUSED_FOR & "" & user_strAgency & """ onClick=""document.EntryForm.VNUM.value='" & strNewVNUM & "';"" class=""btn btn-default"" disabled>" & _
+		"</div>" & _
 		" [ <a href=""javascript:openWin('" & makeLinkB("vnumfind.asp") & "','aFind')"">" & TXT_LOWEST_UNUSED_FOR & TXT_ALL_AGENCIES & "</a> ]", _
 		True,True,False,True,bEnforceReqFields,False,False)
 End If
+
 If intFormType <> EF_UPDATE Then
 	strFieldVal = makeNUMContents(strNUM, Null, False)
 	Call printRow("NUM",TXT_ORG_RECORD_NUM, _
 		strFieldVal, _
-		True,True,False,True,False,False,True)
+		True,True,False,True,bEnforceReqFields,False,True)
 	strFieldVal = makeTextFieldVal("POSITION_TITLE", _
 			vbNullString, _
 			150, _
 			True)
+	strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>" & TXT_COLON & _
+		TXT_INST_POSITION_TITLE & "</p>" & vbCrLf & _
+		strFieldVal
 	Call printRow("POSITION_TITLE",TXT_POSITION_TITLE, _
 		strFieldVal, _
-		True,True,False,True,False,False,True)
+		True,True,False,True,bEnforceReqFields,False,True)
 End If
 
 While Not rsFields.EOF
@@ -544,6 +604,12 @@ While Not rsFields.EOF
 					IIf(strFieldName="REQUEST_DATE",True,False),False,False,False,False, _
 					rsFields.Fields("CanUseFeedback") _
 					)
+				Select Case strFieldName
+					Case "DISPLAY_UNTIL"
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_IMPORTANT & "</span>" & TXT_COLON & _
+							TXT_INST_DISPLAY_UNTIL & "</p>" & vbCrLf & _
+							strFieldVal
+				End Select
 			Case "m"
 				strFieldVal = makeMemoFieldVal(strFieldName, _
 					strFieldContents, _
@@ -551,6 +617,12 @@ While Not rsFields.EOF
 					rsFields.Fields("CanUseFeedback"), _
 					rsFields.Fields("WYSIWYG") _
 					)
+				Select Case strFieldName
+					Case "DUTIES"
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_IMPORTANT & "</span>" & TXT_COLON & _
+							TXT_INST_DUTIES & "</p>" & vbCrLf & _
+							strFieldVal
+				End Select
 			Case "t"
 				If rsFields.Fields("ValidateType") = "w" Then
 					Dim strProtocol
@@ -572,6 +644,12 @@ While Not rsFields.EOF
 							rsFields.Fields("CanUseFeedback") _
 							)
 				End If
+				Select Case strFieldName
+					Case "POSITION_TITLE"
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>" & TXT_COLON & _
+							TXT_INST_POSITION_TITLE & "</p>" & vbCrLf & _
+							strFieldVal
+				End Select
 			Case "u"
 				strFieldVal = makeUserFieldVal(strFieldName, _
 					strFieldContents, _
@@ -586,7 +664,9 @@ While Not rsFields.EOF
 					Case "COMMITMENT_LENGTH"
 						strFieldVal = makeCommitmentLengthContents(rsOrg, Not bNew)
 					Case "CONTACT"
-						strFieldVal = makeContactFieldVal(rsOrg, strFieldName, Not bNew)
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>. " & _
+							TXT_INST_VOL_CONTACT & "</p>" & vbCrLf & _
+							makeContactFieldVal(rsOrg, strFieldName, Not bNew)
 					Case "EVENT_SCHEDULE"
 						strFieldVal = makeEventScheduleContentsEntryForm(rsOrg, Not bNew)
 					Case "INTERACTION_LEVEL"
@@ -657,7 +737,7 @@ While Not rsFields.EOF
 			bHasLabel = True
 		End If
 		Call printRow(strFieldName,rsFields.Fields("FieldDisplay"),strFieldVal, _
-			True,rsFields.Fields("HasHelp"),Nz(rsFields.Fields("ChangeHistory"), 0) > 0 And Not bNew,Not rsFields.Fields("AllowNulls"),False,bFieldHasFeedback,bHasLabel)
+			True,rsFields.Fields("HasHelp"),Nz(rsFields.Fields("ChangeHistory"), 0) > 0 And Not bNew,Not rsFields.Fields("AllowNulls"),bEnforceReqFields,bFieldHasFeedback,bHasLabel)
 	End If
 	rsFields.MoveNext
 Wend
@@ -727,8 +807,7 @@ If bHasSchedule Then
 End If
 If bInterests Then
 %>
-	entryform.interest_complete_url = "<%= makeLinkB(ps_strPathToStart & "jsonfeeds/interest_generator.asp") %>";
-	init_interests("<%= TXT_NOT_FOUND %>");
+	init_interests("<%= TXT_NOT_FOUND %>", "<%= makeLinkB(ps_strPathToStart & "jsonfeeds/interest_generator.asp") %>");
 <%
 End If
 If bNumNeeded Then
@@ -746,7 +825,22 @@ If bHasSchedule Then
 <%
 End If
 %>
+	var validator = init_client_validation('#EntryForm', '<%= TXT_VALIDATION_ERRORS_TITLE %>');
+
 	init_check_for_autochecklist(<%=JSONQs(TXT_UNADDED_CHECKLIST_ALERT,True)%>);
+<%
+If Not bNew Then
+%>
+	if (!validator.form()) {
+		ef_node.show();
+		$('html').scrollTop(scrollTop);
+		alert("<%= TXT_VALIDATION_ERRORS_MESSAGE %>");
+		ef_node.hide();
+	}
+
+<%
+End If
+%>
 <%
 If Not bNew Then
 Call printHistoryDialogJavaScript(False)
@@ -759,8 +853,11 @@ End If
 <script type="text/javascript">
     tinymce.init({
         selector: '.WYSIWYG',
-        plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table',
+        plugins: 'lists autolink link image charmap preview searchreplace visualblocks fullscreen table autoresize paste',
         toolbar: 'undo redo styles bullist numlist link | bold italic forecolor removeformat image table | copy cut paste searchreplace fullscreen',
+        mobile: {
+            toolbar: 'styles bullist numlist link bold italic'
+        },
 		menubar: false,
 		convert_urls: false,
 		cleanup: true,

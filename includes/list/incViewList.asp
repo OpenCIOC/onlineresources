@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -87,7 +87,7 @@ Function makeViewList(intSelected, strSelectName, bIncludeBlank, bMultiple)
 		If .EOF Then
 			strReturn = TXT_NO_VALUES_AVAILABLE
 		Else
-			strReturn = strReturn & "<select name=" & AttrQs(strSelectName) & " id=" & AttrQs(strSelectName) & _
+			strReturn = strReturn & "<select class=""form-control"" name=" & AttrQs(strSelectName) & " id=" & AttrQs(strSelectName) & _
 							StringIf(bMultiple, " multiple") & ">"
 			If bIncludeBlank Then
 				strReturn = strReturn & "<option value=""""> -- </option>"

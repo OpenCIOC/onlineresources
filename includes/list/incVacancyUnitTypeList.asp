@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -53,7 +53,7 @@ Function makeVacancyUnitTypeList(strSelected, strSelectName, bIncludeBlank, strO
 			strReturn = TXT_NO_VALUES_AVAILABLE
 		Else
 			.MoveFirst
-			strReturn = strReturn & "<select name=" & AttrQs(strSelectName) & " id=" & AttrQs(strSelectName)
+			strReturn = strReturn & "<select class=""form-control"" name=" & AttrQs(strSelectName) & " id=" & AttrQs(strSelectName)
 			If Not Nl(strOnChange) Then
 				strReturn = strReturn & " onChange=""" & strOnChange & """"
 			End If

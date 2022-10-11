@@ -23,10 +23,6 @@ CREATE TABLE [dbo].[GBL_Agency]
 [UpdatePasswordDefault] [bit] NOT NULL CONSTRAINT [DF_GBL_Agency_UpdatePasswordDefault] DEFAULT ((1)),
 [UpdateAccountLangID] [smallint] NOT NULL CONSTRAINT [DF_GBL_Agency_UpdateAccountLangID] DEFAULT ((0)),
 [NUMSize] [tinyint] NOT NULL CONSTRAINT [DF_GBL_Agency_NUMSize] DEFAULT ((4)),
-[GetInvolvedUser] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[GetInvolvedToken] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
-[GetInvolvedCommunitySet] [int] NULL,
-[GetInvolvedSite] [nvarchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
 [VNUMSize] [tinyint] NOT NULL CONSTRAINT [DF_GBL_Agency_VNUMSize] DEFAULT ((4)),
 [AutoImportFromICarol] [bit] NOT NULL CONSTRAINT [DF_GBL_Agency_AutoImportIcarol] DEFAULT ((0))
 ) ON [PRIMARY]
@@ -46,8 +42,6 @@ GO
 ALTER TABLE [dbo].[GBL_Agency] ADD CONSTRAINT [FK_GBL_Agency_STP_Language] FOREIGN KEY ([UpdateAccountLangID]) REFERENCES [dbo].[STP_Language] ([LangID])
 GO
 ALTER TABLE [dbo].[GBL_Agency] ADD CONSTRAINT [FK_GBL_Agency_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
-GO
-ALTER TABLE [dbo].[GBL_Agency] ADD CONSTRAINT [FK_GBL_Agency_VOL_CommunitySet] FOREIGN KEY ([GetInvolvedCommunitySet]) REFERENCES [dbo].[VOL_CommunitySet] ([CommunitySetID]) ON DELETE SET NULL ON UPDATE CASCADE
 GO
 ALTER TABLE [dbo].[GBL_Agency] NOCHECK CONSTRAINT [FK_GBL_Agency_GBL_BaseTable_AgencyNUMCIC]
 GO

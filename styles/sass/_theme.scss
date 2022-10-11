@@ -92,6 +92,10 @@ a:visited.btn-default, .ui-widget-content .btn-default {
 	color: $btn-default-color;
 }
 
+.btn-default>.glyphicon, btn-default>.fa {
+	color: $btn-default-color !important;
+}
+
 .SimulateLink {
 	color: $LinkColour;
 	cursor: pointer;

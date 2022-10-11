@@ -1142,45 +1142,6 @@ window['init_cached_state'] = function(formselector) {
 })();
 
 
-/*! Copyright (c) 2010 Brandon Aaron (http://brandonaaron.net)
- * Licensed under the MIT License (LICENSE.txt).
- *
- * Version 2.1.2
- */
-
-(function($){
-
-$.fn.bgiframe = ($.browser.msie && /msie 6\.0/i.test(navigator.userAgent) ? function(s) {
-    s = $.extend({
-        top     : 'auto', // auto == .currentStyle.borderTopWidth
-        left    : 'auto', // auto == .currentStyle.borderLeftWidth
-        width   : 'auto', // auto == offsetWidth
-        height  : 'auto', // auto == offsetHeight
-        opacity : true,
-        src     : 'javascript:false;'
-    }, s);
-    var html = '<iframe class="bgiframe"frameborder="0"tabindex="-1"src="'+s.src+'"'+
-                   'style="display:block;position:absolute;z-index:-1;'+
-                       (s.opacity !== false?'filter:Alpha(Opacity=\'0\');':'')+
-                       'top:'+(s.top=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderTopWidth)||0)*-1)+\'px\')':prop(s.top))+';'+
-                       'left:'+(s.left=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderLeftWidth)||0)*-1)+\'px\')':prop(s.left))+';'+
-                       'width:'+(s.width=='auto'?'expression(this.parentNode.offsetWidth+\'px\')':prop(s.width))+';'+
-                       'height:'+(s.height=='auto'?'expression(this.parentNode.offsetHeight+\'px\')':prop(s.height))+';'+
-                '"/>';
-    return this.each(function() {
-        if ( $(this).children('iframe.bgiframe').length === 0 )
-            this.insertBefore( document.createElement(html), this.firstChild );
-    });
-} : function() { return this; });
-
-// old alias
-$.fn.bgIframe = $.fn.bgiframe;
-
-function prop(n) {
-    return n && n.constructor === Number ? n + 'px' : n;
-}
-
-})(jQuery);
 // =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
@@ -1236,173 +1197,2775 @@ function prop(n) {
 })(jQuery);
 		
 
-// =========================================================================================
-// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// =========================================================================================
+/**
+ * jQuery Validation Plugin 1.9.0
+ *
+ * http://bassistance.de/jquery-plugins/jquery-plugin-validation/
+ * http://docs.jquery.com/Plugins/Validation
+ *
+ * Copyright (c) 2006 - 2011 Jörn Zaefferer
+ *
+ * Dual licensed under the MIT and GPL licenses:
+ *   http://www.opensource.org/licenses/mit-license.php
+ *   http://www.gnu.org/licenses/gpl.html
+ */
 
-(function() {
-/*global diff_match_patch:true */
-var init_history_dialog = function($, field_history) {
-    var diff_match_patch_loaded = false;
-	var dmp = null;
+(function($) {
 
-	var current_revision = null;
-	var current_compare = null;
-	
-	var replace_history = function(data) {
-		if (data.fail) {
-			$('#HistoryFieldContent').html('<em>' + data.errinfo + '</em>');
-		} else if (data.compare) {
-			if (dmp === null) {
-				dmp = new diff_match_patch();
-			}
+$.extend($.fn, {
+	// http://docs.jquery.com/Plugins/Validation/validate
+	validate: function( options ) {
 
-			var d = dmp.diff_main(data.text2, data.text1);
-			dmp.diff_cleanupSemantic(d);
-			var ds = dmp.diff_prettyHtml(d);
-			$('#HistoryFieldContent').html(ds);
-		} else {
-			$('#HistoryFieldContent').html(data.text1);
-		}
-	};
-	var history_select_changed = function(field, display, id) {
-		return function() {
-			var lang = $('#HistoryLanguage').prop('value');
-			var revision = $('#HistoryRevision').prop('value');
-			var compare = $('#HistoryCompare').prop('value');
-
-			if (compare !== current_compare && (
-					(current_compare === '' && compare === revision) ||
-					(compare === '' && current_compare === current_revision))) {
-				current_revision = revision;
-				current_compare = compare;
-				return;
-			}
-
-			var comp = compare;
-			if (compare === '' || compare === revision) {
-				comp = '';
-			}
-			$.getJSON(field_history.fielddiff_url.
-					replace('[ID]', id).
-					replace('[LANG]', lang).
-					replace('[FIELD]', field).
-					replace('[REV]', revision).
-					replace('[COMP]', comp), replace_history);
-
-			current_revision = revision;
-			current_compare = compare;
-		};
-	};
-
-	var add_history_events = null;
-	var change_language = function(field, display, id, lang) {
-		$('select.HistorySelect').unbind('change');
-		$('#HistoryLanguage').unbind('change');
-
-		$("#field_history").
-			html('<p class="Info">' + field_history.txt_loading + '</p>').
-			dialog('close').
-			dialog('open').
-			dialog('option', 'title', field_history.txt_fielddifftitle +
-					id + " (" + display + ')').
-			load(field_history.fielddiffui_url.
-				replace("[ID]", id).
-				replace('[FIELD]', field).
-				replace('[LANG]', lang),
-				add_history_events(field, display, id));
-	};
-
-	var language_changed = function(field, display, id) {
-		return function() {
-			var lang = $(this).prop('value');
-			change_language(field, display, id, lang);
-		};
-	};
-	
-	add_history_events = function(field, display, id) {
-		return function() {
-			$('select.HistorySelect').
-				change(history_select_changed(field, display, id));
-
-			$('#HistoryLanguage').
-				change(language_changed(field, display, id));
-
-			current_revision = $('#HistoryRevision').prop('value');
-			current_compare = $('#HistoryCompare').prop('value');
-		};
-	};
-
-
-	$(".ShowVersions").click(function() {
-		var field = $(this).data('ciocfield');
-		var display = $(this).data('ciocfielddisplay');
-		var id = $(this).data('ciocid');
-
-		if (!diff_match_patch_loaded) {
-			diff_match_patch_loaded = true;
-			$.getScript(field_history.path_to_start + "scripts/diff_match_patch.min.js");
+		// if nothing is selected, return nothing; can't chain anyway
+		if (!this.length) {
+			options && options.debug && window.console && console.warn( "nothing selected, can't validate, returning nothing" );
+			return;
 		}
 
-		change_language(field, display, id, '');
-
-	});
-
-	var toggle_history_fields = function(e) {
-
-
-		$(e.currentTarget).parent().children('ul').toggle("fast");
-	};
-	var go_to_field = function(e) {
-		var field = $(e.currentTarget).data('fieldname');
-		var td = document.getElementById('FIELD_' + field);
-		if (td) {
-			td.scrollIntoView(true);
+		// check if a validator for this form was already created
+		var validator = $.data(this[0], 'validator');
+		if ( validator ) {
+			return validator;
 		}
-	};
-	$(document).on('click', '.FieldHistoryJump', go_to_field);
-	$(document).on('click', '.HistoryFieldsToggle', toggle_history_fields);
 
-	var hide_children = function() {
-		$('.HistoryFieldsToggle').
-			parent().children('ul').hide();
-	};
-	$(".HistorySummary").click(function() {
-		var lang = $(this).data('cioclang');
-		var id = $(this).data('ciocid');
+		// Add novalidate tag if HTML5.
+		this.attr('novalidate', 'novalidate');
 
-		$('#revision_history').
-			html('Loading...').
-			load(field_history.revhistory_url.
-				replace('[ID]', id).
-				replace('[LANG]', lang), hide_children).
-			dialog('open');
+		validator = new $.validator( options, this[0] );
+		$.data(this[0], 'validator', validator);
 
-	});
+		if ( validator.settings.onsubmit ) {
 
-	$("#revision_history").dialog({autoOpen: false, width: 330, height: 280, position: ['right', 'top' ], resizable: false, dialogClass: 'RevHistory'});
-	$("#field_history").dialog({autoOpen: false, width: 620, height: 280, position: ['right', 'bottom']});
+			var inputsAndButtons = this.find("input, button");
 
-	$(".RevHistory.ui-dialog").css({position:"fixed"});
+			// allow suppresing validation by adding a cancel class to the submit button
+			inputsAndButtons.filter(".cancel").click(function () {
+				validator.cancelSubmit = true;
+			});
 
+			// when a submitHandler is used, capture the submitting button
+			if (validator.settings.submitHandler) {
+				inputsAndButtons.filter(":submit").click(function () {
+					validator.submitButton = this;
+				});
+			}
+
+			// validate the form on submit
+			this.submit( function( event ) {
+				if ( validator.settings.debug )
+					// prevent form submit to be able to see console output
+					event.preventDefault();
+
+				function handle() {
+					if ( validator.settings.submitHandler ) {
+						if (validator.submitButton) {
+							// insert a hidden input as a replacement for the missing submit button
+							var hidden = $("<input type='hidden'/>").attr("name", validator.submitButton.name).val(validator.submitButton.value).appendTo(validator.currentForm);
+						}
+						validator.settings.submitHandler.call( validator, validator.currentForm );
+						if (validator.submitButton) {
+							// and clean up afterwards; thanks to no-block-scope, hidden can be referenced
+							hidden.remove();
+						}
+						return false;
+					}
+					return true;
+				}
+
+				// prevent submit for invalid forms or custom submit handlers
+				if ( validator.cancelSubmit ) {
+					validator.cancelSubmit = false;
+					return handle();
+				}
+				if ( validator.form() ) {
+					if ( validator.pendingRequest ) {
+						validator.formSubmitted = true;
+						return false;
+					}
+					return handle();
+				} else {
+					validator.focusInvalid();
+					return false;
+				}
+			});
+		}
+
+		return validator;
+	},
+	// http://docs.jquery.com/Plugins/Validation/valid
+	valid: function() {
+        if ( $(this[0]).is('form')) {
+            return this.validate().form();
+        } else {
+            var valid = true;
+            var validator = $(this[0].form).validate();
+            this.each(function() {
+				valid &= validator.element(this);
+            });
+            return valid;
+        }
+    },
+	// attributes: space seperated list of attributes to retrieve and remove
+	removeAttrs: function(attributes) {
+		var result = {},
+			$element = this;
+		$.each(attributes.split(/\s/), function(index, value) {
+			result[value] = $element.attr(value);
+			$element.removeAttr(value);
+		});
+		return result;
+	},
+	// http://docs.jquery.com/Plugins/Validation/rules
+	rules: function(command, argument) {
+		var element = this[0];
+
+		if (command) {
+			var settings = $.data(element.form, 'validator').settings;
+			var staticRules = settings.rules;
+			var existingRules = $.validator.staticRules(element);
+			switch(command) {
+			case "add":
+				$.extend(existingRules, $.validator.normalizeRule(argument));
+				staticRules[element.name] = existingRules;
+				if (argument.messages)
+					settings.messages[element.name] = $.extend( settings.messages[element.name], argument.messages );
+				break;
+			case "remove":
+				if (!argument) {
+					delete staticRules[element.name];
+					return existingRules;
+				}
+				var filtered = {};
+				$.each(argument.split(/\s/), function(index, method) {
+					filtered[method] = existingRules[method];
+					delete existingRules[method];
+				});
+				return filtered;
+			}
+		}
+
+		var data = $.validator.normalizeRules(
+		$.extend(
+			{},
+			$.validator.metadataRules(element),
+			$.validator.classRules(element),
+			$.validator.attributeRules(element),
+			$.validator.staticRules(element)
+		), element);
+
+		// make sure required is at front
+		if (data.required) {
+			var param = data.required;
+			delete data.required;
+			data = $.extend({required: param}, data);
+		}
+
+		return data;
+	}
+});
+
+// Custom selectors
+$.extend($.expr[":"], {
+	// http://docs.jquery.com/Plugins/Validation/blank
+	blank: function(a) {return !$.trim("" + a.value);},
+	// http://docs.jquery.com/Plugins/Validation/filled
+	filled: function(a) {return !!$.trim("" + a.value);},
+	// http://docs.jquery.com/Plugins/Validation/unchecked
+	unchecked: function(a) {return !a.checked;}
+});
+
+// constructor for validator
+$.validator = function( options, form ) {
+	this.settings = $.extend( true, {}, $.validator.defaults, options );
+	this.currentForm = form;
+	this.init();
 };
 
-window['init_history_dialog'] = init_history_dialog;
-})();
+$.validator.format = function(source, params) {
+	if ( arguments.length == 1 )
+		return function() {
+			var args = $.makeArray(arguments);
+			args.unshift(source);
+			return $.validator.format.apply( this, args );
+		};
+	if ( arguments.length > 2 && params.constructor != Array  ) {
+		params = $.makeArray(arguments).slice(1);
+	}
+	if ( params.constructor != Array ) {
+		params = [ params ];
+	}
+	$.each(params, function(i, n) {
+		source = source.replace(new RegExp("\\{" + i + "\\}", "g"), n);
+	});
+	return source;
+};
 
+$.extend($.validator, {
 
+	defaults: {
+		messages: {},
+		groups: {},
+		rules: {},
+		errorClass: "error",
+		validClass: "valid",
+		errorElement: "label",
+		focusInvalid: true,
+		errorContainer: $( [] ),
+		errorLabelContainer: $( [] ),
+		onsubmit: true,
+		ignore: ":hidden",
+		ignoreTitle: false,
+		onfocusin: function(element, event) {
+			this.lastActive = element;
+
+			// hide error label and remove error class on focus if enabled
+			if ( this.settings.focusCleanup && !this.blockFocusCleanup ) {
+				this.settings.unhighlight && this.settings.unhighlight.call( this, element, this.settings.errorClass, this.settings.validClass );
+				this.addWrapper(this.errorsFor(element)).hide();
+			}
+		},
+		onfocusout: function(element, event) {
+			if ( !this.checkable(element) && (element.name in this.submitted || !this.optional(element)) ) {
+				this.element(element);
+			}
+		},
+		onkeyup: function(element, event) {
+			if ( element.name in this.submitted || element == this.lastElement ) {
+				this.element(element);
+			}
+		},
+		onclick: function(element, event) {
+			// click on selects, radiobuttons and checkboxes
+			if ( element.name in this.submitted )
+				this.element(element);
+			// or option elements, check parent select in that case
+			else if (element.parentNode.name in this.submitted)
+				this.element(element.parentNode);
+		},
+		highlight: function(element, errorClass, validClass) {
+			if (element.type === 'radio') {
+				this.findByName(element.name).addClass(errorClass).removeClass(validClass);
+			} else {
+				$(element).addClass(errorClass).removeClass(validClass);
+			}
+		},
+		unhighlight: function(element, errorClass, validClass) {
+			if (element.type === 'radio') {
+				this.findByName(element.name).removeClass(errorClass).addClass(validClass);
+			} else {
+				$(element).removeClass(errorClass).addClass(validClass);
+			}
+		}
+	},
+
+	// http://docs.jquery.com/Plugins/Validation/Validator/setDefaults
+	setDefaults: function(settings) {
+		$.extend( $.validator.defaults, settings );
+	},
+
+	messages: {
+		required: "This field is required.",
+		remote: "Please fix this field.",
+		email: "Please enter a valid email address.",
+		url: "Please enter a valid URL.",
+		date: "Please enter a valid date.",
+		dateISO: "Please enter a valid date (ISO).",
+		number: "Please enter a valid number.",
+		digits: "Please enter only digits.",
+		creditcard: "Please enter a valid credit card number.",
+		equalTo: "Please enter the same value again.",
+		accept: "Please enter a value with a valid extension.",
+		maxlength: $.validator.format("Please enter no more than {0} characters."),
+		minlength: $.validator.format("Please enter at least {0} characters."),
+		rangelength: $.validator.format("Please enter a value between {0} and {1} characters long."),
+		range: $.validator.format("Please enter a value between {0} and {1}."),
+		max: $.validator.format("Please enter a value less than or equal to {0}."),
+		min: $.validator.format("Please enter a value greater than or equal to {0}.")
+	},
+
+	autoCreateRanges: false,
+
+	prototype: {
+
+		init: function() {
+			this.labelContainer = $(this.settings.errorLabelContainer);
+			this.errorContext = this.labelContainer.length && this.labelContainer || $(this.currentForm);
+			this.containers = $(this.settings.errorContainer).add( this.settings.errorLabelContainer );
+			this.submitted = {};
+			this.valueCache = {};
+			this.pendingRequest = 0;
+			this.pending = {};
+			this.invalid = {};
+			this.reset();
+
+			var groups = (this.groups = {});
+			$.each(this.settings.groups, function(key, value) {
+				$.each(value.split(/\s/), function(index, name) {
+					groups[name] = key;
+				});
+			});
+			var rules = this.settings.rules;
+			$.each(rules, function(key, value) {
+				rules[key] = $.validator.normalizeRule(value);
+			});
+
+			function delegate(event) {
+				var validator = $.data(this[0].form, "validator"),
+					eventType = "on" + event.type.replace(/^validate/, "");
+				validator.settings[eventType] && validator.settings[eventType].call(validator, this[0], event);
+			}
+			$(this.currentForm)
+			       .validateDelegate("[type='text'], [type='password'], [type='file'], select, textarea, " +
+						"[type='number'], [type='search'] ,[type='tel'], [type='url'], " +
+						"[type='email'], [type='datetime'], [type='date'], [type='month'], " +
+						"[type='week'], [type='time'], [type='datetime-local'], " +
+						"[type='range'], [type='color'] ",
+						"focusin focusout keyup", delegate)
+				.validateDelegate("[type='radio'], [type='checkbox'], select, option", "click", delegate);
+
+			if (this.settings.invalidHandler)
+				$(this.currentForm).bind("invalid-form.validate", this.settings.invalidHandler);
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Validator/form
+		form: function() {
+			this.checkForm();
+			$.extend(this.submitted, this.errorMap);
+			this.invalid = $.extend({}, this.errorMap);
+			if (!this.valid())
+				$(this.currentForm).triggerHandler("invalid-form", [this]);
+			this.showErrors();
+			return this.valid();
+		},
+
+		checkForm: function() {
+			this.prepareForm();
+			for ( var i = 0, elements = (this.currentElements = this.elements()); elements[i]; i++ ) {
+				this.check( elements[i] );
+			}
+			return this.valid();
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Validator/element
+		element: function( element ) {
+			element = this.validationTargetFor( this.clean( element ) );
+			this.lastElement = element;
+			this.prepareElement( element );
+			this.currentElements = $(element);
+			var result = this.check( element );
+			if ( result ) {
+				delete this.invalid[element.name];
+			} else {
+				this.invalid[element.name] = true;
+			}
+			if ( !this.numberOfInvalids() ) {
+				// Hide error containers on last error
+				this.toHide = this.toHide.add( this.containers );
+			}
+			this.showErrors();
+			return result;
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Validator/showErrors
+		showErrors: function(errors) {
+			if(errors) {
+				// add items to error list and map
+				$.extend( this.errorMap, errors );
+				this.errorList = [];
+				for ( var name in errors ) {
+					this.errorList.push({
+						message: errors[name],
+						element: this.findByName(name)[0]
+					});
+				}
+				// remove items from success list
+				this.successList = $.grep( this.successList, function(element) {
+					return !(element.name in errors);
+				});
+			}
+			this.settings.showErrors
+				? this.settings.showErrors.call( this, this.errorMap, this.errorList )
+				: this.defaultShowErrors();
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Validator/resetForm
+		resetForm: function() {
+			if ( $.fn.resetForm )
+				$( this.currentForm ).resetForm();
+			this.submitted = {};
+			this.lastElement = null;
+			this.prepareForm();
+			this.hideErrors();
+			this.elements().removeClass( this.settings.errorClass );
+		},
+
+		numberOfInvalids: function() {
+			return this.objectLength(this.invalid);
+		},
+
+		objectLength: function( obj ) {
+			var count = 0;
+			for ( var i in obj )
+				count++;
+			return count;
+		},
+
+		hideErrors: function() {
+			this.addWrapper( this.toHide ).hide();
+		},
+
+		valid: function() {
+			return this.size() == 0;
+		},
+
+		size: function() {
+			return this.errorList.length;
+		},
+
+		focusInvalid: function() {
+			if( this.settings.focusInvalid ) {
+				try {
+					$(this.findLastActive() || this.errorList.length && this.errorList[0].element || [])
+					.filter(":visible")
+					.focus()
+					// manually trigger focusin event; without it, focusin handler isn't called, findLastActive won't have anything to find
+					.trigger("focusin");
+				} catch(e) {
+					// ignore IE throwing errors when focusing hidden elements
+				}
+			}
+		},
+
+		findLastActive: function() {
+			var lastActive = this.lastActive;
+			return lastActive && $.grep(this.errorList, function(n) {
+				return n.element.name == lastActive.name;
+			}).length == 1 && lastActive;
+		},
+
+		elements: function() {
+			var validator = this,
+				rulesCache = {};
+
+			// select all valid inputs inside the form (no submit or reset buttons)
+			return $(this.currentForm)
+			.find("input, select, textarea")
+			.not(":submit, :reset, :image, [disabled]")
+			.not( this.settings.ignore )
+			.filter(function() {
+				!this.name && validator.settings.debug && window.console && console.error( "%o has no name assigned", this);
+
+				// select only the first element for each name, and only those with rules specified
+				if ( this.name in rulesCache || !validator.objectLength($(this).rules()) )
+					return false;
+
+				rulesCache[this.name] = true;
+				return true;
+			});
+		},
+
+		clean: function( selector ) {
+			return $( selector )[0];
+		},
+
+		errors: function() {
+			return $( this.settings.errorElement + "." + this.settings.errorClass, this.errorContext );
+		},
+
+		reset: function() {
+			this.successList = [];
+			this.errorList = [];
+			this.errorMap = {};
+			this.toShow = $([]);
+			this.toHide = $([]);
+			this.currentElements = $([]);
+		},
+
+		prepareForm: function() {
+			this.reset();
+			this.toHide = this.errors().add( this.containers );
+		},
+
+		prepareElement: function( element ) {
+			this.reset();
+			this.toHide = this.errorsFor(element);
+		},
+
+		check: function( element ) {
+			element = this.validationTargetFor( this.clean( element ) );
+
+			var rules = $(element).rules();
+			var dependencyMismatch = false;
+			for (var method in rules ) {
+				var rule = { method: method, parameters: rules[method] };
+				try {
+					var result = $.validator.methods[method].call( this, element.value.replace(/\r/g, ""), element, rule.parameters );
+
+					// if a method indicates that the field is optional and therefore valid,
+					// don't mark it as valid when there are no other rules
+					if ( result == "dependency-mismatch" ) {
+						dependencyMismatch = true;
+						continue;
+					}
+					dependencyMismatch = false;
+
+					if ( result == "pending" ) {
+						this.toHide = this.toHide.not( this.errorsFor(element) );
+						return;
+					}
+
+					if( !result ) {
+						this.formatAndAdd( element, rule );
+						return false;
+					}
+				} catch(e) {
+					this.settings.debug && window.console && console.log("exception occured when checking element " + element.id
+						 + ", check the '" + rule.method + "' method", e);
+					throw e;
+				}
+			}
+			if (dependencyMismatch)
+				return;
+			if ( this.objectLength(rules) )
+				this.successList.push(element);
+			return true;
+		},
+
+		// return the custom message for the given element and validation method
+		// specified in the element's "messages" metadata
+		customMetaMessage: function(element, method) {
+			if (!$.metadata)
+				return;
+
+			var meta = this.settings.meta
+				? $(element).metadata()[this.settings.meta]
+				: $(element).metadata();
+
+			return meta && meta.messages && meta.messages[method];
+		},
+
+		// return the custom message for the given element name and validation method
+		customMessage: function( name, method ) {
+			var m = this.settings.messages[name];
+			return m && (m.constructor == String
+				? m
+				: m[method]);
+		},
+
+		// return the first defined argument, allowing empty strings
+		findDefined: function() {
+			for(var i = 0; i < arguments.length; i++) {
+				if (arguments[i] !== undefined)
+					return arguments[i];
+			}
+			return undefined;
+		},
+
+		defaultMessage: function( element, method) {
+			return this.findDefined(
+				this.customMessage( element.name, method ),
+				this.customMetaMessage( element, method ),
+				// title is never undefined, so handle empty string as undefined
+				!this.settings.ignoreTitle && element.title || undefined,
+				$.validator.messages[method],
+				"<strong>Warning: No message defined for " + element.name + "</strong>"
+			);
+		},
+
+		formatAndAdd: function( element, rule ) {
+			var message = this.defaultMessage( element, rule.method ),
+				theregex = /\$?\{(\d+)\}/g;
+			if ( typeof message == "function" ) {
+				message = message.call(this, rule.parameters, element);
+			} else if (theregex.test(message)) {
+				message = jQuery.format(message.replace(theregex, '{$1}'), rule.parameters);
+			}
+			this.errorList.push({
+				message: message,
+				element: element
+			});
+
+			this.errorMap[element.name] = message;
+			this.submitted[element.name] = message;
+		},
+
+		addWrapper: function(toToggle) {
+			if ( this.settings.wrapper )
+				toToggle = toToggle.add( toToggle.parent( this.settings.wrapper ) );
+			return toToggle;
+		},
+
+		defaultShowErrors: function() {
+			for ( var i = 0; this.errorList[i]; i++ ) {
+				var error = this.errorList[i];
+				this.settings.highlight && this.settings.highlight.call( this, error.element, this.settings.errorClass, this.settings.validClass );
+				this.showLabel( error.element, error.message );
+			}
+			if( this.errorList.length ) {
+				this.toShow = this.toShow.add( this.containers );
+			}
+			if (this.settings.success) {
+				for ( var i = 0; this.successList[i]; i++ ) {
+					this.showLabel( this.successList[i] );
+				}
+			}
+			if (this.settings.unhighlight) {
+				for ( var i = 0, elements = this.validElements(); elements[i]; i++ ) {
+					this.settings.unhighlight.call( this, elements[i], this.settings.errorClass, this.settings.validClass );
+				}
+			}
+			this.toHide = this.toHide.not( this.toShow );
+			this.hideErrors();
+			this.addWrapper( this.toShow ).show();
+		},
+
+		validElements: function() {
+			return this.currentElements.not(this.invalidElements());
+		},
+
+		invalidElements: function() {
+			return $(this.errorList).map(function() {
+				return this.element;
+			});
+		},
+
+		showLabel: function(element, message) {
+			var label = this.errorsFor( element );
+			if ( label.length ) {
+				// refresh error/success class
+				label.removeClass( this.settings.validClass ).addClass( this.settings.errorClass );
+
+				// check if we have a generated label, replace the message then
+				label.attr("generated") && label.html(message);
+			} else {
+				// create label
+				label = $("<" + this.settings.errorElement + "/>")
+					.attr({"for":  this.idOrName(element), generated: true})
+					.addClass(this.settings.errorClass)
+					.html(message || "");
+				if ( this.settings.wrapper ) {
+					// make sure the element is visible, even in IE
+					// actually showing the wrapped element is handled elsewhere
+					label = label.hide().show().wrap("<" + this.settings.wrapper + "/>").parent();
+				}
+				if ( !this.labelContainer.append(label).length )
+					this.settings.errorPlacement
+						? this.settings.errorPlacement(label, $(element) )
+						: label.insertAfter(element);
+			}
+			if ( !message && this.settings.success ) {
+				label.text("");
+				typeof this.settings.success == "string"
+					? label.addClass( this.settings.success )
+					: this.settings.success( label );
+			}
+			this.toShow = this.toShow.add(label);
+		},
+
+		errorsFor: function(element) {
+			var name = this.idOrName(element);
+    		return this.errors().filter(function() {
+				return $(this).attr('for') == name;
+			});
+		},
+
+		idOrName: function(element) {
+			return this.groups[element.name] || (this.checkable(element) ? element.name : element.id || element.name);
+		},
+
+		validationTargetFor: function(element) {
+			// if radio/checkbox, validate first element in group instead
+			if (this.checkable(element)) {
+				element = this.findByName( element.name ).not(this.settings.ignore)[0];
+			}
+			return element;
+		},
+
+		checkable: function( element ) {
+			return /radio|checkbox/i.test(element.type);
+		},
+
+		findByName: function( name ) {
+			// select by name and filter by form for performance over form.find("[name=...]")
+			var form = this.currentForm;
+			return $(document.getElementsByName(name)).map(function(index, element) {
+				return element.form == form && element.name == name && element  || null;
+			});
+		},
+
+		getLength: function(value, element) {
+			switch( element.nodeName.toLowerCase() ) {
+			case 'select':
+				return $("option:selected", element).length;
+			case 'input':
+				if( this.checkable( element) )
+					return this.findByName(element.name).filter(':checked').length;
+			}
+			return value.length;
+		},
+
+		depend: function(param, element) {
+			return this.dependTypes[typeof param]
+				? this.dependTypes[typeof param](param, element)
+				: true;
+		},
+
+		dependTypes: {
+			"boolean": function(param, element) {
+				return param;
+			},
+			"string": function(param, element) {
+				return !!$(param, element.form).length;
+			},
+			"function": function(param, element) {
+				return param(element);
+			}
+		},
+
+		optional: function(element) {
+			return !$.validator.methods.required.call(this, $.trim(element.value), element) && "dependency-mismatch";
+		},
+
+		startRequest: function(element) {
+			if (!this.pending[element.name]) {
+				this.pendingRequest++;
+				this.pending[element.name] = true;
+			}
+		},
+
+		stopRequest: function(element, valid) {
+			this.pendingRequest--;
+			// sometimes synchronization fails, make sure pendingRequest is never < 0
+			if (this.pendingRequest < 0)
+				this.pendingRequest = 0;
+			delete this.pending[element.name];
+			if ( valid && this.pendingRequest == 0 && this.formSubmitted && this.form() ) {
+				$(this.currentForm).submit();
+				this.formSubmitted = false;
+			} else if (!valid && this.pendingRequest == 0 && this.formSubmitted) {
+				$(this.currentForm).triggerHandler("invalid-form", [this]);
+				this.formSubmitted = false;
+			}
+		},
+
+		previousValue: function(element) {
+			return $.data(element, "previousValue") || $.data(element, "previousValue", {
+				old: null,
+				valid: true,
+				message: this.defaultMessage( element, "remote" )
+			});
+		}
+
+	},
+
+	classRuleSettings: {
+		required: {required: true},
+		email: {email: true},
+		url: {url: true},
+		date: {date: true},
+		dateISO: {dateISO: true},
+		dateDE: {dateDE: true},
+		number: {number: true},
+		numberDE: {numberDE: true},
+		digits: {digits: true},
+		creditcard: {creditcard: true}
+	},
+
+	addClassRules: function(className, rules) {
+		className.constructor == String ?
+			this.classRuleSettings[className] = rules :
+			$.extend(this.classRuleSettings, className);
+	},
+
+	classRules: function(element) {
+		var rules = {};
+		var classes = $(element).attr('class');
+		classes && $.each(classes.split(' '), function() {
+			if (this in $.validator.classRuleSettings) {
+				$.extend(rules, $.validator.classRuleSettings[this]);
+			}
+		});
+		return rules;
+	},
+
+	attributeRules: function(element) {
+		var rules = {};
+		var $element = $(element);
+
+		for (var method in $.validator.methods) {
+			var value;
+			// If .prop exists (jQuery >= 1.6), use it to get true/false for required
+			if (method === 'required' && typeof $.fn.prop === 'function') {
+				value = $element.prop(method);
+			} else {
+				value = $element.attr(method);
+			}
+			if (value) {
+				rules[method] = value;
+			} else if ($element[0].getAttribute("type") === method) {
+				rules[method] = true;
+			}
+		}
+
+		// maxlength may be returned as -1, 2147483647 (IE) and 524288 (safari) for text inputs
+		if (rules.maxlength && /-1|2147483647|524288/.test(rules.maxlength)) {
+			delete rules.maxlength;
+		}
+
+		return rules;
+	},
+
+	metadataRules: function(element) {
+		if (!$.metadata) return {};
+
+		var meta = $.data(element.form, 'validator').settings.meta;
+		return meta ?
+			$(element).metadata()[meta] :
+			$(element).metadata();
+	},
+
+	staticRules: function(element) {
+		var rules = {};
+		var validator = $.data(element.form, 'validator');
+		if (validator.settings.rules) {
+			rules = $.validator.normalizeRule(validator.settings.rules[element.name]) || {};
+		}
+		return rules;
+	},
+
+	normalizeRules: function(rules, element) {
+		// handle dependency check
+		$.each(rules, function(prop, val) {
+			// ignore rule when param is explicitly false, eg. required:false
+			if (val === false) {
+				delete rules[prop];
+				return;
+			}
+			if (val.param || val.depends) {
+				var keepRule = true;
+				switch (typeof val.depends) {
+					case "string":
+						keepRule = !!$(val.depends, element.form).length;
+						break;
+					case "function":
+						keepRule = val.depends.call(element, element);
+						break;
+				}
+				if (keepRule) {
+					rules[prop] = val.param !== undefined ? val.param : true;
+				} else {
+					delete rules[prop];
+				}
+			}
+		});
+
+		// evaluate parameters
+		$.each(rules, function(rule, parameter) {
+			rules[rule] = $.isFunction(parameter) ? parameter(element) : parameter;
+		});
+
+		// clean number parameters
+		$.each(['minlength', 'maxlength', 'min', 'max'], function() {
+			if (rules[this]) {
+				rules[this] = Number(rules[this]);
+			}
+		});
+		$.each(['rangelength', 'range'], function() {
+			if (rules[this]) {
+				rules[this] = [Number(rules[this][0]), Number(rules[this][1])];
+			}
+		});
+
+		if ($.validator.autoCreateRanges) {
+			// auto-create ranges
+			if (rules.min && rules.max) {
+				rules.range = [rules.min, rules.max];
+				delete rules.min;
+				delete rules.max;
+			}
+			if (rules.minlength && rules.maxlength) {
+				rules.rangelength = [rules.minlength, rules.maxlength];
+				delete rules.minlength;
+				delete rules.maxlength;
+			}
+		}
+
+		// To support custom messages in metadata ignore rule methods titled "messages"
+		if (rules.messages) {
+			delete rules.messages;
+		}
+
+		return rules;
+	},
+
+	// Converts a simple string to a {string: true} rule, e.g., "required" to {required:true}
+	normalizeRule: function(data) {
+		if( typeof data == "string" ) {
+			var transformed = {};
+			$.each(data.split(/\s/), function() {
+				transformed[this] = true;
+			});
+			data = transformed;
+		}
+		return data;
+	},
+
+	// http://docs.jquery.com/Plugins/Validation/Validator/addMethod
+	addMethod: function(name, method, message) {
+		$.validator.methods[name] = method;
+		$.validator.messages[name] = message != undefined ? message : $.validator.messages[name];
+		if (method.length < 3) {
+			$.validator.addClassRules(name, $.validator.normalizeRule(name));
+		}
+	},
+
+	methods: {
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/required
+		required: function(value, element, param) {
+			// check if dependency is met
+			if ( !this.depend(param, element) )
+				return "dependency-mismatch";
+			switch( element.nodeName.toLowerCase() ) {
+			case 'select':
+				// could be an array for select-multiple or a string, both are fine this way
+				var val = $(element).val();
+				return val && val.length > 0;
+			case 'input':
+				if ( this.checkable(element) )
+					return this.getLength(value, element) > 0;
+			default:
+				return $.trim(value).length > 0;
+			}
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/remote
+		remote: function(value, element, param) {
+			if ( this.optional(element) )
+				return "dependency-mismatch";
+
+			var previous = this.previousValue(element);
+			if (!this.settings.messages[element.name] )
+				this.settings.messages[element.name] = {};
+			previous.originalMessage = this.settings.messages[element.name].remote;
+			this.settings.messages[element.name].remote = previous.message;
+
+			param = typeof param == "string" && {url:param} || param;
+
+			if ( this.pending[element.name] ) {
+				return "pending";
+			}
+			if ( previous.old === value ) {
+				return previous.valid;
+			}
+
+			previous.old = value;
+			var validator = this;
+			this.startRequest(element);
+			var data = {};
+			data[element.name] = value;
+			$.ajax($.extend(true, {
+				url: param,
+				mode: "abort",
+				port: "validate" + element.name,
+				dataType: "json",
+				data: data,
+				success: function(response) {
+					validator.settings.messages[element.name].remote = previous.originalMessage;
+					var valid = response === true;
+					if ( valid ) {
+						var submitted = validator.formSubmitted;
+						validator.prepareElement(element);
+						validator.formSubmitted = submitted;
+						validator.successList.push(element);
+						validator.showErrors();
+					} else {
+						var errors = {};
+						var message = response || validator.defaultMessage( element, "remote" );
+						errors[element.name] = previous.message = $.isFunction(message) ? message(value) : message;
+						validator.showErrors(errors);
+					}
+					previous.valid = valid;
+					validator.stopRequest(element, valid);
+				}
+			}, param));
+			return "pending";
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/minlength
+		minlength: function(value, element, param) {
+			return this.optional(element) || this.getLength($.trim(value), element) >= param;
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/maxlength
+		maxlength: function(value, element, param) {
+			return this.optional(element) || this.getLength($.trim(value), element) <= param;
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/rangelength
+		rangelength: function(value, element, param) {
+			var length = this.getLength($.trim(value), element);
+			return this.optional(element) || ( length >= param[0] && length <= param[1] );
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/min
+		min: function( value, element, param ) {
+			return this.optional(element) || value >= param;
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/max
+		max: function( value, element, param ) {
+			return this.optional(element) || value <= param;
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/range
+		range: function( value, element, param ) {
+			return this.optional(element) || ( value >= param[0] && value <= param[1] );
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/email
+		email: function(value, element) {
+			// contributed by Scott Gonzalez: http://projects.scottsplayground.com/email_address_validation/
+			return this.optional(element) || /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i.test(value);
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/url
+		url: function(value, element) {
+			// contributed by Scott Gonzalez: http://projects.scottsplayground.com/iri/
+			return this.optional(element) || /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(value);
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/date
+		date: function(value, element) {
+			return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/dateISO
+		dateISO: function(value, element) {
+			return this.optional(element) || /^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$/.test(value);
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/number
+		number: function(value, element) {
+			return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/.test(value);
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/digits
+		digits: function(value, element) {
+			return this.optional(element) || /^\d+$/.test(value);
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/creditcard
+		// based on http://en.wikipedia.org/wiki/Luhn
+		creditcard: function(value, element) {
+			if ( this.optional(element) )
+				return "dependency-mismatch";
+			// accept only spaces, digits and dashes
+			if (/[^0-9 -]+/.test(value))
+				return false;
+			var nCheck = 0,
+				nDigit = 0,
+				bEven = false;
+
+			value = value.replace(/\D/g, "");
+
+			for (var n = value.length - 1; n >= 0; n--) {
+				var cDigit = value.charAt(n);
+				var nDigit = parseInt(cDigit, 10);
+				if (bEven) {
+					if ((nDigit *= 2) > 9)
+						nDigit -= 9;
+				}
+				nCheck += nDigit;
+				bEven = !bEven;
+			}
+
+			return (nCheck % 10) == 0;
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/accept
+		accept: function(value, element, param) {
+			param = typeof param == "string" ? param.replace(/,/g, '|') : "png|jpe?g|gif";
+			return this.optional(element) || value.match(new RegExp(".(" + param + ")$", "i"));
+		},
+
+		// http://docs.jquery.com/Plugins/Validation/Methods/equalTo
+		equalTo: function(value, element, param) {
+			// bind to the blur event of the target in order to revalidate whenever the target field is updated
+			// TODO find a way to bind the event just once, avoiding the unbind-rebind overhead
+			var target = $(param).unbind(".validate-equalTo").bind("blur.validate-equalTo", function() {
+				$(element).valid();
+			});
+			return value == target.val();
+		}
+
+	}
+
+});
+
+// deprecated, use $.validator.format instead
+$.format = $.validator.format;
+
+})(jQuery);
+
+// ajax mode: abort
+// usage: $.ajax({ mode: "abort"[, port: "uniqueport"]});
+// if mode:"abort" is used, the previous request on that port (port can be undefined) is aborted via XMLHttpRequest.abort()
+;(function($) {
+	var pendingRequests = {};
+	// Use a prefilter if available (1.5+)
+	if ( $.ajaxPrefilter ) {
+		$.ajaxPrefilter(function(settings, _, xhr) {
+			var port = settings.port;
+			if (settings.mode == "abort") {
+				if ( pendingRequests[port] ) {
+					pendingRequests[port].abort();
+				}
+				pendingRequests[port] = xhr;
+			}
+		});
+	} else {
+		// Proxy ajax
+		var ajax = $.ajax;
+		$.ajax = function(settings) {
+			var mode = ( "mode" in settings ? settings : $.ajaxSettings ).mode,
+				port = ( "port" in settings ? settings : $.ajaxSettings ).port;
+			if (mode == "abort") {
+				if ( pendingRequests[port] ) {
+					pendingRequests[port].abort();
+				}
+				return (pendingRequests[port] = ajax.apply(this, arguments));
+			}
+			return ajax.apply(this, arguments);
+		};
+	}
+})(jQuery);
+
+// provides cross-browser focusin and focusout events
+// IE has native support, in other browsers, use event caputuring (neither bubbles)
+
+// provides delegate(type: String, delegate: Selector, handler: Callback) plugin for easier event delegation
+// handler is only called when $(event.target).is(delegate), in the scope of the jquery-object for event.target
+;(function($) {
+	// only implement if not provided by jQuery core (since 1.4)
+	// TODO verify if jQuery 1.4's implementation is compatible with older jQuery special-event APIs
+	if (!jQuery.event.special.focusin && !jQuery.event.special.focusout && document.addEventListener) {
+		$.each({
+			focus: 'focusin',
+			blur: 'focusout'
+		}, function( original, fix ){
+			$.event.special[fix] = {
+				setup:function() {
+					this.addEventListener( original, handler, true );
+				},
+				teardown:function() {
+					this.removeEventListener( original, handler, true );
+				},
+				handler: function(e) {
+					arguments[0] = $.event.fix(e);
+					arguments[0].type = fix;
+					return $.event.handle.apply(this, arguments);
+				}
+			};
+			function handler(e) {
+				e = $.event.fix(e);
+				e.type = fix;
+				return $.event.handle.call(this, e);
+			}
+		});
+	};
+	$.extend($.fn, {
+		validateDelegate: function(delegate, type, handler) {
+			return this.bind(type, function(event) {
+				var target = $(event.target);
+				if (target.is(delegate)) {
+					return handler.apply(target, arguments);
+				}
+			});
+		}
+	});
+})(jQuery);
+/*!
+ * Globalize
+ *
+ * http://github.com/jquery/globalize
+ *
+ * Copyright Software Freedom Conservancy, Inc.
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ */
+
+(function( window, undefined ) {
+
+var Globalize,
+	// private variables
+	regexHex,
+	regexInfinity,
+	regexParseFloat,
+	regexTrim,
+	// private JavaScript utility functions
+	arrayIndexOf,
+	endsWith,
+	extend,
+	isArray,
+	isFunction,
+	isObject,
+	startsWith,
+	trim,
+	truncate,
+	zeroPad,
+	// private Globalization utility functions
+	appendPreOrPostMatch,
+	expandFormat,
+	formatDate,
+	formatNumber,
+	getTokenRegExp,
+	getEra,
+	getEraYear,
+	parseExact,
+	parseNegativePattern;
+
+// Global variable (Globalize) or CommonJS module (globalize)
+Globalize = function( cultureSelector ) {
+	return new Globalize.prototype.init( cultureSelector );
+};
+
+if ( typeof require !== "undefined" &&
+	typeof exports !== "undefined" &&
+	typeof module !== "undefined" ) {
+	// Assume CommonJS
+	module.exports = Globalize;
+} else {
+	// Export as global variable
+	window.Globalize = Globalize;
+}
+
+Globalize.cultures = {};
+
+Globalize.prototype = {
+	constructor: Globalize,
+	init: function( cultureSelector ) {
+		this.cultures = Globalize.cultures;
+		this.cultureSelector = cultureSelector;
+
+		return this;
+	}
+};
+Globalize.prototype.init.prototype = Globalize.prototype;
+
+// 1. When defining a culture, all fields are required except the ones stated as optional.
+// 2. Each culture should have a ".calendars" object with at least one calendar named "standard"
+//    which serves as the default calendar in use by that culture.
+// 3. Each culture should have a ".calendar" object which is the current calendar being used,
+//    it may be dynamically changed at any time to one of the calendars in ".calendars".
+Globalize.cultures[ "default" ] = {
+	// A unique name for the culture in the form <language code>-<country/region code>
+	name: "en",
+	// the name of the culture in the english language
+	englishName: "English",
+	// the name of the culture in its own language
+	nativeName: "English",
+	// whether the culture uses right-to-left text
+	isRTL: false,
+	// "language" is used for so-called "specific" cultures.
+	// For example, the culture "es-CL" means "Spanish, in Chili".
+	// It represents the Spanish-speaking culture as it is in Chili,
+	// which might have different formatting rules or even translations
+	// than Spanish in Spain. A "neutral" culture is one that is not
+	// specific to a region. For example, the culture "es" is the generic
+	// Spanish culture, which may be a more generalized version of the language
+	// that may or may not be what a specific culture expects.
+	// For a specific culture like "es-CL", the "language" field refers to the
+	// neutral, generic culture information for the language it is using.
+	// This is not always a simple matter of the string before the dash.
+	// For example, the "zh-Hans" culture is netural (Simplified Chinese).
+	// And the "zh-SG" culture is Simplified Chinese in Singapore, whose lanugage
+	// field is "zh-CHS", not "zh".
+	// This field should be used to navigate from a specific culture to it's
+	// more general, neutral culture. If a culture is already as general as it
+	// can get, the language may refer to itself.
+	language: "en",
+	// numberFormat defines general number formatting rules, like the digits in
+	// each grouping, the group separator, and how negative numbers are displayed.
+	numberFormat: {
+		// [negativePattern]
+		// Note, numberFormat.pattern has no "positivePattern" unlike percent and currency,
+		// but is still defined as an array for consistency with them.
+		//   negativePattern: one of "(n)|-n|- n|n-|n -"
+		pattern: [ "-n" ],
+		// number of decimal places normally shown
+		decimals: 2,
+		// string that separates number groups, as in 1,000,000
+		",": ",",
+		// string that separates a number from the fractional portion, as in 1.99
+		".": ".",
+		// array of numbers indicating the size of each number group.
+		// TODO: more detailed description and example
+		groupSizes: [ 3 ],
+		// symbol used for positive numbers
+		"+": "+",
+		// symbol used for negative numbers
+		"-": "-",
+		// symbol used for NaN (Not-A-Number)
+		"NaN": "NaN",
+		// symbol used for Negative Infinity
+		negativeInfinity: "-Infinity",
+		// symbol used for Positive Infinity
+		positiveInfinity: "Infinity",
+		percent: {
+			// [negativePattern, positivePattern]
+			//   negativePattern: one of "-n %|-n%|-%n|%-n|%n-|n-%|n%-|-% n|n %-|% n-|% -n|n- %"
+			//   positivePattern: one of "n %|n%|%n|% n"
+			pattern: [ "-n %", "n %" ],
+			// number of decimal places normally shown
+			decimals: 2,
+			// array of numbers indicating the size of each number group.
+			// TODO: more detailed description and example
+			groupSizes: [ 3 ],
+			// string that separates number groups, as in 1,000,000
+			",": ",",
+			// string that separates a number from the fractional portion, as in 1.99
+			".": ".",
+			// symbol used to represent a percentage
+			symbol: "%"
+		},
+		currency: {
+			// [negativePattern, positivePattern]
+			//   negativePattern: one of "($n)|-$n|$-n|$n-|(n$)|-n$|n-$|n$-|-n $|-$ n|n $-|$ n-|$ -n|n- $|($ n)|(n $)"
+			//   positivePattern: one of "$n|n$|$ n|n $"
+			pattern: [ "($n)", "$n" ],
+			// number of decimal places normally shown
+			decimals: 2,
+			// array of numbers indicating the size of each number group.
+			// TODO: more detailed description and example
+			groupSizes: [ 3 ],
+			// string that separates number groups, as in 1,000,000
+			",": ",",
+			// string that separates a number from the fractional portion, as in 1.99
+			".": ".",
+			// symbol used to represent currency
+			symbol: "$"
+		}
+	},
+	// calendars defines all the possible calendars used by this culture.
+	// There should be at least one defined with name "standard", and is the default
+	// calendar used by the culture.
+	// A calendar contains information about how dates are formatted, information about
+	// the calendar's eras, a standard set of the date formats,
+	// translations for day and month names, and if the calendar is not based on the Gregorian
+	// calendar, conversion functions to and from the Gregorian calendar.
+	calendars: {
+		standard: {
+			// name that identifies the type of calendar this is
+			name: "Gregorian_USEnglish",
+			// separator of parts of a date (e.g. "/" in 11/05/1955)
+			"/": "/",
+			// separator of parts of a time (e.g. ":" in 05:44 PM)
+			":": ":",
+			// the first day of the week (0 = Sunday, 1 = Monday, etc)
+			firstDay: 0,
+			days: {
+				// full day names
+				names: [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
+				// abbreviated day names
+				namesAbbr: [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ],
+				// shortest day names
+				namesShort: [ "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" ]
+			},
+			months: {
+				// full month names (13 months for lunar calendards -- 13th month should be "" if not lunar)
+				names: [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", "" ],
+				// abbreviated month names
+				namesAbbr: [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "" ]
+			},
+			// AM and PM designators in one of these forms:
+			// The usual view, and the upper and lower case versions
+			//   [ standard, lowercase, uppercase ]
+			// The culture does not use AM or PM (likely all standard date formats use 24 hour time)
+			//   null
+			AM: [ "AM", "am", "AM" ],
+			PM: [ "PM", "pm", "PM" ],
+			eras: [
+				// eras in reverse chronological order.
+				// name: the name of the era in this culture (e.g. A.D., C.E.)
+				// start: when the era starts in ticks (gregorian, gmt), null if it is the earliest supported era.
+				// offset: offset in years from gregorian calendar
+				{
+					"name": "A.D.",
+					"start": null,
+					"offset": 0
+				}
+			],
+			// when a two digit year is given, it will never be parsed as a four digit
+			// year greater than this year (in the appropriate era for the culture)
+			// Set it as a full year (e.g. 2029) or use an offset format starting from
+			// the current year: "+19" would correspond to 2029 if the current year 2010.
+			twoDigitYearMax: 2029,
+			// set of predefined date and time patterns used by the culture
+			// these represent the format someone in this culture would expect
+			// to see given the portions of the date that are shown.
+			patterns: {
+				// short date pattern
+				d: "M/d/yyyy",
+				// long date pattern
+				D: "dddd, MMMM dd, yyyy",
+				// short time pattern
+				t: "h:mm tt",
+				// long time pattern
+				T: "h:mm:ss tt",
+				// long date, short time pattern
+				f: "dddd, MMMM dd, yyyy h:mm tt",
+				// long date, long time pattern
+				F: "dddd, MMMM dd, yyyy h:mm:ss tt",
+				// month/day pattern
+				M: "MMMM dd",
+				// month/year pattern
+				Y: "yyyy MMMM",
+				// S is a sortable format that does not vary by culture
+				S: "yyyy\u0027-\u0027MM\u0027-\u0027dd\u0027T\u0027HH\u0027:\u0027mm\u0027:\u0027ss"
+			}
+			// optional fields for each calendar:
+			/*
+			monthsGenitive:
+				Same as months but used when the day preceeds the month.
+				Omit if the culture has no genitive distinction in month names.
+				For an explaination of genitive months, see http://blogs.msdn.com/michkap/archive/2004/12/25/332259.aspx
+			convert:
+				Allows for the support of non-gregorian based calendars. This convert object is used to
+				to convert a date to and from a gregorian calendar date to handle parsing and formatting.
+				The two functions:
+					fromGregorian( date )
+						Given the date as a parameter, return an array with parts [ year, month, day ]
+						corresponding to the non-gregorian based year, month, and day for the calendar.
+					toGregorian( year, month, day )
+						Given the non-gregorian year, month, and day, return a new Date() object
+						set to the corresponding date in the gregorian calendar.
+			*/
+		}
+	},
+	// For localized strings
+	messages: {}
+};
+
+Globalize.cultures[ "default" ].calendar = Globalize.cultures[ "default" ].calendars.standard;
+
+Globalize.cultures.en = Globalize.cultures[ "default" ];
+
+Globalize.cultureSelector = "en";
+
+//
+// private variables
+//
+
+regexHex = /^0x[a-f0-9]+$/i;
+regexInfinity = /^[+\-]?infinity$/i;
+regexParseFloat = /^[+\-]?\d*\.?\d*(e[+\-]?\d+)?$/;
+regexTrim = /^\s+|\s+$/g;
+
+//
+// private JavaScript utility functions
+//
+
+arrayIndexOf = function( array, item ) {
+	if ( array.indexOf ) {
+		return array.indexOf( item );
+	}
+	for ( var i = 0, length = array.length; i < length; i++ ) {
+		if ( array[i] === item ) {
+			return i;
+		}
+	}
+	return -1;
+};
+
+endsWith = function( value, pattern ) {
+	return value.substr( value.length - pattern.length ) === pattern;
+};
+
+extend = function() {
+	var options, name, src, copy, copyIsArray, clone,
+		target = arguments[0] || {},
+		i = 1,
+		length = arguments.length,
+		deep = false;
+
+	// Handle a deep copy situation
+	if ( typeof target === "boolean" ) {
+		deep = target;
+		target = arguments[1] || {};
+		// skip the boolean and the target
+		i = 2;
+	}
+
+	// Handle case when target is a string or something (possible in deep copy)
+	if ( typeof target !== "object" && !isFunction(target) ) {
+		target = {};
+	}
+
+	for ( ; i < length; i++ ) {
+		// Only deal with non-null/undefined values
+		if ( (options = arguments[ i ]) != null ) {
+			// Extend the base object
+			for ( name in options ) {
+				src = target[ name ];
+				copy = options[ name ];
+
+				// Prevent never-ending loop
+				if ( target === copy ) {
+					continue;
+				}
+
+				// Recurse if we're merging plain objects or arrays
+				if ( deep && copy && ( isObject(copy) || (copyIsArray = isArray(copy)) ) ) {
+					if ( copyIsArray ) {
+						copyIsArray = false;
+						clone = src && isArray(src) ? src : [];
+
+					} else {
+						clone = src && isObject(src) ? src : {};
+					}
+
+					// Never move original objects, clone them
+					target[ name ] = extend( deep, clone, copy );
+
+				// Don't bring in undefined values
+				} else if ( copy !== undefined ) {
+					target[ name ] = copy;
+				}
+			}
+		}
+	}
+
+	// Return the modified object
+	return target;
+};
+
+isArray = Array.isArray || function( obj ) {
+	return Object.prototype.toString.call( obj ) === "[object Array]";
+};
+
+isFunction = function( obj ) {
+	return Object.prototype.toString.call( obj ) === "[object Function]";
+};
+
+isObject = function( obj ) {
+	return Object.prototype.toString.call( obj ) === "[object Object]";
+};
+
+startsWith = function( value, pattern ) {
+	return value.indexOf( pattern ) === 0;
+};
+
+trim = function( value ) {
+	return ( value + "" ).replace( regexTrim, "" );
+};
+
+truncate = function( value ) {
+	if ( isNaN( value ) ) {
+		return NaN;
+	}
+	return Math[ value < 0 ? "ceil" : "floor" ]( value );
+};
+
+zeroPad = function( str, count, left ) {
+	var l;
+	for ( l = str.length; l < count; l += 1 ) {
+		str = ( left ? ("0" + str) : (str + "0") );
+	}
+	return str;
+};
+
+//
+// private Globalization utility functions
+//
+
+appendPreOrPostMatch = function( preMatch, strings ) {
+	// appends pre- and post- token match strings while removing escaped characters.
+	// Returns a single quote count which is used to determine if the token occurs
+	// in a string literal.
+	var quoteCount = 0,
+		escaped = false;
+	for ( var i = 0, il = preMatch.length; i < il; i++ ) {
+		var c = preMatch.charAt( i );
+		switch ( c ) {
+			case "\'":
+				if ( escaped ) {
+					strings.push( "\'" );
+				}
+				else {
+					quoteCount++;
+				}
+				escaped = false;
+				break;
+			case "\\":
+				if ( escaped ) {
+					strings.push( "\\" );
+				}
+				escaped = !escaped;
+				break;
+			default:
+				strings.push( c );
+				escaped = false;
+				break;
+		}
+	}
+	return quoteCount;
+};
+
+expandFormat = function( cal, format ) {
+	// expands unspecified or single character date formats into the full pattern.
+	format = format || "F";
+	var pattern,
+		patterns = cal.patterns,
+		len = format.length;
+	if ( len === 1 ) {
+		pattern = patterns[ format ];
+		if ( !pattern ) {
+			throw "Invalid date format string \'" + format + "\'.";
+		}
+		format = pattern;
+	}
+	else if ( len === 2 && format.charAt(0) === "%" ) {
+		// %X escape format -- intended as a custom format string that is only one character, not a built-in format.
+		format = format.charAt( 1 );
+	}
+	return format;
+};
+
+formatDate = function( value, format, culture ) {
+	var cal = culture.calendar,
+		convert = cal.convert,
+		ret;
+
+	if ( !format || !format.length || format === "i" ) {
+		if ( culture && culture.name.length ) {
+			if ( convert ) {
+				// non-gregorian calendar, so we cannot use built-in toLocaleString()
+				ret = formatDate( value, cal.patterns.F, culture );
+			}
+			else {
+				var eraDate = new Date( value.getTime() ),
+					era = getEra( value, cal.eras );
+				eraDate.setFullYear( getEraYear(value, cal, era) );
+				ret = eraDate.toLocaleString();
+			}
+		}
+		else {
+			ret = value.toString();
+		}
+		return ret;
+	}
+
+	var eras = cal.eras,
+		sortable = format === "s";
+	format = expandFormat( cal, format );
+
+	// Start with an empty string
+	ret = [];
+	var hour,
+		zeros = [ "0", "00", "000" ],
+		foundDay,
+		checkedDay,
+		dayPartRegExp = /([^d]|^)(d|dd)([^d]|$)/g,
+		quoteCount = 0,
+		tokenRegExp = getTokenRegExp(),
+		converted;
+
+	function padZeros( num, c ) {
+		var r, s = num + "";
+		if ( c > 1 && s.length < c ) {
+			r = ( zeros[c - 2] + s);
+			return r.substr( r.length - c, c );
+		}
+		else {
+			r = s;
+		}
+		return r;
+	}
+
+	function hasDay() {
+		if ( foundDay || checkedDay ) {
+			return foundDay;
+		}
+		foundDay = dayPartRegExp.test( format );
+		checkedDay = true;
+		return foundDay;
+	}
+
+	function getPart( date, part ) {
+		if ( converted ) {
+			return converted[ part ];
+		}
+		switch ( part ) {
+			case 0:
+				return date.getFullYear();
+			case 1:
+				return date.getMonth();
+			case 2:
+				return date.getDate();
+			default:
+				throw "Invalid part value " + part;
+		}
+	}
+
+	if ( !sortable && convert ) {
+		converted = convert.fromGregorian( value );
+	}
+
+	for ( ; ; ) {
+		// Save the current index
+		var index = tokenRegExp.lastIndex,
+			// Look for the next pattern
+			ar = tokenRegExp.exec( format );
+
+		// Append the text before the pattern (or the end of the string if not found)
+		var preMatch = format.slice( index, ar ? ar.index : format.length );
+		quoteCount += appendPreOrPostMatch( preMatch, ret );
+
+		if ( !ar ) {
+			break;
+		}
+
+		// do not replace any matches that occur inside a string literal.
+		if ( quoteCount % 2 ) {
+			ret.push( ar[0] );
+			continue;
+		}
+
+		var current = ar[ 0 ],
+			clength = current.length;
+
+		switch ( current ) {
+			case "ddd":
+				//Day of the week, as a three-letter abbreviation
+			case "dddd":
+				// Day of the week, using the full name
+				var names = ( clength === 3 ) ? cal.days.namesAbbr : cal.days.names;
+				ret.push( names[value.getDay()] );
+				break;
+			case "d":
+				// Day of month, without leading zero for single-digit days
+			case "dd":
+				// Day of month, with leading zero for single-digit days
+				foundDay = true;
+				ret.push(
+					padZeros( getPart(value, 2), clength )
+				);
+				break;
+			case "MMM":
+				// Month, as a three-letter abbreviation
+			case "MMMM":
+				// Month, using the full name
+				var part = getPart( value, 1 );
+				ret.push(
+					( cal.monthsGenitive && hasDay() ) ?
+					( cal.monthsGenitive[ clength === 3 ? "namesAbbr" : "names" ][ part ] ) :
+					( cal.months[ clength === 3 ? "namesAbbr" : "names" ][ part ] )
+				);
+				break;
+			case "M":
+				// Month, as digits, with no leading zero for single-digit months
+			case "MM":
+				// Month, as digits, with leading zero for single-digit months
+				ret.push(
+					padZeros( getPart(value, 1) + 1, clength )
+				);
+				break;
+			case "y":
+				// Year, as two digits, but with no leading zero for years less than 10
+			case "yy":
+				// Year, as two digits, with leading zero for years less than 10
+			case "yyyy":
+				// Year represented by four full digits
+				part = converted ? converted[ 0 ] : getEraYear( value, cal, getEra(value, eras), sortable );
+				if ( clength < 4 ) {
+					part = part % 100;
+				}
+				ret.push(
+					padZeros( part, clength )
+				);
+				break;
+			case "h":
+				// Hours with no leading zero for single-digit hours, using 12-hour clock
+			case "hh":
+				// Hours with leading zero for single-digit hours, using 12-hour clock
+				hour = value.getHours() % 12;
+				if ( hour === 0 ) hour = 12;
+				ret.push(
+					padZeros( hour, clength )
+				);
+				break;
+			case "H":
+				// Hours with no leading zero for single-digit hours, using 24-hour clock
+			case "HH":
+				// Hours with leading zero for single-digit hours, using 24-hour clock
+				ret.push(
+					padZeros( value.getHours(), clength )
+				);
+				break;
+			case "m":
+				// Minutes with no leading zero for single-digit minutes
+			case "mm":
+				// Minutes with leading zero for single-digit minutes
+				ret.push(
+					padZeros( value.getMinutes(), clength )
+				);
+				break;
+			case "s":
+				// Seconds with no leading zero for single-digit seconds
+			case "ss":
+				// Seconds with leading zero for single-digit seconds
+				ret.push(
+					padZeros( value.getSeconds(), clength )
+				);
+				break;
+			case "t":
+				// One character am/pm indicator ("a" or "p")
+			case "tt":
+				// Multicharacter am/pm indicator
+				part = value.getHours() < 12 ? ( cal.AM ? cal.AM[0] : " " ) : ( cal.PM ? cal.PM[0] : " " );
+				ret.push( clength === 1 ? part.charAt(0) : part );
+				break;
+			case "f":
+				// Deciseconds
+			case "ff":
+				// Centiseconds
+			case "fff":
+				// Milliseconds
+				ret.push(
+					padZeros( value.getMilliseconds(), 3 ).substr( 0, clength )
+				);
+				break;
+			case "z":
+				// Time zone offset, no leading zero
+			case "zz":
+				// Time zone offset with leading zero
+				hour = value.getTimezoneOffset() / 60;
+				ret.push(
+					( hour <= 0 ? "+" : "-" ) + padZeros( Math.floor(Math.abs(hour)), clength )
+				);
+				break;
+			case "zzz":
+				// Time zone offset with leading zero
+				hour = value.getTimezoneOffset() / 60;
+				ret.push(
+					( hour <= 0 ? "+" : "-" ) + padZeros( Math.floor(Math.abs(hour)), 2 ) +
+					// Hard coded ":" separator, rather than using cal.TimeSeparator
+					// Repeated here for consistency, plus ":" was already assumed in date parsing.
+					":" + padZeros( Math.abs(value.getTimezoneOffset() % 60), 2 )
+				);
+				break;
+			case "g":
+			case "gg":
+				if ( cal.eras ) {
+					ret.push(
+						cal.eras[ getEra(value, eras) ].name
+					);
+				}
+				break;
+		case "/":
+			ret.push( cal["/"] );
+			break;
+		default:
+			throw "Invalid date format pattern \'" + current + "\'.";
+		}
+	}
+	return ret.join( "" );
+};
+
+// formatNumber
+(function() {
+	var expandNumber;
+
+	expandNumber = function( number, precision, formatInfo ) {
+		var groupSizes = formatInfo.groupSizes,
+			curSize = groupSizes[ 0 ],
+			curGroupIndex = 1,
+			factor = Math.pow( 10, precision ),
+			rounded = Math.round( number * factor ) / factor;
+
+		if ( !isFinite(rounded) ) {
+			rounded = number;
+		}
+		number = rounded;
+
+		var numberString = number+"",
+			right = "",
+			split = numberString.split( /e/i ),
+			exponent = split.length > 1 ? parseInt( split[1], 10 ) : 0;
+		numberString = split[ 0 ];
+		split = numberString.split( "." );
+		numberString = split[ 0 ];
+		right = split.length > 1 ? split[ 1 ] : "";
+
+		var l;
+		if ( exponent > 0 ) {
+			right = zeroPad( right, exponent, false );
+			numberString += right.slice( 0, exponent );
+			right = right.substr( exponent );
+		}
+		else if ( exponent < 0 ) {
+			exponent = -exponent;
+			numberString = zeroPad( numberString, exponent + 1, true );
+			right = numberString.slice( -exponent, numberString.length ) + right;
+			numberString = numberString.slice( 0, -exponent );
+		}
+
+		if ( precision > 0 ) {
+			right = formatInfo[ "." ] +
+				( (right.length > precision) ? right.slice(0, precision) : zeroPad(right, precision) );
+		}
+		else {
+			right = "";
+		}
+
+		var stringIndex = numberString.length - 1,
+			sep = formatInfo[ "," ],
+			ret = "";
+
+		while ( stringIndex >= 0 ) {
+			if ( curSize === 0 || curSize > stringIndex ) {
+				return numberString.slice( 0, stringIndex + 1 ) + ( ret.length ? (sep + ret + right) : right );
+			}
+			ret = numberString.slice( stringIndex - curSize + 1, stringIndex + 1 ) + ( ret.length ? (sep + ret) : "" );
+
+			stringIndex -= curSize;
+
+			if ( curGroupIndex < groupSizes.length ) {
+				curSize = groupSizes[ curGroupIndex ];
+				curGroupIndex++;
+			}
+		}
+
+		return numberString.slice( 0, stringIndex + 1 ) + sep + ret + right;
+	};
+
+	formatNumber = function( value, format, culture ) {
+		if ( !isFinite(value) ) {
+			if ( value === Infinity ) {
+				return culture.numberFormat.positiveInfinity;
+			}
+			if ( value === -Infinity ) {
+				return culture.numberFormat.negativeInfinity;
+			}
+			return culture.numberFormat[ "NaN" ];
+		}
+		if ( !format || format === "i" ) {
+			return culture.name.length ? value.toLocaleString() : value.toString();
+		}
+		format = format || "D";
+
+		var nf = culture.numberFormat,
+			number = Math.abs( value ),
+			precision = -1,
+			pattern;
+		if ( format.length > 1 ) precision = parseInt( format.slice(1), 10 );
+
+		var current = format.charAt( 0 ).toUpperCase(),
+			formatInfo;
+
+		switch ( current ) {
+			case "D":
+				pattern = "n";
+				number = truncate( number );
+				if ( precision !== -1 ) {
+					number = zeroPad( "" + number, precision, true );
+				}
+				if ( value < 0 ) number = "-" + number;
+				break;
+			case "N":
+				formatInfo = nf;
+				/* falls through */
+			case "C":
+				formatInfo = formatInfo || nf.currency;
+				/* falls through */
+			case "P":
+				formatInfo = formatInfo || nf.percent;
+				pattern = value < 0 ? formatInfo.pattern[ 0 ] : ( formatInfo.pattern[1] || "n" );
+				if ( precision === -1 ) precision = formatInfo.decimals;
+				number = expandNumber( number * (current === "P" ? 100 : 1), precision, formatInfo );
+				break;
+			default:
+				throw "Bad number format specifier: " + current;
+		}
+
+		var patternParts = /n|\$|-|%/g,
+			ret = "";
+		for ( ; ; ) {
+			var index = patternParts.lastIndex,
+				ar = patternParts.exec( pattern );
+
+			ret += pattern.slice( index, ar ? ar.index : pattern.length );
+
+			if ( !ar ) {
+				break;
+			}
+
+			switch ( ar[0] ) {
+				case "n":
+					ret += number;
+					break;
+				case "$":
+					ret += nf.currency.symbol;
+					break;
+				case "-":
+					// don't make 0 negative
+					if ( /[1-9]/.test(number) ) {
+						ret += nf[ "-" ];
+					}
+					break;
+				case "%":
+					ret += nf.percent.symbol;
+					break;
+			}
+		}
+
+		return ret;
+	};
+
+}());
+
+getTokenRegExp = function() {
+	// regular expression for matching date and time tokens in format strings.
+	return (/\/|dddd|ddd|dd|d|MMMM|MMM|MM|M|yyyy|yy|y|hh|h|HH|H|mm|m|ss|s|tt|t|fff|ff|f|zzz|zz|z|gg|g/g);
+};
+
+getEra = function( date, eras ) {
+	if ( !eras ) return 0;
+	var start, ticks = date.getTime();
+	for ( var i = 0, l = eras.length; i < l; i++ ) {
+		start = eras[ i ].start;
+		if ( start === null || ticks >= start ) {
+			return i;
+		}
+	}
+	return 0;
+};
+
+getEraYear = function( date, cal, era, sortable ) {
+	var year = date.getFullYear();
+	if ( !sortable && cal.eras ) {
+		// convert normal gregorian year to era-shifted gregorian
+		// year by subtracting the era offset
+		year -= cal.eras[ era ].offset;
+	}
+	return year;
+};
+
+// parseExact
+(function() {
+	var expandYear,
+		getDayIndex,
+		getMonthIndex,
+		getParseRegExp,
+		outOfRange,
+		toUpper,
+		toUpperArray;
+
+	expandYear = function( cal, year ) {
+		// expands 2-digit year into 4 digits.
+		if ( year < 100 ) {
+			var now = new Date(),
+				era = getEra( now ),
+				curr = getEraYear( now, cal, era ),
+				twoDigitYearMax = cal.twoDigitYearMax;
+			twoDigitYearMax = typeof twoDigitYearMax === "string" ? new Date().getFullYear() % 100 + parseInt( twoDigitYearMax, 10 ) : twoDigitYearMax;
+			year += curr - ( curr % 100 );
+			if ( year > twoDigitYearMax ) {
+				year -= 100;
+			}
+		}
+		return year;
+	};
+
+	getDayIndex = function	( cal, value, abbr ) {
+		var ret,
+			days = cal.days,
+			upperDays = cal._upperDays;
+		if ( !upperDays ) {
+			cal._upperDays = upperDays = [
+				toUpperArray( days.names ),
+				toUpperArray( days.namesAbbr ),
+				toUpperArray( days.namesShort )
+			];
+		}
+		value = toUpper( value );
+		if ( abbr ) {
+			ret = arrayIndexOf( upperDays[1], value );
+			if ( ret === -1 ) {
+				ret = arrayIndexOf( upperDays[2], value );
+			}
+		}
+		else {
+			ret = arrayIndexOf( upperDays[0], value );
+		}
+		return ret;
+	};
+
+	getMonthIndex = function( cal, value, abbr ) {
+		var months = cal.months,
+			monthsGen = cal.monthsGenitive || cal.months,
+			upperMonths = cal._upperMonths,
+			upperMonthsGen = cal._upperMonthsGen;
+		if ( !upperMonths ) {
+			cal._upperMonths = upperMonths = [
+				toUpperArray( months.names ),
+				toUpperArray( months.namesAbbr )
+			];
+			cal._upperMonthsGen = upperMonthsGen = [
+				toUpperArray( monthsGen.names ),
+				toUpperArray( monthsGen.namesAbbr )
+			];
+		}
+		value = toUpper( value );
+		var i = arrayIndexOf( abbr ? upperMonths[1] : upperMonths[0], value );
+		if ( i < 0 ) {
+			i = arrayIndexOf( abbr ? upperMonthsGen[1] : upperMonthsGen[0], value );
+		}
+		return i;
+	};
+
+	getParseRegExp = function( cal, format ) {
+		// converts a format string into a regular expression with groups that
+		// can be used to extract date fields from a date string.
+		// check for a cached parse regex.
+		var re = cal._parseRegExp;
+		if ( !re ) {
+			cal._parseRegExp = re = {};
+		}
+		else {
+			var reFormat = re[ format ];
+			if ( reFormat ) {
+				return reFormat;
+			}
+		}
+
+		// expand single digit formats, then escape regular expression characters.
+		var expFormat = expandFormat( cal, format ).replace( /([\^\$\.\*\+\?\|\[\]\(\)\{\}])/g, "\\\\$1" ),
+			regexp = [ "^" ],
+			groups = [],
+			index = 0,
+			quoteCount = 0,
+			tokenRegExp = getTokenRegExp(),
+			match;
+
+		// iterate through each date token found.
+		while ( (match = tokenRegExp.exec(expFormat)) !== null ) {
+			var preMatch = expFormat.slice( index, match.index );
+			index = tokenRegExp.lastIndex;
+
+			// don't replace any matches that occur inside a string literal.
+			quoteCount += appendPreOrPostMatch( preMatch, regexp );
+			if ( quoteCount % 2 ) {
+				regexp.push( match[0] );
+				continue;
+			}
+
+			// add a regex group for the token.
+			var m = match[ 0 ],
+				len = m.length,
+				add;
+			switch ( m ) {
+				case "dddd": case "ddd":
+				case "MMMM": case "MMM":
+				case "gg": case "g":
+					add = "(\\D+)";
+					break;
+				case "tt": case "t":
+					add = "(\\D*)";
+					break;
+				case "yyyy":
+				case "fff":
+				case "ff":
+				case "f":
+					add = "(\\d{" + len + "})";
+					break;
+				case "dd": case "d":
+				case "MM": case "M":
+				case "yy": case "y":
+				case "HH": case "H":
+				case "hh": case "h":
+				case "mm": case "m":
+				case "ss": case "s":
+					add = "(\\d\\d?)";
+					break;
+				case "zzz":
+					add = "([+-]?\\d\\d?:\\d{2})";
+					break;
+				case "zz": case "z":
+					add = "([+-]?\\d\\d?)";
+					break;
+				case "/":
+					add = "(\\/)";
+					break;
+				default:
+					throw "Invalid date format pattern \'" + m + "\'.";
+			}
+			if ( add ) {
+				regexp.push( add );
+			}
+			groups.push( match[0] );
+		}
+		appendPreOrPostMatch( expFormat.slice(index), regexp );
+		regexp.push( "$" );
+
+		// allow whitespace to differ when matching formats.
+		var regexpStr = regexp.join( "" ).replace( /\s+/g, "\\s+" ),
+			parseRegExp = { "regExp": regexpStr, "groups": groups };
+
+		// cache the regex for this format.
+		return re[ format ] = parseRegExp;
+	};
+
+	outOfRange = function( value, low, high ) {
+		return value < low || value > high;
+	};
+
+	toUpper = function( value ) {
+		// "he-IL" has non-breaking space in weekday names.
+		return value.split( "\u00A0" ).join( " " ).toUpperCase();
+	};
+
+	toUpperArray = function( arr ) {
+		var results = [];
+		for ( var i = 0, l = arr.length; i < l; i++ ) {
+			results[ i ] = toUpper( arr[i] );
+		}
+		return results;
+	};
+
+	parseExact = function( value, format, culture ) {
+		// try to parse the date string by matching against the format string
+		// while using the specified culture for date field names.
+		value = trim( value );
+		var cal = culture.calendar,
+			// convert date formats into regular expressions with groupings.
+			// use the regexp to determine the input format and extract the date fields.
+			parseInfo = getParseRegExp( cal, format ),
+			match = new RegExp( parseInfo.regExp ).exec( value );
+		if ( match === null ) {
+			return null;
+		}
+		// found a date format that matches the input.
+		var groups = parseInfo.groups,
+			era = null, year = null, month = null, date = null, weekDay = null,
+			hour = 0, hourOffset, min = 0, sec = 0, msec = 0, tzMinOffset = null,
+			pmHour = false;
+		// iterate the format groups to extract and set the date fields.
+		for ( var j = 0, jl = groups.length; j < jl; j++ ) {
+			var matchGroup = match[ j + 1 ];
+			if ( matchGroup ) {
+				var current = groups[ j ],
+					clength = current.length,
+					matchInt = parseInt( matchGroup, 10 );
+				switch ( current ) {
+					case "dd": case "d":
+						// Day of month.
+						date = matchInt;
+						// check that date is generally in valid range, also checking overflow below.
+						if ( outOfRange(date, 1, 31) ) return null;
+						break;
+					case "MMM": case "MMMM":
+						month = getMonthIndex( cal, matchGroup, clength === 3 );
+						if ( outOfRange(month, 0, 11) ) return null;
+						break;
+					case "M": case "MM":
+						// Month.
+						month = matchInt - 1;
+						if ( outOfRange(month, 0, 11) ) return null;
+						break;
+					case "y": case "yy":
+					case "yyyy":
+						year = clength < 4 ? expandYear( cal, matchInt ) : matchInt;
+						if ( outOfRange(year, 0, 9999) ) return null;
+						break;
+					case "h": case "hh":
+						// Hours (12-hour clock).
+						hour = matchInt;
+						if ( hour === 12 ) hour = 0;
+						if ( outOfRange(hour, 0, 11) ) return null;
+						break;
+					case "H": case "HH":
+						// Hours (24-hour clock).
+						hour = matchInt;
+						if ( outOfRange(hour, 0, 23) ) return null;
+						break;
+					case "m": case "mm":
+						// Minutes.
+						min = matchInt;
+						if ( outOfRange(min, 0, 59) ) return null;
+						break;
+					case "s": case "ss":
+						// Seconds.
+						sec = matchInt;
+						if ( outOfRange(sec, 0, 59) ) return null;
+						break;
+					case "tt": case "t":
+						// AM/PM designator.
+						// see if it is standard, upper, or lower case PM. If not, ensure it is at least one of
+						// the AM tokens. If not, fail the parse for this format.
+						pmHour = cal.PM && ( matchGroup === cal.PM[0] || matchGroup === cal.PM[1] || matchGroup === cal.PM[2] );
+						if (
+							!pmHour && (
+								!cal.AM || ( matchGroup !== cal.AM[0] && matchGroup !== cal.AM[1] && matchGroup !== cal.AM[2] )
+							)
+						) return null;
+						break;
+					case "f":
+						// Deciseconds.
+					case "ff":
+						// Centiseconds.
+					case "fff":
+						// Milliseconds.
+						msec = matchInt * Math.pow( 10, 3 - clength );
+						if ( outOfRange(msec, 0, 999) ) return null;
+						break;
+					case "ddd":
+						// Day of week.
+					case "dddd":
+						// Day of week.
+						weekDay = getDayIndex( cal, matchGroup, clength === 3 );
+						if ( outOfRange(weekDay, 0, 6) ) return null;
+						break;
+					case "zzz":
+						// Time zone offset in +/- hours:min.
+						var offsets = matchGroup.split( /:/ );
+						if ( offsets.length !== 2 ) return null;
+						hourOffset = parseInt( offsets[0], 10 );
+						if ( outOfRange(hourOffset, -12, 13) ) return null;
+						var minOffset = parseInt( offsets[1], 10 );
+						if ( outOfRange(minOffset, 0, 59) ) return null;
+						tzMinOffset = ( hourOffset * 60 ) + ( startsWith(matchGroup, "-") ? -minOffset : minOffset );
+						break;
+					case "z": case "zz":
+						// Time zone offset in +/- hours.
+						hourOffset = matchInt;
+						if ( outOfRange(hourOffset, -12, 13) ) return null;
+						tzMinOffset = hourOffset * 60;
+						break;
+					case "g": case "gg":
+						var eraName = matchGroup;
+						if ( !eraName || !cal.eras ) return null;
+						eraName = trim( eraName.toLowerCase() );
+						for ( var i = 0, l = cal.eras.length; i < l; i++ ) {
+							if ( eraName === cal.eras[i].name.toLowerCase() ) {
+								era = i;
+								break;
+							}
+						}
+						// could not find an era with that name
+						if ( era === null ) return null;
+						break;
+				}
+			}
+		}
+		var result = new Date(), defaultYear, convert = cal.convert;
+		defaultYear = convert ? convert.fromGregorian( result )[ 0 ] : result.getFullYear();
+		if ( year === null ) {
+			year = defaultYear;
+		}
+		else if ( cal.eras ) {
+			// year must be shifted to normal gregorian year
+			// but not if year was not specified, its already normal gregorian
+			// per the main if clause above.
+			year += cal.eras[( era || 0 )].offset;
+		}
+		// set default day and month to 1 and January, so if unspecified, these are the defaults
+		// instead of the current day/month.
+		if ( month === null ) {
+			month = 0;
+		}
+		if ( date === null ) {
+			date = 1;
+		}
+		// now have year, month, and date, but in the culture's calendar.
+		// convert to gregorian if necessary
+		if ( convert ) {
+			result = convert.toGregorian( year, month, date );
+			// conversion failed, must be an invalid match
+			if ( result === null ) return null;
+		}
+		else {
+			// have to set year, month and date together to avoid overflow based on current date.
+			result.setFullYear( year, month, date );
+			// check to see if date overflowed for specified month (only checked 1-31 above).
+			if ( result.getDate() !== date ) return null;
+			// invalid day of week.
+			if ( weekDay !== null && result.getDay() !== weekDay ) {
+				return null;
+			}
+		}
+		// if pm designator token was found make sure the hours fit the 24-hour clock.
+		if ( pmHour && hour < 12 ) {
+			hour += 12;
+		}
+		result.setHours( hour, min, sec, msec );
+		if ( tzMinOffset !== null ) {
+			// adjust timezone to utc before applying local offset.
+			var adjustedMin = result.getMinutes() - ( tzMinOffset + result.getTimezoneOffset() );
+			// Safari limits hours and minutes to the range of -127 to 127.  We need to use setHours
+			// to ensure both these fields will not exceed this range.	adjustedMin will range
+			// somewhere between -1440 and 1500, so we only need to split this into hours.
+			result.setHours( result.getHours() + parseInt(adjustedMin / 60, 10), adjustedMin % 60 );
+		}
+		return result;
+	};
+}());
+
+parseNegativePattern = function( value, nf, negativePattern ) {
+	var neg = nf[ "-" ],
+		pos = nf[ "+" ],
+		ret;
+	switch ( negativePattern ) {
+		case "n -":
+			neg = " " + neg;
+			pos = " " + pos;
+			/* falls through */
+		case "n-":
+			if ( endsWith(value, neg) ) {
+				ret = [ "-", value.substr(0, value.length - neg.length) ];
+			}
+			else if ( endsWith(value, pos) ) {
+				ret = [ "+", value.substr(0, value.length - pos.length) ];
+			}
+			break;
+		case "- n":
+			neg += " ";
+			pos += " ";
+			/* falls through */
+		case "-n":
+			if ( startsWith(value, neg) ) {
+				ret = [ "-", value.substr(neg.length) ];
+			}
+			else if ( startsWith(value, pos) ) {
+				ret = [ "+", value.substr(pos.length) ];
+			}
+			break;
+		case "(n)":
+			if ( startsWith(value, "(") && endsWith(value, ")") ) {
+				ret = [ "-", value.substr(1, value.length - 2) ];
+			}
+			break;
+	}
+	return ret || [ "", value ];
+};
+
+//
+// public instance functions
+//
+
+Globalize.prototype.findClosestCulture = function( cultureSelector ) {
+	return Globalize.findClosestCulture.call( this, cultureSelector );
+};
+
+Globalize.prototype.format = function( value, format, cultureSelector ) {
+	return Globalize.format.call( this, value, format, cultureSelector );
+};
+
+Globalize.prototype.localize = function( key, cultureSelector ) {
+	return Globalize.localize.call( this, key, cultureSelector );
+};
+
+Globalize.prototype.parseInt = function( value, radix, cultureSelector ) {
+	return Globalize.parseInt.call( this, value, radix, cultureSelector );
+};
+
+Globalize.prototype.parseFloat = function( value, radix, cultureSelector ) {
+	return Globalize.parseFloat.call( this, value, radix, cultureSelector );
+};
+
+Globalize.prototype.culture = function( cultureSelector ) {
+	return Globalize.culture.call( this, cultureSelector );
+};
+
+//
+// public singleton functions
+//
+
+Globalize.addCultureInfo = function( cultureName, baseCultureName, info ) {
+
+	var base = {},
+		isNew = false;
+
+	if ( typeof cultureName !== "string" ) {
+		// cultureName argument is optional string. If not specified, assume info is first
+		// and only argument. Specified info deep-extends current culture.
+		info = cultureName;
+		cultureName = this.culture().name;
+		base = this.cultures[ cultureName ];
+	} else if ( typeof baseCultureName !== "string" ) {
+		// baseCultureName argument is optional string. If not specified, assume info is second
+		// argument. Specified info deep-extends specified culture.
+		// If specified culture does not exist, create by deep-extending default
+		info = baseCultureName;
+		isNew = ( this.cultures[ cultureName ] == null );
+		base = this.cultures[ cultureName ] || this.cultures[ "default" ];
+	} else {
+		// cultureName and baseCultureName specified. Assume a new culture is being created
+		// by deep-extending an specified base culture
+		isNew = true;
+		base = this.cultures[ baseCultureName ];
+	}
+
+	this.cultures[ cultureName ] = extend(true, {},
+		base,
+		info
+	);
+	// Make the standard calendar the current culture if it's a new culture
+	if ( isNew ) {
+		this.cultures[ cultureName ].calendar = this.cultures[ cultureName ].calendars.standard;
+	}
+};
+
+Globalize.findClosestCulture = function( name ) {
+	var match;
+	if ( !name ) {
+		return this.findClosestCulture( this.cultureSelector ) || this.cultures[ "default" ];
+	}
+	if ( typeof name === "string" ) {
+		name = name.split( "," );
+	}
+	if ( isArray(name) ) {
+		var lang,
+			cultures = this.cultures,
+			list = name,
+			i, l = list.length,
+			prioritized = [];
+		for ( i = 0; i < l; i++ ) {
+			name = trim( list[i] );
+			var pri, parts = name.split( ";" );
+			lang = trim( parts[0] );
+			if ( parts.length === 1 ) {
+				pri = 1;
+			}
+			else {
+				name = trim( parts[1] );
+				if ( name.indexOf("q=") === 0 ) {
+					name = name.substr( 2 );
+					pri = parseFloat( name );
+					pri = isNaN( pri ) ? 0 : pri;
+				}
+				else {
+					pri = 1;
+				}
+			}
+			prioritized.push({ lang: lang, pri: pri });
+		}
+		prioritized.sort(function( a, b ) {
+			if ( a.pri < b.pri ) {
+				return 1;
+			} else if ( a.pri > b.pri ) {
+				return -1;
+			}
+			return 0;
+		});
+		// exact match
+		for ( i = 0; i < l; i++ ) {
+			lang = prioritized[ i ].lang;
+			match = cultures[ lang ];
+			if ( match ) {
+				return match;
+			}
+		}
+
+		// neutral language match
+		for ( i = 0; i < l; i++ ) {
+			lang = prioritized[ i ].lang;
+			do {
+				var index = lang.lastIndexOf( "-" );
+				if ( index === -1 ) {
+					break;
+				}
+				// strip off the last part. e.g. en-US => en
+				lang = lang.substr( 0, index );
+				match = cultures[ lang ];
+				if ( match ) {
+					return match;
+				}
+			}
+			while ( 1 );
+		}
+
+		// last resort: match first culture using that language
+		for ( i = 0; i < l; i++ ) {
+			lang = prioritized[ i ].lang;
+			for ( var cultureKey in cultures ) {
+				var culture = cultures[ cultureKey ];
+				if ( culture.language == lang ) {
+					return culture;
+				}
+			}
+		}
+	}
+	else if ( typeof name === "object" ) {
+		return name;
+	}
+	return match || null;
+};
+
+Globalize.format = function( value, format, cultureSelector ) {
+	var culture = this.findClosestCulture( cultureSelector );
+	if ( value instanceof Date ) {
+		value = formatDate( value, format, culture );
+	}
+	else if ( typeof value === "number" ) {
+		value = formatNumber( value, format, culture );
+	}
+	return value;
+};
+
+Globalize.localize = function( key, cultureSelector ) {
+	return this.findClosestCulture( cultureSelector ).messages[ key ] ||
+		this.cultures[ "default" ].messages[ key ];
+};
+
+Globalize.parseDate = function( value, formats, culture ) {
+	culture = this.findClosestCulture( culture );
+
+	var date, prop, patterns;
+	if ( formats ) {
+		if ( typeof formats === "string" ) {
+			formats = [ formats ];
+		}
+		if ( formats.length ) {
+			for ( var i = 0, l = formats.length; i < l; i++ ) {
+				var format = formats[ i ];
+				if ( format ) {
+					date = parseExact( value, format, culture );
+					if ( date ) {
+						break;
+					}
+				}
+			}
+		}
+	} else {
+		patterns = culture.calendar.patterns;
+		for ( prop in patterns ) {
+			date = parseExact( value, patterns[prop], culture );
+			if ( date ) {
+				break;
+			}
+		}
+	}
+
+	return date || null;
+};
+
+Globalize.parseInt = function( value, radix, cultureSelector ) {
+	return truncate( Globalize.parseFloat(value, radix, cultureSelector) );
+};
+
+Globalize.parseFloat = function( value, radix, cultureSelector ) {
+	// radix argument is optional
+	if ( typeof radix !== "number" ) {
+		cultureSelector = radix;
+		radix = 10;
+	}
+
+	var culture = this.findClosestCulture( cultureSelector );
+	var ret = NaN,
+		nf = culture.numberFormat;
+
+	if ( value.indexOf(culture.numberFormat.currency.symbol) > -1 ) {
+		// remove currency symbol
+		value = value.replace( culture.numberFormat.currency.symbol, "" );
+		// replace decimal seperator
+		value = value.replace( culture.numberFormat.currency["."], culture.numberFormat["."] );
+	}
+
+	// trim leading and trailing whitespace
+	value = trim( value );
+
+	// allow infinity or hexidecimal
+	if ( regexInfinity.test(value) ) {
+		ret = parseFloat( value );
+	}
+	else if ( !radix && regexHex.test(value) ) {
+		ret = parseInt( value, 16 );
+	}
+	else {
+
+		// determine sign and number
+		var signInfo = parseNegativePattern( value, nf, nf.pattern[0] ),
+			sign = signInfo[ 0 ],
+			num = signInfo[ 1 ];
+
+		// #44 - try parsing as "(n)"
+		if ( sign === "" && nf.pattern[0] !== "(n)" ) {
+			signInfo = parseNegativePattern( value, nf, "(n)" );
+			sign = signInfo[ 0 ];
+			num = signInfo[ 1 ];
+		}
+
+		// try parsing as "-n"
+		if ( sign === "" && nf.pattern[0] !== "-n" ) {
+			signInfo = parseNegativePattern( value, nf, "-n" );
+			sign = signInfo[ 0 ];
+			num = signInfo[ 1 ];
+		}
+
+		sign = sign || "+";
+
+		// determine exponent and number
+		var exponent,
+			intAndFraction,
+			exponentPos = num.indexOf( "e" );
+		if ( exponentPos < 0 ) exponentPos = num.indexOf( "E" );
+		if ( exponentPos < 0 ) {
+			intAndFraction = num;
+			exponent = null;
+		}
+		else {
+			intAndFraction = num.substr( 0, exponentPos );
+			exponent = num.substr( exponentPos + 1 );
+		}
+		// determine decimal position
+		var integer,
+			fraction,
+			decSep = nf[ "." ],
+			decimalPos = intAndFraction.indexOf( decSep );
+		if ( decimalPos < 0 ) {
+			integer = intAndFraction;
+			fraction = null;
+		}
+		else {
+			integer = intAndFraction.substr( 0, decimalPos );
+			fraction = intAndFraction.substr( decimalPos + decSep.length );
+		}
+		// handle groups (e.g. 1,000,000)
+		var groupSep = nf[ "," ];
+		integer = integer.split( groupSep ).join( "" );
+		var altGroupSep = groupSep.replace( /\u00A0/g, " " );
+		if ( groupSep !== altGroupSep ) {
+			integer = integer.split( altGroupSep ).join( "" );
+		}
+		// build a natively parsable number string
+		var p = sign + integer;
+		if ( fraction !== null ) {
+			p += "." + fraction;
+		}
+		if ( exponent !== null ) {
+			// exponent itself may have a number patternd
+			var expSignInfo = parseNegativePattern( exponent, nf, "-n" );
+			p += "e" + ( expSignInfo[0] || "+" ) + expSignInfo[ 1 ];
+		}
+		if ( regexParseFloat.test(p) ) {
+			ret = parseFloat( p );
+		}
+	}
+	return ret;
+};
+
+Globalize.culture = function( cultureSelector ) {
+	// setter
+	if ( typeof cultureSelector !== "undefined" ) {
+		this.cultureSelector = cultureSelector;
+	}
+	// getter
+	return this.findClosestCulture( cultureSelector ) || this.cultures[ "default" ];
+};
+
+}( this ));
 // =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
@@ -1925,7 +4488,7 @@ var configure_feedback_submit_button = function() {
 window['configure_feedback_submit_button'] = configure_feedback_submit_button;
 
 })();
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -2310,6 +4873,610 @@ window['init_schedule'] = function($) {
 };
 
 })();
+﻿// =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// =========================================================================================
+
+(function() {
+
+var $ = jQuery;
+var add_new_community = function(chkid, display) {
+	var existing_container = $('#CM_existing_add_container'),
+		addon_label = existing_container.data('addonLabel');
+	existing_container.
+		append($('<div>').
+			addClass('row-border-bottom').
+			append($('<div>').
+				addClass('row form-group').
+				append($('<label>').
+					addClass('control-label control-label-left col-md-4').
+					prop({
+						for: 'CM_ID_' + chkid,
+					}).
+					append($('<input>').
+						prop({
+							id: 'CM_ID_' + chkid,
+							type: 'checkbox',
+							checked: true,
+							defaultChecked: true,
+							name: 'CM_ID',
+							value: chkid
+							})
+					).
+					append(document.createTextNode(' ' + display))
+				).
+				append($('<div>').
+					addClass('col-md-8 form-inline').
+					append($('<div>').
+						addClass('input-group').
+						append($('<input>').
+							addClass('form-control').
+							prop({
+								id: 'CM_NUM_NEEDED_' + chkid,
+								name: 'CM_NUM_NEEDED_' + chkid,
+								size: 3,
+								maxlength: 3
+							})
+						).
+						append($('<span>').
+							addClass('input-group-addon').
+							text(addon_label)
+						)
+					)
+
+				)
+			)
+		);
+};
+var init_num_needed = function(txt_not_found){
+	init_autocomplete_checklist($, {
+		field: 'CM',
+		source: entryform.community_complete_url,
+		add_new_html: add_new_community,
+		minLength: 3,
+		txt_not_found: txt_not_found
+		});
+};
+window['init_num_needed'] = init_num_needed;
+
+
+})();
+﻿(function() {
+
+var $ = jQuery;
+
+var init_interests = function(txt_not_found, interest_complete_url) {
+	var added_values = [];
+	var add_item_fn = only_items_chk_add_html($, 'AI');
+	init_autocomplete_checklist($, {field: 'AI',
+			source: interest_complete_url,
+			add_new_html: add_item_fn,
+			added_values: added_values,
+			txt_not_found: txt_not_found
+	});
+
+	var interest_group;
+	var update_interest_list = function (data) {
+		var ai_list_old = $("#AreaOfInterestList");
+		if (ai_list_old.length) {
+			ai_list_old.prop('id', 'AreaOfInterestListOld');
+
+		}
+		var ai_list = $('<ul>').hide().
+			insertAfter(interest_group).
+			prop('id', 'AreaOfInterestList').
+			append($($.map(data, function(item, index) {
+				var el = $('<li>').append(
+						$('<label>').append(
+							$('<input>').
+								prop({
+								type: 'checkbox',
+								value: item.chkid
+									}).
+								data('cioc_chk_display', item.value)
+							).
+							append(document.createTextNode(' ' + item.value)
+						)
+					)[0];
+					return el;
+					})));
+
+
+		ai_list.show('slow');
+		if (ai_list_old.length) {
+			ai_list_old.hide('slow', function ()
+						{
+							ai_list_old.remove();
+						});
+		}
+
+
+	};
+	interest_group = $('#InterestGroup').
+		change(function() {
+			$.getJSON(interest_complete_url,
+				{IGID: interest_group.prop('value')},
+				update_interest_list);
+		});
+
+
+	$("#FIELD_INTERESTS").next().on('click', "#AreaOfInterestList input:checkbox",
+		{added_values: added_values, add_item_fn: add_item_fn}, function (event) {
+			var me = $(this);
+			var existing_chk = document.getElementById('AI_ID_' + this.value);
+			if (existing_chk) {
+				existing_chk.checked = true;
+			} else {
+
+				var display = me.data('cioc_chk_display');
+
+				event.data.added_values.push({chkid: this.value, display: display});
+				event.data.add_item_fn(this.value, display);
+			}
+
+			me.parent().parent().hide('slow',function () { me.remove(); });
+
+		});
+};
+window['init_interests'] = init_interests;
+
+})();
+// =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// =========================================================================================
+
+(function() {
+var init_entryform_notes = function(jqarray, show_text, hide_text) {
+	var $= jQuery;
+	jqarray.each(function() {
+		var sortable = null;
+		var obj = this;
+		var order = [];
+		var jqobj = $(obj);
+		var parent = jqobj.parent();
+		var next_new_id = 1;
+		var updates_dom = jqobj.find('.EntryFormNotesUpdateIds')[0];
+		if (!updates_dom) {
+			return;
+		}
+		var deletes_dom = jqobj.find('.EntryFormNotesDeleteIds')[0];
+		var cancels_dom = jqobj.find('.EntryFormNotesCancelIds')[0];
+		var restores_dom = jqobj.find('.EntryFormNotesRestoreIds')[0];
+
+		var updates = [];
+		var deletes = [];
+		var cancels = [];
+		var cancel_reason = {};
+		var restores = [];
+
+		var add_templated = function(data, isnew) {
+			updates.push(data.id);
+			updates_dom.value = updates.join(',');
+			var count = jqobj.find('.EntryFormItemBox').length + 1;
+				template = jqobj.data('addTmpl'),
+				new_item = $(template.replace(/\[COUNT\]/g, count).
+						replace(/\[ID\]/g, data.id).
+						replace(/\[MODIFIED_DATE\]/g, data.modified_date || '').
+						replace(/\[MODIFIED_BY\]/g, data.modified_by || '').
+						replace(/\[CREATED_DATE\]/g, data.created_date || '').
+						replace(/\[CREATED_BY\]/g, data.created_by || '').
+						replace(/\[NOTE_VALUE\]/g, data.note_value || ''));
+			if (data.note_type) {
+				new_item.find("option[value='" + data.note_type + "']").prop('selected', true);
+			}
+
+			if (data.created_date) {
+				new_item.find('tr.CreatedField').show();
+			}
+			if (data.modified_date && (data.modified_date !== data.created_date || data.modified_by !== data.created_by)) {
+				new_item.find('tr.ModifiedField').show();
+			}
+
+			if (isnew) {
+				new_item.find('.NewFlag').show();
+			}
+
+			jqobj.append(new_item);
+
+		};
+
+		var add = function() {
+			var id = "NEW" + next_new_id++;
+
+			add_templated({id: id}, true);
+		};
+
+		var add_button = parent.find(".EntryFormItemAdd").click(function() { add(false); });
+
+		var do_update = function(button) {
+			var container = $(button).parents('.EntryFormNotesItem'),
+				entry = container.find('.EntryFormItemContent');
+
+			add_templated(entry.data('formValues'));
+			container.hide(); // remove?
+
+		};
+		var do_delete = function(button) {
+			var id = button.id.split('_'), btn = $(button),
+				container = btn.parents('.EntryFormNotesItem'),
+				entry = container.find('.EntryFormItemContent');
+
+			entry.css('text-decoration', 'line-through');
+			deletes.push(id[id.length-2]);
+			deletes_dom.value = deletes.join(',');
+			container.data('actionToRestore', 'delete');
+
+			// hide button, show restore button
+			btn.parent().hide().prev().show();
+			
+		};
+		var do_cancel = function(button, selected_action) {
+			var id = button.id.split('_'), btn = $(button),
+				container = btn.parents('.EntryFormNotesItem'),
+				entry = container.find('.EntryFormItemContent'),
+				splitpoint = button.id.lastIndexOf('_'),
+				fieldname = button.id.substring(0,splitpoint) + '_CANCEL_REASON';
+
+			id = id[id.length-2];
+			entry.prepend(selected_action.data('cancelTemplate'));
+			cancels.push(id);
+			cancels_dom.value = cancels.join(',');
+			cancel_reason[id] = selected_action.data('cancelType');
+			jqobj.append($('<input>').prop({
+				type: 'hidden', 
+				id: fieldname, 
+				name: fieldname, 
+				value: selected_action.data('cancelType')
+			}));
+			container.data('actionToRestore', 'cancel');
+
+			// hide button, show restore button
+			btn.parent().hide().prev().show();
+		};
+		var menu_actions = { 
+			'update': do_update, 
+			'delete': do_delete, 
+			'cancel': do_cancel
+		};
+		var menu = parent.find('.EntryFormItemActionMenu').menu({
+			select: function(event, ui) {
+				$(this).hide();
+				menu_actions[ui.item.data('action')](menu.data('activeButton'), ui.item);
+			}
+		}).hide().css({position: 'absolute', zIndex: 1});
+		parent.on('click', '.EntryFormItemAction', function(event) {
+			menu.data('activeButton', this);
+			if (menu.is(':visible') ){
+				menu.hide();
+				return false;
+			}
+			menu.menu('blur').show();
+			menu.position({
+				my: "right top",
+				at: "right bottom",
+				of: this
+			});
+			$(document).one("click", function() {
+				menu.hide();
+			});
+			return false;
+		});
+
+		parent.find('.EntryFormItemViewHidden').click(function(event) {
+			var self = $(this), hide_target = self.next();
+			if (hide_target.is(':visible')) {
+				self.text(show_text);
+				hide_target.hide();
+			} else {
+				self.text(hide_text);
+				hide_target.show();
+			}	
+
+		});
+
+		var restore_delete = function(id, btn, container, entry) {
+			entry.css('text-decoration', 'none');
+			deletes = $.grep(deletes, function(value) { return value !== id;});
+			deletes_dom.value = deletes.join(',');
+
+			// hide button, show restore button
+			btn.parent().hide().next().show();
+		};
+		var restore_cancel = function(id, btn, container, entry) {
+			var button = btn[0],
+				splitpoint = button.id.lastIndexOf('_'),
+				fieldname = button.id.substring(0,splitpoint) + '_CANCEL_REASON';
+
+			entry.find('.EntryFormItemCancelledDetails').remove();
+			cancels = $.grep(cancels, function(value) { return value !== id;}),
+			cancels_dom.value = cancels.join(',');
+			delete cancel_reason[id];
+			$('#' + fieldname).remove();
+
+			btn.parent().hide().next().show();
+		};
+		var restore_fns = {
+			'delete': restore_delete,
+			'cancel': restore_cancel
+		};
+
+		parent.on('click', '.EntryFormItemRestoreAction', function(event) {
+			var id = this.id.split('_'), btn = $(this),
+				container = btn.parents('.EntryFormNotesItem'),
+				entry = container.find('.EntryFormItemContent');
+
+			restore_fns[container.data('actionToRestore')](id[id.length-2], btn, container, entry);
+		});
+
+		var do_restore_cancel = function(event) {
+			var id = this.id.split('_'), btn = $(this),
+				container = btn.parents('.EntryFormNotesItem'),
+				entry = container.find('.EntryFormItemCancelledDetails');
+
+			entry.css('text-decoration', 'line-through');
+			btn.parent().hide().prev().show();
+
+			restores.push(id[id.length-2]);
+			restores_dom.value = restores.join(',');
+
+		};
+		parent.on('click', '.EntryFormItemRestoreCancel', do_restore_cancel);
+
+		parent.on('click', '.EntryFormItemDontRestoreCancel', function(event) {
+			var id = this.id.split('_'), btn = $(this),
+				container = btn.parents('.EntryFormNotesItem'),
+				entry = container.find('.EntryFormItemCancelledDetails');
+
+			entry.css('text-decoration', 'none');
+			btn.parent().hide().next().show();
+			id = id[id.length - 2];
+			restores = $.grep(restores, function(value) { return value !== id;}),
+			restores_dom.value = restores.join(',');
+
+		});
+
+		var onbeforeunload = function(cache) {
+			cache[obj.id + '_updates'] = updates;
+			cache[obj.id + '_deletes'] = deletes;
+			cache[obj.id + '_restores'] = restores;
+			cache[obj.id + '_cancels'] = cancels;
+			cache[obj.id + '_cancel_reason'] = cancel_reason;
+		};
+		cache_register_onbeforeunload(onbeforeunload);
+
+		var onbeforerestorevalues = function(cache) {
+			var id_prefix = obj.id.substring(0, obj.id.lastIndexOf('_')) + '_';
+			if (cache[obj.id + '_updates']) {
+				
+				$.each(cache[obj.id + '_updates'], function(index, value) {
+					if (value.indexOf('NEW') === 0) {
+						next_new_id++;
+						add_templated({id: value}, true);
+					} else {
+						var entry = $('#' + id_prefix + value + '_DISPLAY');
+						add_templated(entry.data('formValues'));
+						$('#' + id_prefix + value + '_CONTAINER').hide();
+					}
+				});
+			}
+			if (cache[obj.id + '_deletes']) {
+				$.each(cache[obj.id + '_deletes'], function(index, value) {
+					do_delete(document.getElementById(id_prefix + value + '_ACTION'));
+				});
+			}
+			if (cache[obj.id + '_restores']) {
+				$.each(cache[obj.id + '_restores'], function(index, value) {
+					do_restore_cancel.call(document.getElementById(id_prefix + value + '_RESTORECANCEL'));
+				});
+				parent.find('.EntryFormItemViewHidden').click();
+			}
+
+			if (cache[obj.id + '_cancels']) {
+				var cancel_reason = cache[obj.id + '_cancel_reason'];
+				$.each(cache[obj.id + '_cancels'], function(index, value) {
+					do_cancel(document.getElementById(id_prefix + value + '_ACTION'), menu.find("li[data-cancel-type='" + cancel_reason[value] + "']"));
+				});
+				
+			}
+		};
+
+		cache_register_onbeforerestorevalues(onbeforerestorevalues);
+	});
+};
+window['init_entryform_notes'] = init_entryform_notes;
+})();
+
+// =========================================================================================
+// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// =========================================================================================
+
+(function() {
+/*global diff_match_patch:true */
+var init_history_dialog = function($, field_history) {
+    var diff_match_patch_loaded = false;
+	var dmp = null;
+
+	var current_revision = null;
+	var current_compare = null;
+	
+	var replace_history = function(data) {
+		if (data.fail) {
+			$('#HistoryFieldContent').html('<em>' + data.errinfo + '</em>');
+		} else if (data.compare) {
+			if (dmp === null) {
+				dmp = new diff_match_patch();
+			}
+
+			var d = dmp.diff_main(data.text2, data.text1);
+			dmp.diff_cleanupSemantic(d);
+			var ds = dmp.diff_prettyHtml(d);
+			$('#HistoryFieldContent').html(ds);
+		} else {
+			$('#HistoryFieldContent').html(data.text1);
+		}
+	};
+	var history_select_changed = function(field, display, id) {
+		return function() {
+			var lang = $('#HistoryLanguage').prop('value');
+			var revision = $('#HistoryRevision').prop('value');
+			var compare = $('#HistoryCompare').prop('value');
+
+			if (compare !== current_compare && (
+					(current_compare === '' && compare === revision) ||
+					(compare === '' && current_compare === current_revision))) {
+				current_revision = revision;
+				current_compare = compare;
+				return;
+			}
+
+			var comp = compare;
+			if (compare === '' || compare === revision) {
+				comp = '';
+			}
+			$.getJSON(field_history.fielddiff_url.
+					replace('[ID]', id).
+					replace('[LANG]', lang).
+					replace('[FIELD]', field).
+					replace('[REV]', revision).
+					replace('[COMP]', comp), replace_history);
+
+			current_revision = revision;
+			current_compare = compare;
+		};
+	};
+
+	var add_history_events = null;
+	var change_language = function(field, display, id, lang) {
+		$('select.HistorySelect').unbind('change');
+		$('#HistoryLanguage').unbind('change');
+
+		$("#field_history").
+			html('<p class="Info">' + field_history.txt_loading + '</p>').
+			dialog('close').
+			dialog('open').
+			dialog('option', 'title', field_history.txt_fielddifftitle +
+					id + " (" + display + ')').
+			load(field_history.fielddiffui_url.
+				replace("[ID]", id).
+				replace('[FIELD]', field).
+				replace('[LANG]', lang),
+				add_history_events(field, display, id));
+	};
+
+	var language_changed = function(field, display, id) {
+		return function() {
+			var lang = $(this).prop('value');
+			change_language(field, display, id, lang);
+		};
+	};
+	
+	add_history_events = function(field, display, id) {
+		return function() {
+			$('select.HistorySelect').
+				change(history_select_changed(field, display, id));
+
+			$('#HistoryLanguage').
+				change(language_changed(field, display, id));
+
+			current_revision = $('#HistoryRevision').prop('value');
+			current_compare = $('#HistoryCompare').prop('value');
+		};
+	};
+
+
+	$(".ShowVersions").click(function() {
+		var field = $(this).data('ciocfield');
+		var display = $(this).data('ciocfielddisplay');
+		var id = $(this).data('ciocid');
+
+		if (!diff_match_patch_loaded) {
+			diff_match_patch_loaded = true;
+			$.getScript(field_history.path_to_start + "scripts/diff_match_patch.min.js");
+		}
+
+		change_language(field, display, id, '');
+
+	});
+
+	var toggle_history_fields = function(e) {
+
+
+		$(e.currentTarget).parent().children('ul').toggle("fast");
+	};
+	var go_to_field = function(e) {
+		var field = $(e.currentTarget).data('fieldname');
+		var td = document.getElementById('FIELD_' + field);
+		if (td) {
+			td.scrollIntoView(true);
+		}
+	};
+	$(document).on('click', '.FieldHistoryJump', go_to_field);
+	$(document).on('click', '.HistoryFieldsToggle', toggle_history_fields);
+
+	var hide_children = function() {
+		$('.HistoryFieldsToggle').
+			parent().children('ul').hide();
+	};
+	$(".HistorySummary").click(function() {
+		var lang = $(this).data('cioclang');
+		var id = $(this).data('ciocid');
+
+		$('#revision_history').
+			html('Loading...').
+			load(field_history.revhistory_url.
+				replace('[ID]', id).
+				replace('[LANG]', lang), hide_children).
+			dialog('open');
+
+	});
+
+	$("#revision_history").dialog({autoOpen: false, width: 330, height: 280, position: ['right', 'top' ], resizable: false, dialogClass: 'RevHistory'});
+	$("#field_history").dialog({autoOpen: false, width: 620, height: 280, position: ['right', 'bottom']});
+
+	$(".RevHistory.ui-dialog").css({position:"fixed"});
+
+};
+
+window['init_history_dialog'] = init_history_dialog;
+})();
+
+
 ﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
@@ -2865,416 +6032,3 @@ var init_validate_duplicate_org_names = function(options) {
 
 window['init_validate_duplicate_org_names'] = init_validate_duplicate_org_names;
 })();
-// =========================================================================================
-// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// =========================================================================================
-
-(function() {
-
-var $ = jQuery;
-var add_new_community = function(chkid, display) {
-	$('#CM_existing_add_table').
-		removeClass('NotVisible').
-		append($('<tr>').
-			append($('<td>').
-				append($('<input>').
-					prop({
-						id: 'CM_ID_' + chkid,
-						type: 'checkbox',
-						checked: true,
-						defaultChecked: true,
-						name: 'CM_ID',
-						value: chkid
-						})
-				)
-			).
-			append($('<td>').
-				addClass('FieldLabelLeftClr').
-				append(document.createTextNode(' ' + display))
-			).
-			append($('<td>').
-				prop('align', 'center').
-				append($('<input>').
-					prop({
-						id: 'CM_NUM_NEEDED_' + chkid,
-						name: 'CM_NUM_NEEDED_' + chkid,
-						size: 3,
-						maxlength: 3
-						})
-				)
-			)
-		);
-};
-var init_num_needed = function(txt_not_found){
-	init_autocomplete_checklist($, {
-		field: 'CM',
-		source: entryform.community_complete_url,
-		add_new_html: add_new_community,
-		minLength: 3,
-		txt_not_found: txt_not_found
-		});
-};
-window['init_num_needed'] = init_num_needed;
-
-var init_interests = function(txt_not_found) {
-	var added_values = [];
-	var add_item_fn = only_items_chk_add_html($, 'AI');
-	init_autocomplete_checklist($, {field: 'AI',
-			source: entryform.interest_complete_url,
-			add_new_html: add_item_fn,
-			added_values: added_values,
-			txt_not_found: txt_not_found
-	});
-
-	var interest_group;
-	var update_interest_list = function (data) {
-		var ai_list_old = $("#AreaOfInterestList");
-		if (ai_list_old.length) {
-			ai_list_old.prop('id', 'AreaOfInterestListOld');
-
-		}
-		var ai_list = $('<ul>').hide().
-			insertAfter(interest_group).
-			prop('id', 'AreaOfInterestList').
-			append($($.map(data, function(item, index) {
-					var el =  $('<li>').append(
-						$('<input>').
-							prop({
-							type: 'checkbox',
-							value: item.chkid
-								}).
-							data('cioc_chk_display', item.value)
-						).
-						append(document.createTextNode(' ' + item.value))[0];
-					return el;
-					})));
-
-
-		ai_list.show('slow');
-		if (ai_list_old.length) {
-			ai_list_old.hide('slow', function ()
-						{
-							ai_list_old.remove();
-						});
-		}
-
-
-	};
-	interest_group = $('#InterestGroup').
-		change(function() {
-			$.getJSON(entryform.interest_complete_url,
-				{IGID: interest_group.prop('value')},
-				update_interest_list);
-		});
-
-
-	$("#FIELD_INTERESTS").next().on('click', "#AreaOfInterestList input:checkbox",
-		{added_values: added_values, add_item_fn: add_item_fn}, function (event) {
-			var me = $(this);
-			var existing_chk = document.getElementById('AI_ID_' + this.value);
-			if (existing_chk) {
-				existing_chk.checked = true;
-			} else {
-
-				var display = me.data('cioc_chk_display');
-
-				event.data.added_values.push({chkid: this.value, display: display});
-				event.data.add_item_fn(this.value, display);
-			}
-
-			me.parent().hide('slow',function () { me.remove(); });
-
-		});
-};
-window['init_interests'] = init_interests;
-
-})();
-// =========================================================================================
-// Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// =========================================================================================
-
-(function() {
-var init_entryform_notes = function(jqarray, show_text, hide_text) {
-	var $= jQuery;
-	jqarray.each(function() {
-		var sortable = null;
-		var obj = this;
-		var order = [];
-		var jqobj = $(obj);
-		var parent = jqobj.parent();
-		var next_new_id = 1;
-		var updates_dom = jqobj.find('.EntryFormNotesUpdateIds')[0];
-		if (!updates_dom) {
-			return;
-		}
-		var deletes_dom = jqobj.find('.EntryFormNotesDeleteIds')[0];
-		var cancels_dom = jqobj.find('.EntryFormNotesCancelIds')[0];
-		var restores_dom = jqobj.find('.EntryFormNotesRestoreIds')[0];
-
-		var updates = [];
-		var deletes = [];
-		var cancels = [];
-		var cancel_reason = {};
-		var restores = [];
-
-		var add_templated = function(data, isnew) {
-			updates.push(data.id);
-			updates_dom.value = updates.join(',');
-			var count = jqobj.find('.EntryFormItemBox').length + 1;
-				template = jqobj.data('addTmpl'),
-				new_item = $(template.replace(/\[COUNT\]/g, count).
-						replace(/\[ID\]/g, data.id).
-						replace(/\[MODIFIED_DATE\]/g, data.modified_date || '').
-						replace(/\[MODIFIED_BY\]/g, data.modified_by || '').
-						replace(/\[CREATED_DATE\]/g, data.created_date || '').
-						replace(/\[CREATED_BY\]/g, data.created_by || '').
-						replace(/\[NOTE_VALUE\]/g, data.note_value || ''));
-			if (data.note_type) {
-				new_item.find("option[value='" + data.note_type + "']").prop('selected', true);
-			}
-
-			if (data.created_date) {
-				new_item.find('tr.CreatedField').show();
-			}
-			if (data.modified_date && (data.modified_date !== data.created_date || data.modified_by !== data.created_by)) {
-				new_item.find('tr.ModifiedField').show();
-			}
-
-			if (isnew) {
-				new_item.find('.NewFlag').show();
-			}
-
-			jqobj.append(new_item);
-
-		};
-
-		var add = function() {
-			var id = "NEW" + next_new_id++;
-
-			add_templated({id: id}, true);
-		};
-
-		var add_button = parent.find(".EntryFormItemAdd").click(function() { add(false); });
-
-		var do_update = function(button) {
-			var container = $(button).parents('.EntryFormNotesItem'),
-				entry = container.find('.EntryFormItemContent');
-
-			add_templated(entry.data('formValues'));
-			container.hide(); // remove?
-
-		};
-		var do_delete = function(button) {
-			var id = button.id.split('_'), btn = $(button),
-				container = btn.parents('.EntryFormNotesItem'),
-				entry = container.find('.EntryFormItemContent');
-
-			entry.css('text-decoration', 'line-through');
-			deletes.push(id[id.length-2]);
-			deletes_dom.value = deletes.join(',');
-			container.data('actionToRestore', 'delete');
-
-			// hide button, show restore button
-			btn.parent().hide().prev().show();
-			
-		};
-		var do_cancel = function(button, selected_action) {
-			var id = button.id.split('_'), btn = $(button),
-				container = btn.parents('.EntryFormNotesItem'),
-				entry = container.find('.EntryFormItemContent'),
-				splitpoint = button.id.lastIndexOf('_'),
-				fieldname = button.id.substring(0,splitpoint) + '_CANCEL_REASON';
-
-			id = id[id.length-2];
-			entry.prepend(selected_action.data('cancelTemplate'));
-			cancels.push(id);
-			cancels_dom.value = cancels.join(',');
-			cancel_reason[id] = selected_action.data('cancelType');
-			jqobj.append($('<input>').prop({
-				type: 'hidden', 
-				id: fieldname, 
-				name: fieldname, 
-				value: selected_action.data('cancelType')
-			}));
-			container.data('actionToRestore', 'cancel');
-
-			// hide button, show restore button
-			btn.parent().hide().prev().show();
-		};
-		var menu_actions = { 
-			'update': do_update, 
-			'delete': do_delete, 
-			'cancel': do_cancel
-		};
-		var menu = parent.find('.EntryFormItemActionMenu').menu({
-			select: function(event, ui) {
-				$(this).hide();
-				menu_actions[ui.item.data('action')](menu.data('activeButton'), ui.item);
-			}
-		}).hide().css({position: 'absolute', zIndex: 1});
-		parent.on('click', '.EntryFormItemAction', function(event) {
-			menu.data('activeButton', this);
-			if (menu.is(':visible') ){
-				menu.hide();
-				return false;
-			}
-			menu.menu('blur').show();
-			menu.position({
-				my: "right top",
-				at: "right bottom",
-				of: this
-			});
-			$(document).one("click", function() {
-				menu.hide();
-			});
-			return false;
-		});
-
-		parent.find('.EntryFormItemViewHidden').click(function(event) {
-			var self = $(this), hide_target = self.next();
-			if (hide_target.is(':visible')) {
-				self.text(show_text);
-				hide_target.hide();
-			} else {
-				self.text(hide_text);
-				hide_target.show();
-			}	
-
-		});
-
-		var restore_delete = function(id, btn, container, entry) {
-			entry.css('text-decoration', 'none');
-			deletes = $.grep(deletes, function(value) { return value !== id;});
-			deletes_dom.value = deletes.join(',');
-
-			// hide button, show restore button
-			btn.parent().hide().next().show();
-		};
-		var restore_cancel = function(id, btn, container, entry) {
-			var button = btn[0],
-				splitpoint = button.id.lastIndexOf('_'),
-				fieldname = button.id.substring(0,splitpoint) + '_CANCEL_REASON';
-
-			entry.find('.EntryFormItemCancelledDetails').remove();
-			cancels = $.grep(cancels, function(value) { return value !== id;}),
-			cancels_dom.value = cancels.join(',');
-			delete cancel_reason[id];
-			$('#' + fieldname).remove();
-
-			btn.parent().hide().next().show();
-		};
-		var restore_fns = {
-			'delete': restore_delete,
-			'cancel': restore_cancel
-		};
-
-		parent.on('click', '.EntryFormItemRestoreAction', function(event) {
-			var id = this.id.split('_'), btn = $(this),
-				container = btn.parents('.EntryFormNotesItem'),
-				entry = container.find('.EntryFormItemContent');
-
-			restore_fns[container.data('actionToRestore')](id[id.length-2], btn, container, entry);
-		});
-
-		var do_restore_cancel = function(event) {
-			var id = this.id.split('_'), btn = $(this),
-				container = btn.parents('.EntryFormNotesItem'),
-				entry = container.find('.EntryFormItemCancelledDetails');
-
-			entry.css('text-decoration', 'line-through');
-			btn.parent().hide().prev().show();
-
-			restores.push(id[id.length-2]);
-			restores_dom.value = restores.join(',');
-
-		};
-		parent.on('click', '.EntryFormItemRestoreCancel', do_restore_cancel);
-
-		parent.on('click', '.EntryFormItemDontRestoreCancel', function(event) {
-			var id = this.id.split('_'), btn = $(this),
-				container = btn.parents('.EntryFormNotesItem'),
-				entry = container.find('.EntryFormItemCancelledDetails');
-
-			entry.css('text-decoration', 'none');
-			btn.parent().hide().next().show();
-			id = id[id.length - 2];
-			restores = $.grep(restores, function(value) { return value !== id;}),
-			restores_dom.value = restores.join(',');
-
-		});
-
-		var onbeforeunload = function(cache) {
-			cache[obj.id + '_updates'] = updates;
-			cache[obj.id + '_deletes'] = deletes;
-			cache[obj.id + '_restores'] = restores;
-			cache[obj.id + '_cancels'] = cancels;
-			cache[obj.id + '_cancel_reason'] = cancel_reason;
-		};
-		cache_register_onbeforeunload(onbeforeunload);
-
-		var onbeforerestorevalues = function(cache) {
-			var id_prefix = obj.id.substring(0, obj.id.lastIndexOf('_')) + '_';
-			if (cache[obj.id + '_updates']) {
-				
-				$.each(cache[obj.id + '_updates'], function(index, value) {
-					if (value.indexOf('NEW') === 0) {
-						next_new_id++;
-						add_templated({id: value}, true);
-					} else {
-						var entry = $('#' + id_prefix + value + '_DISPLAY');
-						add_templated(entry.data('formValues'));
-						$('#' + id_prefix + value + '_CONTAINER').hide();
-					}
-				});
-			}
-			if (cache[obj.id + '_deletes']) {
-				$.each(cache[obj.id + '_deletes'], function(index, value) {
-					do_delete(document.getElementById(id_prefix + value + '_ACTION'));
-				});
-			}
-			if (cache[obj.id + '_restores']) {
-				$.each(cache[obj.id + '_restores'], function(index, value) {
-					do_restore_cancel.call(document.getElementById(id_prefix + value + '_RESTORECANCEL'));
-				});
-				parent.find('.EntryFormItemViewHidden').click();
-			}
-
-			if (cache[obj.id + '_cancels']) {
-				var cancel_reason = cache[obj.id + '_cancel_reason'];
-				$.each(cache[obj.id + '_cancels'], function(index, value) {
-					do_cancel(document.getElementById(id_prefix + value + '_ACTION'), menu.find("li[data-cancel-type='" + cancel_reason[value] + "']"));
-				});
-				
-			}
-		};
-
-		cache_register_onbeforerestorevalues(onbeforerestorevalues);
-	});
-};
-window['init_entryform_notes'] = init_entryform_notes;
-})();
-

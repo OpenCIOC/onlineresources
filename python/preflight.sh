@@ -66,6 +66,8 @@ fi
 
 ( echo "Checking for Web Plaform installer" && winget list -e --id Microsoft.webpicmd -s winget > /dev/null ) || ( echo "installing Web Platform installer" &&  winget install -e --id Microsoft.webpicmd -s winget )
 ( echo "Checking for WkHtmlToPDF" && winget list -e --id wkhtmltopdf.wkhtmltox -s winget > /dev/null) || ( echo "Installing WkHtmlToPDF" && winget install -e --id wkhtmltopdf.wkhtmltox -s winget )
+( echo "Checking for GNU Make" && winget list -e --id GnuWin32.Make -s winget > /dev/null) || ( echo "Installing GNU Make" && winget install -e --id GnuWin32.Make -s winget )
+( echo "Checking for Node.js" && winget list -e --id OpenJS.NodeJS -s winget > /dev/null) || ( echo "Installing Node.js" && winget install -e --id OpenJS.NodeJS -s winget )
 
 echo "Checking for Microsoft Application Request Routing 3.0"
 if ! wmic product get name | grep "Microsoft Application Request Routing 3.0" > /dev/null ; then
@@ -76,7 +78,7 @@ fi
 echo "Checking for Microsoft ODBC Driver 17 for SQL Server"
 if ! wmic product get name | grep "Microsoft ODBC Driver 17 for SQL Server" > /dev/null ; then
 	echo "Downloading Microsoft ODBC Driver 17 for SQL Server"
-	curl -O $TEMP/msobdcsql.msi "https://go.microsoft.com/fwlink/?linkid=2186919"
+	curl -o $TEMP/msobdcsql.msi "https://go.microsoft.com/fwlink/?linkid=2186919"
 	echo "Installing Microsoft ODBC Driver 17 for SQL Server"
 	MSYS_NO_PATHCONV=1 msiexec /passive /i $TEMP\\msodbcsql.msi AgreeToLicense=yes
 	rm $TEMP/msodbcsql.msi
@@ -85,25 +87,25 @@ fi
 echo "Checking for Python 3.9.12"
 if ! wmic product get name | grep "Python 3.9.12 Core Interpreter (64-bit)" > /dev/null ; then
 	echo "Downloading Python 3.9.12"
-	curl -O $TEMP/python39-amd64.exe "https://www.python.org/ftp/python/3.9.12/python-3.9.12-amd64.exe"
+	curl -o $TEMP/python39-amd64.exe "https://www.python.org/ftp/python/3.9.12/python-3.9.12-amd64.exe"
 	echo "Installing Python 3.9.12"
 	MSYS_NO_PATHCONV=1 $TEMP\\python39-amd64.exe /quiet InstallAllUsers=1 AssociateFiles=0 CompileAll=1
 	rm $TEMP/python39-amd64.exe
 fi
 
 export PATH="/c/Program Files/Python39/:/c/Program Files/Python39/scripts:$PATH"
-python -m pip install -U pip virtualenv virtualenvwrapper-win
+"/c/Program Files/Python39/python" -m pip install -U pip virtualenv virtualenvwrapper-win
 if [[ ! -e "/c/Program Files/Python39/Lib/site-packages/pywin32-303.dist-info" ]]; then
-	python -m pip install pywin32==303
-	python "/c/Program Files/Python39/Scripts/pywin32_postinstall.py" -install -quiet
+	"/c/Program Files/Python39/python" -m pip install pywin32==303
+	"/c/Program Files/Python39/python" "/c/Program Files/Python39/Scripts/pywin32_postinstall.py" -install -quiet
 fi
 
 for gencache in "'{2A75196C-D9EB-4129-B803-931327F72D5C}', 0, 2, 8" "'{00000600-0000-0010-8000-00AA006D2EA4}', 0, 6, 0" "'{B691E011-1797-432E-907A-4D8C69339129}', 0, 6, 1" "'{D97A6DA0-A85C-11CF-83AE-00A0C90C2BD8}', 0, 3, 0" "'{D97A6DA0-9C1C-11D0-9C3C-00A0C922E764}', 0, 3, 0"; do
-	python -c "from win32com.client import gencache; gencache.EnsureModule($gencache)"
+	"/c/Program Files/Python39/python" -c "from win32com.client import gencache; gencache.EnsureModule($gencache)"
 done
 
 mkdir -p "$USERPROFILE/Envs"
-for identity in "IIS_IUSRS" "IUSR"  ; do 
+for identity in "IIS_IUSRS" "IUSR"  ; do
 	MSYS_NO_PATHCONV=1 $SYSTEMROOT/system32/icacls.exe "c:\\Program Files\\Python39/Lib/site-packages/win32com/gen_py" /grant "$identity:(OI)(CI)F"
 	MSYS_NO_PATHCONV=1 $SYSTEMROOT/system32/icacls.exe "$USERPROFILE/Envs" /grant "$identity:(OI)(CI)RX" /T
 done
@@ -133,4 +135,3 @@ for header in "${headers[@]}"; do
 	done
 	[[ -n $skip ]] || $appcmd set config $sitename -section:system.webServer/rewrite/allowedServerVariables /+"[name='$header']" /commit:apphost
 done
-

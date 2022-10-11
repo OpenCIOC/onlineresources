@@ -58,7 +58,10 @@ from markupsafe import escape_silent as h, Markup
 </tr>
 </%def>
 
-<p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> | <a href="${request.passvars.route_path('admin_view_index', _query=[('DM', domain.id)])}">${_('Return to Views (%s)') % _(domain.label)}</a> ]</p>
+<div class="btn-group" role="group">
+	<a role="button" class="btn btn-default" href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a>
+	<a role="button" class="btn btn-default" href="${request.passvars.route_path('admin_view_index', _query=[('DM', domain.id)])}">${_('Return to Views (%s)') % _(domain.label)}</a>
+</div>
 
 <p class="HideJs Alert">${_('Javascript is required to use this page.')}</p>
 
@@ -92,7 +95,10 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 	<li><a href="#details">${_('Record Details')}</a></li>
 	<li><a href="#searching">${_('Searching')}</a></li>
 	<li><a href="#template">${_('Template and Layout Options')}</a></li>
+	%if domain.id == const.DM_CIC:
 	<li><a href="#classifications">${_('Classifications')}</a></li>
+	%endif
+	<li><a href="#fields">${_('Manage Fields')}</li>
 </ul>
 
 <div class="panel panel-default max-width-lg">
@@ -1481,6 +1487,7 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 
 <div class="panel panel-default max-width-lg">
 	<div class="panel-heading">
+		<a name="fields"></a>
 		<h2><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> ${_('Manage Fields')}</h2>
 	</div>
 	<div class="panel-body">
