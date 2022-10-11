@@ -60,7 +60,7 @@ def get_git_blame(filename):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
-    output = [x.decode("ascii") for x in proc.communicate()]
+    output = [x.decode("utf-8") for x in proc.communicate()]
 
     if proc.returncode:
         log.debug(output)
