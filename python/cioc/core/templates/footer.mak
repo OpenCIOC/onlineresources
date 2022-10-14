@@ -71,13 +71,6 @@ from cioc.core import gtranslate
 
 	%if request.viewdata.PrintMode:
 		<script type="text/javascript">
-		%if not request.context.force_print_mode:
-			var pageTitle= prompt('Please enter a Title for the report', '');
-			if ((pageTitle!='') && (pageTitle!=null)) { 
-				document.getElementById('PrintModePageTitle').innerHTML=pageTitle;
-				show(document.getElementById('PrintModePageTitle'));
-			}
-		%endif
 		%if renderinfo.focus:
 			(function() {
 				window.onerror = null;

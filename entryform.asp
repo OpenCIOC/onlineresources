@@ -421,12 +421,12 @@ End Select
 		<th class="RevTitleBox" colspan="2"><%=TXT_LEGEND%></th>
 	</tr>
 	<tr>
-		<td><span class="glyphicon glyphicon-question-sign medium-icon"></span></td>
+		<td><span class="fa fa-question-circle medium-icon"></span></td>
 		<td><%=TXT_LEGEND_HELP%></td>
 	</tr>
 	<% If Not bNew Then %>
 	<tr>
-		<td><span class="glyphicon glyphicon-duplicate medium-icon"></span></td>
+		<td><span class="fa fa-history medium-icon"></span></td>
 		<td><%=TXT_LEGEND_VERSIONS%></td>
 	</tr>
 	<% End If %>

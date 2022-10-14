@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -140,7 +140,7 @@ Else
 	End If
 	If user_bCanRequestUpdateVOL And user_bCanDoBulkOpsVOL And Not g_bNoEmail Then
 	%>
-		| <a href="<%=makeLinkAdmin("email_prep.asp","IDList=" & strNUM & "&MR=1&DM=" & DM_VOL)%>">Email Update All Oportunities Request</a>
+		| <a href="<%=makeLinkAdmin("email_prep.asp","IDList=" & strNUM & "&MR=1&DM=" & DM_VOL)%>">Request Update of Volunteer Opportunities</a>
 	<%End If%>
 	]</td></tr>
 <%

@@ -23,6 +23,7 @@ Dim TXT_ADD_PROFILE_FAILED, _
 	TXT_AND_WILL_BE_TOMORROW, _
 	TXT_ARCHIVE_DATASET, _
 	TXT_ARCHIVE, _
+	TXT_ARCHIVED, _
 	TXT_ARE_YOU_SURE_ARCHIVE, _
 	TXT_ARE_YOU_SURE_UNARCHIVE, _
 	TXT_ARE_YOU_SURE_RESCHEDULE, _
@@ -144,6 +145,7 @@ Sub setTxtImport()
 			TXT_AND_WILL_BE_TOMORROW = " and will be in a new import tomorrow."
 			TXT_ARCHIVE_DATASET = "Archive Dataset"
 			TXT_ARCHIVE = "Archive"
+			TXT_ARCHIVED = "Archived"
 			TXT_ARE_YOU_SURE_ARCHIVE = "Are you sure you want to archive this item?" & _
 				"<br>Use your back button to return to the form if you do not want to archive."
 			TXT_ARE_YOU_SURE_UNARCHIVE = "Are you sure you want to unarchive this item?" & _
@@ -267,15 +269,16 @@ Sub setTxtImport()
 			TXT_AND_WILL_BE_TOMORROW = "TRANSLATE_FR --  and will be in a new import tomorrow."
 			TXT_ARCHIVE_DATASET = "Archiver le fichier de données"
 			TXT_ARCHIVE = "Archive"
-			TXT_ARE_YOU_SURE_ARCHIVE = "TRANSLATE_FR -- Are you sure you want to archive this item?" & _
-				"<br>Use your back button to return to the form if you do not want to archive."
+			TXT_ARCHIVE = "Archivé"
+			TXT_ARE_YOU_SURE_ARCHIVE = "Êtes-vous sûr de vouloir archiver ce fichier ?" & _
+				"<br>Utilisez votre bouton retour pour revenir au formulaire si vous ne souhaitez pas archiver."
 			TXT_ARE_YOU_SURE_UNARCHIVE = "TRANSLATE_FR -- Are you sure you want to unarchive this item?" & _
 				"<br>Use your back button to return to the form if you do not want to unarchive."
 			TXT_ARE_YOU_SURE_RESCHEDULE = "TRANSLATE_FR -- Are you sure you want to reschedule an import of these records?" & _
 				"<br>Use your back button to return to the form if you do not want to reschedule."
-			TXT_CAN_BE_RETRIED = "TRANSLATE_FR -- can be retried."
-			TXT_CAN_RESCHEDULE = "TRANSLATE_FR -- Can Reschedule"
-			TXT_CAN_RETRY = "TRANSLATE_FR -- Can Retry"
+			TXT_CAN_BE_RETRIED = "peut être réessayé."
+			TXT_CAN_RESCHEDULE = "Peut reprogrammer"
+			TXT_CAN_RETRY = "Peut réessayer"
 			TXT_CANCEL_QUEUE = "Annuler la file d'attente"
 			TXT_CANNOT_IMPORT = "Impossible d'importer"
 			TXT_CASE_DELETED_CONFLICT = "Dans le cas d'un conflit sur la date de suppression"

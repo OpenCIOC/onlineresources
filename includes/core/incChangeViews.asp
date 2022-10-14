@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -55,7 +55,7 @@ Function makeChangeViewsList(intSelected, strSelectName, bIncludeBlank, bMultipl
 			.MoveFirst
 		End If
 		If Not .EOF Then
-			strReturn = strReturn & "<select name=" & AttrQs(strSelectName) & _
+			strReturn = strReturn & "<select class=""form-control"" name=" & AttrQs(strSelectName) & _
 							StringIf(bMultiple, "multiple") & ">"
 			If bIncludeBlank Then
 				strReturn = strReturn & "<option value=""""> -- </option>"
@@ -96,7 +96,12 @@ Sub printChangeViewsFormContents(bTemp, intDomain, strExtraSkip)
 <%		End If
 	Next
 %>
-<%=makeChangeViewsList(vbNullString, strVarName, True, False)%> <input type="submit" value="<%=TXT_CHANGE_VIEW%><%If bTemp Then%> <%=TXT_CHANGE_VIEW_TEMP%><%End If%>">
+<div class="input-group">
+	<%=makeChangeViewsList(vbNullString, strVarName, True, False)%>
+	<div class="input-group-btn">
+		<button class="btn" type="submit"><%=TXT_CHANGE_VIEW%><%If bTemp Then%> <%=TXT_CHANGE_VIEW_TEMP%><%End If%></button>
+	</div>
+</div>
 <%
 	End If
 	Call closeChangeViewsListRst()

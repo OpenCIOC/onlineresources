@@ -37,170 +37,183 @@ makeDetailsLink = request.passvars.makeDetailsLink
 %if not viewdata.PrintMode:
 ${gtranslate.render_ui(request)}
 %endif
+
 %if not viewdata.PrintMode and (search_list_top or (request.user.cic and views)):
-	<form action="${request.url}" id="change_view_form" name="ChangeViewForm">
-		<div class="cioc-grid-row">
-			%if search_list_top:
-			<div class="cioc-col-sm-6"><div id="search-list-top"> ${search_list_top}</div></div>
-			%endif
-			%if request.user.cic and views:
-				<div class="form-inline-always ${'cioc-col-sm-offset-6' if not search_list_top else ''} cioc-col-sm-6 change-view-box">
-					<span style="display: none">
-						%for key, value in request.params.items():
-							%if key != 'UseCICVwTmp' and key != 'InlineResults':
-								<input type="hidden" name="${key}" value="${value}">
-							%endif
-						%endfor
-					</span>
-					${tags.select('UseCICVwTmp', None, convert_options([('', '')] + list(map(tuple, views))), class_="form-control")} <input type="submit" value="${_('Change View (Temp.)')}" class="btn btn-default">
-				</div> <!-- .cioc-col-md-6 -->
-			%endif
-		</div> <!-- .cioc-grid-row -->
-	</form> <!-- #change_view_form -->
-%endif
-<div class="cioc-grid-row">
-	%if agency or org_locations or org_services or location_services or service_locations or similar_services:
-	<div class="cioc-col-md-8">
-	%else:
-	<div class="cioc-col-md-12">
+
+<div class="row clear-line-below">
+	%if search_list_top:
+	<div class="col-sm-12 ${' col-md-6 col-lg-8' if request.user.cic and views else ''}">
+		<div id="search-list-top">
+			<div class="row">${search_list_top}</div>
+		</div>
+	</div>
 	%endif
-		<div class="record-details">
-			<div class="TitleBox RecordDetailsHeader ${'clearfix' if logo_link is not None else ''}">
-			%if logo_link is not None:
-				<div style="float:right;">${logo_link|n}</div>
-			%endif
-				<h2>${org_level_1_linked}</h2>
-				%if org_level_2to5_linked:
-				<h3>${org_level_2to5_linked}</h3>
-				%endif
-				%if location_name_linked:
-				<h3>${_('Site:')} ${location_name_linked}</h3>
-				%endif
-				%if service_levels_linked:
-				<h3>${_('Service:')} ${service_levels_linked}</h3>
-				%endif
-			</div> <!-- .TitleBox.RecordDetailsHeader -->
-			<% now = datetime.now() %>
-
-
-			<div class="record-details-action">
-				<%
-				user = request.user
-				cicuser = user.cic
-				%>
-				%if not viewdata.PrintMode:
-					<div class="record-details-action-header">
-					<div class="record-details-action-bar HideListUI clear-line-below">
-
-					${clienttracker.my_list_details_add_record(request, record.NUM)}
-
-					<span class="NoWrap"><a class="NoLineLink" href="${feedback_link}"><img src="/images/edit.gif" aria-hidden="true" border="0"> ${_('Suggest Update')}</a></span>
-					${other_langs_links}
-					%if request.dboptions.UseVOL and cicview.VolunteerLink:
-						%if record.HAS_VOL:
-							| <span class="NoWrap"><a class="NoLineLink" href="${makeLink('~/volunteer/results.asp',num_link)}"><img src="/images/handshake.gif" aria-hidden="true" border="0"> ${_('Volunteer Opportunities')}</a></span>
-						%endif
-						% if volview.SuggestOpLink and not request.user.vol.CanAddRecord:
-							| <span class="NoWrap"><a class="NoLineLink" href="${makeLink('~/volunteer/feedback.asp',num_link)}"><img src="/images/new.gif" aria-hidden="true" border="0"> ${_('Suggest New Volunteer Opportunity')}</a></span>
-						%endif
+	%if request.user.cic and views:
+	<div class="col-sm-12 ${' col-md-6 col-lg-4' if search_list_top else ''}">
+		<form class="form" action="${request.url}" id="change_view_form" name="ChangeViewForm">
+			<div class="text-right">
+				<span style="display: none">
+					%for key, value in request.params.items():
+					%if key != 'UseCICVwTmp' and key != 'InlineResults':
+					<input type="hidden" name="${key}" value="${value}">
 					%endif
-					%if (request.user or request.dboptions.PrintModePublic) and cicview.PrintTemplate:
-						| <span class="NoWrap"><a class="NoLineLink" href="${makeDetailsLink(num, 'PrintMd=on&UseCICVwTmp=' + request.params.get("UseCICVwTmp", ''))}" target="_BLANK"><img src="/images/printer.gif" aria-hidden="true" border="0"> ${_('Print Version (New Window)')}</a></span>
-					%endif
-					%if cicview.AllowPDF:
-						| <span class="NoWrap"><a class="NoLineLink" href="${makeDetailsLink(num + '/pdf', 'UseCICVwTmp=' + request.params.get('UseCICVwTmp', ''))}" target="_BLANK"><img src="/images/pdf.gif" aria-hidden="true" border="0"> ${_('PDF (New Window)')}</a></span>
-					%endif
-
-					%if record.NON_PUBLIC and request.user:
-						| <span class="Alert NoWrap">${_('NON PUBLIC')}</span>
-					%endif
-					%if record.DELETION_DATE:
-						%if record.DELETION_DATE <= now:
-							| <span class="Alert">${_('DELETED')}</span>
-						%elif request.user:
-							| <span class="Alert NoWrap">${_('TO BE DELETED')}</span>
-						%endif
-					%endif
-					%if request.user.cic.FeedbackAlert:
-						%if record.HAS_FEEDBACK:
-							| <a class="Alert NoLineLink NoWrap" href="${makeLink('~/revfeedback_view.asp',num_number_link)}">${_('CHECK FEEDBACK')}</a>
-						%endif
-						%if record.HAS_PUB_FEEDBACK:
-							| <span class="Alert NoWrap">${_('CHECK PUB FEEDBACK')}</span>
-						%endif
-					%endif
-
-					%if request.user:
-					  ${reminder_notice}
-					%endif
-
-
-					</div> <!-- .HideListUI -->
-
-
-
-				%if nav_dropdown:
-				<span class="form-inline-always">
-					<div class="form-group">
-						<label for="ActionList">${_('Action:')}</label>
-						<select name="ActionList" id="ActionList" onchange="do_drop_down_navigation()" class="form-control">
-							<option selected></option>
-							${nav_dropdown}
-						</select>
-					</div>
+					%endfor
 				</span>
-				%endif
-
-				%if cicview.SocialMediaShare and not inline_results:
-				<div class="new-share-wrapper HideNoJs">
-					<div class="new-share-label">${_('Share:')}</div>
-					<div class="addthis_toolbox addthis_default_style addthis_20x20_style new-share-toolbox" addthis:url="${request.host_url}${request.passvars.makeDetailsLink(num)}">
-						<a class="addthis_button_preferred_1"></a>
-						<a class="addthis_button_preferred_2"></a>
-						<a class="addthis_button_preferred_3"></a>
-						<a class="addthis_button_preferred_4"></a>
-						<a class="addthis_button_compact"></a>
+				<div class="input-group">
+					${tags.select('UseCICVwTmp', None, convert_options([('', '')] + list(map(tuple, views))), class_="form-control")}
+					<div class="input-group-btn">
+						<button class="btn" type="submit" class="btn btn-default">${_('Change View (Temp.)')}</button>
 					</div>
-				</div> <!-- .new-share-wrapper -->
-				%endif
 				</div>
-				%endif # not print mode
+			</div>
+		</form> <!-- #change_view_form -->
+	</div>
+	%endif
+</div> <!-- .row -->
 
-				<table class="NoBorder record-metadata cell-padding-4" style="padding: 0">
-					<tr>
-						<td><strong>${_('Record #:')}</strong> ${record.NUM}</td>
-					%if cicview.LastModifiedDate:
-						<td><strong>${_('Last Modified:')}</strong> <span class="NoWrap">${format_date(record.MODIFIED_DATE, if_none=_('Unknown'))}</span></td>
-					%endif
-						<td><strong>${_('Last Full Update:')}</strong> <span class="NoWrap">${format_date(record.UPDATE_DATE, if_none=_('Unknown'))}</span></td>
-					%if cicview.DataMgmtFields:
-						<td><strong>${_('Update Schedule:')}</strong> <span class="NoWrap ${'Alert' if record.UPDATE_SCHEDULE is None or now > record.UPDATE_SCHEDULE else ''}">${format_date(record.UPDATE_SCHEDULE, if_none=_('Unknown'))}</span></td>
-						%if not cicview.LastModifiedDate and request.user.cic.CanRequestUpdate:
-							<td>&nbsp;</td>
-						%endif
-					%endif
-					</tr>
-					%if request.viewdata.cic.DataMgmtFields:
-						<tr>
-							<td><strong>${_('Record Owner:')}</strong> ${record.RECORD_OWNER}</td>
-							<td><strong>${_('Date Created:')}</strong> <span class="NoWrap">${format_date(record.CREATED_DATE, if_none=_('Unknown'))}</span></td>
-							<td><strong>${_('Date Deleted:')}</strong> <span class="NoWrap">${format_date(record.DELETION_DATE, if_none=_('N/A'))}</span></td>
+%endif
 
-						%if request.user.cic.CanRequestUpdate:
-							<td><strong>${_('Last Email:')}</strong> <span class="NoWrap">${format_date(record.EMAIL_UPDATE_DATE, if_none=_('N/A'))}</span></td>
-						%elif request.viewdata.cic.LastModifiedDate:
-							<td>&nbsp;</td>
-						%endif
-						</tr>
-					%endif
-				</table>
-
-			</div> <!-- record-details-action -->
+<div class="record-details">
+	<div class="TitleBox RecordDetailsHeader ${'clearfix' if logo_link is not None else ''}">
+	%if logo_link is not None:
+		<div style="float:right;">${logo_link|n}</div>
+	%endif
+		<h2>${org_level_1_linked}</h2>
+		%if org_level_2to5_linked:
+		<h3>${org_level_2to5_linked}</h3>
+		%endif
+		%if location_name_linked:
+		<h3>${_('Site:')} ${location_name_linked}</h3>
+		%endif
+		%if service_levels_linked:
+		<h3>${_('Service:')} ${service_levels_linked}</h3>
+		%endif
+	</div> <!-- .TitleBox.RecordDetailsHeader -->
+	<% now = datetime.now() %>
 
 
-			<table class="BasicBorder cell-padding-3 record-data">
-			%for group_name, fields in field_groups:
-				<tr><th class="RevTitleBox field-group-header" colspan="2">${group_name|n}</th></tr>
+	<div class="record-details-action">
+		<%
+		user = request.user
+		cicuser = user.cic
+		%>
+		%if not viewdata.PrintMode:
+			<div class="record-details-action-header">
+			<div class="record-details-action-bar HideListUI clear-line-below">
+
+			${clienttracker.my_list_details_add_record(request, record.NUM)}
+
+			<span class="NoWrap"><a class="NoLineLink" href="${feedback_link}"><img src="/images/edit.gif" aria-hidden="true" border="0"> ${_('Suggest Update')}</a></span>
+			${other_langs_links}
+			%if request.dboptions.UseVOL and cicview.VolunteerLink:
+				%if record.HAS_VOL:
+					| <span class="NoWrap"><a class="NoLineLink" href="${makeLink('~/volunteer/results.asp',num_link)}"><img src="/images/handshake.gif" aria-hidden="true" border="0"> ${_('Volunteer Opportunities')}</a></span>
+				%endif
+				% if volview.SuggestOpLink and not request.user.vol.CanAddRecord:
+					| <span class="NoWrap"><a class="NoLineLink" href="${makeLink('~/volunteer/feedback.asp',num_link)}"><img src="/images/new.gif" aria-hidden="true" border="0"> ${_('Suggest New Volunteer Opportunity')}</a></span>
+				%endif
+			%endif
+			%if (request.user or request.dboptions.PrintModePublic) and cicview.PrintTemplate:
+				| <span class="NoWrap"><a class="NoLineLink" href="${makeDetailsLink(num, 'PrintMd=on&UseCICVwTmp=' + request.params.get("UseCICVwTmp", ''))}" target="_BLANK"><img src="/images/printer.gif" aria-hidden="true" border="0"> ${_('Print Version (New Window)')}</a></span>
+			%endif
+			%if cicview.AllowPDF:
+				| <span class="NoWrap"><a class="NoLineLink" href="${makeDetailsLink(num + '/pdf', 'UseCICVwTmp=' + request.params.get('UseCICVwTmp', ''))}" target="_BLANK"><img src="/images/pdf.gif" aria-hidden="true" border="0"> ${_('PDF (New Window)')}</a></span>
+			%endif
+
+			%if record.NON_PUBLIC and request.user:
+				| <span class="Alert NoWrap">${_('NON PUBLIC')}</span>
+			%endif
+			%if record.DELETION_DATE:
+				%if record.DELETION_DATE <= now:
+					| <span class="Alert">${_('DELETED')}</span>
+				%elif request.user:
+					| <span class="Alert NoWrap">${_('TO BE DELETED')}</span>
+				%endif
+			%endif
+			%if request.user.cic.FeedbackAlert:
+				%if record.HAS_FEEDBACK:
+					| <a class="Alert NoLineLink NoWrap" href="${makeLink('~/revfeedback_view.asp',num_number_link)}">${_('CHECK FEEDBACK')}</a>
+				%endif
+				%if record.HAS_PUB_FEEDBACK:
+					| <span class="Alert NoWrap">${_('CHECK PUB FEEDBACK')}</span>
+				%endif
+			%endif
+
+			%if request.user:
+				${reminder_notice}
+			%endif
+
+
+			</div> <!-- .HideListUI -->
+
+
+
+		%if nav_dropdown:
+		<span class="form-inline-always">
+			<div class="form-group">
+				<label for="ActionList">${_('Action:')}</label>
+				<select name="ActionList" id="ActionList" onchange="do_drop_down_navigation()" class="form-control">
+					<option selected></option>
+					${nav_dropdown}
+				</select>
+			</div>
+		</span>
+		%endif
+
+		%if cicview.SocialMediaShare and not inline_results:
+		<div class="new-share-wrapper HideNoJs">
+			<div class="new-share-label">${_('Share:')}</div>
+			<div class="addthis_toolbox addthis_default_style addthis_20x20_style new-share-toolbox" addthis:url="${request.host_url}${request.passvars.makeDetailsLink(num)}">
+				<a class="addthis_button_preferred_1"></a>
+				<a class="addthis_button_preferred_2"></a>
+				<a class="addthis_button_preferred_3"></a>
+				<a class="addthis_button_compact"></a>
+			</div>
+		</div> <!-- .new-share-wrapper -->
+		%endif
+		</div>
+		%endif # not print mode
+
+		<table class="NoBorder record-metadata cell-padding-4" style="padding: 0">
+			<tr>
+				<td><strong>${_('Record #:')}</strong> ${record.NUM}</td>
+			%if cicview.LastModifiedDate:
+				<td><strong>${_('Last Modified:')}</strong> <span class="NoWrap">${format_date(record.MODIFIED_DATE, if_none=_('Unknown'))}</span></td>
+			%endif
+				<td><strong>${_('Last Full Update:')}</strong> <span class="NoWrap">${format_date(record.UPDATE_DATE, if_none=_('Unknown'))}</span></td>
+			%if cicview.DataMgmtFields:
+				<td><strong>${_('Update Schedule:')}</strong> <span class="NoWrap ${'Alert' if record.UPDATE_SCHEDULE is None or now > record.UPDATE_SCHEDULE else ''}">${format_date(record.UPDATE_SCHEDULE, if_none=_('Unknown'))}</span></td>
+				%if not cicview.LastModifiedDate and request.user.cic.CanRequestUpdate:
+					<td>&nbsp;</td>
+				%endif
+			%endif
+			</tr>
+			%if request.viewdata.cic.DataMgmtFields:
+				<tr>
+					<td><strong>${_('Record Owner:')}</strong> ${record.RECORD_OWNER}</td>
+					<td><strong>${_('Date Created:')}</strong> <span class="NoWrap">${format_date(record.CREATED_DATE, if_none=_('Unknown'))}</span></td>
+					<td><strong>${_('Date Deleted:')}</strong> <span class="NoWrap">${format_date(record.DELETION_DATE, if_none=_('N/A'))}</span></td>
+
+				%if request.user.cic.CanRequestUpdate:
+					<td><strong>${_('Last Email:')}</strong> <span class="NoWrap">${format_date(record.EMAIL_UPDATE_DATE, if_none=_('N/A'))}</span></td>
+				%elif request.viewdata.cic.LastModifiedDate:
+					<td>&nbsp;</td>
+				%endif
+				</tr>
+			%endif
+		</table>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-${'8' if agency or org_locations or org_services or location_services or service_locations or similar_services else '12'}">
+		%for group_name, fields in field_groups:
+			<div class="panel panel-default max-width-lg">
+				<div class="panel-heading">
+					<h4>${group_name|n}</h4>
+				</div>
+				<div class="panel-body no-padding">
+					<table class="BasicBorder cell-padding-4 full-width inset-table responsive-table">
 					%for field, field_contents in fields:
 						%if field_contents:
 							%if field.CheckMultiline or field.CheckHTML:
@@ -213,16 +226,16 @@ ${gtranslate.render_ui(request)}
 								<% field_display = getattr(viewdata.cic, "OrgLevel%sName" % field.FieldName[-1], None) or field_display %>
 							%endif
 							<tr>
-								<td class="FieldLabelLeft">${field_display|n}</td>
-								<td class="field-detail clearfix">${str(field_contents)|n}</td>
+								<td class="field-label-cell">${field_display|n}</td>
+								<td class="field-data-cell">${str(field_contents)|n}</td>
 							</tr>
 						%endif
 					%endfor
-			%endfor
-			</table>
-
-		</div> <!-- .record-details -->
-	</div> <!-- .cioc-col-sm-8 -->
+					</table>
+				</div>
+			</div>
+		%endfor
+	</div> <!-- .col-sm-8 -->
 
 	%if agency or org_locations or org_services or location_services or service_locations or similar_services:
 	<%
@@ -242,7 +255,7 @@ ${gtranslate.render_ui(request)}
 
 	makeLink = request.passvars.makeLink
 	%>
-	<div class="cioc-col-md-4">
+	<div class="col-md-4">
 		%for j, (section, group) in enumerate(groups):
 		%if any(x[0] for x in group):
 		<div class="agency-overview">
@@ -303,14 +316,16 @@ ${gtranslate.render_ui(request)}
 		</div>
 		%endif
 		%endfor
-	</div> <!-- cioc-col-sm-4 -->
+	</div> <!-- col-sm-4 -->
 	%endif
-</div> <!-- .cioc-grid-row -->
+</div> <!-- .row -->
 
 %if request.user and not viewdata.PrintMode and search_list_bottom:
-<p>
-	<span id="search-list-bottom">${search_list_bottom}</span>
-</p>
+<div id="search-list-bottom">
+	<div class="row">
+		${search_list_bottom}
+	</div>
+</div>
 %endif
 
 %if request.user and not viewdata.PrintMode:

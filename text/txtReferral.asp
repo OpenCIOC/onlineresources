@@ -18,13 +18,15 @@
 
 <%
 Dim TXT_ABOUT_VOLUNTEER, _
+	TXT_ADMINISTRATION, _
 	TXT_ADD_FOLLOW_UP_FLAG, _
 	TXT_CONFIRM_DELETE_REFERRAL, _
 	TXT_CONFIRM_DELETE_REFERRALS, _
 	TXT_CONTACT, _
-	TXT_CONTACTED_BY, _
+	TXT_CONTACT_METHOD, _
 	TXT_CREATE_REFERRAL_STATS_REPORT, _
 	TXT_CUSTOM_REFERRAL_SEARCH, _
+	TXT_DATE_OF_CONTACT, _
 	TXT_DATE_OF_REQUEST, _
 	TXT_DELETE_OLD_REFERRALS, _
 	TXT_EMAIL_FOLLOW_UP, _
@@ -37,6 +39,7 @@ Dim TXT_ABOUT_VOLUNTEER, _
 	TXT_FOLLOW_UP_FLAGS_UPDATED, _
 	TXT_FOLLOW_UP_REQUIRED, _
 	TXT_GRAND_TOTAL, _
+	TXT_IN_PERSON, _
 	TXT_INST_DELETE_REFERRALS_1, _
 	TXT_INST_DELETE_REFERRALS_2, _
 	TXT_INST_DELETE_REFERRALS_3, _
@@ -56,6 +59,7 @@ Dim TXT_ABOUT_VOLUNTEER, _
 	TXT_OR_MORE_REFERRALS, _
 	TXT_ORG_LAST_CONTACT, _
 	TXT_ORGANIZATION_KEYWORDS, _
+	TXT_OTHER, _
 	TXT_OTHER_REFERRAL_TOOLS, _
 	TXT_OUTCOME_NOTES, _
 	TXT_PAST_REFERRALS_FOR_POSITION, _
@@ -102,13 +106,15 @@ Sub setTxtReferral()
 	Select Case g_objCurrentLang.Culture
 		Case CULTURE_FRENCH_CANADIAN
 			TXT_ABOUT_VOLUNTEER = "À propos du bénévole potentiel"
+			TXT_ADMINISTRATION = "Administration"
 			TXT_ADD_FOLLOW_UP_FLAG = "Ajouter un marqueur de suivi"
 			TXT_CONFIRM_DELETE_REFERRAL = "Confirmer la suppression de la mise en relation"
 			TXT_CONFIRM_DELETE_REFERRALS = "Confirmer la suppression des mises en relation"
 			TXT_CONTACT = "Contact"
-			TXT_CONTACTED_BY = "Contacté par :"
+			TXT_CONTACT_METHOD = "Méthode de contact"
 			TXT_CREATE_REFERRAL_STATS_REPORT = "Créer un rapport statistique des mises en relation"
 			TXT_CUSTOM_REFERRAL_SEARCH = "Recherche avancée sur les mises en relation"
+			TXT_DATE_OF_CONTACT = "Date du dernier contact"
 			TXT_DATE_OF_REQUEST = "Date de la demande"
 			TXT_DELETE_OLD_REFERRALS = "Supprimer les mises en relation anciennes"
 			TXT_EMAIL_FOLLOW_UP = "Suivi par courriel"
@@ -121,6 +127,7 @@ Sub setTxtReferral()
 			TXT_FOLLOW_UP_FLAGS_UPDATED = "Signets de suivi mis à jour"
 			TXT_FOLLOW_UP_REQUIRED = "Suivi requis"
 			TXT_GRAND_TOTAL = "Total général"
+			TXT_IN_PERSON = "En personne"
 			TXT_INST_DELETE_REFERRALS_1 = "Ainsi, vous souhaitez supprimer les mises en relation anciennes ?"
 			TXT_INST_DELETE_REFERRALS_2 = "Purger périodiquement vos mises en relation rend le comptage des dossiers plus efficace et réduit la taille de votre téléchargement quotidien mais <span class=""""Alert"""">soyez sûr d'avoir une copie d'archive !</span>"
 			TXT_INST_DELETE_REFERRALS_3 = "Vous pouvez récupérer le tableau des mises en relation dans votre téléchargement quotidien."
@@ -140,6 +147,7 @@ Sub setTxtReferral()
 			TXT_OR_MORE_REFERRALS = "mise(s) en relation ou plus"
 			TXT_ORG_LAST_CONTACT = "La personne contact pour ce poste a été contactée pour la dernière fois au sujet de cette mise en relation :"
 			TXT_ORGANIZATION_KEYWORDS = "Mots-clés d'organisme"
+			TXT_OTHER = "Autre"
 			TXT_OTHER_REFERRAL_TOOLS = "Autres outils sur les mises en relation"
 			TXT_OUTCOME_NOTES = "Notes sur le résultat"
 			TXT_PAST_REFERRALS_FOR_POSITION = "Mises en relation passées pour ce poste :"
@@ -183,13 +191,15 @@ Sub setTxtReferral()
 			TXT_YOU_ARE_UPDATING_REFERRAL_REQUEST = "Vous mettez à jour une demande de mise en relation pour ce poste :"
 		Case Else
 			TXT_ABOUT_VOLUNTEER = "About the Potential Volunteer"
+			TXT_ADMINISTRATION = "Administration"
 			TXT_ADD_FOLLOW_UP_FLAG = "Add Follow-Up Flag"
 			TXT_CONFIRM_DELETE_REFERRAL = "Confirm Delete Referral"
 			TXT_CONFIRM_DELETE_REFERRALS = "Confirm Delete Referrals"
 			TXT_CONTACT = "Contact"
-			TXT_CONTACTED_BY = "Contacted by:"
+			TXT_CONTACT_METHOD = "Contact Method"
 			TXT_CREATE_REFERRAL_STATS_REPORT = "Create Referral Statistics Report"
 			TXT_CUSTOM_REFERRAL_SEARCH = "Custom Referral Search"
+			TXT_DATE_OF_CONTACT = "Last Contact Date"
 			TXT_DATE_OF_REQUEST = "Date of Request"
 			TXT_DELETE_OLD_REFERRALS = "Delete Old Referrals"
 			TXT_EMAIL_FOLLOW_UP = "Email Follow-Up"
@@ -202,6 +212,7 @@ Sub setTxtReferral()
 			TXT_FOLLOW_UP_FLAGS_UPDATED = "Follow Up Flags Updated"
 			TXT_FOLLOW_UP_REQUIRED = "Follow-up Required"
 			TXT_GRAND_TOTAL = "Grand Total"
+			TXT_IN_PERSON = "In Person"
 			TXT_INST_DELETE_REFERRALS_1 = "So...you want to delete old Referrals?"
 			TXT_INST_DELETE_REFERRALS_2 = "Periodically clearing out your Referrals makes the record counts more meaningful, and reduces the size of your daily download...but <span class=""Alert"">ensure that you have an archived copy first!</span>"
 			TXT_INST_DELETE_REFERRALS_3 = "You can grab the Referrals table out of your daily download."
@@ -221,6 +232,7 @@ Sub setTxtReferral()
 			TXT_OR_MORE_REFERRALS = "or more Referrals"
 			TXT_ORG_LAST_CONTACT = "The Contact Person for this position was last contacted about this Referral:"
 			TXT_ORGANIZATION_KEYWORDS = "Organization Keywords"
+			TXT_OTHER = "Other"
 			TXT_OTHER_REFERRAL_TOOLS = "Other Referral Tools"
 			TXT_OUTCOME_NOTES = "Outcome Notes"
 			TXT_PAST_REFERRALS_FOR_POSITION = "Past Referrals for the Position:"

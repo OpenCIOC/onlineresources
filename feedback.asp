@@ -111,6 +111,7 @@ Call setSessionLanguage(objUpdateLang.Culture)
 Dim intRSN, _
 	strNUM, _
 	strFBKey, _
+	bNew, _
 	bNUMError, _
 	strError, _
 	bHasDynamicAddField, _
@@ -126,6 +127,7 @@ Dim	bSuggest, _
 	strUpdatePassword
 
 bSuggest = False
+bNew = False
 bUpdatePasswordRequired = Null
 strUpdatePassword = Trim(Request("FeedbackPassword"))
 If Nl(strUpdatePassword) Then
@@ -168,6 +170,8 @@ Else
 	strNUM = Null
 	bSuggest = True
 End If
+
+bNew = bSuggest
 
 If Not bNUMError Then
 	Dim intViewType

@@ -7796,11 +7796,14 @@ msgid "Create Volunteer Opportunity"
 msgstr ""
 
 #: ../python/cioc/web/cic/record.py:412
-msgid "Email Update All Volunteer Opportunities Request"
+msgid "Request Update of Volunteer Opportunities"
 msgstr ""
 
 #: ../python/cioc/web/cic/record.py:456
-msgid "Other Search Results:"
+msgid "Your Search"
+msgstr ""
+
+msgid "viewing"
 msgstr ""
 
 #: ../python/cioc/web/cic/record.py:469

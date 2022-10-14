@@ -31,15 +31,15 @@ Dim	TXT_CREATE_NEW_OPP, _
 Sub setTxtDetailsVOL()
 	Select Case g_objCurrentLang.Culture
 		Case CULTURE_FRENCH_CANADIAN
-			TXT_CREATE_NEW_OPP = "Créer une Nouvelle occasion"
-			TXT_CREATE_REFERRAL = "Créer une Mise en relation"
+			TXT_CREATE_NEW_OPP = "Créer une nouvelle occasion"
+			TXT_CREATE_REFERRAL = "Créer une mise en relation"
 			TXT_FLAG_EXPIRED = "EXPIRÉ"
-			TXT_LIST_REFERRALS = "Répertorier les mises en relation"
-			TXT_MORE_AGENCY_INFO = "Renseignements supplémentaires sur l'agence"
+			TXT_LIST_REFERRALS = "Les mises en relation"
+			TXT_MORE_AGENCY_INFO = "Informations sur l'agence"
 			TXT_ORGNAME = "Nom de l'organisme"
 			TXT_OTHER_OPPORTUNITIES = "Autres occasions"
 			TXT_SUGGEST_NEW_OPPORTUNITY = "Proposer une nouvelle occasion"
-			TXT_YES_VOLUNTEER = "Oui, je souhaite faire du bénévolat !"
+			TXT_YES_VOLUNTEER = "J'aimerais être bénévole !"
 		Case Else
 			TXT_CREATE_NEW_OPP = "Create New Opportunity"
 			TXT_CREATE_REFERRAL = "Create Referral"

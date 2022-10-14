@@ -8438,12 +8438,15 @@ msgid "Create Volunteer Opportunity"
 msgstr "Créer une occasion de bénévolat"
 
 #: ../python/cioc/web/cic/record.py:412
-msgid "Email Update All Volunteer Opportunities Request"
-msgstr "Mettre à jour par courriel toutes les demandes d'occasion de bénévolat"
+msgid "Request Update of Volunteer Opportunities"
+msgstr "Demander une mise à jour des opportunités de bénévolat"
 
 #: ../python/cioc/web/cic/record.py:456
-msgid "Other Search Results:"
-msgstr "Autres résultats de recherche :"
+msgid "Your Search"
+msgstr "Votres recherche"
+
+msgid "viewing"
+msgstr "affichage"
 
 #: ../python/cioc/web/cic/record.py:469
 msgid "First"

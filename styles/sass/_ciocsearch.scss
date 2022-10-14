@@ -109,8 +109,14 @@ td.ListUI {
 	text-align: left;
 }
 
-#search-list-top {
+#search-list-top, #search-list-bottom {
 	margin-bottom: 0.5em;
+	color: $fcContent;
+	background-color: $bgColorContent;
+	border: 1px solid $borderColorContent;
+	-moz-border-radius: $cornerRadius;
+	-webkit-border-radius: $cornerRadius;
+	border-radius: $cornerRadius;
 }
 
 .checkbox-list-table {

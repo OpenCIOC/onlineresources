@@ -422,12 +422,12 @@ Call closeVOLCommunitySetListRst()
 				<table class="BasicBorder cell-padding-4 full-width inset-table form-table responsive-table">
 					<tbody>
 						<tr>
-							<td><span class="btn btn-xs btn-default"><span class="glyphicon glyphicon-question-sign medium-icon legend-button-icon" title="<%=TXT_HELP%>"></span></span></td>
+							<td class="field-icon-cell icon-1"><span class="btn btn-xs btn-default"><span class="fa fa-question-circle medium-icon legend-button-icon" title="<%=TXT_HELP%>"></span></span></td>
 							<td><%=TXT_LEGEND_HELP%></td>
 						</tr>
 						<% If Not bNew Then %>
 						<tr>
-							<td><span class="btn btn-xs btn-default"><span class="glyphicon glyphicon-duplicate medium-icon legend-button-icon" title="<%=TXT_HISTORY%>"></span></span></td>
+							<td class="field-icon-cell icon-1"><span class="btn btn-xs btn-default"><span class="fa fa-history medium-icon legend-button-icon" title="<%=TXT_HISTORY%>"></span></span></td>
 							<td>
 								<p><%=TXT_LEGEND_VERSIONS%></p>
 <%

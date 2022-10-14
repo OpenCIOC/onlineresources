@@ -18,7 +18,9 @@
 %>
 
 <%
-Dim	TXT_CLICK_TO_VIEW, _
+Dim	TXT_ABOUT_AGENCY, _
+	TXT_ALL_RESULTS, _
+	TXT_CLICK_TO_VIEW, _
 	TXT_CONCERNS, _
 	TXT_COPY_RECORD, _
 	TXT_CREATE_EQUIVALENT, _
@@ -34,7 +36,7 @@ Dim	TXT_CLICK_TO_VIEW, _
 	TXT_FLAG_TO_BE_DELETED, _
 	TXT_LAST_EMAIL, _
 	TXT_NA, _
-	TXT_OTHER_RESULTS, _
+	TXT_OPPORTUNITY_DETAILS, _
 	TXT_READ_LESS, _
 	TXT_READ_MORE, _
 	TXT_RECORD_EXISTS_BUT, _
@@ -46,11 +48,15 @@ Dim	TXT_CLICK_TO_VIEW, _
 	TXT_REMINDER_DUE_SINGLE, _
 	TXT_REMINDERS, _
 	TXT_RESTORE_RECORD, _
-	TXT_SHARE
+	TXT_SHARE, _
+	TXT_VIEWING , _
+	TXT_YOUR_SEARCH
 
 Sub setTxtDetails()
 	Select Case g_objCurrentLang.Culture
 		Case CULTURE_FRENCH_CANADIAN
+			TXT_ABOUT_AGENCY = "Coordonnées de l'agence :"
+			TXT_ALL_RESULTS = "Tous les résultats"
 			TXT_CLICK_TO_VIEW = "Cliquer pour visualiser."
 			TXT_CONCERNS = "Si vous avez des questions ou des préoccupations sur le statut de ce dossier, communiquez avec le propriétaire du dossier"
 			TXT_COPY_RECORD = "Copier le dossier"
@@ -59,15 +65,15 @@ Sub setTxtDetails()
 			TXT_DATE_DELETED = "Date de suppression"
 			TXT_DELETE_RECORD = "Supprimer le dossier"
 			TXT_EMAIL_UPDATE_REQUEST = "Demander la mise à jour par courriel"
-			TXT_EMAIL_UPDATE_ALL_VOL_OPP = "Mettre à jour par courriel toutes les demandes d'occasion de bénévolat"
-			TXT_FLAG_CHECK_FEEDBACK = "VÉRIFIER LA&nbsp;RÉTROACTION"
+			TXT_EMAIL_UPDATE_ALL_VOL_OPP = "Demander la mise à jour des dossiers"
+			TXT_FLAG_CHECK_FEEDBACK = "VÉRIFIER LA RÉTROACTION"
 			TXT_FLAG_DELETED = "SUPPRIMÉ"
 			TXT_FLAG_NON_PUBLIC = "INTERNE"
 			TXT_FLAG_REMINDERS = "RAPPELS"
-			TXT_FLAG_TO_BE_DELETED = "POUR&nbsp;SUPPRESSION"
+			TXT_FLAG_TO_BE_DELETED = "POUR SUPPRESSION"
 			TXT_LAST_EMAIL = "Dernier courriel"
 			TXT_NA = "S/O"
-			TXT_OTHER_RESULTS = "Autres résultats de recherche : "
+			TXT_OPPORTUNITY_DETAILS = "Détails de l'opportunité : "
 			TXT_READ_LESS = "[moins]"
 			TXT_READ_MORE = "[lire plus]"
 			TXT_RECORD_EXISTS_BUT = " existe dans la base de données, mais l'accès y est restreint depuis cette zone. Ce dossier peut être incomplet ou en attente d'une mise à jour ; le programme ou service n'est peut être plus offert ; ou le type de service peut avoir changé, ce qui rend la présence du dossier inappropriée."
@@ -80,7 +86,11 @@ Sub setTxtDetails()
 			TXT_REMINDERS = "Rappels"
 			TXT_RESTORE_RECORD = "Restaurer le dossier"
 			TXT_SHARE = "Partager : "
+			TXT_VIEWING = "affichage"
+			TXT_YOUR_SEARCH = "Votre recherche"
 		Case Else
+			TXT_ABOUT_AGENCY = "Agency Details: "
+			TXT_ALL_RESULTS = "All Results"
 			TXT_CLICK_TO_VIEW = "Click to view."
 			TXT_CONCERNS = "If you have questions or concerns about the status of this record, contact the record owner"
 			TXT_COPY_RECORD = "Copy Record"
@@ -89,15 +99,15 @@ Sub setTxtDetails()
 			TXT_DATE_DELETED = "Date Deleted"
 			TXT_DELETE_RECORD = "Delete Record"
 			TXT_EMAIL_UPDATE_REQUEST = "Email Update Request"
-			TXT_EMAIL_UPDATE_ALL_VOL_OPP = "Email Update All Volunteer Opportunities Request"
-			TXT_FLAG_CHECK_FEEDBACK = "CHECK&nbsp;FEEDBACK"
+			TXT_EMAIL_UPDATE_ALL_VOL_OPP = "Request Update of Opportunities"
+			TXT_FLAG_CHECK_FEEDBACK = "CHECK FEEDBACK"
 			TXT_FLAG_DELETED = "DELETED"
-			TXT_FLAG_NON_PUBLIC = "NON&nbsp;PUBLIC"
+			TXT_FLAG_NON_PUBLIC = "NON-PUBLIC"
 			TXT_FLAG_REMINDERS = "REMINDERS"
-			TXT_FLAG_TO_BE_DELETED = "TO&nbsp;BE&nbsp;DELETED"
+			TXT_FLAG_TO_BE_DELETED = "TO BE DELETED"
 			TXT_LAST_EMAIL = "Last Email"
 			TXT_NA = "N/A"
-			TXT_OTHER_RESULTS = "Other Search Results: "
+			TXT_OPPORTUNITY_DETAILS = "Opportunity Details: "
 			TXT_READ_LESS = "[less]"
 			TXT_READ_MORE = "[read more]"
 			TXT_RECORD_EXISTS_BUT = " exists in the database, but access to it has been restricted from this area. This record may be incomplete or waiting to be updated, the program or service may no longer be offered, or the type of service may have changed making it no longer appropriate for the record to be listed here."
@@ -110,6 +120,8 @@ Sub setTxtDetails()
 			TXT_REMINDERS = "Reminders"
 			TXT_RESTORE_RECORD = "Restore"
 			TXT_SHARE = "Share: "
+			TXT_VIEWING = "viewing"
+			TXT_YOUR_SEARCH = "Your Search"
 	End Select
 End Sub
 

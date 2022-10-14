@@ -93,6 +93,7 @@ Call setSessionLanguage(objUpdateLang.Culture)
 Dim intOPID, _
 	strVNUM, _
 	strNUM, _
+	bNew, _
 	strFBKey, _
 	bVNUMError, _
 	bNUMError, _
@@ -109,6 +110,7 @@ bHasDynamicAddField = False
 Dim	bSuggest
 
 bSuggest = False
+bNew = False
 
 If Not (Nl(intOPID) And Nl(strVNUM)) Then
 	If Not IsIDType(intOPID) And Not IsVNUMType(strVNUM) Then
@@ -149,6 +151,8 @@ Else
 		End If
 	End If
 End If
+
+bNew = bSuggest
 
 If Not bVNUMError Then
 	Dim intViewType

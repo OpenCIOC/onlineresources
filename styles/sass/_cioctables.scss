@@ -145,6 +145,13 @@ div.table {
 table.responsive-table {
 	width: 100%;
 
+	@media (min-width: $screen-sm-min) {
+		td.field-label-cell {
+			width: 17em;
+			overflow: clip;
+		}
+	}
+
 	@media (max-width: $screen-xs-max) {
 		.field-data-cell, &.form-table .field-data-cell,
 		.field-label-cell, &.form-table .field-label-cell,
@@ -160,17 +167,25 @@ table.responsive-table {
 	}
 }
 
+.field-icon-cell {
+	&.icon-2 {
+		width: 84px;
+	}
+
+	&.icon-1 {
+		width: 38px;
+	}
+
+	.glyphicon, .fa {
+		margin-right: 0;
+		padding: 2px;
+	}
+}
+
 table.form-table {
 	.field-icon-cell {
-		&.icon-2 {
-			width: 87px;
-		}
-		&.icon-1 {
-			width: 49px;
-		}
-		.glyphicon, .fa {
-			margin-right: 0;
-			padding: 2px;
+		@media (max-width: $screen-xs-max) {
+			display: none;
 		}
 	}
 

@@ -192,8 +192,5 @@ function openWinXL(pageToOpen,windowName)  {
 
 		${request.viewdata.PageMsgs |n}
 
-		%if request.viewdata.PrintMode:
-		<h1 class="NotVisible" id="PrintModePageTitle"></h1>
-		%endif
 </%def>
 ${header()}

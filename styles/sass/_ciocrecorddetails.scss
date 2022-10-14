@@ -16,8 +16,27 @@
 
 // RECORD DETAILS
 
+.RecordDetailsHeader {
+	h2, .h2, h3, .h3 {
+		margin-top: ($line-height-computed / 2);
+		color: $TitleFontColour;
+	}
+
+	a.RecordDetailsHeaderText {
+		color: $TitleFontColour;
+		font-weight: bold;
+		text-decoration: underline;
+	}
+
+	border-bottom: thin solid $borderColorContent;
+}
+
+.agency-overview, .record-details {
+	@extend .panel-shading;
+}
+
 .record-details-action {
-	padding: 5px;
+	padding: ($line-height-computed / 2) 0.6em;
 }
 
 .record-details-action-header {
@@ -26,6 +45,14 @@
 
 .record-details-action-bar {
 	font-weight: bold;
+}
+
+.record-details-admin-fields {
+	padding-top: ($line-height-computed / 2);
+}
+
+.record-details-top-border {
+	border-top: thin solid $borderColorContent;
 }
 
 .agency-overview, .record-details {
@@ -140,4 +167,18 @@ table.BasicBorder.record-data {
 	vertical-align: top; 
 	height: 16px; 
 	cursor: default;
+}
+
+.apply-button-box {
+	padding: 0.6em 1em;
+	text-align: center;
+
+	@media (min-width: $screen-md-min) {
+		text-align: right;
+	}
+}
+
+#VolApplyButton {
+	border-width: medium;
+	border-color: $borderColorContent;
 }

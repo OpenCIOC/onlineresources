@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -61,41 +61,17 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../includes/update/incAgencyUpdateInfo.asp" -->
 
 <%
-
-Dim strSearchList
-If intLastSearchNumber >= 0 And Not g_bPrintMode Then
-	If intLastSearchNumber >= intCurSearchNumber And Not (intCurSearchNumber = 0 And intCurSearchNumber = intLastSearchNumber) Then
-		If intCurSearchNumber > 0 Then
-			strSearchList = "<span style=""white-space: nowrap""><a id=""first_link_*"" class=""NoLineLink DetailsLink"" data-num=" & AttrQs(aGetSearchArray(0)) &" href=""" & makeVOLDetailsLink(aGetSearchArray(0), "Number=0",vbNullString) & """><img src=""" & ps_strPathToStart & "images/first.gif"" aria-hidden=" & AttrQs("true") & " border=""0"">&nbsp;" & TXT_FIRST & "</a></span> " & _
-				"<span style=""white-space: nowrap""><a id=""prev_link_*"" class=""NoLineLink DetailsLink"" data-num=" & AttrQs(aGetSearchArray(intCurSearchNumber-1)) &" href=""" & makeVOLDetailsLink(aGetSearchArray(intCurSearchNumber-1), "Number=" & intCurSearchNumber-1,vbNullString) & """><img src=""" & ps_strPathToStart & "images/previous.gif"" aria-hidden=" & AttrQs("true") & " border=""0"">&nbsp;" & TXT_PREVIOUS & "</a></span>"
-		End If
-		If intCurSearchNumber < intLastSearchNumber Then
-			If intCurSearchNumber > 0 Then
-				strSearchList = strSearchList & " | "
-			End If
-			strSearchList = strSearchList & "<span class=""NoWrap""><a id=""next_link_*"" class=""NoLineLink DetailsLink"" data-num=" & AttrQs(aGetSearchArray(intCurSearchNumber+1)) &" href=""" & makeVOLDetailsLink(aGetSearchArray(intCurSearchNumber+1), "Number=" & intCurSearchNumber+1,vbNullString) & """>" & TXT_NEXT & "&nbsp;<img src=""" & ps_strPathToStart & "images/next.gif"" aria-hidden=" & AttrQs("true") & " border=""0""></a></span> " & _
-				"<span class=""NoWrap""><a id=""last_link_*"" class=""NoLineLink DetailsLink"" data-num=" & AttrQs(aGetSearchArray(intLastSearchNumber)) &" href=""" & makeVOLDetailsLink(aGetSearchArray(intLastSearchNumber), "Number=" & intLastSearchNumber,vbNullString) & """>" & TXT_LAST & "&nbsp;<img src=""" & ps_strPathToStart & "images/last.gif"" aria-hidden=" & AttrQs("true") & " border=""0""></a></span>"
-		End If
-	End If
-	strSearchList = "<strong>" & TXT_OTHER_RESULTS & "</strong> " & _
-		strSearchList & " <span class=""NoWrap"">(" & intCurSearchNumber+1 & TXT_OF & intLastSearchNumber+1 & _
-		" <a id=""total_link_*"" class=""NoLineLink SearchTotalLink"" href=""" & _
-		makeLinkB("~/volunteer/presults.asp") & """>" & TXT_TOTAL & "</a>)</span>"
-End If
-
-Sub printSearchList(strType)
-%>
-<span id="search-list-<%= strType %>"><%=Replace(strSearchList,"_link_*","_link_" & strType)%></span>
-<%
-End Sub
-
 Sub makeFieldRow(strDisplay,strContents)
 %>
-<tr><td class="FieldLabelLeft"><%=strDisplay%></td><td><%=strContents%></td></tr>
+<tr>
+	<td class="field-label-cell"><%=strDisplay%></td>
+	<td class="field-data-cell"><%=strContents%></td>
+</tr>
 <%
 End Sub
 
 Dim xmlLangDoc, xmlRecordLangNode, xmlLangNode
+
 Sub loadLanguageXML()
 	Set xmlLangDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
 	With xmlLangDoc
@@ -112,7 +88,7 @@ Function linkOtherLangs(bSkipFirst)
 		strCon
 
 	strReturn = vbNullString
-	strCon = StringIf(Not bSkipFirst, " | ")
+	strCon = StringIf(Not bSkipFirst, " ")
 
 	If g_bMultiLingual Then
 	
@@ -125,17 +101,16 @@ Function linkOtherLangs(bSkipFirst)
 				If bCanSeeLang Then
 					If xmlLangNode.getAttribute("Active") Then
 						strReturn = strReturn & vbCrLf & strCon & _
-							"<span style=""white-space: nowrap"">" & _
-							"<a class=""NoLineLink"" href=""" & makeVOLDetailsLink(strVNUM, strNumberLink & "&Ln=" & xmlLangNode.getAttribute("Culture"), "Ln") & """>" & _
-							"<img src=""/images/" & xmlLangNode.getAttribute("Culture") & ".gif"" border=""0"">" & _
-							"&nbsp;" & xmlLangNode.getAttribute("LanguageName") & "</a></span>"
+							"<a role=""button"" class=""btn btn-info link-btn"" href=""" & makeVOLDetailsLink(strVNUM, strNumberLink & "&Ln=" & xmlLangNode.getAttribute("Culture"), "Ln") & """> " & _
+							 xmlLangNode.getAttribute("LanguageName") & _
+							"</a>"
 					Else
 						strReturn = strReturn & vbCrLf & strCon & _
-							"<span style=""white-space: nowrap"">" & _
-							"<a class=""NoLineLink"" href=""" & makeVOLDetailsLink(strVNUM, strDetailsNumberLink & StringIf(Not Nl(strDetailsNumberLink), "&") & "TmpLn=" & xmlLangNode.getAttribute("Culture"), vbNullString) & """>" & _
-							"&nbsp;" & xmlLangNode.getAttribute("LanguageName") & "</a></span>"
+							"<a role=""button"" class=""btn btn-info link-btn"" href=""" & makeVOLDetailsLink(strVNUM, strDetailsNumberLink & StringIf(Not Nl(strDetailsNumberLink), "&") & "TmpLn=" & xmlLangNode.getAttribute("Culture"), vbNullString) & """> " & _
+							xmlLangNode.getAttribute("LanguageName") & _
+							"</a>"
 					End If
-					strCon = " | "
+					strCon = " "
 				End If
 			End If
 		Next
@@ -155,16 +130,29 @@ Function reminderNotice()
 	Set xmlRemindersNode = xmlReminderDoc.selectSingleNode("/reminders")
 	Dim strReturn, _
 		intDue, _
-		intCount
+		intCount, _
+		strBorderType, _
+		strIconType
 
 	intCount = CInt(Nz(xmlRemindersNode.getAttribute("Total"), 0))
 	intDue = CInt(Nz(xmlRemindersNode.getAttribute("PastDue"), 0))
+	strBorderType = vbNullString
 
-	strReturn = "<span class=""HideNoJs""> | <a id=""reminders"" style=""cursor: pointer;"" class=""NoLineLink" & StringIf(intDue > 0, " Alert") & """ title=""" & _
-		IIf(intCount=1,TXT_REMINDER_COUNT_SINGLE, Replace(TXT_REMINDER_COUNT_MULTIPLE, "[COUNT]", intCount)) & _ 
-		StringIf (intDue > 0, IIf(intDue = 1, TXT_REMINDER_DUE_SINGLE, Replace(TXT_REMINDER_DUE_MULTIPLE, "[COUNT]", intDue))) & _
-		TXT_CLICK_TO_VIEW & """>" & IIf(intDue > 0, "<span class=""ui-state-error"" style=""border: none; background: inherit""><span style=""display: inline-block; vertical-align: text-bottom;"" class=""ui-icon ui-icon-alert""></span> </span>", _
-		StringIf(intCount > 0, "<img src=""" & ps_strPathToStart & "images/remind.gif""> ")) & TXT_FLAG_REMINDERS & "</a></span>"
+	If intDue > 0 Then
+		strBorderType = " btn-alert-border"
+		strIconType = "fa fa-warning"
+	ElseIf intcount > 0 Then
+		strBorderType = " btn-warning-border"
+		strIconType = "fa fa-exclamation-circle"
+	Else
+		strIconType = "fa fa-clock-o"
+	End If
+
+	strReturn = "<span class=""HideNoJs"">" & _
+		"<a id=""reminders"" class=""btn btn-info" & strBorderType & """" & _
+		" title=""" & IIf(intCount=1,TXT_REMINDER_COUNT_SINGLE, Replace(TXT_REMINDER_COUNT_MULTIPLE, "[COUNT]", intCount)) & _ 
+			StringIf (intDue > 0, IIf(intDue = 1, TXT_REMINDER_DUE_SINGLE, Replace(TXT_REMINDER_DUE_MULTIPLE, "[COUNT]", intDue))) & " " & TXT_CLICK_TO_VIEW & """>" & _
+		"<span class=""" & strIconType & """ aria-hidden=""true""></span> " & TXT_FLAG_REMINDERS & "</a></span>"
 
 	reminderNotice = strReturn
 End Function
@@ -215,10 +203,9 @@ ElseIf Nl(strVNUM) Then
 		bVNUMError = True
 	End If
 	intOPID = Null
-End If
+End If 'Check OPID / VNUM
 
 If Not bVNUMError Then
-
 
 Dim strCurCulture, _
 	strRestoreCulture
@@ -354,6 +341,7 @@ ElseIf rsOrg.EOF Then
 	bVNUMError = True
 End If
 
+End If 'bVNUMError
 
 If Not bVNUMError Then
 	Dim strNumberLink, _
@@ -368,36 +356,43 @@ If Not bVNUMError Then
 	strVNUMNumberLink = strVNUMLink & StringIf(intCurSearchNumber >= 0,"&" & strNumberLink)
 	strIDListLink = "IDList=" & strVNUM & StringIf(intCurSearchNumber >= 0,"&" & strNumberLink)
 
-If Nl(rsOrg("OPD_ID")) Then
-	Dim strOtherLangList
-	Call loadLanguageXML()
-	strOtherLangList = linkOtherLangs(True)
-	Call makePageHeader(TXT_RECORD_DETAILS, TXT_RECORD_DETAILS, True, False, True, True)
-	Call handleError(TXT_ERROR & TXT_RECORD_NOT_AVAILABLE_LANGUAGE & StringIf(Not Nl(strOtherLangList),"<br>" & TXT_RECORD_DETAILS & TXT_COLON & strOtherLangList), vbNullString, vbNullString)
-	bVNUMError = True
-ElseIf Not (rsOrg("IN_DEFAULT_VIEW") Or rsOrg("IN_VIEW")) Then
-	Call getROInfo(rsOrg("RECORD_OWNER"),ps_intDbArea)
-	Call makePageHeader(TXT_RECORD_DETAILS, TXT_RECORD_DETAILS, True, False, True, True)
-	Call handleError(TXT_ERROR & TXT_RECORD_YOU_REQUESTED & TXT_RECORD_EXISTS_BUT, vbNullString, vbNullString)
-%>
+	If Nl(rsOrg("OPD_ID")) Then
+		Dim strOtherLangList
+		Call loadLanguageXML()
+		strOtherLangList = linkOtherLangs(True)
+		Call makePageHeader(TXT_RECORD_DETAILS, TXT_RECORD_DETAILS, True, False, True, True)
+		Call handleError(TXT_ERROR & TXT_RECORD_NOT_AVAILABLE_LANGUAGE & StringIf(Not Nl(strOtherLangList),"<br>" & TXT_RECORD_DETAILS & TXT_COLON & strOtherLangList), vbNullString, vbNullString)
+		bVNUMError = True
+	ElseIf Not (rsOrg("IN_DEFAULT_VIEW") Or rsOrg("IN_VIEW")) Then
+		Call getROInfo(rsOrg("RECORD_OWNER"),ps_intDbArea)
+		Call makePageHeader(TXT_RECORD_DETAILS, TXT_RECORD_DETAILS, True, False, True, True)
+		Call handleError(TXT_ERROR & TXT_RECORD_YOU_REQUESTED & TXT_RECORD_EXISTS_BUT, vbNullString, vbNullString)
+	%>
 <p><%=TXT_CONCERNS & TXT_COLON%><strong><%=strROName%></strong></p>
-<%
-	Call printROContactInfo(False)
-	bVNUMError = True
-End If
-End If
+	<%
+		Call printROContactInfo(False)
+		bVNUMError = True
+	End If
+End If 'bVNUMError
 
 If Not bVNUMError Then
-	Call loadLanguageXML()
-	Call setSessionLanguage(strCurCulture)
 
-	Dim bExpired
-	bExpired = False
-	If Not Nl(rsOrg("DISPLAY_UNTIL")) Then
-		If DateValue(rsOrg("DISPLAY_UNTIL")) < Date() Then
-			bExpired = True
-		End If
+Call loadLanguageXML()
+Call setSessionLanguage(strCurCulture)
+
+Dim bExpired, bDeleted
+bExpired = False
+If Not Nl(rsOrg("DISPLAY_UNTIL")) Then
+	If DateValue(rsOrg("DISPLAY_UNTIL")) < Date() Then
+		bExpired = True
 	End If
+End If
+bDeleted = False
+If Not Nl(rsOrg("DELETION_DATE")) Then
+	If CDate(rsOrg("DELETION_DATE")) <= Date() Then
+		bDeleted = True
+	End If
+End If
 
 Dim strOrgName
 strOrgName = rsOrg.Fields("ORG_NAME_FULL")
@@ -421,223 +416,308 @@ Else
 	strChangeViewExtraSkip = "(VNUM)"
 End If
 
-If Not Nl(strSearchList) Or user_bVOL Then
+
+'Other Search Results Bar
+Dim bSearchList
+bSearchList = intLastSearchNumber >= intCurSearchNumber And intLastSearchNumber >= 0
+
+If (bSearchList or user_bVOL) Then
 %>
-<form action="<%=strFormAction%>" id="change_view_form" name="ChangeViewForm">
-<p>
+<div class="row clear-line-below">
 <%
-	If Not Nl(strSearchList) Then
-		Call printSearchList("top")
-	End If
-	If user_bVOL Then
-		If Not Nl(strSearchList) Then
-		%> &nbsp; <%
+	If bSearchList Then
+%>
+<!-- Other Search Results -->
+<div class="col-sm-12 <%=StringIf(user_bVOL," col-md-6 col-lg-8")%>">
+	<div id="search-list-top">
+		<div class="row">
+			<div class="col-sm-5 <%=StringIf(user_bVOL,IIf(intCurSearchNumber > 0 and intCurSearchNumber < intLastSearchNumber,"col-md-12","col-md-5") & " col-lg-4")%>">
+				<a href="<%=makeLinkB("~/volunteer/presults.asp")%>" role="button" class="btn">
+					<span class="fa fa-list" aria-hidden="true"></span>
+					<%=TXT_YOUR_SEARCH & " (" & TXT_VIEWING & " " & intCurSearchNumber+1 & TXT_OF & intLastSearchNumber+1 & ")"%>
+				</a>
+			</div>
+			<div class="col-sm-7 <%=StringIf(user_bVOL,IIf(intCurSearchNumber > 0 and intCurSearchNumber < intLastSearchNumber,"col-md-12","col-md-7") & " col-lg-8")%>">
+<%
+		If intCurSearchNumber > 0 Then
+%>
+				<a id="first_link_top" data-num=<%=AttrQs(aGetSearchArray(0))%> href="<%=makeVOLDetailsLink(aGetSearchArray(0), "Number=0",vbNullString)%>" role="button" class="btn">
+					<span class="fa fa-fast-backward" aria-hidden="true"></span> <%=TXT_FIRST%>
+				</a>
+				<a id="prev_link_top" data-num=<%=AttrQs(aGetSearchArray(0))%> href="<%=makeVOLDetailsLink(aGetSearchArray(intCurSearchNumber-1), "Number=" & intCurSearchNumber-1,vbNullString)%>" role="button" class="btn">
+					<span class="fa fa-step-backward" aria-hidden="true"></span> <%=TXT_PREVIOUS%>
+				</a>
+<%
 		End If
-		Call printChangeViewsFormContents(True,DM_CIC,strChangeViewExtraSkip)
-	End If
+		If intCurSearchNumber < intLastSearchNumber Then
 %>
-</p>
+				<a id="next_link_top" data-num=<%=AttrQs(aGetSearchArray(0))%> href="<%=makeVOLDetailsLink(aGetSearchArray(intCurSearchNumber+1), "Number=" & intCurSearchNumber+1,vbNullString)%>" role="button" class="btn">
+					<%=TXT_NEXT%> <span class="fa fa-step-forward" aria-hidden="true"></span>
+				</a>
+				<a id="last_link_top" data-num=<%=AttrQs(aGetSearchArray(0))%> href="<%=makeVOLDetailsLink(aGetSearchArray(intLastSearchNumber), "Number=" & intLastSearchNumber,vbNullString)%>" role="button" class="btn">
+					<%=TXT_LAST%> <span class="fa fa-fast-forward" aria-hidden="true"></span>
+				</a>
 <%
-End If
+		End If
 %>
-</form>
+			</div>
+		</div>
+	</div>
+</div>
 <%
-End If
+	End If 'bSearchList
+
+	If user_bVOL Then
 %>
-<div class="cioc-grid-row">
-	<div class="cioc-col-md-12">
-		<div class="record-details">
-			<div class="TitleBox RecordDetailsHeader">
+<!-- Change Views -->
+<div class="col-sm-12 <%=StringIf(bSearchList," col-md-6 col-lg-4")%>">
+	<form class="form" action="<%=strFormAction%>" id="change_view_form" name="ChangeViewForm">
+	<div class="text-right">
+<%
+	Call printChangeViewsFormContents(True,DM_VOL,strChangeViewExtraSkip)
+%>
+	</div>
+	</form>
+</div>
+<%
+	End If 'user_bVOL
+%>
+</div>
+<%
+End If 'bSearchList or user_bVOL
+
+End If 'g_bPrintMode
+
+Dim bReferral
+bReferral = user_bSuperUserVOL Or (user_strAgency=rsOrg("RECORD_OWNER") And user_bCanManageReferrals)
+%>
+<!-- Record Admin Header -->
+<div class="record-details">
+	<div class="RecordDetailsHeader TitleBox">
+		<div class="row">
+			<div class="col-md-<%=IIf(g_bPrintMode And Not (bExpired Or bDeleted),12,8)%>">
 				<h2><%=rsOrg("POSITION_TITLE")%></h2>
 				<h3>(<%=strOrgName%>)</h3>
 			</div>
-			<table class="BasicBorder cell-padding-3 record-data">			
 <%
-Dim bReferral
-bReferral = user_bSuperUserVOL Or (user_strAgency=rsOrg("RECORD_OWNER") And user_bCanManageReferrals)
-
-If Not g_bPrintMode Then
+If Not g_bPrintMode Or bExpired Or bDeleted Then
 %>
-<form action="/volunteer/<%=IIf(bReferral,"referral_edit.asp","volunteer.asp")%>" method="post">
-<div style="display:none">
-<%=g_strCacheFormVals%>
-<input type="hidden" name="VNUM" value="<%=rsOrg("VNUM")%>">
-<%If intCurSearchNumber >= 0 Then%>
-<input type="hidden" name="Number" value="<%=intCurSearchNumber%>">
-<%End If%>
-</div>
-<tr>
-	<td colspan="2" class="RevTitleBox" align="center"><button id="VolApplyButton" type="submit" class="btn btn-default"><span class="glyphicon glyphicon-check" aria-hidden="true"></span> <strong><%=IIf(bReferral,TXT_CREATE_REFERRAL,TXT_YES_VOLUNTEER)%></strong></button></td>
-</tr>
-</form>
+			<div class="col-md-4 apply-button-box">
 <%
-End If
+	If bExpired Or bDeleted Then
 %>
-<tr><td colspan="2">
+				<div class="AlertBubble"><span class="fa fa-warning" aria-hidden="true"></span> <%If bDeleted Then%><%=TXT_FLAG_DELETED%><%End If%><%If bDeleted And bExpired Then%> | <%End If%><%If bExpired Then%><%=TXT_FLAG_EXPIRED%><%End If%></div>
 <%
-If Not g_bPrintMode Then
+	ElseIf Not g_bPrintMode Then
 %>
-<div class="clearfix">
-<%If g_bSocialMediaShareVOL Then%>
-<!-- AddThis Button BEGIN -->
-<div class="HideNoJs share-wrapper">
-<label class="share-label"><%=TXT_SHARE%></label>
-<div class="addthis_toolbox addthis_default_style share-toolbox">
-<a class="addthis_button_preferred_1"></a>
-<a class="addthis_button_preferred_2"></a>
-<a class="addthis_button_preferred_3"></a>
-<a class="addthis_button_preferred_4"></a>
-<a class="addthis_button_compact"></a>
-<a class="addthis_counter addthis_bubble_style"></a>
-</div>
-</div>
-<!-- AddThis Button END -->
-<%End If%>
-<div style="font-weight:bold; float:left" class="HideListUI clear-line-below">[
-	<% Call myListDetailsAddRecord(CStr(strVNUM)) %>
-	<span style="white-space: nowrap"><a class="NoLineLink" href="<%=makeLink("~/volunteer/feedback.asp",strVNUMNumberLink,vbNullString)%>"><img src="/images/edit.gif" aria-hidden="true" border="0">&nbsp;<%=TXT_SUGGEST_UPDATE%></a></span>
-	<%= linkOtherLangs(False) %>
-<%If bReferral And rsOrg("REFERRALS") > 0 Then%>
-	| <a class="NoLineLink" href="<%=makeLink("~/volunteer/referral_list.asp",strVNUMNumberLink,vbNullString)%>"><img src="/images/referral.gif" aria-hidden="true" border="0">&nbsp;<%= TXT_LIST_REFERRALS %> (<%=rsOrg("REFERRALS")%>)</a>
-<%End If%>
-<%If (user_bLoggedIn Or g_bPrintModePublic) And Not Nl(g_intPrintDesignVOL) Then%>
-	| <span style="white-space: nowrap"><a class="NoLineLink" href="<%=makeVOLDetailsLink(strVNUM, "PrintMd=on&UseVOLVwTmp=" & Request("UseVOLVwTmp"),vbNullString)%>" target="_BLANK"><img src="/images/printer.gif" border="0">&nbsp;<%=TXT_PRINT_VERSION%></a></span>
-<%End If%>
-<%If rsOrg("NON_PUBLIC") And user_bLoggedIn Then%>
-	| <span class="Alert"><%=TXT_FLAG_NON_PUBLIC%></span>
-<%End If%>
-<%If bExpired Then%>
-	| <span class="Alert"><%=TXT_FLAG_EXPIRED%></span>
-<%End If%>
-<%
-If Not Nl(rsOrg("DELETION_DATE")) Then
-	If CDate(rsOrg("DELETION_DATE")) <= Date() Then
-%>
-	| <span class="Alert"><%=TXT_FLAG_DELETED%></span>
-<%	
-	ElseIf user_bLoggedIn Then
-%>
-	| <span class="Alert"><%=TXT_FLAG_TO_BE_DELETED%></span>
+				<form action="/volunteer/<%=IIf(bReferral,"referral_edit.asp","volunteer.asp")%>" method="post">
+				<div style="display:none">
+					<%=g_strCacheFormVals%>
+					<input type="hidden" name="VNUM" value="<%=rsOrg("VNUM")%>">
+					<%If intCurSearchNumber >= 0 Then%><input type="hidden" name="Number" value="<%=intCurSearchNumber%>"><%End If%>
+				</div>
+				<button id="VolApplyButton" type="submit" class="btn btn-lg btn-info"><span class="glyphicon glyphicon-check" aria-hidden="true"></span> <strong><%=IIf(bReferral,TXT_CREATE_REFERRAL,TXT_YES_VOLUNTEER)%></strong></button>
+				</form>
 <%
 	End If
-End If
 %>
-<%If user_bFeedbackAlertVOL And rsOrg("HAS_FEEDBACK") Then%>
-	| <a class="Alert NoLineLink" href="<%=makeLink("~/volunteer/revfeedback_view.asp",strVNUMNumberLink,vbNullString)%>"><%=TXT_FLAG_CHECK_FEEDBACK%></a>
-<%
-End If
-If user_bLoggedIn Then
-%><%= reminderNotice() %><%
-End If
-%>
-]
-</div>
-</div>
-<%
-End If
-
-If user_bLoggedIn Then
-	Dim strCreateEquivalent,bHasLang,bCanEdit
-	strCreateEquivalent = vbNullString
-	If g_bMultiLingual And Not g_bPrintMode Then
-		For Each xmlLangNode In xmlRecordLangNode.childNodes
-			bHasLang = CInt(Nz(xmlLangNode.getAttribute("HAS_LANG"),SQL_FALSE)) = SQL_TRUE
-			bCanEdit = CInt(Nz(xmlLangNode.getAttribute("CAN_UPDATE"),SQL_FALSE)) = SQL_TRUE
-			If Not bHasLang And bCanEdit Then
-				strCreateEquivalent = strCreateEquivalent & "<option href=""" & makeLink("~/volunteer/copy.asp",strVNUMNumberLink & "&CopyLn=" & xmlLangNode.getAttribute("Culture"),vbNullString) & """>" & TXT_CREATE_EQUIVALENT & " - " & xmlLangNode.getAttribute("LanguageName") & "</option>"
-			End If
-		Next
-	End If
-
-If Not g_bPrintMode And ( _
-		rsOrg("CAN_UPDATE") = 1 Or _
-		(rsOrg("CAN_UPDATE") = -2 And Not Nl(strCreateEquivalent)) Or _
-		user_bSuperUserVOL Or _
-		user_bCopyVOL Or _
-		(user_bCanRequestUpdateVOL And (user_bSuperUserVOL Or (user_strAgency = rsOrg("RECORD_OWNER"))) And rsOrg("CAN_EMAIL") And Not g_bNoEmail) _
-		) _
-	Then
-
-%>
-	<div class="form-inline-always clear-line-below">
-		<div class="form-group">
-			<label for="ActionList"><%=TXT_ACTION & TXT_COLON%></label>
-			<select name="ActionList" id="ActionList" onchange="do_drop_down_navigation()" class="form-control">
-				<option selected></option>
-<%
-	If rsOrg("CAN_UPDATE") = 1 Or rsOrg("CAN_UPDATE") = -2 Or (rsOrg("CAN_UPDATE") <> 0 And user_bCopyVOL) Then
-%>
-				<optgroup label="<%=TXT_DATA_MANAGEMENT%>">
-					<% If rsOrg("CAN_UPDATE") <> -2 Then %>
-					<option id="AL_Update" href="<%=makeLink("~/volunteer/entryform.asp",strVNUMNumberLink,vbNullString)%>"><%=TXT_UPDATE_RECORD%></option>
-					<% End If %>
-					<%= strCreateEquivalent %>
-<%
-					If user_bCopyVOL Then%>
-					<option id="AL_Copy" href="<%=makeLink("~/volunteer/copy.asp",strVNUMLink,vbNullString)%>"><%=TXT_COPY_RECORD%></option>
-					<%End If%>
-					<%If (user_bSuperUserVOL Or user_bCanDeleteRecordVOL) And rsOrg("CAN_UPDATE")=1 Then
-						If user_bSuperUserVOL Or rsOrg("CAN_UPDATE") Then
-							If Nl(rsOrg("DELETION_DATE")) Then%>
-					<option href="<%=makeLink("~/volunteer/delete_mark.asp","IdList=" & rsOrg("OPD_ID"),vbNullString)%>"><%=TXT_DELETE_RECORD%></option>
-							<%Else%>
-					<option class="NoLineLink" href="<%=makeLink("~/volunteer/delete_mark.asp","IdList=" & rsOrg("OPD_ID") & "&Unmark=on",vbNullString)%>"><%=TXT_RESTORE_RECORD%></option>
-							<%End If
-						End If
-					End If
-%>
-				</optgroup>
-<%
-	End If
-
-If user_bCanRequestUpdateVOL And (user_bSuperUserVOL Or user_strAgency = rsOrg("RECORD_OWNER")) And rsOrg("CAN_EMAIL") And Not g_bNoEmail Then
-%>
-				<optgroup label="Request Update">
-				<option href="<%=makeLinkAdmin("email_prep.asp",strIDListLink & "&DM=" & DM_VOL)%>"><%=TXT_EMAIL_UPDATE_REQUEST%></option>
-				</optgroup>
+			</div>
 <%
 End If
 %>
-			</select>
 		</div>
 	</div>
+
+	<div class="record-details-action">
+<%
+
+
+If Not g_bPrintMode Then
+%>
+
+		<!-- Quick Access Record Menu -->
+		<div class="HideListUI clear-line-below">
+			<% Call myListDetailsAddRecord(CStr(strVNUM)) %>
+			<a role="button" class="btn btn-info link-btn" href="<%=makeLink("~/volunteer/feedback.asp",strVNUMNumberLink,vbNullString)%>"><span class="fa fa-edit" aria-hidden="true"></span> <%=TXT_SUGGEST_UPDATE%></a>
+	<%= linkOtherLangs(False) %>
+<%
+	If bReferral And rsOrg("REFERRALS") > 0 Then
+%>
+			<a role="button" class="btn btn-info link-btn" href="<%=makeLink("~/volunteer/referral_list.asp",strVNUMNumberLink,vbNullString)%>"><span class="fa fa-external-link-square" aria-hidden="true"></span> <%= TXT_LIST_REFERRALS %> (<%=rsOrg("REFERRALS")%>)</a>
+<%
+	End If
+	If (user_bLoggedIn Or g_bPrintModePublic) And Not Nl(g_intPrintDesignVOL) Then
+%>
+			<a role="button" class="btn btn-info link-btn hidden-xs" href="<%=makeVOLDetailsLink(strVNUM, "PrintMd=on&UseVOLVwTmp=" & Request("UseVOLVwTmp"),vbNullString)%>" target="_BLANK"><span class="fa fa-print" aria-hidden="true"></span> <%=TXT_PRINT_VERSION%></a>
+<%
+	End If
+	If user_bFeedbackAlertVOL And rsOrg("HAS_FEEDBACK") Then
+%>
+			<a role="button" class="btn btn-info link-btn btn-alert-border" href="<%=makeLink("~/volunteer/revfeedback_view.asp",strVNUMNumberLink,vbNullString)%>"><%=TXT_FLAG_CHECK_FEEDBACK%></a>
+<%
+	End If
+	If user_bLoggedIn Then
+%>
+		<%= reminderNotice() %>
+<%
+	End If
+	If rsOrg("NON_PUBLIC") Then
+%>
+			<span class="AlertBubble"><%=TXT_FLAG_NON_PUBLIC%></span>
+<%
+	End If
+	If Not Nl(rsOrg("DELETION_DATE")) And Not bDeleted Then
+%>
+			<span class="AlertBubble"><%=TXT_FLAG_TO_BE_DELETED%></span>
+<%
+	End If
+%>
+		</div>
+				<!-- End Quick Access Menu -->
+<%
+
+	If user_bLoggedIn Then
+		Dim strCreateEquivalent,bHasLang,bCanEdit
+		strCreateEquivalent = vbNullString
+
+		If g_bMultiLingual Then
+			For Each xmlLangNode In xmlRecordLangNode.childNodes
+				bHasLang = CInt(Nz(xmlLangNode.getAttribute("HAS_LANG"),SQL_FALSE)) = SQL_TRUE
+				bCanEdit = CInt(Nz(xmlLangNode.getAttribute("CAN_UPDATE"),SQL_FALSE)) = SQL_TRUE
+				If Not bHasLang And bCanEdit Then
+					strCreateEquivalent = strCreateEquivalent & "<option href=""" & makeLink("~/volunteer/copy.asp",strVNUMNumberLink & "&CopyLn=" & xmlLangNode.getAttribute("Culture"),vbNullString) & """>" & TXT_CREATE_EQUIVALENT & " - " & xmlLangNode.getAttribute("LanguageName") & "</option>"
+				End If
+			Next
+		End If
+
+		If ( _
+			rsOrg("CAN_UPDATE") = 1 Or _
+			(rsOrg("CAN_UPDATE") = -2 And Not Nl(strCreateEquivalent)) Or _
+			user_bSuperUserVOL Or _
+			user_bCopyVOL Or _
+			(user_bCanRequestUpdateVOL And (user_bSuperUserVOL Or (user_strAgency = rsOrg("RECORD_OWNER"))) And rsOrg("CAN_EMAIL") And Not g_bNoEmail) _
+			) Then
+
+%>
+		<div class="row clear-line-below">
+			<!-- Action Menu -->
+			<div class="col-md-6 col-lg-6">
+				<div class="form-inline-always">
+					<div class="form-group">
+						<label class="control-label" for="ActionList"><%=TXT_ACTION & TXT_COLON%></label>
+						<select name="ActionList" id="ActionList" onchange="do_drop_down_navigation()" class="form-control">
+							<option selected></option>
+<%
+			If rsOrg("CAN_UPDATE") = 1 Or rsOrg("CAN_UPDATE") = -2 Or (rsOrg("CAN_UPDATE") <> 0 And user_bCopyVOL) Then
+%>
+							<optgroup label="<%=TXT_DATA_MANAGEMENT%>">
+<%
+				If rsOrg("CAN_UPDATE") <> -2 Then
+%>
+								<option id="AL_Update" href="<%=makeLink("~/volunteer/entryform.asp",strVNUMNumberLink,vbNullString)%>"><%=TXT_UPDATE_RECORD%></option>
+<%
+				End If
+%>
+					<%= strCreateEquivalent %>
+<%
+				If user_bCopyVOL Then
+%>
+								<option id="AL_Copy" href="<%=makeLink("~/volunteer/copy.asp",strVNUMLink,vbNullString)%>"><%=TXT_COPY_RECORD%></option>
+<%
+				End If
+				If (user_bSuperUserVOL Or user_bCanDeleteRecordVOL) And rsOrg("CAN_UPDATE")=1 Then
+					If Nl(rsOrg("DELETION_DATE")) Then
+%>
+								<option href="<%=makeLink("~/volunteer/delete_mark.asp","IdList=" & rsOrg("OPD_ID"),vbNullString)%>"><%=TXT_DELETE_RECORD%></option>
+<%
+					Else
+%>
+								<option href="<%=makeLink("~/volunteer/delete_mark.asp","IdList=" & rsOrg("OPD_ID") & "&Unmark=on",vbNullString)%>"><%=TXT_RESTORE_RECORD%></option>
+<%
+					End If
+				End If
+%>
+							</optgroup>
+<%
+			End If 'Update, Copy, Delete
+
+			If user_bCanRequestUpdateVOL And (user_bSuperUserVOL Or user_strAgency = rsOrg("RECORD_OWNER")) And rsOrg("CAN_EMAIL") And Not g_bNoEmail Then
+%>
+							<optgroup label="Request Update">
+								<option href="<%=makeLinkAdmin("email_prep.asp",strIDListLink & "&DM=" & DM_VOL)%>"><%=TXT_EMAIL_UPDATE_REQUEST%></option>
+							</optgroup>
+<%
+			End If
+%>
+						</select>
+					</div>
+				</div>
+			</div>
+			<!-- End Action Menu -->
+		</div>
+<%
+		End If 'Update, Copy, Delete, Email
+	End If 'user_bLoggedIn
+End If 'Not g_bPrintMode
+
+'Data Management Info
+%>
+		<div class="<%If user_bLoggedIn And Not g_bPrintMode Then%>record-details-top-border<%End If%>">
+			<div class="row">
+				<div class="col-sm-4 col-md-3 record-details-admin-fields"><strong>Position ID<%=TXT_COLON%></strong> <%=rsOrg("VNUM")%></div>
+<%
+If g_bLastModifiedDateVOL Then
+%>
+				<div class="col-sm-4 col-md-3 record-details-admin-fields"><strong><%=TXT_LAST_MODIFIED%></strong><%=TXT_COLON%><span class="NoWrap"><%=Nz(rsOrg("MODIFIED_DATE"),TXT_UNKNOWN)%></span></div>
 <%
 End If
-End If
 %>
-<table class="NoBorder cell-padding-3">
-<tr>
-	<td><strong>Position ID<%=TXT_COLON%></strong> <%=rsOrg("VNUM")%></td>
-<%If g_bLastModifiedDateVOL Then%>
-	<td><strong><%=TXT_LAST_MODIFIED%></strong><%=TXT_COLON%><span class="NoWrap"><%=Nz(rsOrg("MODIFIED_DATE"),TXT_UNKNOWN)%></span></td>
-<%End If%>
-	<td><strong><%=TXT_LAST_UPDATE%></strong><%=TXT_COLON%><span class="NoWrap"><%=Nz(rsOrg("UPDATE_DATE"),TXT_UNKNOWN)%></span></td>
-<%If g_bDataMgmtFieldsVOL Then
-	Dim dUpdateSchedule
+				<div class="col-sm-4 col-md-3 record-details-admin-fields"><strong><%=TXT_LAST_UPDATE%></strong><%=TXT_COLON%><span class="NoWrap"><%=Nz(rsOrg("UPDATE_DATE"),TXT_UNKNOWN)%></span></div>
+<%
+If g_bDataMgmtFieldsVOL Then
+	Dim dUpdateSchedule, strUpdateSchedule
 	dUpdateSchedule = Null
 	If Not Nl(rsOrg("UPDATE_SCHEDULE")) Then
 		dUpdateSchedule = DateValue(rsOrg("UPDATE_SCHEDULE"))	
-	End If%>
-	<td><strong><%=TXT_UPDATE_SCHEDULE%></strong><%=TXT_COLON%><span class="NoWrap"><%If Now() > dUpdateSchedule Or Nl(dUpdateSchedule) Then%><span class="Alert"><%End If%><%=Nz(rsOrg("UPDATE_SCHEDULE"),TXT_UNKNOWN)%><%If Now() > dUpdateSchedule Or Nl(dUpdateSchedule) Then%></span><%End If%></span></td>
-	<%If Not g_bLastModifiedDateVOL And user_bCanRequestUpdateVOL Then%>
-	<td>&nbsp;</td>
-	<%End If%>
-<%End If%>
-</tr>
-<%If g_bDataMgmtFieldsVOL Then%>
-<tr>
-	<td><strong><%=TXT_RECORD_OWNER%></strong><%=TXT_COLON%><%=rsOrg("RECORD_OWNER")%></td>
-	<td><strong><%=TXT_DATE_CREATED%></strong><%=TXT_COLON%><span class="NoWrap"><%=IIf(Nl(rsOrg("CREATED_DATE")),TXT_UNKNOWN,DateString(rsOrg("CREATED_DATE"),True))%></span></td>
-	<td><strong><%=TXT_DATE_DELETED%></strong><%=TXT_COLON%><span class="NoWrap"><%=IIf(Nl(rsOrg("DELETION_DATE")),TXT_NA,DateString(rsOrg("DELETION_DATE"),True))%></span></td>
-<%If user_bCanRequestUpdateVOL Then%>
-	<td><strong><%=TXT_LAST_EMAIL%><%=TXT_COLON%></strong><%=Nz(rsOrg("EMAIL_UPDATE_DATE"),TXT_NA)%></td>
-<%ElseIf g_bLastModifiedDateVOL Then%>
-	<td>&nbsp;</td>
-<%End If%>
-</tr>
-<%End If%>
-</table></td></tr>
-<tr><th colspan="2" class="RevTitleBox">Opportunity Details</th></tr>
+	End If
+	If Now() > dUpdateSchedule Or Nl(dUpdateSchedule) Then
+		strUpdateSchedule = "<span class=""Alert"">" & Nz(rsOrg("UPDATE_SCHEDULE"),TXT_UNKNOWN) & "</span>"
+	Else
+		strUpdateSchedule = rsOrg("UPDATE_SCHEDULE")
+	End If
+%>
+				<div class="col-sm-4 col-md-3 record-details-admin-fields"><strong><%=TXT_UPDATE_SCHEDULE%></strong><%=TXT_COLON%><span class="NoWrap"><%=strUpdateSchedule%></span></div>
+				<div class="col-sm-4 col-md-3 record-details-admin-fields"><strong><%=TXT_RECORD_OWNER%></strong><%=TXT_COLON%><%=rsOrg("RECORD_OWNER")%></div>
+				<div class="col-sm-4 col-md-3 record-details-admin-fields"><strong><%=TXT_DATE_CREATED%></strong><%=TXT_COLON%><%=IIf(Nl(rsOrg("CREATED_DATE")),TXT_UNKNOWN,DateString(rsOrg("CREATED_DATE"),True))%></div>
+				<div class="col-sm-4 col-md-3 record-details-admin-fields"><strong><%=TXT_DATE_DELETED%></strong><%=TXT_COLON%><span class="<%If bDeleted Then%>Alert <%End If%> %>NoWrap"><%=IIf(Nl(rsOrg("DELETION_DATE")),TXT_NA,DateString(rsOrg("DELETION_DATE"),True))%></span></div>
+<%
+	If user_bCanRequestUpdateVOL Then
+%>
+				<div class="col-sm-4 col-md-3 record-details-admin-fields"><strong><%=TXT_LAST_EMAIL%><%=TXT_COLON%></strong><%=Nz(rsOrg("EMAIL_UPDATE_DATE"),TXT_NA)%></div>
+<%
+	End If
+End If
+If Not g_bPrintMode And g_bSocialMediaShareVOL Then
+%>
+				<div class="col-sm-4 col-md-3 hidden-xs record-details-admin-fields"><table border="0" class="NoBorder"><tr><td><span style="padding-right:0.5em; font-weight: bold;"><%=TXT_SHARE%></span></td><td><div class="addthis_inline_share_toolbox"></div></td></tr></table></div>
+<%
+End If
+%>
+			</div>
+		</div>
+	</div>
+	<!-- End Admin Section -->
+
+</div>
+<!-- End Opportunity Info Header -->
+
+<!-- Opportunity Details Section -->
+<div class="panel panel-default max-width-lg">
+	<div class="panel-heading">
+		<h3><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%=TXT_OPPORTUNITY_DETAILS & rsOrg("POSITION_TITLE")%></h3>
+	</div>
+	<div class="panel-body no-padding">
+		<table class="BasicBorder cell-padding-4 full-width inset-table responsive-table">
 <%
 	Dim strFieldName, strFieldContents, bOrgFields
 	bOrgFields = False
@@ -657,30 +737,50 @@ End If
 		End If
 	Wend
 %>
-<tr><th colspan="2" class="RevTitleBox">Agency Details</th></tr>
+		</table>
+	</div>
+</div>
+
+<!-- Agency Details Section -->
+<div class="panel panel-default max-width-lg">
+	<div class="panel-heading">
+		<h3><span class="fa icon-commerical-building" aria-hidden="true"></span> <%=TXT_ABOUT_AGENCY & strOrgName%></h3>
+	</div>
+	<div class="panel-body no-padding">
 <%
 	If Not g_bPrintMode Then
 %>
-<tr><td colspan="2" align="center">[
-<%If (user_bLoggedIn Or g_bUseCIC) And rsOrg("IN_CIC_VIEW") Then%>
-	<span class="NoWrap"><a class="NoLineLink" href="<%=makeDetailsLink(rsOrg("NUM"),vbNullString,vbNullString)%>"><%If Not user_bLoggedIn Then%><img src="/images/zoom.gif" aria-hidden="true" border="0">&nbsp;<%End If%><%= TXT_MORE_AGENCY_INFO %></a></span> |
-<%End If%>
-	<span class="NoWrap"><a class="NoLineLink" href="<%=makeLink("~/volunteer/results.asp","NUM=" & rsOrg("NUM"),vbNullString)%>"><%If Not user_bLoggedIn Then%><img src="/images/handshake.gif" aria-hidden="true" border="0">&nbsp;<%End If%><%= TXT_OTHER_OPPORTUNITIES %></a></span> |
-<%If user_bAddVOL Then%>
-	<span class="NoWrap"><a class="NoLineLink" href="<%=makeLink("~/volunteer/entryform.asp","NUM=" & rsOrg("NUM"),vbNullString)%>"><%=TXT_CREATE_NEW_OPP%></a></span>
-<%Else%>
-	<span class="NoWrap"><a class="NoLineLink" href="<%=makeLink("~/volunteer/feedback.asp","NUM=" & rsOrg("NUM"),vbNullString)%>"><%If Not user_bLoggedIn Then%><img src="/images/new.gif" aria-hidden="true" border="0">&nbsp;<%End If%><%= TXT_SUGGEST_NEW_OPPORTUNITY %></a></span>
+		<div class="record-details-action text-center">
 <%
-End If
-If user_bCanRequestUpdateVOL And user_bCanDoBulkOpsVOL And Not g_bNoEmail Then
+		If (user_bLoggedIn Or g_bUseCIC) And rsOrg("IN_CIC_VIEW") Then
 %>
-	| <a class="NoLineLink" href="<%=makeLinkAdmin("email_prep.asp","IDList=" & rsOrg("NUM") & "&MR=1&DM=" & DM_VOL)%>"><%=TXT_EMAIL_UPDATE_ALL_VOL_OPP%></a>
-<%End If%>
-]</td></tr>
+			<a role="button" class="btn btn-info link-btn" href="<%=makeDetailsLink(rsOrg("NUM"),vbNullString,vbNullString)%>"><span class="fa fa-info-circle" aria-hidden="true"></span> <%= TXT_MORE_AGENCY_INFO %></a>
+<%
+		End If
+%>
+			<a role="button" class="btn btn-info link-btn" href="<%=makeLink("~/volunteer/results.asp","NUM=" & rsOrg("NUM"),vbNullString)%>"><span class="fa fa-users" aria-hidden="true"></span> <%= TXT_OTHER_OPPORTUNITIES %></a>
+<%
+		If user_bAddVOL Then
+%>
+			<a role="button" class="btn btn-info link-btn" href="<%=makeLink("~/volunteer/entryform.asp","NUM=" & rsOrg("NUM"),vbNullString)%>"><span class="fa fa-plus" aria-hidden="true"></span> <%=TXT_CREATE_NEW_OPP%></a>
+<%
+		Else
+%>
+			<a role="button" class="btn btn-info link-btn" href="<%=makeLink("~/volunteer/feedback.asp","NUM=" & rsOrg("NUM"),vbNullString)%>"><span class="fa fa-plus" aria-hidden="true"></span> <%= TXT_SUGGEST_NEW_OPPORTUNITY %></a>
+<%
+		End If
+		If user_bCanRequestUpdateVOL And user_bCanDoBulkOpsVOL And Not g_bNoEmail Then
+%>
+			<a role="button" class="btn btn-info link-btn" href="<%=makeLinkAdmin("email_prep.asp","IDList=" & rsOrg("NUM") & "&MR=1&DM=" & DM_VOL)%>"><span class="fa fa-envelope" aria-hidden="true"></span> <%=TXT_EMAIL_UPDATE_ALL_VOL_OPP%></a>
+<%
+		End If
+%>
+		</div>
 <%
 	End If
-	Call makeFieldRow(TXT_ORGNAME,strOrgName)
-
+%>
+		<table class="BasicBorder cell-padding-4 full-width inset-table responsive-table">
+<%
 	While Not rsFields.EOF
 		strFieldName = rsFields.Fields("FieldName")
 		If Not reEquals(strFieldName, "((NUM)|(ORG_NAME_FULL))",True,False,True,False) Then
@@ -700,17 +800,17 @@ If user_bCanRequestUpdateVOL And user_bCanDoBulkOpsVOL And Not g_bNoEmail Then
 	Set rsFields = Nothing
 	Set cmdFields = Nothing
 %>
-			</table>
-		</div>
+		</table>
 	</div>
 </div>
+
 <%
 If user_bLoggedIn And Not g_bPrintMode Then
 %>
 <div id="reminder-dialog" style="display: none;">
-<div id="existing-reminders-page">
+	<div id="existing-reminders-page"></div>
 </div>
-</div>
+
 <div id="reminder-edit-dialog" style="display: none;">
 </div>
 <%
@@ -753,17 +853,12 @@ End If
 	var addthis_exclude = 'print';
 	<% End If %>
 </script>
-<% If Not g_bPrintMode And g_bSocialMediaShareVOL Then %>
-<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f7b02c913a929bb"></script>
-<% End If %>
 <%
-End If
-End If
-
-If user_bLoggedIn And Not g_bPrintMode And Not Nl(strSearchList) Then
+	If Not g_bPrintMode And g_bSocialMediaShareVOL Then
 %>
-<p><%=strSearchList%></p>
+<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f7b02c913a929bb"></script>
 <%
+	End If
 End If
 
 Call makePageFooter(True)

@@ -85,7 +85,6 @@ Dim TXT_ACTION, _
 	TXT_ORG_SEARCH, _
 	TXT_ORGANIZATION, _
 	TXT_PAGE_HELP, _
-	TXT_PLEASE_ENTER_TITLE, _
 	TXT_POSITION_TITLE, _
 	TXT_PREVIOUS, _
 	TXT_PRINT_VERSION, _
@@ -196,7 +195,6 @@ Sub setTxtGeneral()
 			TXT_ORG_SEARCH = "Recherche d'un organisme / programme"
 			TXT_ORGANIZATION = "Organisme"
 			TXT_PAGE_HELP = "Aide sur la page"
-			TXT_PLEASE_ENTER_TITLE = "Veuillez saisir un titre pour le rapport"
 			TXT_POSITION_TITLE = "Titre de poste"
 			TXT_PREVIOUS = "Précédent"
 			TXT_PRINT_VERSION = "Version&nbsp;imprimable&nbsp;" & TXT_NEW_WINDOW
@@ -301,7 +299,6 @@ Sub setTxtGeneral()
 			TXT_ORG_SEARCH = "Organization / Program Search"
 			TXT_ORGANIZATION = "Organization"
 			TXT_PAGE_HELP = "Page Help"
-			TXT_PLEASE_ENTER_TITLE = "Please enter a Title for the report"
 			TXT_POSITION_TITLE = "Position Title"
 			TXT_PREVIOUS = "Previous"
 			TXT_PRINT_VERSION = "Print&nbsp;Version&nbsp;" & TXT_NEW_WINDOW

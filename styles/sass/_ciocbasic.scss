@@ -68,9 +68,21 @@
     margin-bottom: 0.1em;
 }
 
-@media (min-width: 768px) {
+.btn-alert-border {
+    font-weight: bold !important;
+    border-width: medium;
+    border-color: $borderColorError;
+}
+
+.btn-warning-border {
+    font-weight: bold !important;
+    border-width: medium;
+    border-color: $borderColorContent;
+}
+
+@media (min-width: $screen-md-min) {
     .container-action-list {
-        min-width: 192px;
+        min-width: 200px;
     }
 }
 

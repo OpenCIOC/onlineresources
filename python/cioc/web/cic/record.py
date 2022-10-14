@@ -409,7 +409,7 @@ def build_nav_dropdown(
                         idlist_link + "&MR=1&DM=%d" % const.DM_VOL,
                     ),
                     "",
-                    _("Email Update All Volunteer Opportunities Request", request),
+                    _("Request Update of Volunteer Opportunities", request),
                 )
             )
 
@@ -427,21 +427,28 @@ def build_nav_dropdown(
 
     return ""
 
-
 _first_prev_template = Markup(
-    """<span style="white-space: nowrap"><a id="first_link_top" class="NoLineLink DetailsLink" data-num="%(first_num)s" href="%(first_url)s"><img src="/images/first.gif" aria-hidden="true" border="0">&nbsp;%(first)s</a></span>
-                <span class="NoWrap"><a id="prev_link_top" class="NoLineLink DetailsLink" data-num="%(prev_num)s" href="%(prev_url)s"><img src="/images/previous.gif" aria-hidden="true" border="0">&nbsp;%(previous)s</a></span>"""
+    """
+        <a id="first_link_top" data-num="%(first_num)s" href="%(first_url)s" role="button" class="btn"><span class="fa fa-fast-backward" aria-hidden="true"></span> %(first)s</a>
+        <a id="prev_link_top" data-num="%(prev_num)s" href="%(prev_url)s" role="button" class="btn"><span class="fa fa-step-backward" aria-hidden="true"></span> %(previous)s</a>
+    """
 )
+
 _next_last_template = Markup(
-    """<span class="NoWrap"><a id="next_link_top" class="NoLineLink DetailsLink" data-num="%(next_num)s" href="%(next_url)s">%(next)s&nbsp;<img src="/images/next.gif" aria-hidden="true" border="0"></a></span>
-                <span class="NoWrap"><a id="last_link_top" class="NoLineLink DetailsLink" data-num="%(last_num)s" href="%(last_url)s">%(last)s&nbsp;<img src="/images/last.gif" aria-hidden="true" border="0"></a></span>"""
+    """
+        <a id="next_link_top" data-num="%(next_num)s" href="%(next_url)s" role="button" class="btn">%(next)s <span class="fa fa-step-forward" aria-hidden="true"></span></a>
+        <a id="last_link_top" data-num="%(last_num)s" href="%(last_url)s" role="button" class="btn">%(last)s <span class="fa fa-fast-forward" aria-hidden="true"></span></a>
+    """
 )
-_other_results_template = Markup(
-    """<strong>%(other_results)s</strong><br class="visible-xs-inline visible-sm-inline"> """
-)
+
 _total_template = Markup(
-    """<span class="NoWrap">(%(human_number)s %(of)s %(length)s
-        <a id="total_link_top" class="NoLineLink SearchTotalLink" href="%(total_url)s">%(total)s</a>)</span>"""
+    """<div class="col-sm-5 %(col-md-first)s">
+        <a id="total_link_top" href="%(total_url)s" role="button" class="btn"><span class="fa fa-list" aria-hidden="true"></span>
+        %(your_search)s (%(viewing)s %(human_number)s %(of)s %(length)s)
+        </a>
+        </div>
+        <div class="col-sm-7 %(col-md-second)s">
+    """
 )
 
 
@@ -452,11 +459,24 @@ def get_search_list_top(request, search_list, number):
     _ = gettext
     makeDetailsLink = request.passvars.makeDetailsLink
 
+    go_back = len(search_list) > 1 and number > 0
+    go_forward = number < len(search_list) - 1
+
     search_list_ui = [
-        _other_results_template % {"other_results": _("Other Search Results:", request)}
+        _total_template
+        % {
+            "your_search": _("Your Search", request),
+            "viewing": _("viewing", request),
+            "human_number": number + 1,
+            "of": _("of", request),
+            "length": len(search_list),
+            "total_url": request.passvars.makeLink("~/presults.asp"),
+            "col-md-first": "col-md-12 col-lg-4" if go_back and go_forward and request.user.cic else "col-md-5",
+            "col-md-second": "col-md-12 col-lg-8" if go_back and go_forward and request.user.cic else "col-md-7",
+        }
     ]
 
-    if len(search_list) > 1 and number > 0:
+    if go_back:
         search_list_ui.append(
             _first_prev_template
             % {
@@ -471,10 +491,7 @@ def get_search_list_top(request, search_list, number):
             }
         )
 
-    if number < len(search_list) - 1:
-        if len(search_list_ui) > 1:
-            search_list_ui.append(" | ")
-
+    if go_forward:
         search_list_ui.append(
             _next_last_template
             % {
@@ -491,16 +508,7 @@ def get_search_list_top(request, search_list, number):
             }
         )
 
-    search_list_ui.append(
-        _total_template
-        % {
-            "human_number": number + 1,
-            "of": _("of", request),
-            "length": len(search_list),
-            "total_url": request.passvars.makeLink("~/presults.asp"),
-            "total": _("Total", request),
-        }
-    )
+    search_list_ui.append(Markup("</div>"))
 
     return Markup(" ").join(search_list_ui)
 

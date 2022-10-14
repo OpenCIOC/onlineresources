@@ -1826,14 +1826,14 @@ Function printRow(strFieldName,strFieldDisplay,strFieldVal,bFieldColumn,bHasHelp
 		<%=strFieldVal%>
 	</td>
 	<%If bFieldColumn Then%>
-	<td class="field-icon-cell icon-<%=IIf(bFeedbackForm,1,2)%>">
+	<td class="field-icon-cell icon-<%=IIf(bFeedbackForm Or bNew,1,2)%>">
 		<%If bHasHelp Then%>
 			<a class="btn btn-xs btn-default" href="javascript:openWin('<%=makeLink("fieldhelp.asp","field=" & strFieldName & "&amp;Ln=" & g_objCurrentLang.Culture,"Ln")%>','fHelp')">
-				<span class="glyphicon glyphicon-question-sign medium-icon legend-button-icon" title="<%=strFieldDisplay & TXT_COLON & TXT_HELP%>"></span></a>
+				<span class="fa fa-question-circle medium-icon legend-button-icon" title="<%=strFieldDisplay & TXT_COLON & TXT_HELP%>"></span></a>
 		<%End If%>
 		<%If bHasVersions Then%>
 			<span class="btn btn-xs btn-default">
-			<span class="glyphicon glyphicon-duplicate medium-icon legend-button-icon ShowVersions"
+			<span class="fa fa-history medium-icon legend-button-icon ShowVersions"
 				title="<%=strFieldDisplay & TXT_COLON & TXT_VERSIONS%>"
 				data-ciocid="<%=IIf(ps_intDbArea=DM_VOL, Request("VNUM"), strNUM)%>"
 				data-ciocfield="<%=strFieldName%>" data-ciocfielddisplay=<%=AttrQs(strFieldDisplay)%>></span>
