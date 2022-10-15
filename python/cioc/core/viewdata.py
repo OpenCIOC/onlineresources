@@ -16,6 +16,7 @@
 
 
 import logging
+import re
 
 from pyramid.decorator import reify
 
@@ -385,24 +386,26 @@ class ViewData:
             request.user or request.dboptions.PrintModePublic
         )
         if print_mode:
-            # log.debug('ThisPageFull: %s, %s', request.pageinfo.ThisPageFull, request.pageinfo.ThisPage)
-            if request.pageinfo.ThisPageFull.startswith("record/"):
-                # log.debug('Check _printmode_cic_details_re')
+            # log.debug(
+            #     "ThisPageFull: %s, ThisPage: %s",
+            #     request.pageinfo.ThisPageFull,
+            #     request.pageinfo.ThisPage,
+            # )
+            if request.pageinfo.ThisPageFull == "details.asp":
+                # log.debug("Check _printmode_cic_details_re")
                 print_mode = bool(
                     _printmode_cic_details_re.match(request.pageinfo.ThisPage)
                 )
-            elif request.pageinfo.ThisPageFull.startswith("volunteer/record/"):
-                print_mode = bool(
-                    _printmode_cic_details_re.match(request.pageinfo.ThisPage)
-                )
+            # elif request.pageinfo.ThisPageFull == "volunteer/details.asp":
+            #     print_mode = bool(
+            #         _printmode_vol_details_re.match(request.pageinfo.ThisPage)
+            #     )
             else:
                 print_mode = bool(_printmode_re.match(request.pageinfo.ThisPage))
 
-        # log.debug('print mode: %s', print_mode)
+        # log.debug("print mode: %s", print_mode)
         return print_mode or force_print_mode
 
-
-import re
 
 _printmode_re = re.compile(
     "^(details.asp)|(browseby.*)|(mailform.asp)|(processRecordList.asp)|(report_.*)|(.*results.asp)|(.*_list.asp)|(.*stats.*)|(whatsnew.asp)|(chklst_edit.asp)|(users(_history)?.asp)|(viewlist.asp)|(checklist)|(listvalues)|(interests)|(publication)$",
