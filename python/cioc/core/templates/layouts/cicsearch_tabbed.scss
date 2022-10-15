@@ -18,7 +18,7 @@
 
 @import 'browse_by_item_sizer';
 
- 
+
 
 
 #cic-search {
@@ -40,11 +40,8 @@
 	}
 
 	.search-cioc-menu {
+		@extend .basic-corner-style-default;
 		margin-bottom: 0.75em;
-		border: 1px solid $borderColorDefault; 
-		-moz-border-radius: $cornerRadius;
-		-webkit-border-radius: $cornerRadius;
-		border-radius: $cornerRadius;
 
 		.main-menu-title {
 			border-bottom: 1px solid $borderColorDefault;
@@ -78,14 +75,13 @@
 		max-width: 16em;
 		margin-left: 1em;
 		padding: 0.5em;
-		color: #000000/*{fcColorContent}*/; 
-		background-color: #ffffff/*{bgColorContent}*/; 
-		border: 1px solid #c5dbec/*{borderColorContent}*/; 
-		-moz-border-radius: 4px/*{cornerRadius}*/;
-		-webkit-border-radius: 4px/*{cornerRadius}*/;
-		border-radius: 4px/*{cornerRadius}*/;
+		color: #000000 /*{fcColorContent}*/;
+		background-color: #ffffff /*{bgColorContent}*/;
+		border: 1px solid #c5dbec /*{borderColorContent}*/;
+		-moz-border-radius: 4px /*{cornerRadius}*/;
+		-webkit-border-radius: 4px /*{cornerRadius}*/;
+		border-radius: 4px /*{cornerRadius}*/;
 	}
-
 }
 
 #service-category-staff {

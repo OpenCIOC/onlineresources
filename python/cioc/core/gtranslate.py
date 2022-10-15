@@ -40,7 +40,7 @@ def render_ui(request):
             disclaimer = ""
         return (
             Markup(
-                '<div id="google-translate-element-parent" class="clearfix mb5" style="display:none;"><div class="browse-by-list"><div id="google-translate-element" class="mb5"></div>%s</div></div>'
+                '<div id="google-translate-element-parent" class="clearfix mb5" style="display:none;"><div class="content-bubble-float"><div id="google-translate-element" class="mb5"></div>%s</div></div>'
             )
             % disclaimer
         )

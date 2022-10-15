@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -74,7 +74,12 @@ bSearchDisplay = Not g_bPrintMode
 <!--#include file="includes/search/incSearchBasicCommon.asp" -->
 <!--#include file="includes/search/incSearchBasicCIC.asp" -->
 <!--#include file="includes/search/incSearchBasicCCR.asp" -->
-<% 
+<!--#include file="includes/search/incSearchInfo.asp" -->
+<%
+Public Sub printSearchInfo()
+	Response.Write(strSearchDetails)
+End Sub
+
 If Not Nl(strSearchErrors) Then
 	Call handleError(strSearchErrors, _
 		vbNullString, vbNullString)
@@ -97,9 +102,7 @@ Else
 	If Not g_bPrintMode Then
 		Response.Write(render_gtranslate_ui())
 	End If
-%>
-<!--#include file="includes/search/incSearchInfo.asp" -->
-<%
+
 	Dim	objOrgTable, _
 		intRelevancyType
 
@@ -117,9 +120,18 @@ Else
 		intRelevancyType = CAN_RANK_BOTH
 	End If
 
+	Call setSearchDetails()
+
 	Call objOrgTable.setOptions(strFrom, strWhere, strSearchInfoSSNotes, False, False, strQueryString, intRelevancyType, decNearLatitude, decNearLongitude, bNearSort)
+%>
+		<div id="SearchResultsArea">
+<%
 	Call objOrgTable.makeTable()
+%>
+		</div>
+<%
 	Set objOrgTable = Nothing
+
 End If
 %>
 

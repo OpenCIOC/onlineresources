@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -76,8 +76,69 @@ Call setPageInfo(False, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStr
 <!--#include file="includes/thesaurus/incSubjSearchResults.asp" -->
 <!--#include file="includes/thesaurus/incSubjSearchUtils.asp" -->
 <!--#include file="includes/search/incDatesPredef.asp" -->
+<!--#include file="includes/search/incSearchInfo.asp" -->
 <%
 'On Error Resume Next
+
+Public Sub printSearchInfo()
+
+If Not g_bPrintMode Then	
+	If Nl(strWhere) And Not (opt_intOrderByCIC = OB_RELEVANCY And Not (Nl(strJoinedSTerms) And Nl(strJoinedQSTerms))) Then
+
+%>
+	<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=TXT_ALL_AVAILABLE_RECORDS & StringIf(Not bIncludeDeleted And g_bCanSeeDeletedCIC," (" & TXT_DELETED_EXCLUDED & ")")%></strong></p>
+<%
+	Else
+		If Not Nl(strTermListDisplayAll & strTermListDisplayAny) Then
+			strMoreSearchInfoRefineNotes = TXT_TAX_CRITERIA & TXT_COLON & "<ul>"
+%>
+	<p><%=TXT_YOUR_TAX_CRITERIA%></p>
+	<ul>
+<%
+			If Not Nl(strTermListDisplayAll) Then
+				strMoreSearchInfoRefineNotes = strMoreSearchInfoRefineNotes & _
+					"<li><strong>" & TXT_MUST_MATCH_TERMS & "</strong>" & strTermListDisplayAll & "</li>"
+	%>
+		<li><strong><%=TXT_MUST_MATCH_TERMS%></strong><%=strTermListDisplayAll%></li>
+	<%
+			End If
+			If Not Nl(strTermListDisplayAny) Then
+				strMoreSearchInfoRefineNotes = strMoreSearchInfoRefineNotes & _
+						"<li><strong>" & TXT_MATCH_ANY_TERMS & "</strong>" & strTermListDisplayAny & "</li>"
+	%>
+			<li><strong><%=TXT_MATCH_ANY_TERMS%></strong><%=strTermListDisplayAny%></li>
+	<%
+				End If
+				If bTMCRestricted Then
+					strMoreSearchInfoRefineNotes = strMoreSearchInfoRefineNotes & _
+						"<li><strong>" & TXT_RESTRICT & "</strong></li>"
+	%>
+			<li><strong><%=TXT_RESTRICT%></strong></li>
+	<%
+				End If
+				strMoreSearchInfoRefineNotes = strMoreSearchInfoRefineNotes & "</ul>"
+%>
+	</ul>
+<%
+			If user_bLoggedIn And user_bCIC Then
+%>
+	<p><%=TXT_NEW_SEARCH_W_TERMS%>
+		[ <a href="<%=makeLink("taxsrch.asp","TMC=" & strTMC & "&ATMC=" & strATMC & IIf(bTMCRestricted,"&TMCR=on",vbNullString),vbNullString)%>"><%=TXT_EDIT_TERM_LIST%></a>
+		| <a href="<%=makeLink("advsrch.asp","TMC=" & strTMC & "&ATMC=" & strATMC & IIf(bTMCRestricted,"&TMCR=on",vbNullString),vbNullString)%>"><%=TXT_ADD_CRITERIA%> (<%=TXT_ADVANCED_SEARCH%>)</a>
+		]</p>
+<%
+			End If
+%>
+	<hr>
+<%
+		End If
+		Response.Write(strSearchDetails)
+
+		strSearchInfoRefineNotes = strSearchInfoRefineNotes & StringIf(Not (Nl(strSearchInfoRefineNotes) Or Nl(strMoreSearchInfoRefineNotes)),"-{|}-") & strMoreSearchInfoRefineNotes
+	End If
+End If
+
+End Sub
 
 Dim strReferer
 strReferer = Request.ServerVariables("HTTP_REFERER")
@@ -143,66 +204,14 @@ Else
 	End If
 	If Not bHideSubjectBox Then
 %>
-<div class="cioc-grid-row">
-	<div id="results-column" class="cioc-col-sm-9 cioc-col-md-10 cioc-col-md-push-2 cioc-col-sm-push-3">
+<div class="row">
+	<div id="subjects_column" class="hidden-xs col-sm-3 col-md-3">
+		<%Call printSubjectBox%>
+	</div>
+	<div id="results-column" class="col-xs-12 col-sm-9 col-md-9">
 <%
 	End If
-%>
-	<div id="SearchResultsArea">
-<%
-	If Not g_bPrintMode Then	
-		If Nl(strWhere) And Not (opt_intOrderByCIC = OB_RELEVANCY And Not (Nl(strJoinedSTerms) And Nl(strJoinedQSTerms))) Then
 
-%>
-<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=TXT_ALL_AVAILABLE_RECORDS & StringIf(Not bIncludeDeleted And g_bCanSeeDeletedCIC," (" & TXT_DELETED_EXCLUDED & ")")%></strong></p>
-<%
-		Else
-			If Not Nl(strTermListDisplayAll & strTermListDisplayAny) Then
-				strMoreSearchInfoRefineNotes = TXT_TAX_CRITERIA & TXT_COLON & "<ul>"
-%>
-<p><%=TXT_YOUR_TAX_CRITERIA%></p>
-<ul>
-<%
-				If Not Nl(strTermListDisplayAll) Then
-					strMoreSearchInfoRefineNotes = strMoreSearchInfoRefineNotes & _
-						"<li><strong>" & TXT_MUST_MATCH_TERMS & "</strong>" & strTermListDisplayAll & "</li>"
-%>
-	<li><strong><%=TXT_MUST_MATCH_TERMS%></strong><%=strTermListDisplayAll%></li>
-<%
-				End If
-				If Not Nl(strTermListDisplayAny) Then
-					strMoreSearchInfoRefineNotes = strMoreSearchInfoRefineNotes & _
-						"<li><strong>" & TXT_MATCH_ANY_TERMS & "</strong>" & strTermListDisplayAny & "</li>"
-%>
-	<li><strong><%=TXT_MATCH_ANY_TERMS%></strong><%=strTermListDisplayAny%></li>
-<%
-				End If
-				If bTMCRestricted Then
-					strMoreSearchInfoRefineNotes = strMoreSearchInfoRefineNotes & _
-						"<li><strong>" & TXT_RESTRICT & "</strong></li>"
-%>
-	<li><strong><%=TXT_RESTRICT%></strong></li>
-<%
-				End If
-				strMoreSearchInfoRefineNotes = strMoreSearchInfoRefineNotes & "</ul>"
-%>
-</ul>
-<%If user_bLoggedIn And user_bCIC Then%>
-<p><%=TXT_NEW_SEARCH_W_TERMS%>
-[ <a href="<%=makeLink("taxsrch.asp","TMC=" & strTMC & "&ATMC=" & strATMC & IIf(bTMCRestricted,"&TMCR=on",vbNullString),vbNullString)%>"><%=TXT_EDIT_TERM_LIST%></a>
-| <a href="<%=makeLink("advsrch.asp","TMC=" & strTMC & "&ATMC=" & strATMC & IIf(bTMCRestricted,"&TMCR=on",vbNullString),vbNullString)%>"><%=TXT_ADD_CRITERIA%> (<%=TXT_ADVANCED_SEARCH%>)</a>
-]</p>
-<%End If%>
-<hr>
-<%
-			End If
-%>
-<!--#include file="includes/search/incSearchInfo.asp" -->
-<%
-			strSearchInfoRefineNotes = strSearchInfoRefineNotes & StringIf(Not (Nl(strSearchInfoRefineNotes) Or Nl(strMoreSearchInfoRefineNotes)),"-{|}-") & strMoreSearchInfoRefineNotes
-		End If
-	End If
-	
 	Dim	objOrgTable, _
 		intRelevancyType
 
@@ -220,19 +229,20 @@ Else
 		intRelevancyType = CAN_RANK_BOTH
 	End If
 
-	Call objOrgTable.setOptions(strFrom, strWhere, strSearchInfoSSNotes, bIncludeDeleted, bHideSubjectBox And bCanShowSubjectBox, strQueryString, intRelevancyType, decNearLatitude, decNearLongitude, bNearSort)
+	Call setSearchDetails()
 
+	Call objOrgTable.setOptions(strFrom, strWhere, strSearchInfoSSNotes, bIncludeDeleted, bHideSubjectBox And bCanShowSubjectBox, strQueryString, intRelevancyType, decNearLatitude, decNearLongitude, bNearSort)
+%>
+		<div id="SearchResultsArea">
+<%
 	Call objOrgTable.makeTable()
 %>
-	</div>
+		</div>
 <%
 	Set objOrgTable = Nothing
 	
 	If Not bHideSubjectBox Then
 %>
-	</div>
-	<div id="subjects_column" class="cioc-col-sm-3 cioc-col-md-2 cioc-col-md-pull-10 cioc-col-sm-pull-9">
-	<%Call printSubjectBox%>
 	</div>
 </div>
 <%

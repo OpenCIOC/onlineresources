@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -79,7 +79,12 @@ bSearchDisplay = Not g_bPrintMode
 <!--#include file="includes/search/incSearchBasicCommon.asp" -->
 <!--#include file="includes/search/incSearchBasicCIC.asp" -->
 <!--#include file="includes/search/incSearchSubjectBox.asp" -->
-<% 
+<!--#include file="includes/search/incSearchInfo.asp" -->
+<%
+Public Sub printSearchInfo()
+	Response.Write(strSearchDetails)
+End Sub
+
 If Not Nl(strSearchErrors) Then
 	Call handleError(strSearchErrors, _
 		vbNullString, vbNullString)
@@ -102,10 +107,14 @@ Else
 	If Not g_bPrintMode Then
 		Response.Write(render_gtranslate_ui())
 	End If
+
 	If Not bHideSubjectBox Then
 %>
-<div class="cioc-grid-row">
-	<div id="results-column" class="cioc-col-sm-9 cioc-col-md-10 cioc-col-md-push-2 cioc-col-sm-push-3">
+<div class="row">
+	<div id="subjects_column" class="hidden-xs col-sm-3 col-md-3">
+		<%Call printSubjectBox%>
+	</div>
+	<div id="results-column" class="col-xs-12 col-sm-9 col-md-9">
 <%
 	End If
 
@@ -126,22 +135,20 @@ Else
 		intRelevancyType = CAN_RANK_BOTH
 	End If
 
+	Call setSearchDetails()
+
 	Call objOrgTable.setOptions(strFrom, strWhere, strSearchInfoSSNotes, False, bHideSubjectBox And bCanShowSubjectBox, strQueryString, intRelevancyType, vbNullString, vbNullString, False)
 %>
-	<div id="SearchResultsArea">
-	<!--#include file="includes/search/incSearchInfo.asp" -->
+		<div id="SearchResultsArea">
 <%
 	Call objOrgTable.makeTable()
 %>
-	</div>
+		</div>
 <%
 	Set objOrgTable = Nothing
 	
 	If Not bHideSubjectBox Then
 %>
-	</div>
-	<div id="subjects_column" class="cioc-col-sm-3 cioc-col-md-2 cioc-col-md-pull-10 cioc-col-sm-pull-9">
-	<%Call printSubjectBox%>
 	</div>
 </div>
 <%

@@ -91,15 +91,11 @@
 }
 
 .footer-narrow {
+	@extend .basic-corner-style;
+	border: thin solid $borderColorFooter;
 	> .row {
 		margin: 0;
 	}
-
-	border: thin solid $borderColorFooter;
-
-	-moz-border-radius: $cornerRadius;
-	-webkit-border-radius: $cornerRadius;
-	border-radius: $cornerRadius;
 }
 
 .container-contrast .footer-narrow {

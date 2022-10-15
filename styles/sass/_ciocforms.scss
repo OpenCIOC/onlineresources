@@ -144,14 +144,11 @@ div.row-border-bottom {
 }
 
 .feedback-item {
+	@extend .basic-corner-style-alert;
 	margin-top: 0.25em;
 	margin-bottom: 0.25em;
 	padding: 0.5em;
 	background: darken($bgColorContent,3%);
-	border: thin solid $borderColorError;
-	-moz-border-radius: $cornerRadius;
-	-webkit-border-radius: $cornerRadius;
-	border-radius: $cornerRadius;
 }
 
 .fb-data-label {

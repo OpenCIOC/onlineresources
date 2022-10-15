@@ -428,57 +428,57 @@ If (bSearchList or user_bVOL) Then
 	If bSearchList Then
 %>
 <!-- Other Search Results -->
-<div class="col-sm-12 <%=StringIf(user_bVOL," col-md-6 col-lg-8")%>">
-	<div id="search-list-top">
-		<div class="row">
-			<div class="col-sm-5 <%=StringIf(user_bVOL,IIf(intCurSearchNumber > 0 and intCurSearchNumber < intLastSearchNumber,"col-md-12","col-md-5") & " col-lg-4")%>">
-				<a href="<%=makeLinkB("~/volunteer/presults.asp")%>" role="button" class="btn">
-					<span class="fa fa-list" aria-hidden="true"></span>
-					<%=TXT_YOUR_SEARCH & " (" & TXT_VIEWING & " " & intCurSearchNumber+1 & TXT_OF & intLastSearchNumber+1 & ")"%>
-				</a>
-			</div>
-			<div class="col-sm-7 <%=StringIf(user_bVOL,IIf(intCurSearchNumber > 0 and intCurSearchNumber < intLastSearchNumber,"col-md-12","col-md-7") & " col-lg-8")%>">
+	<div class="col-sm-12 <%=StringIf(user_bVOL," col-md-6 col-lg-8")%>">
+		<div id="search-list-top" class="content-bubble">
+			<div class="row">
+				<div class="col-sm-5 <%=StringIf(user_bVOL,IIf(intCurSearchNumber > 0 and intCurSearchNumber < intLastSearchNumber,"col-md-12","col-md-5") & " col-lg-4")%>">
+					<a href="<%=makeLinkB("~/volunteer/presults.asp")%>" role="button" class="btn">
+						<span class="fa fa-list" aria-hidden="true"></span>
+						<%=TXT_YOUR_SEARCH & " (" & TXT_VIEWING & " " & intCurSearchNumber+1 & TXT_OF & intLastSearchNumber+1 & ")"%>
+					</a>
+				</div>
+				<div class="col-sm-7 <%=StringIf(user_bVOL,IIf(intCurSearchNumber > 0 and intCurSearchNumber < intLastSearchNumber,"col-md-12","col-md-7") & " col-lg-8")%>">
 <%
 		If intCurSearchNumber > 0 Then
 %>
-				<a id="first_link_top" data-num=<%=AttrQs(aGetSearchArray(0))%> href="<%=makeVOLDetailsLink(aGetSearchArray(0), "Number=0",vbNullString)%>" role="button" class="btn">
-					<span class="fa fa-fast-backward" aria-hidden="true"></span> <%=TXT_FIRST%>
-				</a>
-				<a id="prev_link_top" data-num=<%=AttrQs(aGetSearchArray(0))%> href="<%=makeVOLDetailsLink(aGetSearchArray(intCurSearchNumber-1), "Number=" & intCurSearchNumber-1,vbNullString)%>" role="button" class="btn">
-					<span class="fa fa-step-backward" aria-hidden="true"></span> <%=TXT_PREVIOUS%>
-				</a>
+					<a id="first_link_top" data-num=<%=AttrQs(aGetSearchArray(0))%> href="<%=makeVOLDetailsLink(aGetSearchArray(0), "Number=0",vbNullString)%>" role="button" class="btn">
+						<span class="fa fa-fast-backward" aria-hidden="true"></span> <%=TXT_FIRST%>
+					</a>
+					<a id="prev_link_top" data-num=<%=AttrQs(aGetSearchArray(0))%> href="<%=makeVOLDetailsLink(aGetSearchArray(intCurSearchNumber-1), "Number=" & intCurSearchNumber-1,vbNullString)%>" role="button" class="btn">
+						<span class="fa fa-step-backward" aria-hidden="true"></span> <%=TXT_PREVIOUS%>
+					</a>
 <%
 		End If
 		If intCurSearchNumber < intLastSearchNumber Then
 %>
-				<a id="next_link_top" data-num=<%=AttrQs(aGetSearchArray(0))%> href="<%=makeVOLDetailsLink(aGetSearchArray(intCurSearchNumber+1), "Number=" & intCurSearchNumber+1,vbNullString)%>" role="button" class="btn">
-					<%=TXT_NEXT%> <span class="fa fa-step-forward" aria-hidden="true"></span>
-				</a>
-				<a id="last_link_top" data-num=<%=AttrQs(aGetSearchArray(0))%> href="<%=makeVOLDetailsLink(aGetSearchArray(intLastSearchNumber), "Number=" & intLastSearchNumber,vbNullString)%>" role="button" class="btn">
-					<%=TXT_LAST%> <span class="fa fa-fast-forward" aria-hidden="true"></span>
-				</a>
+					<a id="next_link_top" data-num=<%=AttrQs(aGetSearchArray(0))%> href="<%=makeVOLDetailsLink(aGetSearchArray(intCurSearchNumber+1), "Number=" & intCurSearchNumber+1,vbNullString)%>" role="button" class="btn">
+						<%=TXT_NEXT%> <span class="fa fa-step-forward" aria-hidden="true"></span>
+					</a>
+					<a id="last_link_top" data-num=<%=AttrQs(aGetSearchArray(0))%> href="<%=makeVOLDetailsLink(aGetSearchArray(intLastSearchNumber), "Number=" & intLastSearchNumber,vbNullString)%>" role="button" class="btn">
+						<%=TXT_LAST%> <span class="fa fa-fast-forward" aria-hidden="true"></span>
+					</a>
 <%
 		End If
 %>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 <%
 	End If 'bSearchList
 
 	If user_bVOL Then
 %>
-<!-- Change Views -->
-<div class="col-sm-12 <%=StringIf(bSearchList," col-md-6 col-lg-4")%>">
-	<form class="form" action="<%=strFormAction%>" id="change_view_form" name="ChangeViewForm">
-	<div class="text-right">
+	<!-- Change Views -->
+	<div class="col-sm-12 <%=StringIf(bSearchList," col-md-6 col-lg-4")%>">
+		<form class="form" action="<%=strFormAction%>" id="change_view_form" name="ChangeViewForm">
+		<div class="text-right">
 <%
-	Call printChangeViewsFormContents(True,DM_VOL,strChangeViewExtraSkip)
+		Call printChangeViewsFormContents(True,DM_VOL,strChangeViewExtraSkip)
 %>
+		</div>
+		</form>
 	</div>
-	</form>
-</div>
 <%
 	End If 'user_bVOL
 %>
@@ -530,11 +530,8 @@ End If
 
 	<div class="record-details-action">
 <%
-
-
 If Not g_bPrintMode Then
 %>
-
 		<!-- Quick Access Record Menu -->
 		<div class="HideListUI clear-line-below">
 			<% Call myListDetailsAddRecord(CStr(strVNUM)) %>
@@ -573,7 +570,6 @@ If Not g_bPrintMode Then
 	End If
 %>
 		</div>
-				<!-- End Quick Access Menu -->
 <%
 
 	If user_bLoggedIn Then
@@ -602,7 +598,7 @@ If Not g_bPrintMode Then
 		<div class="row clear-line-below">
 			<!-- Action Menu -->
 			<div class="col-md-6 col-lg-6">
-				<div class="form-inline-always">
+				<div class="form-inline">
 					<div class="form-group">
 						<label class="control-label" for="ActionList"><%=TXT_ACTION & TXT_COLON%></label>
 						<select name="ActionList" id="ActionList" onchange="do_drop_down_navigation()" class="form-control">
@@ -699,7 +695,7 @@ If g_bDataMgmtFieldsVOL Then
 End If
 If Not g_bPrintMode And g_bSocialMediaShareVOL Then
 %>
-				<div class="col-sm-4 col-md-3 hidden-xs record-details-admin-fields"><table border="0" class="NoBorder"><tr><td><span style="padding-right:0.5em; font-weight: bold;"><%=TXT_SHARE%></span></td><td><div class="addthis_inline_share_toolbox"></div></td></tr></table></div>
+				<div class="col-sm-4 col-md-3 hidden-xs record-details-admin-fields HideNoJs"><table border="0" class="NoBorder"><tr><td><span style="padding-right:0.5em; font-weight: bold;"><%=TXT_SHARE%></span></td><td><div class="addthis_inline_share_toolbox"></div></td></tr></table></div>
 <%
 End If
 %>
@@ -712,7 +708,7 @@ End If
 <!-- End Opportunity Info Header -->
 
 <!-- Opportunity Details Section -->
-<div class="panel panel-default max-width-lg">
+<div class="panel panel-default">
 	<div class="panel-heading">
 		<h3><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%=TXT_OPPORTUNITY_DETAILS & rsOrg("POSITION_TITLE")%></h3>
 	</div>
@@ -742,7 +738,7 @@ End If
 </div>
 
 <!-- Agency Details Section -->
-<div class="panel panel-default max-width-lg">
+<div class="panel panel-default">
 	<div class="panel-heading">
 		<h3><span class="fa icon-commerical-building" aria-hidden="true"></span> <%=TXT_ABOUT_AGENCY & strOrgName%></h3>
 	</div>

@@ -18,7 +18,7 @@
 %>
 
 <%
-Const WARNING_ICON_HTML = "<span class=""ui-state-error"" style=""background-color: transparent; border: none;""><span class=""ui-icon ui-icon-alert"" style=""display: inline-block; background-color: transparent; border: none; vertical-align: text-top;""></span></span>"
+Const WARNING_ICON_HTML = " <span class=""fa fa-exclamation-triangle"" aria-hidden=""true""></span>"
 
 Function getNewNum()
 	Dim cmdNewNUM, rsNewNUM
@@ -1730,10 +1730,10 @@ Function makeLocationsServicesContents(rst, strFieldName, strAddTitle, strTypeWa
 				strReturn = strReturn & _
 					"<li><input type=""checkbox"" name=""" & strFieldName & """ value=" & AttrQs(strRecordNum) & " id=""" & strFieldName & "_" & strRecordNum & """ checked><label for=" & AttrQs(strFieldName & "_" & strRecordNum) & "" & StringIf(bDeleted," class=""AlertStrike""") & "> " & strRecordNum & "</label> <a target=""_blank"" href=" & _
 						AttrQs(makeDetailsLink(strRecordNum, vbNullString, vbNullString)) & ">" & Ns(strName) & "</a>" & _
-						StringIf(bNotType, " <span class=""Alert"">" & WARNING_ICON_HTML & _
+						StringIf(bNotType, " <span class=""AlertBubble"">" & WARNING_ICON_HTML & _
 								strTypeWarning & "</span>") & _
 						StringIf(bNotType And Not bSameAgency, ";") & _
-						StringIf(Not bSameAgency, " <span class=""Alert"">" & WARNING_ICON_HTML & _
+						StringIf(Not bSameAgency, " <span class=""AlertBubble"">" & WARNING_ICON_HTML & _
 								TXT_WRONG_AGENCY_WARNING & "</span>") & _
 						"</li>"
 			Next
@@ -2166,7 +2166,7 @@ Function makeOrgNumContents(rst, bUseContent)
 		bDisplayOrgName = rst("DISPLAY_ORG_NAME")
 	End If
 
-	strFullAgencyWarning = " <span class=""Alert"">" & WARNING_ICON_HTML & TXT_AGENCY_WARNING & "</span>"
+	strFullAgencyWarning = " <span class=""AlertBubble"">" & WARNING_ICON_HTML & TXT_AGENCY_WARNING & "</span>"
 	
 	strReturn = "<input type=""text"" id=""ORG_NUM"" name=""ORG_NUM"" size=""9"" maxlength=""8"" class=""record-num form-control form-inline clear-line-below"" value=" & AttrQs(strOrgNum) & ">" & _
 		StringIf(Not bIsAgency And Not Nl(strOrgNum), strFullAgencyWarning) & _

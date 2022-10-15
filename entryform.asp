@@ -556,7 +556,7 @@ If Not bNew Then
 <%
 End If
 %>
-<div class="panel panel-default max-width-lg">
+<div class="panel panel-default">
 	<div class="panel-heading">
 <%If Not bNew Then%>
 		<h2><%=TXT_REVIEW_RECORD & rsOrg("NUM")%></h2>
@@ -614,7 +614,7 @@ While Not rsFields.EOF
 		End If
 		intPrevGroupID = rsFields.Fields("DisplayFieldGroupID")
 %>
-<div class="panel panel-default max-width-lg">
+<div class="panel panel-default">
 	<div class="panel-heading">
 		<h2><%=rsFields.Fields("DisplayFieldGroupName")%></h2>
 	</div>

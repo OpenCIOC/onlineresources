@@ -528,7 +528,7 @@ End If
 <%
 End If
 %>
-<div class="panel panel-default max-width-lg">
+<div class="panel panel-default">
 	<div class="panel-heading">
 		<%If Not bNew Then%>
 		<h2><%=TXT_REVIEW_RECORD & rsOrg("VNUM")%></h2>

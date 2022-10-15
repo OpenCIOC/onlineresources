@@ -813,7 +813,7 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 		%else:
 		<tr>
 			${self.fieldLabelCell(None,_('Suggest Opportunity'),
-				_('If selected, the "Suggest New Volunteer Opportunity" link will be available from within all organization/program records.'),False)}
+				_('If selected, the "Suggest a Volunteer Opportunity" link will be available from within all organization/program records.'),False)}
 			<td class="field-data-cell">
 				<div class="checkbox">
 					${renderer.errorlist("item.SuggestOpLink")}

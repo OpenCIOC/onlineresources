@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -30,17 +30,23 @@ bHideSubjectBox = Request("HideSubj") = "on" _
 
 Sub printSubjectBox()
 %>
-<div class="SideBarBox">
-<h2 class="RevBoxHeader"><%=TXT_SUBJECTS%></h2>
-<div>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3><%=TXT_SUBJECTS%></h3>
+	</div>
+	<div class="panel-body">
 <%
 		Call makeSubjectBox(False, Join(singleSTerms,OR_CON), Join(quotedSTerms,OR_CON), IIf(intSConOrg = JTYPE_BOOLEAN,strSTermsOrg,Join(exactSTerms," ")),strSubjID,True,False,"bresults.asp")
+
+		If user_bLoggedIn And Not g_bPrintMode Then%>
+		<hr>
+		<div class="text-center">
+			<a class="btn btn-info" id="hide_subjects" href="<%=ps_strThisPage & "?" & IIf(Nl(strQueryString),vbNullString,strQueryString & "&")%>HideSubj=on"><%=TXT_HIDE_SUBJECTS%></a>
+		</div>
+<%
+		End If
 %>
-</div>
-<%		If user_bLoggedIn And Not g_bPrintMode Then%>
-<hr>
-<div style="text-align:center"><a class="ButtonLink" id="hide_subjects" href="<%=ps_strThisPage & "?" & IIf(Nl(strQueryString),vbNullString,strQueryString & "&")%>HideSubj=on"><%=TXT_HIDE_SUBJECTS%></a></div>
-<%		End If%>
+	</div>
 </div>
 <%
 End Sub

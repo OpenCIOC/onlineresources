@@ -137,7 +137,6 @@ class TemplateBaseSchema(Schema):
     cornerRadius = ciocvalidators.String(max=10)
     fsDefault = ciocvalidators.String(max=10)
 
-    UseFontAwesome = validators.Bool()
     PreviewTemplate = validators.Bool()
 
     chained_validators = [

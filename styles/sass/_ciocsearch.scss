@@ -16,8 +16,13 @@
 
 // SEARCH AND RESULTS
 
+#results-menu {
+	padding-top: 0.6em;
+	padding-bottom: 0.6em;
+}
+
 select.form-control option[default] {
-    color: #999999;
+	color: #999999;
 }
 
 td.checkbox-list-item label {
@@ -39,7 +44,6 @@ td.checkbox-list-item label {
 	}
 }
 
-
 .search-info-list {
 	font-weight: bold;
 }
@@ -55,17 +59,12 @@ td.checkbox-list-item label {
 }
 
 .vol-results-position-title {
-	margin-top:1.5em;
-	margin-bottom:0.5em;
+	@extend .basic-corner-style-content;
+	margin-top: 1.5em;
+	margin-bottom: 0.5em;
 	font-size: 115%;
 	padding: 0.25em 0.5em;
 	background: $bgColorContent;
-
-	border-top: 1px solid $borderColorContent;
-	-moz-border-radius: $cornerRadius;
-	-webkit-border-radius: $cornerRadius;
-	border-radius: $cornerRadius;
-
 	font-weight: bold;
 }
 
@@ -109,33 +108,28 @@ td.ListUI {
 	text-align: left;
 }
 
-#search-list-top, #search-list-bottom {
-	margin-bottom: 0.5em;
-	color: $fcContent;
-	background-color: $bgColorContent;
-	border: 1px solid $borderColorContent;
-	-moz-border-radius: $cornerRadius;
-	-webkit-border-radius: $cornerRadius;
-	border-radius: $cornerRadius;
-}
-
 .checkbox-list-table {
 	width: 100%;
 }
 
 // BROWSE
 
-.browse-by-list {
+.content-bubble-float {
+	@extend .basic-corner-style-content;
 	@extend .panel-shading;
 	float: left;
 	padding: 0.5em;
-	margin-bottom: 10px;
+	margin-bottom: 1em;
 	color: $fcContent;
 	background-color: $bgColorContent;
-	border: 1px solid $borderColorContent;
-	-moz-border-radius: $cornerRadius;
-	-webkit-border-radius: $cornerRadius;
-	border-radius: $cornerRadius;
+}
+
+.content-bubble {
+	@extend .basic-corner-style-content;
+	@extend .panel-shading;
+	margin-bottom: 0.5em;
+	color: $fcContent;
+	background-color: $bgColorContent;
 }
 
 .browse-by-item-base {

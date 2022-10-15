@@ -7317,7 +7317,7 @@ msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:816
 msgid ""
-"If selected, the \"Suggest New Volunteer Opportunity\" link will be "
+"If selected, the \"Suggest a Volunteer Opportunity\" link will be "
 "available from within all organization/program records."
 msgstr ""
 "En sélectionnant cette option, le lien \"Proposer une occasion de "
@@ -8814,8 +8814,8 @@ msgid "Add New Headings"
 msgstr "Ajout de nouveaux en-têtes"
 
 #: ../python/cioc/web/cic/templates/record.mak:55
-msgid "Change View (Temp.)"
-msgstr "Changer la vue (à titre temporaire)"
+msgid "Preview in View"
+msgstr "Aperçu dans la vue"
 
 #: ../python/cioc/web/cic/templates/record.mak:77
 msgid "Site:"
@@ -8830,7 +8830,7 @@ msgid "Suggest Update"
 msgstr "Proposer une mise à jour"
 
 #: ../python/cioc/web/cic/templates/record.mak:104
-msgid "Suggest New Volunteer Opportunity"
+msgid "Suggest a Volunteer Opportunity"
 msgstr "Proposer une occasion de bénévolat"
 
 #: ../python/cioc/web/cic/templates/record.mak:111
@@ -10320,10 +10320,6 @@ msgstr ""
 #: ../python/cioc/web/gbl/templates/shortcodes.mak:234
 msgid "Icons"
 msgstr "Icônes"
-
-#: ../python/cioc/web/gbl/templates/shortcodes.mak:238
-msgid "Enable FontAwesome icons"
-msgstr ""
 
 #: ../python/cioc/web/gbl/templates/shortcodes.mak:244
 msgid "Generated Short Code"

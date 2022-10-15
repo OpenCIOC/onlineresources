@@ -52,7 +52,10 @@ CREATE TABLE [dbo].[VOL_Opportunity_Description]
 [CMP_InternalMemo] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SRCH_Anywhere] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SRCH_Anywhere_U] [bit] NOT NULL CONSTRAINT [DF_VOL_Opportunity_Description_SRCH_Anywhere_U] DEFAULT ((0)),
-[MORE_INFO_URL_PROTOCOL] [varchar] (8) COLLATE Latin1_General_100_CI_AI NULL
+[MORE_INFO_URL_PROTOCOL] [varchar] (8) COLLATE Latin1_General_100_CI_AI NULL,
+[APPLICATION_QUESTION_1] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[APPLICATION_QUESTION_2] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[APPLICATION_QUESTION_3] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON

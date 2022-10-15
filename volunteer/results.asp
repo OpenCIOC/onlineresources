@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -75,6 +75,7 @@ strReferer = Request.ServerVariables("HTTP_REFERER")
 %>
 <!--#include file="../includes/search/incSearchSetupVOL.asp" -->
 <!--#include file="../includes/search/incSearchQString.asp" -->
+<!--#include file="../includes/search/incSearchInfo.asp" -->
 <%
 
 If Request("NewWindow") = "on" Then
@@ -134,9 +135,8 @@ Else
 <p><%=TXT_YOU_SEARCHED_FOR%><strong><%=TXT_ALL_AVAILABLE_RECORDS & StringIf(Not Nl(strExclusions)," (" & strExclusions & ")")%></strong></p>
 <%
 		Else
-%>
-<!--#include file="../includes/search/incSearchInfo.asp" -->
-<%
+			Call setSearchDetails()
+			Response.Write(strSearchDetails)
 		End If
 	End If
 

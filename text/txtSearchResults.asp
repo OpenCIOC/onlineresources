@@ -40,7 +40,6 @@ Dim TXT_ACTION_ON_SELECTED, _
 	TXT_MAP_RECORD, _
 	TXT_MAP_RESULTS, _
 	TXT_MORE_INFO, _
-	TXT_MORE_RESULTS, _
 	TXT_MULTIPLE_ORGANIZATIONS, _
 	TXT_NO_MATCH, _
 	TXT_NO_TERMS, _
@@ -103,7 +102,7 @@ Sub setTxtSearchResults
 			TXT_ACTION_ON_SELECTED = "Action sur les dossiers sélectionnés"
 			TXT_BETWEEN = "entre"
 			TXT_CATEGORIES = "Catégories"
-			TXT_CHANGE_DISPLAY = "Changer&nbsp;les&nbsp;options&nbsp;d'affichage"
+			TXT_CHANGE_DISPLAY = "Changer les options d'affichage"
 			TXT_CHECK_ALL = "Sélectionner tout"
 			TXT_CHECK_IN_VIEWPORT = "Sélectionner les dossiers cartographiés"
 			TXT_CLICK_ON = "Cliquer sur "
@@ -117,7 +116,6 @@ Sub setTxtSearchResults
 			TXT_MAP_RECORD = "Cartographier le dossier"
 			TXT_MAP_RESULTS = "Cartographier les résultats"
 			TXT_MORE_INFO = "Renseignements supplémentaires"
-			TXT_MORE_RESULTS = "Plus de résultats :"
 			TXT_MULTIPLE_ORGANIZATIONS = "Plusieurs organismes avec la même localisation sur la carte"
 			TXT_NO_MATCH = "Il n'y a pas de dossier correspondant à vos critères. Veuillez modifier votre recherche en étant moins restrictif et réessayez."
 			TXT_NO_TERMS = "Vous n'avez saisi aucune valeur de recherche ou alors votre recherche ne contenait que des mots inconnus." & _
@@ -125,7 +123,7 @@ Sub setTxtSearchResults
 			TXT_NO_PREVIOUS = "Votre précédente recherche n'a pu être retrouvée. Soit vous n'avez pas autorisé les cookies, soit votre session a expiré." & _
 				"<br>Veuillez revenir en arrière et recommencer une <a href=""" & makeLinkB("~/" & StringIf(ps_intDbArea = DM_VOL, "volunteer/")) & """>" & TXT_NEW_SEARCH & "</a>."
 			TXT_OWNER = "Propriétaire"
-			TXT_PRINT_RECORD_DETAILS = "TRANSLATE_FR -- Print Record Details"
+			TXT_PRINT_RECORD_DETAILS = "Imprimer les détails du dossier"
 			TXT_RECORDS_MATCH = " dossier(s) correspondant à vos critères."
 			TXT_REQUEST_UPDATE = "Demander une mise à jour"
 			TXT_SAVE_THIS_SEARCH = "Sauvegarder cette recherche"
@@ -138,7 +136,7 @@ Sub setTxtSearchResults
 			TXT_SLCT_DATA_SHARING = "Partage de données"
 			TXT_SLCT_DELETE_RESTORE = "Supprimer / Restaurer les dossiers"
 			TXT_SLCT_DISTRIBUTION = "Ajouter / Supprimer un code de distribution"
-			TXT_SLCT_EMAIL_RECORD_LIST = "TRANSLATE_FR -- Email Record List"
+			TXT_SLCT_EMAIL_RECORD_LIST = "Envoyer la liste des dossiers par courriel"
 			TXT_SLCT_EMAIL_UPDATE = "Demander une mise à jour par courriel"
 			TXT_SLCT_EXPORT = "Exporter les dossiers"
 			TXT_SLCT_FIND_REPLACE = "Outil rechercher et remplacer"
@@ -157,7 +155,7 @@ Sub setTxtSearchResults
 			TXT_SLCT_SUBJECT = "Ajouter / Supprimer un mot-clé du sujet"
 			TXT_SLCT_TAXONOMY = "Ajouter / Supprimer un terme de la Taxonomie"
 			TXT_SHOW_SUBJECTS = "Afficher la barre latérale des sujets"
-			TXT_SHOWING_RECORDS = "Affichage des dossiers "
+			TXT_SHOWING_RECORDS = "Affichage de "
 			TXT_TO_BOTTOM = "Vers le bas"
 			TXT_TO_SIDE = "Sur le côté"
 			TXT_UNCHECK_ALL = "Désélectionner tout"
@@ -195,7 +193,6 @@ Sub setTxtSearchResults
 			TXT_MAP_RECORD = "Map Record"
 			TXT_MAP_RESULTS = "Map Results"
 			TXT_MORE_INFO = "More info"
-			TXT_MORE_RESULTS = "More Results:"
 			TXT_MULTIPLE_ORGANIZATIONS = "Multiple organizations with a similar map location"
 			TXT_NO_MATCH = "There are no records that match your criteria. Please modify your search to be less restrictive and try again."
 			TXT_NO_TERMS = "You did not enter any search values or your search contained only ignored words." & _
@@ -235,7 +232,7 @@ Sub setTxtSearchResults
 			TXT_SLCT_SUBJECT = "Add/Remove Subject Term"
 			TXT_SLCT_TAXONOMY = "Add/Remove Taxonomy Term"
 			TXT_SHOW_SUBJECTS = "Show Subjects Sidebar"
-			TXT_SHOWING_RECORDS = "Showing records "
+			TXT_SHOWING_RECORDS = "Showing "
 			TXT_TO_BOTTOM = "To Bottom"
 			TXT_TO_SIDE = "To Side"
 			TXT_UNCHECK_ALL = "Uncheck All"

@@ -31,20 +31,8 @@
 	border-bottom: thin solid $borderColorContent;
 }
 
-.agency-overview, .record-details {
-	@extend .panel-shading;
-}
-
 .record-details-action {
 	padding: ($line-height-computed / 2) 0.6em;
-}
-
-.record-details-action-header {
-	padding: 0 4px;
-}
-
-.record-details-action-bar {
-	font-weight: bold;
 }
 
 .record-details-admin-fields {
@@ -56,53 +44,9 @@
 }
 
 .agency-overview, .record-details {
-	-moz-border-radius: $cornerRadius;
-	-webkit-border-radius: $cornerRadius;
-	border-radius: $cornerRadius;
-	border: 1px solid $borderColorContent;
+	@extend .basic-corner-style-content;
+	@extend .panel-shading;
 	margin-bottom: 2em;
-}
-
-table.BasicBorder.record-data {
-	width: 100%;
-	border-left: none;
-	border-bottom: none;
-	border-right: none;
-
-	& > tr > td, & > tr > th, & > thead > tr > th, & > tbody > tr > td, & > tbody > tr > th {
-		&:first-of-type {
-			border-left: none;
-		}
-		&:last-of-type {
-			border-right: none;
-		}
-	}
-	& > tr, & > thead > tr, & > tbody > tr {
-		&:last-of-type {
-			&, & > td, & > th {
-				border-bottom: none;
-			}
-		}
-	}
-
-	& > tbody > tr:last-of-type > td:first-of-type {
-		-moz-border-bottom-left-radius: $cornerRadius;
-		-webkit-border-bottom-left-radius: $cornerRadius;
-		border-bottom-left-radius: $cornerRadius;
-	}
-	& > tbody > tr:last-of-type > td:last-of-type {
-		-moz-border-bottom-right-radius: $cornerRadius;
-		-webkit-border-bottom-right-radius: $cornerRadius;
-		border-bottom-right-radius: $cornerRadius;
-	}
-}
-
-.record-data .FieldLabelLeft, .record-data .field-detail, .related-row {
-	border-top: 1px solid $borderColorContent;
-}
-
-.record-data .FieldLabelLeft {
-	border-right: 1px solid $borderColorContent;
 }
 
 .agency-overview .TitleBox, .record-details .TitleBox {
@@ -125,48 +69,6 @@ table.BasicBorder.record-data {
 
 .agency-overview .FieldLabelLeft, .record-summary {
 	padding: 0.2em 0.5em;
-}
-
-@media (min-width: 769px) {
-	.record-data .FieldLabelLeft {
-		width: 200px;
-	}
-}
-
-
-// ADD THIS
-
-.new-share-wrapper {
-	margin: 1em 0;
-}
-
-.new-share-label {
-	font-weight: bold;
-}
-
-.new-share-toolbox.addthis_default_style .at300b:first-child,
-.new-share-toolbox.addthis_default_style .at300bo:first-child,
-.new-share-toolbox.addthis_default_style .at300m:first-child
-{
-	padding-left: 0;
-}
-
-.share-wrapper {
-	float: right;
-	padding-left: 2em;
-}
-
-.share-toolbox {
-	display: inline-block; 
-	width: 150px;
-}
-
-.share-label {
-	display: inline-block; 
-	line-height: 16px; 
-	vertical-align: top; 
-	height: 16px; 
-	cursor: default;
 }
 
 .apply-button-box {

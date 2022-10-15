@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -61,7 +61,11 @@ Call setPageInfo(False, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStr
 <!--#include file="includes/search/incMyList.asp" -->
 <!--#include file="includes/search/incSearchRecent.asp" -->
 
-<% 
+<%
+Public Sub printSearchInfo()
+
+End Sub
+
 Call getDisplayOptionsCIC(g_intViewTypeCIC, Not user_bCIC)
 
 Dim strTitle

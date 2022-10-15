@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -69,6 +69,12 @@ Call setPageInfo(False, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStr
 ' Previous Search Results
 '--------------------------------------------------
 
+Public Sub printSearchInfo()
+%>
+<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=TXT_YOUR_PREVIOUS_SEARCH%></strong></p>
+<%
+End Sub
+
 Dim strPrevResults, _
 	bPrevError
 
@@ -102,16 +108,19 @@ If bPrevError Then
 Else
 	If Not g_bPrintMode Then
 		Response.Write(render_gtranslate_ui())
-%>
-<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=TXT_YOUR_PREVIOUS_SEARCH%></strong></p>
-<%
 	End If
 
 	Dim	objOrgTable
 	Set objOrgTable = New OrgRecordTable	
 
 	Call objOrgTable.setOptions(strFrom, strWhere, vbNullString, g_bCanSeeDeletedCIC, False, strQueryString, CAN_RANK_NONE, vbNullString, vbNullString, False)
+%>
+		<div id="SearchResultsArea">
+<%
 	Call objOrgTable.makeTable()
+%>
+		</div>
+<%
 	Set objOrgTable = Nothing
 End If
 %>

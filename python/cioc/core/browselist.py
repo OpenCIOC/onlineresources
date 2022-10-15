@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,7 +44,7 @@ def makeAlphaListItems(include_nums, link_url, request):
 def makeAlphaList(include_nums, link_url, href_class, request):
     templ = '<a class="%s" href="%%(LINK)s">%%(DISPLAY)s</a>' % href_class
     letters = (templ % l for l in makeAlphaListItems(include_nums, link_url, request))
-    return """<div class="browse-by-list">{}<br>{}</div>""".format(
+    return """<div class="content-bubble-float">{}<br>{}</div>""".format(
         _("Select Letter", request),
         "&nbsp;&nbsp;".join(letters),
     )

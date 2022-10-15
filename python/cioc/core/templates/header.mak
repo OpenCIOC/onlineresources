@@ -40,12 +40,7 @@ template_stylesheet=${template_style_sheet_url}
 <!doctype html>
 %endif
 
-<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
-<!--[if lt IE 7 ]> <html lang="${culture}" class="no-js ie6"> <![endif]-->
-<!--[if IE 7 ]>    <html lang="${culture}" class="no-js ie7"> <![endif]-->
-<!--[if IE 8 ]>    <html lang="${culture}" class="no-js ie8"> <![endif]-->
-<!--[if IE 9 ]>    <html lang="${culture}" class="no-js ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html lang="${culture}" class="no-js"> <!--<![endif]-->
+<html lang="${culture}" class="no-js">
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta charset="utf-8">
@@ -78,10 +73,7 @@ template_stylesheet=${template_style_sheet_url}
 	%endif
 
 	<link rel="search" href="${request.pageinfo.PathToStart}" title="Search Start">
-
-	%if request.template_values['UseFontAwesome'] or ((request.pageinfo.ThisPage).lower() in ["results.asp","sresults.asp","whatsnew.asp","iconlist","publication/edit","generalheading/edit"]):
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-	%endif
 
 	<link rel="stylesheet" type="text/css" href="${basic_style_sheet_url}" id="basic_style">
 	<link rel="stylesheet" type="text/css" href="${template_style_sheet_url}" id="template_style">

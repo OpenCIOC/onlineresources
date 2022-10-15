@@ -79,13 +79,6 @@ ${self.makeMgmtInfo(layout)}
 	</td>
 </tr>
 <tr>
-	<td class="FieldLabelLeft">${_('Icon Library')}</td>
-	<td>
-	${renderer.errorlist("layout.UseFontAwesome")}
-	${renderer.checkbox("layout.UseFontAwesome", label=_('Include Font Awesome CSS (Bootstrap CDN)'))}
-	</td>
-</tr>
-<tr>
 	<td class="FieldLabelLeft">${_('Bootstrap Library')}</td>
 	<td>
 	${renderer.errorlist("layout.UseFullCIOCBootstrap")}

@@ -51,7 +51,6 @@ class LayoutBaseSchema(Schema):
     AlmostStandardsMode = validators.StringBool(if_empty=False)
     LayoutCSS = ciocvalidators.UnicodeString()
     LayoutCSSURL = ciocvalidators.Url(max=255)
-    UseFontAwesome = validators.Bool()
     UseFullCIOCBootstrap = validators.Bool()
 
 
@@ -169,7 +168,6 @@ class TemplateLayout(viewbase.AdminViewBase):
                     "LayoutCSS",
                     "LayoutCSSURL",
                     "AlmostStandardsMode",
-                    "UseFontAwesome",
                     "UseFullCIOCBootstrap",
                 )
             )

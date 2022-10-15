@@ -29,7 +29,10 @@ CREATE TABLE [dbo].[VOL_OP_Referral]
 [VolunteerSuccessfulPlacement] [bit] NULL,
 [VolunteerOutcomeNotes] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [VolunteerHideReferral] [bit] NOT NULL CONSTRAINT [DF_VOL_OP_Referral_VolunteerHideReferral] DEFAULT ((0)),
-[IPAddress] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL
+[IPAddress] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
+[Question1Answer] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[Question2Answer] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[Question3Answer] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[VOL_OP_Referral] WITH NOCHECK ADD CONSTRAINT [CK_VOL_OP_Referral_ContactRequired] CHECK ((NOT ([VolunteerPhone] IS NULL AND [VolunteerEmail] IS NULL AND [VolunteerAddress] IS NULL)))

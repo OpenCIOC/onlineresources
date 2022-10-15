@@ -53,35 +53,31 @@ nav ul, nav ol {
 }
 
 .navbar-default {
-	 .navbar-text, .navbar-brand, .navbar-nav {
-    	.glyphicon, .fa {
+	.navbar-text, .navbar-brand, .navbar-nav {
+		.glyphicon, .fa {
 			color: $iconColorHeader;
 		}
+
 		.glyphicon {
 			font-size: 90%;
 		}
-	 }
+	}
 
-	 .navbar-nav {
-		 li {
-			-moz-border-radius: $cornerRadius;
-			-webkit-border-radius: $cornerRadius;
-			border-radius: $cornerRadius;
+	.navbar-nav {
+		li {
+			@extend .basic-corner-style;
 
-		 	> a {
-				-moz-border-radius: $cornerRadius;
-				-webkit-border-radius: $cornerRadius;
-				border-radius: $cornerRadius;
-
-				&:hover,
-				&:focus {
+			> a {
+				@extend .basic-corner-style;
+				&:hover, &:focus {
 					color: $nav-link-hover;
 					background-color: $nav-link-hover-bg;
+
 					.glyphicon, .fa {
 						color: $iconColorHover;
 					}
 				}
 			}
 		}
-	 }
+	}
 }

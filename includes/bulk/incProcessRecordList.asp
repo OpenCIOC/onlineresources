@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -297,9 +297,14 @@ Else
 %>
 <br>
 <%
+				If Not g_bPrintMode Then
+					Response.Write(render_gtranslate_ui())
+				End If
+
 				Call objOrgTable.setOptions(strFrom, strWhere, vbNullString, True, False, strQueryString, CAN_RANK_NONE, decNearLatitude, decNearLongitude, bNearSort)
-				Response.Write(render_gtranslate_ui())
+
 				Call objOrgTable.makeTable()
+
 				Set objOrgTable = Nothing
 
 				Call makeMappingSearchFooter()

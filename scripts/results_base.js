@@ -1,4 +1,4 @@
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -199,7 +199,7 @@ var toggle_subjects = function(hide) {
 	if (hide) {
 		$('#subjects_column').hide();
 		$('#show_subjects_display').show();
-		results_col[0].className = 'cioc-col-xs-12';
+		results_col[0].className = 'col-xs-12';
 	} else {
 		$('#subjects_column').show();
 		$('#show_subjects_display').hide();

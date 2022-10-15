@@ -321,13 +321,6 @@ ${self.makeMgmtInfo(template)}
 	${renderer.proto_url("template.AppleTouchIcon", class_="form-control")}</td>
 </tr>
 <tr>
-	<td class="field-label-cell">${_('Icon Library')}</td>
-	<td class="field-data-cell">
-	${renderer.errorlist("template.UseFontAwesome")}
-	${renderer.checkbox("template.UseFontAwesome", label=_('Include Font Awesome CSS (Bootstrap CDN)'))}
-	</td>
-</tr>
-<tr>
 	<td class="field-label-cell">${renderer.label("template.StyleSheetUrl", _('Style Sheet'))}</td>
 	<td class="field-data-cell">${renderer.errorlist("template.StyleSheetUrl")}
 	${renderer.proto_url("template.StyleSheetUrl", class_="form-control")}</td>

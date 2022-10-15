@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -19,10 +19,12 @@
 
 <%
 Dim aSQLSearch, _
-	strSearchInfoSSNotes
+	strSearchInfoSSNotes, _
+	strSearchDetails
+
+Public Sub setSearchDetails
 
 If bSearchDisplay Then
-
 	If Not Nl(strSearchInfoSQL) Then
 		strSearchInfoSQL = "SET NOCOUNT ON" & vbCrLf & _
 			strSearchInfoSQL & vbCrLf & "SELECT @searchText AS SEARCH_INFO" & vbCrLf & _
@@ -74,22 +76,17 @@ If bSearchDisplay Then
 	End If
 	
 	If intCurrentSearch > 0 Then
-%>
-<p id="SearchDetails"><%=TXT_YOU_SEARCHED_FOR%></p>
-<ul id="SearchDetailsList">
-<%
+		strSearchDetails = "<p id=""SearchDetails"">" & TXT_YOU_SEARCHED_FOR & "</p>" & vbCrLf & _
+			"<ul id=""SearchDetailsList"">"
+
 		For Each indSearch In aSearch
-%>
-	<li class="search-info-list"><%=indSearch%></li>
-<%
+			strSearchDetails = strSearchDetails & vbCrLf & _
+				"<li class=""search-info-list"">" & indSearch & "</li>"
 		Next
-%>
-</ul>
-<%
+
+		strSearchDetails = strSearchDetails & vbCrLf & "</ul>"
 	ElseIf intCurrentSearch = 0 Then
-%>
-<p id="SearchDetails"><%=TXT_YOU_SEARCHED_FOR%><strong><%=aSearch(0)%></strong></p>
-<%
+		strSearchDetails = "<p id=""SearchDetails"">" & TXT_YOU_SEARCHED_FOR & "<strong>" & aSearch(0) & "</strong></p>"
 	End If
 	
 	strSearchInfoSSNotes = Server.URLEncode("* " & Replace(Replace(Replace(Join(aSearch,vbCrLf & "* "),"<em>",vbNullString),"</em>",vbNullString),"&nbsp;"," "))
@@ -98,4 +95,6 @@ If bSearchDisplay Then
 		strSearchInfoRefineNotes = Join(aSearch,"-{|}-")
 	End If
 End If
+
+End Sub
 %>

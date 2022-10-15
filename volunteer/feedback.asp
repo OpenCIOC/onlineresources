@@ -385,7 +385,7 @@ End If
 <input type="hidden" name="Number" value="<%=intCurSearchNumber%>">
 <%End If%>
 </div>
-<div class="panel panel-default max-width-lg">
+<div class="panel panel-default">
 	<div class="panel-heading">
 		<%If Not bSuggest Then%>
 		<h2><%=TXT_REVIEW_RECORD & rsOrg("VNUM")%></h2>
@@ -600,7 +600,7 @@ Else
 End If
 %>
 
-<div class="panel panel-default max-width-lg">
+<div class="panel panel-default">
 	<div class="panel-heading"><h2><%=TXT_BEFORE_SUBMITTING%></h2></div>
 	<div class="panel-body">
 		<h3 class="Alert"><%=IIf(user_bLoggedIn,TXT_SOURCE_OF_INFO,TXT_ABOUT_YOU)%></h3>

@@ -74,7 +74,10 @@ CREATE TABLE [dbo].[VOL_Feedback]
 [SUITABILITY] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [TRAINING] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [TRANSPORTATION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[UPDATE_EMAIL] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL
+[UPDATE_EMAIL] [nvarchar] (100) COLLATE Latin1_General_100_CI_AI NULL,
+[APPLICATION_QUESTION_1] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[APPLICATION_QUESTION_2] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[APPLICATION_QUESTION_3] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[VOL_Feedback] ADD CONSTRAINT [PK_VOL_Feedback] PRIMARY KEY CLUSTERED ([FB_ID]) ON [PRIMARY]

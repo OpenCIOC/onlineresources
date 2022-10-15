@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -73,6 +73,18 @@ Call setPageInfo(False, DM_CIC, DM_CIC, vbNullString, vbNullString, vbNullString
 ' A. Taxonomy Code Search
 '--------------------------------------------------
 
+Public Sub printSearchInfo()
+	If Not Nl(strTermCodeDisplay) And Not g_bPrintMode Then
+		strSearchInfoRefineNotes = TXT_BROWSE_BY_SERVICE_CATEGORY & TXT_COLON & strTermName & StringIf(bLRestricted," <em>(" & TXT_RESTRICT & ")</em>")
+		Response.Write(strTermCodeDisplay)
+		If Not user_bLoggedIn Then
+%>
+<p class="SmallNote"><%=TXT_TAXONOMY_DISCLAIMER%></p>
+<%
+		End If
+	End If
+End Sub
+
 Dim strTaxCode, _
 	bLRestricted, _
 	strTermName, _
@@ -127,29 +139,21 @@ If Nl(strWhere) Then
 	Call handleError("<p>" & TXT_NO_TERMS & "</p>", _
 		vbNullString, vbNullString)
 Else
-	If Not Nl(strTermCodeDisplay) And Not g_bPrintMode Then
-		strSearchInfoRefineNotes = TXT_BROWSE_BY_SERVICE_CATEGORY & TXT_COLON & strTermName & StringIf(bLRestricted," <em>(" & TXT_RESTRICT & ")</em>")
-%>
-<%=strTermCodeDisplay%>
-<%
-		If Not g_bPrintMode Then
-			Response.Write(render_gtranslate_ui())
-		End If
-		If Not user_bLoggedIn Then
-%>
-<p class="SmallNote"><%=TXT_TAXONOMY_DISCLAIMER%></p>
-<%
-		End If
-%>
-<hr>
-<%
+	If Not g_bPrintMode Then
+		Response.Write(render_gtranslate_ui())
 	End If
-	
+
 	Dim	objOrgTable
 	Set objOrgTable = New OrgRecordTable
 
 	Call objOrgTable.setOptions(strFrom, strWhere, vbNullString, False, False, strQueryString, CAN_RANK_NONE, vbNullString, vbNullString, False)
+%>
+		<div id="SearchResultsArea">
+<%
 	Call objOrgTable.makeTable()
+%>
+		</div>
+<%
 	Set objOrgTable = Nothing
 End If
 %>

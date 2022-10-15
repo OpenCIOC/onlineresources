@@ -99,7 +99,7 @@ Sub printChangeViewsFormContents(bTemp, intDomain, strExtraSkip)
 <div class="input-group">
 	<%=makeChangeViewsList(vbNullString, strVarName, True, False)%>
 	<div class="input-group-btn">
-		<button class="btn" type="submit"><%=TXT_CHANGE_VIEW%><%If bTemp Then%> <%=TXT_CHANGE_VIEW_TEMP%><%End If%></button>
+		<button class="btn" type="submit"><%=IIf(bTemp,TXT_CHANGE_VIEW_TEMP,TXT_CHANGE_VIEW)%></button>
 	</div>
 </div>
 <%

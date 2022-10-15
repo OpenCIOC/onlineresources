@@ -13,7 +13,6 @@ CREATE PROCEDURE [dbo].[sp_GBL_Template_Layout_u]
 	@LayoutCSS [varchar](max),
 	@LayoutCSSURL [varchar](255),
 	@AlmostStandardsMode [bit],
-	@UseFontAwesome[bit],
 	@UseFullCIOCBootstrap [bit],
 	@Descriptions [xml],
 	@ErrMsg [nvarchar](500) OUTPUT
@@ -83,7 +82,7 @@ IF @MemberID IS NULL BEGIN
 	SET @Error = 2 -- No ID Given
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL)
 -- Member ID exists ?
-END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
+END ELSE IF NOT EXISTS(SELECT * FROM dbo.STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS varchar), @MemberObjectName)
 -- Layout exists ?
@@ -150,7 +149,6 @@ IF @Error = 0 BEGIN
 			LayoutCSSURL,
 			LayoutCSSVersionDate,
 			AlmostStandardsMode,
-			UseFontAwesome,
 			UseFullCIOCBootstrap
 		) VALUES (
 			GETDATE(),
@@ -164,7 +162,6 @@ IF @Error = 0 BEGIN
 			@LayoutCSSURL,
 			GETDATE(),
 			@AlmostStandardsMode,
-			@UseFontAwesome,
 			@UseFullCIOCBootstrap
 		)
 		SELECT @LayoutID = SCOPE_IDENTITY()
@@ -176,7 +173,6 @@ IF @Error = 0 BEGIN
 			LayoutCSS			= @LayoutCSS,
 			LayoutCSSURL		= @LayoutCSSURL,
 			AlmostStandardsMode = @AlmostStandardsMode,
-			UseFontAwesome		= @UseFontAwesome,
 			UseFullCIOCBootstrap	= ISNULL(@UseFullCIOCBootstrap,@UseFullCIOCBootstrap)
 		WHERE LayoutID = @LayoutID	
 	END
@@ -185,7 +181,7 @@ IF @Error = 0 BEGIN
 
 	IF @Error=0 AND @LayoutID IS NOT NULL BEGIN
 		DELETE tld
-		FROM GBL_Template_Layout_Description tld
+		FROM dbo.GBL_Template_Layout_Description tld
 		WHERE tld.LayoutID=@LayoutID
 			AND NOT EXISTS(SELECT * FROM @DescTable nt WHERE tld.LangID=nt.LangID)
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @LayoutObjectName, @ErrMsg
@@ -194,12 +190,12 @@ IF @Error = 0 BEGIN
 			LayoutName		= nt.LayoutName,
 			LayoutHTML		= nt.LayoutHTML,
 			LayoutHTMLURL	= nt.LayoutHTMLURL
-		FROM GBL_Template_Layout_Description tld
+		FROM dbo.GBL_Template_Layout_Description tld
 		INNER JOIN @DescTable nt
 			ON tld.LangID=nt.LangID
 		WHERE tld.LayoutID=@LayoutID
 	
-		INSERT INTO GBL_Template_Layout_Description (
+		INSERT INTO dbo.GBL_Template_Layout_Description (
 			LayoutID,
 			LangID,
 			LayoutName,
@@ -212,7 +208,7 @@ IF @Error = 0 BEGIN
 			LayoutHTML,
 			LayoutHTMLURL
 		FROM @DescTable nt
-		WHERE NOT EXISTS(SELECT * FROM GBL_Template_Layout_Description WHERE LayoutID=@LayoutID AND LangID=nt.LangID)
+		WHERE NOT EXISTS(SELECT * FROM dbo.GBL_Template_Layout_Description WHERE LayoutID=@LayoutID AND LangID=nt.LangID)
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @LayoutObjectName, @ErrMsg
 	END
 END

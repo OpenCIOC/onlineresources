@@ -46,16 +46,13 @@ ol.breadcrumb {
 }
 
 .container.container-contrast {
+	@extend .basic-corner-style;
 	margin-top: $line-height-computed;
 	margin-bottom: $line-height-computed * 1.5;
 
-	-moz-border-radius: $cornerRadius;
-	-webkit-border-radius: $cornerRadius;
-	border-radius: $cornerRadius;
-
 	.site-header {
 		margin-right: -$navbar-padding-horizontal;
-		margin-left:  -$navbar-padding-horizontal;
+		margin-left: -$navbar-padding-horizontal;
 		-moz-border-radius-topleft: $cornerRadius;
 		-webkit-border-top-left-radius: $cornerRadius;
 		border-top-left-radius: $cornerRadius;

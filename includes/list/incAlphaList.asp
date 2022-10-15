@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -58,6 +58,6 @@ Public Function makeAlphaList(strChosenLetter, bIncludeNums, strlinkURL, bShowAl
 			strLetters = strLetters & strCon & "<a href=""" & makeLinkB(strlinkURL) & """><div class=""browse-by-item"">" & TXT_SHOW_ALL & "</div></a>"
 		End If
 	End If
-	makeAlphaList = "<div class=""clearfix""><div class=""browse-by-list"">" & TXT_SELECT_LETTER & "<br>" & strLetters & "</div></div>"
+	makeAlphaList = "<div class=""clearfix""><div class=""content-bubble-float"">" & TXT_SELECT_LETTER & "<br>" & strLetters & "</div></div>"
 End Function
 %>

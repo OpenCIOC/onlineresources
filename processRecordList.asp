@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -76,6 +76,12 @@ Call setPageInfo(True, DM_CIC, DM_CIC, vbNullString, vbNullString, vbNullString)
 <!--#include file="includes/search/incMakeTableClassCIC.asp" -->
 <!--#include file="includes/search/incSearchRecent.asp" -->
 <!--#include file="includes/thesaurus/incSubjTermList.asp" -->
+
+<%
+Public Sub printSearchInfo()
+
+End Sub
+%>
 
 <!--#include file="includes/bulk/incProcessRecordList.asp" -->
 
