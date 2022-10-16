@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -178,7 +178,7 @@ With rsProfileSummary
 		<input type="radio" name="Active" value="N">&nbsp;<%=TXT_NO%></td>
 	</tr>
 	<tr>	
-		<td class="FieldLabelLeft"><%=TXT_PRINT_VERSION%></td>
+		<td class="FieldLabelLeft"><%=TXT_PRINT_VERSION_NW%></td>
 		<td><input type="radio" name="PrintMd" value="on">&nbsp;<%=TXT_YES%>
 		<input type="radio" name="PrintMd" value="" checked>&nbsp;<%=TXT_NO%></td>
 	</tr>

@@ -88,6 +88,7 @@ Dim TXT_ACTION, _
 	TXT_POSITION_TITLE, _
 	TXT_PREVIOUS, _
 	TXT_PRINT_VERSION, _
+	TXT_PRINT_VERSION_NW, _
 	TXT_PRINTED_ON_DATE, _
 	TXT_PROFILE, _
 	TXT_PUBLICATIONS, _
@@ -197,7 +198,8 @@ Sub setTxtGeneral()
 			TXT_PAGE_HELP = "Aide sur la page"
 			TXT_POSITION_TITLE = "Titre de poste"
 			TXT_PREVIOUS = "Précédent"
-			TXT_PRINT_VERSION = "Version&nbsp;imprimable&nbsp;" & TXT_NEW_WINDOW
+			TXT_PRINT_VERSION = "Version imprimable"
+			TXT_PRINT_VERSION_NW = TXT_PRINT_VERSION & " " & TXT_NEW_WINDOW
 			TXT_PRINTED_ON_DATE = "Imprimé le" & TXT_COLON
 			TXT_PROFILE = "Profil"
 			TXT_PUBLICATIONS = "Publications"
@@ -301,7 +303,8 @@ Sub setTxtGeneral()
 			TXT_PAGE_HELP = "Page Help"
 			TXT_POSITION_TITLE = "Position Title"
 			TXT_PREVIOUS = "Previous"
-			TXT_PRINT_VERSION = "Print&nbsp;Version&nbsp;" & TXT_NEW_WINDOW
+			TXT_PRINT_VERSION = "Print Version"
+			TXT_PRINT_VERSION_NW = TXT_PRINT_VERSION & " " & TXT_NEW_WINDOW
 			TXT_PRINTED_ON_DATE = "Printed on" & TXT_COLON
 			TXT_PROFILE = "Profile"
 			TXT_PUBLICATIONS = "Publications"

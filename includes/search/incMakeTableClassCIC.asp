@@ -753,21 +753,21 @@ Else
 %>
 		<a class="btn btn-info" href="<%=ps_strThisPage & "?" & IIf(Nl(strQueryString),vbNullString,strQueryString & "&")%>PrintMd=on" target="_BLANK">
 			<span class="fa fa-print" aria-hidden="true"></span>
-			<%=TXT_PRINT_VERSION%>
+			<%=IIf(user_bLoggedIn,TXT_PRINT_VERSION,TXT_PRINT_VERSION_NW)%>
 		</a>
 <%
 			ElseIf reEquals(ps_strThisPage,"browsebyorg.asp",True,False,True,False) Then
 %>
 		<a class="btn btn-info" href="<%=makeLink(ps_strThisPage,"PrintMd=on&Let=" & strChosenLetter,vbNullString)%>" target="_BLANK">
 			<span class="fa fa-print" aria-hidden="true"></span>
-			<%=TXT_PRINT_VERSION%>
+			<%=IIf(user_bLoggedIn,TXT_PRINT_VERSION,TXT_PRINT_VERSION_NW)%>
 		</a>
 <%
 			ElseIf reEquals(ps_strThisPage,"processRecordList.asp",True,False,True,False) Then
 %>
 		<a class="btn btn-info" href="<%=makeLink(ps_strThisPage,"PrintMd=on&ActionType=N&IDList=" & strIDList,vbNullString)%>" target="_BLANK">
 			<span class="fa fa-print" aria-hidden="true"></span>
-			<%=TXT_PRINT_VERSION%>
+			<%=IIf(user_bLoggedIn,TXT_PRINT_VERSION,TXT_PRINT_VERSION_NW)%>
 		</a>
 <%
 			End If

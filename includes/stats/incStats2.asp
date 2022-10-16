@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -44,7 +44,7 @@ If user_bSuperUserDOM Then
 %>
 | <a href="<%=makeLinkB("stats_delete.asp")%>"><%=TXT_DELETE_STATS%></a>
 <%End If%>
-| <a href="<%=makeLink(ps_strThisPage,"PrintMd=on",vbNullString)%>" target="_BLANK"><%=TXT_PRINT_VERSION%></a>
+| <a href="<%=makeLink(ps_strThisPage,"PrintMd=on",vbNullString)%>" target="_BLANK"><%=TXT_PRINT_VERSION_NW%></a>
 ]</p>
 <%End If%>
 <%

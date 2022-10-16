@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -414,17 +414,17 @@ Else
 		If g_bPrintVersionResultsVOL And (user_bLoggedIn Or g_bPrintModePublic) And Not Nl(g_intPrintDesignVOL) Then
 			If reEquals(ps_strThisPage,".?results.asp",True,False,True,False) Then
 %>
-<%=strResultsMenuStart%><a class="NoLineLink" href="<%=ps_strThisPage & "?" & IIf(Nl(strQueryString),vbNullString,strQueryString & "&")%>PrintMd=on" target="_BLANK"><img border="0" src="../images/printer.gif">&nbsp;<%=TXT_PRINT_VERSION%></a>
+<%=strResultsMenuStart%><a class="NoLineLink" href="<%=ps_strThisPage & "?" & IIf(Nl(strQueryString),vbNullString,strQueryString & "&")%>PrintMd=on" target="_BLANK"><img border="0" src="../images/printer.gif">&nbsp;<%=TXT_PRINT_VERSION_NW%></a>
 <%
 				strResultsMenuStart = " | "
 			ElseIf reEquals(ps_strThisPage,"whatsnew.asp",True,False,True,False) Then
 %>
-<%=strResultsMenuStart%><a class="NoLineLink" href="<%=makeLink(ps_strThisPage,"PrintMd=on&numDays=" & intNumDays & "&numRecords=" & intMinRecords & "&dateType=" & strDateType,vbNullString)%>" target="_BLANK"><img border="0" src="../images/printer.gif">&nbsp;<%=TXT_PRINT_VERSION%></a>
+<%=strResultsMenuStart%><a class="NoLineLink" href="<%=makeLink(ps_strThisPage,"PrintMd=on&numDays=" & intNumDays & "&numRecords=" & intMinRecords & "&dateType=" & strDateType,vbNullString)%>" target="_BLANK"><img border="0" src="../images/printer.gif">&nbsp;<%=TXT_PRINT_VERSION_NW%></a>
 <%
 				strResultsMenuStart = " | "
 			ElseIf reEquals(ps_strThisPage,"processRecordList.asp",True,False,True,False) Then
 %>
-<%=strResultsMenuStart%><a class="NoLineLink" href="<%=makeLink(ps_strThisPage,"PrintMd=on&ActionType=N&IDList=" & strIDList,vbNullString)%>" target="_BLANK"><img border="0" src="../images/printer.gif">&nbsp;<%=TXT_PRINT_VERSION%></a>	
+<%=strResultsMenuStart%><a class="NoLineLink" href="<%=makeLink(ps_strThisPage,"PrintMd=on&ActionType=N&IDList=" & strIDList,vbNullString)%>" target="_BLANK"><img border="0" src="../images/printer.gif">&nbsp;<%=TXT_PRINT_VERSION_NW%></a>	
 <%
 				strResultsMenuStart = " | "
 			End If

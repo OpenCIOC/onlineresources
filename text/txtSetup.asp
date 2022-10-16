@@ -208,7 +208,7 @@ Sub setTxtSetup()
 			TXT_SEARCH_AGE_GROUPS = "Classes d'âge pour la recherche"
 			TXT_SECURITY_PRIVACY = "Sécurité et confidentialité"
 			TXT_SHARING_PROFILES = "Profils de partage"
-			TXT_SHORT_CODE_GENERATOR = "TRANSLATE_FR -- Short Code Generator (Wordpress)"
+			TXT_SHORT_CODE_GENERATOR = "Générateur de &quot;short code&quot; (Wordpress)"
 			TXT_SHOW_ON_FORMS = "Afficher sur les formulaires"
 			TXT_SOCIAL_MEDIA_TYPES = "Types de média sociaux"
 			TXT_SPECIFIC_AREAS_OF_INTEREST = "Centres d'intérêt spécifique"

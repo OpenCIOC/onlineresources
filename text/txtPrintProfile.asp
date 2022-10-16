@@ -154,7 +154,7 @@ Sub setTxtPrintProfile()
 			TXT_MSG_LOCATION = "Endroit de message"
 			TXT_OPTIONS = "Options"
 			TXT_PAGE_TITLE = "Titre de page"
-			TXT_PUBLIC = "TRANSLATE_FR -- Public"
+			TXT_PUBLIC = "Public"
 			TXT_PREFIX = "Préfixe"
 			TXT_RECORD_SEPARATOR = "Séparateur de dossiers"
 			TXT_REPLACE_COMMAND = "Commander de remplacer"

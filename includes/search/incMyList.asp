@@ -70,7 +70,18 @@ Sub myListResultsAddRecordHeader()
 	Dim bLaunched
 	bLaunched = ctHasBeenLaunched()
 	If ( g_bMyListCIC And ps_intDbArea = DM_CIC ) Or ( g_bMyListVOL And ps_intDbArea = DM_VOL ) Or bLaunched Then
-	%><th class="ListUI"><span id="list_header_text" style="white-space: nowrap;"><%=IIf(g_bEnableListModeCT, TXT_CT_CLIENT_TRACKER,TXT_MY_LIST)%></span><% If bLaunched Then %><span id="ct_header_text" style="display: none;"><%=TXT_CT_CLIENT_TRACKER%></span><%End If%></th><%
+%>
+	<th class="ListUI">
+		<span id="list_header_text"><%=IIf(g_bEnableListModeCT,TXT_CT_CLIENT_TRACKER,TXT_MY_LIST)%></span>
+<%
+		If bLaunched Then
+%>
+		<span id="ct_header_text" style="display:none;"><%=TXT_CT_CLIENT_TRACKER%></span>
+<%
+		End If
+%>
+	</th>
+<%
 	End If
 End Sub
 
@@ -83,7 +94,11 @@ Function myListResultsAddRecord(strID, bEnableListViewMode, strPrefix, strSuffix
 		myListResultsAddRecord = strPrefix
 		If bEnableListViewMode Then
 			myListResultsAddRecord = myListResultsAddRecord & _
-					"<span id=""remove_from_list_" & strID & """ class=""SimulateLink remove_from_list"" data-id=""" & strID & """><img src=""" & ps_strPathToStart & "images/" & IIf(g_bEnableListModeCT, "referral", "list") & "remove.gif"" width=""17"" height=""17"" border=""0"">" & TXT_LIST_REMOVE & "</span>"
+				"<span id=""remove_from_list_" & strID & """ class=""btn btn-alert-border remove_from_list"" data-id=""" & strID & """>" & _
+					"<span class=""fa fa-remove"" aria-hidden=""true""></span> " & _
+					StringIf(g_bEnableListModeCT,"<span class=""fa fa-user"" aria-hidden=""true""></span> ") & _
+					TXT_LIST_REMOVE & _
+				"</span>"
 		Else
 			myListResultsAddRecord = myListResultsAddRecord & _
 					myListAddRecordBasicUI(strID)

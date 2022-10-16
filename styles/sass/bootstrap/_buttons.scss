@@ -81,7 +81,7 @@ a.btn {
 }
 // Warning appears as orange
 .btn-warning {
-  @include button-variant($btn-warning-color, $btn-warning-bg, $btn-warning-border);
+  @include button-variant($btn-warning-color, $btn-warning-bg, $btn-content-border-thick);
 }
 // Danger and error appear as red
 .btn-danger {

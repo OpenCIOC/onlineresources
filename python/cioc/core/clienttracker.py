@@ -25,7 +25,7 @@ def has_been_launched(request):
     )
 
 
-_details_add_record_template = Markup('<span class="NoWrap ListUI">%s | </span>')
+_details_add_record_template = Markup('<span class="NoWrap ListUI">%s</span>')
 
 
 def my_list_details_add_record(request, id):
@@ -35,9 +35,18 @@ def my_list_details_add_record(request, id):
     return ""
 
 
-_my_list_template = Markup(
-    """<span id="added_to_list_%(id)s" style="display:none;"><img src="/images/listadded.gif" alt="%(record_added)s"> %(record_added)s</span><span id="add_to_list_%(id)s"><span class="NoLineLink SimulateLink add_to_list" data-id="%(id)s"><img src="/images/listadd.gif" alt="%(add_record)s"> %(add_record)s</span>%(ct)s</span>"""
-)
+_my_list_template = Markup("""
+        <span id="added_to_list_%(id)s" style="display:none;" class="btn btn-info btn-content-border-thick">
+            <span class="fa fa-check" aria-hidden="true"></span> %(record_added)s
+        </span>
+        <span id="add_to_list_%(id)s">
+            <span class="btn btn-info add_to_list" data-id="%(id)s">
+                <span class="fa fa-plus" aria-hidden="true"></span> <strong>%(add_record)s</strong>
+            </span>
+            %(ct)s
+        </span>
+        """)
+
 _ct_template = Markup(
     """<span id="ct_added_to_previous_request_%(id)s" class="Alert" style="display: none;"> * </span>"""
 )
@@ -59,7 +68,7 @@ def my_list_add_record_basic_ui(request, id):
             "ct": ct,
             "id": id,
             "record_added": _("Record Added", request),
-            "add_record": _("Add Record", request),
+            "add_record": _("Add to List", request),
         }
 
     return ""

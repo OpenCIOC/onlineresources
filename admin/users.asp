@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -245,7 +245,7 @@ End If
 	</table></td>
 </tr>
 <tr>	
-	<td class="FieldLabel"><%=TXT_PRINT_VERSION%></td>
+	<td class="FieldLabel"><%=TXT_PRINT_VERSION_NW%></td>
 	<td colspan="3"><label><input type="radio" name="PrintMd" value="on"><%=TXT_YES%></label>
 	<label><input type="radio" name="PrintMd" value="" checked><%=TXT_NO%></label></td>
 </tr>

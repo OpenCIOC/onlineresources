@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -104,7 +104,7 @@ Call openAgencyListRst(DM_VOL, True, True)
 	<label for="Placement_No"><input type="radio" name="Placement" id="Placement_No" value="" checked>&nbsp;<%=TXT_NO%></label></td>
 </tr>
 <tr>	
-	<td class="FieldLabel"><%=TXT_PRINT_VERSION%></td>
+	<td class="FieldLabel"><%=TXT_PRINT_VERSION_NW%></td>
 	<td><label for="PrintMd_Yes"><input type="radio" name="PrintMd" id="PrintMd_Yes" value="on">&nbsp;<%=TXT_YES%></label>
 	<label for="PrintMd_No"><input type="radio" name="PrintMd" id="PrintMd_No" value="" checked>&nbsp;<%=TXT_NO%></label></td>
 </tr>

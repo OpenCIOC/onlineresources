@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -106,7 +106,7 @@ For Each Culture in Application("Cultures")
 If Application("Culture_" & Culture & "_ActiveRecord") Then
 %>
 <div>
-<a href="<%=makeLink("setup_help_fields_list.asp","PrintMd=on&DM=" & intDomain & "&HelpLn=" & Culture,vbNullString)%>" target="_BLANK"><%=TXT_PRINT_VERSION & " - " & Application("Culture_" & Culture & "_LanguageName") %></a> - <a href="<%=makeLink("setup_help_fields_list.asp","PrintMd=on&DM=" & intDomain & "&HelpLn=" & Culture & "&Global=on",vbNullString)%>" target="_BLANK"><%= TXT_GLOBAL_HELP %></a>
+<a href="<%=makeLink("setup_help_fields_list.asp","PrintMd=on&DM=" & intDomain & "&HelpLn=" & Culture,vbNullString)%>" target="_BLANK"><%=TXT_PRINT_VERSION_NW & " - " & Application("Culture_" & Culture & "_LanguageName") %></a> - <a href="<%=makeLink("setup_help_fields_list.asp","PrintMd=on&DM=" & intDomain & "&HelpLn=" & Culture & "&Global=on",vbNullString)%>" target="_BLANK"><%= TXT_GLOBAL_HELP %></a>
 </div>
 <%
 End If

@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 <%
 ' =========================================================================================
@@ -51,18 +51,10 @@ Call setPageInfo(False, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStr
 <!--#include file="includes/core/incFooter.asp" -->
 <!--#include file="text/txtMenu.asp" -->
 <% 'End Base includes %>
-<!--#include file="text/txtAgencyContact.asp" -->
-<!--#include file="text/txtClientTracker.asp" -->
 <!--#include file="text/txtDetails.asp" -->
 <!--#include file="text/txtMgmtFields.asp" -->
 <!--#include file="text/txtRecordPages.asp" -->
-<!--#include file="includes/core/incChangeViews.asp" -->
 <!--#include file="includes/core/incFormat.asp" -->
-<!--#include file="includes/list/incAgencyList.asp" -->
-<!--#include file="includes/list/incRecordNoteTypeList.asp" -->
-<!--#include file="includes/mapping/incGoogleMaps.asp" -->
-<!--#include file="includes/search/incMyList.asp" -->
-<!--#include file="includes/stats/incInsertStat.asp" -->
 <!--#include file="includes/update/incAgencyUpdateInfo.asp" -->
 
 <%	

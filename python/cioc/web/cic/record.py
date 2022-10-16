@@ -130,16 +130,11 @@ def parse_language_xml(record):
     )
 
 
-_active_template = Markup(
-    '<span class="NoWrap"><a class="NoLineLink" href="%(link)s"><img src="/images/%(culture)s.gif" aria-hidden="true" border="0"> %(name)s</a></span>'
+_lang_template = Markup(
+    '<a class="btn btn-info" href="%(link)s">%(name)s</a></span>'
 )
-_inactive_template = Markup(
-    '<span class="NoWrap"><a class="NoLineLink" href="%(link)s">%(name)s</a></span>'
-)
-
 
 def link_other_langs(request, lang_xml, num, cur_culture, number):
-    templates = {"1": _active_template, "0": _inactive_template}
 
     makeDetailsLink = request.passvars.makeDetailsLink
     langs = []
@@ -161,20 +156,26 @@ def link_other_langs(request, lang_xml, num, cur_culture, number):
 
         link = makeDetailsLink(num, ln_arg)
         langs.append(
-            templates[active]
-            % {"link": link, "culture": culture, "name": language.get("LanguageName")}
+            _lang_template % {"link": link, "culture": culture, "name": language.get("LanguageName")}
         )
 
-    return Markup(" | ").join(langs)
+    return Markup(" ").join(langs)
 
 
 _reminder_template = Markup(
-    '<span class="HideNoJs"> | <a id="reminders" style="cursor: pointer;" class="NoLineLink%s" title="%s">%s%s</a></span>'
+    '<span class="HideNoJs"><a id="reminders" class="btn btn-info %s" title="%s">%s %s</a></span>'
 )
-_past_due_icon = Markup(
-    '<span class="ui-state-error" style="border: none; background: inherit"><span style="display: inline-block; vertical-align: text-bottom;" class="ui-icon ui-icon-alert"></span> </span>'
+_reminder_alert_icon = Markup(
+    '<span class="fa fa-warning" aria-hidden="true"></span>'
 )
-_reminder_icon = Markup('<img src="/images/remind.gif" aria-hidden="true">')
+
+_reminder_warning_icon = Markup(
+    '<span class="fa fa-exclamation-circle" aria-hidden="true"></span>'
+)
+
+_reminder_icon = Markup(
+    '<span class="fa fa-clock-o" aria-hidden="true"></span>'
+)
 
 
 def get_reminder_notice(request, record):
@@ -190,15 +191,16 @@ def get_reminder_notice(request, record):
         ngettext("There is %d reminder.", "There are %d reminders.", total, request)
         % total
     )
-    icon = ""
+    icon = _reminder_icon
     if past_due:
         title += (
             " " + ngettext("%d is due.", "%d are due.", past_due, request) % past_due
         )
-        alert = " Alert"
-        icon = _past_due_icon
+        alert = "btn-alert-border-thick"
+        icon = _reminder_alert_icon
     elif total:
-        icon = _reminder_icon
+        alert = "btn-content-border-thick"
+        icon = _reminder_warning_icon
 
     title += " " + gettext("Click to view.", request)
 
@@ -973,9 +975,7 @@ SET NOCOUNT OFF
                 if x
             ),
             "location_name_linked": link_location_name(request, record),
-            "other_langs_links": (Markup(" | ") + other_langs_links)
-            if other_langs_links
-            else "",
+            "other_langs_links": other_langs_links,
             "reminder_notice": reminder_notice,
             "nav_dropdown": nav_dropdown,
             "search_list_top": search_list_top,

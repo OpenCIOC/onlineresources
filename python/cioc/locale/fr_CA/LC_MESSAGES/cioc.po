@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CiocWeb 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-08 14:26-0400\n"
+"POT-Creation-Date: 2022-10-16 15:43-0400\n"
 "PO-Revision-Date: 2016-09-12 23:26-0400\n"
 "Last-Translator: Chris Lambacher <chris@kclsoftware.com>\n"
 "Language: fr_CA\n"
@@ -22,13 +22,13 @@ msgstr ""
 msgid "Select Letter"
 msgstr "Choisir une lettre"
 
-#: ../python/cioc/core/clienttracker.py:61
+#: ../python/cioc/core/clienttracker.py:70
 msgid "Record Added"
 msgstr "Dossier ajouté"
 
-#: ../python/cioc/core/clienttracker.py:62
-msgid "Add Record"
-msgstr "Ajouter le dossier"
+#: ../python/cioc/core/clienttracker.py:71
+msgid "Add to List"
+msgstr "Ajouter à la liste"
 
 #: ../python/cioc/core/constants.py:38
 msgid "Global"
@@ -54,7 +54,7 @@ msgstr "CIC"
 #: ../python/cioc/web/admin/templates/generalsetup.mak:201
 #: ../python/cioc/web/admin/templates/generalsetup.mak:244
 #: ../python/cioc/web/admin/templates/views/edit.mak:242
-#: ../python/cioc/web/cic/record.py:419
+#: ../python/cioc/web/cic/record.py:421
 msgid "Volunteer"
 msgstr "Bénévolat"
 
@@ -64,7 +64,7 @@ msgid "Child Care"
 msgstr "Garde d'enfants"
 
 #: ../python/cioc/core/detailsscript.py:26
-#: ../python/cioc/web/cic/templates/record.mak:258
+#: ../python/cioc/web/cic/templates/record.mak:308
 msgid "Show Listings"
 msgstr "Afficher la liste"
 
@@ -73,7 +73,7 @@ msgid "Hide Listings"
 msgstr "Cacher la liste"
 
 #: ../python/cioc/core/detailsscript.py:28
-#: ../python/cioc/web/cic/templates/record.mak:274
+#: ../python/cioc/web/cic/templates/record.mak:324
 msgid "Show Deleted"
 msgstr "Afficher les dossiers supprimés"
 
@@ -295,7 +295,7 @@ msgid "Some reminders are past due or require action."
 msgstr "Quelques rappels sont en retard ou exigent une action."
 
 #: ../python/cioc/core/template.py:925 ../python/cioc/web/cic/reminders.py:98
-#: ../python/cioc/web/cic/templates/record.mak:351
+#: ../python/cioc/web/cic/templates/record.mak:397
 #: ../python/cioc/web/cic/templates/reminders/edit.mak:37
 #: ../python/cioc/web/cic/templates/reminders/index.mak:34
 #: ../python/cioc/web/cic/templates/reminders/index.mak:48
@@ -400,7 +400,7 @@ msgstr ""
 
 #: ../python/cioc/core/vacancyscript.py:100
 #: ../python/cioc/web/admin/templates/userapicreds/add.mak:65
-#: ../python/cioc/web/cic/templates/record.mak:356
+#: ../python/cioc/web/cic/templates/record.mak:402
 #: ../python/cioc/web/cic/templates/reminders/edit.mak:41
 #: ../python/cioc/web/cic/templates/reminders/index.mak:52
 msgid "Loading..."
@@ -469,7 +469,9 @@ msgstr "La liste d'adresse courriel est invalide"
 
 #: ../python/cioc/core/validators.py:289
 msgid "Invalid Slug: Only letters, numbers and dashes are allowed"
-msgstr "Slug non valide : seuls les lettres, les chiffres et les tirets sont autorisés"
+msgstr ""
+"Slug non valide : seuls les lettres, les chiffres et les tirets sont "
+"autorisés"
 
 #: ../python/cioc/core/validators.py:307
 msgid "Not a valid colour"
@@ -531,16 +533,16 @@ msgstr ""
 msgid "Printed on:"
 msgstr "Imprimé le :"
 
-#: ../python/cioc/core/templates/header.mak:164
+#: ../python/cioc/core/templates/header.mak:156
 msgid "Skip to main content"
 msgstr "Accédez au contenu principal"
 
-#: ../python/cioc/core/templates/header.mak:174
+#: ../python/cioc/core/templates/header.mak:166
 msgid "The database is in training mode"
 msgstr "La base de données est en mode Formation."
 
 #: ../python/cioc/web/__init__.py:148
-#: ../python/cioc/web/admin/templates/template/edit.mak:538
+#: ../python/cioc/web/admin/templates/template/edit.mak:531
 msgid "Error"
 msgstr "Erreur"
 
@@ -835,7 +837,7 @@ msgstr "Les dossiers ont été mis à jour avec succès."
 #: ../python/cioc/web/admin/fieldradio.py:201
 #: ../python/cioc/web/admin/general.py:255
 #: ../python/cioc/web/admin/interests.py:263
-#: ../python/cioc/web/admin/layout.py:222
+#: ../python/cioc/web/admin/layout.py:220
 #: ../python/cioc/web/admin/listvalues.py:263
 #: ../python/cioc/web/admin/mappingsystem.py:187
 #: ../python/cioc/web/admin/naics.py:199
@@ -847,7 +849,7 @@ msgstr "Les dossiers ont été mis à jour avec succès."
 #: ../python/cioc/web/admin/sharingprofile.py:477
 #: ../python/cioc/web/admin/sharingprofile.py:1677
 #: ../python/cioc/web/admin/socialmedia.py:181
-#: ../python/cioc/web/admin/template.py:449
+#: ../python/cioc/web/admin/template.py:448
 #: ../python/cioc/web/admin/thesaurus.py:283
 #: ../python/cioc/web/admin/thesaurus_source.py:183
 #: ../python/cioc/web/admin/views.py:606 ../python/cioc/web/admin/views.py:1430
@@ -872,7 +874,7 @@ msgstr "Impossible de sauvegarder : "
 #: ../python/cioc/web/admin/ganalytics.py:123
 #: ../python/cioc/web/admin/general.py:258
 #: ../python/cioc/web/admin/interests.py:267
-#: ../python/cioc/web/admin/layout.py:228
+#: ../python/cioc/web/admin/layout.py:226
 #: ../python/cioc/web/admin/listvalues.py:266
 #: ../python/cioc/web/admin/mappingsystem.py:191
 #: ../python/cioc/web/admin/naics.py:203
@@ -890,7 +892,7 @@ msgstr "Impossible de sauvegarder : "
 #: ../python/cioc/web/admin/sharingprofile.py:1574
 #: ../python/cioc/web/admin/sharingprofile.py:1640
 #: ../python/cioc/web/admin/socialmedia.py:185
-#: ../python/cioc/web/admin/template.py:454
+#: ../python/cioc/web/admin/template.py:453
 #: ../python/cioc/web/admin/thesaurus.py:286
 #: ../python/cioc/web/admin/thesaurus_source.py:186
 #: ../python/cioc/web/admin/views.py:612 ../python/cioc/web/admin/views.py:1434
@@ -923,9 +925,9 @@ msgstr "Des erreurs de validation sont survenues."
 #: ../python/cioc/web/admin/interests.py:326
 #: ../python/cioc/web/admin/interests.py:399
 #: ../python/cioc/web/admin/interests.py:432
-#: ../python/cioc/web/admin/layout.py:281
-#: ../python/cioc/web/admin/layout.py:404
-#: ../python/cioc/web/admin/layout.py:439
+#: ../python/cioc/web/admin/layout.py:279
+#: ../python/cioc/web/admin/layout.py:402
+#: ../python/cioc/web/admin/layout.py:437
 #: ../python/cioc/web/admin/mappingsystem.py:238
 #: ../python/cioc/web/admin/mappingsystem.py:296
 #: ../python/cioc/web/admin/mappingsystem.py:329
@@ -942,9 +944,9 @@ msgstr "Des erreurs de validation sont survenues."
 #: ../python/cioc/web/admin/socialmedia.py:235
 #: ../python/cioc/web/admin/socialmedia.py:293
 #: ../python/cioc/web/admin/socialmedia.py:326
-#: ../python/cioc/web/admin/template.py:531
-#: ../python/cioc/web/admin/template.py:697
-#: ../python/cioc/web/admin/template.py:732
+#: ../python/cioc/web/admin/template.py:530
+#: ../python/cioc/web/admin/template.py:696
+#: ../python/cioc/web/admin/template.py:731
 #: ../python/cioc/web/admin/thesaurus.py:58
 #: ../python/cioc/web/admin/views.py:786 ../python/cioc/web/admin/views.py:1020
 #: ../python/cioc/web/admin/views.py:1068
@@ -963,8 +965,8 @@ msgstr "ID invalide"
 #: ../python/cioc/web/admin/checklists.py:685
 #: ../python/cioc/web/cic/publication.py:204
 #: ../python/cioc/web/cic/publication.py:235
-#: ../python/cioc/web/cic/publication.py:591
-#: ../python/cioc/web/cic/publication.py:786
+#: ../python/cioc/web/cic/publication.py:589
+#: ../python/cioc/web/cic/publication.py:784
 #: ../python/cioc/web/cic/templates/publication/index.mak:26
 msgid "Manage Publications"
 msgstr "Gérer les publications"
@@ -1386,35 +1388,35 @@ msgstr "L'intérêt a été supprimé avec succès."
 msgid "Unable to delete Interest: "
 msgstr "L'Intérêt ne peut être supprimé :"
 
-#: ../python/cioc/web/admin/layout.py:107
-#: ../python/cioc/web/admin/layout.py:246
-#: ../python/cioc/web/admin/layout.py:336
-#: ../python/cioc/web/admin/layout.py:410
+#: ../python/cioc/web/admin/layout.py:106
+#: ../python/cioc/web/admin/layout.py:244
+#: ../python/cioc/web/admin/layout.py:334
+#: ../python/cioc/web/admin/layout.py:408
 msgid "Manage Template Layouts"
 msgstr "Gérer les Mises en page de modèle"
 
-#: ../python/cioc/web/admin/layout.py:211
+#: ../python/cioc/web/admin/layout.py:209
 msgid "The Template Layout was successfully added."
 msgstr "Le modèle de mise en page a été ajouté avec succès."
 
-#: ../python/cioc/web/admin/layout.py:213
+#: ../python/cioc/web/admin/layout.py:211
 msgid "The Template Layout was successfully updated."
 msgstr "Le modèle de mise en page a été mis à jour avec succès."
 
-#: ../python/cioc/web/admin/layout.py:226
+#: ../python/cioc/web/admin/layout.py:224
 msgid "Invalid Layout ID"
 msgstr "ID de Mise en page invalide"
 
-#: ../python/cioc/web/admin/layout.py:306
+#: ../python/cioc/web/admin/layout.py:304
 msgid "Layout not found."
 msgstr "La Mise en page est introuvable"
 
-#: ../python/cioc/web/admin/layout.py:465
+#: ../python/cioc/web/admin/layout.py:463
 msgid "The Template Layout was successfully deleted."
 msgstr "Le modèle de mise en page a été supprimé avec succès."
 
-#: ../python/cioc/web/admin/layout.py:472
-#: ../python/cioc/web/admin/layout.py:479
+#: ../python/cioc/web/admin/layout.py:470
+#: ../python/cioc/web/admin/layout.py:477
 msgid "Unable to delete Template Layout: "
 msgstr "La Mise en page de modèle ne peut être supprimée :"
 
@@ -1549,10 +1551,10 @@ msgstr "Modifier le code SCIAN :"
 #: ../python/cioc/web/admin/templates/interests/index.mak:100
 #: ../python/cioc/web/admin/templates/listvalues/index.mak:84
 #: ../python/cioc/web/admin/templates/pagehelp.mak:26
-#: ../python/cioc/web/cic/templates/record.mak:173
-#: ../python/cioc/web/cic/templates/record.mak:175
-#: ../python/cioc/web/cic/templates/record.mak:177
-#: ../python/cioc/web/cic/templates/record.mak:186
+#: ../python/cioc/web/cic/templates/record.mak:196
+#: ../python/cioc/web/cic/templates/record.mak:201
+#: ../python/cioc/web/cic/templates/record.mak:206
+#: ../python/cioc/web/cic/templates/record.mak:214
 #: ../python/cioc/web/templates/master.mak:75
 #: ../python/cioc/web/templates/master.mak:79
 #: ../python/cioc/web/templates/master.mak:90
@@ -1617,7 +1619,7 @@ msgstr "Demande de modification envoyée."
 #: ../python/cioc/web/admin/templates/community/edit.mak:261
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:275
 #: ../python/cioc/web/admin/templates/views/edit.mak:1530
-#: ../python/cioc/web/cic/templates/record.mak:358
+#: ../python/cioc/web/cic/templates/record.mak:404
 #: ../python/cioc/web/cic/templates/reminders/edit.mak:42
 #: ../python/cioc/web/cic/templates/reminders/index.mak:53
 msgid "Not Found"
@@ -1968,7 +1970,7 @@ msgstr ""
 #: ../python/cioc/web/admin/templates/views/edit.mak:1316
 #: ../python/cioc/web/admin/templates/views/edit.mak:1371
 #: ../python/cioc/web/admin/templates/views/edit.mak:1388
-#: ../python/cioc/web/cic/templates/record.mak:354
+#: ../python/cioc/web/cic/templates/record.mak:400
 #: ../python/cioc/web/cic/templates/topicsearch/searchform.mak:37
 msgid ": "
 msgstr " : "
@@ -2005,35 +2007,35 @@ msgstr "Le type de média social a été supprimé avec succès."
 msgid "Unable to delete Social Media Type: "
 msgstr "Le type de média social ne peut être supprimé : "
 
-#: ../python/cioc/web/admin/template.py:321
-#: ../python/cioc/web/admin/template.py:494
-#: ../python/cioc/web/admin/template.py:600
-#: ../python/cioc/web/admin/template.py:703
+#: ../python/cioc/web/admin/template.py:320
+#: ../python/cioc/web/admin/template.py:493
+#: ../python/cioc/web/admin/template.py:599
+#: ../python/cioc/web/admin/template.py:702
 msgid "Manage Templates"
 msgstr "Gestion des modèles"
 
-#: ../python/cioc/web/admin/template.py:438
+#: ../python/cioc/web/admin/template.py:437
 msgid "The Template has been successfully added."
 msgstr "Le modèle a été ajouté avec succès."
 
-#: ../python/cioc/web/admin/template.py:440
+#: ../python/cioc/web/admin/template.py:439
 msgid "The Template has been successfully updated."
 msgstr "Le modèle a été mis à jour avec succès."
 
-#: ../python/cioc/web/admin/template.py:453
+#: ../python/cioc/web/admin/template.py:452
 msgid "Invalid Template ID"
 msgstr "ID de modèle invalide"
 
-#: ../python/cioc/web/admin/template.py:574
+#: ../python/cioc/web/admin/template.py:573
 msgid "Template Not Found"
 msgstr "Le modèle est introuvable"
 
-#: ../python/cioc/web/admin/template.py:758
+#: ../python/cioc/web/admin/template.py:757
 msgid "The Template has been successfully deleted."
 msgstr "Le modèle a été supprimé avec succès."
 
-#: ../python/cioc/web/admin/template.py:764
-#: ../python/cioc/web/admin/template.py:770
+#: ../python/cioc/web/admin/template.py:763
+#: ../python/cioc/web/admin/template.py:769
 msgid "Unable to delete Template: "
 msgstr "Le modèle ne peut être supprimé"
 
@@ -2258,14 +2260,14 @@ msgstr "Ajouter une nouvelle communauté"
 #: ../python/cioc/web/admin/templates/excelprofile/edit.mak:79
 #: ../python/cioc/web/admin/templates/interests/edit.mak:94
 #: ../python/cioc/web/admin/templates/interests/index.mak:159
-#: ../python/cioc/web/admin/templates/layout/edit.mak:157
+#: ../python/cioc/web/admin/templates/layout/edit.mak:150
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:131
 #: ../python/cioc/web/admin/templates/naics/edit.mak:140
 #: ../python/cioc/web/admin/templates/notice/new.mak:45
 #: ../python/cioc/web/admin/templates/pages/edit.mak:101
 #: ../python/cioc/web/admin/templates/sharingprofile/edit.mak:154
 #: ../python/cioc/web/admin/templates/socialmedia/edit.mak:118
-#: ../python/cioc/web/admin/templates/template/edit.mak:611
+#: ../python/cioc/web/admin/templates/template/edit.mak:604
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:235
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:255
 #: ../python/cioc/web/admin/templates/userapicreds/add.mak:49
@@ -2529,7 +2531,7 @@ msgstr "Nom"
 #: ../python/cioc/web/admin/templates/fieldhide.mak:52
 #: ../python/cioc/web/admin/templates/fieldradio.mak:59
 #: ../python/cioc/web/admin/templates/interests/index.mak:55
-#: ../python/cioc/web/admin/templates/template/edit.mak:649
+#: ../python/cioc/web/admin/templates/template/edit.mak:642
 msgid "Display"
 msgstr "Affichage"
 
@@ -2581,7 +2583,7 @@ msgstr ": Éditeur HTML"
 #: ../python/cioc/web/admin/templates/generalsetup.mak:407
 #: ../python/cioc/web/admin/templates/interests/edit.mak:94
 #: ../python/cioc/web/admin/templates/interests/index.mak:131
-#: ../python/cioc/web/admin/templates/layout/edit.mak:157
+#: ../python/cioc/web/admin/templates/layout/edit.mak:150
 #: ../python/cioc/web/admin/templates/listvalues/edit.mak:76
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:131
 #: ../python/cioc/web/admin/templates/naics/edit.mak:140
@@ -2593,7 +2595,7 @@ msgstr ": Éditeur HTML"
 #: ../python/cioc/web/admin/templates/sharingprofile/additems.mak:220
 #: ../python/cioc/web/admin/templates/sharingprofile/edit.mak:154
 #: ../python/cioc/web/admin/templates/socialmedia/edit.mak:118
-#: ../python/cioc/web/admin/templates/template/edit.mak:611
+#: ../python/cioc/web/admin/templates/template/edit.mak:604
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:235
 #: ../python/cioc/web/admin/templates/views/topicsearch.mak:137
 #: ../python/cioc/web/cic/templates/generalheading/edit.mak:219
@@ -2618,7 +2620,7 @@ msgstr "Mettre à jour"
 #: ../python/cioc/web/admin/templates/generalsetup.mak:408
 #: ../python/cioc/web/admin/templates/interests/edit.mak:98
 #: ../python/cioc/web/admin/templates/interests/index.mak:145
-#: ../python/cioc/web/admin/templates/layout/edit.mak:162
+#: ../python/cioc/web/admin/templates/layout/edit.mak:155
 #: ../python/cioc/web/admin/templates/listvalues/edit.mak:77
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:135
 #: ../python/cioc/web/admin/templates/naics/edit.mak:144
@@ -2632,7 +2634,7 @@ msgstr "Mettre à jour"
 #: ../python/cioc/web/admin/templates/sharingprofile/additems.mak:227
 #: ../python/cioc/web/admin/templates/sharingprofile/edit.mak:159
 #: ../python/cioc/web/admin/templates/socialmedia/edit.mak:122
-#: ../python/cioc/web/admin/templates/template/edit.mak:616
+#: ../python/cioc/web/admin/templates/template/edit.mak:609
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:239
 #: ../python/cioc/web/admin/templates/thesaurus/source.mak:61
 #: ../python/cioc/web/admin/templates/userapicreds/add.mak:50
@@ -2659,7 +2661,7 @@ msgstr ""
 #: ../python/cioc/web/admin/templates/fieldgroup.mak:44
 #: ../python/cioc/web/admin/templates/interests/edit.mak:96
 #: ../python/cioc/web/admin/templates/interests/index.mak:133
-#: ../python/cioc/web/admin/templates/layout/edit.mak:159
+#: ../python/cioc/web/admin/templates/layout/edit.mak:152
 #: ../python/cioc/web/admin/templates/listvalues/edit.mak:180
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:133
 #: ../python/cioc/web/admin/templates/naics/edit.mak:142
@@ -2670,8 +2672,8 @@ msgstr ""
 #: ../python/cioc/web/admin/templates/sharingprofile/additems.mak:222
 #: ../python/cioc/web/admin/templates/sharingprofile/edit.mak:156
 #: ../python/cioc/web/admin/templates/socialmedia/edit.mak:120
-#: ../python/cioc/web/admin/templates/template/edit.mak:613
-#: ../python/cioc/web/admin/templates/template/edit.mak:647
+#: ../python/cioc/web/admin/templates/template/edit.mak:606
+#: ../python/cioc/web/admin/templates/template/edit.mak:640
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:237
 #: ../python/cioc/web/admin/templates/thesaurus/source.mak:37
 #: ../python/cioc/web/admin/templates/userapicreds/index.mak:45
@@ -3263,9 +3265,8 @@ msgstr "Revenir à la Gestion des valeurs"
 #: ../python/cioc/web/admin/templates/listvalues/index.mak:37
 #: ../python/cioc/web/cic/templates/publication/edit.mak:222
 #: ../python/cioc/web/cic/templates/publication/index.mak:28
-#: ../python/cioc/web/cic/templates/record.mak:108
 msgid "Print Version (New Window)"
-msgstr "Version imprimable (nouvelle fenêtre)"
+msgstr ""
 
 #: ../python/cioc/web/admin/templates/checklists/edit.mak:67
 msgid ""
@@ -3761,7 +3762,7 @@ msgstr "Le nom du propriétaire"
 #: ../python/cioc/web/admin/templates/notice/index.mak:58
 #: ../python/cioc/web/admin/templates/sharingprofile/index.mak:54
 #: ../python/cioc/web/admin/templates/socialmedia/edit.mak:110
-#: ../python/cioc/web/admin/templates/template/edit.mak:534
+#: ../python/cioc/web/admin/templates/template/edit.mak:527
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:221
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:229
 #: ../python/cioc/web/cic/templates/taxonomy/activationrec.mak:24
@@ -4236,10 +4237,10 @@ msgid "Record Owner"
 msgstr "Propriétaire du dossier"
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:66
-#: ../python/cioc/web/admin/templates/layout/edit.mak:155
+#: ../python/cioc/web/admin/templates/layout/edit.mak:148
 #: ../python/cioc/web/admin/templates/pages/edit.mak:45
 #: ../python/cioc/web/admin/templates/template/edit.mak:98
-#: ../python/cioc/web/admin/templates/template/edit.mak:609
+#: ../python/cioc/web/admin/templates/template/edit.mak:602
 #: ../python/cioc/web/admin/templates/views/edit.mak:163
 #: ../python/cioc/web/admin/templates/views/edit.mak:1475
 msgid "Setup of this item is exclusively controlled by the Agency: "
@@ -4262,71 +4263,61 @@ msgid "This layout can run in HTML 5 mode."
 msgstr "Cette mise en page est compatible avec le mode HTML 5."
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:82
-#: ../python/cioc/web/admin/templates/template/edit.mak:324
-msgid "Icon Library"
-msgstr "Bibliothèque d'icônes"
-
-#: ../python/cioc/web/admin/templates/layout/edit.mak:85
-#: ../python/cioc/web/admin/templates/template/edit.mak:327
-msgid "Include Font Awesome CSS (Bootstrap CDN)"
-msgstr "Inclure le CSS Font Awesome (Bootstrap CDN)"
-
-#: ../python/cioc/web/admin/templates/layout/edit.mak:89
 msgid "Bootstrap Library"
 msgstr "Bibliothèque Bootstrap"
 
-#: ../python/cioc/web/admin/templates/layout/edit.mak:92
+#: ../python/cioc/web/admin/templates/layout/edit.mak:85
 msgid "Include the full CIOC-adapted Bootstrap design libary"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/layout/edit.mak:98
+#: ../python/cioc/web/admin/templates/layout/edit.mak:91
 msgid "Layout Name"
 msgstr "Nom de l'agence"
 
-#: ../python/cioc/web/admin/templates/layout/edit.mak:112
+#: ../python/cioc/web/admin/templates/layout/edit.mak:105
 #: ../python/cioc/web/admin/templates/layout/index.mak:27
-#: ../python/cioc/web/admin/templates/template/edit.mak:524
+#: ../python/cioc/web/admin/templates/template/edit.mak:517
 msgid "Header"
 msgstr "En-tête"
 
-#: ../python/cioc/web/admin/templates/layout/edit.mak:112
+#: ../python/cioc/web/admin/templates/layout/edit.mak:105
 #: ../python/cioc/web/admin/templates/layout/index.mak:28
-#: ../python/cioc/web/admin/templates/template/edit.mak:526
+#: ../python/cioc/web/admin/templates/template/edit.mak:519
 msgid "Footer"
 msgstr "Message de bas de page"
 
-#: ../python/cioc/web/admin/templates/layout/edit.mak:112
+#: ../python/cioc/web/admin/templates/layout/edit.mak:105
 #: ../python/cioc/web/admin/templates/layout/index.mak:29
 msgid "CIC Basic Search"
 msgstr "Recherche simple CIC"
 
-#: ../python/cioc/web/admin/templates/layout/edit.mak:112
+#: ../python/cioc/web/admin/templates/layout/edit.mak:105
 #: ../python/cioc/web/admin/templates/layout/index.mak:30
 msgid "Volunteer Basic Search"
 msgstr "Recherche simple bénévolat"
 
-#: ../python/cioc/web/admin/templates/layout/edit.mak:116
+#: ../python/cioc/web/admin/templates/layout/edit.mak:109
 msgid "Layout Type"
 msgstr "Type de mise en page"
 
-#: ../python/cioc/web/admin/templates/layout/edit.mak:125
+#: ../python/cioc/web/admin/templates/layout/edit.mak:118
 msgid "HTML URL"
 msgstr "URL HTML"
 
-#: ../python/cioc/web/admin/templates/layout/edit.mak:127
-#: ../python/cioc/web/admin/templates/layout/edit.mak:140
+#: ../python/cioc/web/admin/templates/layout/edit.mak:120
+#: ../python/cioc/web/admin/templates/layout/edit.mak:133
 msgid "Fetch"
 msgstr "Extraire"
 
-#: ../python/cioc/web/admin/templates/layout/edit.mak:131
+#: ../python/cioc/web/admin/templates/layout/edit.mak:124
 msgid "HTML"
 msgstr "HTML"
 
-#: ../python/cioc/web/admin/templates/layout/edit.mak:138
+#: ../python/cioc/web/admin/templates/layout/edit.mak:131
 msgid "CSS URL"
 msgstr "URL CSS"
 
-#: ../python/cioc/web/admin/templates/layout/edit.mak:144
+#: ../python/cioc/web/admin/templates/layout/edit.mak:137
 msgid "CSS"
 msgstr "CSS"
 
@@ -4417,7 +4408,7 @@ msgstr ""
 "système cartographique."
 
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:90
-#: ../python/cioc/web/admin/templates/template/edit.mak:648
+#: ../python/cioc/web/admin/templates/template/edit.mak:641
 msgid "Link"
 msgstr "Lien"
 
@@ -4461,6 +4452,8 @@ msgstr ""
 "lorsqu'il n'y a pas de valeur dans le dossier cartographié."
 
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:123
+#: ../python/cioc/web/cic/templates/record.mak:133
+#: ../python/cioc/web/cic/templates/record.mak:140
 msgid "New Window"
 msgstr "Nouvelle fenêtre"
 
@@ -5358,7 +5351,7 @@ msgstr "Envoyer le profil au membre partenaire pour révision"
 
 #: ../python/cioc/web/admin/templates/sharingprofile/records_add.mak:45
 #: ../python/cioc/web/admin/templates/sharingprofile/records_remove.mak:55
-#: ../python/cioc/web/admin/templates/template/edit.mak:540
+#: ../python/cioc/web/admin/templates/template/edit.mak:533
 msgid "Info"
 msgstr "Info"
 
@@ -5687,7 +5680,7 @@ msgid "Text Colour"
 msgstr "Couleur du texte"
 
 #: ../python/cioc/web/admin/templates/template/colour_set_tmpl.mak:21
-#: ../python/cioc/web/admin/templates/template/edit.mak:361
+#: ../python/cioc/web/admin/templates/template/edit.mak:354
 msgid "Background Colour"
 msgstr "Couleur d'arrière-plan"
 
@@ -5893,211 +5886,211 @@ msgstr "Icône de raccourci"
 msgid "Mobile App Icon"
 msgstr "Icône de l'application mobile"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:331
+#: ../python/cioc/web/admin/templates/template/edit.mak:324
 msgid "Style Sheet"
 msgstr "Feuille de style"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:336
+#: ../python/cioc/web/admin/templates/template/edit.mak:329
 msgid "Extra CSS"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:341
+#: ../python/cioc/web/admin/templates/template/edit.mak:334
 msgid "Javascript Top"
 msgstr "Haut de page Javascript"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:346
+#: ../python/cioc/web/admin/templates/template/edit.mak:339
 msgid "Javascript Bottom"
 msgstr "Bas de page Javascript"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:351
+#: ../python/cioc/web/admin/templates/template/edit.mak:344
 msgid "Body Tag Extras"
 msgstr "Balises Body extra"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:356
+#: ../python/cioc/web/admin/templates/template/edit.mak:349
 msgid "Background Image URL"
 msgstr "URL de l'image de fond"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:370
+#: ../python/cioc/web/admin/templates/template/edit.mak:363
 msgid "Logo Background Colour"
 msgstr "Couleur d'arrière-plan pour le logo"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:379
+#: ../python/cioc/web/admin/templates/template/edit.mak:372
 msgid "Font Family"
 msgstr "Famille de police"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:386
+#: ../python/cioc/web/admin/templates/template/edit.mak:379
 msgid "Font Colour"
 msgstr "Couleur de la police"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:395
+#: ../python/cioc/web/admin/templates/template/edit.mak:388
 msgid "Alert Colour"
 msgstr "Couleur d'alerte"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:404
+#: ../python/cioc/web/admin/templates/template/edit.mak:397
 msgid "Link Colour"
 msgstr "Couleur du lien"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:413
+#: ../python/cioc/web/admin/templates/template/edit.mak:406
 msgid "Active Link Colour"
 msgstr "Couleur du lien actif"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:422
+#: ../python/cioc/web/admin/templates/template/edit.mak:415
 msgid "Visited Link Colour"
 msgstr "Couleur du lien visité"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:432
+#: ../python/cioc/web/admin/templates/template/edit.mak:425
 msgid "Bootstrap Container"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:433
-#: ../python/cioc/web/admin/templates/template/edit.mak:443
+#: ../python/cioc/web/admin/templates/template/edit.mak:426
+#: ../python/cioc/web/admin/templates/template/edit.mak:436
 msgid "These options do not apply to all Layouts"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:435
+#: ../python/cioc/web/admin/templates/template/edit.mak:428
 msgid "Fluid (Wide) Container"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:437
+#: ../python/cioc/web/admin/templates/template/edit.mak:430
 msgid "Contrast the Container Colour with the Background"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:442
+#: ../python/cioc/web/admin/templates/template/edit.mak:435
 msgid "View Title"
 msgstr "Titre de la vue"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:445
+#: ../python/cioc/web/admin/templates/template/edit.mak:438
 msgid "Small Title (Put the View Title in the Site Bar)"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:450
+#: ../python/cioc/web/admin/templates/template/edit.mak:443
 msgid "Header Layout"
 msgstr "Mise en page de l'en-tête"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:455
+#: ../python/cioc/web/admin/templates/template/edit.mak:448
 msgid "Include a search/menu link as a menu item"
 msgstr "Inclure un lien pour une recherche ou le menu comme un élément de menu"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:456
+#: ../python/cioc/web/admin/templates/template/edit.mak:449
 msgid "Include an icon in the search link"
 msgstr "Inclure une icône dans le lien de recherche"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:457
+#: ../python/cioc/web/admin/templates/template/edit.mak:450
 msgid "Include a suggest record link as a menu item"
 msgstr "Inclure un lien à suggérer un dossier comme un élément de menu"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:458
+#: ../python/cioc/web/admin/templates/template/edit.mak:451
 msgid "Include an icon in the suggest record link"
 msgstr "Inclure une icône dans le lien à suggérer un dossier"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:463
+#: ../python/cioc/web/admin/templates/template/edit.mak:456
 msgid "Footer Layout"
 msgstr "Mise en page du bas de page"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:474
+#: ../python/cioc/web/admin/templates/template/edit.mak:467
 msgid "CIC Search Layout"
 msgstr "Mise en page de la recherche CIC"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:486
+#: ../python/cioc/web/admin/templates/template/edit.mak:479
 msgid "Volunteer Search Layout"
 msgstr "Mise en page de la recherche bénévolat"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:499
+#: ../python/cioc/web/admin/templates/template/edit.mak:492
 msgid "Field Label"
 msgstr "l'étiquette de champ"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:503
+#: ../python/cioc/web/admin/templates/template/edit.mak:496
 msgid "Text Color"
 msgstr "Couleur du texte"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:511
+#: ../python/cioc/web/admin/templates/template/edit.mak:504
 msgid "Background Color"
 msgstr "Couleur d'arrière-plan"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:520
+#: ../python/cioc/web/admin/templates/template/edit.mak:513
 msgid "Content"
 msgstr "Contenu"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:522
+#: ../python/cioc/web/admin/templates/template/edit.mak:515
 msgid "Titles"
 msgstr "Titres"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:528
+#: ../python/cioc/web/admin/templates/template/edit.mak:521
 msgid "Menu"
 msgstr "Menu"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:532
+#: ../python/cioc/web/admin/templates/template/edit.mak:525
 msgid "Hover"
 msgstr "Survol"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:536
+#: ../python/cioc/web/admin/templates/template/edit.mak:529
 msgid "Highlight"
 msgstr "Surbrillance"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:543
+#: ../python/cioc/web/admin/templates/template/edit.mak:536
 msgid "Corner Radius"
 msgstr "Courbure du coin"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:552
+#: ../python/cioc/web/admin/templates/template/edit.mak:545
 msgid "jQuery Widget Font Size"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:564
+#: ../python/cioc/web/admin/templates/template/edit.mak:557
 msgid ""
 "Warning: the values below are deprecated and should not be used in new "
 "Template Layouts"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:567
+#: ../python/cioc/web/admin/templates/template/edit.mak:560
 msgid "Title Background Colour [OLD]"
 msgstr "Couleur de l'arrière-plan du titre [ANCIEN]"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:576
+#: ../python/cioc/web/admin/templates/template/edit.mak:569
 msgid "Title Text Colour [OLD]"
 msgstr "Couleur du texte du titre [ANCIEN]"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:585
+#: ../python/cioc/web/admin/templates/template/edit.mak:578
 msgid "Menu Background Colour [OLD]"
 msgstr "Couleur de l'arrière-plan du menu [ANCIEN]"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:594
+#: ../python/cioc/web/admin/templates/template/edit.mak:587
 msgid "Menu Text Colour [OLD]"
 msgstr "Couleur du texte du menu [ANCIEN]"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:631
+#: ../python/cioc/web/admin/templates/template/edit.mak:624
 msgid "Menu Items"
 msgstr "Commandes du menu"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:636
+#: ../python/cioc/web/admin/templates/template/edit.mak:629
 #, python-format
 msgid "Group %s"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:650
+#: ../python/cioc/web/admin/templates/template/edit.mak:643
 msgid "Group"
 msgstr "Groupe"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:651
+#: ../python/cioc/web/admin/templates/template/edit.mak:644
 msgid "Re-Order"
 msgstr "Réordonner"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:665
+#: ../python/cioc/web/admin/templates/template/edit.mak:658
 msgid "Add Menu Item"
 msgstr "Ajouter une Commande au menu"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:675
+#: ../python/cioc/web/admin/templates/template/edit.mak:668
 msgid "Delete Menu Item"
 msgstr "Supprimer un Commande au menu"
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:677
+#: ../python/cioc/web/admin/templates/template/edit.mak:670
 msgid "Link Location"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:678
+#: ../python/cioc/web/admin/templates/template/edit.mak:671
 msgid "Display Text"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/template/edit.mak:680
+#: ../python/cioc/web/admin/templates/template/edit.mak:673
 msgid "Drag to Re-Order Items"
 msgstr "Réordonner"
 
@@ -6482,9 +6475,9 @@ msgstr "Mise à jour d'enregistrement et de rétroaction"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:95
 #: ../python/cioc/web/admin/templates/views/edit.mak:732
-#: ../python/cioc/web/cic/record.py:782 ../python/cioc/web/cic/record.py:825
-#: ../python/cioc/web/cic/record.py:826 ../python/cioc/web/cic/record.py:851
-#: ../python/cioc/web/cic/record.py:858 ../python/cioc/web/cic/record.py:995
+#: ../python/cioc/web/cic/record.py:792 ../python/cioc/web/cic/record.py:835
+#: ../python/cioc/web/cic/record.py:836 ../python/cioc/web/cic/record.py:861
+#: ../python/cioc/web/cic/record.py:868 ../python/cioc/web/cic/record.py:1003
 msgid "Record Details"
 msgstr "Renseignements sur le dossier"
 
@@ -8169,7 +8162,7 @@ msgid "Search all in this Category"
 msgstr "Rechercher tous dans cette catégorie"
 
 #: ../python/cioc/web/cic/bsearch.py:596
-#: ../python/cioc/web/cic/templates/record.mak:101
+#: ../python/cioc/web/cic/templates/record.mak:120
 #: ../python/cioc/web/gbl/templates/shortcodes.mak:85
 msgid "Volunteer Opportunities"
 msgstr "Occasions de bénévolat"
@@ -8191,13 +8184,13 @@ msgstr "Fichier introuvable."
 #: ../python/cioc/web/cic/generalheading.py:340
 #: ../python/cioc/web/cic/generalheading_quicktaxonomy.py:64
 #: ../python/cioc/web/cic/publication.py:327
-#: ../python/cioc/web/cic/publication.py:461
-#: ../python/cioc/web/cic/publication.py:585
-#: ../python/cioc/web/cic/publication.py:618
-#: ../python/cioc/web/cic/publication.py:680
-#: ../python/cioc/web/cic/publication.py:717
-#: ../python/cioc/web/cic/publication.py:782
-#: ../python/cioc/web/cic/publication.py:810
+#: ../python/cioc/web/cic/publication.py:460
+#: ../python/cioc/web/cic/publication.py:583
+#: ../python/cioc/web/cic/publication.py:616
+#: ../python/cioc/web/cic/publication.py:678
+#: ../python/cioc/web/cic/publication.py:715
+#: ../python/cioc/web/cic/publication.py:780
+#: ../python/cioc/web/cic/publication.py:808
 #: ../python/cioc/web/cic/updatepubs.py:96
 #: ../python/cioc/web/cic/updatepubs.py:206
 #: ../python/cioc/web/cic/updatepubs.py:322
@@ -8247,7 +8240,7 @@ msgid "Heading Not Found"
 msgstr "L'En-tête est introuvable"
 
 #: ../python/cioc/web/cic/generalheading.py:453
-#: ../python/cioc/web/cic/publication.py:553
+#: ../python/cioc/web/cic/publication.py:551
 msgid "Publication Not Found"
 msgstr "La publication est introuvable"
 
@@ -8292,118 +8285,118 @@ msgid "The Publication was successfully updated."
 msgstr "La publication a été mise à jour avec succès."
 
 #: ../python/cioc/web/cic/publication.py:434
-#: ../python/cioc/web/cic/publication.py:478
+#: ../python/cioc/web/cic/publication.py:476
 #: ../python/cioc/web/cic/templates/publication/edit.mak:40
 msgid "Add Publication"
 msgstr "Ajouter une publication"
 
 #: ../python/cioc/web/cic/publication.py:436
-#: ../python/cioc/web/cic/publication.py:480
+#: ../python/cioc/web/cic/publication.py:478
 #, python-format
 msgid "Edit Publication: %s"
 msgstr "Modifier la publication : %s"
 
-#: ../python/cioc/web/cic/publication.py:645
+#: ../python/cioc/web/cic/publication.py:643
 #: ../python/cioc/web/cic/updatepubs.py:392
 #: ../python/cioc/web/cic/updatepubs.py:399
 msgid "The Publication was successfully deleted."
 msgstr "La publication a été supprimée avec succès."
 
-#: ../python/cioc/web/cic/publication.py:652
+#: ../python/cioc/web/cic/publication.py:650
 msgid "Unable to delete Publication:"
 msgstr "La publication ne peut être supprimée :"
 
-#: ../python/cioc/web/cic/publication.py:659
+#: ../python/cioc/web/cic/publication.py:657
 #: ../python/cioc/web/cic/updatepubs.py:402
 msgid "Unable to delete Publication: "
 msgstr "La publication ne peut être supprimée :"
 
-#: ../python/cioc/web/cic/publication.py:689
+#: ../python/cioc/web/cic/publication.py:687
 msgid "Manage Publication from Records"
 msgstr ""
 
-#: ../python/cioc/web/cic/publication.py:746
+#: ../python/cioc/web/cic/publication.py:744
 msgid "The records were successfuly cleared."
 msgstr ""
 
-#: ../python/cioc/web/cic/publication.py:752
+#: ../python/cioc/web/cic/publication.py:750
 msgid "Unable to clear records:"
 msgstr ""
 
-#: ../python/cioc/web/cic/publication.py:758
+#: ../python/cioc/web/cic/publication.py:756
 msgid "Unable to clear records: "
 msgstr ""
 
-#: ../python/cioc/web/cic/publication.py:831
+#: ../python/cioc/web/cic/publication.py:829
 msgid "The Publication was successfully shared."
 msgstr "La publication a été partagée avec succès."
 
-#: ../python/cioc/web/cic/publication.py:833
+#: ../python/cioc/web/cic/publication.py:831
 msgid "The Publication was successfully made local."
 msgstr "La publication a été rendue locale avec succès."
 
-#: ../python/cioc/web/cic/publication.py:838
+#: ../python/cioc/web/cic/publication.py:836
 msgid "Unable to make the Publication shared: "
 msgstr "La publication ne peut être partagée : "
 
-#: ../python/cioc/web/cic/publication.py:840
+#: ../python/cioc/web/cic/publication.py:838
 msgid "Unable to make the Publication local: "
 msgstr "La publication ne peut être rendue locale : "
 
-#: ../python/cioc/web/cic/record.py:190
+#: ../python/cioc/web/cic/record.py:191
 #, python-format
 msgid "There is %d reminder."
 msgid_plural "There are %d reminders."
 msgstr[0] "Il y a %d rappel."
 msgstr[1] "Il y a %d rappels."
 
-#: ../python/cioc/web/cic/record.py:196
+#: ../python/cioc/web/cic/record.py:197
 #, python-format
 msgid "%d is due."
 msgid_plural "%d are due."
 msgstr[0] "%d sont end retard."
 msgstr[1] "%d en retard."
 
-#: ../python/cioc/web/cic/record.py:203
+#: ../python/cioc/web/cic/record.py:205
 msgid "Click to view."
 msgstr "Cliquer pour visualiser."
 
-#: ../python/cioc/web/cic/record.py:205
+#: ../python/cioc/web/cic/record.py:207
 msgid "REMINDERS"
 msgstr "RAPPELS"
 
-#: ../python/cioc/web/cic/record.py:244
+#: ../python/cioc/web/cic/record.py:246
 #: ../python/cioc/web/templates/displayoptions.mak:68
 #: ../python/cioc/web/templates/displayoptions.mak:133
 msgid "Update Record"
 msgstr "Mise à jour du dossier"
 
-#: ../python/cioc/web/cic/record.py:257
+#: ../python/cioc/web/cic/record.py:259
 #, python-format
 msgid "Create Equivalent - %s"
 msgstr "Créer le dossier équivalent - %s"
 
-#: ../python/cioc/web/cic/record.py:263
+#: ../python/cioc/web/cic/record.py:265
 msgid "Copy Record"
 msgstr "Copier le dossier"
 
-#: ../python/cioc/web/cic/record.py:273
+#: ../python/cioc/web/cic/record.py:275
 msgid "Delete Record"
 msgstr "Supprimer le dossier"
 
-#: ../python/cioc/web/cic/record.py:284
+#: ../python/cioc/web/cic/record.py:286
 msgid "Restore Record"
 msgstr "Restaurer le dossier"
 
-#: ../python/cioc/web/cic/record.py:291
+#: ../python/cioc/web/cic/record.py:293
 msgid "Data Management"
 msgstr "Gestion de données"
 
-#: ../python/cioc/web/cic/record.py:306
+#: ../python/cioc/web/cic/record.py:308
 msgid "Update Service Categories"
 msgstr "Mettre à jour les catégories de services"
 
-#: ../python/cioc/web/cic/record.py:317
+#: ../python/cioc/web/cic/record.py:319
 #: ../python/cioc/web/cic/updatepubs.py:172
 #: ../python/cioc/web/cic/updatepubs.py:216
 #: ../python/cioc/web/cic/updatepubs.py:326
@@ -8411,87 +8404,82 @@ msgstr "Mettre à jour les catégories de services"
 msgid "Update Publications"
 msgstr "Mise à jour des publications"
 
-#: ../python/cioc/web/cic/record.py:329
+#: ../python/cioc/web/cic/record.py:331
 msgid "Update Description/Headings"
 msgstr "Mettre à jour la description ou les en-têtes"
 
-#: ../python/cioc/web/cic/record.py:336
+#: ../python/cioc/web/cic/record.py:338
 msgid "Classification"
 msgstr ""
 
-#: ../python/cioc/web/cic/record.py:359
+#: ../python/cioc/web/cic/record.py:361
 #: ../python/cioc/web/templates/displayoptions.mak:73
 #: ../python/cioc/web/templates/displayoptions.mak:139
 msgid "Email Update Request"
 msgstr "Demander la mise à jour par courriel"
 
-#: ../python/cioc/web/cic/record.py:368
+#: ../python/cioc/web/cic/record.py:370
 msgid "Mail Form (New Window)"
 msgstr "Expédier le formulaire par la poste (nouvelle fenêtre)"
 
-#: ../python/cioc/web/cic/record.py:375
+#: ../python/cioc/web/cic/record.py:377
 msgid "Request Update"
 msgstr "Demander une mise à jour"
 
-#: ../python/cioc/web/cic/record.py:399
+#: ../python/cioc/web/cic/record.py:401
 msgid "Create Volunteer Opportunity"
 msgstr "Créer une occasion de bénévolat"
 
-#: ../python/cioc/web/cic/record.py:412
+#: ../python/cioc/web/cic/record.py:414
 msgid "Request Update of Volunteer Opportunities"
 msgstr "Demander une mise à jour des opportunités de bénévolat"
 
-#: ../python/cioc/web/cic/record.py:456
+#: ../python/cioc/web/cic/record.py:470
 msgid "Your Search"
 msgstr "Votres recherche"
 
+#: ../python/cioc/web/cic/record.py:471
 msgid "viewing"
 msgstr "affichage"
 
-#: ../python/cioc/web/cic/record.py:469
-msgid "First"
-msgstr "Premier"
-
-#: ../python/cioc/web/cic/record.py:470
-msgid "Previous"
-msgstr "Précédent"
-
-#: ../python/cioc/web/cic/record.py:489
-msgid "Next"
-msgstr "Suivant"
-
-#: ../python/cioc/web/cic/record.py:490
-msgid "Last"
-msgstr "Dernier"
-
-#: ../python/cioc/web/cic/record.py:498
+#: ../python/cioc/web/cic/record.py:473
 msgid "of"
 msgstr "de"
 
-#: ../python/cioc/web/cic/record.py:501
-#: ../python/cioc/web/stats/templates/auto_viewsbyro.mak:86
-#: ../python/cioc/web/stats/templates/auto_viewsbyview.mak:86
-msgid "Total"
-msgstr "Total"
+#: ../python/cioc/web/cic/record.py:491
+msgid "First"
+msgstr "Premier"
 
-#: ../python/cioc/web/cic/record.py:781
+#: ../python/cioc/web/cic/record.py:492
+msgid "Previous"
+msgstr "Précédent"
+
+#: ../python/cioc/web/cic/record.py:508
+msgid "Next"
+msgstr "Suivant"
+
+#: ../python/cioc/web/cic/record.py:509
+msgid "Last"
+msgstr "Dernier"
+
+#: ../python/cioc/web/cic/record.py:791
 msgid "Error: An unkown error occurred"
 msgstr "Erreur : Une erreur d'origine inconnue s'est produite"
 
-#: ../python/cioc/web/cic/record.py:828
+#: ../python/cioc/web/cic/record.py:838
 #, python-format
 msgid "Error: No record exists with the ID: %s."
 msgstr "Erreur : Il n'existe pas de dossier avec l'identifiant : %s."
 
-#: ../python/cioc/web/cic/record.py:840
+#: ../python/cioc/web/cic/record.py:850
 msgid "Error: This record is not available in the selected language."
 msgstr "Erreur : Ce dossier n'est pas disponible dans la langue sélectionnée."
 
-#: ../python/cioc/web/cic/record.py:847
+#: ../python/cioc/web/cic/record.py:857
 msgid "Record Details:"
 msgstr "Renseignements sur le dossier :"
 
-#: ../python/cioc/web/cic/record.py:854
+#: ../python/cioc/web/cic/record.py:864
 #, python-format
 msgid ""
 "Error: The record you requested (%s) exists in the database, but access "
@@ -8813,155 +8801,163 @@ msgstr "En-têtes courants"
 msgid "Add New Headings"
 msgstr "Ajout de nouveaux en-têtes"
 
-#: ../python/cioc/web/cic/templates/record.mak:55
+#: ../python/cioc/web/cic/templates/record.mak:68
 msgid "Preview in View"
 msgstr "Aperçu dans la vue"
 
-#: ../python/cioc/web/cic/templates/record.mak:77
+#: ../python/cioc/web/cic/templates/record.mak:95
 msgid "Site:"
 msgstr "Site :"
 
-#: ../python/cioc/web/cic/templates/record.mak:80
+#: ../python/cioc/web/cic/templates/record.mak:98
 msgid "Service:"
 msgstr "Service :"
 
-#: ../python/cioc/web/cic/templates/record.mak:97
+#: ../python/cioc/web/cic/templates/record.mak:113
 msgid "Suggest Update"
 msgstr "Proposer une mise à jour"
 
-#: ../python/cioc/web/cic/templates/record.mak:104
+#: ../python/cioc/web/cic/templates/record.mak:125
+msgid "New Volunteer Opportunity"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/record.mak:125
 msgid "Suggest a Volunteer Opportunity"
 msgstr "Proposer une occasion de bénévolat"
 
-#: ../python/cioc/web/cic/templates/record.mak:111
-msgid "PDF (New Window)"
-msgstr "PDF (nouvelle fenêtre)"
+#: ../python/cioc/web/cic/templates/record.mak:133
+msgid "Print Version"
+msgstr "Version imprimable"
 
-#: ../python/cioc/web/cic/templates/record.mak:115
-#: ../python/cioc/web/cic/templates/record.mak:290
-msgid "NON PUBLIC"
-msgstr "INTERNE"
+#: ../python/cioc/web/cic/templates/record.mak:140
+msgid "PDF Version"
+msgstr "Version PDF"
 
-#: ../python/cioc/web/cic/templates/record.mak:119
-msgid "DELETED"
-msgstr "SUPPRIMÉ"
-
-#: ../python/cioc/web/cic/templates/record.mak:121
-msgid "TO BE DELETED"
-msgstr "POUR SUPPRESSION"
-
-#: ../python/cioc/web/cic/templates/record.mak:126
+#: ../python/cioc/web/cic/templates/record.mak:146
 msgid "CHECK FEEDBACK"
 msgstr "VÉRIFIER LA RÉTROACTION"
 
-#: ../python/cioc/web/cic/templates/record.mak:129
+#: ../python/cioc/web/cic/templates/record.mak:149
 msgid "CHECK PUB FEEDBACK"
 msgstr "VÉRIFIER LA RÉTROACTION AU SUJET DE LA PUBLICATION"
 
-#: ../python/cioc/web/cic/templates/record.mak:145
+#: ../python/cioc/web/cic/templates/record.mak:158
+#: ../python/cioc/web/cic/templates/record.mak:340
+msgid "NON PUBLIC"
+msgstr "INTERNE"
+
+#: ../python/cioc/web/cic/templates/record.mak:163
+msgid "DELETED"
+msgstr "SUPPRIMÉ"
+
+#: ../python/cioc/web/cic/templates/record.mak:165
+msgid "TO BE DELETED"
+msgstr "POUR SUPPRESSION"
+
+#: ../python/cioc/web/cic/templates/record.mak:176
 msgid "Action:"
 msgstr "Action :"
 
-#: ../python/cioc/web/cic/templates/record.mak:156
-msgid "Share:"
-msgstr "Partager :"
-
-#: ../python/cioc/web/cic/templates/record.mak:171
+#: ../python/cioc/web/cic/templates/record.mak:190
 msgid "Record #:"
 msgstr "No. de dossier :"
 
-#: ../python/cioc/web/cic/templates/record.mak:173
+#: ../python/cioc/web/cic/templates/record.mak:195
 msgid "Last Modified:"
 msgstr "Dernière modification :"
 
-#: ../python/cioc/web/cic/templates/record.mak:175
+#: ../python/cioc/web/cic/templates/record.mak:200
 msgid "Last Full Update:"
 msgstr "Dernière mise à jour complète :"
 
-#: ../python/cioc/web/cic/templates/record.mak:177
+#: ../python/cioc/web/cic/templates/record.mak:205
 msgid "Update Schedule:"
 msgstr "Calendrier des mises à jour :"
 
-#: ../python/cioc/web/cic/templates/record.mak:185
+#: ../python/cioc/web/cic/templates/record.mak:209
 msgid "Record Owner:"
 msgstr "Propriétaire du dossier :"
 
-#: ../python/cioc/web/cic/templates/record.mak:186
+#: ../python/cioc/web/cic/templates/record.mak:213
 msgid "Date Created:"
 msgstr "Date de création :"
 
-#: ../python/cioc/web/cic/templates/record.mak:187
+#: ../python/cioc/web/cic/templates/record.mak:218
 msgid "Date Deleted:"
 msgstr "Date de suppression :"
 
-#: ../python/cioc/web/cic/templates/record.mak:187
-#: ../python/cioc/web/cic/templates/record.mak:190
+#: ../python/cioc/web/cic/templates/record.mak:219
+#: ../python/cioc/web/cic/templates/record.mak:225
 msgid "N/A"
 msgstr "S/O"
 
-#: ../python/cioc/web/cic/templates/record.mak:190
+#: ../python/cioc/web/cic/templates/record.mak:224
 msgid "Last Email:"
 msgstr "Dernier courriel :"
 
-#: ../python/cioc/web/cic/templates/record.mak:230
+#: ../python/cioc/web/cic/templates/record.mak:233
+msgid "Share:"
+msgstr "Partager :"
+
+#: ../python/cioc/web/cic/templates/record.mak:279
 msgid "Agency Overview"
 msgstr "Aperçu de l'Agence"
 
-#: ../python/cioc/web/cic/templates/record.mak:231
+#: ../python/cioc/web/cic/templates/record.mak:280
 msgid "About This Agency"
 msgstr "Informations sur cette agence"
 
-#: ../python/cioc/web/cic/templates/record.mak:232
+#: ../python/cioc/web/cic/templates/record.mak:281
 msgid "Agency Locations"
 msgstr "Les emplacements de l'Agence"
 
-#: ../python/cioc/web/cic/templates/record.mak:233
+#: ../python/cioc/web/cic/templates/record.mak:282
 msgid "Agency Services"
 msgstr "Services de l'Agence"
 
-#: ../python/cioc/web/cic/templates/record.mak:234
+#: ../python/cioc/web/cic/templates/record.mak:283
 msgid "Services at this Location"
 msgstr "Programmes sur ce site"
 
-#: ../python/cioc/web/cic/templates/record.mak:235
+#: ../python/cioc/web/cic/templates/record.mak:284
 msgid " other Service(s) at this Location"
 msgstr " autre(s) programme(s) sur ce site"
 
-#: ../python/cioc/web/cic/templates/record.mak:235
+#: ../python/cioc/web/cic/templates/record.mak:284
 msgid " Service(s) at this Location"
 msgstr " programme(s) sur ce site"
 
-#: ../python/cioc/web/cic/templates/record.mak:236
+#: ../python/cioc/web/cic/templates/record.mak:285
 msgid "Locations for this Service"
 msgstr "Sites pour ce programme"
 
-#: ../python/cioc/web/cic/templates/record.mak:237
+#: ../python/cioc/web/cic/templates/record.mak:286
 msgid " other Location(s) for this Service"
 msgstr " autres site(s) pour ce programme"
 
-#: ../python/cioc/web/cic/templates/record.mak:237
+#: ../python/cioc/web/cic/templates/record.mak:286
 msgid " Location(s) for this Service"
 msgstr " site(s) pour ce programme"
 
-#: ../python/cioc/web/cic/templates/record.mak:238
+#: ../python/cioc/web/cic/templates/record.mak:287
 msgid "Similar Service(s)"
 msgstr "Service(s) similaire(s)"
 
-#: ../python/cioc/web/cic/templates/record.mak:239
+#: ../python/cioc/web/cic/templates/record.mak:288
 msgid " Similar Service(s) from this Agency"
 msgstr " Service(s) similaire(s) de cette agence"
 
-#: ../python/cioc/web/cic/templates/record.mak:261
+#: ../python/cioc/web/cic/templates/record.mak:311
 msgid "Search in New Window"
 msgstr "Rechercher dans une nouvelle fenêtre"
 
-#: ../python/cioc/web/cic/templates/record.mak:355
+#: ../python/cioc/web/cic/templates/record.mak:401
 #: ../python/cioc/web/cic/templates/reminders/edit.mak:41
 #: ../python/cioc/web/cic/templates/reminders/index.mak:52
 msgid "[read more]"
 msgstr "[lire plus]"
 
-#: ../python/cioc/web/cic/templates/record.mak:355
+#: ../python/cioc/web/cic/templates/record.mak:401
 #: ../python/cioc/web/cic/templates/reminders/edit.mak:41
 #: ../python/cioc/web/cic/templates/reminders/index.mak:52
 msgid "[less]"
@@ -10321,6 +10317,10 @@ msgstr ""
 msgid "Icons"
 msgstr "Icônes"
 
+#: ../python/cioc/web/gbl/templates/shortcodes.mak:238
+msgid "Enable FontAwesome icons"
+msgstr ""
+
 #: ../python/cioc/web/gbl/templates/shortcodes.mak:244
 msgid "Generated Short Code"
 msgstr ""
@@ -10652,6 +10652,11 @@ msgstr "Connectés"
 #: ../python/cioc/web/stats/templates/auto_viewsbyview.mak:85
 msgid "Public"
 msgstr "Public"
+
+#: ../python/cioc/web/stats/templates/auto_viewsbyro.mak:86
+#: ../python/cioc/web/stats/templates/auto_viewsbyview.mak:86
+msgid "Total"
+msgstr "Total"
 
 #: ../python/cioc/web/templates/agencyinfo.mak:28
 msgid "By <strong>Mail</strong> at:"
@@ -11167,4 +11172,10 @@ msgstr "Voir votre profil"
 
 #~ msgid "Using Google to search when CIOC is offline"
 #~ msgstr "Utiliser la recherche Google quand CIOC est hors ligne"
+
+#~ msgid "Icon Library"
+#~ msgstr "Bibliothèque d'icônes"
+
+#~ msgid "Include Font Awesome CSS (Bootstrap CDN)"
+#~ msgstr "Inclure le CSS Font Awesome (Bootstrap CDN)"
 

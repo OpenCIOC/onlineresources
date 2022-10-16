@@ -361,7 +361,7 @@ Sub setTxtImport()
 			TXT_SKIP_FIELDS = "Ne pas importer les champs confidentiels"
 			TXT_SKIP_RECORD = "Reporter à plus tard le traitement du dossier complet"
 			TXT_SOURCE_DATABASE = "Base de données source"
-			TXT_SOURCE_DATABASE_CODE = "TRANSLATE_FR -- Source Database Code"
+			TXT_SOURCE_DATABASE_CODE = "Code de la base de données source"
 			TXT_TAXONOMY_INDEXING_DOES_NOT_MATCH = "L'indexation taxonomique ne permet pas de correspondance avec les en-têtes" & TXT_COLON
 			TXT_THIS_DATASET_INCLUDES = "TRANSLATE_FR -- This dataset includes "
 			TXT_TO_IMPORT_SELECT = "Pour importer ces dossiers dans la base de données, choisir parmi les options ci-dessous."

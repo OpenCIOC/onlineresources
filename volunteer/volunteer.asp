@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -44,7 +44,6 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../text/txtAgencyContact.asp" -->
 <!--#include file="../text/txtCommonForm.asp" -->
 <!--#include file="../text/txtDetails.asp" -->
-<!--#include file="../text/txtDetailsVOL.asp" -->
 <!--#include file="../text/txtEntryForm.asp" -->
 <!--#include file="../text/txtFormSecurity.asp" -->
 <!--#include file="../text/txtGeneralForm.asp" -->

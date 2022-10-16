@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -135,7 +135,7 @@ Call closeRobotNamesListRst()
 End If
 %>
 <tr>	
-	<td class="FieldLabel"><%=TXT_PRINT_VERSION%></td>
+	<td class="FieldLabel"><%=TXT_PRINT_VERSION_NW%></td>
 	<td><label for="PrintMd_Yes"><input type="radio" name="PrintMd" id="PrintMd_Yes" value="on">&nbsp;<%=TXT_YES%></label>
 	<label for="PrintMd_No"><input type="radio" name="PrintMd" id="PrintMd_No" value="" checked>&nbsp;<%=TXT_NO%></label></td>
 </tr>
