@@ -213,7 +213,7 @@ Sub getLanguagesFields(strFieldDisplay)
 		.Parameters.Append .CreateParameter("@LNIDs", adVarChar, adParamInput, 5000, strIDList)
 	End With
 	Set rsLanguage = cmdLanguage.Execute
-	
+
 	makeLanguageDetailsMap(rsLanguage)
 	Dim strXML, strEmailText, strEmailCon, bChanged, strSubIDList, aSubIDList, indID, bChecked, strLNNote, aDetailNames, strXMLInner, strExistingDetail, i
 	bChanged = False
@@ -231,7 +231,7 @@ Sub getLanguagesFields(strFieldDisplay)
 	With rsLanguage
 		While Not .EOF
 			strSubIDList = vbNullString
-			bChecked = InStr(strIDList, "<" & .Fields("LN_ID") & ">") > 0 
+			bChecked = InStr(strIDList, "<" & .Fields("LN_ID") & ">") > 0
 			If bChecked Then
 				strLNNote = Trim(Request("LN_NOTES_" & .Fields("LN_ID")))
 				strSubIDList = Trim(Request("LND_" & .Fields("LN_ID")))
@@ -265,7 +265,7 @@ Sub getLanguagesFields(strFieldDisplay)
 				strEmailText = strEmailText & strEmailCon & .Fields("LanguageName")
 				If Not Nl(strSubIDList) Or Not Nl(strLNNote) Then
 					strEmailText = strEmailText & TXT_COLON
-				End If 
+				End If
 				If Not Nl(strSubIDList) Then
 					strEmailText = strEmailText & Join(aDetailNames, ", ")
 				End If
@@ -276,7 +276,7 @@ Sub getLanguagesFields(strFieldDisplay)
 				strEmailCon = " ; "
 				strXML = strXML & "<LN ID=" & XMLQs(.Fields("LN_ID")) & StringIf(Not Nl(strLNNote), " NOTE=" & XMLQs(strLNNote)) & _
 						IIf(Not Nl(strXMLInner), ">" & strXMLInner & "</LN>", "/>")
-					
+
 			End If
 			If .Fields("IS_SELECTED") <> IIf(bChecked, 1, 0) Then
 				bChanged = True
@@ -375,16 +375,32 @@ Sub getGeocodeFields(strFieldDisplay)
 	End If
 End Sub
 
+Function getCombinedLink(strField)
+	Dim strVal
+	strVal = vbNullString
+	If Not bSuggest Then
+		strVal = Nz(rsOrg(strField & "_PROTOCOL"), "http://") & rsOrg(strField)
+	End If
+	getCombinedLink = strVal
+End Function
+
+Sub getLogoAddressPart(strFieldPartName, strField)
+	Dim strFieldVal, strFieldProto
+	strFieldVal = getNormalizedValue(Request(strField))
+	Call extractWebProtocol(strFieldVal, strFieldProto)
+
+	strFieldVal = getStrSetValue2(strFieldProto & strFieldVal, getCombinedLink(strField))
+	If addInsertField(strField,QsNNl(strFieldVal),strInsertIntoCFB,strInsertValueCFB) Then
+		Call addEmailField(strFieldPartName,strFieldVal)
+	End If
+End Sub
+
 Sub getLogoAddressFields(strFieldDisplay)
 	Dim strFieldVal
-	strFieldVal = getStrSetValue("LOGO_ADDRESS")
-	If addInsertField("LOGO_ADDRESS",QsNNl(strFieldVal),strInsertIntoCFB,strInsertValueCFB) Then
-		Call addEmailField(TXT_LOGO_ADDRESS,strFieldVal)
-	End If
-	strFieldVal = getStrSetValue("LOGO_ADDRESS_LINK")
-	If addInsertField("LOGO_ADDRESS_LINK",QsNNl(strFieldVal),strInsertIntoCFB,strInsertValueCFB) Then
-		Call addEmailField(TXT_LOGO_LINK_ADDRESS,strFieldVal)
-	End If
+
+	Call getLogoAddressPart(TXT_LOGO_ADDRESS, "LOGO_ADDRESS")
+	Call getLogoAddressPart(TXT_LOGO_LINK_ADDRESS, "LOGO_ADDRESS_LINK")
+
 	strFieldVal = getStrSetValue("LOGO_ADDRESS_HOVER_TEXT")
 	If addInsertField("LOGO_ADDRESS_HOVER_TEXT",QsNNl(strFieldVal),strInsertIntoCFB,strInsertValueCFB) Then
 		Call addEmailField(TXT_LOGO_HOVER_TEXT,strFieldVal)
@@ -399,7 +415,7 @@ Sub getMailAddressFields(strFieldDisplay)
 	Dim aStreetType, _
 		strOldStreetType, _
 		bOldAfterName
-	
+
 	aStreetType = Split(Trim(Request("MAIL_STREET_TYPE")),"|")
 
 	If Not bSuggest Then
@@ -508,7 +524,7 @@ Sub getSiteAddressFields(strFieldDisplay)
 	Dim aStreetType, _
 		strOldStreetType, _
 		bOldAfterName
-	
+
 	aStreetType = Split(Trim(Request("SITE_STREET_TYPE")),"|")
 
 	If Not bSuggest Then
@@ -612,7 +628,7 @@ End Sub
 
 Sub getSpaceAvailableFields(strFieldDisplay)
 	Dim strFieldVal
-	strFieldVal = getCbSetValue("SPACE_AVAILABLE", rsFields.Fields("CheckboxOnText"), rsFields.Fields("CheckboxOffText"))	
+	strFieldVal = getCbSetValue("SPACE_AVAILABLE", rsFields.Fields("CheckboxOnText"), rsFields.Fields("CheckboxOffText"))
 	If addInsertField("SPACE_AVAILABLE",QsNNl(strFieldVal),strInsertIntoCCFB,strInsertValueCCFB) Then
 		Call addEmailField(strFieldDisplay,strFieldVal)
 	End If
@@ -988,15 +1004,15 @@ If addInsertField("AUTH_TYPE",QsNl(Request("Auth")),strInsertIntoFBE,strInsertVa
 				Dim bAuthInquiry, _
 					bAuthOnline, _
 					bAuthPrint
-				
+
 				bAuthInquiry = Request("AuthInquiry")="on"
 				bAuthOnline = Request("AuthOnline")="on"
 				bAuthPrint = Request("AuthPrint")="on"
-			
+
 				Call addInsertField("AUTH_INQUIRY",IIf(bAuthInquiry,SQL_TRUE,SQL_FALSE),strInsertIntoFBE,strInsertValueFBE)
 				Call addInsertField("AUTH_ONLINE",IIf(bAuthOnline,SQL_TRUE,SQL_FALSE),strInsertIntoFBE,strInsertValueFBE)
 				Call addInsertField("AUTH_PRINT",IIf(bAuthPrint,SQL_TRUE,SQL_FALSE),strInsertIntoFBE,strInsertValueFBE)
-			
+
 				strFieldVal = TXT_AUTH_GIVEN_FOR & _
 					IIf(bAuthInquiry,TXT_USE_INQUIRY & "; ",vbNullString) & _
 					IIf(bAuthOnline,TXT_USE_ONLINE & "; ",vbNullString) & _
@@ -1145,7 +1161,7 @@ While Not rsFields.EOF
 					strFieldVal = getStrSetValue(strFieldName)
 					strFieldValDisplay = getDropDownValue(strFieldVal,"dbo.fn_CIC_DisplayExtraDropDown",True,strFieldName)
 				ElseIf rsFields.Fields("FormFieldType") = "c" Then
-					strFieldVal = getCbSetValue(strFieldName, rsFields.Fields("CheckboxOnText"), rsFields.Fields("CheckboxOffText"))			
+					strFieldVal = getCbSetValue(strFieldName, rsFields.Fields("CheckboxOnText"), rsFields.Fields("CheckboxOffText"))
 				ElseIf rsFields.Fields("FormFieldType") = "d" Then
 					strFieldVal = getDateSetValue(strFieldName)
 				Else
@@ -1158,7 +1174,7 @@ While Not rsFields.EOF
 					If Not Nl(strFieldVal) Then
 						dicExtraFb.Add strFieldName, strFieldVal
 						Call addEmailField(rsFields.Fields("FieldDisplay"),Nz(strFieldValDisplay,strFieldVal))
-					End If									
+					End If
 				Else
 					Select Case rsFields.Fields("FieldType")
 						Case "GBL"
@@ -1212,7 +1228,7 @@ While Not rsFields.EOF
 									Case "QUALITY"
 										strFieldValDisplay = getDropDownValue(strFieldVal,"dbo.fn_CIC_FullQuality",False,Null)
 									Case "RECORD_TYPE"
-										strFieldValDisplay = getDropDownValue(strFieldVal,"dbo.fn_CIC_FullRecordType",False,Null)			
+										strFieldValDisplay = getDropDownValue(strFieldVal,"dbo.fn_CIC_FullRecordType",False,Null)
 									Case "WARD"
 										strFieldValDisplay = getDropDownValue(strFieldVal,"dbo.fn_CIC_FullWard",False,Null)
 									Case Else

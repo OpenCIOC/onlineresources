@@ -39,7 +39,8 @@ def getEventScheduleFields_l(
 	changed = False
 	lines = []
 	for sched_id, schedule in existing_value:
-		new_schedule = [(k,six.text_type(format_time_if_iso(v) if k.endswith('_TIME') else format_date_if_iso(v) if k.endswith('_DATE') else int(v) if isinstance(v, bool) else v)) for k, v in feedback_map.get(sched_id, schedule)]
+		new_schedule = prepEscapeEventScheduleValuesForXML(feedback_map.get(sched_id, schedule))
+		new_schedule.sort()
 		if new_schedule != sorted(schedule):
 			changed = True
 
@@ -54,16 +55,16 @@ def getEventScheduleFields_l(
 			lines.append(line)
 
 	for sched_id, schedule in feedback_schedules:
-		if not six.text_type(sched_id).startswith(u'NEW'):
+		if not str(sched_id).startswith(u'NEW'):
 			continue
 
 		changed = True
 		line = format_event_schedule_line(dict(schedule))
 		lines.append(line)
-	
+
 	if changed:
 		xml = convertEventScheduleValuesToXML(feedback_schedules)
-		scheduleAddInsertField(u'<SCHEDULES>{}</SCHEDULES>'.format(xml)) 
+		scheduleAddInsertField(u'<SCHEDULES>{}</SCHEDULES>'.format(xml))
 	if lines:
 		addEmailField(strFieldDisplay, u'\n'.join(lines))
 
@@ -76,7 +77,7 @@ def sanitizeHTML(html):
 <%
 
 Dim strEmailContents
-	
+
 Sub addEmailField(strFldName,strInsert)
 	strEmailContents = strEmailContents & vbCrLf & vbCrLf & strFldName & TXT_COLON & strInsert
 End Sub
@@ -143,13 +144,15 @@ Function getContactStrSetValue(strContactType, strFldName, xmlNode)
 	getContactStrSetValue = strNewValue
 End Function
 
-Function getStrSetValue(strFldName)
-	Dim strOldValue, strNewValue
-	strNewValue = Replace(Replace(Trim(CStr(Request(strFldName))), vbCr, vbNullString), vbLf, vbCrLf)
+Function getNormalizedValue(strValue)
+	getNormalizedValue = Replace(Replace(Trim(CStr(Ns(strValue))), vbCr, vbNullString), vbLf, vbCrLf)
+End Function
+
+Function getStrSetValue2(strNewValue, strOldValue)
+	strNewValue = getNormalizedValue(strNewValue)
 	If Not bSuggest Then
-		strOldValue = rsOrg(strFldName)
+		strOldValue = getNormalizedValue(strOldValue)
 		If Not Nl(strOldValue) Then
-			strOldValue = Replace(Replace(Trim(CStr(strOldValue)), vbCr, vbNullString), vbLf, vbCrLf)
 			If strOldValue = strNewValue Then
 				strNewValue = Null
 			ElseIf Nl(strNewValue) Then
@@ -157,7 +160,16 @@ Function getStrSetValue(strFldName)
 			End If
 		End If
 	End If
-	getStrSetValue = strNewValue
+	getStrSetValue2 = strNewValue
+End Function
+
+Function getStrSetValue(strFldName)
+	Dim strOldValue, strNewValue
+	strNewValue = Request(strFldName)
+	If Not bSuggest Then
+		strOldValue = rsOrg(strFldName)
+	End If
+	getStrSetValue = getStrSetValue2(strNewValue, strOldValue)
 End Function
 
 Function getBasicListSetValue(strFldName,strLBracket,strRBracket)
@@ -210,21 +222,21 @@ Function getCbSetValue(strFldName,strOnText,strOffText)
 		strNewValue = strOnText
 	Else
 		strNewValue = strOffText
-	End If			
+	End If
 	getCbSetValue = strNewValue
 End Function
 
 Sub getContactFields(strContactType,strFieldDisplay,ByRef strInsertInto,ByRef strInsertValue)
 	Dim strFieldVal
-	
+
 	Dim xmlDoc, xmlNode
-	
+
 	Set xmlDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
 	With xmlDoc
 		.async = False
 		.setProperty "SelectionLanguage", "XPath"
 	End With
-	
+
 	If Not bSuggest Then
 		xmlDoc.loadXML Nz(rsOrg(strContactType).Value,"<CONTACT/>")
 	Else
@@ -262,16 +274,16 @@ Sub getContactFields(strContactType,strFieldDisplay,ByRef strInsertInto,ByRef st
 End Sub
 
 Sub sendNotifyEmails(intID, strRecName, strOldEmail, strNewEmail, bInView, strAccessURL, intViewType, ByVal strUseFbKey, strMasterFbKey)
-	
+
 	If Nl(strROUpdateEmail) Then
 		Exit Sub
 	End If
 
 	Dim strDetailLink
-	
+
 	Dim bNotifyAdmin, _
 		bNotifyAgency
-		
+
 	bNotifyAdmin = Not user_bLoggedIn Or Request("NotifyAdmin") <> "N"
 	bNotifyAgency = Not user_bLoggedIn Or Request("NotifyAgency") <> "N"
 
@@ -327,7 +339,7 @@ Sub sendNotifyEmails(intID, strRecName, strOldEmail, strNewEmail, bInView, strAc
 	Else
 		strFrom = strSourceName & TXT_SUBMITTED_FEEDBACK_1_NAME
 	End If
-	
+
 	strMsgHeader = TXT_SUBMITTED_FEEDBACK_2 & _
 			vbCrLf & _
 			strRecName & _
@@ -360,7 +372,7 @@ Sub sendNotifyEmails(intID, strRecName, strOldEmail, strNewEmail, bInView, strAc
 
 			Call sendEmail(False, strSender, strRecipient, strSubject, strMessageHeader & vbCrLf & vbCrLf & Replace(strMessageFooter,"&Key=[FBKEY]","&Key=" & strMasterFbKey))
 		End If
-		
+
 		'send Email to org's new Email, if it exists and is different
 		If Not Nl(strNewEmail) And strNewEmail <> TXT_DELETED Then
 			strRecipient = strNewEmail
@@ -382,13 +394,13 @@ Sub sendNotifyEmails(intID, strRecName, strOldEmail, strNewEmail, bInView, strAc
 
 		Call sendEmail(False, strSender, strRecipient, strSubject, strMessageHeader & vbCrLf & vbCrLf & Replace(strMessageFooter,"&Key=[FBKEY]",StringIf(Not Nl(strFbKey),"&Key=" & strFbKey)))
 	End If
-	
+
 	'send Email to owner agency, if it exists
 	Dim strAlsoNotify
 	strAlsoNotify = IIf(ps_intDbArea=DM_VOL, g_strAlsoNotifyVOL, g_strAlsoNotifyCIC)
 
 	If bNotifyAdmin And (Not Nl(strROUpdateEmail) or Not Nl(strAlsoNotify)) Then
-	
+
 		strMessageHeader = strFrom & strMsgHeader
 		If Not Nl(strFbNotes) Then
 			strMessageHeader = strMessageHeader & vbCrLf & TXT_FEEDBACK_NOTES & TXT_COLON & strFbNotes
@@ -403,7 +415,7 @@ Sub sendNotifyEmails(intID, strRecName, strOldEmail, strNewEmail, bInView, strAc
 		strRecipient = strRecipient & Ns(strAlsoNotify)
 
 		strSubject = TXT_FEEDBACK_FOR & strRecName & " (" & TXT_ID & " " & intID & ")"
-	
+
 		Call sendEmail(False, strSender, strRecipient, strSubject, strMessageHeader & vbCrLf & vbCrLf & Replace(strMessageFooter,"&Key=[FBKEY]",vbNullString))
 	End If
 
@@ -435,7 +447,7 @@ Function getDropDownValue(strValue, strFunction, bLangID, strFieldName)
 		Set rsDropDown = Nothing
 		Set cmdDropDown = Nothing
 	End If
-	
+
 	getDropDownValue = strReturn
 End Function
 
@@ -448,7 +460,7 @@ Sub getSocialMediaField(strFieldDisplay, strInsertInto, strInsertValue)
 		.async = False
 		.setProperty "SelectionLanguage", "XPath"
 	End With
-	
+
 	If Not bSuggest Then
 		xmlDoc.loadXML Nz(rsOrg("SOCIAL_MEDIA").Value,"<SOCIAL_MEDIA/>")
 	Else
@@ -512,7 +524,7 @@ Sub getSocialMediaField(strFieldDisplay, strInsertInto, strInsertValue)
 	End If
 	If Not Nl(strEmailText) Then
 		Call addEmailField(strFieldDisplay, strEmailText)
-	End If 
+	End If
 End Sub
 
 Sub WrapScheduleAddInsertField(strValue)
@@ -528,7 +540,7 @@ Sub getEventScheduleFields(strFieldDisplay):
 	junk = getEventScheduleFields_l(strFieldDisplay, rsOrg, bSuggest, _
 			GetRef("WrapScheduleAddInsertField"), GetRef("addEmailField"), _
 			GetRef("WrapCheckDate"), GetRef("checkInteger"), GetRef("checkID"), _
-			GetRef("checkLength"), GetRef("checkAddValidationError"), GetRef("DateString")) 
+			GetRef("checkLength"), GetRef("checkAddValidationError"), GetRef("DateString"))
 End Sub
 
 %>

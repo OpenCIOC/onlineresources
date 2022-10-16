@@ -47,6 +47,8 @@ def get_numeric_extension(value):
 	return _('th')
 
 def format_date_if_iso(value):
+	if not value:
+		return ''
 	if '-' in value:
 		try:
 			value = format_date(isodate.parse_date(value), pyrequest)
@@ -57,8 +59,10 @@ def format_date_if_iso(value):
 
 
 def format_time_if_iso(value):
+	if not value:
+		return ''
 	try:
-		value = format_time(isodate.parse_time(value), pyrequest).replace(':00 ', '')
+		value = format_time(isodate.parse_time(value), pyrequest, format='short')
 	except isodate.ISO8601Error:
 		# already parsed iso time
 		pass
@@ -325,25 +329,28 @@ def getEventScheduleValues(checkDate, checkInteger, checkID, checkLength, checkA
 
 	return output
 
-
-def convertEventScheduleValuesToXML(schedules):
-	def escape_for_xml(value):
+def prepEscapeEventScheduleValuesForXML(values):
+	def convert_for_xml(value):
 		if isinstance(value, bool):
-			return six.text_type(int(value))
+			return str(int(value))
 
 		if isinstance(value, int):
-			return six.text_type(value)
+			return str(value)
 
 		if isinstance(value, (datetime, time, date)):
 			return value.isoformat()
 
-		return cgiescape(six.text_type(value), True)
+		return str(value)
+
+	return [(f, convert_for_xml(v)) for f, v in values if f is not None]
+
+def convertEventScheduleValuesToXML(schedules):
 
 	xml_values = []
 	for sched_id, values in schedules:
 		xml_values.append(
 			u'<SCHEDULE {} />'.format(
-				u' '.join('{}="{}"'.format(f, escape_for_xml(v)) for f, v in values if v is not None)
+				u' '.join('{}="{}"'.format(f, cgiescape(v, True)) for f, v in prepEscapeEventScheduleValuesForXML(values))
 			)
 		)
 

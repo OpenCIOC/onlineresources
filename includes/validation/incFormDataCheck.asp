@@ -175,7 +175,7 @@ Sub checkWeb(strFldName,strFldVal)
 	End If
 End Sub
 
-Sub checkWebWithProtocol(strFldName, ByRef strFldVal, ByRef strFldProtocol)
+Sub extractWebProtocol(ByRef strFldVal, ByRef strFldProtocol)
 	strFldProtocol = vbNullString
 	If Not Nl(strFldVal) Then
 		strFldProtocol = "http://"
@@ -185,8 +185,12 @@ Sub checkWebWithProtocol(strFldName, ByRef strFldVal, ByRef strFldProtocol)
 			strFldProtocol = "https://"
 			strFldVal = Mid(strFldVal, 9)
 		End If
-		Call checkWeb(strFldName, strFldVal)
 	End If
+End Sub
+
+Sub checkWebWithProtocol(strFldName, ByRef strFldVal, ByRef strFldProtocol)
+	Call extractWebProtocol(strFldVal, strFldProtocol)
+	Call checkWeb(strFldName, strFldVal)
 End Sub
 
 Sub checkLength(strFldName,strFldVal,intMaxLength)

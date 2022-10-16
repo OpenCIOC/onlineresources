@@ -128,14 +128,14 @@ def format_date(d, request):
     return d_out
 
 
-def format_time(t, request):
+def format_time(t, request, format="medium"):
     if t is None:
         return ""
     if not isinstance(t, (datetime, time)):
         return t
 
     l = get_locale(request)
-    return dates.format_time(t, locale=l)
+    return dates.format_time(t, format=format, locale=l)
 
 
 def format_datetime(dt, request):

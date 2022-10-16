@@ -397,7 +397,7 @@ def prepEventScheduleFeedback(rsFb):
 			if not attrib.get('START_DATE'):
 				schedule_line = _('[deleted]')
 			else:
-				schedule_line = format_event_schedule_line(attrib)
+				schedule_line = format_event_schedule_line(entry.attrib)
 
 			attrib['_line'] = schedule_line
 			attrib = convertEventScheduleFeedbackEntry(attrib)
@@ -501,10 +501,10 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 		'txt_end_date': _('End Date'),
 		'txt_start_time': _('Start Time'),
 		'txt_end_time': _('End Time'),
-		'START_DATE': entry.get('START_DATE') or u'',
-		'END_DATE': entry.get('END_DATE') or u'',
-		'START_TIME': entry.get('START_TIME') or u'',
-		'END_TIME': entry.get('END_TIME') or u'',
+		'START_DATE': format_date_if_iso(entry.get('START_DATE')),
+		'END_DATE': format_date_if_iso(entry.get('END_DATE')),
+		'START_TIME': format_time_if_iso(entry.get('START_TIME')),
+		'END_TIME': format_time_if_iso(entry.get('END_TIME')),
 		'RECURS_TYPE': tags.select(prefix + 'RECURS_TYPE', ui_select_value, convert_options([
 				('0', _('Never')), ('1', _('Weekly')), ('2', _('Monthly by Day of Month')), ('3', _('Monthly by Week of Month'))]),
 				class_='recur-type-selector form-control'),
@@ -598,7 +598,7 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 			<div class="form-group">
 				<label for="{prefix}RECURS_XTH_WEEKDAY_OF_MONTH" class="control-label col-sm-3">{txt_week_of_month}</label>
 				<div class="col-sm-9 form-inline">
-					<input type="text" class="form-control name="{prefix}RECURS_XTH_WEEKDAY_OF_MONTH" value="{RECURS_XTH_WEEKDAY_OF_MONTH}" maxlength="2" size="3" class="posint">
+					<input type="text" class="form-control" name="{prefix}RECURS_XTH_WEEKDAY_OF_MONTH" value="{RECURS_XTH_WEEKDAY_OF_MONTH}" maxlength="2" size="3" class="posint">
 				</div>
 			</div>
 		</div>
@@ -606,7 +606,7 @@ def makeEventScheduleEntry(entry, label, prefix, feedback=None):
 			<div class="form-group">
 				<label for="{prefix}RECURS_DAY_OF_MONTH" class="control-label col-sm-3">{txt_day_of_month}</label>
 				<div class="col-sm-9 form-inline">
-					<input type="text" class="form-control name="{prefix}RECURS_DAY_OF_MONTH" value="{RECURS_DAY_OF_MONTH}" maxlength="2" size="3" class="posint">
+					<input type="text" class="form-control" name="{prefix}RECURS_DAY_OF_MONTH" value="{RECURS_DAY_OF_MONTH}" maxlength="2" size="3" class="posint">
 				</div>
 			</div>
 		</div>
