@@ -130,9 +130,8 @@ def parse_language_xml(record):
     )
 
 
-_lang_template = Markup(
-    '<a class="btn btn-info" href="%(link)s">%(name)s</a></span>'
-)
+_lang_template = Markup('<a class="btn btn-info" href="%(link)s">%(name)s</a></span>')
+
 
 def link_other_langs(request, lang_xml, num, cur_culture, number):
 
@@ -156,7 +155,8 @@ def link_other_langs(request, lang_xml, num, cur_culture, number):
 
         link = makeDetailsLink(num, ln_arg)
         langs.append(
-            _lang_template % {"link": link, "culture": culture, "name": language.get("LanguageName")}
+            _lang_template
+            % {"link": link, "culture": culture, "name": language.get("LanguageName")}
         )
 
     return Markup(" ").join(langs)
@@ -165,17 +165,13 @@ def link_other_langs(request, lang_xml, num, cur_culture, number):
 _reminder_template = Markup(
     '<span class="HideNoJs"><a id="reminders" class="btn btn-info %s" title="%s">%s %s</a></span>'
 )
-_reminder_alert_icon = Markup(
-    '<span class="fa fa-warning" aria-hidden="true"></span>'
-)
+_reminder_alert_icon = Markup('<span class="fa fa-warning" aria-hidden="true"></span>')
 
 _reminder_warning_icon = Markup(
     '<span class="fa fa-exclamation-circle" aria-hidden="true"></span>'
 )
 
-_reminder_icon = Markup(
-    '<span class="fa fa-clock-o" aria-hidden="true"></span>'
-)
+_reminder_icon = Markup('<span class="fa fa-clock-o" aria-hidden="true"></span>')
 
 
 def get_reminder_notice(request, record):
@@ -429,23 +425,24 @@ def build_nav_dropdown(
 
     return ""
 
+
 _first_prev_template = Markup(
     """
-        <a id="first_link_top" data-num="%(first_num)s" href="%(first_url)s" role="button" class="btn"><span class="fa fa-fast-backward" aria-hidden="true"></span> %(first)s</a>
-        <a id="prev_link_top" data-num="%(prev_num)s" href="%(prev_url)s" role="button" class="btn"><span class="fa fa-step-backward" aria-hidden="true"></span> %(previous)s</a>
+        <a id="first_link_top" data-num="%(first_num)s" href="%(first_url)s" role="button" class="btn DetailsLink"><span class="fa fa-fast-backward" aria-hidden="true"></span> %(first)s</a>
+        <a id="prev_link_top" data-num="%(prev_num)s" href="%(prev_url)s" role="button" class="btn DetailsLink"><span class="fa fa-step-backward" aria-hidden="true"></span> %(previous)s</a>
     """
 )
 
 _next_last_template = Markup(
     """
-        <a id="next_link_top" data-num="%(next_num)s" href="%(next_url)s" role="button" class="btn">%(next)s <span class="fa fa-step-forward" aria-hidden="true"></span></a>
-        <a id="last_link_top" data-num="%(last_num)s" href="%(last_url)s" role="button" class="btn">%(last)s <span class="fa fa-fast-forward" aria-hidden="true"></span></a>
+        <a id="next_link_top" data-num="%(next_num)s" href="%(next_url)s" role="button" class="btn DetailsLink">%(next)s <span class="fa fa-step-forward" aria-hidden="true"></span></a>
+        <a id="last_link_top" data-num="%(last_num)s" href="%(last_url)s" role="button" class="btn DetailsLink">%(last)s <span class="fa fa-fast-forward" aria-hidden="true"></span></a>
     """
 )
 
 _total_template = Markup(
     """<div class="col-sm-5 %(col-md-first)s">
-        <a id="total_link_top" href="%(total_url)s" role="button" class="btn"><span class="fa fa-list" aria-hidden="true"></span>
+        <a id="total_link_top" href="%(total_url)s" role="button" class="btn SearchTotalLink"><span class="fa fa-list" aria-hidden="true"></span>
         %(your_search)s (%(viewing)s %(human_number)s %(of)s %(length)s)
         </a>
         </div>
@@ -473,8 +470,12 @@ def get_search_list_top(request, search_list, number):
             "of": _("of", request),
             "length": len(search_list),
             "total_url": request.passvars.makeLink("~/presults.asp"),
-            "col-md-first": "col-md-12 col-lg-5" if go_back and go_forward and request.user.cic else "col-md-5",
-            "col-md-second": "col-md-12 col-lg-7" if go_back and go_forward and request.user.cic else "col-md-7",
+            "col-md-first": "col-md-12 col-lg-5"
+            if go_back and go_forward and request.user.cic
+            else "col-md-5",
+            "col-md-second": "col-md-12 col-lg-7"
+            if go_back and go_forward and request.user.cic
+            else "col-md-7",
         }
     ]
 
