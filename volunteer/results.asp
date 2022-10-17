@@ -77,6 +77,19 @@ strReferer = Request.ServerVariables("HTTP_REFERER")
 <!--#include file="../includes/search/incSearchQString.asp" -->
 <!--#include file="../includes/search/incSearchInfo.asp" -->
 <%
+Public Sub printSearchInfo()
+
+If Not g_bPrintMode Then	
+	If bShowAllRecords Then
+
+%>
+	<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=TXT_ALL_AVAILABLE_RECORDS & StringIf(Not bIncludeDeleted And g_bCanSeeDeletedCIC," (" & TXT_DELETED_EXCLUDED & ")")%></strong></p>
+<%
+	End If
+	Response.Write(strSearchDetails)
+End If
+
+End Sub
 
 If Request("NewWindow") = "on" Then
 	Call setSessionValue("NewWindowVOL", "on")
@@ -130,21 +143,18 @@ If Not (reEquals(strReferer,"advsrch.asp",True,False,False,False) _
 Else
 	If Not g_bPrintMode Then
 		Response.Write(render_gtranslate_ui())
-		If bShowAllRecords Then
-%>
-<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=TXT_ALL_AVAILABLE_RECORDS & StringIf(Not Nl(strExclusions)," (" & strExclusions & ")")%></strong></p>
-<%
-		Else
-			Call setSearchDetails()
-			Response.Write(strSearchDetails)
-		End If
+
+		Call setSearchDetails()
 	End If
 
 	Dim objOpTable
+
 	Set objOpTable = New OpRecordTable
 
 	Call objOpTable.setOptions(strFrom, strWhere, strSearchInfoSSNotes, bIncludeDeleted, vbNullString, vbNullString)
+
 	Call objOpTable.makeTable()
+
 	Set objOpTable = Nothing
 
 End If

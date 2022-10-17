@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -10,13 +9,6 @@ CREATE FUNCTION [dbo].[fn_VOL_CommBallsLegend](
 RETURNS [varchar](max) WITH EXECUTE AS CALLER
 AS 
 BEGIN 
-
-/*
-	Checked for Release: 3.6.2
-	Checked by: KL
-	Checked on: 02-Feb-2015
-	Action: NO ACTION REQUIRED
-*/
 
 DECLARE @returnStr varchar(max),
 		@baseURLVOL varchar(200)
@@ -41,7 +33,11 @@ INSERT INTO @ballTable SELECT ISNULL(vcg.ImageURL, @baseURLVOL + '/images/' + bl
 	WHERE vcg.CommunitySetID=@CommunitySetID
 	ORDER BY vcgn.CommunityGroupName
 
-SELECT @returnStr = COALESCE(@returnStr + '<br>','')  + '<img src="' + BallFileName + '"> ' + CommunityGroupName
+SELECT @returnStr = COALESCE(@returnStr,'')
+        + '<div class="col-sm-6 col-md-12 vol-comm-legend-item">'
+        + '<img src="' + BallFileName + '" alt="' + CommunityGroupName + '"> '
+        + CommunityGroupName
+        + '</div>'
 	FROM @ballTable
 
 RETURN @returnStr

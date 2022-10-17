@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -63,6 +63,12 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../includes/search/incSearchSetupVOL.asp" -->
 <!--#include file="../includes/search/incSearchQString.asp" -->
 <%
+Public Sub printSearchInfo()
+%>
+<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=strSearchInfoRefineNotes%></strong></p>
+<%
+End Sub
+
 Dim strRecordList, _
 	bListCriteria
 bListCriteria = False
@@ -92,11 +98,15 @@ If bListCriteria Then
 	strSearchInfoRefineNotes = IIf(g_bEnableListModeCT, TXT_CT_CLIENT_TRACKER,TXT_MY_LIST) & TXT_COLON & "<em>" & TXT_AS_OF & DateTimeString(Now(),True) & "</em>"
 
 	Dim objOpTable
+
 	Set objOpTable = New OpRecordTable
 
 	Call objOpTable.setOptions(strFrom, strWhere, vbNullString, g_bCanSeeDeletedVOL, vbNullString, vbNullString)
+
 	Call objOpTable.enableListViewMode()
+
 	Call objOpTable.makeTable()
+
 	Set objOpTable = Nothing
 
 End If

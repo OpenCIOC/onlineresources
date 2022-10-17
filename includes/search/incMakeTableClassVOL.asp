@@ -19,20 +19,43 @@
 
 <script language="python" runat="server">
 import lxml.html
+from cioc.core import gtranslate
+
+def results_page_link():
+	from urllib.parse import parse_qsl, urlencode
+	qs = pyrequest.query_string
+
+	parsed_qs = parse_qsl(qs, True)
+	qs = urlencode([(x,y) for x, y in parsed_qs if x.lower() != 'page'])
+
+	if qs:
+		qs = '?' + qs + '&Page='
+	else:
+		qs = '?Page='
+
+	return pyrequest.path + qs
+
 
 def clean_html_for_label(data):
 	tree = lxml.html.document_fromstring(six.text_type(data))
 	return tree.text_content()
-
 </script>
 <%
 
+Dim cmdOpList
+
 Dim strSearchInfoRefineNotes
+
+Set cmdOpList = Server.CreateObject("ADODB.Command")
+With cmdOpList
+	.ActiveConnection = getCurrentVOLBasicCnn()
+	.CommandType = adCmdText
+	.CommandTimeout = 0
+End With
 
 Class OpRecordTable
 
-Private cmdOpList, _
-		rsOpList, _
+Private rsOpList, _
 		cmdCustField, _
 		rsCustField, _
 		strCustOrderSelect
@@ -53,12 +76,6 @@ Private bCustResultsFields, _
 		bEnableListViewMode
 
 Private Sub Class_Initialize()
-	Set cmdOpList = Server.CreateObject("ADODB.Command")
-	With cmdOpList
-		.ActiveConnection = getCurrentVOLBasicCnn()
-		.CommandType = adCmdText
-		.CommandTimeout = 0
-	End With
 	Set rsOpList = Server.CreateObject("ADODB.Recordset")
 	With rsOpList
 		.CursorLocation = adUseClient
@@ -66,7 +83,7 @@ Private Sub Class_Initialize()
 	End With
 	
 	bCustResultsFields = False
-	If reEquals(ps_strThisPage,"(results.asp)",True,False,True,False) Then
+	If reEquals(ps_strThisPage,"results.asp",True,False,True,False) Then
 		If bCFldInc1 Or bCFldInc2 Then
 			bCustResultsFields = True
 		End If
@@ -87,6 +104,10 @@ Public Function setOptions(strFrom,strWhere,strSSNotes,bIncludeDeleted,strTop,st
 	strTopSpecial = strTop
 	strOBSpecial = strOB
 End Function
+
+Public Sub enableListViewMode()
+	bEnableListViewMode = True
+End Sub
 
 Private Function getFields()
 	Dim strFieldList
@@ -144,10 +165,6 @@ Private Function getFields()
 	End If
 	getFields = strFieldList
 End Function
-
-Public Sub enableListViewMode()
-	bEnableListViewMode = True
-End Sub
 
 Private Sub getCustomFields()
 	Dim cmdCustField, rsCustField
@@ -311,20 +328,26 @@ If Err.Number <> 0 Then
 	Call handleError(TXT_SRCH_ERROR & Nz(Err.Description, TXT_UNKNOWN_ERROR_OCCURED), _
 		vbNullString, _
 		vbNullString)
+	Call makePageFooter(True)
+	%>
+	<!--#include file="../../includes/core/incClose.asp" -->
+	<%
+	Response.End
 End If
 
 With rsOpList
 
-Dim strResultsMenuStart, intTotalResultCount
-strResultsMenuStart = "<p>[ "
+Dim intTotalResultCount
 
 intTotalResultCount = .RecordCount
 
 %>
-<script type="text/javascript">window.cioc_results_count=<%=intTotalResultCount%>;</script>
+<script type="text/javascript">
+	window.cioc_results_count =<%=intTotalResultCount %>;
+</script>
 <%
 
-If .EOF Then
+If intTotalResultCount = 0 Then
 	Dim strSearchNoResultMessage
 	strSearchNoResultMessage = get_view_data_vol("NoResultsMsg")
 	If Nl(strSearchNoResultMessage) Then
@@ -339,8 +362,12 @@ If .EOF Then
 		And Not Nl(strSaveSQL) _
 		And Nl(Request("SRCHID")) Then
 %>
-<p>[ <% If bEnableListViewMode And Not g_bEnableListModeCT Then %><a class="NoLineLink SimulateLink" id="remove_all_from_list"><img src="<%= ps_strPathToStart %>images/<%= IIf(g_bEnableListModeCT, "referral", "list") %>remove.gif" width="17" height="17" border="0"> <%= TXT_LIST_REMOVE_ALL %></a> |<% End If %>
-<a href="<%=makeLink(ps_strPathToStart & "volunteer/savedsearch_edit.asp","WhereClause=" & Server.URLEncode(strSaveSQL) & "&InclDel=" & IIf(bInclDeleted,"on",vbNullString) & "&Notes=" & strSaveNotes,vbNullString)%>"><img border="0" src="../images/folder.gif">&nbsp;<%=TXT_SAVE_THIS_SEARCH%></a> ]</p>
+<p>
+	<a class="btn btn-info" role="button" href="<%=makeLink(ps_strPathToStart & "volunteer/savedsearch_edit.asp","WhereClause=" & Server.URLEncode(strSaveSQL) & "&InclDel=" & IIf(bInclDeleted,"on",vbNullString) & "&Notes=" & strSaveNotes,vbNullString)%>">
+		<span class="fa fa-save" aria-hidden="true"></span>
+		<%=TXT_SAVE_THIS_SEARCH%>
+	</a>
+</p>
 <%
 	End If 'Saved Search link
 Else
@@ -349,11 +376,13 @@ Else
 	End If
 
 	If bEnableListViewMode Then
-	%><div id="records_ui"><%
+%>
+<div id="records_ui">
+<%
 	End If
 
 	If opt_fld_bComm Then
-		Dim cmdCommBalls, rsCommBalls
+		Dim cmdCommBalls, rsCommBalls, strCommBalls
 		Set cmdCommBalls = Server.CreateObject("ADODB.Command")
 		With cmdCommBalls
 			.ActiveConnection = getCurrentVOLBasicCnn()
@@ -365,35 +394,44 @@ Else
 			Set rsCommBalls = .Execute
 		End With
 		Set rsCommBalls = rsCommBalls.NextRecordset
-		Response.Write("<p aria-hidden=""true"">" & cmdCommBalls.Parameters("@RETURN_VALUE").Value & "</p>")
+		strCommBalls = cmdCommBalls.Parameters("@RETURN_VALUE").Value
 		Set cmdCommBalls = Nothing
 		Set rsCommBalls = Nothing
 	End If
 
 	If Not g_bPrintMode Then
-		If Not bEnableListViewMode Then
 %>
-<p><%=TXT_THERE_ARE%> <strong><%=.RecordCount%></strong> <%=TXT_RECORDS_MATCH%>
+	<div class="row">
+		<div class="col-md-8">
+			<div id="results-info" class="content-bubble padding-md clear-line-below">
+<%
+		Call printSearchInfo()
+		If Not Request("NoCount")="on" Then
+%>
+				<p class="content-border-top"><%=TXT_THERE_ARE%> <strong><%= intTotalResultCount %></strong> <%=TXT_RECORDS_MATCH%></p>
 <%
 		End If
-		If opt_bDispTableVOL Then
 %>
-<br><%=TXT_CLICK_ON%> <%If opt_fld_bPosition Then%><%=TXT_POSITION_TITLE%><%Else%>Opportunity ID<%End If%> <%=TXT_VIEW_FULL%></p>
+				<p <%If Not user_bLoggedIn Then%>class="AlertBubble"<%End If%>><%=TXT_CLICK_ON%> <strong><%If opt_fld_bPosition Then%><%=TXT_POSITION_TITLE%><%Else%>Opportunity ID<%End If%></strong> <%=TXT_VIEW_FULL%></p>
+			</div>
+			<div id="results-menu">
 <%
-		End If
-
 		If bEnableListViewMode And Not g_bEnableListModeCT Then
 		%>
-		<%=strResultsMenuStart%><a class="NoLineLink SimulateLink" id="remove_all_from_list"><img src="<%= ps_strPathToStart %>images/listremove.gif" width="17" height="17" border="0"> <%= TXT_LIST_REMOVE_ALL %></a>
+				<a class="btn btn-info btn-alert-border" id="remove_all_from_list">
+					<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+					<%=TXT_LIST_REMOVE_ALL%>
+				</a>
 		<%
-		strResultsMenuStart = " | "
 		End IF
 		
 		If user_bVol Then
 %>
-<%=strResultsMenuStart%><a class="NoLineLink" href="javascript:openWin('<%=makeLink(ps_strPathToStart & "volunteer/display_options.asp",vbNullString,vbNullString)%>');"><img border="0" src="../images/edit.gif">&nbsp;<%=TXT_CHANGE_DISPLAY%></a>
+				<a class="btn btn-info" href="javascript:openWin('<%=makeLink(ps_strPathToStart & "volunteer/display_options.asp",vbNullString,vbNullString)%>');">
+					<span class="fa fa-gear" aria-hidden="true"></span>
+					<%=TXT_CHANGE_DISPLAY%>
+				</a>
 <%
-			strResultsMenuStart = " | "
 			If reEquals(ps_strThisPage,".?results.asp",True,False,True,False) _
 				And ps_strThisPage <> "presults.asp" _
 				And user_intSavedSearchQuota > 0 _
@@ -401,12 +439,18 @@ Else
 				And Not Nl(strSaveSQL) _
 				And Nl(Request("SRCHID")) Then
 %>
-<%=strResultsMenuStart%><a class="NoLineLink" href="<%=makeLink(ps_strPathToStart & "volunteer/savedsearch_edit.asp","WhereClause=" & Server.URLEncode(strSaveSQL) & "&InclDel=" & IIf(bInclDeleted,"on",vbNullString) & "&Notes=" & strSaveNotes,vbNullString)%>"><img border="0" src="../images/folder.gif">&nbsp;<%=TXT_SAVE_THIS_SEARCH%></a>
+				<a class="btn btn-info" href="<%=makeLink(ps_strPathToStart & "volunteer/savedsearch_edit.asp","WhereClause=" & Server.URLEncode(strSaveSQL) & "&InclDel=" & IIf(bInclDeleted,"on",vbNullString) & "&Notes=" & strSaveNotes,vbNullString)%>">
+					<span class="fa fa-save" aria-hidden="true"></span>
+					<%=TXT_SAVE_THIS_SEARCH%>
+				</a>
 <%
 			End If
 			If Not Nl(strRecentSearchKey) And user_bVOL Then
 %>
-<%=strResultsMenuStart%><a class="NoLineLink" href="<%=makeLink(ps_strPathToStart & "volunteer/advsrch.asp","RS=" & Server.URLEncode(strRecentSearchKey),vbNullString)%>"><img border="0" src="../images/zoom.gif">&nbsp;<%=TXT_REFINE_SEARCH%></a>
+				<a class="btn btn-info" href="<%=makeLink(ps_strPathToStart & "volunteer/advsrch.asp","RS=" & Server.URLEncode(strRecentSearchKey),vbNullString)%>">
+					<span class="fa fa-edit" aria-hidden="true"></span>
+					<%=TXT_REFINE_SEARCH%>
+				</a>
 <%
 			End If
 		End If 'User is VOL
@@ -414,72 +458,114 @@ Else
 		If g_bPrintVersionResultsVOL And (user_bLoggedIn Or g_bPrintModePublic) And Not Nl(g_intPrintDesignVOL) Then
 			If reEquals(ps_strThisPage,".?results.asp",True,False,True,False) Then
 %>
-<%=strResultsMenuStart%><a class="NoLineLink" href="<%=ps_strThisPage & "?" & IIf(Nl(strQueryString),vbNullString,strQueryString & "&")%>PrintMd=on" target="_BLANK"><img border="0" src="../images/printer.gif">&nbsp;<%=TXT_PRINT_VERSION_NW%></a>
+				<a class="btn btn-info" href="<%=ps_strThisPage & "?" & IIf(Nl(strQueryString),vbNullString,strQueryString & "&")%>PrintMd=on" target="_BLANK">
+					<span class="fa fa-print" aria-hidden="true"></span>
+					<%=IIf(user_bLoggedIn,TXT_PRINT_VERSION,TXT_PRINT_VERSION_NW)%>
+				</a>
 <%
-				strResultsMenuStart = " | "
 			ElseIf reEquals(ps_strThisPage,"whatsnew.asp",True,False,True,False) Then
 %>
-<%=strResultsMenuStart%><a class="NoLineLink" href="<%=makeLink(ps_strThisPage,"PrintMd=on&numDays=" & intNumDays & "&numRecords=" & intMinRecords & "&dateType=" & strDateType,vbNullString)%>" target="_BLANK"><img border="0" src="../images/printer.gif">&nbsp;<%=TXT_PRINT_VERSION_NW%></a>
+				<a class="btn btn-info" href="<%=makeLink(ps_strThisPage,"PrintMd=on&numDays=" & intNumDays & "&numRecords=" & intMinRecords & "&dateType=" & strDateType,vbNullString)%>" target="_BLANK">
+					<span class="fa fa-print" aria-hidden="true"></span>
+					<%=IIf(user_bLoggedIn,TXT_PRINT_VERSION,TXT_PRINT_VERSION_NW)%>
+				</a>
 <%
-				strResultsMenuStart = " | "
 			ElseIf reEquals(ps_strThisPage,"processRecordList.asp",True,False,True,False) Then
 %>
-<%=strResultsMenuStart%><a class="NoLineLink" href="<%=makeLink(ps_strThisPage,"PrintMd=on&ActionType=N&IDList=" & strIDList,vbNullString)%>" target="_BLANK"><img border="0" src="../images/printer.gif">&nbsp;<%=TXT_PRINT_VERSION_NW%></a>	
+				<a class="btn btn-info" href="<%=makeLink(ps_strThisPage,"PrintMd=on&ActionType=N&IDList=" & strIDList,vbNullString)%>" target="_BLANK">
+					<span class="fa fa-print" aria-hidden="true"></span>
+					<%=IIf(user_bLoggedIn,TXT_PRINT_VERSION,TXT_PRINT_VERSION_NW)%>
+				</a>
 <%
-				strResultsMenuStart = " | "
 			End If
 		End If 'Print Version link
-		If strResultsMenuStart = " | " Then
 %>
-]</p>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="content-bubble padding-md clear-line-below">
+				<h4><%=TXT_COMMUNITIES%></h4>
+				<div class="row clear-line-below">
+					<%=strCommBalls%>
+				</div>
+			</div>
+		</div>
+	</div>
+
 <%
-		End If
 		If user_bVOL And opt_bDispTableVOL And opt_bSelectVOL Then
 %>
-<form name="RecordList" action="<%=ps_strPathToStart%>volunteer/processRecordList.asp" method="post">
-<%=g_strCacheFormVals%>
-<hr>
-<p><%=TXT_ACTION_ON_SELECTED%> <select name="ActionType">
-	<option value="N"><%=TXT_SLCT_NEW_RESULTS%></option>
-	<option value="AR"><%=TXT_SLCT_NEW_REMINDER%></option>
-	<option value="EL"><%=TXT_SLCT_EMAIL_RECORD_LIST%></option>
+	<form name="RecordList" class="form" action="<%=ps_strPathToStart%>volunteer/processRecordList.asp" method="post">
+	<%=g_strCacheFormVals%>
 
-	<optgroup label="<%=TXT_SLCT_STATS_AND_REPORTING%>">
-		<option value="P"><%=TXT_SLCT_PRINT%></option>
+	<div class="row">
+		<div class="col-md-6 col-lg-7">
+			<div class="form-group">
+				<label for="SearchResultActionList" class="control-label">
+					<%=TXT_ACTION_ON_SELECTED%>
+				</label>
+				<div class="input-group">
+					<select name="ActionType" class="form-control" id="SearchResultActionList">
+						<option value="N"><%=TXT_SLCT_NEW_RESULTS%></option>
+						<option value="AR"><%=TXT_SLCT_NEW_REMINDER%></option>
+						<option value="EL"><%=TXT_SLCT_EMAIL_RECORD_LIST%></option>
+						<optgroup label="<%=TXT_SLCT_STATS_AND_REPORTING%>">
+							<option value="P"><%=TXT_SLCT_PRINT%></option>
 <%	
 			If user_intCanViewStatsVOL > STATS_NONE Then
 %>
-	<option value="G"><%=TXT_SLCT_STATS%></option>
+							<option value="G"><%=TXT_SLCT_STATS%></option>
 <%
 			End If
 %>
-	</optgroup>
+						</optgroup>
 <%
-			If user_bCanDoBulkOpsVOL Then%>
-	<optgroup label="<%=TXT_SLCT_DATA_MANAGEMENT%>"><%
+			If user_bCanDoBulkOpsVOL Then
+%>
+						<optgroup label="<%=TXT_SLCT_DATA_MANAGEMENT%>">
+<%
 				If user_bCanRequestUpdateVOL And Not g_bNoEmail Then%>
-		<option value="U"><%=TXT_SLCT_EMAIL_UPDATE%></option>
-<%				End If%>
-		<option value="NP"><%=TXT_SLCT_PUBLIC_NONPUBLIC%></option>
+							<option value="U"><%=TXT_SLCT_EMAIL_UPDATE%></option>
+<%
+				End If%>
+							<option value="NP"><%=TXT_SLCT_PUBLIC_NONPUBLIC%></option>
 <%	
 				If user_bCanDeleteRecordVOL Then%>
-		<option value="R"><%=TXT_SLCT_DELETE_RESTORE%></option><%
-				End If%>
-		<option value="RO"><%=TXT_SLCT_CHANGE_OWNER%></option>
-		<option value="AI"><%=TXT_SLCT_AREAS_OF_INTEREST%></option>
-	</optgroup>
+							<option value="R"><%=TXT_SLCT_DELETE_RESTORE%></option><%
+				End If
+%>
+							<option value="RO"><%=TXT_SLCT_CHANGE_OWNER%></option>
+							<option value="AI"><%=TXT_SLCT_AREAS_OF_INTEREST%></option>
+						</optgroup>
 <%
 			End If
 			If user_bSuperUserVOL And g_bOtherMembers Then
 %>
-	<optgroup label="<%=TXT_SLCT_DATA_SHARING%>">
-		<option value="SP"><%= TXT_SLCT_SHARING_PROFILE %></option>
-	</optgroup>
+						<optgroup label="<%=TXT_SLCT_DATA_SHARING%>">
+							<option value="SP"><%= TXT_SLCT_SHARING_PROFILE %></option>
+						</optgroup>
 <%
 			End If
 %>
-</select> <input type="submit" value="<%=TXT_SUBMIT%>"></p>
-<p><input type="BUTTON" onClick="CheckAll();" value="<%=TXT_CHECK_ALL%>"> <input type="BUTTON" onClick="ClearAll();" value="<%=TXT_UNCHECK_ALL%>"></p>
+					</select>
+					<div class="input-group-btn">
+						<input type="submit" class="btn btn-default" value="<%=TXT_SUBMIT%>">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 col-lg-5">
+			<div class="form-group">
+				<label class="control-label hidden-sm">
+					<%=TXT_SELECT%>
+				</label>
+				<div>
+					<input type="button" class="btn btn-default" onClick="CheckAll();" value="<%=TXT_CHECK_ALL%>">
+					<input type="button" class="btn btn-default" onClick="ClearAll();" value="<%=TXT_UNCHECK_ALL%>">
+				</div>
+			</div>
+		</div>
+	</div>
 <%
 		End If 'Select Checkbox
 	End If 'Print Mode
@@ -578,28 +664,80 @@ Else
 		End If 'PrintMode
 %>
 <table class="BasicBorder cell-padding-3 HideListUI <%If Not g_bPrintMode Then%>ResponsiveResults<% End If %>" id="results_table">
-<thead>
-<tr class="RevTitleBox">
-<% If not g_bPrintMode Then %><th class="MobileShowField"></th><% End If %>
-<%If opt_bSelectVOL Then%><th>&nbsp;</th><%End If%>
-<%If opt_fld_bAlertVOL Then%><th width="5" class="MobileHideField">&nbsp;</th><%End If%>
-<%If opt_fld_bVNUM Or Not (opt_fld_bPosition Or opt_fld_bOrgVOL) Then%><th><%=TXT_ID%></th><%End If%>
-<%If opt_fld_bPosition Then%><th><%=TXT_POSITION_TITLE%></th><%End If%>
-<%If opt_fld_bOrgVOL Then%><th><%=TXT_ORG_NAMES%></th><%End If%>
-<%If opt_fld_bComm Then%><th><%=TXT_COMMUNITIES%></th><%End If%>
-<%If opt_fld_bDuties Then%><th><%=TXT_DUTIES%></th><%End If%>
-<%If opt_fld_bRecordOwnerVOL Then%><th><%=TXT_OWNER%></th><%End If%>
-<%If IsArray(aCustFields) Then
-	For Each indOrgFldData In aCustFields%>
-<th><%=indOrgFldData.fLabel%></th>
-<%	Next
-End If%>
-<%If opt_fld_bUpdateScheduleVOL Then%><th><%=TXT_UPDATE_SCHEDULE%></th><%End If%>
-<%If opt_bUpdateVOL Then%><th><%=TXT_UPDATE_FEEDBACK%></th><%End If%>
-<%If opt_bEmailVOL And user_bCanRequestUpdateDOM Then%><th><%=TXT_REQUEST_UPDATE%></th><%End If%>
-<%If Not g_bPrintMode And (opt_bListAddRecordVOL Or bEnableListViewMode) Then Call myListResultsAddRecordHeader() End If%>
-</tr>
-</thead>
+	<thead>
+		<tr class="RevTitleBox">
+<%
+	If not g_bPrintMode Then
+%>
+			<th class="MobileShowField"></th>
+<%
+	End If
+	If opt_bSelectVOL Then
+%>
+			<th>&nbsp;</th>
+<%
+	End If
+	If opt_fld_bAlertVOL Then
+%>
+			<th width="5" class="MobileHideField">&nbsp;</th>
+<%
+	End If
+	If opt_fld_bVNUM Or Not (opt_fld_bPosition Or opt_fld_bOrgVOL) Then
+%>
+			<th><%=TXT_ID%></th>
+<%
+	End If
+	If opt_fld_bPosition Then
+%>
+			<th><%=TXT_POSITION_TITLE%></th>
+<%
+	End If
+	If opt_fld_bOrgVOL Then
+%>
+			<th><%=TXT_ORG_NAMES%></th>
+<%
+	End If
+	If opt_fld_bComm Then
+%>
+			<th><%=TXT_COMMUNITIES%></th>
+<%
+	End If
+	If opt_fld_bDuties Then
+%>
+			<th><%=TXT_DUTIES%></th>
+<%
+	End If
+	If opt_fld_bRecordOwnerVOL Then
+%>
+			<th><%=TXT_OWNER%></th>
+<%
+	End If
+	If IsArray(aCustFields) Then
+		For Each indOrgFldData In aCustFields
+%>
+			<th><%=indOrgFldData.fLabel%></th>
+<%
+		Next
+	End If
+	If opt_fld_bUpdateScheduleVOL Then
+%>
+			<th><%=TXT_UPDATE_SCHEDULE%></th>
+<%
+	End If
+	If opt_bUpdateVOL Then
+%>
+			<th><%=TXT_UPDATE_FEEDBACK%></th>
+<%
+	End If
+	If opt_bEmailVOL And user_bCanRequestUpdateDOM Then
+%>
+			<th><%=TXT_REQUEST_UPDATE%></th>
+<%
+	End If
+	If Not g_bPrintMode And (opt_bListAddRecordVOL Or bEnableListViewMode) Then Call myListResultsAddRecordHeader() End If
+%>
+		</tr>
+	</thead>
 <%	
 	Else 'Display Table
 %>

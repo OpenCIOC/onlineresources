@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -62,9 +62,14 @@ Call setPageInfo(True, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStri
 <!--#include file="includes/search/incSearchRecent.asp" -->
 <!--#include file="includes/search/incSearchSetupCIC.asp" -->
 <!--#include file="includes/search/incSearchQString.asp" -->
-
 <!--#include file="includes/search/incSearchReminder.asp" -->
 <%
+Public Sub printSearchInfo()
+%>
+<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=strSearchInfoRefineNotes%></strong></p>
+<%
+End Sub
+
 Call setReminderData()
 
 Call finalQStringTidy()
@@ -81,16 +86,16 @@ Else
 
 	If Not g_bPrintMode Then
 		Response.Write(render_gtranslate_ui())
-%>
-<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=strSearchInfoRefineNotes%></strong></p>
-<%
 	End If
 	
 	Dim	objOrgTable
+
 	Set objOrgTable = New OrgRecordTable
 	
 	Call objOrgTable.setOptions(strFrom, strWhere, vbNullString, g_bCanSeeDeletedCIC, False, strQueryString, CAN_RANK_NONE, vbNullString, vbNullString, False)
+
 	Call objOrgTable.makeTable()
+
 	Set objOrgTable = Nothing
 End If
 %>

@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -66,6 +66,11 @@ Call setPageInfo(False, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStr
 <!--#include file="includes/search/incSearchSetupCIC.asp" -->
 <!--#include file="includes/search/incSearchQString.asp" -->
 <%
+Public Sub printSearchInfo()
+%>
+<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=strSearchInfoRefineNotes%></strong></p>
+<%
+End Sub
 
 Dim strRecordList, _
 	bListCriteria
@@ -98,11 +103,15 @@ If bListCriteria Then
 	strSearchInfoRefineNotes = IIf(g_bEnableListModeCT, TXT_CT_CLIENT_TRACKER,TXT_MY_LIST) & TXT_COLON & "<em>" & TXT_AS_OF & DateTimeString(Now(),True) & "</em>"
 
 	Dim	objOrgTable
+
 	Set objOrgTable = New OrgRecordTable	
 
 	Call objOrgTable.setOptions(strFrom, strWhere, vbNullString, g_bCanSeeDeletedCIC, False, strQueryString, CAN_RANK_NONE, vbNullString, vbNullString, False)
+
 	Call objOrgTable.enableListViewMode()
+
 	Call objOrgTable.makeTable()
+
 	Set objOrgTable = Nothing
 End If
 %>

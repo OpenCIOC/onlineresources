@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -64,6 +64,12 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 ' Previous Search Results
 '--------------------------------------------------
 
+Public Sub printSearchInfo()
+%>
+<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=TXT_YOUR_PREVIOUS_SEARCH%></strong></p>
+<%
+End Sub
+
 Dim strPrevResults, _
 	bPrevError
 
@@ -96,16 +102,16 @@ If bPrevError Then
 Else
 	If Not g_bPrintMode Then
 		Response.Write(render_gtranslate_ui())
-%>
-<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=TXT_YOUR_PREVIOUS_SEARCH%></strong></p>
-<%
 	End If
 
 	Dim objOpTable	
+
 	Set objOpTable = New OpRecordTable
 	
 	Call objOpTable.setOptions(strFrom, strWhere, vbNullString, g_bCanSeeDeletedVOL, vbNullString, vbNullString)
+
 	Call objOpTable.makeTable()
+
 	Set objOpTable = Nothing
 End If
 %>

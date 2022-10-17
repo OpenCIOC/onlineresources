@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -56,7 +56,15 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../includes/search/incMakeTableClassVOL.asp" -->
 <!--#include file="../includes/search/incMyList.asp" -->
 <!--#include file="../includes/search/incSearchRecent.asp" -->
-<% 
+<%
+Public Sub printSearchInfo()
+	If Not Nl(strSearchInfoRefineNotes) Then
+%>
+	<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=strSearchInfoRefineNotes%></strong></p>
+<%
+	End If
+End Sub
+
 Dim bInlineMode
 bInlineMode = Not Nl(Trim(Request("InlineMode")))
 

@@ -473,8 +473,8 @@ def get_search_list_top(request, search_list, number):
             "of": _("of", request),
             "length": len(search_list),
             "total_url": request.passvars.makeLink("~/presults.asp"),
-            "col-md-first": "col-md-12 col-lg-4" if go_back and go_forward and request.user.cic else "col-md-5",
-            "col-md-second": "col-md-12 col-lg-8" if go_back and go_forward and request.user.cic else "col-md-7",
+            "col-md-first": "col-md-12 col-lg-5" if go_back and go_forward and request.user.cic else "col-md-5",
+            "col-md-second": "col-md-12 col-lg-7" if go_back and go_forward and request.user.cic else "col-md-7",
         }
     ]
 

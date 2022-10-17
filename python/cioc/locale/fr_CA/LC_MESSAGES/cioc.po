@@ -8819,7 +8819,7 @@ msgstr "Proposer une mise à jour"
 
 #: ../python/cioc/web/cic/templates/record.mak:125
 msgid "New Volunteer Opportunity"
-msgstr ""
+msgstr "Nouvelle opportunité de bénévolat"
 
 #: ../python/cioc/web/cic/templates/record.mak:125
 msgid "Suggest a Volunteer Opportunity"

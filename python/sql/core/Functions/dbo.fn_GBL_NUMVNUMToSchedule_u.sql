@@ -10,24 +10,14 @@ RETURNS nvarchar(MAX) WITH EXECUTE AS CALLER
 AS 
 BEGIN
 
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 04-Jan-2012
-	Action: NO ACTION REQUIRED
-*/
-
-DECLARE	@conStr	nvarchar(3),
-		@returnStr	nvarchar(MAX)
-
-SET @conStr = CHAR(13) + CHAR(10)
+DECLARE	@returnStr	nvarchar(MAX)
 
 SELECT @returnStr = CAST(
 	(SELECT SchedID,
-			cioc_shared.dbo.fn_SHR_GBL_DateString(START_DATE) AS START_DATE,
-			cioc_shared.dbo.fn_SHR_GBL_DateString(END_DATE) AS END_DATE,
-			cioc_shared.dbo.fn_SHR_GBL_TimeString(START_TIME) AS START_TIME,
-			cioc_shared.dbo.fn_SHR_GBL_TimeString(END_TIME) AS END_TIME,
+			CONVERT(nvarchar(30), START_DATE, 126) AS START_DATE,
+			CONVERT(nvarchar(30), END_DATE, 126) AS END_DATE,
+			CONVERT(nvarchar(30), START_TIME, 126) AS START_TIME,
+			CONVERT(nvarchar(30), END_TIME, 126) AS END_TIME,
 			RECURS_EVERY,
 			RECURS_DAY_OF_WEEK,
 			RECURS_WEEKDAY_1,
@@ -58,10 +48,12 @@ SELECT @returnStr = CAST(
 		s.RECURS_DAY_OF_MONTH,
 		s.RECURS_XTH_WEEKDAY_OF_MONTH,
 		sn.Label
-	 FROM GBL_Schedule s
-	 LEFT JOIN GBL_Schedule_Name sn
+	 FROM dbo.GBL_Schedule s
+	 LEFT JOIN dbo.GBL_Schedule_Name sn
 		 ON sn.SchedID = s.SchedID AND LangID=@@LANGID
-     WHERE (@NUM IS NOT NULL AND GblNUM=@NUM) OR (@VNUM IS NOT NULL AND VolVNUM=@VNUM)) AS SCHEDULE ORDER BY START_DATE, START_TIME  FOR XML AUTO, ROOT('SCHEDULES'))
+     WHERE (@NUM IS NOT NULL AND s.GblNUM=@NUM)
+        OR (@VNUM IS NOT NULL AND s.VolVNUM=@VNUM)
+    ) AS SCHEDULE ORDER BY START_DATE, START_TIME  FOR XML AUTO, ROOT('SCHEDULES'))
 AS nvarchar(max)) 
 
 IF @returnStr = '' SET @returnStr = NULL

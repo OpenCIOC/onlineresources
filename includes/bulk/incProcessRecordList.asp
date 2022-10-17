@@ -19,7 +19,13 @@
 '
 %>
 <!--#include file="../search/incSearchQString.asp" -->
-<% 
+<%
+Public Sub printSearchInfo()
+%>
+	<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=TXT_SLCT_NEW_RESULTS%></strong></p>
+<%
+End Sub
+
 Call finalQStringTidy()
 
 Dim	strIDList, _

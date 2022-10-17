@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -59,9 +59,14 @@ Call setPageInfo(True, DM_VOL, DM_VOL, vbNullString, vbNullString, vbNullString)
 <!--#include file="../includes/search/incSearchRecent.asp" -->
 <!--#include file="../includes/search/incSearchSetupVOL.asp" -->
 <!--#include file="../includes/search/incSearchQString.asp" -->
-
 <!--#include file="../includes/search/incSearchReminder.asp" -->
 <%
+Public Sub printSearchInfo()
+%>
+<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=strSearchInfoRefineNotes%></strong></p>
+<%
+End Sub
+
 Call setReminderData()
 
 Call finalQStringTidy()

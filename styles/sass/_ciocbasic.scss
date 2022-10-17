@@ -75,7 +75,7 @@
 	border-color: $borderColorError;
 }
 
-.btn-alert-border-thick-thick {
+.btn-alert-border-thick {
 	font-weight: bold !important;
 	border-width: thick;
 	border-color: $borderColorError;
@@ -196,6 +196,11 @@ div.row-border-top:not(:first-of-type) {
 	padding-top: 0.5em;
 }
 
+.content-border-top {
+	border-top: thin solid $borderColorContent;
+	margin-top: 0.5em;
+	padding-top: 0.5em;
+}
 
 // LIST STYLES
 

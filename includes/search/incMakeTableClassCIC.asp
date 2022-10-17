@@ -647,7 +647,7 @@ Else
 				strPageLinkTemplate = results_page_link()
 				bPagedResults = True
 %>
-		<div class="row">
+		<div class="row clear-line-below">
 			<div class="col-lg-6">
 				<%= TXT_SHOWING_RECORDS %>  <%= (intResultsCurrentPage * intResultsPageSize) + 1 %> <%= TXT_TO %> <%= Min((intResultsCurrentPage + 1) * intResultsPageSize, intTotalResultCount) %>
 				<%= TXT_OF %> <strong><a href="<%= strPageLinkTemplate %>all"><%= intTotalResultCount %></a></strong> <%=TXT_RECORDS_MATCH%></>
@@ -703,7 +703,7 @@ Else
 <%
 		If bEnableListViewMode And Not g_bEnableListModeCT Then
 %>
-		<a class="btn btn-info" id="remove_all_from_list">
+		<a class="btn btn-info btn-alert-border" id="remove_all_from_list">
 			<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
 			<%=TXT_LIST_REMOVE_ALL%>
 		</a>
@@ -926,12 +926,12 @@ Else
 					<%=TXT_SELECT%>
 				</label>
 				<div>
-				<input type="button" class="btn btn-default" onClick="CheckAll();" value="<%=TXT_CHECK_ALL%>">
-				<input type="button" class="btn btn-default" onClick="ClearAll();" value="<%=TXT_UNCHECK_ALL%>">
+					<input type="button" class="btn btn-default" onClick="CheckAll();" value="<%=TXT_CHECK_ALL%>">
+					<input type="button" class="btn btn-default" onClick="ClearAll();" value="<%=TXT_UNCHECK_ALL%>">
 <%
 		If g_bMapSearchResults Then
 %>
-		<input type="button" class="btn btn-default NotVisible" onClick="do_check_all_in_viewport();" id="check_all_in_viewport" value="<%=TXT_CHECK_IN_VIEWPORT%>">
+					<input type="button" class="btn btn-default NotVisible" onClick="do_check_all_in_viewport();" id="check_all_in_viewport" value="<%=TXT_CHECK_IN_VIEWPORT%>">
 <%
 		End If
 %>
