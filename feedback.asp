@@ -80,6 +80,7 @@ Call setPageInfo(False, DM_GLOBAL, DM_CIC, vbNullString, vbNullString, vbNullStr
 <!--#include file="includes/update/incAgencyUpdateInfo.asp" -->
 <!--#include file="includes/update/incCICFormFbPrint.asp" -->
 <!--#include file="includes/update/incCICFormUpdPrint.asp" -->
+<!--#include file="includes/update/incEventSchedule.asp" -->
 <!--#include file="includes/update/incEntryFormGeneral.asp" -->
 <%
 'On Error Resume Next

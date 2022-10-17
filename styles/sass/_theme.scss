@@ -604,24 +604,6 @@ table.cell-border-top > tbody > tr > td,
 	border-color: #000000;
 }
 
-.TitleBoxLink {
-	text-decoration: none;
-	margin: 2px;
-	padding: 3px;
-	border-style: outset;
-	border-width: medium;
-}
-
-.TitleBoxLink a {
-	background-color: $TitleBgColour;
-	color: $TitleFontColour;
-}
-
-.TitleBoxLink:hover {
-	background-color: $TitleBgColour;
-	color: $TitleFontColour;
-}
-
 .TitleText, .TitleText:visited, .TitleText:active {
 	color: $TitleFontColour;
 	font-weight: bold;

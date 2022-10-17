@@ -63,6 +63,7 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../includes/list/incMinHourPerList.asp" -->
 <!--#include file="../includes/list/incMonthList.asp" -->
 <!--#include file="../includes/update/incAgencyUpdateInfo.asp" -->
+<!--#include file="../includes/update/incEventSchedule.asp" -->
 <!--#include file="../includes/update/incEntryFormGeneral.asp" -->
 <!--#include file="../includes/update/incVOLFormUpdPrint.asp" -->
 <%
