@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -68,6 +68,12 @@ On Error Resume Next
 
 <!--#include file="includes/search/incSearchSaved.asp" -->
 <%
+Public Sub printSearchInfo()
+%>
+<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=strSearchInfoRefineNotes%></strong></p>
+<%
+End Sub
+
 Call setSavedSearchData()
 
 Call finalQStringTidy()
@@ -84,9 +90,6 @@ Else
 
 	If Not g_bPrintMode Then
 		Response.Write(render_gtranslate_ui())
-%>
-<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=strSearchInfoRefineNotes%></strong></p>
-<%
 	End If
 	
 	Dim	objOrgTable

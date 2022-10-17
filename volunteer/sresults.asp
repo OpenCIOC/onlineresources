@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -65,6 +65,11 @@ Call setPageInfo(True, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 
 <!--#include file="../includes/search/incSearchSaved.asp" -->
 <%
+Public Sub printSearchInfo()
+%>
+<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=strSearchInfoRefineNotes%></strong></p>
+<%
+End Sub
 
 Call setSavedSearchData()
 
@@ -82,9 +87,6 @@ Else
 
 	If Not g_bPrintMode Then
 		Response.Write(render_gtranslate_ui())
-%>
-<p><%=TXT_YOU_SEARCHED_FOR%><strong><%=strSearchInfoRefineNotes%></strong></p>
-<%
 	End If
 	
 	Dim objOpTable	

@@ -552,7 +552,7 @@ Sub setTxtEntryForm()
 				"The record may still be viewed through a direct link, but will be marked as expired, and will not accept applications."
 			TXT_INST_DUTIES = "Provide a detailed description of the position and its expected activities."
 			TXT_INST_IMPORTANT_CHECK_ALL = "This information is required for some types of searches. Please take care to select ALL applicable values."
-			TXT_INST_NUM_NEEDED_COMMUNITIES = "From which geographic area(s) do expect to seek volunteers for this position? If a specific number of volunteers are needed from a particular community, you may optionally provide a count of individuals wanted from that community."
+			TXT_INST_NUM_NEEDED_COMMUNITIES = "From which geographic area(s) you do expect to seek volunteers for this position? If a specific number of volunteers are needed from a particular community, you may optionally provide a count of individuals wanted from that community."
 			TXT_INST_NUM_NEEDED_NOTES = "Indicate any other relevant information about the number of individuals you need for the volunteer position, and the communities where you are seeking volunteers."
 			TXT_INST_NUM_NEEDED_TOTAL = "Indicate the number of individual volunteers being sought for this position."
 			TXT_INST_POSITION_TITLE = "Use a short, descriptive title. Avoid generic titles such as &quot;Helper&quot; or &quot;Assistant&quot;"
