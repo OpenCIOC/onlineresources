@@ -1,4 +1,4 @@
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -184,7 +184,7 @@
 					/// XXX
 				}
 			});
-			
+
 		});
 		var reminders_popup_link = $('#reminders').click(function() {
 			var existing_reminders = $('#existing-reminders-page').empty().text(txt_loading);
@@ -234,7 +234,7 @@
 			})).done(function(data) {
 				if (data.success) {
 					reminder_edit_dialog[0].innerHTML = data.form;
-					reminder_edit_dialog.find('.DatePicker').autodatepicker();
+					reminder_edit_dialog.find('.DatePicker').css('zIndex', reminder_edit_dialog.css('zIndex')).autodatepicker();
 					init_user_autocomplete(userurl);
 					reminder_edit_dialog.dialog('option', 'position', 'center');
 				} else {
@@ -259,7 +259,7 @@
 				if (!data.success) {
 					//error condition
 					reminder_edit_dialog[0].innerHTML = data.form;
-					reminder_edit_dialog.find('.DatePicker').autodatepicker();
+					reminder_edit_dialog.find('.DatePicker').css('zIndex', reminder_edit_dialog.css('zIndex')).autodatepicker();
 					init_user_autocomplete(userurl);
 				} else {
 					reminders_popup_link.trigger('click');

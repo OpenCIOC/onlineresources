@@ -1142,45 +1142,6 @@ window['init_cached_state'] = function(formselector) {
 })();
 
 
-/*! Copyright (c) 2010 Brandon Aaron (http://brandonaaron.net)
- * Licensed under the MIT License (LICENSE.txt).
- *
- * Version 2.1.2
- */
-
-(function($){
-
-$.fn.bgiframe = ($.browser.msie && /msie 6\.0/i.test(navigator.userAgent) ? function(s) {
-    s = $.extend({
-        top     : 'auto', // auto == .currentStyle.borderTopWidth
-        left    : 'auto', // auto == .currentStyle.borderLeftWidth
-        width   : 'auto', // auto == offsetWidth
-        height  : 'auto', // auto == offsetHeight
-        opacity : true,
-        src     : 'javascript:false;'
-    }, s);
-    var html = '<iframe class="bgiframe"frameborder="0"tabindex="-1"src="'+s.src+'"'+
-                   'style="display:block;position:absolute;z-index:-1;'+
-                       (s.opacity !== false?'filter:Alpha(Opacity=\'0\');':'')+
-                       'top:'+(s.top=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderTopWidth)||0)*-1)+\'px\')':prop(s.top))+';'+
-                       'left:'+(s.left=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderLeftWidth)||0)*-1)+\'px\')':prop(s.left))+';'+
-                       'width:'+(s.width=='auto'?'expression(this.parentNode.offsetWidth+\'px\')':prop(s.width))+';'+
-                       'height:'+(s.height=='auto'?'expression(this.parentNode.offsetHeight+\'px\')':prop(s.height))+';'+
-                '"/>';
-    return this.each(function() {
-        if ( $(this).children('iframe.bgiframe').length === 0 )
-            this.insertBefore( document.createElement(html), this.firstChild );
-    });
-} : function() { return this; });
-
-// old alias
-$.fn.bgIframe = $.fn.bgiframe;
-
-function prop(n) {
-    return n && n.constructor === Number ? n + 'px' : n;
-}
-
-})(jQuery);
 /**
  * jQuery Validation Plugin 1.9.0
  *
@@ -3705,7 +3666,7 @@ window['init_languages'] = function($, txt_not_found) {
 };
 
 })();
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -3891,7 +3852,7 @@ window['init_languages'] = function($, txt_not_found) {
 					/// XXX
 				}
 			});
-			
+
 		});
 		var reminders_popup_link = $('#reminders').click(function() {
 			var existing_reminders = $('#existing-reminders-page').empty().text(txt_loading);
@@ -3941,7 +3902,7 @@ window['init_languages'] = function($, txt_not_found) {
 			})).done(function(data) {
 				if (data.success) {
 					reminder_edit_dialog[0].innerHTML = data.form;
-					reminder_edit_dialog.find('.DatePicker').autodatepicker();
+					reminder_edit_dialog.find('.DatePicker').css('zIndex', reminder_edit_dialog.css('zIndex')).autodatepicker();
 					init_user_autocomplete(userurl);
 					reminder_edit_dialog.dialog('option', 'position', 'center');
 				} else {
@@ -3966,7 +3927,7 @@ window['init_languages'] = function($, txt_not_found) {
 				if (!data.success) {
 					//error condition
 					reminder_edit_dialog[0].innerHTML = data.form;
-					reminder_edit_dialog.find('.DatePicker').autodatepicker();
+					reminder_edit_dialog.find('.DatePicker').css('zIndex', reminder_edit_dialog.css('zIndex')).autodatepicker();
 					init_user_autocomplete(userurl);
 				} else {
 					reminders_popup_link.trigger('click');
