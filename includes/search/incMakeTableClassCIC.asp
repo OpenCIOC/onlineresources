@@ -485,7 +485,7 @@ If Not Nl(intResultsPageSize) Then
 End If
 
 strSQL = strSQL & vbCrLf & _
-	"SELECT " & strSelectFields & vbCrLf & "FROM " & strFromSQL & vbCrLf & _
+	strParamSQL & "SELECT " & strSelectFields & vbCrLf & "FROM " & strFromSQL & vbCrLf & _
 	StringIf(Not Nl(strWhereSQL),"WHERE (" & strWhereSQL & ")") & vbCrLf & _
 	strOrderBy & vbCrLf
 
