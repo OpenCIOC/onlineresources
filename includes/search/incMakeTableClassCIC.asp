@@ -358,7 +358,9 @@ Private Sub getFacetFields()
 				.CursorLocation = adUseClient
 				.CursorType = adOpenStatic
 				.Open cmdCustField
-				ReDim aFacetFields(.RecordCount-1)
+				If Not .EOF Then
+					ReDim aFacetFields(.RecordCount-1)
+				End If
 				intCurFld = 0
 				While Not .EOF
 					Set aFacetFields(intCurFld) = New FacetFieldData
