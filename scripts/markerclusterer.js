@@ -1,4 +1,4 @@
-/*jslint browser: true, confusion: true, sloppy: true, vars: true, nomen: false, plusplus: false, indent: 2 */
+﻿/*jslint browser: true, confusion: true, sloppy: true, vars: true, nomen: false, plusplus: false, indent: 2 */
 /*global window,google */
 
 /**
@@ -132,16 +132,16 @@ ClusterIcon.prototype.onAdd = function () {
   this.getPanes().overlayMouseTarget.appendChild(this.div_);
 
   // Fix for Issue 157
-  google.maps.event.addListener(this.getMap(), "bounds_changed", function () {
+  this.getMap().getDiv().addEventListener("bounds_changed", function () {
     cDraggingMapByCluster = cMouseDownInCluster;
   });
 
-  google.maps.event.addDomListener(this.div_, "mousedown", function () {
+  this.div_.addEventListener("mousedown", function () {
     cMouseDownInCluster = true;
     cDraggingMapByCluster = false;
   });
 
-  google.maps.event.addDomListener(this.div_, "click", function (e) {
+  this.div_.addEventListener("click", function (e) {
     cMouseDownInCluster = false;
     if (!cDraggingMapByCluster) {
       var theBounds;
@@ -181,7 +181,7 @@ ClusterIcon.prototype.onAdd = function () {
     }
   });
 
-  google.maps.event.addDomListener(this.div_, "mouseover", function () {
+  this.div_.addEventListener("mouseover", function () {
     var mc = cClusterIcon.cluster_.getMarkerClusterer();
     /**
      * This event is fired when the mouse moves over a cluster marker.
@@ -192,7 +192,7 @@ ClusterIcon.prototype.onAdd = function () {
     google.maps.event.trigger(mc, "mouseover", cClusterIcon.cluster_);
   });
 
-  google.maps.event.addDomListener(this.div_, "mouseout", function () {
+  this.div_.addEventListener("mouseout", function () {
     var mc = cClusterIcon.cluster_.getMarkerClusterer();
     /**
      * This event is fired when the mouse moves out of a cluster marker.

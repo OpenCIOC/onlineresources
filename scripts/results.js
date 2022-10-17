@@ -1142,7 +1142,7 @@ window['init_cached_state'] = function(formselector) {
 })();
 
 
-/*jslint browser: true, confusion: true, sloppy: true, vars: true, nomen: false, plusplus: false, indent: 2 */
+﻿/*jslint browser: true, confusion: true, sloppy: true, vars: true, nomen: false, plusplus: false, indent: 2 */
 /*global window,google */
 
 /**
@@ -1276,16 +1276,16 @@ ClusterIcon.prototype.onAdd = function () {
   this.getPanes().overlayMouseTarget.appendChild(this.div_);
 
   // Fix for Issue 157
-  google.maps.event.addListener(this.getMap(), "bounds_changed", function () {
+  this.getMap().getDiv().addEventListener("bounds_changed", function () {
     cDraggingMapByCluster = cMouseDownInCluster;
   });
 
-  google.maps.event.addDomListener(this.div_, "mousedown", function () {
+  this.div_.addEventListener("mousedown", function () {
     cMouseDownInCluster = true;
     cDraggingMapByCluster = false;
   });
 
-  google.maps.event.addDomListener(this.div_, "click", function (e) {
+  this.div_.addEventListener("click", function (e) {
     cMouseDownInCluster = false;
     if (!cDraggingMapByCluster) {
       var theBounds;
@@ -1325,7 +1325,7 @@ ClusterIcon.prototype.onAdd = function () {
     }
   });
 
-  google.maps.event.addDomListener(this.div_, "mouseover", function () {
+  this.div_.addEventListener("mouseover", function () {
     var mc = cClusterIcon.cluster_.getMarkerClusterer();
     /**
      * This event is fired when the mouse moves over a cluster marker.
@@ -1336,7 +1336,7 @@ ClusterIcon.prototype.onAdd = function () {
     google.maps.event.trigger(mc, "mouseover", cClusterIcon.cluster_);
   });
 
-  google.maps.event.addDomListener(this.div_, "mouseout", function () {
+  this.div_.addEventListener("mouseout", function () {
     var mc = cClusterIcon.cluster_.getMarkerClusterer();
     /**
      * This event is fired when the mouse moves out of a cluster marker.
@@ -6498,17 +6498,17 @@ Globalize.culture = function( cultureSelector ) {
 	// We define the function first
 	var MapPositionControl = function () {
 	};
-	
+
 	// Creates a one DIV for each of the buttons and places them in a container
 	// DIV which is returned as our control element. We add the control to
 	// to the map container and return the element for the map class to
 	// position properly.
 	MapPositionControl.prototype.initialize = function(map) {
-		var self = this, container = $('<div>').css({ fontFamily: "Arial,sans-serif", fontSize: "small" });
+		var self = this, container = $('<div>').css({ fontFamily: "Arial,sans-serif", fontSize: "medium" });
 
 
 		this.legendButton = this.makeButton_(translations.txt_legend).
-			appendTo(container).css('right',  "10.2em").hide().click(function() {
+			appendTo(container).hide().click(function() {
 					if (self.legendPopup.is(':hidden')) {
 						self.legendPopup.show();
 					} else {
@@ -6519,7 +6519,7 @@ Globalize.culture = function( cultureSelector ) {
 		this.legendPopup = $('<div>').addClass('MapLegendContainer').hide().appendTo(this.legendButton);
 
 		var toBottomDiv = this.makeButton_(translations.txt_to_bottom).appendTo(container).
-			css('right', '5.1em').click(function() {
+			click(function() {
 					var center = map.getCenter();
 
 					set_map_position('Bottom');
@@ -6530,7 +6530,7 @@ Globalize.culture = function( cultureSelector ) {
 				});
 
 		var toSideDiv = this.makeButton_(translations.txt_to_side).appendTo(container).
-			css('right', '5.1em').click(function() {
+			click(function() {
 				var center = map.getCenter();
 
 				set_map_position('Side');
@@ -6576,9 +6576,10 @@ Globalize.culture = function( cultureSelector ) {
 				textAlign: "center",
 				width: "5em",
 				cursor: "pointer",
-				position: "absolute",
-				bottom: "0px",
-				right: "0px"
+				margin: "3px",
+				//position: "absolute",
+				//bottom: "0px",
+				//right: "0px"
 			}).append(
 				$('<div>').css({
 					borderStyle: "solid",
@@ -6604,7 +6605,7 @@ Globalize.culture = function( cultureSelector ) {
 					toggle_mapping_category(category_id);
 				});
 		}
-		
+
 	};
 
 var map_pins, translations, culture, key_arg;
@@ -6684,7 +6685,7 @@ var get_scroller_width = function() {
 
 		// get difference
 		sBarWidth -= tarea.offsetHeight;
-		
+
 	} else {
 		var wNoScroll = 0;
 		// Outer scrolling div
@@ -6886,7 +6887,7 @@ var marker_cluster_clicked = function(cluster)
 
 		var markers = cluster.getMarkers();
 		var html = map_popup_start() + '<ul>';
-		
+
 		var nums = [];
 		for(i = 0; i < markers.length; i++)
 		{
@@ -6970,7 +6971,7 @@ window['maps_loaded'] = function() {
 
 
 	_map_position_contol = new MapPositionControl();
-	map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(_map_position_contol.initialize(map));
+	map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(_map_position_contol.initialize(map));
 	$(window).resize(window_resize);
 
 
@@ -7178,7 +7179,7 @@ var register_details_nav_event = function(elid) {
 	href = href[0];
 	var num = href.split('/');
 	num = num[num.length-1];
-	
+
 	el.onclick = function() {
 		$.bbq.pushState("#/" + num);
 		return false;
@@ -7219,7 +7220,7 @@ var search_page_loaded = function() {
 
 		set_body_size();
 		fix_map_marker_icons();
-		
+
 		setTimeout(function() {
 			set_body_size();
 
@@ -7229,7 +7230,7 @@ var search_page_loaded = function() {
 				_fake_body.scrollTop(0);
 			}
 		}, 10);
-		
+
 	}
 	return false;
 };
@@ -7276,7 +7277,7 @@ var details_page_loaded = function(num, responseText) {
 		}
 	}
 
-	var parentNode = current_page_content.parent();
+	var parentNode = current_page_content.parent().hide();
 	if (current_page_content.is(_search_page_content)) {
 		current_page_content.detach();
 	} else {
@@ -7284,7 +7285,6 @@ var details_page_loaded = function(num, responseText) {
 	}
 
 	var page_content = responseText.substr(content_start);
-	parentNode.html(page_content);
 
 	var head_node = $('head')[0];
 
@@ -7312,17 +7312,19 @@ var details_page_loaded = function(num, responseText) {
 
 	document.title = parameters['title'];
 
+	parentNode.html(page_content).show();
+
 	set_body_size();
 	$(_fake_body).scrollTop(0);
 	add_details_last_visible_class();
 
 	setTimeout(function(num) {
-		set_body_size(); 
+		set_body_size();
 
 		show_map_popup(num, false, true, true);
 
 	}, 1, num);
-		
+
 };
 
 var show_details_page = function(num, parameters) {
@@ -7443,7 +7445,7 @@ var check_visible_markers = $.throttle(200, function() {
 				}
 
 				var last_in_bounds = item.last_in_bounds || false;
-				
+
 				if (bounds.contains(item.point)) {
 					if (last_in_bounds === false) {
 						item.icon.prop('src', map_pins[item.mappin].image_small);
@@ -7519,7 +7521,7 @@ var start_mapping = function() {
 		item.longitude = Globalize.parseFloat(item.longitude);
 
 		mapped_items[num] = item;
-		
+
 		var point = new google.maps.LatLng(item.latitude, item.longitude);
 		item.point = point;
 
@@ -7548,9 +7550,9 @@ var start_mapping = function() {
 		bounds.extend(point);
 		item.marker_evt = google.maps.event.addListener(item.marker, 'click', make_marker_click(num));
 
-		
-		
-		
+
+
+
 	});
 	mgr.addMarkers(allmarkers, 0);
 
@@ -7675,7 +7677,7 @@ var modify_dom = function() {
 		css('margin', offsetTop + 'px ' + offsetRight + 'px 0px ' + offsetLeft + 'px').appendTo(fake_body);
 
 	size_checker.remove();
-		
+
 
 	var resize_options = {
 		start: resize_start,
