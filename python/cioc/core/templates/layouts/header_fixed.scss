@@ -153,3 +153,10 @@ ol.breadcrumb {
 		margin-top: $BannerHeight + 44px;
 	}
 }
+
+@media (max-width: 438px) {
+	#CIOC_main_container {
+		margin-top: $BannerHeight + 48px;
+	}
+}
+
