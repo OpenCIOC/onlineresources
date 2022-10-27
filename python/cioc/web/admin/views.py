@@ -842,7 +842,7 @@ class View(viewbase.AdminViewBase):
 
                 cursor.nextset()
 
-                disp_opt_fields = {x[0] for x in cursor.fetchall()}
+                disp_opt_fields = [x[0] for x in cursor.fetchall()]
 
                 if domain.id == const.DM_CIC:
                     cursor.nextset()
