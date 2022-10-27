@@ -47,55 +47,65 @@ ${self.body()}
 %endif
 
 <%def name="requiredFieldMarker()">
-	<span class="Alert" title="${_('Required')}">*</span>
+<span class="Alert glyphicon glyphicon-star" title="${_('Required')}" aria-hidden="true"></span>
 </%def>
 
 <%def name="helpBubble(label_text,help_text)">
 	%if help_text:
-	<a data-toggle="popover" data-trigger="focus" title="${_('Help: ') + (label_text or '')}" data-placement="top" data-content="${help_text}" tabindex="0">
-		<span class="glyphicon glyphicon-question-sign SimulateLink"></span>
-	</a>
+<a data-toggle="popover" data-trigger="focus" title="${_('Help: ') + (label_text or '')}" data-placement="top" data-content="${help_text}" tabindex="0">
+	<span class="glyphicon glyphicon-question-sign SimulateLink"></span>
+</a>
 	%endif
 </%def>
 
 <%def name="fieldLabelCell(field_id,label_text,help_text,is_required=False)">
-	<td class="field-label-cell">
-		${renderer.label(field_id, label_text)}
-		%if is_required:
-			${requiredFieldMarker()}
-		%endif
-		${helpBubble(label_text,help_text)}
-	</td>
+<td class="field-label-cell">
+	${renderer.label(field_id, label_text)}
+	%if is_required:
+	${requiredFieldMarker()}
+	%endif
+	${helpBubble(label_text,help_text)}
+</td>
 </%def>
 
 <%def name="makeMgmtInfo(model, show_created=True, show_modified=True)">
-%if show_created:
-<%
-	created_date = getattr(model, 'CREATED_DATE', None)
-	created_by = getattr(model, 'CREATED_BY', None) or _('Unknown')
-%>
-<tr>
-	${fieldLabelCell(None,_('Date Created'),_('set automatically'),False)}
-	<td class="field-data-cell">${format_date(created_date) if created_date else _('Unknown')}</td>
-</tr>
-<tr>
-	${fieldLabelCell(None,_('Created by'),_('set automatically'),False)}
-	<td class="field-data-cell">${created_by}</td>
-</tr>
 
-%endif
-%if show_modified:
 <%
+if show_created:
+	created_date = getattr(model, 'CREATED_DATE', None)
+	created_by = getattr(model, 'CREATED_BY', None)
+if show_modified:
 	modified_date = getattr(model, 'MODIFIED_DATE', None)
-	modified_by = getattr(model, 'MODIFIED_BY', None) or _('Unknown')
+	modified_by = getattr(model, 'MODIFIED_BY', None)
 %>
 <tr>
-	${fieldLabelCell(None,_('Last Modified'),_('set automatically'),False)}
-	<td class="field-data-cell">${format_date(modified_date) if modified_date else _('Unknown')}</td>
+	<td class="field-label-cell">
+		${_('Admin History')}
+		${helpBubble(_('Admin History'),_('set automatically'))}
+	</td>
+	<td class="field-data-cell">
+		<div class="row">
+			%if show_created:
+			<div class="col-md-3 padding-sm-top">
+				<strong>${_('Date Created')}${_(': ')}</strong>
+				<br class="hidden-xs hidden-sm">${format_date(created_date) if created_date else _('Unknown')}
+			</div>
+			<div class="col-md-3 padding-sm-top">
+				<strong>${_('Created by')}${_(': ')}</strong>
+				<br class="hidden-xs hidden-sm">${created_by if created_by else _('Unknown')}
+			</div>
+			%endif
+			%if show_modified:
+			<div class="col-md-3 padding-sm-top">
+				<strong class="no-wrap">${_('Last Modified')}${_(': ')}</strong>
+				<br class="hidden-xs hidden-sm">${format_date(modified_date) if modified_date else _('Unknown')}
+			</div>
+			<div class="col-md-3 padding-sm-top">
+				<strong class="no-wrap">${_('Last Modified by')}${_(': ')}</strong>
+				<br class="hidden-xs hidden-sm">${modified_by if modified_by else _('Unknown')}
+			</div>
+			%endif
+		</div>
+	</td>
 </tr>
-<tr>
-	${fieldLabelCell(None,_('Last Modified by'),_('set automatically'),False)}
-	<td class="field-data-cell">${modified_by}</td>
-</tr>
-%endif
 </%def>

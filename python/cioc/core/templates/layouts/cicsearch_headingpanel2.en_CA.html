@@ -65,60 +65,42 @@
 	<div class="clearfix clear-line-below"></div>
 	[ENDIF:CUSTOM_MENU_ITEMS]
 
-	[IF:HAS_KEYWORD_SEARCH]
-	<div id="keyword-search-panel" class="panel panel-default">
-		<div class="panel-heading"><h2><span class="glyphicon glyphicon-[SEARCH_KEYWORD_GLYPH]" aria-hidden="true"></span> [SEARCH_KEYWORD_TITLE]</h2></div>
-		<div class="panel-body">
-			<div class="form-group" id="CIOC_cicsearch_keyword">
-				[SEARCH_FORM_START]
-				<div class="main-search-box">
-					<div class="table search-table no-line-below">
-						<div class="table-row form-group">
-							<div class="table-cell table-cell-100">
-								[IF:HAS_COMMUNITY_SEARCH]
-								<div class="row">
-									<div class="col-md-6">
-										[ENDIF:HAS_COMMUNITY_SEARCH]
-										<div class="form-group">
-											[KEYWORD_SEARCH_BOX]
-											<div id="keyword-search-in">
-												[KEYWORD_SEARCH_IN]
-											</div>
-										</div>
-										[IF:HAS_COMMUNITY_SEARCH]
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											[FN:COMMUNITY_SEARCH][ENDFN:COMMUNITY_SEARCH]
-										</div>
-									</div>
-								</div>
-								[ENDIF:HAS_COMMUNITY_SEARCH]
-							</div>
-							<div class="table-cell search-button-wrapper hidden-xxs">
-								<button class="btn btn-default CIOC_search_button" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> [SEARCH]</button>
-							</div>
-						</div>
-					</div>
-				</div>
 
-				[IF:HAS_LANGUAGES_SEARCH]
-				<div class="form-group">
-					[FN:LANGUAGES_SEARCH][ENDFN:LANGUAGES_SEARCH]
+	[IFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
+	[IF:QUICKLIST]
+	<div class="row search-panels">
+		<div class="col-xs-12 col-md-4">
+	[ENDIF:QUICKLIST]
+
+			[IF:SEARCH_LEFT_CONTENT]
+			<div id="search-left-panel" class="panel panel-default panel-bc">
+				[IF:SEARCH_LEFT_TITLE]
+				<div class="panel-heading"><h2>[IF:SEARCH_LEFT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_LEFT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_LEFT_GLYPH][SEARCH_LEFT_TITLE]</h2></div>
+				[ENDIF:SEARCH_LEFT_TITLE]
+				<div class="panel-body panel-body-nofooter">
+					[SEARCH_LEFT_CONTENT]
 				</div>
-				[ENDIF:HAS_LANGUAGES_SEARCH]
-				<div class="visible-xxs">
-					<button class="btn btn-default CIOC_search_button" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> [SEARCH]</button>
-				</div>
-				</form>
 			</div>
+			[ENDIF:SEARCH_LEFT_CONTENT]
+
+			[IF:SEARCH_RIGHT_CONTENT]
+			<div id="search-right-panel" class="panel panel-default panel-bc">
+				[IF:SEARCH_RIGHT_TITLE]
+				<div class="panel-heading"><h2>[IF:SEARCH_RIGHT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_RIGHT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_RIGHT_GLYPH][SEARCH_RIGHT_TITLE]</h2></div>
+				[ENDIF:SEARCH_RIGHT_TITLE]
+				<div class="panel-body panel-body-nofooter">
+					[SEARCH_RIGHT_CONTENT]
+				</div>
+			</div>
+			[ENDIF:SEARCH_RIGHT_CONTENT]
+
+		[IF:QUICKLIST]
 		</div>
-	</div>
-	[ENDIF:HAS_KEYWORD_SEARCH]
+		[ENDIF:QUICKLIST]
+	[ENDIFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
 
 	[IF:QUICKLIST]
 	[IFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
-	<div class="row search-panels">
 		<div class="col-xs-12 col-md-8">
 	[ENDIFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
 			<div id="heading-search-panel" class="panel panel-default">
@@ -209,42 +191,63 @@
 					</div>
 					</form>
 				</div>
-		[IFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
 			</div>
+	[IFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
 		</div>
-		[ENDIFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
-		[ENDIF:QUICKLIST]
-
-		[IFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
-		[IF:QUICKLIST]
-		<div class="col-xs-12 col-md-4">
-		[ENDIF:QUICKLIST]
-			[IF:SEARCH_LEFT_CONTENT]
-			<div id="search-left-panel" class="panel panel-default panel-bc">
-				[IF:SEARCH_LEFT_TITLE]
-				<div class="panel-heading"><h2>[IF:SEARCH_LEFT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_LEFT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_LEFT_GLYPH][SEARCH_LEFT_TITLE]</h2></div>
-				[ENDIF:SEARCH_LEFT_TITLE]
-				<div class="panel-body panel-body-nofooter">
-					[SEARCH_LEFT_CONTENT]
-				</div>
-			</div>
-			[ENDIF:SEARCH_LEFT_CONTENT]
-
-			[IF:SEARCH_RIGHT_CONTENT]
-			<div id="search-right-panel" class="panel panel-default panel-bc">
-				[IF:SEARCH_RIGHT_TITLE]
-				<div class="panel-heading"><h2>[IF:SEARCH_RIGHT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_RIGHT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_RIGHT_GLYPH][SEARCH_RIGHT_TITLE]</h2></div>
-				[ENDIF:SEARCH_RIGHT_TITLE]
-				<div class="panel-body panel-body-nofooter">
-					[SEARCH_RIGHT_CONTENT]
-				</div>
-			</div>
-			[ENDIF:SEARCH_RIGHT_CONTENT]
-		[IF:QUICKLIST]
-		</div>
-		[ENDIF:QUICKLIST]
-	</div>	
+	</div>
 	[ENDIFANY:SEARCH_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
+	[ENDIF:QUICKLIST]
+
+	[IF:HAS_KEYWORD_SEARCH]
+	<div id="keyword-search-panel" class="panel panel-default">
+		<div class="panel-heading"><h2><span class="glyphicon glyphicon-[SEARCH_KEYWORD_GLYPH]" aria-hidden="true"></span> [SEARCH_KEYWORD_TITLE]</h2></div>
+		<div class="panel-body">
+			<div class="form-group" id="CIOC_cicsearch_keyword">
+				[SEARCH_FORM_START]
+				<div class="main-search-box">
+					<div class="table search-table no-line-below">
+						<div class="table-row form-group">
+							<div class="table-cell table-cell-100">
+								[IF:HAS_COMMUNITY_SEARCH]
+								<div class="row">
+									<div class="col-md-6">
+										[ENDIF:HAS_COMMUNITY_SEARCH]
+										<div class="form-group">
+											[KEYWORD_SEARCH_BOX]
+											<div id="keyword-search-in">
+												[KEYWORD_SEARCH_IN]
+											</div>
+										</div>
+										[IF:HAS_COMMUNITY_SEARCH]
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											[FN:COMMUNITY_SEARCH][ENDFN:COMMUNITY_SEARCH]
+										</div>
+									</div>
+								</div>
+								[ENDIF:HAS_COMMUNITY_SEARCH]
+							</div>
+							<div class="table-cell search-button-wrapper hidden-xxs">
+								<button class="btn btn-default CIOC_search_button" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> [SEARCH]</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				[IF:HAS_LANGUAGES_SEARCH]
+				<div class="form-group">
+					[FN:LANGUAGES_SEARCH][ENDFN:LANGUAGES_SEARCH]
+				</div>
+				[ENDIF:HAS_LANGUAGES_SEARCH]
+				<div class="visible-xxs">
+					<button class="btn btn-default CIOC_search_button" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> [SEARCH]</button>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	[ENDIF:HAS_KEYWORD_SEARCH]
 
 	[IF:SEARCH_CENTRE_CONTENT]
 	<div id="search-centre-panel" class="panel panel-default">

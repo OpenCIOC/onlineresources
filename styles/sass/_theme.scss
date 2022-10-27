@@ -153,6 +153,10 @@ a:visited.btn-info {
 .Alert, .Alert:visited, .Alert:active {
 	color: $AlertColour;
 	font-weight: bold;
+
+	&.glyphicon, &.fa {
+		color: $AlertColour !important;
+	}
 }
 
 td.AlertBox {
