@@ -1,4 +1,4 @@
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,8 +40,8 @@ var init_pubs_dropdown = function(url) {
 			$("GHIDx").empty();
 			return;
 		}
-		$("#GHID").parent().html('<select id="GHID" name="GHID" multiple>' + last_gh_ui + '</select>');
-		$("#GHIDx").parent().html('<select id="GHIDx" name="GHIDx" multiple>' + last_gh_ui + '</select>');
+		$("#GHID").parent().html('<select id="GHID" name="GHID" multiple class="form-control" size="6">' + last_gh_ui + '</select>');
+		$("#GHIDx").parent().html('<select id="GHIDx" name="GHIDx" multiple class="form-control" size="6">' + last_gh_ui + '</select>');
 
 	};
 	pubs.change(function(evt) {

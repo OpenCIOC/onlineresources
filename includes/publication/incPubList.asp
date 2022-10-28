@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -59,7 +59,7 @@ Function makePubList(intSelected, intExcluded, strSelectName, strSelectID ,bNonP
 		If .EOF And Not bIncludeNew Then
 			strReturn = TXT_NO_VALUES_AVAILABLE
 		Else
-			strReturn = strReturn & "<select name=" & AttrQs(strSelectName) & " id=" & AttrQs(strSelectID) & ">"
+			strReturn = strReturn & "<select name=" & AttrQs(strSelectName) & " id=" & AttrQs(strSelectID) & " class=""form-control"">"
 			If bIncludeNew Then
 				strReturn = strReturn & "<option value="""">" & TXT_CREATE_NEW & "</option>"
 			ElseIf bIncludeBlank Then

@@ -1142,45 +1142,6 @@ window['init_cached_state'] = function(formselector) {
 })();
 
 
-/*! Copyright (c) 2010 Brandon Aaron (http://brandonaaron.net)
- * Licensed under the MIT License (LICENSE.txt).
- *
- * Version 2.1.2
- */
-
-(function($){
-
-$.fn.bgiframe = ($.browser.msie && /msie 6\.0/i.test(navigator.userAgent) ? function(s) {
-    s = $.extend({
-        top     : 'auto', // auto == .currentStyle.borderTopWidth
-        left    : 'auto', // auto == .currentStyle.borderLeftWidth
-        width   : 'auto', // auto == offsetWidth
-        height  : 'auto', // auto == offsetHeight
-        opacity : true,
-        src     : 'javascript:false;'
-    }, s);
-    var html = '<iframe class="bgiframe"frameborder="0"tabindex="-1"src="'+s.src+'"'+
-                   'style="display:block;position:absolute;z-index:-1;'+
-                       (s.opacity !== false?'filter:Alpha(Opacity=\'0\');':'')+
-                       'top:'+(s.top=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderTopWidth)||0)*-1)+\'px\')':prop(s.top))+';'+
-                       'left:'+(s.left=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderLeftWidth)||0)*-1)+\'px\')':prop(s.left))+';'+
-                       'width:'+(s.width=='auto'?'expression(this.parentNode.offsetWidth+\'px\')':prop(s.width))+';'+
-                       'height:'+(s.height=='auto'?'expression(this.parentNode.offsetHeight+\'px\')':prop(s.height))+';'+
-                '"/>';
-    return this.each(function() {
-        if ( $(this).children('iframe.bgiframe').length === 0 )
-            this.insertBefore( document.createElement(html), this.firstChild );
-    });
-} : function() { return this; });
-
-// old alias
-$.fn.bgIframe = $.fn.bgiframe;
-
-function prop(n) {
-    return n && n.constructor === Number ? n + 'px' : n;
-}
-
-})(jQuery);
 // =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
@@ -1474,7 +1435,7 @@ var init_find_box = function(urls, search_form) {
 };
 window["init_find_box"] = init_find_box;
 })();
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -1516,8 +1477,8 @@ var init_pubs_dropdown = function(url) {
 			$("GHIDx").empty();
 			return;
 		}
-		$("#GHID").parent().html('<select id="GHID" name="GHID" multiple>' + last_gh_ui + '</select>');
-		$("#GHIDx").parent().html('<select id="GHIDx" name="GHIDx" multiple>' + last_gh_ui + '</select>');
+		$("#GHID").parent().html('<select id="GHID" name="GHID" multiple class="form-control" size="6">' + last_gh_ui + '</select>');
+		$("#GHIDx").parent().html('<select id="GHIDx" name="GHIDx" multiple class="form-control" size="6">' + last_gh_ui + '</select>');
 
 	};
 	pubs.change(function(evt) {

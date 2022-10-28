@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -54,7 +54,9 @@ End Class
 
 
 Function makeChecklistUI(strTypeField, strIncField, strExclField, bAllFrom, rsOptions, strOptionsID, objNameFormatter, bJsonResponse)
-	Dim strRetVal, strOptions
+	Dim strRetVal, strOptions, intSize
+
+	intSize=3
 	
 	strOptions = vbNullString
 	With rsOptions
@@ -64,6 +66,15 @@ Function makeChecklistUI(strTypeField, strIncField, strExclField, bAllFrom, rsOp
 				Server.HTMLEncode(Ns(objNameFormatter.format_name(rsOptions))) & "</option>"
 			.MoveNext
 		Wend
+
+		If .RecordCount > 7 Then
+			intSize = 7
+		ElseIf .RecordCount = 0 Then
+			intSize = 1
+		Else
+			intSize = .RecordCount
+		End If
+			
 	End With
 	strRetVal = vbNullString
 	If strOptionsID = "EXC_ID" Or strOptionsID = "EXD_ID" Then
@@ -72,25 +83,25 @@ Function makeChecklistUI(strTypeField, strIncField, strExclField, bAllFrom, rsOp
 	End If
 
 	strRetVal = strRetVal &  _
-		"<span class=""SmallNote"">" & TXT_HOLD_CTRL & "</span>" & _
+		"<p class=""SmallNote"">" & TXT_HOLD_CTRL & "</p>" & _
 		"<div class=""row"">" & _
 			"<div class=""col-sm-6"">" & _
-				"<div class=""panel"">" & _
+				"<div class=""panel panel-info"">" & _
 					"<div class=""panel-body""><h4>" & TXT_INCLUDE_VALUES & "</h4>" & _
 						"<div class=""radio""><label for=" & AttrQs(strTypeField & "N") & "><input type=""radio"" name=""" & strTypeField & """ id=""" & strTypeField & "N"" value=""N""> " & TXT_HAS_NONE & "</label></div>" & _
 						"<div class=""radio""><label for=" & AttrQs(strTypeField & "A") & "><input type=""radio"" name=""" & strTypeField & """ id=""" & strTypeField & "A"" value=""A""> " & TXT_HAS_ANY & "</label></div>" & _
 						StringIf(bAllFrom,"<div class=""radio""><label for=" & AttrQs(strTypeField & "AF") & "><input type=""radio"" name=""" & strTypeField & """ id=""" & strTypeField & "AF"" value=""AF""> " & TXT_HAS_ALL_FROM & "</label></div>") & _
 						"<div class=""radio""><label for=" & AttrQs(strTypeField & "F") & "><input type=""radio"" name=""" & strTypeField & """ id=""" & strTypeField & "F"" value=""F"" checked> " & TXT_HAS_ANY_FROM & "</label></div>" & _
-						"<select name=""" & strIncField & """ id=""" & strIncField & """ class=""form-control""  multiple>" & _
+						"<select name=""" & strIncField & """ id=""" & strIncField & """ class=""form-control"" multiple size=" & AttrQs(intSize) & ">" & _
 							strOptions & _
 						"</select>" & _
 					"</div>" & _
 				"</div>" & _
 			"</div>" & _
 			"<div class=""col-sm-6"">" & _
-				"<div class=""panel"">" & _
+				"<div class=""panel panel-info"">" & _
 					"<div class=""panel-body""><h4>" & TXT_EXCLUDE_VALUES & "</h4>" & _
-						"<select name=""" & strExclField & """ id=""" & strExclField & """ class=""form-control"" multiple>" & _
+						"<select name=""" & strExclField & """ id=""" & strExclField & """ class=""form-control"" multiple size=" & AttrQs(intSize) & ">" & _
 							strOptions & _
 						"</select>" & _
 					"</div>" & _

@@ -11,13 +11,6 @@ RETURNS nvarchar(max) WITH EXECUTE AS CALLER
 AS 
 BEGIN
 
-/*
-	Checked for Release: 3.6
-	Checked by: CL
-	Checked on: 27-Sep-2014
-	Action: TESTING REQUIRED
-*/
-
 DECLARE	@conStr	nvarchar(4),
 		@returnStr	nvarchar(max)
 
@@ -28,7 +21,7 @@ SELECT @returnStr =  COALESCE(@returnStr + @conStr,'')
 		+ ' alt="' + REPLACE(Name,'"','""') + '"'
 		+ ' width="16px" height="16px">&nbsp;'
 		+ Name + cioc_shared.dbo.fn_SHR_STP_ObjectName(': ')
-		+ cioc_shared.dbo.fn_SHR_GBL_Link_URL(Protocol,URL,0)
+		+ cioc_shared.dbo.fn_SHR_GBL_Link_WebsiteWithProtocol(URL,0,Protocol)
 	FROM dbo.fn_VOL_VNUMToSocialMedia_rst(@VNUM)
 
 IF @returnStr = '' SET @returnStr = NULL

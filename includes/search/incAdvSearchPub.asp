@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -83,48 +83,69 @@ End Sub
 Sub makePublicationUI()
 	If bHavePubsWithGeneralHeadings Then
 %>
-		<%=strPublicationDropDown%><br>
+<%=strPublicationDropDown%><br>
 <%
 	End If
 %>
-	<div id="publication_search_selection">
-	<span class="SmallNote"><%=TXT_HOLD_CTRL%></span>
-
-
-		<span class="SmallNote"> & TXT_HOLD_CTRL & </span> 
-		<div class="row"> 
-			<div class="col-sm-6"> 
-				<div class="panel"> 
-					<div class="panel-body"><h4><%=TXT_INCLUDE_PUBLICATIONS%></h4> 
-						<div class="radio"><label for="PBType_N"><input type="radio" name="PBType" id="PBType_N" value="N"> <%=TXT_HAS_NONE%></label></div> 
-						<div class="radio"><label for="PBType_A"><input type="radio" name="PBType" id="PBType_A" value="A"> <%=TXT_HAS_ANY%></label></div> 
-						<div class="radio"><label for="PBType_AF"><input type="radio" name="PBType" id="PBType_AF" value="AF" checked> <%=TXT_HAS_ALL_FROM%></label></div> 
-						<div class="radio"><label for="PBType_F"><input type="radio" name="PBType" id="PBType_F" value="F" checked> <%=TXT_HAS_ANY_FROM%></label></div> 
-						<select name="PBID" id="PBID" class="form-control"  multiple> 
-							<%=strPublicationSearchUI%>
-						</select> 
-					</div> 
-				</div> 
-			</div> 
-			<div class="col-sm-6"> 
-				<div class="panel"> 
-					<div class="panel-body"><h4><%=TXT_EXCLUDE_PUBLICATIONS%></h4> 
-						<select name="PBIDx" id="PBIDx" class="form-control" multiple> 
-							<%=strPublicationSearchUI%>
-						</select> 
-					</div> 
-				</div> 
-			</div> 
-		</div>
-	</div>
+<div id="publication_search_selection">
+    <p class="SmallNote"><%=TXT_HOLD_CTRL%></p>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <h4><%=TXT_INCLUDE_PUBLICATIONS%></h4>
+                    <div class="radio">
+                        <label for="PBType_N">
+                            <input type="radio" name="PBType" id="PBType_N" value="N">
+                            <%=TXT_HAS_NONE%>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label for="PBType_A">
+                            <input type="radio" name="PBType" id="PBType_A" value="A">
+                            <%=TXT_HAS_ANY%>
+                        </label>
+                    </div>
+                    <div class="row">
+                        <div class="radio col-sm-6">
+                            <label for="PBType_AF">
+                                <input type="radio" name="PBType" id="PBType_AF" value="AF" checked>
+                                <%=TXT_HAS_ALL_FROM%>
+                            </label>
+                        </div>
+                        <div class="radio col-sm-6">
+                            <label for="PBType_F">
+                                <input type="radio" name="PBType" id="PBType_F" value="F" checked>
+                                <%=TXT_HAS_ANY_FROM%>
+                            </label>
+                        </div>
+                    </div>
+                    <select name="PBID" id="PBID" class="form-control" multiple size="6">
+                        <%=strPublicationSearchUI%>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <h4><%=TXT_EXCLUDE_PUBLICATIONS%></h4>
+                    <select name="PBIDx" id="PBIDx" class="form-control" multiple size="6">
+                        <%=strPublicationSearchUI%>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <%
 	If bHavePubsWithGeneralHeadings Then
 %>
-	<div class="NotVisible" id="general_heading_search_selection">
-<%
+<div class="NotVisible" id="general_heading_search_selection">
+    <%
 	Call makeGeneralHeadingUI()
-%>
-	</div>
+    %>
+</div>
 <%
 	End If
 	
@@ -132,27 +153,61 @@ End Sub
 
 Sub makeGeneralHeadingUI()
 %>
-	<span class="SmallNote"><%=TXT_HOLD_CTRL%></span>
-	<table class="NoBorder cell-padding-2"><tr>
-		<td><table class="BasicBorder cell-padding-3">
-			<tr><th class="FieldLabelCenterClr"><%=TXT_INCLUDE_HEADINGS%></th></tr>
-			<tr><td><input type="radio" name="GHType" value="N"> <%=TXT_HAS_NONE%>
-			<br><input type="radio" name="GHType" value="A"> <%=TXT_HAS_ANY%>
-			<br><input type="radio" name="GHType" value="AF" checked> <%=TXT_HAS_ALL_FROM%>
-			<br><input type="radio" name="GHType" value="F" checked> <%=TXT_HAS_ANY_FROM%>
-			<br><div id="GHID_IE_Bugfix"><select name="GHID" id="GHID" multiple>
-			<%=strGeneralHeadingUI%>
-			</select></div></td></tr>
-		</table></td>
-		<td>&nbsp;&nbsp;</td>
-		<td><table class="BasicBorder cell-padding-3">
-			<tr><th class="FieldLabelCenterClr"><%=TXT_EXCLUDE_HEADINGS%></th></tr>
-			<tr><td><div id="GHIDx_IE_Bugfix"><select name="GHIDx" id="GHIDx" multiple>
-			<%=strGeneralHeadingUI%>
-			</select></div></td></tr>
-		</table></td>
-	</tr></table>
+<p class="SmallNote"><%=TXT_HOLD_CTRL%></p>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <div class="panel-header">
+                    <h4><%=TXT_INCLUDE_HEADINGS%></h4>
+                </div>
+                <div class="radio">
+                    <label for="GHType_N">
+                        <input type="radio" name="GHType" id="GHType_N" value="N">
+                        <%=TXT_HAS_NONE%>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label for="GHType_A">
+                        <input type="radio" name="GHType" id="GHType_A" value="A">
+                        <%=TXT_HAS_ANY%>
+                    </label>
+                </div>
+                <div class="row">
+                    <div class="radio col-sm-6">
+                        <label for="GHType_AF">
+                            <input type="radio" name="GHType" id="GHType_AF" value="AF" checked>
+                            <%=TXT_HAS_ALL_FROM%>
+                        </label>
+                    </div>
+                    <div class="radio col-sm-6">
+                        <label for="GHType_F">
+                            <input type="radio" name="GHType" id="GHType_F" value="F" checked>
+                            <%=TXT_HAS_ANY_FROM%>
+                        </label>
+                    </div>
+                </div>
+                <div id="heading_list_parent_container">
+                    <select name="GHID" id="GHID" class="form-control" multiple size="6">
+                        <%=strGeneralHeadingUI%>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <h4><%=TXT_EXCLUDE_HEADINGS%></h4>
+                <div id="heading_list_parent_container_x">
+                    <select name="GHIDx" id="GHIDx" class="form-control" multiple size="6">
+                        <%=strGeneralHeadingUI%>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <%
 End Sub
-
 %>

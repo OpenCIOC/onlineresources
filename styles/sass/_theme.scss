@@ -387,6 +387,7 @@ iframe.Search {
 .force-word-break {
 	word-wrap: break-word;
 	overflow-wrap: break-word;
+	word-break: break-all;
 }
 
 .change-view-box {
