@@ -18,24 +18,31 @@
 
 <%def name="shown_cultures_ui(edit=True)">
 <div class="NotVisible">
-%for culture in active_cultures:
-<input type="hidden" name="ShowCulture" value="${culture}">
-%endfor
+	%for culture in active_cultures:
+	<input type="hidden" name="ShowCulture" value="${culture}">
+	%endfor
 </div>
 
 <% remaining_cultures = [rc for rc in record_cultures if rc not in active_cultures] %>
 %if remaining_cultures:
-<div id="show-also">
-	%if edit:
-	${_('Also edit labels in:')}
-	%else:
-	${_('Also show labels in:')}
-	%endif
+<div id="show-also" class="clear-line-above">
+	<p>
+		%if edit:
+		${_('Also edit labels in:')}
+		%else:
+		${_('Also show labels in:')}
+		%endif
+	</p>
 	<ul>
-	%for culture in remaining_cultures:
+		%for culture in remaining_cultures:
 		<% lang = culture_map[culture] %>
-		<li><label for="ShowCultures_${culture}"><input id="ShowCultures_${culture}" class="ShowCultures" type="checkbox" name="ShowCultures" value="${culture}" ${'checked' if culture in shown_cultures else ''}> ${_('Edit Labels in ') if edit else _('Show Labels in ')} ${lang.LanguageName}</label></li>
-	%endfor
+		<li>
+			<label for="ShowCultures_${culture}">
+				<input id="ShowCultures_${culture}" class="ShowCultures" type="checkbox" name="ShowCultures" value="${culture}" ${'checked' if culture in shown_cultures else '' }> ${_('Edit Labels in ') if edit else _('Show Labels in ')}
+				${lang.LanguageName}
+			</label>
+		</li>
+		%endfor
 	</ul>
 </div>
 %endif
@@ -44,21 +51,21 @@
 
 <%def name="shown_cultures_js()">
 <script type="text/javascript">
-(function() {
-var toggle_culture_display = function() {
-	var form = $(this).parents('form,body').first().hide()
-	if (this.checked) {
-		form.find('.culture-' + this.value).show();
-	} else {
-		form.find('.culture-' + this.value).hide();
-	}
-	form.show()
-};
-jQuery(function($) {
+	(function () {
+		var toggle_culture_display = function () {
+			var form = $(this).parents('form,body').first().hide()
+			if (this.checked) {
+				form.find('.culture-' + this.value).show();
+			} else {
+				form.find('.culture-' + this.value).hide();
+			}
+			form.show()
+		};
+		jQuery(function ($) {
 
-	$('.ShowCultures').live('change', toggle_culture_display).
-		each(toggle_culture_display);
-});
-})();
+			$('.ShowCultures').live('change', toggle_culture_display).
+				each(toggle_culture_display);
+		});
+	})();
 </script>
 </%def>

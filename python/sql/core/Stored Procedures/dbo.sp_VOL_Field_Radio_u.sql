@@ -11,13 +11,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 06-Jan-2012
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE	@Error		int
 SET @Error = 0
 
@@ -31,8 +24,8 @@ DECLARE @DescTable TABLE (
 	FieldID int NOT NULL,
 	Culture varchar(5) NOT NULL,
 	LangID smallint NULL,
-	CheckboxOnText nvarchar(20) NULL,
-	CheckboxOffText nvarchar(20)
+	CheckboxOnText nvarchar(100) NULL,
+	CheckboxOffText nvarchar(100) NULL
 )
 
 DECLARE @BadCulturesDesc nvarchar(max)
@@ -51,9 +44,9 @@ SELECT
 FROM @Data.nodes('//Field') as T(N) CROSS APPLY 
 	( SELECT 
 		D.query('Culture').value('/', 'varchar(5)') AS Culture,
-		(SELECT LangID FROM STP_Language sl WHERE sl.Culture = D.query('Culture').value('/', 'varchar(5)') AND ActiveRecord=1) AS LangID,
-		CASE WHEN D.exist('CheckboxOnText')=1 THEN D.query('CheckboxOnText').value('/', 'nvarchar(50)') ELSE NULL END AS CheckboxOnText,
-		CASE WHEN D.exist('CheckboxOffText')=1 THEN D.query('CheckboxOffText').value('/', 'nvarchar(50)') ELSE NULL END AS CheckboxOffText
+		(SELECT LangID FROM dbo.STP_Language sl WHERE sl.Culture = D.query('Culture').value('/', 'varchar(5)') AND ActiveRecord=1) AS LangID,
+		CASE WHEN D.exist('CheckboxOnText')=1 THEN D.query('CheckboxOnText').value('/', 'nvarchar(100)') ELSE NULL END AS CheckboxOnText,
+		CASE WHEN D.exist('CheckboxOffText')=1 THEN D.query('CheckboxOffText').value('/', 'nvarchar(100)') ELSE NULL END AS CheckboxOffText
 			FROM N.nodes('DESCS/DESC') AS T2(D) ) iq 
 EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @FieldObjectName, @ErrMsg
 
@@ -72,12 +65,12 @@ IF @Error = 0 BEGIN
 		CheckboxOffText = nf.CheckboxOffText,
 		MODIFIED_BY = @MODIFIED_BY,
 		MODIFIED_DATE = GETDATE()
-	FROM VOL_FieldOption_Description fod
+	FROM dbo.VOL_FieldOption_Description fod
 	INNER JOIN @DescTable nf
 		ON fod.LangID=nf.LangID AND fod.FieldID=nf.FieldID
 	EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @FieldObjectName, @ErrMsg
 
-	INSERT INTO VOL_FieldOption_Description (
+	INSERT INTO dbo.VOL_FieldOption_Description (
 		CREATED_BY,
 		CREATED_DATE,
 		MODIFIED_BY,
@@ -92,13 +85,13 @@ IF @Error = 0 BEGIN
 		@MODIFIED_BY,
 		GETDATE(),
 		nf.FieldID,
-		LangID,
-		CheckboxOnText,
-		CheckboxOffText
+		nf.LangID,
+		nf.CheckboxOnText,
+		nf.CheckboxOffText
 	FROM @DescTable nf
-	INNER JOIN VOL_FieldOption fo
+	INNER JOIN dbo.VOL_FieldOption fo
 		ON fo.FieldID = nf.FieldID
-	WHERE NOT EXISTS(SELECT * FROM VOL_FieldOption_Description WHERE FieldID=nf.FieldID AND LangID=nf.LangID)
+	WHERE NOT EXISTS(SELECT * FROM dbo.VOL_FieldOption_Description WHERE FieldID=nf.FieldID AND LangID=nf.LangID)
 	EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @FieldObjectName, @ErrMsg
 
 END

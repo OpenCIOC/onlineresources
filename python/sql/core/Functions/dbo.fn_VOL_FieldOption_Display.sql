@@ -11,20 +11,13 @@ CREATE FUNCTION [dbo].[fn_VOL_FieldOption_Display](
 	@DisplayFM varchar(max),
 	@FormFieldType char(1),
 	@EquivalentSource bit,
-	@CheckboxOnText nvarchar(20),
-	@CheckboxOffText nvarchar(20),
+	@CheckboxOnText nvarchar(100),
+	@CheckboxOffText nvarchar(100),
 	@UseAS bit
 )
 RETURNS nvarchar(max) WITH EXECUTE AS CALLER
 AS 
 BEGIN
-
-/*
-	Checked for Release: 3.6
-	Checked by: CL
-	Checked on: 27-Sep-2014
-	Action: TESTING REQUIRED
-*/
 
 DECLARE @SharingProfileIDList varchar(max),
 		@returnStr nvarchar(max)

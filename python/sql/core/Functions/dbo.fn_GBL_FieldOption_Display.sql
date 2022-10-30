@@ -15,21 +15,13 @@ CREATE FUNCTION [dbo].[fn_GBL_FieldOption_Display](
 	@FieldType varchar(3),
 	@FormFieldType char(1),
 	@EquivalentSource bit,
-	@CheckboxOnText nvarchar(20),
-	@CheckboxOffText nvarchar(20),
+	@CheckboxOnText nvarchar(100),
+	@CheckboxOffText nvarchar(100),
 	@UseAS bit
 )
 RETURNS nvarchar(max) WITH EXECUTE AS CALLER
 AS 
 BEGIN
-
-/*
-	Checked for Release: 3.5
-	Checked by: KL
-	Checked on: 22-Jan-2012
-	Action: NO ACTION REQUIRED
-	Notes: Is it necessary to replace [LANGID] with @@LANGID?
-*/
 
 DECLARE @SharingProfileIDList varchar(max),
 		@returnStr nvarchar(max)

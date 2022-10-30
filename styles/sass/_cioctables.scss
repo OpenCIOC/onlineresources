@@ -17,7 +17,7 @@
 // TABLE STYLES
 
 tr {
-  vertical-align: top;
+	vertical-align: top;
 }
 
 table.BasicBorder {
@@ -39,6 +39,7 @@ table.BasicBorder {
 table.NoBorder {
 	border-spacing: 0px;
 	border-collapse: collapse;
+
 	&, & > tr > td, & > tr > th, & > thead > tr > th, & > tbody > tr > td, & > tbody > tr > th {
 		border: 0 none;
 	}
@@ -83,12 +84,14 @@ table.sortable_table {
 		.header {
 			cursor: pointer;
 		}
+
 		.headerSortUp {
 			padding-right: 16px;
 			background-image: url(../images/down.gif);
 			background-repeat: no-repeat;
 			background-position: center right;
 		}
+
 		.headerSortDown {
 			padding-right: 16px;
 			background-image: url(../images/up.gif);
@@ -136,6 +139,7 @@ div.table {
 			background-color: $FieldLabelColour;
 			font-weight: bold;
 		}
+
 		&.field-label-cell-clr {
 			font-weight: bold;
 		}
@@ -145,9 +149,16 @@ div.table {
 table.responsive-table {
 	width: 100%;
 
-	@media (min-width: $screen-sm-min) {
+	@media (min-width: $screen-sm-min) and (max-width: $screen-md-max) {
 		td.field-label-cell {
-			width: 17em;
+			width: 14em;
+			overflow: clip;
+		}
+	}
+
+	@media (min-width: $screen-lg-min) {
+		td.field-label-cell {
+			width: 16em;
 			overflow: clip;
 		}
 	}
@@ -159,6 +170,36 @@ table.responsive-table {
 		.field-label-cell-clr, &.form-table .field-label-cell-clr {
 			width: 100%;
 			display: inline-block;
+		}
+
+		&.BasicBorder.form-table .field-data-cell {
+			border-top-width: 1px;
+		}
+	}
+}
+
+table.responsive-table-multicol {
+	width: 100%;
+
+	.field-header-secondary {
+		display: none;
+	}
+
+	@media (max-width: $screen-sm-max) {
+		.field-data-cell, &.form-table .field-data-cell,
+		.field-label-cell, &.form-table .field-label-cell,
+		.field-label-cell-widelabel, &.form-table .field-label-cell-widelabel,
+		.field-label-cell-clr, &.form-table .field-label-cell-clr {
+			width: 100%;
+			display: inline-block;
+		}
+
+		.field-header-row {
+			display: none;
+		}
+
+		.field-header-secondary {
+			display: block;
 		}
 
 		&.BasicBorder.form-table .field-data-cell {
@@ -214,10 +255,12 @@ table.inset-table {
 		&:first-of-type {
 			border-left: none;
 		}
+
 		&:last-of-type {
 			border-right: none;
 		}
 	}
+
 	& > tr, & > thead > tr, & > tbody > tr {
 		&:last-of-type {
 			&, & > td, & > th {
@@ -231,6 +274,7 @@ table.inset-table {
 		-webkit-border-bottom-left-radius: $cornerRadius;
 		border-bottom-left-radius: $cornerRadius;
 	}
+
 	& > tbody > tr:last-of-type > td:last-of-type {
 		-moz-border-bottom-right-radius: $cornerRadius;
 		-webkit-border-bottom-right-radius: $cornerRadius;

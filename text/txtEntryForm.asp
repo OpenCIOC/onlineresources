@@ -112,6 +112,7 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_INST_NUM_NEEDED_COMMUNITIES, _
 	TXT_INST_NUM_NEEDED_NOTES, _
 	TXT_INST_NUM_NEEDED_TOTAL, _
+	TXT_INST_POLICE_CHECK, _
 	TXT_INST_POSITION_TITLE, _
 	TXT_INST_VOL_CONTACT, _
 	TXT_INVALID_RECORD_NUM, _
@@ -333,6 +334,7 @@ Sub setTxtEntryForm()
 			TXT_INST_NUM_NEEDED_COMMUNITIES = "Dans quelle(s) zone(s) géographique(s) comptez-vous chercher des volontaires pour ce poste ? Si un nombre spécifique de bénévoles est nécessaire dans une communauté particulière, vous pouvez fournir un nombre de personnes recherchées dans cette communauté."
 			TXT_INST_NUM_NEEDED_NOTES = "Indiquez toute autre information pertinente sur le nombre de personnes dont vous avez besoin pour le poste de bénévole et les communautés où vous recherchez des bénévoles."
 			TXT_INST_NUM_NEEDED_TOTAL = "Indiquez le nombre de bénévoles individuels recherchés pour ce poste."
+			TXT_INST_POLICE_CHECK = "Indiquez si ce poste nécessite un contrôle de police actuel / un dépistage du secteur vulnérable. Il est également recommandé d'inclure des détails supplémentaires sur vos exigences de sélection dans la description du poste."
 			TXT_INST_POSITION_TITLE = "Utilisez un titre court et descriptif. Évitez les titres génériques tels que &quot;Helper&quot; ou &quot;Assistant&quot;."
 			TXT_INST_VOL_CONTACT = "Ces informations de contact sont fournies aux candidats pour compléter le processus de candidature, et la personne de contact recevra un e-mail de notification lorsque les volontaires manifesteront leur intérêt pour un poste. " & _
 				"Veuillez vous assurer que le nom et l'adresse e-mail sont exacts et à jour."
@@ -555,6 +557,7 @@ Sub setTxtEntryForm()
 			TXT_INST_NUM_NEEDED_COMMUNITIES = "From which geographic area(s) you do expect to seek volunteers for this position? If a specific number of volunteers are needed from a particular community, you may optionally provide a count of individuals wanted from that community."
 			TXT_INST_NUM_NEEDED_NOTES = "Indicate any other relevant information about the number of individuals you need for the volunteer position, and the communities where you are seeking volunteers."
 			TXT_INST_NUM_NEEDED_TOTAL = "Indicate the number of individual volunteers being sought for this position."
+			TXT_INST_POLICE_CHECK = "Indicate whether this position requires a current police check / vulnerable sector screening. It is also recommended that you include additional details on your screening requirements in the description of the position."
 			TXT_INST_POSITION_TITLE = "Use a short, descriptive title. Avoid generic titles such as &quot;Helper&quot; or &quot;Assistant&quot;"
 			TXT_INST_VOL_CONTACT = "This contact information is provided to potential volunteers to complete the application process, and the contact will receive a notification email when volunteers express their interest in a position. " & _
 				"Please ensure that the posting includes an accurate and up-to-date name and Email."

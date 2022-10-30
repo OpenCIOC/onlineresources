@@ -3,7 +3,8 @@ GO
 SET ANSI_NULLS ON
 GO
 CREATE FUNCTION [dbo].[fn_CIC_NUMToBusRoutes_rst](
-	@NUM varchar(8)
+	@NUM varchar(8),
+	@LangID smallint
 )
 RETURNS @BusRoutes TABLE (
 	[BR_ID] int NULL,
@@ -26,7 +27,7 @@ SELECT br.BR_ID, br.RouteNumber, brn.Name As RouteName
 	INNER JOIN CIC_BusRoute br
 		ON pr.BR_ID = br.BR_ID
 	LEFT JOIN CIC_BusRoute_Name brn
-		ON br.BR_ID=brn.BR_ID AND brn.LangID=@@LANGID
+		ON br.BR_ID=brn.BR_ID AND brn.LangID=@LangID
 WHERE NUM = @NUM
 ORDER BY DisplayOrder, br.RouteNumber, brn.Name
 

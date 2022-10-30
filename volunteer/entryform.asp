@@ -598,6 +598,12 @@ While Not rsFields.EOF
 					rsFields.Fields("AllowNulls"), _
 					rsFields.Fields("CanUseFeedback") _
 					)
+				Select Case strFieldName
+					Case "POLICE_CHECK"
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>" & TXT_COLON & _
+							TXT_INST_POLICE_CHECK & "</p>" & vbCrLf & _
+							strFieldVal
+				End Select
 			Case "d"
 				strFieldVal = makeDateFieldVal(strFieldName, _
 					strFieldContents, _

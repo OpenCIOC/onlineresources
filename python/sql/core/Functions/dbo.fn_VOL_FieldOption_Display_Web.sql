@@ -12,8 +12,8 @@ CREATE FUNCTION [dbo].[fn_VOL_FieldOption_Display_Web](
 	@DisplayFMWeb varchar(max),
 	@FormFieldType char(1),
 	@EquivalentSource bit,
-	@CheckboxOnText nvarchar(20),
-	@CheckboxOffText nvarchar(20),
+	@CheckboxOnText nvarchar(100),
+	@CheckboxOffText nvarchar(100),
 	@UseAS bit,
 	@HTTPVals varchar(500),
 	@PathToStart varchar(50)
@@ -21,13 +21,6 @@ CREATE FUNCTION [dbo].[fn_VOL_FieldOption_Display_Web](
 RETURNS nvarchar(max) WITH EXECUTE AS CALLER
 AS 
 BEGIN
-
-/*
-	Checked for Release: 3.6
-	Checked by: CL
-	Checked on: 27-Sep-2014
-	Action: TESTING REQUIRED
-*/
 
 DECLARE @SharingProfileIDList varchar(max),
 		@returnStr nvarchar(max)

@@ -30,7 +30,7 @@ SELECT @returnStr =  COALESCE(@returnStr + ' ; ','') + cioc_shared.dbo.fn_SHR_CI
 			END + RouteName
 		END,
 		@HTTPVals, @PathToStart)
-	FROM dbo.fn_CIC_NUMToBusRoutes_rst(@NUM) br
+	FROM dbo.fn_CIC_NUMToBusRoutes_rst(@NUM, @@LANGID) br
 
 IF @returnStr = '' SET @returnStr = NULL
 

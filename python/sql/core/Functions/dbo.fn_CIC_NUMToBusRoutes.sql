@@ -27,7 +27,7 @@ SELECT @returnStr =  COALESCE(@returnStr + ' ; ','') +
 				ELSE RouteNumber + ' - '
 			END + RouteName
 		END
-	FROM dbo.fn_CIC_NUMToBusRoutes_rst(@NUM) br
+	FROM dbo.fn_CIC_NUMToBusRoutes_rst(@NUM, @@LANGID) br
 
 IF @returnStr = '' SET @returnStr = NULL
 

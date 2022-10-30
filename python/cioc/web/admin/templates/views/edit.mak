@@ -201,7 +201,7 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 						<td class="field-data-cell">
 							<p>
 								<span class="Alert"><span class=" glyphicon glyphicon-star" aria-hidden="true"></span>${_('Important')}</span>${_(': ')}
-								${_('Use notes to explain the who will use the View and for what purpose, to prevent future security issues or orphaned Views.')}
+								${_('Use notes to explain who will use the View and for what purpose, to prevent future security issues or orphaned Views.')}
 							</p>
 							%for culture in culture_order:
 							<% lang = culture_map[culture] %>

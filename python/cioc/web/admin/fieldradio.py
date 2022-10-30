@@ -37,8 +37,8 @@ templateprefix = "cioc.web.admin:templates/"
 class FieldDescriptionSchema(Schema):
     if_key_missing = None
 
-    CheckboxOnText = ciocvalidators.UnicodeString(max=20, not_empty=True)
-    CheckboxOffText = ciocvalidators.UnicodeString(max=20, not_empty=True)
+    CheckboxOnText = ciocvalidators.UnicodeString(max=100, not_empty=True)
+    CheckboxOffText = ciocvalidators.UnicodeString(max=100, not_empty=True)
 
 
 class FieldBaseSchema(Schema):
