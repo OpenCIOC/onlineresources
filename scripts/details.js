@@ -3955,7 +3955,7 @@ window['init_languages'] = function($, txt_not_found) {
 		});
 	};
 })();
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -3994,9 +3994,9 @@ window['init_languages'] = function($, txt_not_found) {
 			$('<iframe>').prop({
 				src: iframeurl,
 				frameborder: 0
-			}).css('border', 0)
+			}).css({border: 0, height: '100%', width: '100%'})
 		);
-		
+
 		return;
 	};
 
