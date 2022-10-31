@@ -111,8 +111,8 @@ SELECT CAST((SELECT (
 		(SELECT -- NOTE: This needs some work
 			a.CoverageArea AS [@N],
 			f.CoverageArea AS [@NF],
-			CASE WHEN a.CoverageArea IS NOT NULL THEN 1 ELSE NULL END AS [@ODN],
-			CASE WHEN f.CoverageArea IS NOT NULL THEN 1 ELSE NULL END AS [@ODNF],
+			CASE WHEN a.CoverageArea IS NOT NULL AND a.Coverage IS NULL THEN 1 ELSE 0 END AS [@ODN],
+			CASE WHEN f.CoverageArea IS NOT NULL AND a.Coverage IS NULL THEN 1 ELSE 0 END AS [@ODNF],
 			(SELECT COALESCE(cmn.Name,i.AreaName) AS [@V], i.Prov AS [@PRV] FROM (
 				SELECT DISTINCT FIRST_VALUE(ItemID) OVER (PARTITION BY t.TotalItemID ORDER BY t.cm_level DESC) AS AreaName, FIRST_VALUE(ItemID) OVER (PARTITION BY t.TotalItemID ORDER BY t.cm_level) AS Prov,
 				 REPLACE(REPLACE(REPLACE(REPLACE(FIRST_VALUE(cm_level) OVER (PARTITION BY t.TotalItemID ORDER BY cm_level DESC), 1, 'State'), 2, 'County'), 3, 'City'), 4, 'Community') AS cm_level
