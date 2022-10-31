@@ -449,6 +449,12 @@ End If
 					rsFields.Fields("AllowNulls"), _
 					False _
 					)
+				Select Case strFieldName
+					Case "POLICE_CHECK"
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>" & TXT_COLON & _
+							TXT_INST_POLICE_CHECK & "</p>" & vbCrLf & _
+							strFieldVal
+				End Select
 			' "Date" field type
 			Case "d"
 				strFieldVal = makeDateFieldValFull(strFieldName, _
@@ -567,7 +573,7 @@ End If
 					)
 				Select Case strFieldName
 					Case "DUTIES"
-						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_IMPORTANT & "</span>" & TXT_COLON & _
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>" & TXT_COLON & _
 							TXT_INST_DUTIES & "</p>" & vbCrLf & _
 							strFieldVal
 				End Select

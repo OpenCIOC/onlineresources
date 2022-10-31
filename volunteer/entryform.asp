@@ -589,6 +589,7 @@ While Not rsFields.EOF
 	End If
 	If Not (intFormType <> EF_UPDATE And reEquals(rsFields.Fields("FieldName"), "(VNUM)|(RECORD_OWNER)|(NUM)|(POSITION_TITLE)",True,False,True,False)) Then
 		Select Case rsFields.Fields("FormFieldType")
+			' "Checkbox" field type
 			Case "c"
 				strFieldVal = makeCBFieldVal(strFieldName, _
 					strFieldContents, _
@@ -604,6 +605,7 @@ While Not rsFields.EOF
 							TXT_INST_POLICE_CHECK & "</p>" & vbCrLf & _
 							strFieldVal
 				End Select
+			' "Date" field type
 			Case "d"
 				strFieldVal = makeDateFieldVal(strFieldName, _
 					strFieldContents, _
@@ -625,10 +627,11 @@ While Not rsFields.EOF
 					)
 				Select Case strFieldName
 					Case "DUTIES"
-						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_IMPORTANT & "</span>" & TXT_COLON & _
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>" & TXT_COLON & _
 							TXT_INST_DUTIES & "</p>" & vbCrLf & _
 							strFieldVal
 				End Select
+			' "Text" field type, for single-line short text fields < 255 characters.
 			Case "t"
 				If rsFields.Fields("ValidateType") = "w" Then
 					Dim strProtocol
