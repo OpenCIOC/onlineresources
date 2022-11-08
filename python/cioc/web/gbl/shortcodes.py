@@ -34,7 +34,7 @@ templateprefix = "cioc.web.gbl:templates/"
 def make_url(x):
 
     data = {
-        "url": f"{x.Protocol}://{x.AccessURL}",
+        "url": f"https://{x.AccessURL}",
         "name": f"{x.AccessURL} ({x.ViewName})",
     }
     if x.URLViewType is not None:

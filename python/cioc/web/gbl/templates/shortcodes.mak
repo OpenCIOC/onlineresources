@@ -32,9 +32,9 @@ required_field_marker = Markup('<span class="Alert" title="%s">*</span>') % _('R
 <p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> | <a href="http://www.opencioc.org/wordpress.php" target="_blank">Wordpress Plugin Documentation</a> ]</p>
 
 <form action="${request.current_route_path()}" method="post" class="form">
-<div class="hidden">
-${request.passvars.cached_form_vals}
-</div>
+	<div class="hidden">
+		${request.passvars.cached_form_vals}
+	</div>
 
 	<% languages = [(x, culture_map[x].LanguageName) for x in active_cultures] %>
 	<table class="BasicBorder cell-padding-4 max-width-md" style="display: none; min-width: 40%;" data-bind="visible: true">
@@ -174,8 +174,10 @@ ${request.passvars.cached_form_vals}
 		</tr>
 		<tr data-bind="visible: needCode">
 			<th class="FieldLabelLeft">
-				<label for="code">${_('Code')}
-				${required_field_marker}</label>
+				<label for="code">
+					${_('Code')}
+					${required_field_marker}
+				</label>
 			</th>
 			<td>
 				<input type="text" maxlength="20" id="code" class="form-control" data-bind="textInput: code">
@@ -201,8 +203,10 @@ ${request.passvars.cached_form_vals}
 		</tr>
 		<tr data-bind="visible: needNUM">
 			<th class="FieldLabelLeft">
-				<label for="num">${_('Organization Record #')}
-				${required_field_marker}</label>
+				<label for="num">
+					${_('Organization Record #')}
+					${required_field_marker}
+				</label>
 			</th>
 			<td>
 				<input type="text" maxlength="220" id="num" class="form-control" data-bind="textInput: num">
@@ -251,185 +255,185 @@ ${request.passvars.cached_form_vals}
 <%def name="bottomjs()">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
 <script type="text/javascript">
- // Here's my data model
-var ViewModel = function(key_list, cic_domains, vol_domains) {
-	var self = this;
-	self.selectedKey = ko.observable()
-	if (key_list !== null) {
-		self.key_list = ko.observableArray(key_list);
-	} else {
-		self.key_list = ko.observable(key_list);
-		self.typedKey = ko.observable();
-		ko.computed(function() {
-			var key = self.typedKey();
-			var re = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-			if (re.test(key)) {
-				$.ajax({dataType: 'json', url: '', method: 'post', data: {'feed_key': key}, success: self.selectedKey});
-			}
+	// Here's my data model
+	var ViewModel = function (key_list, cic_domains, vol_domains) {
+		var self = this;
+		self.selectedKey = ko.observable()
+		if (key_list !== null) {
+			self.key_list = ko.observableArray(key_list);
+		} else {
+			self.key_list = ko.observable(key_list);
+			self.typedKey = ko.observable();
+			ko.computed(function () {
+				var key = self.typedKey();
+				var re = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+				if (re.test(key)) {
+					$.ajax({ dataType: 'json', url: '', method: 'post', data: { 'feed_key': key }, success: self.selectedKey });
+				}
+			});
+		}
+		self.selectedLanguage = ko.observable('');
+		self.listingType = ko.observable();
+		self.selectedDomainName = ko.observable();
+		self.includeFieldList = ko.observableArray();
+		self.excludeFieldList = ko.observableArray();
+		self.styleMe = ko.observable(true);
+		self.listID = ko.observable('');
+		self.listClass = ko.observable('');
+		self.fontAwesome = ko.observable();
+		self.code = ko.observable('');
+		self.communityType = ko.observable('location');
+		self.community = ko.observable('');
+		self.num = ko.observable('');
+
+		self.keyIsCIC = ko.computed(function () {
+			var key = self.selectedKey();
+			return key && key.cic;
 		});
-	}
-	self.selectedLanguage = ko.observable('');
-	self.listingType = ko.observable();
-	self.selectedDomainName = ko.observable();
-	self.includeFieldList = ko.observableArray();
-	self.excludeFieldList = ko.observableArray();
-	self.styleMe = ko.observable(true);
-	self.listID = ko.observable('');
-	self.listClass = ko.observable('');
-	self.fontAwesome = ko.observable();
-	self.code = ko.observable('');
-	self.communityType = ko.observable('location');
-	self.community = ko.observable('');
-	self.num = ko.observable('');
+		self.keyIsVOL = ko.computed(function () {
+			var key = self.selectedKey();
+			return key && key.vol;
+		});
 
-	self.keyIsCIC = ko.computed(function() {
-		var key = self.selectedKey();
-		return key && key.cic;
-	});
-	self.keyIsVOL = ko.computed(function() {
-		var key = self.selectedKey();
-		return key && key.vol;
-	});
+		self.listingIsCIC = ko.computed(function () {
+			var listing = self.listingType(), key = self.selectedKey();
+			if (!listing || !key) {
+				return false;
+			}
 
-	self.listingIsCIC = ko.computed(function() {
-		var listing = self.listingType(), key = self.selectedKey();
-		if (!listing || !key) {
+			if (listing.name === 'cioccominfo' && key.cic) {
+				return true;
+			}
 			return false;
-		}
+		});
 
-		if (listing.name === 'cioccominfo' && key.cic) {
-			return true;
-		}
-		return false;
-	});
-
-	self.listingIsVOL = ko.computed(function() {
-		var listing = self.listingType(), key = self.selectedKey();
-		if (!listing || !key) {
+		self.listingIsVOL = ko.computed(function () {
+			var listing = self.listingType(), key = self.selectedKey();
+			if (!listing || !key) {
+				return false;
+			}
+			if (listing.name === 'ciocvolunteer' && key.vol) {
+				return true;
+			}
 			return false;
-		}
-		if (listing.name === 'ciocvolunteer' && key.vol) {
-			return true;
-		}
-		return false;
-	});
+		});
 
-	self.canHaveCustomField = ko.computed(function(){
-		var listing = self.listingType(), key = self.selectedKey();
-		return listing && listing.custfield && key;
-	});
+		self.canHaveCustomField = ko.computed(function () {
+			var listing = self.listingType(), key = self.selectedKey();
+			return listing && listing.custfield && key;
+		});
 
-	self.needCode = ko.computed(function(){
-		var listing = self.listingType(), key = self.selectedKey();
-		return listing && listing.code && key;
-	});
+		self.needCode = ko.computed(function () {
+			var listing = self.listingType(), key = self.selectedKey();
+			return listing && listing.code && key;
+		});
 
-	self.needNUM = ko.computed(function(){
-		var listing = self.listingType(), key = self.selectedKey();
-		return listing && listing.num && key;
-	});
+		self.needNUM = ko.computed(function () {
+			var listing = self.listingType(), key = self.selectedKey();
+			return listing && listing.num && key;
+		});
 
-	self.canHaveCommunity = ko.computed(function(){
-		var listing = self.listingType(), key = self.selectedKey();
-		return listing && listing.location && key;
-	});
+		self.canHaveCommunity = ko.computed(function () {
+			var listing = self.listingType(), key = self.selectedKey();
+			return listing && listing.location && key;
+		});
 
-	self.domainNames = ko.computed(function() {
-		if (self.listingIsCIC()) {
-			return cic_domains;
-		} else if (self.listingIsVOL()) {
-			return vol_domains;
-		}
+		self.domainNames = ko.computed(function () {
+			if (self.listingIsCIC()) {
+				return cic_domains;
+			} else if (self.listingIsVOL()) {
+				return vol_domains;
+			}
 
-		return [];
+			return [];
 
-	});
-	self.shortCode = ko.computed(function() {
-		var listing = self.listingType(), key = self.selectedKey(),
-			language = self.selectedLanguage(), style_me = self.styleMe(), list_id = self.listID(), list_class = self.listClass(),
-			domain = self.selectedDomainName(), include = self.includeFieldList(),
-			exclude = self.excludeFieldList(), font_awesome = self.fontAwesome(),
-			num = self.num(), needNUM = self.needNUM(), code = self.code(), needCode = self.needCode()
+		});
+		self.shortCode = ko.computed(function () {
+			var listing = self.listingType(), key = self.selectedKey(),
+				language = self.selectedLanguage(), style_me = self.styleMe(), list_id = self.listID(), list_class = self.listClass(),
+				domain = self.selectedDomainName(), include = self.includeFieldList(),
+				exclude = self.excludeFieldList(), font_awesome = self.fontAwesome(),
+				num = self.num(), needNUM = self.needNUM(), code = self.code(), needCode = self.needCode()
 			canHaveCommunity = self.canHaveCommunity(), community = self.community(), communityType = self.communityType();
 
-		if (!listing || !key || !domain || (needCode && !code) || (needNUM && !num)) {
-			return '';
-		}
-
-		var args = {url: domain.url, key: key.key, type: listing.type};
-		if (language) {
-			args.ln = language;
-		}
-
-		if (domain.viewtype) {
-			args.viewtype = domain.viewtype;
-		}
-		var iscic = listing.name === 'cioccominfo';
-		var isvol = listing.name === 'ciocvolunteer';
-
-		if (listing.custfield) {
-			$.each(include, function(idx, field) {
-				if ((iscic && field.cic) || (isvol && field.vol)) {
-					args[field.value] = 'on';
-				}
-			});
-			var possible_excludes = [];
-			if (isvol) {
-				possible_excludes = ['org'];
+			if (!listing || !key || !domain || (needCode && !code) || (needNUM && !num)) {
+				return '';
 			}
-			$.each(exclude, function(idx, field) {
-				if ((iscic && field.cic) || (isvol && field.vol)) {
-					var i = possible_excludes.indexOf(field.value);
-					if (i > -1) {
-						possible_excludes.splice(i, 1);
+
+			var args = { url: domain.url, key: key.key, type: listing.type };
+			if (language) {
+				args.ln = language;
+			}
+
+			if (domain.viewtype) {
+				args.viewtype = domain.viewtype;
+			}
+			var iscic = listing.name === 'cioccominfo';
+			var isvol = listing.name === 'ciocvolunteer';
+
+			if (listing.custfield) {
+				$.each(include, function (idx, field) {
+					if ((iscic && field.cic) || (isvol && field.vol)) {
+						args[field.value] = 'on';
 					}
+				});
+				var possible_excludes = [];
+				if (isvol) {
+					possible_excludes = ['org'];
 				}
-			});
-			$.each(possible_excludes, function(idx, field) {
-				args[field] = 'off';
-			});
-		}
+				$.each(exclude, function (idx, field) {
+					if ((iscic && field.cic) || (isvol && field.vol)) {
+						var i = possible_excludes.indexOf(field.value);
+						if (i > -1) {
+							possible_excludes.splice(i, 1);
+						}
+					}
+				});
+				$.each(possible_excludes, function (idx, field) {
+					args[field] = 'off';
+				});
+			}
 
-		if (style_me) {
-			args.style_me = 'on';
-		}
+			if (style_me) {
+				args.style_me = 'on';
+			}
 
-		if (list_id) {
-			args.list_id = list_id;
-		}
+			if (list_id) {
+				args.list_id = list_id;
+			}
 
-		if (list_class) {
-			args.list_class = list_class;
-		}
+			if (list_class) {
+				args.list_class = list_class;
+			}
 
-		if (font_awesome) {
-			args.has_fa = 'on';
-		}
+			if (font_awesome) {
+				args.has_fa = 'on';
+			}
 
-		if (needNUM) {
-			args.num = num;
-		}
+			if (needNUM) {
+				args.num = num;
+			}
 
-		if (needCode) {
-			args.code = code;
-		}
+			if (needCode) {
+				args.code = code;
+			}
 
-		if (canHaveCommunity && community) {
-			args[communityType || 'location'] = community;
-		}
+			if (canHaveCommunity && community) {
+				args[communityType || 'location'] = community;
+			}
 
-		args = $.map(args, function(val, key) { return key + '="' + val + '"'; });
+			args = $.map(args, function (val, key) { return key + '="' + val + '"'; });
 
-		return '[' + listing.name + ' ' + args.join(' ') + ']'
-	});
+			return '[' + listing.name + ' ' + args.join(' ') + ']'
+		});
 
-	ko.computed(function() {
-		//console.log(self.selectedKey(), self.selectedLanguage(), self.listingType(), self.selectedDomainName());
-	});
+		ko.computed(function () {
+			//console.log(self.selectedKey(), self.selectedLanguage(), self.listingType(), self.selectedDomainName());
+		});
 
-};
-ko.options.deferUpdates = true;
-ko.applyBindings(new ViewModel(${json.dumps(keys)|n}, ${json.dumps(cic_domains)|n}, ${json.dumps(vol_domains)|n})); // This makes Knockout get to work
+	};
+	ko.options.deferUpdates = true;
+	ko.applyBindings(new ViewModel(${ json.dumps(keys) | n }, ${ json.dumps(cic_domains) | n }, ${ json.dumps(vol_domains) | n })); // This makes Knockout get to work
 </script>
 
 </%def>
