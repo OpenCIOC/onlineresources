@@ -104,6 +104,7 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_INFO_CREATE_OP, _
 	TXT_INFO_LANGUAGES, _
 	TXT_INFO_LOCATED, _
+	TXT_INST_APPLICATION_QUESTION, _
 	TXT_INST_COPY_OP, _
 	TXT_INST_DATES_AND_TIMES, _
 	TXT_INST_DISPLAY_UNTIL, _
@@ -325,6 +326,7 @@ Sub setTxtEntryForm()
 			TXT_INFO_LANGUAGES = "Vous devez utiliser un nom de langue valide compris dans la liste de contrôle des langues."
 			TXT_INFO_LOCATED = "Pour une recherche exacte, utilisez le niveau de communauté le plus précis possible." & _
 				"<br>Si le champ est vide, le dossier apparaîtra dans <em>toutes</em> les recherches basées sur le champ &quot;Situé dans la communauté &quot;."
+			TXT_INST_APPLICATION_QUESTION = "Optionnel. Les questions de candidature font partie du formulaire lorsqu'un bénévole potentiel exprime son intérêt pour le poste."
 			TXT_INST_COPY_OP = "Veuillez faire les changements appropriés avant de soumettre."
 			TXT_INST_DATES_AND_TIMES = "Sélectionnez toutes les dates et heures où vous pourriez avoir besoin de bénévoles. Les bénévoles utilisant une recherche par date et heure trouveront des postes correspondant à au moins une des dates et heures sélectionnées."
 			TXT_INST_DUTIES = "Fournissez une description détaillée du poste et des activités prévues."
@@ -548,6 +550,7 @@ Sub setTxtEntryForm()
 			TXT_INFO_LANGUAGES = "You must use a valid language name from the languages checklists."
 			TXT_INFO_LOCATED = "For accurate searching, use the most narrow Community applicable." & _
 				"<br>If you leave this field blank, this record will come up in <em>all</em> &quot;Located In Community&quot; searches."
+			TXT_INST_APPLICATION_QUESTION = "Optional. Application questions become part of the form when a potential volunteer expresses interest in the position."
 			TXT_INST_COPY_OP = "Please make the appropriate changes before submitting."
 			TXT_INST_DATES_AND_TIMES = "Select any / all dates and times you may need volunteers. Volunteers using a date and time search will find positions that match at least one of their selected dates and times."
 			TXT_INST_DISPLAY_UNTIL = "Optional. If you choose to provide a &quot;Display Until&quot; date, the record will be <strong>removed from new searches</strong> on that date. " & _
