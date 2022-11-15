@@ -490,6 +490,10 @@ End If
 						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>" & TXT_COLON & _
 							TXT_INST_POSITION_TITLE & "</p>" & vbCrLf & _
 							strFieldVal
+					Case "APPLICATION_QUESTION_1"
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_IMPORTANT & "</span>" & TXT_COLON & _
+							TXT_INST_APPLICATION_QUESTION & "</p>" & vbCrLf & _
+							strFieldVal
 				End Select
 			' "User" field type, holds a user's name or initials
 			Case "u"
@@ -672,8 +676,16 @@ Call printRow("SOURCE_TITLE",strSourcePrefix & TXT_JOB_TITLE, _
 		</table>
 		<%	If user_bSuppressEmailVOL And Not g_bNoEmail Then%>
 		<h3 class="Alert"><%=TXT_NOTIFICATIONS%></h3>
-		<p><strong><%=TXT_NOTIFY_AGENCY%></strong>&nbsp;&nbsp;<label for="NotifyAgency_N"><input type="radio" name="NotifyAgency" id="NotifyAgency_N" value="N" checked>&nbsp;<%=TXT_NO%></label>&nbsp;&nbsp;<label for="NotifyAgency_Y"><input type="radio" name="NotifyAgency" id="NotifyAgency_Y" value="Y">&nbsp;<%=TXT_YES%></label>
-		<br><strong><%=TXT_NOTIFY_ADMIN%></strong>&nbsp;&nbsp;<label for="NotifyAdmin_N"><input type="radio" name="NotifyAdmin" id="NotifyAdmin_N" value="N" checked>&nbsp;<%=TXT_NO%></label>&nbsp;&nbsp;<label for="NotifyAdmin_Y"><input type="radio" name="NotifyAdmin" id="NotifyAdmin_Y" value="Y">&nbsp;<%=TXT_YES%></label></p>
+		<p>
+			<strong><%=TXT_NOTIFY_AGENCY%></strong>
+			<label for="NotifyAgency_N"><input type="radio" name="NotifyAgency" id="NotifyAgency_N" value="N" checked><%=TXT_NO%></label>
+			<label for="NotifyAgency_Y"><input type="radio" name="NotifyAgency" id="NotifyAgency_Y" value="Y"><%=TXT_YES%></label>
+		</p>
+		<p>
+			<strong><%=TXT_NOTIFY_ADMIN%></strong>
+			<label for="NotifyAdmin_N"><input type="radio" name="NotifyAdmin" id="NotifyAdmin_N" value="N" checked><%=TXT_NO%></label>
+			<label for="NotifyAdmin_Y"><input type="radio" name="NotifyAdmin" id="NotifyAdmin_Y" value="Y"><%=TXT_YES%></label>
+		</p>
 		<%	End If
 		End If%>
 

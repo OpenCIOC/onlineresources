@@ -658,6 +658,10 @@ While Not rsFields.EOF
 						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_REQUIRED & "</span>" & TXT_COLON & _
 							TXT_INST_POSITION_TITLE & "</p>" & vbCrLf & _
 							strFieldVal
+					Case "APPLICATION_QUESTION_1"
+						strFieldVal = "<p><span class=""Alert""><span class=""glyphicon glyphicon-star"" aria-hidden=""true""></span>" & TXT_IMPORTANT & "</span>" & TXT_COLON & _
+							TXT_INST_APPLICATION_QUESTION & "</p>" & vbCrLf & _
+							strFieldVal
 				End Select
 			Case "u"
 				strFieldVal = makeUserFieldVal(strFieldName, _
