@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -61,7 +61,7 @@ If Not bEmptyCommTable Then
 <%
 End If
 %>
-<p><input type="submit" value="<%=TXT_NEXT%> >>"></p>
+<p><input type="submit" class="btn btn-default" value="<%=TXT_NEXT%> >>"></p>
 </form>
 
 <%

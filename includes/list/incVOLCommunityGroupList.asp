@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -57,7 +57,7 @@ Function makeVOLCommunityGroupList(intSelected, strSelectName, strSelectTitle, b
 			strReturn = TXT_NO_VALUES_AVAILABLE
 		Else
 			.MoveFirst
-			strReturn = strReturn & "<select title=" & AttrQs(strSelectTitle) & " name=" & AttrQs(strSelectName) & ">"
+			strReturn = strReturn & "<select title=" & AttrQs(strSelectTitle) & " name=" & AttrQs(strSelectName) & " class=""form-control"">"
 			If bIncludeBlank Then
 				strReturn = strReturn & "<option value=""""> -- </option>"
 			End If

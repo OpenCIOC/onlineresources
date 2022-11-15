@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -63,8 +63,8 @@ Call setSessionValue("session_test", "ok")
 
 <div class="max-width-sm">
 <form action="login2.asp" method="post" name="EntryForm" role="form" class="form-horizontal">
-	<%=g_strCacheFormVals%>
 	<div style="display:none">
+	<%=g_strCacheFormVals%>
 	<input type="hidden" name="page" value=<%=AttrQs(Server.HTMLEncode(Trim(Ns(Request("page")))))%>>
 	<input type="hidden" name="args" value=<%=AttrQs(Server.HTMLEncode(Trim(Ns(Request("args")))))%>>
 	</div>

@@ -1,4 +1,4 @@
-﻿<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@  language="VBSCRIPT" %>
 <%Option Explicit%>
 
 <%
@@ -110,11 +110,12 @@ For Each objField in rsProfileInfo.Fields
 	dicBasicInfo(objField.Name) = objField.Value
 Next
 
-Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""" & ps_strPathToStart & makeAssetVer("styles/taxonomy.css") & """/>")
 Call makePageHeader(TXT_VOLUNTEER_PROFILE, TXT_VOLUNTEER_PROFILE, True, True, True, True)
 %>
-<h2><%= TXT_WELCOME & " " & dicBasicInfo("FirstName") & " " & dicBasicInfo("LastName")%>! <a class="btn btn-default" role="button" href="<%=makeLink("logout.asp", strSearchArgs, vbNullString)%>"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> <strong><%=TXT_LOGOUT%></strong></a></h2>
-</form>
+<h2><%=TXT_WELCOME & " " & dicBasicInfo("FirstName") & " " & dicBasicInfo("LastName")%>!
+    <a class="btn btn-default" role="button" href="<%=makeLink("logout.asp", strSearchArgs, vbNullString)%>"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+    <strong><%=TXT_LOGOUT%></strong></a>
+</h2>
 
 <%
 Dim strCommunityIDs, strInterestIDs, strCommunityHTML, strInterestHTML, bHaveACommunity, bHaveAnInterest, strJoin
@@ -129,35 +130,38 @@ strJoin = vbNullString
 Set rsProfileInfo = rsProfileInfo.NextRecordset()
 With rsProfileInfo
 	If .EOF Then
-		strCommunityHTML = "&nbsp;"
+		strCommunityHTML = vbNullString
 	Else
-		Dim intWrapNum, intWrapAt
-		intWrapAt = g_intCommSrchWrapAtVOL - 1
-		intWrapNum = intWrapAt
-		strCommunityHTML = "<table class=""NoBorder cell-padding-1"">" & vbCrLf
+		Dim strWrapClass
+		Select Case g_intCommSrchWrapAtVOL
+			Case 0
+				strWrapClass = "col-xs-12"
+			Case 1
+				strWrapClass = "col-xs-12"
+			Case 2
+				strWrapClass = "col-xs-12 col-md-6"
+			Case 3
+				strWrapClass = "col-xs-12 col-sm-6 col-md-4"
+			Case Else
+				strWrapClass = "col-xxs-12 col-xs-6 col-md-4 col-lg-3"
+		End Select
+
+		strCommunityHTML = "<div class=""row"">" & vbCrLf
 		While Not .EOF
 			If .Fields("IS_SELECTED") Then
 				strCommunityIDs = strCommunityIDs & StringIf(bHaveACommunity, ",") & .Fields("CM_ID")
 				bHaveACommunity = True
 			End If
-			If intWrapNum = intWrapAt Then
-				strCommunityHTML = strCommunityHTML & "<tr valign=""top"">" & vbCrLf
-			End If
-			strCommunityHTML = strCommunityHTML & "<td class=""checkbox-list-item""><label><input type=""checkbox"" name=""CMID"" value=""" & .Fields("CM_ID") & """ " & Checked(.Fields("IS_SELECTED")) & ">&nbsp;" & Server.HTMLEncode(.Fields("Community")) & "</label></td>" & vbCrLf
-			If intWrapNum > 0 Then
-				intWrapNum = intWrapNum - 1
-			Else
-				strCommunityHTML = strCommunityHTML & "</tr>" & vbCrLf
-
-				intWrapNum = intWrapAt
-			End If
+			strCommunityHTML = strCommunityHTML & _
+				"<div class=" & AttrQs(strWrapClass) & ">" & _
+				"<label for=" & AttrQs("CMID_" & .Fields("CM_ID")) & ">" & _
+					"<input type=""checkbox"" name=""CMID"" id=" & AttrQs("CMID_" & .Fields("CM_ID")) & " value=" & AttrQs(.Fields("CM_ID")) & Checked(.Fields("IS_SELECTED")) & "> " & _
+					.Fields("Community") & _
+				"</label>" & _
+				"</div>"
 			.MoveNext
 		Wend
-		If intWrapNum <> intWrapAt Then
-			strCommunityHTML = strCommunityHTML & "</tr>" & vbCrLf
-
-		End If
-		strCommunityHTML = strCommunityHTML & "</table>" & vbCrLf
+		strCommunityHTML = strCommunityHTML & "</div>" & vbCrLf
 	End If
 End With
 
@@ -169,7 +173,6 @@ With rsProfileInfo
 	While Not .EOF
 
 		' this next block of code is the only difference from the volunteer entryform version of
-		' this
 		bHaveAnInterest = True
 		strInterestIDs = strInterestIDs & strJoin & .Fields("AI_ID")
 		strJoin = ","
@@ -191,7 +194,7 @@ With rsProfileInfo
 				"<input type=""text"" id=""NEW_AI"" class=""form-control"">" & _
 			"</div>" & _
 			"<div class=""entryform-checklist-add-right"">" & _
-				"<button type=""button"" class=""btn btn-default"" id=""add_AI"">" & TXT_ADD & "</button>" & _
+				"<button type=""button"" class=""btn btn-info"" id=""add_AI""><span class=""fa fa-plus"" aria-hidden=""true""></span> " & TXT_ADD & "</button>" & _
 			"</div>" & _
 		"</div>"
 
@@ -242,28 +245,35 @@ If Not .EOF Then
 	End If
 %>
 <div>
-<h3><%= TXT_SEARCH_NOW %>!</h3>
-<p>
-<%If Not Nl(strSearchArgs) Then%>
-<%= TXT_USE_MY_SAVED_SEARCH_PROFILE %> <a href="<%=makeLink(ps_strPathToStart & "volunteer/results.asp", strSearchArgs, vbNullString)%>" style="font-weight:bolder"><%= TXT_SEARCH_NOW %></a>
-<em><%= TXT_OR_LC %></em>
-<%End If%>
-<%= TXT_START_A_NEW %><a href="<%=makeLinkB(ps_strPathToStart & "volunteer/")%>" style="font-weight:bolder"><%=TXT_VOLUNTEER_SEARCH%></a>.</p>
-<%If .RecordCount <> 1 Then%>
-<div>
-<%= TXT_REMEMBER_WORKS_WITH_ALL_SITES %>
-<ul>
-<%
-While Not .EOF
-	strSearchURL = "https://" & .Fields("AccessURL") & "/volunteer/"
-	strSearchURL = makeLink(strSearchURL, StringIf(Not Nl(.Fields("ViewType")), "UseVOLVw=" & .Fields("ViewType")), "UseVOLVw")
-	%><li><a href="<%=strSearchURL%>"><%=strSearchURL%></a></li><%
-	.MoveNext
-Wend
-%>
-</ul>
-</div>
-<%End If%>
+    <h3><%=TXT_SEARCH_NOW%>!</h3>
+    <p>
+        <%If Not Nl(strSearchArgs) Then%>
+        <a class="btn btn-info" href="<%=makeLink(ps_strPathToStart & "volunteer/results.asp", strSearchArgs, vbNullString)%>"><%=TXT_USE_MY_SAVED_SEARCH_PROFILE%></a>
+        <em><%=TXT_OR_LC%></em>
+        <%End If%>
+        <%=TXT_START_A_NEW%><a class="btn btn-info" href="<%=makeLinkB(ps_strPathToStart & "volunteer/")%>"><%=TXT_VOLUNTEER_SEARCH%></a>
+    </p>
+    <%
+    If .RecordCount > 1 Then
+    %>
+    <div>
+        <h3><%=TXT_REMEMBER_WORKS_WITH_ALL_SITES%></h3>
+        <ul>
+            <%
+        While Not .EOF
+	        strSearchURL = "https://" & .Fields("AccessURL") & "/volunteer/"
+	        strSearchURL = makeLink(strSearchURL, StringIf(Not Nl(.Fields("ViewType")), "UseVOLVw=" & .Fields("ViewType")), "UseVOLVw")
+            %>
+            <li><a href="<%=strSearchURL%>"><%=strSearchURL%></a></li>
+            <%
+	        .MoveNext
+        Wend
+            %>
+        </ul>
+    </div>
+    <%
+        End If
+    %>
 </div>
 <%
 End If
@@ -271,36 +281,39 @@ End With
 Set rsProfileInfo = rsProfileInfo.NextRecordset()
 With rsProfileInfo
 
-If .EOF And intShow > 0 Then
-	intShow = intShow -1
-End If
+    If .EOF And intShow > 0 Then
+	    intShow = intShow -1
+    End If
 %>
 
 <div id="TabbedDisplayTabArea" class="max-width-lg">
-<ul>
-
-<% If Not .EOF Then %>
-<li><a href="#referral_tab"><%= TXT_MY_APPLICATIONS %></a></li>
-<%End If%>
-<li><a href="#search_tab"><%= TXT_MY_SEARCH_PROFILE %></a></li>
-<li><a href="#personal_tab"><%= TXT_MY_PERSONAL_INFO %></a></li>
-</ul>
+    <ul>
 <%
-If Not .EOF Then
+    If Not .EOF Then
 %>
-<div id="referral_tab">
-<table class="BasicBorder cell-padding-3 sortable_table"  data-sortdisabled="[4]" data-default-sort="[0,1]">
-<thead>
-<tr>
-	<th class="RevTitleBox"><%= TXT_APPLICATION_DATE %></th>
-	<th class="RevTitleBox"><%=TXT_POSITION_TITLE%></th>
-	<th class="RevTitleBox"><%=TXT_ORG_NAMES%></th>
-	<th class="RevTitleBox"><%= TXT_OUTCOME %></th>
-	<th class="RevTitleBox"><%=TXT_ACTION%></th>
-</tr>
-</thead>
-<tbody>
+        <li><a href="#referral_tab"><%=TXT_MY_APPLICATIONS%></a></li>
 <%
+    End If
+%>
+        <li><a href="#search_tab"><%=TXT_MY_SEARCH_PROFILE%></a></li>
+        <li><a href="#personal_tab"><%=TXT_MY_PERSONAL_INFO%></a></li>
+    </ul>
+    <%
+    If Not .EOF Then
+    %>
+    <div id="referral_tab">
+        <table class="BasicBorder cell-padding-3 sortable_table" data-sortdisabled="[4]" data-default-sort="[0,1]">
+            <thead>
+                <tr>
+                    <th class="RevTitleBox"><%=TXT_APPLICATION_DATE%></th>
+                    <th class="RevTitleBox"><%=TXT_POSITION_TITLE%></th>
+                    <th class="RevTitleBox"><%=TXT_ORG_NAMES%></th>
+                    <th class="RevTitleBox"><%=TXT_OUTCOME%></th>
+                    <th class="RevTitleBox"><%=TXT_ACTION%></th>
+                </tr>
+            </thead>
+            <tbody>
+                <%
 
 		Dim bOutcomeSuccessful, strOutcomeNotes, _
 				dReferralDate, _
@@ -325,177 +338,238 @@ If Not .EOF Then
 			strOutcome = "U"
 		End If
 
-%>
-<tr valign="TOP" id="referral_table_row_<%=intRefID%>" data-refid="<%=intRefID%>">
-	<td class="ReferralDate" data-tbl-key="<%=Nz(ISODateTimeString(dReferralDate), "1900-01-01 00:00:00")%>"><%=Nz(DateString(dReferralDate, True), "&nbsp;")%></td>
-	<td class="PositionTitle"><%= Nz(strPositionTitle, "") %></td>
+                %>
+                <tr valign="top" id="referral_table_row_<%=intRefID%>" data-refid="<%=intRefID%>">
+                    <td class="ReferralDate" data-tbl-key="<%=Nz(ISODateTimeString(dReferralDate), "1900-01-01 00:00:00")%>"><%=Nz(DateString(dReferralDate, True), "&nbsp;")%></td>
+                    <td class="PositionTitle"><%= Nz(strPositionTitle, "") %></td>
 
-	<td><%=strOrgName%></td>
-	<td id="referral_outcome_<%=intRefID%>" data-outcome="<%= strOutcome %>">
-		<div class="OutcomeContainer" <%= StringIf(strOutcome="N", "style=""display: None""") %>>
-			<strong><%= TXT_OUTCOME %>:</strong> <span class="OutcomeSuccessfull" <%=StringIf(strOutcome <> "S", "style=""display: none;""")%>><%= TXT_SUCCESSFUL %></span><span class="OutcomeUnsuccessful" <%= StringIf(strOutcome <> "U", "style=""display: none""")%>><%= TXT_UNSUCCESSFUL %></span>
-		</div>
-		<div class="OutcomeNotesContainer" <%= StringIf(Nl(strOutcomeNotes), "style=""display: none""") %>>
-			<strong><%= TXT_NOTES %>:</strong> <span class="OutcomeNotes"><%=Server.HTMLEncode(strOutcomeNotes)%></span>
-		</div>
-	</td>
-	<td>
-		<input type="button" id="referral_outcome_edit_<%=intRefID%>" class="referral_outcome_edit btn btn-default" value="<%= TXT_OUTCOME %>">
-		<input type="button" id="referral_hide_<%=intRefID%>" class="referral_hide btn btn-default" value="<%= TXT_HIDE %>">
-	</td>
-</tr>
-<%
+                    <td><%=strOrgName%></td>
+                    <td id="referral_outcome_<%=intRefID%>" data-outcome="<%=strOutcome%>">
+                        <div class="OutcomeContainer" <%=StringIf(strOutcome="N", "style=""display: None""")%>>
+                            <strong><%=TXT_OUTCOME & TXT_COLON%></strong>
+                            <span class="OutcomeSuccessfull" <%=StringIf(strOutcome <> "S", "style=""display: none;""")%>><%=TXT_SUCCESSFUL%></span>
+                            <span class="OutcomeUnsuccessful" <%= StringIf(strOutcome <> "U", "style=""display: none""")%>><%= TXT_UNSUCCESSFUL %></span>
+                        </div>
+                        <div class="OutcomeNotesContainer" <%= StringIf(Nl(strOutcomeNotes), "style=""display: none""") %>>
+                            <strong><%= TXT_NOTES %>:</strong> <span class="OutcomeNotes"><%=Server.HTMLEncode(strOutcomeNotes)%></span>
+                        </div>
+                    </td>
+                    <td>
+                        <button id="referral_outcome_edit_<%=intRefID%>" class="referral_outcome_edit btn btn-sm btn-info btn-action-list"><span class="fa fa-edit" aria-hidden="true"></span> <%=TXT_OUTCOME%></button>
+                        <button id="referral_hide_<%=intRefID%>" class="referral_hide btn btn-sm btn-danger btn-action-list"><span class="fa fa-remove" aria-hidden="true"></span> <%=TXT_HIDE%></button>
+                    </td>
+                </tr>
+                <%
 			.MoveNext
 		Wend
-%>
-</tbody>
-</table>
+                %>
+            </tbody>
+        </table>
 
-</div>
-<%
+    </div>
+    <%
 End If
 End With
-%>
-<div id="search_tab">
-<form method="post" action="criteria.asp" id="criteria_form">
-<div style="display: none;">
-<%=g_strCacheFormVals%>
-</div>
-<table class="BasicBorder cell-padding-4">
-	<tr><th colspan="2" class="RevTitleBox"><%= TXT_SEARCH_PROFILE %></th></tr>
-	<tr>
-		<td class="FieldLabelLeft"><%= TXT_EMAIL_NOTIFICATIONS %></td>
-		<td><input type="checkbox" name="NotifyNew"<%=Checked(dicBasicInfo("NotifyNew"))%>> <%= " " & TXT_NOTIFY_ME_NEW %>
-			<br><input type="checkbox" name="NotifyUpdated"<%=Checked(dicBasicInfo("NotifyUpdated"))%>> <%= " " & TXT_NOTIFY_ME_UPDATED %>
-		</td>
-	</tr>
-	<tr>
-		<td class="FieldLabelLeft"><%= TXT_DATE_OF_BIRTH %></td>
-		<td><%= Replace(TXT_INST_DATE_OF_BIRTH, "[DATE]", DateString(CDate("1979-06-21"), True)) %>
-			<br><%=makeDateFieldVal("BirthDate", dicBasicInfo("BirthDate"), False, False, False, False, False, False)%>
-		</td>
-	</tr>
-	<tr>
-		<td class="FieldLabelLeft"><%= TXT_COMMUNITIES %></td>
-		<td><%= TXT_INST_COMMUNITIES %>
-		<br><%=strCommunityHTML%></td>
-	</tr>
-	<tr>
-		<td class="FieldLabelLeft"><%= TXT_DATES_AND_TIMES %></td>
-		<td><%= TXT_INST_DATES_AND_TIMES_PROFILE %>
-		<br>&nbsp;
-		<table class="BasicBorder cell-padding-2">
-			<tr class="FieldLabelCenterClr">
-				<td>&nbsp;</td>
-				<td><%= TXT_TIME_MORNING %><br><%= TXT_TIME_BEFORE_12 %></td>
-				<td><%= TXT_TIME_AFTERNOON %><br><%= TXT_TIME_12_6 %></td>
-				<td><%= TXT_TIME_EVENING %><br><%= TXT_TIME_AFTER_6 %></td>
-			</tr>
-			<tr>
-				<td class="FieldLabelClr"><%= TXT_DAY_MONDAY %></td>
-				<td align="center"><input name="SCH_M_Morning" type="checkbox"<%=Checked(dicBasicInfo("SCH_M_Morning"))%>></td>
-				<td align="center"><input name="SCH_M_Afternoon" type="checkbox"<%=Checked(dicBasicInfo("SCH_M_Afternoon"))%>></td>
-				<td align="center"><input name="SCH_M_Evening" type="checkbox"<%=Checked(dicBasicInfo("SCH_M_Evening"))%>></td>
-			</tr>
-			<tr>
-				<td class="FieldLabelClr"><%= TXT_DAY_TUESDAY %></td>
-				<td align="center"><input name="SCH_TU_Morning" type="checkbox"<%=Checked(dicBasicInfo("SCH_TU_Morning"))%>></td>
-				<td align="center"><input name="SCH_TU_Afternoon" type="checkbox"<%=Checked(dicBasicInfo("SCH_TU_Afternoon"))%>></td>
-				<td align="center"><input name="SCH_TU_Evening" type="checkbox"<%=Checked(dicBasicInfo("SCH_TU_Evening"))%>></td>
-			</tr>
-			<tr>
-				<td class="FieldLabelClr"><%= TXT_DAY_WEDNESDAY %></td>
-				<td align="center"><input name="SCH_W_Morning" type="checkbox"<%=Checked(dicBasicInfo("SCH_W_Morning"))%>></td>
-				<td align="center"><input name="SCH_W_Afternoon" type="checkbox"<%=Checked(dicBasicInfo("SCH_W_Afternoon"))%>></td>
-				<td align="center"><input name="SCH_W_Evening" type="checkbox"<%=Checked(dicBasicInfo("SCH_W_Evening"))%>></td>
-			</tr>
-			<tr>
-				<td class="FieldLabelClr"><%= TXT_DAY_THURSDAY %></td>
-				<td align="center"><input name="SCH_TH_Morning" type="checkbox"<%=Checked(dicBasicInfo("SCH_TH_Morning"))%>></td>
-				<td align="center"><input name="SCH_TH_Afternoon" type="checkbox"<%=Checked(dicBasicInfo("SCH_TH_Afternoon"))%>></td>
-				<td align="center"><input name="SCH_TH_Evening" type="checkbox"<%=Checked(dicBasicInfo("SCH_TH_Evening"))%>></td>
-			</tr>
-			<tr>
-				<td class="FieldLabelClr"><%= TXT_DAY_FRIDAY %></td>
-				<td align="center"><input name="SCH_F_Morning" type="checkbox" <%=Checked(dicBasicInfo("SCH_F_Morning"))%>></td>
-				<td align="center"><input name="SCH_F_Afternoon" type="checkbox" <%=Checked(dicBasicInfo("SCH_F_Afternoon"))%>></td>
-				<td align="center"><input name="SCH_F_Evening" type="checkbox" <%=Checked(dicBasicInfo("SCH_F_Evening"))%>></td>
-			</tr>
-			<tr>
-				<td class="FieldLabelClr"><%= TXT_DAY_SATURDAY %></td>
-				<td align="center"><input name="SCH_ST_Morning" type="checkbox"<%=Checked(dicBasicInfo("SCH_ST_Morning"))%>></td>
-				<td align="center"><input name="SCH_ST_Afternoon" type="checkbox"<%=Checked(dicBasicInfo("SCH_ST_Afternoon"))%>></td>
-				<td align="center"><input name="SCH_ST_Evening" type="checkbox"<%=Checked(dicBasicInfo("SCH_ST_Evening"))%>></td>
-			</tr>
-			<tr>
-				<td class="FieldLabelClr"><%= TXT_DAY_SUNDAY %></td>
-				<td align="center"><input name="SCH_SN_Morning" type="checkbox" <%=Checked(dicBasicInfo("SCH_SN_Morning"))%>></td>
-				<td align="center"><input name="SCH_SN_Afternoon" type="checkbox"<%=Checked(dicBasicInfo("SCH_SN_Afternoon"))%>></td>
-				<td align="center"><input name="SCH_SN_Evening" type="checkbox"<%=Checked(dicBasicInfo("SCH_SN_Evening"))%>></td>
-			</tr>
-		</table>
-	</tr>
-	<tr>
-		<td class="FieldLabelLeft" id="FIELD_INTERESTS"><%= TXT_AREAS_OF_INTEREST %></td>
-		<td class="InterestList">
-			<%=strInterestHTML%>
-			<p><button type="button" class="btn btn-default" id="clear_interests"><%= TXT_REMOVE_ALL %></button></p>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2">
-			<input type="submit" name="Submit" value="<%=TXT_SUBMIT%>" class="btn btn-default">
-			<input type="reset" value="<%=TXT_RESET_FORM%>" id="criteria_reset_button" class="btn btn-default">
-		</td>
-	</tr>
-</table>
-</form>
-</div>
-<div id="personal_tab">
-<%
+    %>
+    <div id="search_tab">
+        <form method="post" action="criteria.asp" id="criteria_form">
+            <div style="display: none;">
+                <%=g_strCacheFormVals%>
+            </div>
+            <h4><%=TXT_MY_SEARCH_PROFILE & TXT_COLON & TXT_VIEW_OR_UPDATE%></h4>
+            <table class="BasicBorder cell-padding-4 form-table responsive-table">
+                <tr>
+                    <td class="field-label-cell"><%=TXT_EMAIL_NOTIFICATIONS%></td>
+                    <td class="field-data-cell">
+                        <input type="checkbox" name="NotifyNew" <%=Checked(dicBasicInfo("NotifyNew"))%>>
+                        <%= " " & TXT_NOTIFY_ME_NEW %>
+                        <br>
+                        <input type="checkbox" name="NotifyUpdated" <%=Checked(dicBasicInfo("NotifyUpdated"))%>>
+                        <%= " " & TXT_NOTIFY_ME_UPDATED %>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="field-label-cell"><%=TXT_DATE_OF_BIRTH%></td>
+                    <td class="field-data-cell"><%=Replace(TXT_INST_DATE_OF_BIRTH, "[DATE]", DateString(CDate("1979-06-21"), True))%>
+                        <br>
+                        <%=makeDateFieldVal("BirthDate", dicBasicInfo("BirthDate"), False, False, False, False, False, False)%>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="field-label-cell">
+                        <%=TXT_COMMUNITIES%>
+                    </td>
+                    <td class="field-data-cell">
+                        <%=TXT_INST_COMMUNITIES%>
+                        <%=strCommunityHTML%>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="field-label-cell">
+                        <%=TXT_DATES_AND_TIMES %>
+                    </td>
+                    <td class="field-data-cell"><%=TXT_INST_DATES_AND_TIMES_PROFILE %>
+		                <table class="BasicBorder cell-padding-2 clear-line-above">
+                            <tr class="FieldLabelCenterClr">
+                                <td>&nbsp;</td>
+                                <td><%=TXT_TIME_MORNING%><br>
+                                    <%=TXT_TIME_BEFORE_12%></td>
+                                <td><%=TXT_TIME_AFTERNOON%><br>
+                                    <%=TXT_TIME_12_6%></td>
+                                <td><%=TXT_TIME_EVENING%><br>
+                                    <%=TXT_TIME_AFTER_6%></td>
+                            </tr>
+                            <tr>
+                                <td class="FieldLabelClr"><%= TXT_DAY_MONDAY %></td>
+                                <td align="center">
+                                    <input name="SCH_M_Morning" type="checkbox" <%=Checked(dicBasicInfo("SCH_M_Morning"))%>></td>
+                                <td align="center">
+                                    <input name="SCH_M_Afternoon" type="checkbox" <%=Checked(dicBasicInfo("SCH_M_Afternoon"))%>></td>
+                                <td align="center">
+                                    <input name="SCH_M_Evening" type="checkbox" <%=Checked(dicBasicInfo("SCH_M_Evening"))%>></td>
+                            </tr>
+                            <tr>
+                                <td class="FieldLabelClr"><%= TXT_DAY_TUESDAY %></td>
+                                <td align="center">
+                                    <input name="SCH_TU_Morning" type="checkbox" <%=Checked(dicBasicInfo("SCH_TU_Morning"))%>></td>
+                                <td align="center">
+                                    <input name="SCH_TU_Afternoon" type="checkbox" <%=Checked(dicBasicInfo("SCH_TU_Afternoon"))%>></td>
+                                <td align="center">
+                                    <input name="SCH_TU_Evening" type="checkbox" <%=Checked(dicBasicInfo("SCH_TU_Evening"))%>></td>
+                            </tr>
+                            <tr>
+                                <td class="FieldLabelClr"><%= TXT_DAY_WEDNESDAY %></td>
+                                <td align="center">
+                                    <input name="SCH_W_Morning" type="checkbox" <%=Checked(dicBasicInfo("SCH_W_Morning"))%>></td>
+                                <td align="center">
+                                    <input name="SCH_W_Afternoon" type="checkbox" <%=Checked(dicBasicInfo("SCH_W_Afternoon"))%>></td>
+                                <td align="center">
+                                    <input name="SCH_W_Evening" type="checkbox" <%=Checked(dicBasicInfo("SCH_W_Evening"))%>></td>
+                            </tr>
+                            <tr>
+                                <td class="FieldLabelClr"><%= TXT_DAY_THURSDAY %></td>
+                                <td align="center">
+                                    <input name="SCH_TH_Morning" type="checkbox" <%=Checked(dicBasicInfo("SCH_TH_Morning"))%>></td>
+                                <td align="center">
+                                    <input name="SCH_TH_Afternoon" type="checkbox" <%=Checked(dicBasicInfo("SCH_TH_Afternoon"))%>></td>
+                                <td align="center">
+                                    <input name="SCH_TH_Evening" type="checkbox" <%=Checked(dicBasicInfo("SCH_TH_Evening"))%>></td>
+                            </tr>
+                            <tr>
+                                <td class="FieldLabelClr"><%= TXT_DAY_FRIDAY %></td>
+                                <td align="center">
+                                    <input name="SCH_F_Morning" type="checkbox" <%=Checked(dicBasicInfo("SCH_F_Morning"))%>></td>
+                                <td align="center">
+                                    <input name="SCH_F_Afternoon" type="checkbox" <%=Checked(dicBasicInfo("SCH_F_Afternoon"))%>></td>
+                                <td align="center">
+                                    <input name="SCH_F_Evening" type="checkbox" <%=Checked(dicBasicInfo("SCH_F_Evening"))%>></td>
+                            </tr>
+                            <tr>
+                                <td class="FieldLabelClr"><%= TXT_DAY_SATURDAY %></td>
+                                <td align="center">
+                                    <input name="SCH_ST_Morning" type="checkbox" <%=Checked(dicBasicInfo("SCH_ST_Morning"))%>></td>
+                                <td align="center">
+                                    <input name="SCH_ST_Afternoon" type="checkbox" <%=Checked(dicBasicInfo("SCH_ST_Afternoon"))%>></td>
+                                <td align="center">
+                                    <input name="SCH_ST_Evening" type="checkbox" <%=Checked(dicBasicInfo("SCH_ST_Evening"))%>></td>
+                            </tr>
+                            <tr>
+                                <td class="FieldLabelClr"><%= TXT_DAY_SUNDAY %></td>
+                                <td align="center">
+                                    <input name="SCH_SN_Morning" type="checkbox" <%=Checked(dicBasicInfo("SCH_SN_Morning"))%>></td>
+                                <td align="center">
+                                    <input name="SCH_SN_Afternoon" type="checkbox" <%=Checked(dicBasicInfo("SCH_SN_Afternoon"))%>></td>
+                                <td align="center">
+                                    <input name="SCH_SN_Evening" type="checkbox" <%=Checked(dicBasicInfo("SCH_SN_Evening"))%>></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="field-label-cell" id="FIELD_INTERESTS">
+                        <%=TXT_AREAS_OF_INTEREST%>
+                    </td>
+                    <td class="field-data-cell InterestList">
+                        <%=strInterestHTML%>
+                        <button type="button" class="btn btn-danger" id="clear_interests"><span class="fa fa-remove" aria-hidden="true"></span> <%=TXT_REMOVE_ALL%></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="field-data-cell" colspan="2">
+                        <input type="submit" name="Submit" value="<%=TXT_SUBMIT%>" class="btn btn-default">
+                        <input type="reset" value="<%=TXT_RESET_FORM%>" id="criteria_reset_button" class="btn btn-default">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div id="personal_tab">
+        <%
 Call VOLProfilePersonalForm(False, dicBasicInfo)
-%>
+        %>
+    </div>
 </div>
+
+<div id="confirm_hide_dialog" style="display: none;">
+    <h3><%= TXT_CONFIRM_APPLICATION_HIDE %></h3>
+    <form style="display:none" id="hide_confirm_form">
+        <%=g_strCacheFormVals%>
+        <input type="hidden" name="RefID" id="hide_confirm_refid" value="">
+        <input type="hidden" name="Confirm" value="on">
+    </form>
+    <p><%= TXT_INST_CONFIRM_APPLICATION_HIDE %></p>
+    <input class="btn btn-default" type="button" name="Submit" value="<%= TXT_HIDE %>" id="confirm_okay">
+    <input class="btn btn-default" type="button" value="<%= TXT_CANCEL %>" id="confirm_cancel">
 </div>
 
 <div id="outcome_dialog" style="display: none;">
-<h2 id="outcome_dialog_title"><%=strPositionTitle%> (<%=dReferralDate%>)</h1>
-<form id="outcome_form">
-<div style="display:none">
-<%=g_strCacheFormVals%>
-<input type="hiden" name="RefID" id="outcome_refid" value="">
-</div>
-<table class="BasicBorder cell-padding-3">
-	<tr>
-		<td class="FieldLabelLeft"><%= TXT_OUTCOME %></td>
-		<td>
-			<select name="Outcome" id="outcome_state">
-				<option value="N"><%= TXT_UNKNOWN %></option>
-				<option value="S"><%= TXT_SUCCESSFUL %></option>
-				<option value="U"><%= TXT_UNSUCCESSFUL %></option>
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td class="FieldLabelLeft"><%= TXT_NOTES %></td>
-		<td><textarea cols="<%=TEXTAREA_COLS%>" rows="<%=TEXTAREA_ROWS_XLONG%>" name="Notes" id="outcome_notes"></textarea></td>
-	</tr>
-	<tr>
-		<td colspan="2"><input type="submit" name="Submit" value="<%=TXT_SUBMIT%>"> <input type="button" value="<%=TXT_CANCEL%>" id="outcome_cancel"></td>
-	</tr>
-</table>
-</form>
+    <h2 id="outcome_dialog_title"><%=strPositionTitle%> (<%=dReferralDate%>)</h2>
+    <form id="outcome_form">
+        <div style="display: none">
+            <%=g_strCacheFormVals%>
+            <input type="hidden" name="RefID" id="outcome_refid" value="">
+        </div>
+        <table class="BasicBorder cell-padding-3">
+            <tr>
+                <td class="field-label-cell"><%= TXT_OUTCOME %></td>
+                <td class="field-data-cell">
+                    <select class="form-control" name="Outcome" id="outcome_state">
+                        <option value="N"><%=TXT_UNKNOWN%></option>
+                        <option value="S"><%=TXT_SUCCESSFUL%></option>
+                        <option value="U"><%=TXT_UNSUCCESSFUL%></option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="field-label-cell"><%=TXT_NOTES%></td>
+                <td class="field-data-cell">
+                    <textarea class="form-control" cols="<%=TEXTAREA_COLS%>" rows="<%=TEXTAREA_ROWS_XLONG%>" name="Notes" id="outcome_notes"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="field-data-cell" colspan="2">
+                    <input class="btn btn-default" type="submit" name="Submit" value="<%=TXT_SUBMIT%>">
+                    <input class="btn btn-default" type="button" value="<%=TXT_CANCEL%>" id="outcome_cancel">
+                </td>
+            </tr>
+        </table>
+    </form>
 </div>
 
 <form class="NotVisible" name="stateForm" id="stateForm">
-<textarea id="cache_form_values"></textarea>
+    <textarea id="cache_form_values"></textarea>
 </form>
+<%
+    Dim strInterestGenURL
+    strInterestGenURL = makeLinkB(ps_strPathToStart & "jsonfeeds/interest_generator.asp")
+%>
 <%= makeJQueryScriptTags() %>
 <%= JSVerScriptTag("scripts/vprofiles.js") %>
 <script type="text/javascript">
-(function() {
-init_vprofiles(<%= intShow %>, "<%= ps_strRootPath %>", "<%= TXT_REMOVE %>", <%= IIf(g_bOnlySpecificInterests, """" & makeLink("~/volunteer/interestfind.asp", "ProfileSearch=on", vbNullString) & """", "null") %>, "<%= TXT_NOT_FOUND %>", "<%= makeLinkB(ps_strPathToStart & "jsonfeeds/interest_generator.asp") %>");
-})();
+
+    (function () {
+        init_vprofiles(<%=intShow%>, "<%=ps_strRootPath%>", "<%=TXT_REMOVE%>", "<%=TXT_NOT_FOUND%>", "<%=strInterestGenURL%>");
+    })();
 </script>
 <%
 Call makePageFooter(True)

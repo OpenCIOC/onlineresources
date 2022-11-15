@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@  language="VBSCRIPT" %>
 <%Option Explicit%>
 
 <%
@@ -132,8 +132,9 @@ If bSQLError Then
 	Call handleError(TXT_YOUR_PASSWORD_COULD_NOT_BE_RESET & " " & strErrorList, vbNullString, vbNullString)
 ElseIf bValidationError Then
 	Call handleError(TXT_THERE_WERE_VALIDIATION_ERRORS, vbNullString, vbNullString)
-	%><ul><%=strErrorList%></ul>
-	<p><%=TXT_USE_BACK_BUTTON%></p><%
+%><ul><%=strErrorList%></ul>
+<p><%=TXT_USE_BACK_BUTTON%></p>
+<%
 Else
 	Dim bEmailFailed, strExtraArgs
 
@@ -145,11 +146,12 @@ Else
 
 	Call handleMessage(TXT_YOUR_PASSWORD_IS_RESET, vbNullString, vbNullString, False)
 
-	%><p><%= TXT_YOU_HAVE_BEEN_SENT_PASSWORD %></p>
-	<form method="post" action="login.asp?<%=strExtraArgs%>">
-	<%=g_strCacheFormVals%>
-	<p><input type="submit" value="<%= TXT_LOGIN %>"></p>
-	</form>
+%>
+<p><%= TXT_YOU_HAVE_BEEN_SENT_PASSWORD %></p>
+<form method="post" action="login.asp?<%=strExtraArgs%>">
+    <%=g_strCacheFormVals%>
+    <input class="btn btn-default" type="submit" value="<%=TXT_LOGIN_NOW%>">
+</form>
 <%
 End If
 

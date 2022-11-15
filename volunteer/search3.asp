@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@  language="VBSCRIPT" %>
 <%Option Explicit%>
 
 <%
@@ -45,26 +45,27 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../includes/search/incCommSrchVOLList.asp" -->
 <%
 Dim strCMID, _
-	strSearchCMID, _
+	strCMIDList, _
 	decAge, _
 	bOSSD, _
-	strIGID
+	strIGID, _
+	bNoInterests
 
 strCMID = Trim(Request("CMID"))
 If Not IsIDList(strCMID) Then
 	strCMID = vbNullString
-Else
-	strSearchCMID = Trim(Request("SearchCMID"))
-	If Not IsIDList(strSearchCMID) Then
-		strSearchCMID = vbNullString
-	End If
-	If Nl(strSearchCMID) Then
-		Call getVolSearchComms(strCMID)
-	Else
-		strCommList = strCMID
-		strCommSearchList = strSearchCMID
-	End If
 End If
+strCMIDList = Trim(Request("CMIDList"))
+If Not IsIDList(strCMIDList) Then
+	strCMIDList = vbNullString
+End If
+
+If Not Nl(strCMIDList) Then
+	strCMID = strCMID & StringIf(Not Nl(strCMID),",") & strCMIDList
+	strCMID = Replace(strCMID," ",vbNullString)
+End If
+
+Call getVolSearchComms(strCMID)
 
 decAge = Request("Age")
 If Not Nl(decAge) Then
@@ -83,9 +84,9 @@ If Not IsIDList(strIGID) Then
 	strIGID = Null
 End If
 
-Function makeSrch2Table()
+Sub makeSrch3Table()
 	Dim strReturn, strSQL
-	Dim cmdSrch2, rsSrch2
+	Dim cmdSrch3, rsSrch3
 
 	strSQL = "SELECT ai.AI_ID, ain.Name AS InterestName, COUNT(DISTINCT pr.VNUM) AS NUM_POS" & vbCrLf & _
 			"FROM VOL_InterestGroup ig" & vbCrLf & _
@@ -118,44 +119,43 @@ Function makeSrch2Table()
 	'Response.Flush()
 
 
-	Set cmdSrch2 = Server.CreateObject("ADODB.Command")
-	With cmdSrch2
+	Set cmdSrch3 = Server.CreateObject("ADODB.Command")
+	With cmdSrch3
 		.ActiveConnection = getCurrentVOLBasicCnn()
 		.CommandType = adCmdText
 		.CommandText = strSQL
 		.CommandTimeout = 0
 	End With
-	Set rsSrch2 = cmdSrch2.Execute
-	With rsSrch2
+	Set rsSrch3 = cmdSrch3.Execute
+	With rsSrch3
 		If .EOF Then
-			strReturn = "<p class=""Alert"">" & TXT_NO_SPECIFIC_INTERESTS_FOUND & "</p>"
+			bNoInterests = True
+%>
+<p><span class="AlertBubble"><%= TXT_NO_SPECIFIC_INTERESTS_FOUND %></span></p>
+<%
 		Else
-			Dim intWrapNum, intWrapAt
-			intWrapAt = 1
-			intWrapNum = intWrapAt
-			strReturn = strReturn & "<table class=""NoBorder cell-padding-4"">"
+%>
+<div class="row clear-line-below">
+<%
 			While Not .EOF
-				If intWrapNum = intWrapAt Then
-					strReturn = strReturn & "<tr VALIGN=top>"
-				End If
-				strReturn = strReturn & vbCrLf & "<td><label><input type=""checkbox"" name=""AIID"" value=""" & rsSrch2("AI_ID") & """>" & _
-					.Fields("InterestName") & "</label>&nbsp;(" & .Fields("NUM_POS") & ")</td>"
-				If intWrapNum > 0 Then
-					intWrapNum = intWrapNum - 1
-				Else
-					strReturn = strReturn & "</tr>"
-					intWrapNum = intWrapAt
-				End If
+%>
+	<div class="col-xs-12 col-sm-6 col-md-4 clear-line-below">
+		<label>
+			<input type="checkbox" name="AIID" value="<%=rsSrch3("AI_ID")%>">
+			<%=Server.HTMLEncode(.Fields("InterestName"))%>
+		</label>
+		<span class="badge"><%= .Fields("NUM_POS") %></span>
+	</div>
+<%
 				.MoveNext
 			Wend
-			If intWrapNum <> intWrapAt Then
-				strReturn = strReturn & "</tr>"
-			End If
-			strReturn = strReturn & vbCrLf & "</table>"
+%>
+</div>
+<%
 		End If
 	End With
-	makeSrch2Table = strReturn
-End Function
+
+End Sub
 
 %>
 <%
@@ -164,24 +164,29 @@ Call makePageHeader(TXT_VOLUNTEER_SEARCH_STEP & IIf(g_bOnlySpecificInterests,"2"
 <h2><%=IIf(g_bOnlySpecificInterests,TXT_AREAS_OF_INTEREST,TXT_SPECIFIC_AREA_OF_INTEREST)%></h2>
 <p><%=IIf(g_bOnlySpecificInterests,TXT_INST_SELECT_SPECIFIC_INTERESTS_2,TXT_INST_SELECT_SPECIFIC_INTERESTS_1)%></p>
 <form action="<%= IIf(g_bUseDatesTimes, "search4.asp", "results.asp") %>" name="EntryForm" method="GET">
-<div style="display:none">
-<%=g_strCacheFormVals%>
-<%If Not Nl(strCommList) Then%>
-<input type="hidden" name="CMID" value="<%=strCommList%>">
-<input type="hidden" name="SearchCMID" value="<%=strCommSearchList%>">
-<%End If%>
-<%If Not Nl(decAge) Then%>
-<input type="hidden" name="Age" value="<%=decAge%>">
-<%End If%>
-<%If bOSSD Then%>
-<input type="hidden" name="forOSSD" value="on">
-<%End If%>
-<%If Not Nl(strIGID) Then%>
-<input type="hidden" name="IGID" value="<%=strIGID%>">
-<%End If%>
-</div>
-<%=makeSrch2Table()%>
-<p><input type="submit" value="<%= TXT_NEXT %> >>"></p>
+    <div style="display: none">
+        <%=g_strCacheFormVals%>
+        <%If Not Nl(strCommList) Then%>
+        <input type="hidden" name="CMID" value="<%=strCommList%>">
+        <%End If%>
+        <%If Not Nl(decAge) Then%>
+        <input type="hidden" name="Age" value="<%=decAge%>">
+        <%End If%>
+        <%If bOSSD Then%>
+        <input type="hidden" name="forOSSD" value="on">
+        <%End If%>
+        <%If Not Nl(strIGID) Then%>
+        <input type="hidden" name="IGID" value="<%=strIGID%>">
+        <%End If%>
+    </div>
+<%
+	Call makeSrch3Table()
+	If Not bNoInterests Then
+%>
+	<input class="btn btn-default" type="submit" value="<%= TXT_NEXT %> >>">
+<%
+	End If
+%>
 </form>
 <%
 Call makePageFooter(True)

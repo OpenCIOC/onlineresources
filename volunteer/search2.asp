@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@  language="VBSCRIPT" %>
 <%Option Explicit%>
 
 <%
@@ -54,7 +54,10 @@ Call makePageHeader(TXT_VOLUNTEER_SEARCH_STEP & "2", TXT_VOLUNTEER_SEARCH_STEP &
 Dim strCMID, _
 	strCMIDList, _
 	decAge, _
-	bOSSD
+	bOSSD, _
+	bNoInterests
+
+bNoInterests = False
 
 strCMID = Trim(Request("CMID"))
 If Not IsIDList(strCMID) Then
@@ -84,8 +87,8 @@ Else
 End If
 bOSSD = Request("forOSSD") = "on"
 
-Function makeSrch2Table()
-	Dim strReturn, strSQL
+Sub makeSrch2Table()
+	Dim strSQL
 	Dim cmdSrch2, rsSrch2
 
 	strSQL = "SELECT ig.IG_ID, ign.Name AS InterestGroupName, COUNT(DISTINCT pr.VNUM) AS NUM_POS" & vbCrLf & _
@@ -126,54 +129,57 @@ Function makeSrch2Table()
 	Set rsSrch2 = cmdSrch2.Execute
 	With rsSrch2
 		If .EOF Then
-			strReturn = "<p class=""Alert"">" & TXT_NO_INTERESTS_FOUND & "</p>"
+			bNoInterests = True
+%>
+<p><span class="AlertBubble"><%= TXT_NO_INTERESTS_FOUND %></span></p>
+<%
 		Else
-			Dim intWrapNum, intWrapAt
-			intWrapAt = 1
-			intWrapNum = intWrapAt
-			strReturn = strReturn & "<table class=""NoBorder cell-padding-4"">"
+%>
+<div class="row clear-line-below">
+<%
 			While Not .EOF
-				If intWrapNum = intWrapAt Then
-					strReturn = strReturn & "<tr VALIGN=top>"
-				End If
-				strReturn = strReturn & vbCrLf & "<td><label><input type=""checkbox"" name=""IGID"" value=""" & rsSrch2("IG_ID") & """>" & _
-					.Fields("InterestGroupName") & "</label>&nbsp;(" & .Fields("NUM_POS") & ")</td>"
-				If intWrapNum > 0 Then
-					intWrapNum = intWrapNum - 1
-				Else
-					strReturn = strReturn & "</tr>"
-					intWrapNum = intWrapAt
-				End If
+%>
+	<div class="col-xs-12 col-sm-6 col-md-4 clear-line-below">
+		<label>
+			<input type="checkbox" name="IGID" value="<%=rsSrch2("IG_ID")%>">
+			<%=Server.HTMLEncode(.Fields("InterestGroupName"))%>
+		</label>
+		<span class="badge"><%= .Fields("NUM_POS") %></span>
+	</div>
+<%
 				.MoveNext
 			Wend
-			If intWrapNum <> intWrapAt Then
-				strReturn = strReturn & "</tr>"
-			End If
-			strReturn = strReturn & vbCrLf & "</table>"
+%>
+</div>
+<%
 		End If
 	End With
-	makeSrch2Table = strReturn
-End Function
+End Sub
 %>
 
 <h2><%= TXT_GENERAL_AREA_OF_INTEREST %></h2>
 <p><%= TXT_INST_SELECT_GENERAL_INTERESTS %></p>
 <form action="search3.asp" name="EntryForm" method="GET">
-<div style="display:none">
-<%=g_strCacheFormVals%>
-<%If Not Nl(strCommList) Then%>
-<input type="hidden" name="CMID" value="<%=strCommList%>">
-<input type="hidden" name="SearchCMID" value="<%=strCommSearchList%>">
-<%End If%>
-<%If Not Nl(decAge) Then%>
-<input type="hidden" name="Age" value="<%=decAge%>">
-<%End If%>
-<%If bOSSD Then%>
-<input type="hidden" name="forOSSD" value="on">
-<%End If%>
-</div>
-<%=makeSrch2Table()%>
-<p><input type="submit" value="<%=TXT_NEXT%> >>"></p>
+    <div style="display: none">
+        <%=g_strCacheFormVals%>
+        <%If Not Nl(strCommList) Then%>
+        <input type="hidden" name="CMID" value="<%=strCommList%>">
+        <%End If%>
+        <%If Not Nl(decAge) Then%>
+        <input type="hidden" name="Age" value="<%=decAge%>">
+        <%End If%>
+        <%If bOSSD Then%>
+        <input type="hidden" name="forOSSD" value="on">
+        <%End If%>
+    </div>
+<%
+		Call makeSrch2Table()
+		If Not bNoInterests Then
+%>
+	<input type="submit" class="btn btn-default" value="<%=TXT_NEXT%> >>">
+<%
+		End If
+%>
 </form>
 
 <%

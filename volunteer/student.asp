@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -48,28 +48,22 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 Call makePageHeader(TXT_STUDENT_VOLUNTEERS, TXT_STUDENT_VOLUNTEERS, True, False, False, True)
 %>
 <h2><%= TXT_SEARCH_STUDENT_OPPS %></h2>
-<form action="search<%=IIf(g_bOnlySpecificInterests,3,2)%>.asp" name="EntryForm" method="get">
+<form action="search<%=IIf(g_bOnlySpecificInterests,3,2)%>.asp" name="EntryForm" method="get" class="form-inline">
 <%=g_strCacheFormVals%>
-<h4><%= TXT_AGE %></h4>
-<p><label for="Age"><%= TXT_SELECT_YOUR_AGE %></label>&nbsp;<select name="Age" id="Age">
-<option></option>
-<option value="10">10</option>
-<option value="11">11</option>
-<option value="12">12</option>
-<option value="13">13</option>
-<option value="14">14</option>
-<option value="15">15</option>
-<option value="16">16</option>
-<option value="17">17</option>
-<option value="18">18</option>
-<option value="19">19</option>
-<option value="20">20</option>
-<option value="21">21</option>
-<option value="22">22</option>
-<option value="23">23</option>
-<option value="24">24</option>
-<option value="25">25</option>
-</select></p>
+<div class="form-group">
+    <label for="Age" class="control-label"><%= TXT_SELECT_YOUR_AGE %></label>
+    <select name="Age" id="Age" class="form-control">
+        <option> -- </option>
+<%
+    Dim i
+    For i = 10 to 25
+%>
+        <option value="<%=i%>"><%=i%></option>
+<%
+    Next
+%>
+     </select>
+</div>
 <%
 Dim strCommTable, bEmptyCommTable
 strCommTable = makeCommSrchTable(bEmptyCommTable, False)
@@ -88,7 +82,7 @@ If g_bUseOSSD Then
 <%
 End If
 %>
-<p><input type="submit" value="<%= TXT_NEXT %> >>"></p>
+<input class="btn btn-default" type="submit" value="<%= TXT_NEXT %> >>">
 </form>
 
 <%

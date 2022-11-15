@@ -108,6 +108,19 @@ class GeneralBaseSchema(Schema):
     OnlySpecificInterests = validators.Bool()
     LoginRetryLimit = validators.Int(max=20)
 
+    ContactOrgCIC = validators.Bool()
+    ContactPhone1CIC = validators.Bool()
+    ContactPhone2CIC = validators.Bool()
+    ContactPhone3CIC = validators.Bool()
+    ContactFaxCIC = validators.Bool()
+    ContactEmailCIC = validators.Bool()
+    ContactOrgVOL = validators.Bool()
+    ContactPhone1VOL = validators.Bool()
+    ContactPhone2VOL = validators.Bool()
+    ContactPhone3VOL = validators.Bool()
+    ContactFaxVOL = validators.Bool()
+    ContactEmailVOL = validators.Bool()
+
     chained_validators = [
         ciocvalidators.RequireIfPredicate(
             IsCICSuperUser,

@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -58,22 +58,27 @@ End If
 Call makePageHeader(TXT_VOL_PROFILE_PASSWORD_RESET, TXT_VOL_PROFILE_PASSWORD_RESET, True, True, True, True)
 %>
 <p class="Info"><%= TXT_INST_RESET_PW %></p>
-<form action="resetpw2.asp" method="post" name="EntryForm">
-<div style="display:none">
-<%=g_strCacheFormVals%>
-<input type="hidden" name="page" value=<%=AttrQs(Server.HTMLEncode(Trim(Ns(Request("page")))))%>>
-<input type="hidden" name="args" value=<%=AttrQs(Server.HTMLEncode(Trim(Ns(Request("args")))))%>>
-</div>
-<table class="BasicBorder cell-padding-3">
-	<tr>
-		<td class="FieldLabelLeft"><%= TXT_EMAIL %></td>
-		<td><input name="LoginName" type="text" size="30" maxlength="100"></td>
-	</tr>
-	<tr>
-		<td colspan="2"><input type="submit" value="<%= TXT_EMAIL_MY_NEW_PW %>"></td>
-	</tr>
-</table>
+
+<div class="max-width-sm">
+<form action="resetpw2.asp" method="post" name="EntryForm" role="form" class="form-horizontal">
+	<div style="display:none">
+	<%=g_strCacheFormVals%>
+	<input type="hidden" name="page" value=<%=AttrQs(Server.HTMLEncode(Trim(Ns(Request("page")))))%>>
+	<input type="hidden" name="args" value=<%=AttrQs(Server.HTMLEncode(Trim(Ns(Request("args")))))%>>
+	</div>
+	<div class="form-group">
+		<label for="LoginName" class="control-label col-sm-2"><%=TXT_EMAIL%></label>
+		<div class="col-sm-10">
+			<input name="LoginName" type="text" maxlength="100" class="form-control">
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<input type="submit" class="btn btn-default" value="<%=TXT_EMAIL_MY_NEW_PW%>">
+		</div>
+	</div>
 </form>
+</div>
 
 <%
 Call makePageFooter(True)

@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -178,6 +178,8 @@ def getDbOptions(handleDBConnetionError):
 		g_intCanUpdateRecordNoteVOL, g_bRecordNoteTypeOptionalCIC, \
 		g_bRecordNoteTypeOptionalVOL, g_intPreventDuplicateOrgNames, \
 		g_strDefaultCountry, g_strDefaultProvState, \
+		g_bContactOrgCIC, g_bContactPhone1CIC, g_bContactPhone2CIC, g_bContactPhone3CIC, g_bContactFaxCIC, g_bContactEmailCIC, \
+		g_bContactOrgVOL, g_bContactPhone1VOL, g_bContactPhone2VOL, g_bContactPhone3VOL, g_bContactFaxVOL, g_bContactEmailVOL, \
 		g_intMemberID, g_bOtherMembers, g_bOtherMembersActive, g_bSSL, g_intLoginRetryLimit
 
 	try:
@@ -229,6 +231,20 @@ def getDbOptions(handleDBConnetionError):
 	g_intLoginRetryLimit = dboptions.LoginRetryLimit
 	g_strDefaultCountry = dboptions.DefaultCountry
 	g_strDefaultProvState = dboptions.DefaultProvince
+
+	#temporary formatting to avoid ResetDb requirement
+	g_bContactOrgCIC = getattr(dboptions,"ContactOrgCIC",True)
+	g_bContactPhone1CIC = getattr(dboptions,"ContactPhone1CIC",True)
+	g_bContactPhone2CIC = getattr(dboptions,"ContactPhone2CIC",True)
+	g_bContactPhone3CIC = getattr(dboptions,"ContactPhone3CIC",True)
+	g_bContactFaxCIC = getattr(dboptions,"ContactFaxCIC",True)
+	g_bContactEmailCIC = getattr(dboptions,"ContactEmailCIC",True)
+	g_bContactOrgVOL = getattr(dboptions,"ContactOrgVOL",True)
+	g_bContactPhone1VOL = getattr(dboptions,"ContactPhone1VOL",True)
+	g_bContactPhone2VOL = getattr(dboptions,"ContactPhone2VOL",True)
+	g_bContactPhone3VOL = getattr(dboptions,"ContactPhone3VOL",True)
+	g_bContactFaxVOL = getattr(dboptions,"ContactFaxVOL",True)
+	g_bContactEmailVOL = getattr(dboptions,"ContactEmailVOL",True)
 
 	g_bSSL = not not pyrequest.headers.get('CIOC-USING-SSL')
 

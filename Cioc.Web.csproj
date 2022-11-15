@@ -442,6 +442,7 @@
     <Content Include="robots.txt" />
     <Content Include="scripts\checklists.js" />
     <Content Include="scripts\iconautocomplete.js" />
+    <Content Include="scripts\interests_checkbox.js" />
     <Content Include="scripts\keyword_autocomplete.js" />
     <Content Include="scripts\related_record_sidebar_base.js" />
     <Content Include="scripts\search_params.js" />

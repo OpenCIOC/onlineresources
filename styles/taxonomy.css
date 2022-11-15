@@ -181,13 +181,13 @@ div.TermList ul > li {
 }
 
 .activate {
-	background-image: url("../images/greencheck.gif")
+	background-image: url("/images/greencheck.gif")
 }
 
 .deactivate {
-	background-image: url("../images/redx.gif")
+	background-image: url("/images/redx.gif")
 }
 
 .rollup {
-	background-image: url("../images/rollup.gif")
+	background-image: url("/images/rollup.gif")
 }

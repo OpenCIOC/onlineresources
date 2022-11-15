@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -56,17 +56,30 @@ Call openVOLCommunitySetListRst(CSET_BASIC, vbNullString)
 strCommSetSelect = makeVolCommunitySetList(0, "CommunitySetID", False)
 Call closeVolCommunitySetListRst()
 
-strCommSetForm = "<form action=""[ACTION]"" method=""get"">" & g_strCacheFormVals & strCommSetSelect & "&nbsp;<input type=""submit"" value=""" & TXT_EDIT & """></form>"
+strCommSetForm = "<form action=""[ACTION]"" method=""get"" class=""form-inline"">" & vbCrLf & _
+	g_strCacheFormVals & vbCrLf & _
+	strCommSetSelect & _
+	"<input class=""btn btn-default"" type=""submit"" value=""" & TXT_EDIT & """>" & vbCrLf & _
+	"</form>"
 
 Call makePageHeader(TXT_VOLUNTEER_COMMUNITIES, TXT_VOLUNTEER_COMMUNITIES, True, False, True, True)
 %>
-<p style="font-weight:bold">[ <a href="<%=makeLinkB("setup.asp")%>"><%=TXT_RETURN_TO_SETUP%></a> ]</p>
-<ul>
-	<li><a href="<%=makeLinkB("comms_vol_vcs.asp")%>"><%= TXT_VOLUNTEER_COMMUNITY_SETS %></a></li>
-	<li><%= TXT_VOLUNTEER_COMMUNITY_GROUPINGS %>&nbsp;<%=Replace(strCommSetForm, "[ACTION]","comms_vol_vcg.asp")%></li>
-	<li><%= TXT_VOLUNTEER_COMMUNITY_GROUP_MEMBERS_FOR %>&nbsp;<%=Replace(strCommSetForm, "[ACTION]","comms_vol_vcgc.asp")%></li>
-	<li><a href="<%=makeLinkB("comms_vol_opcm.asp")%>"><%= TXT_VOL_OP_CS_MANAGMENT %></a></li>
-</ul>
+<div class="btn-group" role="group">
+	<a role="button" class="btn btn-default" href="<%=makeLinkB("setup.asp")%>"><%=TXT_RETURN_TO_SETUP%></a>
+</div>
+
+<h2><%= TXT_SETUP & TXT_COLON & TXT_VOLUNTEER_COMMUNITIES %></h2>
+<hr />
+<h4><a href="<%=makeLinkB("comms_vol_vcs.asp")%>"><%= TXT_VOLUNTEER_COMMUNITY_SETS %></a></h4>
+<hr />
+<h4><%= TXT_VOLUNTEER_COMMUNITY_GROUPINGS %></h4>
+<%=Replace(strCommSetForm, "[ACTION]","comms_vol_vcg.asp")%>
+<hr />
+<h4><%= TXT_VOLUNTEER_COMMUNITY_GROUP_MEMBERS_FOR %></h4>
+<%=Replace(strCommSetForm, "[ACTION]","comms_vol_vcgc.asp")%>
+<hr />
+<h4><a href="<%=makeLinkB("comms_vol_opcm.asp")%>"><%= TXT_VOL_OP_CS_MANAGMENT %></a></h4>
+<hr />
 <%
 Call makePageFooter(True)
 %>

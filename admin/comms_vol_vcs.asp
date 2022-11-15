@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@  language="VBSCRIPT" %>
 <%Option Explicit%>
 
 <%
@@ -55,7 +55,7 @@ End If
 Call makePageHeader(TXT_VOLUNTEER_COMMUNITY_SETS, TXT_VOLUNTEER_COMMUNITY_SETS, True, False, True, True)
 %>
 <%
-Const FORM_ACTION = "<form action=""comms_vol_vcs2.asp"" method=""post"">"
+Const FORM_ACTION = "<form action=""comms_vol_vcs2.asp"" method=""post"" class=""form-horizontal"">"
 Dim SUBMIT_BUTTON, _
 	DELETE_BUTTON, _
 	ADD_BUTTON, _
@@ -64,24 +64,19 @@ Dim SUBMIT_BUTTON, _
 	xmlNode, _
 	strValue
 
-SUBMIT_BUTTON = "<input type=""submit"" name=""Submit"" value=""" & TXT_UPDATE & """>"
-DELETE_BUTTON = "<input type=""submit"" name=""Submit"" value=""" & TXT_DELETE & """>"
-ADD_BUTTON = "<input type=""submit"" name=""Submit"" value=""" & TXT_ADD & """>"
+SUBMIT_BUTTON = "<input class=""btn btn-default"" type=""submit"" name=""Submit"" value=""" & TXT_UPDATE & """>"
+DELETE_BUTTON = "<input class=""btn btn-default"" type=""submit"" name=""Submit"" value=""" & TXT_DELETE & """>"
+ADD_BUTTON = "<input class=""btn btn-default"" type=""submit"" name=""Submit"" value=""" & TXT_ADD & """>"
 
 Call openVOLCommunitySetListRst(CSET_FULL, vbNullString)
 %>
-<p style="font-weight:bold">[ <a href="<%=makeLinkB("setup.asp")%>"><%=TXT_RETURN_TO_SETUP%></a> | <a href="<%=makeLinkB("comms_vol.asp")%>"><%= TXT_RETURN_TO_VC %></a> ]</p>
-<h1><%= TXT_EDIT_VOLUNTEER_COMMUNITY_SETS %></h1>
-<table class="BasicBorder cell-padding-4 max-width-lg">
-<tr>
-	<th class="RevTitleBox"><%= TXT_SET_NAME %></th>
-	<th class="RevTitleBox"><%= TXT_AREAS_SERVED %></th>
-	<th class="RevTitleBox"><%= TXT_USAGE %></th>
-	<th class="RevTitleBox"><%=TXT_ACTION%></th>
-</tr>
-<tr>
-	<td colspan="4"><span class="Alert"><%= TXT_NOTE %>:</span> <%= TXT_INST_DELETE %></td>
-</tr>
+<div class="btn-group" role="group">
+    <a role="button" class="btn btn-default" href="<%=makeLinkB("setup.asp")%>"><%=TXT_RETURN_TO_SETUP%></a>
+    <a role="button" class="btn btn-default" href="<%=makeLinkB("comms_vol.asp")%>"><%=TXT_RETURN_TO_VC %></a>
+</div>
+
+<h2><%= TXT_EDIT_VOLUNTEER_COMMUNITY_SETS %></h2>
+<p><span class="AlertBubble"><%= TXT_NOTE %>: <%= TXT_INST_DELETE %></span></p>
 <%
 With rsListVolCommunitySet
 	If Not .EOF Then
@@ -94,13 +89,29 @@ With rsListVolCommunitySet
 			xmlDoc.loadXML "<DESCS>" & Nz(.Fields("Descriptions"),vbNullString) & "</DESCS>"
 %>
 <%=FORM_ACTION%>
-<div style="display:none">
-<%=g_strCacheFormVals%>
-<input type="hidden" name="CommunitySetID" value="<%=.Fields("CommunitySetID")%>">
+<div style="display: none">
+    <%=g_strCacheFormVals%>
+    <input type="hidden" name="CommunitySetID" value="<%=.Fields("CommunitySetID")%>">
 </div>
-<tr>
-	<td><table class="NoBorder cell-padding-2">
-<%
+<div class="panel panel-default max-width-lg">
+    <div class="panel-heading">
+        <h3><%=xmlDoc.selectSingleNode("//DESC[1]").getAttribute("SetName")%></h3>
+    </div>
+    <div class="panel-body no-padding">
+        <table class="BasicBorder cell-padding-4 full-width form-table responsive-table inset-table">
+            <tr>
+                <td class="field-label-cell">
+                    <%=TXT_USAGE%>
+                </td>
+                <td class="field-data-cell">Records: <%=.Fields("UsageCountRecords")%>; Views: <%=.Fields("UsageCountViews")%>
+                </td>
+            </tr>
+            <tr>
+                <td class="field-label-cell">
+                    <%=TXT_SET_NAME%>
+                </td>
+                <td class="field-data-cell">
+                    <%
 	For Each strCulture In active_cultures()
 		Set xmlNode = xmlDoc.selectSingleNode("//DESC[@Culture=" & Qs(strCulture,SQUOTE) & "]")
 		If Not xmlNode Is Nothing Then
@@ -108,16 +119,26 @@ With rsListVolCommunitySet
 		Else
 			strValue = vbNullString
 		End If
-%>
-	<tr><td class="FieldLabelLeftClr"><%= Application("Culture_" & strCulture & "_LanguageName") %></td>
-
-		<td><input type="text" name="SetName_<%= strCulture %>" title=<%=AttrQs(Application("Culture_" & strCulture & "_LanguageName") & TXT_COLON & TXT_SET_NAME)%> value=<%=AttrQs(strValue)%> size="<%=(TEXT_SIZE-25)/2%>" maxlength="100"></td></tr>
-<%
-Next
-%>
-</table></td>
-	<td><table class="NoBorder cell-padding-2">
-<%
+                    %>
+                    <div class="form-group row">
+                        <label for="SetName_<%=strCulture%>_<%=.Fields("CommunitySetID")%>" class="control-label col-sm-4 col-md-3 col-lg-2">
+                            <%= Application("Culture_" & strCulture & "_LanguageName") %>
+                        </label>
+                        <div class="col-sm-8 col-md-9 col-lg-10">
+                            <input class="form-control" type="text" id="SetName_<%=strCulture%>_<%=.Fields("CommunitySetID")%>" name="SetName_<%=strCulture%>" title=<%=AttrQs(Application("Culture_" & strCulture & "_LanguageName") & TXT_COLON & TXT_SET_NAME)%> value=<%=AttrQs(strValue)%> maxlength="100">
+                        </div>
+                    </div>
+                    <%
+	Next
+                    %>
+                </td>
+            </tr>
+            <tr>
+                <td class="field-label-cell">
+                    <%=TXT_AREAS_SERVED%>
+                </td>
+                <td class="field-data-cell">
+                    <%
 	For Each strCulture In active_cultures()
 		Set xmlNode = xmlDoc.selectSingleNode("//DESC[@Culture=" & Qs(strCulture,SQUOTE) & "]")
 		If Not xmlNode Is Nothing Then
@@ -125,16 +146,28 @@ Next
 		Else
 			strValue = vbNullString
 		End If
-%>
-	<tr><td class="FieldLabelLeftClr"><%= Application("Culture_" & strCulture & "_LanguageName") %></td>
-	<td><input type="text" name="AreaServed_<%=strCulture%>" title=<%=AttrQs(Application("Culture_" & strCulture & "_LanguageName") & TXT_COLON & TXT_AREAS_SERVED)%> value=<%=AttrQs(strValue)%> size="<%=(TEXT_SIZE-10)/2%>" maxlength="100"></td></tr>
-<%
-Next
-%>
-</table></td>
-	<td>Records: <%=.Fields("UsageCountRecords")%>; Views: <%=.Fields("UsageCountViews")%></td>
-	<td><%=submit_button%><%If .Fields("UsageCountRecords") + .Fields("UsageCountViews") = 0 Then%>&nbsp;<%=DELETE_BUTTON%><%End If%></td>
-</tr>
+                    %>
+                    <div class="form-group row">
+                        <label for="AreaServed_<%=strCulture%>_<%=.Fields("CommunitySetID")%>" class="control-label col-sm-4 col-md-3 col-lg-2">
+                            <%= Application("Culture_" & strCulture & "_LanguageName") %>
+                        </label>
+                        <div class="col-sm-8 col-md-9 col-lg-10">
+                            <input class="form-control" type="text" id="AreaServed_<%=strCulture%>_<%=.Fields("CommunitySetID")%>" name="AreaServed_<%=strCulture%>" title=<%=AttrQs(Application("Culture_" & strCulture & "_LanguageName") & TXT_COLON & TXT_AREAS_SERVED)%> value=<%=AttrQs(strValue)%> maxlength="100">
+                        </div>
+                    </div>
+                    <%
+	Next
+                    %>
+                </td>
+            </tr>
+            <tr>
+                <td class="field-data-cell" colspan="2">
+                    <%=submit_button%><%If .Fields("UsageCountRecords") + .Fields("UsageCountViews") = 0 Then%> <%=DELETE_BUTTON%><%End If%>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
 </form>
 <%
 			.MoveNext
@@ -145,42 +178,68 @@ Call closeVOLCommunitySetListRst()
 
 %>
 <%=FORM_ACTION%>
-<div style="display:none">
-<%=g_strCacheFormVals%>
+<div style="display: none">
+    <%=g_strCacheFormVals%>
 </div>
-<tr>
-	<td colspan="4"><%= TXT_INST_ADD %></td>
-</tr>
-<tr>
-	<td><table class="NoBorder cell-padding-2">
-<%
-For Each strCulture In active_cultures()
-%>
-	<tr>
-	<td class="FieldLabelLeftClr"><%= Application("Culture_" & strCulture & "_LanguageName") %></td>
-	<td><input type="text" name="SetName_<%=strCulture %>" title=<%=AttrQs(Application("Culture_" & strCulture & "_LanguageName") & TXT_COLON & TXT_SET_NAME)%> size="<%=(TEXT_SIZE-25)/2%>" maxlength="100"></td>
-	</tr>
-<%
-Next
-%>
-	</table></td>
-	<td><table class="NoBorder cell-padding-2">
-<%
-For Each strCulture In active_cultures()
-%>
-	<tr>
-	<td class="FieldLabelLeftClr"><%= Application("Culture_" & strCulture & "_LanguageName") %></td>
-	<td><input type="text" name="AreaServed_<%=strCulture %>" title=<%=AttrQs(Application("Culture_" & strCulture & "_LanguageName") & TXT_COLON & TXT_AREAS_SERVED)%> size="<%=(TEXT_SIZE-10)/2%>" maxlength="100"></td>
-	</tr>
-<%
-Next
-%>
-	</table></td>
-	<td>&nbsp;</td>
-	<td><%=ADD_BUTTON%></td>
-</tr>
+
+<div class="panel panel-default max-width-lg">
+    <div class="panel-heading">
+        <h3><%=TXT_INST_ADD%></h3>
+    </div>
+    <div class="panel-body no-padding">
+        <table class="BasicBorder cell-padding-4 full-width form-table responsive-table inset-table">
+            <tr>
+                <td class="field-label-cell">
+                    <%=TXT_SET_NAME%>
+                </td>
+                <td class="field-data-cell">
+                    <%
+	For Each strCulture In active_cultures()
+                    %>
+                    <div class="form-group row">
+                        <label for="SetName_<%=strCulture%>" class="control-label col-sm-4 col-md-3 col-lg-2">
+                            <%= Application("Culture_" & strCulture & "_LanguageName") %>
+                        </label>
+                        <div class="col-sm-8 col-md-9 col-lg-10">
+                            <input class="form-control" type="text" id="SetName_<%=strCulture%>" name="SetName_<%=strCulture%>" title=<%=AttrQs(Application("Culture_" & strCulture & "_LanguageName") & TXT_COLON & TXT_SET_NAME)%> maxlength="100">
+                        </div>
+                    </div>
+                    <%
+	Next
+                    %>
+                </td>
+            </tr>
+            <tr>
+                <td class="field-label-cell">
+                    <%=TXT_AREAS_SERVED%>
+                </td>
+                <td class="field-data-cell">
+                    <%
+	For Each strCulture In active_cultures()
+                    %>
+                    <div class="form-group row">
+                        <label for="AreaServed_<%=strCulture%>" class="control-label col-sm-4 col-md-3 col-lg-2">
+                            <%= Application("Culture_" & strCulture & "_LanguageName") %>
+                        </label>
+                        <div class="col-sm-8 col-md-9 col-lg-10">
+                            <input class="form-control" type="text" id="AreaServed_<%=strCulture%>" name="AreaServed_<%=strCulture%>" title=<%=AttrQs(Application("Culture_" & strCulture & "_LanguageName") & TXT_COLON & TXT_AREAS_SERVED)%> maxlength="100">
+                        </div>
+                    </div>
+                    <%
+	Next
+                    %>
+                </td>
+            </tr>
+            <tr>
+                <td class="field-data-cell" colspan="2">
+                    <%=add_button%>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
 </form>
-</table>
+
 <%
 Call makePageFooter(True)
 %>

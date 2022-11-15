@@ -15,8 +15,9 @@
 // =========================================================================================
 
 (function($) {
-window['init_vprofiles'] = function(show_tab, root_path, strRemove, specific_interest_url, txt_not_found, interest_complete_url) {
-	var tabs, default_results_area=null, initial_interest = null,
+	window['init_vprofiles'] = function (show_tab, root_path, strRemove, txt_not_found, interest_complete_url) {
+
+	var tabs, default_results_area = null, initial_interest = null,
 	onbeforeunload = function(cache) {
 		cache['personal_values'] = get_form_values('#personalform');
 		cache['last_tab'] = tabs.tabs('option', 'active');
@@ -135,13 +136,13 @@ window['init_vprofiles'] = function(show_tab, root_path, strRemove, specific_int
 		cache_register_onbeforeunload(onbeforeunload);
 		cache_register_onbeforerestorevalues(onbeforerestore);
 
-		init_interests(txt_not_found, interest_complete_url)
+		init_interests(txt_not_found, interest_complete_url);
 
 		restore_cached_state();
 		initial_interests = $('#AI_existing_add_container').html();
 
-		$(document).on('click', 'input.referral_outcome_edit', edit_outcome);
-		$(document).on('click', 'input.referral_hide', do_referral_hide);
+		$(document).on('click', 'button.referral_outcome_edit', edit_outcome);
+		$(document).on('click', 'button.referral_hide', do_referral_hide);
 		$('#confirm_cancel').click(do_referral_hide_cancel);
 		$('#confirm_okay').click(do_referral_hide_okay);
 		$('#outcome_cancel').click(do_outcome_cancel);

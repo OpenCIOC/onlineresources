@@ -1,4 +1,4 @@
-﻿<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@  language="VBSCRIPT" %>
 <%Option Explicit%>
 
 <%
@@ -66,7 +66,7 @@ bFormatXML = LCase(Ns(Request("format"))) = "xml"
 If Not bApi Then
 Call makePageHeader(TXT_YES_VOLUNTEER, TXT_YES_VOLUNTEER, True, False, True, True)
 ElseIf bFormatXML Then
-Response.Clear %><?xml version="1.0" encoding="utf-8"?><%
+Response.Clear %><?xml version="1.0" encoding="utf-8" ?><%
 Response.ContentType = "application/xml"
 Response.CacheControl = "Private"
 Response.Expires=-1
@@ -111,11 +111,11 @@ strVNUM = Request("VNUM")
 
 Sub handleErrorAPI(strErrorMsg, strRedirect, strHTTPVals)
 	If bFormatXML Then
-	%><root><error><%= Server.HTMLEncode(strErrorMsg) %></error></root><%
+%><root><error><%= Server.HTMLEncode(strErrorMsg) %></error></root><%
 	Else
 %>{"error": true, "errinfo": <%= JSONQs(strErrorMsg, True) %>}<%
 	End If
-	%><!--#include file="../includes/core/incClose.asp" --><%
+%><!--#include file="../includes/core/incClose.asp" --><%
 	Response.End()
 End Sub
 
@@ -175,44 +175,44 @@ Else
 <p><span class="AlertBubble"><%=TXT_INST_SECURITY_CHECK_FAIL%></span></p>
 <p><%=TXT_INST_SECURITY_CHECK_2%></p>
 <form action="<%=ps_strThisPage%>" method="post" class="form-horizontal">
-<div style="display:none">
-<%
+    <div style="display: none">
+        <%
 		For Each indItem In Request.QueryString()
 			If Not reEquals(indItem,"sCheck.+",False,False,True,False) Then
-				%><input type="hidden" name="<%=indItem%>" value=<%=AttrQs(Request.QueryString(indItem))%>><%
+        %><input type="hidden" name="<%=indItem%>" value=<%=AttrQs(Request.QueryString(indItem))%>><%
 			End If
 		Next
 		For Each indItem In Request.Form()
 			If Not reEquals(indItem,"sCheck.+",False,False,True,False) Then
-				%><input type="hidden" name="<%=indItem%>" value=<%=AttrQs(Request.Form(indItem))%>><%
+        %><input type="hidden" name="<%=indItem%>" value=<%=AttrQs(Request.Form(indItem))%>><%
 			End If
 		Next
-%>
-</div>
-<p><%=TXT_ENTER_TOMORROWS_DATE%></p>
-<div class="form-group">
-	<label for="sCheckDay" class="control-label col-xs-4 col-sm-2 col-md-1"><%=TXT_DAY%></label>
-	<div class="form-inline form-inline-always col-xs-8 col-sm-10">
-		<input id="sCheckDay" name="sCheckDay" type="text" size="5" maxlength="8" class="form-control">
-	</div>
-</div>
-<div class="form-group">
-	<label for="sCheckMonth" class="control-label col-xs-4 col-sm-2 col-md-1"><%=TXT_MONTH%></label>
-	<div class="form-inline form-inline-always col-xs-8 col-sm-10 col-md-11">
-		<%Call printMonthList("sCheckMonth")%></label>
-	</div>
-</div>
-<div class="form-group">
-	<label for="sCheckYear" class="control-label col-xs-4 col-sm-2 col-md-1"><%=TXT_YEAR%></label>
-	<div class="form-inline form-inline-always col-xs-8 col-sm-10 col-md-11">
-		<input id="sCheckYear" name="sCheckYear" type="text" size="5" maxlength="8" class="form-control">
-	</div>
-</div>
-<div class="form-group">
-	<div class="col-sm-offset-2 col-xs-offset-4 col-sm-10 col-xs-8 col-md-offset-1 col-md-11">
-		<input type="submit" value="<%=TXT_SUBMIT%>" class="btn btn-default">
-	</div>
-</div>
+        %>
+    </div>
+    <p><%=TXT_ENTER_TOMORROWS_DATE%></p>
+    <div class="form-group">
+        <label for="sCheckDay" class="control-label col-xs-4 col-sm-2 col-md-1"><%=TXT_DAY%></label>
+        <div class="form-inline form-inline-always col-xs-8 col-sm-10">
+            <input id="sCheckDay" name="sCheckDay" type="text" size="5" maxlength="8" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="sCheckMonth" class="control-label col-xs-4 col-sm-2 col-md-1"><%=TXT_MONTH%></label>
+        <div class="form-inline form-inline-always col-xs-8 col-sm-10 col-md-11">
+            <%Call printMonthList("sCheckMonth")%>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="sCheckYear" class="control-label col-xs-4 col-sm-2 col-md-1"><%=TXT_YEAR%></label>
+        <div class="form-inline form-inline-always col-xs-8 col-sm-10 col-md-11">
+            <input id="sCheckYear" name="sCheckYear" type="text" size="5" maxlength="8" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-xs-offset-4 col-sm-10 col-xs-8 col-md-offset-1 col-md-11">
+            <input type="submit" value="<%=TXT_SUBMIT%>" class="btn btn-default">
+        </div>
+    </div>
 </form>
 <%
 		Else
@@ -244,12 +244,16 @@ If Not bVNUMError Then
 			IIf(Nl(strContactPhone),vbNullString,vbCrLf & TXT_PHONE & TXT_COLON & strContactPhone) & _
 			IIf(Nl(strContactFax),vbNullString,vbCrLf & TXT_FAX & TXT_COLON & strContactFax) & _
 			IIf(Nl(strContactEmail),vbNullString,vbCrLf & TXT_EMAIL & TXT_COLON & strContactEmail)
+
 		Dim strVolunteerName, _
 			strVolunteerPhone, _
 			strVolunteerEmail, _
 			strVolunteerAddress, _
 			strVolunteerCity, _
 			strVolunteerPostalCode, _
+			strQuestion1Answer, _
+			strQuestion2Answer, _
+			strQuestion3Answer, _
 			strVolunteerNotes, _
 			strFullVolunteerInfo, _
 			bOrgEmailed
@@ -260,7 +264,10 @@ If Not bVNUMError Then
 		strVolunteerAddress = Trim(Request("VolunteerAddress"))
 		strVolunteerCity = Trim(Request("VolunteerCity"))
 		strVolunteerPostalCode = Trim(Request("VolunteerPostalCode"))
-		strVolunteerNotes = Trim(Request("VolunteerNotes"))
+		strQuestion1Answer = Left(Trim(Request("Question1Answer")),4000)
+		strQuestion2Answer = Left(Trim(Request("Question2Answer")),4000)
+		strQuestion3Answer = Left(Trim(Request("Question3Answer")),4000)
+		strVolunteerNotes = Left(Trim(Request("VolunteerNotes")),4000)
 		bOrgEmailed = False
 
 		If Nl(strVolunteerName) Then
@@ -274,7 +281,10 @@ If Not bVNUMError Then
 				IIf(Nl(strVolunteerAddress),vbNullString,vbCrLf & TXT_ADDRESS & TXT_COLON & strVolunteerAddress) & _
 				IIf(Nl(strVolunteerCity),vbNullString,vbCrLf & TXT_CITY & TXT_COLON & strVolunteerCity) & _
 				IIf(Nl(strVolunteerPostalCode),vbNullString,vbCrLf & TXT_POSTAL_CODE & TXT_COLON & strVolunteerPostalCode) & _
-				IIf(Nl(strVolunteerNotes),vbNullString,vbCrLf & TXT_NOTES & TXT_COLON & strVolunteerNotes)
+				IIf(Nl(strQuestion1Answer) Or Nl(strAppQ1),vbNullString,vbCrLf & vbCrLf & strAppQ1 & TXT_COLON & vbCrLf & strQuestion1Answer) & _
+				IIf(Nl(strQuestion2Answer) Or Nl(strAppQ2),vbNullString,vbCrLf & vbCrLf & strAppQ2 & TXT_COLON & vbCrLf & strQuestion2Answer) & _
+				IIf(Nl(strQuestion3Answer) Or Nl(strAppQ3),vbNullString,vbCrLf & vbCrLf & strAppQ3 & TXT_COLON & vbCrLf & strQuestion3Answer) & _
+				IIf(Nl(strVolunteerNotes),vbNullString,vbCrLf & vbCrLf & TXT_NOTES & TXT_COLON & vbCrLf & strVolunteerNotes)
 			strSender = strROUpdateEmail & " <" & strROUpdateEmail & ">"
 			
 			'Email the Volunteer
@@ -361,7 +371,13 @@ If Not bVNUMError Then
 				.Parameters.Append .CreateParameter("@VolunteerAddress", adVarWChar, adParamInput, 100, strVolunteerAddress)
 				.Parameters.Append .CreateParameter("@VolunteerCity", adVarWChar, adParamInput, 100, strVolunteerCity)
 				.Parameters.Append .CreateParameter("@VolunteerPostalCode", adVarChar, adParamInput, 100, strVolunteerPostalCode)
-				.Parameters.Append .CreateParameter("@VolunteerNotes", adVarWChar, adParamInput, 4000, Left(strVolunteerNotes,4000))
+				.Parameters.Append .CreateParameter("@Question1", adVarWChar, adParamInput, 255, StringIf(Not Nl(strQuestion1Answer),strAppQ1))
+				.Parameters.Append .CreateParameter("@Question2", adVarWChar, adParamInput, 255, StringIf(Not Nl(strQuestion2Answer),strAppQ2))
+				.Parameters.Append .CreateParameter("@Question3", adVarWChar, adParamInput, 255, StringIf(Not Nl(strQuestion3Answer),strAppQ3))
+				.Parameters.Append .CreateParameter("@Question1Answer", adVarWChar, adParamInput, 4000, strQuestion1Answer)
+				.Parameters.Append .CreateParameter("@Question2Answer", adVarWChar, adParamInput, 4000, strQuestion2Answer)
+				.Parameters.Append .CreateParameter("@Question3Answer", adVarWChar, adParamInput, 4000, strQuestion3Answer)
+				.Parameters.Append .CreateParameter("@VolunteerNotes", adVarWChar, adParamInput, 4000, strVolunteerNotes)
 				.Parameters.Append .CreateParameter("@NotifyOrgType", adInteger, adParamInput, 4, IIf(bOrgEmailed,1,Null))
 				.Parameters.Append .CreateParameter("@NotifyOrgDate", adDBDate, adParamInput, 2, IIf(bOrgEmailed,Now(),Null))
 				.Parameters.Append .CreateParameter("@VolunteerContactType", adInteger, adParamInput, 4, Null)
@@ -385,16 +401,20 @@ If Not bApi Then
 %>
 <p class="Info"><%= TXT_VOL_THANK_YOU_INTEREST %></p>
 <h4><a href="<%=makeVOLDetailsLink(strVNUM, IIf(intCurSearchNumber >= 0,"Number=" & intCurSearchNumber,vbNullString),vbNullString)%>"><%=strPosition%> (<%=strOrgName%>)</a></h4>
-<p><%= TXT_INFORMATION_EMAILED_TO %> <%=strSentTo%></p>
-<p><%= TXT_YOU_CAN_CONTACT %> <strong><%=Nz(strContactName,strContactEmail)%></strong> (<%=strContactOrg%>) <%= TXT_TO_DISCUSS_THIS_OPP_AT %>
-<%If Not Nl(strContactPhone) Then%><br><%=TXT_PHONE & TXT_COLON%><strong><%=strContactPhone%></strong><%End If%>
-<%If Not Nl(strContactFax) Then%><br><%=TXT_FAX & TXT_COLON%><strong><%=strContactFax%></strong><%End If%>
-<%If Not Nl(strContactEmail) Then%><br><%=TXT_EMAIL & TXT_COLON%><strong><a href="mailto:<%=strContactEmail%>"><%=strContactEmail%></a></strong><%End If%>
+<p><%=TXT_INFORMATION_EMAILED_TO%> <%=strSentTo%></p>
+<p>
+    <%=TXT_YOU_CAN_CONTACT%> <strong><%=Nz(strContactName,strContactEmail)%></strong> (<%=strContactOrg%>) <%=TXT_TO_DISCUSS_THIS_OPP_AT%>
+    <%If Not Nl(strContactPhone) Then%><br>
+    <%=TXT_PHONE & TXT_COLON%><strong><%=strContactPhone%></strong><%End If%>
+    <%If Not Nl(strContactFax) Then%><br>
+    <%=TXT_FAX & TXT_COLON%><strong><%=strContactFax%></strong><%End If%>
+    <%If Not Nl(strContactEmail) Then%><br>
+    <%=TXT_EMAIL & TXT_COLON%><strong><a href="mailto:<%=strContactEmail%>"><%=strContactEmail%></a></strong><%End If%>
 </p>
-<p><%= TXT_VOL_THANK_YOU %></p>
+<p><%=TXT_VOL_THANK_YOU%></p>
 <%
 ElseIf bFormatXML Then
-%><root><error/></root><%
+%><root><error /></root><%
 Else
 %>{"error": false, "errinfo": null}<%
 End If

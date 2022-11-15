@@ -20,7 +20,7 @@
 	box-shadow: 2px 2px 4px 1px rgba(102,102,102,0.3);
 }
 
-.panel-default, .panel-danger, .panel-info  {
+.panel-default, .panel-danger, .panel-info {
 	@extend .panel-shading;
 
 	a {
@@ -65,6 +65,12 @@
 
 		.glyphicon, .fa {
 			color: $iconColorContent;
+		}
+
+		.Alert, .AlertBubble {
+			.glyphicon, .fa {
+				color: $fcError;
+			}
 		}
 
 		h2 {
@@ -123,7 +129,7 @@
 
 	> .panel-body-scroll {
 		padding-bottom: 0px;
-	
+
 		> .panel-body-scroll-bottommargin {
 			margin-bottom: 15px;
 		}

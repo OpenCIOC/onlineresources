@@ -183,7 +183,7 @@ If Not Nl(strTermListDisplayAll & strTermListDisplayAny) Then
 	If Not Nl(strTermListDisplayAll) Then
 %>
                     <div style="display: none">
-                        <input type="hidden" name="TMC" value="<%=AttrQs(strTMC)%>">
+                        <input type="hidden" name="TMC" value=<%=AttrQs(strTMC)%>>
                     </div>
                     <strong><%=TXT_MUST_MATCH_TERMS%></strong>
                     <%=strTermListDisplayAll%>
@@ -192,7 +192,7 @@ If Not Nl(strTermListDisplayAll & strTermListDisplayAny) Then
 	If Not Nl(strTermListDisplayAny) Then
 %>
                     <div style="display: none">
-                        <input type="hidden" name="ATMC" value="<%=AttrQs(strATMC)%>"></div>
+                        <input type="hidden" name="ATMC" value=<%=AttrQs(strATMC)%>></div>
                     <%=StringIf(Not Nl(strTermListDisplayAll),"<br>")%><strong><%=TXT_MATCH_ANY_TERMS%></strong><%=strTermListDisplayAny%>
 <%
 	End If

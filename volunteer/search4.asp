@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -96,7 +96,7 @@ End If
 <%End If%>
 </div>
 <!--#include file="../includes/search/incDateTimeTable.asp" -->
-<p><input type="submit" value="<%= TXT_GET_MATCHES %>"></p>
+<input class="btn btn-default clear-line-above" type="submit" value="<%= TXT_GET_MATCHES %>">
 </form>
 
 <%

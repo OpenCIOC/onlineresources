@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -120,6 +120,12 @@ Else
 		strVolunteerAddress, _
 		strVolunteerCity, _
 		strVolunteerPostalCode, _
+		strQuestion1, _
+		strQuestion2, _
+		strQuestion3, _
+		strQuestion1Answer, _
+		strQuestion2Answer, _
+		strQuestion3Answer, _
 		strVolunteerNotes, _
 		intNotifyOrgType, _
 		dNotifyOrgDate, _
@@ -145,6 +151,18 @@ Else
 	strVolunteerCity = Trim(Request("VolunteerCity"))
 	strVolunteerPostalCode = Trim(Request("VolunteerPostalCode"))
 	Call checkPostalCode(TXT_POTENTIAL_VOL_POSTAL_CODE,strVolunteerPostalCode)
+	strQuestion1Answer = Left(Trim(Request("Question1Answer")),4000)
+	If Not Nl(strQuestion1Answer) Then
+		strQuestion1 = Left(Trim(Request("Question1")),255)
+	End If
+	strQuestion2Answer = Left(Trim(Request("Question2Answer")),4000)
+	If Not Nl(strQuestion2Answer) Then
+		strQuestion2 = Left(Trim(Request("Question1")),255)
+	End If
+	strQuestion3Answer = Left(Trim(Request("Question3Answer")),4000)
+	If Not Nl(strQuestion3Answer) Then
+		strQuestion3 = Left(Trim(Request("Question3")),255)
+	End If
 	strVolunteerNotes = Left(Trim(Request("VolunteerNotes")),4000)
 	intNotifyOrgType = Nz(Request("NotifyOrgType"),Null)
 	dNotifyOrgDate = Nz(Trim(Request("NotifyOrgDate")),Null)
@@ -213,6 +231,12 @@ Else
 			.Parameters.Append .CreateParameter("@VolunteerAddress", adVarWChar, adParamInput, 100, strVolunteerAddress)
 			.Parameters.Append .CreateParameter("@VolunteerCity", adVarWChar, adParamInput, 100, strVolunteerCity)
 			.Parameters.Append .CreateParameter("@VolunteerPostalCode", adVarChar, adParamInput, 100, strVolunteerPostalCode)
+			.Parameters.Append .CreateParameter("@Question1", adVarWChar, adParamInput, 255, strQuestion1)
+			.Parameters.Append .CreateParameter("@Question2", adVarWChar, adParamInput, 255, strQuestion2)
+			.Parameters.Append .CreateParameter("@Question3", adVarWChar, adParamInput, 255, strQuestion3)
+			.Parameters.Append .CreateParameter("@Question1Answer", adVarWChar, adParamInput, 4000, strQuestion1Answer)
+			.Parameters.Append .CreateParameter("@Question2Answer", adVarWChar, adParamInput, 4000, strQuestion2Answer)
+			.Parameters.Append .CreateParameter("@Question3Answer", adVarWChar, adParamInput, 4000, strQuestion3Answer)
 			.Parameters.Append .CreateParameter("@VolunteerNotes", adVarChar, adParamInput, 4000, strVolunteerNotes)
 			.Parameters.Append .CreateParameter("@NotifyOrgType", adInteger, adParamInput, 4, intNotifyOrgType)
 			.Parameters.Append .CreateParameter("@NotifyOrgDate", adDBDate, adParamInput, 1, dNotifyOrgDate)

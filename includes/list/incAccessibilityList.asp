@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -58,7 +58,7 @@ Function makeAccessibilityList(strSelected, strSelectName, bIncludeBlank, strOnC
 			If Not Nl(strOnChange) Then
 				strReturn = strReturn & " onChange=""" & strOnChange & """"
 			End If
-			strReturn = strReturn & " class=""form-control"">"
+			strReturn = strReturn & ">"
 			If bIncludeBlank Then
 				strReturn = strReturn & "<option value=""""> -- </option>"
 			End If

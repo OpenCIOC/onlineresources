@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -48,7 +48,7 @@ Call makePageHeader(TXT_LOGIN_CONFLICT, TXT_LOGIN_CONFLICT, True, True, True, Tr
 %>
 
 
-<p><%=TXT_YOU_MUST_FIRST%> <a href="<%=makeLinkB(ps_strPathToStart & "logout.asp")%>"><%= TXT_LOGOUT %></a> <%=TXT_OF_YOUR_CIOC_LOGIN %></p>
+<p><span class="AlertBubble"><%=TXT_YOU_MUST_FIRST%> <strong><a href="<%=makeLinkB(ps_strPathToStart & "logout.asp")%>"><%= TXT_LOGOUT %></a></strong> <%=TXT_OF_YOUR_CIOC_LOGIN %></span></p>
 
 <%Call makePageFooter(True)%>
 

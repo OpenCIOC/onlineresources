@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -47,19 +47,30 @@ Class CommunityGroup
 		SearchList(CurrentSearchItem) = intCMID	
 		
 		SubItems = SubItems & "<li style=""list-style-type:none"">" & _
-			"<input type=""checkbox"" name=""CMID"" id=" & AttrQs("CMID_" & intCMID) & " value=" & AttrQs(intCMID) & ">&nbsp;" & _
-			"<label for=" & AttrQs("CMID_" & intCMID) & ">" & strCommunityName & "</label>" & _
-			"&nbsp;(" & Replace(Replace(IIf(g_bUseIndividualCount,TXT_NUMOPTS_NUMNEEDED,TXT_NUMOPTS), "[NUMPOS]", intNumPos), "[NUMNEEDED]", intNumNeeded) & ")</li>"
+			"<div class=""checkbox"">" & _
+			"<label class=""control-label"" for=" & AttrQs("CMID_" & intCMID) & ">" & _
+				"<input type=""checkbox"" name=""CMID"" id=" & AttrQs("CMID_" & intCMID) & " value=" & AttrQs(intCMID) & "> " & _
+				"<strong>" & strCommunityName & "</strong>" & _
+			"</label>" & _
+			" (" & Replace(Replace(IIf(g_bUseIndividualCount,TXT_NUMOPTS_NUMNEEDED,TXT_NUMOPTS), "[NUMPOS]", intNumPos), "[NUMNEEDED]", intNumNeeded) & ")" & _
+			"</div>" & _
+			"</li>"
 	End Sub
 	
 	Function makeEntry()
 		Dim strReturn
 	
-		strReturn = "<p><input type=""checkbox"" name=""CMID"" id=" & AttrQs("CMList_CGID_" & GroupID) & " value=""" & Join(SearchList,",") & """>&nbsp;<img src=""" & _
-			IconURL & """ border=""0"">&nbsp;&nbsp;<strong>" & _
-			"<label for=" & AttrQs("CMList_CGID_" & GroupID) & ">" & GroupName & "</label>" & _
-			"</strong>&nbsp;(" & Replace(Replace(IIf(g_bUseIndividualCount,TXT_NUMOPTS_NUMNEEDED,TXT_NUMOPTS), "[NUMPOS]", NumPos), "[NUMNEEDED]", NumNeeded) & ")</p>" & vbCrLf & _
-			StringIf(UBound(SearchList) > 0,"<ul>" & SubItems & "</ul>")
+		strReturn = "<div class=""community-search-volgroup"">" & _
+			"<div class=""checkbox"">" & _
+			"<label for=" & AttrQs("CMList_CGID_" & GroupID) & ">" & _
+				"<input type=""checkbox"" name=""CMID"" id=" & AttrQs("CMList_CGID_" & GroupID) & " value=""" & Join(SearchList,",") & """>" & _
+				"<img src=""" & IconURL & """> " & _
+				"<strong>" & GroupName & "</strong>" & _
+			"</label>" & _
+			" (" & Replace(Replace(IIf(g_bUseIndividualCount,TXT_NUMOPTS_NUMNEEDED,TXT_NUMOPTS), "[NUMPOS]", NumPos), "[NUMNEEDED]", NumNeeded) & ")" & _
+			"</div>" & _
+			StringIf(UBound(SearchList) > 0,vbCrLf & "<ul>" & SubItems & "</ul>") & _
+			"</div>"
 		
 		makeEntry = strReturn
 	End Function
@@ -86,38 +97,38 @@ Function makeCommSrchTable(ByRef bIsEmpty, bCountPosition)
 
 	Set rsSrchComm = cmdSrchComm.Execute
 
-	Dim intWrapNum
-	intWrapAt = g_intCommSrchWrapAtVOL
-
 	If Not bCountPosition Then
+		Dim strWrapClass
+		Select Case g_intCommSrchWrapAtVOL
+			Case 0
+				strWrapClass = "col-xs-12"
+			Case 1
+				strWrapClass = "col-xs-12"
+			Case 2
+				strWrapClass = "col-xs-12 col-md-6"
+			Case 3
+				strWrapClass = "col-xs-12 col-sm-6 col-md-4"
+			Case Else
+				strWrapClass = "col-xxs-12 col-xs-6 col-md-4 col-lg-3"
+		End Select
+
 		With rsSrchComm
 			If .EOF Then
 				bIsEmpty = True
 			Else
-				intWrapAt = intWrapAt - 1
-				intWrapNum = intWrapAt
 				bIsEmpty = False
-				strReturn = strReturn & "<table class=""NoBorder cell-padding-1"">"
+				strReturn = strReturn & "<div class=""row"">"
 				While Not .EOF
-					If intWrapNum = intWrapAt Then
-						strReturn = strReturn & "<tr valign=""top""><td>"
-					Else
-						strReturn = strReturn & "<td style=""padding-left:8px;"">"
-					End If
-					strReturn = strReturn & vbCrLf & "<label for=" & AttrQs("CMID_" & .Fields("CM_ID")) & "><input type=""checkbox"" name=""CMID"" id=" & AttrQs("CMID_" & .Fields("CM_ID")) & " value=""" & _
-						.Fields("CM_ID") & """>&nbsp;" & .Fields("Community") & "</label></td>"
-					If intWrapNum > 0 Then
-						intWrapNum = intWrapNum - 1
-					Else
-						strReturn = strReturn & "</tr>"
-						intWrapNum = intWrapAt
-					End If
+					strReturn = strReturn & _
+						"<div class=" & AttrQs(strWrapClass) & ">" & _
+						"<label for=" & AttrQs("CMID_" & .Fields("CM_ID")) & ">" & _
+							"<input type=""checkbox"" name=""CMID"" id=" & AttrQs("CMID_" & .Fields("CM_ID")) & " value=" & AttrQs(.Fields("CM_ID")) & "> " & _
+							.Fields("Community") & _
+						"</label>" & _
+						"</div>"
 					.MoveNext
 				Wend
-				If intWrapNum <> intWrapAt Then
-					strReturn = strReturn & "</tr>"
-				End If
-				strReturn = strReturn & vbCrLf & "</table>"
+				strReturn = strReturn & vbCrLf & "</div>"
 			End If
 		End With
 	Else

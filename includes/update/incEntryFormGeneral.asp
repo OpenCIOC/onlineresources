@@ -1818,9 +1818,22 @@ Function printRow(strFieldName,strFieldDisplay,strFieldVal,bFieldColumn,bHasHelp
 	%>
 <tr>
 	<td class="field-label-cell <%=StringIf(bHasFeedback," has-feedback-border")%>" id="FIELD_<%=strFieldName%>">
-		<%If bHasLabel Then%><label for=<%=AttrQs(strFieldName)%>><%End If%>
-			<%=strFieldDisplay%> <%If bRequired Then%> <span class="Alert" title="<%=TXT_REQUIRED%>">*</span><%End If%>
-		<%If bHasLabel Then%></label><%End If%>
+<%
+	If bHasLabel Then
+%>
+		<label for=<%=AttrQs(strFieldName)%>>
+<%
+	End If
+%>
+			<%=strFieldDisplay%>
+			<%If bRequired Then%> <span class="Alert" title="<%=TXT_REQUIRED%>"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></span><%End If%>
+<%
+	If bHasLabel Then
+%>
+		</label>
+<%
+	End If
+%>
 	</td>
 	<td class="field-data-cell" data-field-display-name=<%=AttrQs(strFieldDisplay)%> <%If bRequired And bEnforceRequired Then%> data-field-required="true"<%End If%>>
 		<%=strFieldVal%>

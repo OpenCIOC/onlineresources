@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -21,6 +21,9 @@
 Dim strRecordOwner, _
 	strPosition, _
 	strDuties, _
+	strAppQ1, _
+	strAppQ2, _
+	strAppQ3, _
 	strOrgName, _
 	strContactName, _
 	strContactTitle, _
@@ -52,6 +55,9 @@ Sub setOpInfo()
 			strRecordOwner = .Fields("RECORD_OWNER")
 			strPosition = .Fields("POSITION_TITLE")
 			strDuties = .Fields("DUTIES")
+			strAppQ1 = .Fields("APPLICATION_QUESTION_1")
+			strAppQ2 = .Fields("APPLICATION_QUESTION_2")
+			strAppQ3 = .Fields("APPLICATION_QUESTION_3")
 			strOrgName = .Fields("ORG_NAME_FULL")
 			strContactName = .Fields("CONTACT_NAME")
 			strContactOrg = IIf(Nl(.Fields("CONTACT_ORG")), strOrgName, .Fields("CONTACT_ORG"))
@@ -65,6 +71,9 @@ Sub setOpInfo()
 			strRecordOwner = vbNullString
 			strPosition = vbNullString
 			strDuties = vbNullString
+			strAppQ1 = vbNullString
+			strAppQ2 = vbNullString
+			strAppQ3 = vbNullString
 			strOrgName = vbNullString
 			strContactName = vbNullString
 			strContactOrg = vbNullString

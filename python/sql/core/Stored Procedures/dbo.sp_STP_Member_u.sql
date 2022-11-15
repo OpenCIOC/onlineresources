@@ -40,6 +40,18 @@ CREATE PROCEDURE [dbo].[sp_STP_Member_u]
 	@OnlySpecificInterests bit,
 	@LoginRetryLimit TINYINT,
 	@ImportNotificationEmailCIC [varchar](500),
+    @ContactOrgCIC bit,
+    @ContactPhone1CIC bit,
+    @ContactPhone2CIC bit,
+    @ContactPhone3CIC bit,
+    @ContactFaxCIC bit,
+    @ContactEmailCIC bit,
+    @ContactOrgVOL bit,
+    @ContactPhone1VOL bit,
+    @ContactPhone2VOL bit,
+    @ContactPhone3VOL bit,
+    @ContactFaxVOL bit,
+    @ContactEmailVOL bit,
 	@Descriptions [xml],
 	@ErrMsg [nvarchar](500) OUTPUT
 WITH EXECUTE AS CALLER
@@ -112,7 +124,7 @@ IF @MemberID IS NULL BEGIN
 	SET @Error = 2 -- No ID Given
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL)
 -- Member ID exists ?
-END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
+END ELSE IF NOT EXISTS(SELECT * FROM dbo.STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS varchar), @MemberObjectName)
 -- Default Template given ?
@@ -120,7 +132,7 @@ END ELSE IF @DefaultTemplate IS NULL BEGIN
 	SET @Error = 10 -- Required field
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @TemplateObjectName, @GeneralSetupObjectName)
 -- Default Template exists ?
-END IF NOT EXISTS (SELECT * FROM GBL_Template WHERE Template_ID=@DefaultTemplate) BEGIN
+END IF NOT EXISTS (SELECT * FROM dbo.GBL_Template WHERE Template_ID=@DefaultTemplate) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@DefaultTemplate AS varchar), @TemplateObjectName)
 -- Default Template ownership OK ?
@@ -176,8 +188,7 @@ END ELSE IF @UseVOL=1 AND (SELECT DefaultViewVOL FROM STP_Member WHERE MemberID=
 END
 
 IF @Error = 0 BEGIN
-
-	UPDATE STP_Member
+	UPDATE dbo.STP_Member
 		SET	MODIFIED_DATE = GETDATE(),
 			MODIFIED_BY = @MODIFIED_BY,
 			DefaultViewCIC = CASE WHEN @UseCIC=1 THEN @DefaultViewCIC ELSE DefaultViewCIC END,
@@ -209,7 +220,19 @@ IF @Error = 0 BEGIN
 			UseOfflineTools = CASE WHEN @UseCIC=1 THEN @UseOfflineTools ELSE UseOfflineTools END,
 			OnlySpecificInterests = CASE WHEN @UseVOL=1 THEN @OnlySpecificInterests ELSE OnlySpecificInterests END,
 			ImportNotificationEmailCIC = CASE WHEN @UseCIC=1 THEN @ImportNotificationEmailCIC ELSE ImportNotificationEmailCIC END,
-			LoginRetryLimit = CASE WHEN @LoginRetryLimit = 0 THEN NULL ELSE @LoginRetryLimit END
+			LoginRetryLimit = CASE WHEN @LoginRetryLimit = 0 THEN NULL ELSE @LoginRetryLimit END,
+            ContactOrgCIC = CASE WHEN @UseCIC=1 THEN @ContactOrgCIC ELSE ContactOrgCIC END,
+            ContactPhone1CIC = CASE WHEN @UseCIC=1 THEN @ContactPhone1CIC ELSE ContactPhone1CIC END,
+            ContactPhone2CIC = CASE WHEN @UseCIC=1 THEN @ContactPhone2CIC ELSE ContactPhone2CIC END,
+            ContactPhone3CIC = CASE WHEN @UseCIC=1 THEN @ContactPhone3CIC ELSE ContactPhone3CIC END,
+            ContactFaxCIC = CASE WHEN @UseCIC=1 THEN @ContactFaxCIC ELSE ContactFaxCIC END,
+            ContactEmailCIC = CASE WHEN @UseCIC=1 THEN @ContactEmailCIC ELSE ContactEmailCIC END,
+            ContactOrgVOL = CASE WHEN @UseVOL=1 THEN @ContactOrgVOL ELSE ContactOrgVOL END,
+            ContactPhone1VOL = CASE WHEN @UseVOL=1 THEN @ContactPhone1VOL ELSE ContactPhone1VOL END,
+            ContactPhone2VOL = CASE WHEN @UseVOL=1 THEN @ContactPhone2VOL ELSE ContactPhone2VOL END,
+            ContactPhone3VOL = CASE WHEN @UseVOL=1 THEN @ContactPhone3VOL ELSE ContactPhone3VOL END,
+            ContactFaxVOL = CASE WHEN @UseVOL=1 THEN @ContactFaxVOL ELSE ContactFaxVOL END,
+            ContactEmailVOL = CASE WHEN @UseVOL=1 THEN @ContactEmailVOL ELSE ContactEmailVOL END
 	WHERE MemberID=@MemberID
 	
 	EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @GeneralSetupObjectName, @ErrMsg

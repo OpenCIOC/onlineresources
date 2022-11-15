@@ -1,7 +1,7 @@
 <div id="cic-search-area" class="row [IFNOTALL:HAS_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]max-width-lg[ENDIFNOTALL:HAS_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]">
 
 	[IF:HAS_LEFT_CONTENT]
-	<div class="search-left col-xs-12 col-sm-4 col-lg-3">
+	<div class="search-left col-xs-12 col-sm-4 col-md-4 col-lg-3">
 		[IF:SEARCH_ALERT]
 		<div class="panel panel-danger search-alert-box">
 			[IF:SEARCH_ALERT_TITLE]
@@ -93,7 +93,7 @@
 				col-md-8 col-lg-9
 			[ENDIFNOT:SEARCH_RIGHT_CONTENT]
 			[IFALL:HAS_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
-				col-md-6 col-lg-6
+				col-md-8 col-lg-6
 			[ENDIFALL:HAS_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
 		 [ENDIFANY:HAS_LEFT_CONTENT,SEARCH_RIGHT_CONTENT]
 		 ">
@@ -225,7 +225,10 @@
 	[ENDIFANY:HAS_CENTRE_SECTION,SERVICE_CATEGORY]
 
 	[IF:SEARCH_RIGHT_CONTENT]
-	<div class="col-xs-12 col-sm-12 [IF:HAS_LEFT_CONTENT] col-md-3[ENDIF:HAS_LEFT_CONTENT][IFNOT:HAS_LEFT_CONTENT] col-md-4[ENDIFNOT:HAS_LEFT_CONTENT] col-lg-3">	
+	<div class="col-xs-12 col-sm-12
+		 [IF:HAS_LEFT_CONTENT] col-md-12[ENDIF:HAS_LEFT_CONTENT]
+		 [IFNOT:HAS_LEFT_CONTENT] col-md-4[ENDIFNOT:HAS_LEFT_CONTENT]
+		 col-lg-3">	
 		<div class="panel panel-info">
 			[IF:SEARCH_RIGHT_TITLE]
 			<div class="panel-heading"><h2>[IF:SEARCH_RIGHT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_RIGHT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_RIGHT_GLYPH][SEARCH_RIGHT_TITLE]</h2></div>

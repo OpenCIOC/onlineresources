@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -52,7 +52,7 @@ Function makeVOLMemberInvoiceList(intSelected, strSelectName, bIncludeBlank)
 			strReturn = TXT_NO_VALUES_AVAILABLE
 		Else
 			.MoveFirst
-			strReturn = strReturn & "<select name=" & AttrQs(strSelectName) & ">"
+			strReturn = strReturn & "<select name=" & AttrQs(strSelectName) & " class=""form-control"">"
 			If bIncludeBlank Then
 				strReturn = strReturn & "<option value=""""> -- </option>"
 			End If

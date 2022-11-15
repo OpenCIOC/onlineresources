@@ -181,6 +181,10 @@ td.AlertBox {
 		margin: 0 0;
 		padding: 0.5em 0.5em 0.5em 1.5em;
 	}
+
+	&.glyphicon, &.fa {
+		color: $fcError !important;
+	}
 }
 
 .AlertStrike, .AlertStrike a {

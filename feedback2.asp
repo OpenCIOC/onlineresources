@@ -821,7 +821,7 @@ If Not bNUMError Then
 <div class="form-group">
 	<label for="sCheckMonth" class="control-label col-xs-4 col-sm-2 col-md-1"><%=TXT_MONTH%></label>
 	<div class="form-inline form-inline-always col-xs-8 col-sm-10 col-md-11">
-		<%Call printMonthList("sCheckMonth")%></label>
+		<%Call printMonthList("sCheckMonth")%>
 	</div>
 </div>
 <div class="form-group">

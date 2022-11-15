@@ -3210,84 +3210,85 @@ window['init_schedule'] = function($) {
 };
 
 })();
-﻿(function() {
+﻿(function () {
 
-var $ = jQuery;
+	var $ = jQuery;
 
-var init_interests = function(txt_not_found, interest_complete_url) {
-	var added_values = [];
-	var add_item_fn = only_items_chk_add_html($, 'AI');
-	init_autocomplete_checklist($, {field: 'AI',
+	var init_interests = function (txt_not_found, interest_complete_url) {
+		var added_values = [];
+		var add_item_fn = only_items_chk_add_html($, 'AI');
+		init_autocomplete_checklist($, {
+			field: 'AI',
 			source: interest_complete_url,
 			add_new_html: add_item_fn,
 			added_values: added_values,
 			txt_not_found: txt_not_found
-	});
+		});
 
-	var interest_group;
-	var update_interest_list = function (data) {
-		var ai_list_old = $("#AreaOfInterestList");
-		if (ai_list_old.length) {
-			ai_list_old.prop('id', 'AreaOfInterestListOld');
+		var interest_group;
+		var update_interest_list = function (data) {
 
-		}
-		var ai_list = $('<ul>').hide().
-			insertAfter(interest_group).
-			prop('id', 'AreaOfInterestList').
-			append($($.map(data, function(item, index) {
-				var el = $('<li>').append(
+			var ai_list_old = $("#AreaOfInterestList");
+			if (ai_list_old.length) {
+				ai_list_old.prop('id', 'AreaOfInterestListOld');
+
+			}
+			var ai_list = $('<ul>').hide().
+				insertAfter(interest_group).
+				prop('id', 'AreaOfInterestList').
+				append($($.map(data, function (item, index) {
+					var el = $('<li>').append(
 						$('<label>').append(
 							$('<input>').
 								prop({
-								type: 'checkbox',
-								value: item.chkid
-									}).
+									type: 'checkbox',
+									value: item.chkid
+								}).
 								data('cioc_chk_display', item.value)
-							).
+						).
 							append(document.createTextNode(' ' + item.value)
-						)
+							)
 					)[0];
 					return el;
-					})));
+				})));
 
 
-		ai_list.show('slow');
-		if (ai_list_old.length) {
-			ai_list_old.hide('slow', function ()
-						{
-							ai_list_old.remove();
-						});
-		}
-
-
-	};
-	interest_group = $('#InterestGroup').
-		change(function() {
-			$.getJSON(interest_complete_url,
-				{IGID: interest_group.prop('value')},
-				update_interest_list);
-		});
-
-
-	$("#FIELD_INTERESTS").next().on('click', "#AreaOfInterestList input:checkbox",
-		{added_values: added_values, add_item_fn: add_item_fn}, function (event) {
-			var me = $(this);
-			var existing_chk = document.getElementById('AI_ID_' + this.value);
-			if (existing_chk) {
-				existing_chk.checked = true;
-			} else {
-
-				var display = me.data('cioc_chk_display');
-
-				event.data.added_values.push({chkid: this.value, display: display});
-				event.data.add_item_fn(this.value, display);
+			ai_list.show('slow');
+			if (ai_list_old.length) {
+				ai_list_old.hide('slow', function () {
+					ai_list_old.remove();
+				});
 			}
 
-			me.parent().parent().hide('slow',function () { me.remove(); });
 
-		});
-};
-window['init_interests'] = init_interests;
+		};
+		interest_group = $('#InterestGroup').
+			change(function () {
+				$.getJSON(interest_complete_url,
+					{ IGID: interest_group.prop('value') },
+					update_interest_list);
+			});
+
+
+		$("#FIELD_INTERESTS").next().on('click', "#AreaOfInterestList input:checkbox",
+			{ added_values: added_values, add_item_fn: add_item_fn }, function (event) {
+				var me = $(this);
+				var existing_chk = document.getElementById('AI_ID_' + this.value);
+				if (existing_chk) {
+					existing_chk.checked = true;
+				} else {
+
+					var display = me.data('cioc_chk_display');
+
+					event.data.added_values.push({ chkid: this.value, display: display });
+					event.data.add_item_fn(this.value, display);
+				}
+
+				me.parent().parent().hide('slow', function () { me.remove(); });
+
+			});
+	};
+	window['init_interests'] = init_interests;
 
 })();
 ﻿// =========================================================================================
@@ -3307,8 +3308,11 @@ window['init_interests'] = init_interests;
 // =========================================================================================
 
 (function($) {
-window['init_vprofiles'] = function(show_tab, root_path, strRemove, specific_interest_url, txt_not_found, interest_complete_url) {
-	var tabs, default_results_area=null, initial_interest = null,
+	window['init_vprofiles'] = function (show_tab, root_path, strRemove, txt_not_found, interest_complete_url) {
+
+		console.log(interest_complete_url);
+
+	var tabs, default_results_area = null, initial_interest = null,
 	onbeforeunload = function(cache) {
 		cache['personal_values'] = get_form_values('#personalform');
 		cache['last_tab'] = tabs.tabs('option', 'active');
@@ -3427,13 +3431,13 @@ window['init_vprofiles'] = function(show_tab, root_path, strRemove, specific_int
 		cache_register_onbeforeunload(onbeforeunload);
 		cache_register_onbeforerestorevalues(onbeforerestore);
 
-		init_interests(txt_not_found, interest_complete_url)
+		init_interests(txt_not_found, interest_complete_url);
 
 		restore_cached_state();
 		initial_interests = $('#AI_existing_add_container').html();
 
-		$(document).on('click', 'input.referral_outcome_edit', edit_outcome);
-		$(document).on('click', 'input.referral_hide', do_referral_hide);
+		$(document).on('click', 'button.referral_outcome_edit', edit_outcome);
+		$(document).on('click', 'button.referral_hide', do_referral_hide);
 		$('#confirm_cancel').click(do_referral_hide_cancel);
 		$('#confirm_okay').click(do_referral_hide_okay);
 		$('#outcome_cancel').click(do_outcome_cancel);

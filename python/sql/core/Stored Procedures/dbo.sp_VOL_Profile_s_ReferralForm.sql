@@ -10,14 +10,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 30-Jan-2012
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE	@Error int
 SET @Error = 0
 
@@ -30,12 +22,12 @@ IF @ProfileID IS NULL BEGIN
 	SET @Error = 2 -- No ID Given
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @VolunteerProfileObjectName, NULL)
 -- Profile ID exists ?
-END ELSE IF NOT EXISTS(SELECT * FROM VOL_Profile WHERE ProfileID=@ProfileID AND Active=1 AND Blocked=0) BEGIN
+END ELSE IF NOT EXISTS(SELECT * FROM dbo.VOL_Profile WHERE ProfileID=@ProfileID AND Active=1 AND Blocked=0) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@ProfileID AS varchar), @VolunteerProfileObjectName)
 END ELSE BEGIN
 	SELECT FirstName, LastName, Phone, Address, City, PostalCode, Province
-		FROM VOL_Profile
+		FROM dbo.VOL_Profile
 	WHERE ProfileID=@ProfileID
 
 END

@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -20,23 +20,26 @@
 <%
 Sub printBaseTableTextFieldList(strSelectName, bDate, bRadio, bWWW, bMultiple, bIncludeBlank)
 %>
-<select name=<%=AttrQs(strSelectName) & IIf(bMultiple," MULTIPLE size=""15""",vbNullString)%>>
+<select name=<%=AttrQs(strSelectName) & IIf(bMultiple," MULTIPLE size=""15""",vbNullString)%> class="form-control">
 <%If bIncludeBlank And Not bMultiple Then%>
 <option value=""> -- </option>
 <%End If%>
 <option value="btd.ACCESSIBILITY_NOTES">ACCESSIBILITY_NOTES</option>
+<option value="cbtd.ACCREDITATION_NOTES">ACCREDITATION_NOTES</option>
 <option value="cbtd.ACTIVITY_NOTES">ACTIVITY_NOTES</option>
 <option value="cbtd.AFTER_HRS_PHONE">AFTER_HRS_PHONE</option>
 <option value="cbtd.APPLICATION">APPLICATION</option>
 <option value="cbtd.AREAS_SERVED_NOTES">AREAS_SERVED_NOTES</option>
 <option value="ccbtd.BEST_TIME_TO_CALL">BEST_TIME_TO_CALL</option>
 <option value="cbtd.BOUNDARIES">BOUNDARIES</option>
+<option value="cbtd.BUS_ROUTE_NOTES">BUS_ROUTE_NOTES</option>
 <option value="cbtd.COMMENTS">COMMENTS</option>
 <option value="cbt.CORP_REG_NO">CORP_REG_NO</option>
 <option value="cbtd.CRISIS_PHONE">CRISIS_PHONE</option>
 <option value="cbtd.DATES">DATES</option>
 <option value="cbt.DD_CODE">DD_CODE</option>
 <option value="btd.DESCRIPTION">DESCRIPTION</option>
+<option value="cbtd.DOCUMENTS_REQUIRED">DOCUMENTS_REQUIRED</option>
 <option value="btd.E_MAIL">E_MAIL</option>
 <option value="cbtd.ELECTIONS">ELECTIONS</option>
 <option value="cbtd.ELIGIBILITY_NOTES">ELIGIBILITY_NOTES</option>

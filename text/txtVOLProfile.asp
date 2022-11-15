@@ -170,6 +170,7 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_USER_NOT_AGREED_TO_CONTACT, _
 	TXT_VIEW_NAME, _
 	TXT_VIEW_NUMBER, _
+	TXT_VIEW_OR_UPDATE, _
 	TXT_VIEWS_ALLOW_PROFILES, _
 	TXT_VOL_PROFILE_CONFIRMATION, _
 	TXT_VOL_PROFILE_DETAILS, _
@@ -241,7 +242,7 @@ Sub setTxtVOLProfile()
 			TXT_DATES_AND_TIMES = "Dates et heures"
 			TXT_DEACTIVATE = "Désactiver"
 			TXT_DEACTIVATE_ACCOUNT = "Désactiver le compte de profil de bénévole"
-			TXT_DEACTIVATE_PROMPT = "Cliquez ici si vous voulez désactiver votre compte. Pour les paramètres de courriel, consultez votre """"Profil de recherche""""."
+			TXT_DEACTIVATE_PROMPT = "Utilisez le lien ci-dessus si vous voulez désactiver votre compte. Pour les paramètres de courriel, consultez votre """"Profil de recherche""""."
 			TXT_DID_NOT_SELECT_ANY = " n'ont pas sélectionné de communautés spécifiques."
 			TXT_DO_YOU_HAVE_A_PROFILE_ALREADY = "Avez-vous déjà un profil ?"
 			TXT_EDIT_OUTCOME = "Modifier le résultat"
@@ -350,10 +351,11 @@ Sub setTxtVOLProfile()
 			TXT_UNSUCCESSFUL = "Sans succès"
 			TXT_UPDATE_VOL_PROFILE_INFO = "Mettre à jour les Informations du profil de bénévole"
 			TXT_UPDATE_VOL_PROFILE_CRITERIA = "Mettre à jour les Critères de recherche sur les profils de bénévole"
-			TXT_USE_MY_SAVED_SEARCH_PROFILE = "Utiliser mon profil de recherche sauvegardé pour"
+			TXT_USE_MY_SAVED_SEARCH_PROFILE = "Utiliser mon profil enregistré"
 			TXT_USER_NOT_AGREED_TO_CONTACT = "Cet utilisateur n'a pas accepté d'être contacté."
 			TXT_VIEW_NAME = "Afficher le nom"
 			TXT_VIEW_NUMBER = "No de vue"
+			TXT_VIEW_OR_UPDATE = "Afficher ou mettre à jour"
 			TXT_VIEWS_ALLOW_PROFILES = "Les vues publiques suivantes sont configurées pour autoriser les profils de bénévoles :"
 			TXT_VOL_PROFILE_CONFIRMATION = "Confirmation du profil du bénévole"
 			TXT_VOL_PROFILE_DETAILS = "Détails du profil du bénévole"
@@ -422,7 +424,7 @@ Sub setTxtVOLProfile()
 			TXT_DATES_AND_TIMES = "Dates and Times"
 			TXT_DEACTIVATE = "Deactivate"
 			TXT_DEACTIVATE_ACCOUNT = "Deactivate Volunteer Profile Account"
-			TXT_DEACTIVATE_PROMPT = "Click here if you would like to deactivate your account. For Email settings see your ""Search Profile""."
+			TXT_DEACTIVATE_PROMPT = "Use the above link if you would like to deactivate your account. For Email settings see your ""Search Profile""."
 			TXT_DID_NOT_SELECT_ANY = " did not select any specific communities."
 			TXT_DO_YOU_HAVE_A_PROFILE_ALREADY = "Do you already have a Profile?"
 			TXT_EDIT_OUTCOME = "Edit Outcome"
@@ -531,10 +533,11 @@ Sub setTxtVOLProfile()
 			TXT_UNSUCCESSFUL = "Unsuccessful"
 			TXT_UPDATE_VOL_PROFILE_INFO = "Update Volunteer Profile Info"
 			TXT_UPDATE_VOL_PROFILE_CRITERIA = "Update Volunteer Profile Search Criteria"
-			TXT_USE_MY_SAVED_SEARCH_PROFILE = "Use my saved search profile to "
+			TXT_USE_MY_SAVED_SEARCH_PROFILE = "Use my saved Search Profile"
 			TXT_USER_NOT_AGREED_TO_CONTACT = "This User has not agreed to be contacted."
 			TXT_VIEW_NAME = "View Name"
 			TXT_VIEW_NUMBER = "View #"
+			TXT_VIEW_OR_UPDATE = "View or Update"
 			TXT_VIEWS_ALLOW_PROFILES = "The following public Views are set to allow Volunteer Profiles" & TXT_COLON
 			TXT_VOL_PROFILE_CONFIRMATION = "Volunteer Profile Confirmation"
 			TXT_VOL_PROFILE_DETAILS = "Volunteer Profile Details"

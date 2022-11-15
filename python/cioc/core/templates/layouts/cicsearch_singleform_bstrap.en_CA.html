@@ -215,7 +215,10 @@
 	[ENDIF:HAS_CENTRE_SECTION]
 
 	[IF:HAS_RIGHT_OR_SERVCAT]
-	<div class="col-xs-12 col-sm-12 [IF:HAS_LEFT_CONTENT] col-lg-3[ENDIF:HAS_LEFT_CONTENT][IFNOT:HAS_LEFT_CONTENT] col-md-4 col-lg-4[ENDIFNOT:HAS_LEFT_CONTENT]">
+	<div class="col-xs-12 col-sm-12
+		 [IF:HAS_LEFT_CONTENT] col-md-12 col-lg-3[ENDIF:HAS_LEFT_CONTENT]
+		 [IFNOT:HAS_LEFT_CONTENT] col-md-4 col-lg-4[ENDIFNOT:HAS_LEFT_CONTENT]
+		 ">
 		[IF:SERVICE_CATEGORY]
 		<div class="panel panel-info">
 			<div class="panel-heading">

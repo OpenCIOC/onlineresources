@@ -35,12 +35,12 @@ Sub setTxtFormSecurity()
 	Select Case g_objCurrentLang.Culture
 		Case CULTURE_FRENCH_CANADIAN
 			TXT_DAY = "jour" & TXT_COLON
-			TXT_ENTER_TOMORROWS_DATE = "Écrire la <span class=""Alert"">date de demain</span> (" & DateString(DateAdd("d",1,Date()), True) & ")" & TXT_COLON
+			TXT_ENTER_TOMORROWS_DATE = "Écrire la <span class=""Alert"">date de demain</span> (<strong>" & DateString(DateAdd("d",1,Date()), True) & "</strong>)" & TXT_COLON
 			TXT_INST_EMAIL_PHONE = "Veuillez saisir votre adresse de courriel ou votre numéro de téléphone."
 			TXT_INST_FULL_NAME = "Veuillez saisir votre prénom et nom de famille."
-			TXT_INST_SECURITY_CHECK = "Avant de soumettre vos changements, nous exigeons que vous vous soumettiez à un test de protection anti-pourriel." & _
+			TXT_INST_SECURITY_CHECK = "Avant que vos informations puissent être envoyées, nous exigeons que vous vous soumettiez à <strong>un test de protection anti-pourriel</strong>." & _
 				"Si vous avez des difficultés à réussir ce test de protection, ou si vous avez besoin d'aide, retournez à ce formulaire et utilisez les coordonnées au haut de la page pour nous contacter."
-			TXT_INST_SECURITY_CHECK_2 = "Si vous avez des difficultés à réussir ce test de protection, ou si vous avez besoin d'aide, retournez au formulaire de rétroaction et utilisez les coordonnées au haut de la page pour nous contacter."
+			TXT_INST_SECURITY_CHECK_2 = "Si vous avez des difficultés à réussir ce test de protection, ou si vous avez besoin d'aide, retournez à ce formulaire et utilisez les coordonnées au haut de la page pour nous contacter."
 			TXT_INST_SECURITY_CHECK_FAIL = "La valeur que vous avez soumise pour le test de protection n'est PAS VALIDE et vous ne pouvez pas continuez à soumettre de l'information. Veuillez essayer à nouveau."
 			TXT_MONTH = "mois" & TXT_COLON
 			TXT_SECURITY_CHECK = "Test de protection"
@@ -50,12 +50,12 @@ Sub setTxtFormSecurity()
 			TXT_YEAR = "année" & TXT_COLON
 		Case Else
 			TXT_DAY = "Day" & TXT_COLON
-			TXT_ENTER_TOMORROWS_DATE = "Enter <span class=""Alert"">tomorrow's</span> date (" & DateString(DateAdd("d",1,Date()), True) & ")" & TXT_COLON
+			TXT_ENTER_TOMORROWS_DATE = "Enter <span class=""Alert"">tomorrow's</span> date (<strong>" & DateString(DateAdd("d",1,Date()), True) & "</strong>)" & TXT_COLON
 			TXT_INST_EMAIL_PHONE = "Please provide us with your Email address or telephone number"
 			TXT_INST_FULL_NAME = "Please provide us with your First and Last Name"
-			TXT_INST_SECURITY_CHECK = "Before your changes can be submitted, we require that you pass the following anti-spam security check. " & _
-				"If you are having trouble passing this security check, or need other assistance, return to this form and use the contact information at the top of the page."
-			TXT_INST_SECURITY_CHECK_2 = "If you are having trouble passing this security check, or need other assistance, return to the feedback form and use the contact information at the top of the page."
+			TXT_INST_SECURITY_CHECK = "Before your information can be sent, we require that you pass the following <strong>anti-spam security check</strong>, to ensure that this form is being submitted by a real person. " & _
+				"If you are having trouble passing this security check, or need other assistance, return to this form and use the contact information at the top of the page so that we may assist you."
+			TXT_INST_SECURITY_CHECK_2 = "If you are having trouble passing this security check, or need other assistance, return to the form and use the contact information at the top of the page so that we may assist you."
 			TXT_INST_SECURITY_CHECK_FAIL = "The value you entered for the security check was NOT VALID and you cannot yet proceed with submitting your information. Please try again."
 			TXT_MONTH = "Month" & TXT_COLON
 			TXT_SECURITY_CHECK = "Security Check"
