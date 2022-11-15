@@ -216,7 +216,7 @@ GRANT UPDATE ON  [dbo].[VOL_Opportunity_Description] TO [cioc_login_role]
 GO
 GRANT SELECT ON  [dbo].[VOL_Opportunity_Description] TO [cioc_vol_search_role]
 GO
-CREATE FULLTEXT INDEX ON [dbo].[VOL_Opportunity_Description] KEY INDEX [PK_VOL_Opportunity_Description] ON [VOLRecord]
+CREATE FULLTEXT INDEX ON [dbo].[VOL_Opportunity_Description] KEY INDEX [PK_VOL_Opportunity_Description] ON [VOLRecord] WITH STOPLIST [CIOC_DEFAULT_STOPLIST]
 GO
 ALTER FULLTEXT INDEX ON [dbo].[VOL_Opportunity_Description] ADD ([POSITION_TITLE] LANGUAGE 0)
 GO

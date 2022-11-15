@@ -228,7 +228,7 @@ GRANT SELECT ON  [dbo].[CIC_BaseTable_Description] TO [cioc_login_role]
 GO
 GRANT UPDATE ON  [dbo].[CIC_BaseTable_Description] TO [cioc_login_role]
 GO
-CREATE FULLTEXT INDEX ON [dbo].[CIC_BaseTable_Description] KEY INDEX [PK_CIC_BaseTable_Description] ON [GBLRecord]
+CREATE FULLTEXT INDEX ON [dbo].[CIC_BaseTable_Description] KEY INDEX [PK_CIC_BaseTable_Description] ON [GBLRecord] WITH STOPLIST [CIOC_DEFAULT_STOPLIST]
 GO
 ALTER FULLTEXT INDEX ON [dbo].[CIC_BaseTable_Description] ADD ([CMP_Languages] LANGUAGE 1033)
 GO
