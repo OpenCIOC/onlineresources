@@ -48,14 +48,14 @@ only_vol = request.dboptions.UseVOL and not request.dboptions.UseCIC
 					</td>
 				</tr>
 
-				<%
-				sections = []
-				if use_cic or only_vol:
-				sections.append((_('CIC'), 'CIC'))
+				<% sections = [] %>
+				%if use_cic or only_vol:
+				<%	sections.append((_('CIC'), 'CIC')) %>
+				%endif
 
-				if use_vol:
-				sections.append((_('Volunteer'), 'VOL'))
-				%>
+				%if use_vol:
+				<%	sections.append((_('Volunteer'), 'VOL')) %>
+				%endif
 				%for dm_label, domain in sections:
 				<%
 				label = '%s (%s)' % (_('Database Name'), dm_label)
@@ -101,10 +101,10 @@ only_vol = request.dboptions.UseVOL and not request.dboptions.UseCIC
 				<%
 				sections = []
 				if use_cic:
-				sections.append((_('CIC'), 'CIC', _('Community Information Database'), cic_views))
+					sections.append((_('CIC'), 'CIC', _('Community Information Database'), cic_views))
 
 				if use_vol:
-				sections.append((_('Volunteer'), 'VOL', _('Volunteer Database'), vol_views))
+					sections.append((_('Volunteer'), 'VOL', _('Volunteer Database'), vol_views))
 				%>
 
 				%for dm_label, domain, dm_full_name, views in sections:
@@ -155,10 +155,10 @@ only_vol = request.dboptions.UseVOL and not request.dboptions.UseCIC
 				<%
 				sections = []
 				if use_cic:
-				sections.append((_('CIC'), 'CIC', ''))
+					sections.append((_('CIC'), 'CIC', ''))
 
 				if use_vol:
-				sections.append((_('Volunteer'), 'VOL', '/volunteer'))
+					sections.append((_('Volunteer'), 'VOL', '/volunteer'))
 				%>
 
 				%for dm_label, domain, extra_url in sections:
@@ -195,13 +195,13 @@ only_vol = request.dboptions.UseVOL and not request.dboptions.UseCIC
 				<%
 				sections = []
 				if use_cic:
-				sections.append((_('CIC'), 'CIC', True))
+					sections.append((_('CIC'), 'CIC', True))
 
 				if use_vol:
-				sections.append((_('Volunteer'), 'VOL', True))
+					sections.append((_('Volunteer'), 'VOL', True))
 
 				if request.dboptions.UseVolunteerProfiles:
-				sections.append((_('Volunteer Profile'), 'VOLProfile', True))
+					sections.append((_('Volunteer Profile'), 'VOLProfile', True))
 				%>
 
 				%for dm_label, domain, is_required in sections:
@@ -238,10 +238,10 @@ only_vol = request.dboptions.UseVOL and not request.dboptions.UseCIC
 				<%
 				sections = []
 				if use_cic or only_vol:
-				sections.append((_('CIC'), 'CIC'))
+					sections.append((_('CIC'), 'CIC'))
 
 				if use_vol:
-				sections.append((_('Volunteer'), 'VOL'))
+					sections.append((_('Volunteer'), 'VOL'))
 				%>
 				%for dm_label, domain in sections:
 				<%
@@ -343,6 +343,7 @@ only_vol = request.dboptions.UseVOL and not request.dboptions.UseCIC
 						</div>
 					</td>
 				</tr>
+
 				<tr>
 					${self.fieldLabelCell(None,_('Offline Tools'),
 					_('When selected, the Offline Tools will be permitted to connect to this CIOC database and the Offline Tools options will be available in setup areas.'),False)}
@@ -404,6 +405,40 @@ only_vol = request.dboptions.UseVOL and not request.dboptions.UseCIC
 					</td>
 				</tr>
 				%endif
+				<% sections = [] %>
+				%if use_cic or only_vol:
+				<%	sections.append((_('CIC'), 'CIC')) %>
+				%endif
+
+				%if use_vol:
+				<%	sections.append((_('Volunteer'), 'VOL')) %>
+				%endif
+				%for dm_label, domain in sections:
+				<%
+				label = '%s (%s)' % (_('Contact'), dm_label)
+				%>
+				<tr>
+					${self.fieldLabelCell(None,label,
+					_('Contact Options'),True)}
+					<td class="field-data-cell">
+						<% contact_types  = [
+							('Org', _('Org')),
+							('Phone1', _('Phone 1')),
+							('Phone2', _('Phone 2')),
+							('Phone3', _('Phone 3')),
+							('Fax', _('Fax')),
+							('Email', _('Email')),
+						]%>
+						%for i, (ct_type, ct_name) in enumerate(contact_types):
+							%if i:
+							 <br>
+							%endif
+							${renderer.errorlist(f'settings.Contact{ct_type}{domain}')}
+							${renderer.checkbox(f'settings.Contact{ct_type}{domain}', label=ct_name)}
+						%endfor
+					</td>
+				</tr>
+				%endfor
 
 				<tr>
 					<td colspan="2" class="field-data-cell">
