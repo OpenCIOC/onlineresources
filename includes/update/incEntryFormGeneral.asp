@@ -1169,6 +1169,27 @@ Function makeContactContents(rst,strContactType,bUseContent)
 	Dim strReturn, strQFldName
 	Dim xmlDoc, xmlNode
 
+	Dim bContactOrg, bContactPhone, bContactFax, bContactEmail, bPhoneCount
+	bPhoneCount = True
+
+	If ps_intDbArea = DM_VOL Then
+		bContactOrg = g_bContactOrgVOL
+		bContactPhone = Array(g_bContactPhone1VOL,g_bContactPhone2VOL,g_bContactPhone3VOL)
+		If Not (g_bContactPhone2VOL) Then
+			bPhoneCount = False
+		End If
+		bContactFax = g_bContactFaxVOL
+		bContactEmail = g_bContactEmailVOL
+	Else
+		bContactOrg = g_bContactOrgCIC
+		bContactPhone = Array(g_bContactPhone1CIC,g_bContactPhone2CIC,g_bContactPhone3CIC)
+		If Not (g_bContactPhone2CIC) Then
+			bPhoneCount = False
+		End If
+		bContactFax = g_bContactFaxCIC
+		bContactEmail = g_bContactEmailCIC
+	End If
+
 	Set xmlDoc = Server.CreateObject("MSXML2.DOMDocument.6.0")
 	With xmlDoc
 		.async = False
@@ -1190,6 +1211,7 @@ Function makeContactContents(rst,strContactType,bUseContent)
 					"<input type=""text"" name=" & strQFldName & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("NAME")) & ">" & _
 				"</div>" & _
 			"</div>"
+
 	strQFldName = AttrQs(strContactType & "_TITLE")
 	strReturn = strReturn & _
 			"<div class=""form-group"">" & _
@@ -1197,41 +1219,53 @@ Function makeContactContents(rst,strContactType,bUseContent)
 				"<div class=""col-sm-9 col-lg-10"">" & _
 					"<input type=""text"" name=" & strQFldName & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("TITLE")) & "></div>" & _
 			"</div>"
-	strQFldName = AttrQs(strContactType & "_ORG")
-	strReturn = strReturn & _
-			"<div class=""form-group"">" & _
-				"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_ORGANIZATION & "</label>" & _
-				"<div class=""col-sm-9 col-lg-10"">" & _
-					"<input type=""text"" name=" & strQFldName & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("ORG")) & ">" & _
-				"</div>" & _
-			"</div>"
+
+	If bContactOrg Or Not Nl(xmlNode.getAttribute("ORG")) Then
+		strQFldName = AttrQs(strContactType & "_ORG")
+		strReturn = strReturn & _
+				"<div class=""form-group"">" & _
+					"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_ORGANIZATION & "</label>" & _
+					"<div class=""col-sm-9 col-lg-10"">" & _
+						"<input type=""text"" name=" & strQFldName & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("ORG")) & ">" & _
+					"</div>" & _
+				"</div>"
+	End If
+
 	Dim i
 	For i = 1 to 3
-		strQFldName = AttrQs(strContactType & "_PHONE" & i)
-		strReturn = strReturn & _
-			"<div class=""form-group"">" & _
-				"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_PHONE & " #" & i & "</label>" & _
-				"<div class=""col-sm-9 col-lg-10"">" & _
-					"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("PHONE" & i)) & ">" & _
-				"</div>" & _
-			"</div>"
+		If bContactPhone(i-1) Or Not Nl(xmlNode.getAttribute("PHONE" & i)) Then
+			strQFldName = AttrQs(strContactType & "_PHONE" & i)
+			strReturn = strReturn & _
+				"<div class=""form-group"">" & _
+					"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_PHONE & StringIf(bPhoneCount, " #" & i) & "</label>" & _
+					"<div class=""col-sm-9 col-lg-10"">" & _
+						"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("PHONE" & i)) & ">" & _
+					"</div>" & _
+				"</div>"
+		End If
 	Next
-	strQFldName = AttrQs(strContactType & "_FAX")
-	strReturn = strReturn & _
-			"<div class=""form-group"">" & _
-				"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_FAX & "</label>" & _
-				"<div class=""col-sm-9 col-lg-10"">" & _
-					"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("FAX")) & ">" & _
-				"</div>" & _
-			"</div>"
-	strQFldName = AttrQs(strContactType & "_EMAIL")
-	strReturn = strReturn & _
-			"<div class=""form-group"">" & _
-				"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_EMAIL & "</label>" & _
-				"<div class=""col-sm-9 col-lg-10"">" & _
-					"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">" & _
-				"</div>" & _
-			"</div>"
+
+	If bContactFax Or Not Nl(xmlNode.getAttribute("FAX")) Then
+		strQFldName = AttrQs(strContactType & "_FAX")
+		strReturn = strReturn & _
+				"<div class=""form-group"">" & _
+					"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_FAX & "</label>" & _
+					"<div class=""col-sm-9 col-lg-10"">" & _
+						"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("FAX")) & ">" & _
+					"</div>" & _
+				"</div>"
+	End If
+
+	If bContactEmail Or Not Nl(xmlNode.getAttribute("EMAIL")) Then
+		strQFldName = AttrQs(strContactType & "_EMAIL")
+		strReturn = strReturn & _
+				"<div class=""form-group"">" & _
+					"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_EMAIL & "</label>" & _
+					"<div class=""col-sm-9 col-lg-10"">" & _
+						"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">" & _
+					"</div>" & _
+				"</div>"
+	End If
 
 	makeContactContents = strReturn
 End Function
@@ -1239,6 +1273,27 @@ End Function
 Function makeContactFieldVal(rst,strContactType,bUseContent)
 	Dim strReturn, strQFldName
 	Dim xmlDoc, xmlNode
+
+	Dim bContactOrg, bContactPhone, bContactFax, bContactEmail, bPhoneCount
+	bPhoneCount = True
+
+	If ps_intDbArea = DM_VOL Then
+		bContactOrg = g_bContactOrgVOL
+		bContactPhone = Array(g_bContactPhone1VOL,g_bContactPhone2VOL,g_bContactPhone3VOL)
+		If Not (g_bContactPhone2VOL) Then
+			bPhoneCount = False
+		End If
+		bContactFax = g_bContactFaxVOL
+		bContactEmail = g_bContactEmailVOL
+	Else
+		bContactOrg = g_bContactOrgCIC
+		bContactPhone = Array(g_bContactPhone1CIC,g_bContactPhone2CIC,g_bContactPhone3CIC)
+		If Not (g_bContactPhone2CIC) Then
+			bPhoneCount = False
+		End If
+		bContactFax = g_bContactFaxCIC
+		bContactEmail = g_bContactEmailCIC
+	End If
 
 	Call openContactRecordsets()
 
@@ -1300,95 +1355,103 @@ Function makeContactFieldVal(rst,strContactType,bUseContent)
 				"</div>" & _
 			"</div>"
 
-	strQFldName = AttrQs(strContactType & "_ORG")
-	strReturn = strReturn & vbCrLf & _
-			"<div class=""row-border-bottom"">" & _
-				"<div class=""form-group"">" & _
-					"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_ORGANIZATION & "</label>" & _
-					"<div class=""col-sm-9 col-lg-10"">" & _
-						"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("ORG")) & ">"
-	If bFeedback Then
-		strReturn = strReturn & getFeedback(strContactType & "_ORG",True,False)
-	End If
-	strReturn = strReturn & _
-					"</div>" & _
-				"</div>" & _
-			"</div>"
-
-	Dim i
-	For i = 1 to 3
+	If bContactOrg Or Not Nl(xmlNode.getAttribute("ORG")) Then
+		strQFldName = AttrQs(strContactType & "_ORG")
 		strReturn = strReturn & vbCrLf & _
-			"<div class=""row-border-bottom"">" & _
-				"<div class=""form-group"">" & _
-					"<label class=""control-label col-sm-3 col-lg-2"">" & TXT_PHONE & " #" & i & "</label>" & _
-					"<div class=""col-sm-9 col-lg-10"">" & _
-						"<table class=""NoBorder cell-padding-2 full-width"">" & _
-						"<tr>" & _
-							"<td class=""FieldLabelLeftClr"">" & TXT_TYPE & "</td>" & _
-							"<td>" & makeContactPhoneTypeList(xmlNode.getAttribute("PHONE_" & i & "_TYPE"),strContactType & "_PHONE_" & i & "_TYPE",True,False) & "</td>" & _
-							"<td class=""FieldLabelLeftClr""><label for=""" & strContactType & "_PHONE_" & i & "_NOTE"">" & TXT_NOTES & "</label></td>" & _
-							"<td colspan=""3""><input type=""text"" id=""" & strContactType & "_PHONE_" & i & "_NOTE"" name=""" & strContactType & "_PHONE_" & i & "_NOTE"" size=""30"" maxlength=""100"" autocomplete=""off"" value=" & attrQs(xmlNode.getAttribute("PHONE_" & i & "_NOTE")) & " class=""form-control""></td>" & _
-						"</tr>" & _
-						"<tr>" & _
-							"<td class=""FieldLabelLeftClr""><label for=""" & strContactType & "_PHONE_" & i & "_NO"">" & TXT_NUMBER & "</label></td>" & _
-							"<td><input type=""text"" id=""" & strContactType & "_PHONE_" & i & "_NO"" name=""" & strContactType & "_PHONE_" & i & "_NO"" size=""20"" maxlength=""20"" autocomplete=""off"" value=" & attrQs(xmlNode.getAttribute("PHONE_" & i & "_NO")) & " class=""form-control""></td>" & _
-							"<td class=""FieldLabelLeftClr""><label for=""" & strContactType & "_PHONE_" & i & "_EXT"">" & TXT_EXT & "</label></td>" & _
-							"<td><input type=""text"" id=""" & strContactType & "_PHONE_" & i & "_EXT"" name=""" & strContactType & "_PHONE_" & i & "_EXT"" size=""6"" maxlength=""10"" autocomplete=""off"" value=" & attrQs(xmlNode.getAttribute("PHONE_" & i & "_EXT")) & " class=""form-control""></td>" & _
-							"<td class=""FieldLabelLeftClr""><label for=""" & strContactType & "_PHONE_" & i & "_OPTION"">" & TXT_OPTION & "</label></td>" & _
-							"<td><input type=""text"" id=""" & strContactType & "_PHONE_" & i & "_OPTION"" name=""" & strContactType & "_PHONE_" & i & "_OPTION"" size=""6"" maxlength=""10"" autocomplete=""off"" value=" & attrQs(xmlNode.getAttribute("PHONE_" & i & "_OPTION")) & " class=""form-control""></td>" & _
-						"</tr>" & _
-						"</table>"
+				"<div class=""row-border-bottom"">" & _
+					"<div class=""form-group"">" & _
+						"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_ORGANIZATION & "</label>" & _
+						"<div class=""col-sm-9 col-lg-10"">" & _
+							"<input type=""text"" name=" & strQFldName  & " class=""form-control"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("ORG")) & ">"
 		If bFeedback Then
-			strReturn = strReturn & getFeedback(strContactType & "_PHONE" & i,False,False)
+			strReturn = strReturn & getFeedback(strContactType & "_ORG",True,False)
 		End If
 		strReturn = strReturn & _
 						"</div>" & _
 					"</div>" & _
 				"</div>"
+	End If
+
+	Dim i
+	For i = 1 to 3
+		If bContactPhone(i-1) Or Not Nl(xmlNode.getAttribute("PHONE_" & i & "_NO")) Or Not Nl(xmlNode.getAttribute("PHONE_" & i & "_NOTE")) Or Not Nl(xmlNode.getAttribute("PHONE_" & i & "_EXT")) Then
+			strReturn = strReturn & vbCrLf & _
+				"<div class=""row-border-bottom"">" & _
+					"<div class=""form-group"">" & _
+						"<label class=""control-label col-sm-3 col-lg-2"">" & TXT_PHONE & StringIf(bPhoneCount," #" & i) & "</label>" & _
+						"<div class=""col-sm-9 col-lg-10"">" & _
+							"<table class=""NoBorder cell-padding-2 full-width"">" & _
+							"<tr>" & _
+								"<td class=""FieldLabelLeftClr"">" & TXT_TYPE & "</td>" & _
+								"<td>" & makeContactPhoneTypeList(xmlNode.getAttribute("PHONE_" & i & "_TYPE"),strContactType & "_PHONE_" & i & "_TYPE",True,False) & "</td>" & _
+								"<td class=""FieldLabelLeftClr""><label for=""" & strContactType & "_PHONE_" & i & "_NOTE"">" & TXT_NOTES & "</label></td>" & _
+								"<td colspan=""3""><input type=""text"" id=""" & strContactType & "_PHONE_" & i & "_NOTE"" name=""" & strContactType & "_PHONE_" & i & "_NOTE"" size=""30"" maxlength=""100"" autocomplete=""off"" value=" & attrQs(xmlNode.getAttribute("PHONE_" & i & "_NOTE")) & " class=""form-control""></td>" & _
+							"</tr>" & _
+							"<tr>" & _
+								"<td class=""FieldLabelLeftClr""><label for=""" & strContactType & "_PHONE_" & i & "_NO"">" & TXT_NUMBER & "</label></td>" & _
+								"<td><input type=""text"" id=""" & strContactType & "_PHONE_" & i & "_NO"" name=""" & strContactType & "_PHONE_" & i & "_NO"" size=""20"" maxlength=""20"" autocomplete=""off"" value=" & attrQs(xmlNode.getAttribute("PHONE_" & i & "_NO")) & " class=""form-control""></td>" & _
+								"<td class=""FieldLabelLeftClr""><label for=""" & strContactType & "_PHONE_" & i & "_EXT"">" & TXT_EXT & "</label></td>" & _
+								"<td><input type=""text"" id=""" & strContactType & "_PHONE_" & i & "_EXT"" name=""" & strContactType & "_PHONE_" & i & "_EXT"" size=""6"" maxlength=""10"" autocomplete=""off"" value=" & attrQs(xmlNode.getAttribute("PHONE_" & i & "_EXT")) & " class=""form-control""></td>" & _
+								"<td class=""FieldLabelLeftClr""><label for=""" & strContactType & "_PHONE_" & i & "_OPTION"">" & TXT_OPTION & "</label></td>" & _
+								"<td><input type=""text"" id=""" & strContactType & "_PHONE_" & i & "_OPTION"" name=""" & strContactType & "_PHONE_" & i & "_OPTION"" size=""6"" maxlength=""10"" autocomplete=""off"" value=" & attrQs(xmlNode.getAttribute("PHONE_" & i & "_OPTION")) & " class=""form-control""></td>" & _
+							"</tr>" & _
+							"</table>"
+			If bFeedback Then
+				strReturn = strReturn & getFeedback(strContactType & "_PHONE" & i,False,False)
+			End If
+			strReturn = strReturn & _
+							"</div>" & _
+						"</div>" & _
+					"</div>"
+		End If
 	Next
 
-	strReturn = strReturn & vbCrLf & _
-		"<div class=""row-border-bottom"">" & _
-			"<div class=""form-group"">" & _
-				"<label class=""control-label col-sm-3 col-lg-2"">" & TXT_FAX & "</label>" & _
-				"<div class=""col-sm-9 col-lg-10"">" & _
-					"<table class=""NoBorder cell-padding-2 full-width"">" & _
-					"<tr>" & _
-					"<td class=""FieldLabelLeftClr""><label for=""" & strContactType & "_FAX_NOTE"">" & TXT_NOTES & "</label></td>" & _
-					"<td colspan=""3""><input type=""text"" id=""" & strContactType & "_FAX_NOTE"" name=""" & strContactType & "_FAX_NOTE"" maxlength=""100"" autocomplete=""off"" value=" & attrQs(xmlNode.getAttribute("FAX_NOTE")) & " class=""form-control""></td>" & _
-					"</tr>" & _
-					"<tr>" & _
-					"<td class=""FieldLabelLeftClr""><label for=""" & strContactType & "_FAX_NO"">" & TXT_NUMBER & "</label></td>" & _
-					"<td><input type=""text"" id=""" & strContactType & "_FAX_NO"" name=""" & strContactType & "_FAX_NO"" maxlength=""20"" autocomplete=""off"" value=" & attrQs(xmlNode.getAttribute("FAX_NO")) & " class=""form-control""></td>" & _
-					"<td class=""FieldLabelLeftClr""><label for=""" & strContactType & "_FAX_EXT"">" & TXT_EXT & "</label></td>" & _
-					"<td><input type=""text"" id=""" & strContactType & "_FAX_EXT"" name=""" & strContactType & "_FAX_EXT"" size=""6"" maxlength=""10"" autocomplete=""off"" value=" & attrQs(xmlNode.getAttribute("FAX_EXT")) & " class=""form-control""></td>" & _
-					"</tr><tr>" & _
-					"<td colspan=""4""><label for=""" & strContactType & "_FAX_CALLFIRST""><input type=""checkbox"" id=""" & strContactType & "_FAX_CALLFIRST"" name=""" & strContactType & "_FAX_CALLFIRST"" value=""on""" & Checked(xmlNode.getAttribute("FAX_CALLFIRST")) & "> <span class=""FieldLabelClr"">" & TXT_PLEASE_CALL_FIRST & "</span></label></td>" & _
-					"</tr>" & _
-					"</table>"
-	If bFeedback Then
-		strReturn = strReturn & getFeedback(strContactType & "_FAX",False,False)
-	End If
-	strReturn = strReturn & _
-					"</div>" & _
-				"</div>" & _
-			"</div>"
-
-	strQFldName = AttrQs(strContactType & "_EMAIL")
-	strReturn = strReturn & _
+	If bContactFax Or Not Nl(xmlNode.getAttribute("FAX_NO")) Or Not Nl(xmlNode.getAttribute("FAX_NOTE")) Then
+		strReturn = strReturn & vbCrLf & _
 			"<div class=""row-border-bottom"">" & _
 				"<div class=""form-group"">" & _
-					"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_EMAIL & "</label>" & _
+					"<label class=""control-label col-sm-3 col-lg-2"">" & TXT_FAX & "</label>" & _
 					"<div class=""col-sm-9 col-lg-10"">" & _
-						"<input type=""text"" name=" & strQFldName  & " class=""form-control email"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">"
-	If bFeedback Then
-		strReturn = strReturn & getFeedback(strContactType & "_EMAIL",True,False)
-	End If
-	strReturn = strReturn & _
+						"<table class=""NoBorder cell-padding-2 full-width"">" & _
+						"<tr>" & _
+						"<td class=""FieldLabelLeftClr""><label for=""" & strContactType & "_FAX_NOTE"">" & TXT_NOTES & "</label></td>" & _
+						"<td colspan=""3""><input type=""text"" id=""" & strContactType & "_FAX_NOTE"" name=""" & strContactType & "_FAX_NOTE"" maxlength=""100"" autocomplete=""off"" value=" & attrQs(xmlNode.getAttribute("FAX_NOTE")) & " class=""form-control""></td>" & _
+						"</tr>" & _
+						"<tr>" & _
+						"<td class=""FieldLabelLeftClr""><label for=""" & strContactType & "_FAX_NO"">" & TXT_NUMBER & "</label></td>" & _
+						"<td><input type=""text"" id=""" & strContactType & "_FAX_NO"" name=""" & strContactType & "_FAX_NO"" maxlength=""20"" autocomplete=""off"" value=" & attrQs(xmlNode.getAttribute("FAX_NO")) & " class=""form-control""></td>" & _
+						"<td class=""FieldLabelLeftClr""><label for=""" & strContactType & "_FAX_EXT"">" & TXT_EXT & "</label></td>" & _
+						"<td><input type=""text"" id=""" & strContactType & "_FAX_EXT"" name=""" & strContactType & "_FAX_EXT"" size=""6"" maxlength=""10"" autocomplete=""off"" value=" & attrQs(xmlNode.getAttribute("FAX_EXT")) & " class=""form-control""></td>" & _
+						"</tr><tr>" & _
+						"<td colspan=""4""><label for=""" & strContactType & "_FAX_CALLFIRST""><input type=""checkbox"" id=""" & strContactType & "_FAX_CALLFIRST"" name=""" & strContactType & "_FAX_CALLFIRST"" value=""on""" & Checked(xmlNode.getAttribute("FAX_CALLFIRST")) & "> <span class=""FieldLabelClr"">" & TXT_PLEASE_CALL_FIRST & "</span></label></td>" & _
+						"</tr>" & _
+						"</table>"
+		If bFeedback Then
+			strReturn = strReturn & getFeedback(strContactType & "_FAX",False,False)
+		End If
+		strReturn = strReturn & _
+						"</div>" & _
 					"</div>" & _
-				"</div>" & _
-			"</div>"
+				"</div>"
+	End If
 
+
+	If bContactEmail Or Not Nl(xmlNode.getAttribute("EMAIL")) Then
+		strQFldName = AttrQs(strContactType & "_EMAIL")
+		strReturn = strReturn & _
+				"<div class=""row-border-bottom"">" & _
+					"<div class=""form-group"">" & _
+						"<label for=" & strQFldName & " class=""control-label col-sm-3 col-lg-2"">" & TXT_EMAIL & "</label>" & _
+						"<div class=""col-sm-9 col-lg-10"">" & _
+							"<input type=""text"" name=" & strQFldName  & " class=""form-control email"" id=" & strQFldName & " maxlength=""100"" autocomplete=""off"" value=" & AttrQs(xmlNode.getAttribute("EMAIL")) & ">"
+		If bFeedback Then
+			strReturn = strReturn & getFeedback(strContactType & "_EMAIL",True,False)
+		End If
+		strReturn = strReturn & _
+						"</div>" & _
+					"</div>" & _
+				"</div>"
+	End If
 
 	makeContactFieldVal = strReturn
 End Function
