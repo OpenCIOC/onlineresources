@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -307,7 +307,8 @@ If bSQLError Then
 	<p><%= TXT_WOULD_YOU_LIKE_TO_REACTIVATE %></p>
 	<form method="post" action="reactivate.asp">
 	<input type="hidden" name="Email" value="<%=strEmail%>">
-	<input type="submit" name="Reactivate" value="Reactivate">
+	<input class="btn btn-default" type="submit" name="Reactivate" value="Reactivate">
+	</form>
 	<%
 	End If
 ElseIf bValidationError Then

@@ -26,6 +26,11 @@
 		color: $TitleFontColour;
 		font-weight: bold;
 		text-decoration: underline;
+
+		&:visited:hover, &:visited:focus, &:hover, &:focus {
+			color: $TitleFontColour;
+			text-decoration: none !important;
+		}
 	}
 
 	border-bottom: thin solid $borderColorContent;
