@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@  language="VBSCRIPT" %>
 <%Option Explicit%>
 
 <%
@@ -126,14 +126,15 @@ Set rsProfileFields = rsProfileFields.NextRecordset
 
 Call makePageHeader(TXT_MANAGE_FIELDS_TITLE & TXT_COLON & strProfileName, TXT_MANAGE_FIELDS_TITLE & TXT_COLON & strProfileName, True, False, True, True)
 %>
-<p style="font-weight:bold">[ <a href="<%=makeLinkB("setup.asp")%>"><%=TXT_RETURN_TO_SETUP%></a> | <a href="<%=makeLink("print_profile.asp","DM=" & intDomain,vbNullString)%>"><%=TXT_RETURN_TO_PROFILES%> (<%=strType%>)</a> | <a href="<%=makeLink("print_profile_edit.asp","ProfileID=" & intProfileID & "&DM=" & intDomain,vbNullString)%>"><%=TXT_RETURN_TO_PROFILE%><%=strProfileName%></a> ]</p>
+<div class="btn-group" role="group">
+    <a role="button" class="btn btn-default" href="<%=makeLinkB("setup.asp")%>"><%=TXT_RETURN_TO_SETUP%></a>
+    <a role="button" class="btn btn-default" href="<%=makeLink("print_profile.asp","DM=" & intDomain,vbNullString)%>"><%=TXT_RETURN_TO_PROFILES%> (<%=strType%>)</a>
+    <a role="button" class="btn btn-default" href="<%=makeLink("print_profile_edit.asp","ProfileID=" & intProfileID & "&DM=" & intDomain,vbNullString)%>"><%=TXT_RETURN_TO_PROFILE%> <%=strProfileName%></a>
+</div>
+
 <h2><%=TXT_MANAGE_FIELDS_TITLE%></h2>
-<table class="BasicBorder cell-padding-3">
-<tr>
-	<th class="RevTitleBox"><%=TXT_NAME%></th>
-	<th class="RevTitleBox"><%=TXT_FIELD_INFO%></th>
-	<th class="RevTitleBox"><%=TXT_ACTION%></th>
-</tr>
+
+
 <%
 	Dim fldPFLDID, _
 		fldName, _
@@ -187,30 +188,37 @@ Call makePageHeader(TXT_MANAGE_FIELDS_TITLE & TXT_COLON & strProfileName, TXT_MA
 
 
 %>
-<form action="print_profile_edit_fields2.asp" method="post">
-<%=g_strCacheFormVals%>
-<input type="hidden" name="ProfileID" value="<%=intProfileID%>">
-<input type="hidden" name="DM" value="<%=intDomain%>">
-<input type="hidden" name="PFLDID" value="<%=fldPFLDID%>">
-<input type="hidden" name="FieldTypeID" value="<%=fldTypeID%>">
-<tr valign="TOP">
-	<td class="FieldLabelLeft"><%=fldName.Value & StringIf(fldName.Value<>fldDisplay.Value,"<br>(" & fldDisplay.Value & ")")%></td>
-	<td><table class="NoBorder cell-padding-3">
-	<tr>
-		<td class="FieldLabelClr"><%=TXT_FIELD_TYPE%><%=TXT_COLON%></td>
-		<td><%=fldType%></td>
-	</tr>
-<%
+<form action="print_profile_edit_fields2.asp" method="post" class="form-horizontal">
+    <%=g_strCacheFormVals%>
+    <input type="hidden" name="ProfileID" value="<%=intProfileID%>">
+    <input type="hidden" name="DM" value="<%=intDomain%>">
+    <input type="hidden" name="PFLDID" value="<%=fldPFLDID%>">
+    <input type="hidden" name="FieldTypeID" value="<%=fldTypeID%>">
+    <div class="panel panel-default max-width-lg">
+        <div class="panel-heading">
+            <h3><%=fldName.Value & StringIf(fldName.Value<>fldDisplay.Value," (" & fldDisplay.Value & ")")%></h3>
+        </div>
+        <div class="panel-body">
+            <div class="form-group row">
+                <label class="control-label col-sm-4 col-md-3 "><%=TXT_FIELD_TYPE%></label>
+                <div class="col-sm-8 col-md-9"><%=fldType%></div>
+            </div>
+            <div class="form-group row">
+                <label class="control-label col-sm-4 col-md-3 " for="DisplayOrder_<%=fldPFLDID%>"><%=TXT_ORDER%></label>
+                <div class="col-sm-8 col-md-9 form-inline">
+                    <input type="text" name="DisplayOrder" id="DisplayOrder_<%=fldPFLDID%>" value=<%=AttrQs(fldDisplayOrder)%> size="4" maxlength="3" class="form-control"></div>
+            </div>
+            <%
 If fldTypeID = FTYPE_HEADING Then
-%>
-	<tr>
-		<td class="FieldLabelClr"><%=TXT_HEADING_LEVEL%><%=TXT_COLON%></td>
-		<td><input type="text" name="HeadingLevel" value=<%=AttrQs(fldHeadingLEvel)%> size="1" maxlength="1"></td>
-	</tr>
-<%
+            %>
+            <div class="form-group row">
+                <label class="control-label col-sm-4 col-md-3 " for="HeadingLevel_<%=fldPFLDID%>"><%=TXT_HEADING_LEVEL%></label>
+                <div class="col-sm-8 col-md-9 form-inline">
+                    <input type="text" name="HeadingLevel" id="HeadingLevel_<%=fldPFLDID%>" value=<%=AttrQs(fldHeadingLevel)%> size="2" maxlength="1" class="form-control"></div>
+            </div>
+
+            <%
 End If
-%>
-<%
 If fldTypeID = FTYPE_BASIC Or fldTypeID = FTYPE_FULL Then
 	For Each strCulture In active_cultures()
 		strValue = vbNullString
@@ -221,36 +229,38 @@ If fldTypeID = FTYPE_BASIC Or fldTypeID = FTYPE_FULL Then
 				strValue = xmlNode.text
 			End If
 		End If
-%>
-	<tr>
-		<td class="FieldLabelClr"><%=TXT_FIELD_LABEL%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)<%=TXT_COLON%></td>
-		<td><input type="text" name="Label_<%= strCulture %>" value=<%=AttrQs(strValue)%> size="<%=TEXT_SIZE-15%>" maxlength="50"></td>
-	</tr>
-<% 
+            %>
+            <div class="form-group row">
+                <label class="control-label col-sm-4 col-md-3 " for="Label_<%= strCulture %>_<%=fldPFLDID%>"><%=TXT_FIELD_LABEL%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label>
+                <div class="col-sm-8 col-md-9">
+                    <input type="text" name="Label_<%=strCulture%>" id="Label_<%= strCulture %>_<%=fldPFLDID%>" value=<%=AttrQs(strValue)%> size="<%=TEXT_SIZE-15%>" maxlength="50" class="form-control"></div>
+            </div>
+            <% 
 	Next
-%>
-	<tr>
-		<td class="FieldLabelClr"><%=TXT_FIELD_LABEL_STYLE%><%=TXT_COLON%></td>
-		<td><input type="text" name="LabelStyle" value=<%=AttrQs(fldLabelStyle)%> size="<%=TEXT_SIZE-15%>" maxlength="50"></td>
-	</tr>
-<%
+            %>
+            <div class="form-group row">
+                <label class="control-label col-sm-4 col-md-3 " for="LabelStyle_<%=fldPFLDID%>"><%=TXT_FIELD_LABEL_STYLE%></label>
+                <div class="col-sm-8 col-md-9">
+                    <input type="text" name="LabelStyle" id="LabelStyle_<%=fldPFLDID%>" value=<%=AttrQs(fldLabelStyle)%> size="<%=TEXT_SIZE-15%>" maxlength="50" class="form-control"></div>
+            </div>
+            <%
 End If
-%>
-<%
 If fldTypeID = FTYPE_CONTINUE Then
-%>
-	<tr>
-		<td class="FieldLabelClr"><%=TXT_FIELD_SEPARATOR%><%=TXT_COLON%></td>
-		<td><input type="text" name="Separator" value=<%=AttrQs(fldSeparator)%> size="<%=TEXT_SIZE-15%>" maxlength="50"></td>
-	</tr>
-<%
+            %>
+            <div class="form-group row">
+                <label class="control-label col-sm-4 col-md-3 " for="Separator_<%=fldPFLDID%>"><%=TXT_FIELD_SEPARATOR%></label>
+                <div class="col-sm-8 col-md-9">
+                    <input type="text" name="Separator" id="Separator_<%=fldPFLDID%>" value=<%=AttrQs(fldSeparator)%> size="<%=TEXT_SIZE-15%>" maxlength="50" class="form-control"></div>
+            </div>
+            <%
 Else
-%>
-	<tr>
-		<td class="FieldLabelClr"><%=TXT_CONTENT_STYLE%><%=TXT_COLON%></td>
-		<td><input type="text" name="ContentStyle" value=<%=AttrQs(fldContentStyle)%> size="<%=TEXT_SIZE-15%>" maxlength="50"></td>
-	</tr>
-<%
+            %>
+            <div class="form-group row">
+                <label class="control-label col-sm-4 col-md-3 " for="ContentStyle_<%=fldPFLDID%>"><%=TXT_CONTENT_STYLE%></label>
+                <div class="col-sm-8 col-md-9">
+                    <input type="text" name="ContentStyle" id="ContentStyle_<%=fldPFLDID%>" value=<%=AttrQs(fldContentStyle)%> size="<%=TEXT_SIZE-15%>" maxlength="50" class="form-control"></div>
+            </div>
+            <%
 End If
 For Each strCulture In active_cultures()
 	strValue = vbNullString
@@ -261,12 +271,13 @@ For Each strCulture In active_cultures()
 			strValue = xmlNode.text
 		End If
 	End If
-%>
-	<tr>
-		<td class="FieldLabelClr"><%=TXT_CONTENT_IF_EMPTY%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)<%=TXT_COLON%></td>
-		<td><input type="text" name="ContentIfEmpty_<%= strCulture %>" value=<%=AttrQs(strValue)%> size="<%=TEXT_SIZE-15%>" maxlength="255"></td>
-	</tr>
-<%
+            %>
+            <div class="form-group row">
+                <label class="control-label col-sm-4 col-md-3 " for="ContentIfEmpty_<%= strCulture %>_<%=fldPFLDID%>"><%=TXT_CONTENT_IF_EMPTY%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label>
+                <div class="col-sm-8 col-md-9">
+                    <input type="text" name="ContentIfEmpty_<%=strCulture%>" id="ContentIfEmpty_<%= strCulture %>_<%=fldPFLDID%>" value=<%=AttrQs(strValue)%> size="<%=TEXT_SIZE-15%>" maxlength="255" class="form-control"></div>
+            </div>
+            <%
 Next
 For Each strCulture In active_cultures()
 	strValue = vbNullString
@@ -277,12 +288,13 @@ For Each strCulture In active_cultures()
 			strValue = xmlNode.text
 		End If
 	End If
-%>
-	<tr>
-		<td class="FieldLabelClr"><%=TXT_PREFIX%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)<%=TXT_COLON%></td>
-		<td><input type="text" name="Prefix_<%= strCulture %>" value=<%=AttrQs(Server.HTMLEncode(Ns(strValue)))%> size="<%=TEXT_SIZE-15%>" maxlength="100"></td>
-	</tr>
-<% 
+            %>
+            <div class="form-group row">
+                <label class="control-label col-sm-4 col-md-3 " for="Prefix_<%= strCulture %>_<%=fldPFLDID%>"><%=TXT_PREFIX%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label>
+                <div class="col-sm-8 col-md-9">
+                    <input type="text" name="Prefix_<%=strCulture%>" id="Prefix_<%= strCulture %>_<%=fldPFLDID%>" value=<%=AttrQs(strValue)%> size="<%=TEXT_SIZE-15%>" maxlength="100" class="form-control"></div>
+            </div>
+            <% 
 Next
 For Each strCulture In active_cultures()
 	strValue = vbNullString
@@ -293,25 +305,25 @@ For Each strCulture In active_cultures()
 			strValue = xmlNode.text
 		End If
 	End If
-%>
-	<tr>
-		<td class="FieldLabelClr"><%=TXT_SUFFIX%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)<%=TXT_COLON%></td>
-		<td><input type="text" name="Suffix_<%= strCulture %>" value=<%=AttrQs(Server.HTMLEncode(Ns(strValue)))%> size="<%=TEXT_SIZE-15%>" maxlength="100"></td>
-	</tr>
-<%
+            %>
+            <div class="form-group row">
+                <label class="control-label col-sm-4 col-md-3 " for="Suffix_<%= strCulture %>_<%=fldPFLDID%>"><%=TXT_PREFIX%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label>
+                <div class="col-sm-8 col-md-9">
+                    <input type="text" name="Suffix_<%=strCulture%>" id="Suffix_<%= strCulture %>_<%=fldPFLDID%>" value=<%=AttrQs(strValue)%> size="<%=TEXT_SIZE-15%>" maxlength="100" class="form-control"></div>
+            </div>
+            <%
 Next
-%>
-	<tr>
-		<td class="FieldLabelClr"><%=TXT_ORDER & TXT_COLON%></td>
-		<td><input type="text" name="DisplayOrder" value=<%=AttrQs(fldDisplayOrder)%> size="3" maxlength="3"></td>
-	</tr>
-	<tr>
-		<td class="FieldLabelClr"><%=TXT_FIND_REPLACE & TXT_COLON%></td>
-		<td><a href="<%=makeLink("print_profile_edit_fields_fr.asp","DM=" & intDomain & "&PFLDID=" & fldPFLDID,vbNullString)%>"><%=TXT_MANAGE_FIND_REPLACE%>&nbsp;(<%=Nz(fldFindReplaceCount.Value,0)%>)</a></td>
-	</tr>
-	</table></td>
-	<td><input type="submit" name="Submit" value="<%=TXT_UPDATE%>"><br><br><input type="submit" name="Submit" value="<%=TXT_DELETE%>"></td>
-</tr>
+            %>
+            <div class="form-group row">
+                <label class="control-label col-sm-4 col-md-3 "><%=TXT_FIND_REPLACE%></label>
+                <div class="col-sm-8 col-md-9">
+                    <a href="<%=makeLink("print_profile_edit_fields_fr.asp","DM=" & intDomain & "&PFLDID=" & fldPFLDID,vbNullString)%>"><%=TXT_MANAGE_FIND_REPLACE%>&nbsp;(<%=Nz(fldFindReplaceCount.Value,0)%>)</a></div>
+            </div>
+            <div class="col-sm-offset-4 col-md-offset-3">
+                <input class="btn btn-default" type="submit" name="Submit" value="<%=TXT_UPDATE%>"> <input class="btn btn-default" type="submit" name="Submit" value="<%=TXT_DELETE%>">
+            </div>
+        </div>
+    </div>
 </form>
 <%
 		rsProfileFields.MoveNext
@@ -321,78 +333,75 @@ Next
 	Set cmdProfileFields = Nothing
 
 %>
-</table>
-<br>
-<form action="print_profile_edit_fields_add.asp" method="post">
-<%=g_strCacheFormVals%>
-<input type="hidden" name="ProfileID" value="<%=intProfileID%>">
-<input type="hidden" name="DM" value="<%=intDomain%>">
-<input type="hidden" name="FieldDM" value="<%=intDomain%>">
-<table class="BasicBorder cell-padding-3">
-<tr>
-	<th class="RevTitleBox" colspan="2"><%=TXT_ADD_FIELD%></th>
-</tr>
-<%
+
+<hr>
+<div class="max-width-md">
+<form action="print_profile_edit_fields_add.asp" method="post" class="form-horizontal">
+    <%=g_strCacheFormVals%>
+    <input type="hidden" name="ProfileID" value="<%=intProfileID%>">
+    <input type="hidden" name="DM" value="<%=intDomain%>">
+    <input type="hidden" name="FieldDM" value="<%=intDomain%>">
+    <h3><%=TXT_ADD_FIELD%></h3>
+    <%
 	Call openFieldListRst(intDomain)
-%>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_FIELDS%></td>
-	<td><%=makeFieldList(vbNullString, "FieldID", True, False)%></td>
-</tr>
-<%
+    %>
+    <div class="form-group row">
+        <label class="control-label col-sm-3 col-md-2" for="FieldID"><%=TXT_FIELDS%></label>
+        <div class="col-sm-9 col-md-10">
+            <%=makeFieldList(vbNullString, "FieldID", "FieldID", True, False)%></div>
+    </div>
+    <%
 	Call closeFieldListRst()
-%>
-<%
 	Call openFieldTypeListRst()
-%>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_FIELD_TYPE%></td>
-	<td><%=makeFieldTypeList(vbNullString, "FieldTypeID", False)%></td>
-</tr>
-<%
+    %>
+    <div class="form-group row">
+        <label class="control-label col-sm-3 col-md-2" for="FieldTypeID"><%=TXT_FIELD_TYPE%></label>
+        <div class="col-sm-9 col-md-10">
+            <%=makeFieldTypeList(vbNullString, "FieldTypeID", "FieldTypeID", False)%></div>
+    </div>
+    <%
 	Call closeFieldTypeListRst()
-%>
-<tr>
-	<td colspan="2" align="center"><input type="submit" value="<%=TXT_ADD_FIELD%>"></td>
-</tr>
-</table>
+        %>
+    <div class="col-sm-offset-3 col-md-offset-2">
+        <input class="btn btn-default" type="submit" name="Submit" value="<%=TXT_ADD_FIELD%>">
+    </div>
 </form>
+</div>
+
 <%If intDomain = DM_VOL Then%>
-<br>
-<form action="print_profile_edit_fields_add.asp" method="post">
-<%=g_strCacheFormVals%>
-<input type="hidden" name="ProfileID" value="<%=intProfileID%>">
-<input type="hidden" name="DM" value="<%=intDomain%>">
-<input type="hidden" name="FieldDM" value="<%=DM_GLOBAL%>">
-<table class="BasicBorder cell-padding-3">
-<tr>
-	<th class="RevTitleBox" colspan="2"><%=TXT_ADD_FIELD%> (<%=TXT_ORGANIZATION%>)</th>
-</tr>
-<%
+<hr>
+<div class="max-width-md">
+<form action="print_profile_edit_fields_add.asp" method="post" class="form-horizontal">
+    <%=g_strCacheFormVals%>
+    <input type="hidden" name="ProfileID" value="<%=intProfileID%>">
+    <input type="hidden" name="DM" value="<%=intDomain%>">
+    <input type="hidden" name="FieldDM" value="<%=DM_GLOBAL%>">
+    <h3><%=TXT_ADD_FIELD%> (<%=TXT_ORGANIZATION%>)</h3>
+    <%
 	Call openFieldListRst(Null)
-%>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_FIELDS%></td>
-	<td><%=makeFieldList(vbNullString, "FieldID", True, False)%></td>
-</tr>
-<%
+    %>
+    <div class="form-group row">
+        <label class="control-label col-sm-3 col-md-2" for="OrgFieldID"><%=TXT_FIELDS%></label>
+        <div class="col-sm-9 col-md-10">
+            <%=makeFieldList(vbNullString, "FieldID", "OrgFieldID", True, False)%></div>
+    </div>
+    <%
 	Call closeFieldListRst()
-%>
-<%
 	Call openFieldTypeListRst()
-%>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_FIELD_TYPE%></td>
-	<td><%=makeFieldTypeList(vbNullString, "FieldTypeID", False)%></td>
-</tr>
-<%
+    %>
+    <div class="form-group row">
+        <label class="control-label col-sm-3 col-md-2" for="OrgFieldTypeID"><%=TXT_FIELD_TYPE%></label>
+        <div class="col-sm-9 col-md-10">
+            <%=makeFieldTypeList(vbNullString, "FieldTypeID", "OrgFieldTypeID", False)%></div>
+    </div>
+    <%
 	Call closeFieldTypeListRst()
-%>
-<tr>
-	<td colspan="2" align="center"><input type="submit" value="<%=TXT_ADD_FIELD%>"></td>
-</tr>
-</table>
+        %>
+    <div class="col-sm-offset-3 col-md-offset-2">
+        <input class="btn btn-default" type="submit" name="Submit" value="<%=TXT_ADD_FIELD%>">
+    </div>
 </form>
+</div>
 <%End If%>
 <%
 Call makePageFooter(False)

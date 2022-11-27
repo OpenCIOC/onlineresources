@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -44,7 +44,7 @@ Sub closeFieldTypeListRst()
 	Set rsFieldTypeList = Nothing
 End Sub
 
-Function makeFieldTypeList(intSelected, strSelectName, bIncludeBlank)
+Function makeFieldTypeList(intSelected, strSelectName, strSelectID, bIncludeBlank)
 	Dim strReturn
 	With rsFieldTypeList
 		If .RecordCount <> 0 Then
@@ -53,7 +53,7 @@ Function makeFieldTypeList(intSelected, strSelectName, bIncludeBlank)
 		If .EOF Then
 			strReturn = TXT_NO_VALUES_AVAILABLE
 		Else
-			strReturn = strReturn & "<select name=" & AttrQs(strSelectName) & ">"
+			strReturn = strReturn & "<select name=" & AttrQs(strSelectName) & StringIf(Not Nl(strSelectID)," id=" & AttrQs(strSelectID)) & " class=""form-control"">"
 			If bIncludeBlank Then
 				strReturn = strReturn & "<option value=""""> -- </option>"
 			End If

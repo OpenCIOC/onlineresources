@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -97,6 +97,7 @@ End Sub
 Function makePageHelpLink()
 	makePageHelpLink = render_popup_page_help_link(TXT_PAGE_HELP)
 End Function
+
 Function makePageHelpLinkB(strExtraClass)
 	makePageHelpLinkB = render_popup_page_help_link(TXT_PAGE_HELP, strExtraClass)
 End Function

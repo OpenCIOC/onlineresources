@@ -144,7 +144,7 @@ div.row-border-bottom {
 }
 
 .feedback-item {
-	@extend .basic-corner-style-alert;
+	@extend .basic-corner-style-alert-medium;
 	margin-top: 0.25em;
 	margin-bottom: 0.25em;
 	padding: 0.5em;

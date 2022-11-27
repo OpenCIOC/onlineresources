@@ -47,6 +47,11 @@ html {
 	border: thin solid $borderColorError;
 }
 
+.basic-corner-style-alert-medium {
+	@extend .basic-corner-style;
+	border: 2px solid $borderColorError;
+}
+
 .basic-corner-style-highlight {
 	@extend .basic-corner-style;
 	border: thin solid $borderColorHighlight;

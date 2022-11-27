@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -436,8 +436,10 @@ End If
 
 If Not bError Then
 %>
+<!DOCTYPE html>
 <html>
-<title><%=strTitle%></title>
+	<head>
+		<title><%=strTitle%></title>
 <%
 	If Not Nl(strStyleSheet) Then
 %>
@@ -445,7 +447,8 @@ If Not bError Then
 <%
 	End If
 %>
-<body bgcolor="#FFFFFF" text="#000000">
+	</head>
+	<body bgcolor="#FFFFFF" text="#000000">
 <%=strHeader%>
 <%
 	If Not Nl(strMessage) And Not bMsgBeforeRecord Then
@@ -593,7 +596,7 @@ If Not bError Then
 	Wend
 %>
 <%=strFooter%>
-</body>
+	</body>
 </html>
 <%
 End If

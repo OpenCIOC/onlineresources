@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@  language="VBSCRIPT" %>
 <%Option Explicit%>
 
 <%
@@ -74,46 +74,42 @@ End Select
 
 Call makePageHeader(TXT_MANAGE_PROFILES & " (" & strType & ")", TXT_MANAGE_PROFILES & " (" & strType & ")", True, True, True, True)
 %>
-<p style="font-weight:bold">[ <a href="<%=makeLinkB("setup.asp")%>"><%=TXT_RETURN_TO_SETUP%></a> ]</p>
-<form action="print_profile_edit.asp" method="get">
-<%=g_strCacheFormVals%>
-<input type="hidden" name="DM" value="<%=intDomain%>">
-<table class="BasicBorder cell-padding-4 max-width-lg">
-<tr>
-	<th class="RevTitleBox"><label for="ProfileID"><%=TXT_EDIT_PROFILE%> (<%=strType%>)</label></th>
-</tr>
-<%
+<div class="btn-group" role="group">
+    <a role="button" class="btn btn-default" href="<%=makeLinkB("setup.asp")%>"><%=TXT_RETURN_TO_SETUP%></a>
+</div>
+<hr />
+<div class="max-width-md">
+    <form action="print_profile_edit.asp" method="get" class="form-horizontal form-inline">
+        <%=g_strCacheFormVals%>
+        <input type="hidden" name="DM" value="<%=intDomain%>">
+        <h4>
+            <label for="ProfileID"><%=TXT_EDIT_PROFILE%> (<%=strType%>)</label></h4>
+        </tr>
+        <%
 Call openPrintProfileListRst(intDomain, Null)
-%>
-<tr>
-<td><%=makePrintProfileList(vbNullString,"ProfileID","ProfileID",False)%> <input type="submit" value="<%=TXT_VIEW_EDIT_PROFILE%>"></td>
-</tr>
-</table>
-</form>
-<br>
-<form action="print_profile_add.asp" method="post">
-<%=g_strCacheFormVals%>
-<input type="hidden" name="DM" value="<%=intDomain%>">
-<table class="BasicBorder cell-padding-4 max-width-lg">
-<tr>
-	<th class="RevTitleBox" colspan="2"><%=TXT_CREATE_PROFILE%> (<%=strType%>)</th>
-</tr>
-<tr>
-	<td colspan="2"><%=TXT_INST_ADD_PROFILE%></td>
-</tr>
-<tr>
-	<td class="FieldLabelLeft"><label for="ProfileName"><%=TXT_NAME%></label></td>
-	<td><input type="text" name="ProfileName" id="ProfileName" size="50" maxlength="50"></td>
-</tr>
-<tr>
-	<td class="FieldLabelLeft"><label for="NewProfileID"><%=TXT_COPY_PROFILE%></label></td>
-	<td><%=makePrintProfileList(vbNullString,"ProfileID","NewProfileID",True)%></td>
-</tr>
-<tr>
-	<td colspan="2" align="center"><input type="submit" value="<%=TXT_ADD_PROFILE%>"></td>
-</tr>
-</table>
-</form>
+        %>
+        <%=makePrintProfileList(vbNullString,"ProfileID","ProfileID",False)%>
+        <input class="btn btn-default" type="submit" value="<%=TXT_VIEW_EDIT_PROFILE%>">
+    </form>
+    <hr>
+    <form action="print_profile_add.asp" method="post" class="form-horizontal">
+        <%=g_strCacheFormVals%>
+        <input type="hidden" name="DM" value="<%=intDomain%>">
+        <h4><%=TXT_CREATE_PROFILE%> (<%=strType%>)</h4>
+        <p><%=TXT_INST_ADD_PROFILE%></p>
+        <div class="form-group row">
+            <label class="control-label col-sm-3 col-md-2" for="ProfileName"><%=TXT_NAME%></label>
+            <div class="col-sm-9 col-md-10"><input type="text" name="ProfileName" id="ProfileName" size="50" maxlength="50" class="form-control"></div>
+        </div>
+        <div class="form-group row">
+            <label class="control-label col-sm-3 col-md-2" for="NewProfileID"><%=TXT_COPY_PROFILE%></label>
+            <div class="col-sm-9 col-md-10"><%=makePrintProfileList(vbNullString,"ProfileID","NewProfileID",True)%></div>
+        </div>
+        <div class="col-sm-offset-3 col-md-offset-2">
+            <input class="btn btn-default" type="submit" value="<%=TXT_ADD_PROFILE%>">
+        </div>
+    </form>
+</div>
 <%
 Call closePrintProfileListRst()
 %>

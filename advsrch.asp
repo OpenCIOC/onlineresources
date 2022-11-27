@@ -260,7 +260,7 @@ If bASrchBool Then
 <%
 End If
 %>
-                    <input type="text" name="STerms" id="STerms" title="<%=AttrQs(TXT_SEARCH_TERMS)%>" class="form-control ui-autocomplete-input">
+                    <input type="text" name="STerms" id="STerms" title=<%=AttrQs(TXT_SEARCH_TERMS)%> class="form-control ui-autocomplete-input">
 
                     <div class="radio-inline">
                         <label for="SType_A" class="no-wrap">
@@ -415,9 +415,9 @@ If bASrchAges Then
                 <td class="field-data-cell">
                     <div class="form-inline form-inline-always">
                         <%=TXT_SERVING_AGE%>
-                        <input type="text" name="Age1" title="<%=AttrQs(TXT_MIN_AGE)%>" size="3" maxlength="3" class="form-control">
+                        <input type="text" name="Age1" title=<%=AttrQs(TXT_MIN_AGE)%> size="3" maxlength="3" class="form-control">
                         -
-                        <input type="text" name="Age2" title="<%=AttrQs(TXT_MAX_AGE)%>" size="3" maxlength="3" class="form-control">
+                        <input type="text" name="Age2" title=<%=AttrQs(TXT_MAX_AGE)%> size="3" maxlength="3" class="form-control">
                         (<%=TXT_IN_YEARS%>)
                     </div>
                     <div class="radio-inline">
@@ -513,7 +513,7 @@ If bASrchLastRequest Then
                             <div class="input-group-addon">
                                  <%=TXT_MORE_THAN%>
                             </div>
-                            <input type="text" name="LastEmail" title="<%=AttrQs(TXT_DAYS_SINCE_EMAIL_REQUESTING_UPDATE)%>" id="LastEmail" size="4" maxlength="3" class="form-control">
+                            <input type="text" name="LastEmail" title=<%=AttrQs(TXT_DAYS_SINCE_EMAIL_REQUESTING_UPDATE)%> id="LastEmail" size="4" maxlength="3" class="form-control">
                             <div class="input-group-addon">
                                 <%=TXT_DAYS%>
                             </div>

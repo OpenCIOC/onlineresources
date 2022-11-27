@@ -114,7 +114,7 @@ Next
 %>
 </tr>
 <tr>
-<td><%=makeFieldList(vbNullString,"FieldID",True,False)%> <input type="submit" value="<%=TXT_VIEW_EDIT_FIELD_HELP%>"></td>
+<td><%=makeFieldList(vbNullString,"FieldID","FieldID",True,False)%> <input type="submit" value="<%=TXT_VIEW_EDIT_FIELD_HELP%>"></td>
 </tr>
 </table>
 </form>

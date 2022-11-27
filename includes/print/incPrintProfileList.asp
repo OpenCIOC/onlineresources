@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -62,7 +62,7 @@ Function makePrintProfileList(intSelected, strSelectName, strSelectId, bIncludeB
 		If .EOF Then
 			strReturn = TXT_NO_VALUES_AVAILABLE
 		Else
-			strReturn = strReturn & "<select name=" & AttrQs(strSelectName) & " id=" & AttrQs(strSelectId) & ">"
+			strReturn = strReturn & "<select name=" & AttrQs(strSelectName) & StringIf(Not Nl(strSelectID)," id=" & AttrQs(strSelectID)) & " class=""form-control"">"
 			If bIncludeBlank Then
 				strReturn = strReturn & "<option value=""""> -- </option>"
 			End If

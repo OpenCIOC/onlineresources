@@ -84,7 +84,7 @@ template_stylesheet=${template_style_sheet_url}
 
 
 	%if custom_style_sheet_url:
-	<link rel="STYLESHEET" id="custom_style" type="text/css" href="${custom_style_sheet_url}">
+	<link rel="stylesheet" id="custom_style" type="text/css" href="${custom_style_sheet_url}">
 	%endif
 
 	<!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
