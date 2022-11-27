@@ -154,7 +154,7 @@ ${request.passvars.cached_form_vals |n}
 						</tr>
 						<tr>
 							%endif
-							<td ${'colspan="2" ' if not has_pub else ' ' |n}>${renderer.checkbox(prefix + ' LinkListAdd', label=_('List/Client Tracker'))}</td>
+							<td ${'colspan="2" ' if not has_pub else ' ' |n}>${renderer.checkbox(prefix + 'LinkListAdd', label=_('List/Client Tracker'))}</td>
 						</tr>
 					</table>
 				</td>
