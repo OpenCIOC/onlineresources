@@ -35,7 +35,7 @@ Function getTextAreaRows(intLengthOfField,intSuggestedLength)
 	ElseIf Not IsNumeric(intLengthOfField) Then
 		intLengthOfField = 0
 	End If
-	
+
 	If Nl(intSuggestedLength) Then
 		intSuggestedLength = 0
 	ElseIf Not IsNumeric(intLengthOfField) Then
@@ -55,7 +55,7 @@ Function textToHTML(strText)
 	If Not Nl(strText) Then
 		If Not reEquals(strText,"(<br ?\/?>)|(<p>)|(<a\s+href)|(<b>)|(<strong>)|(<i>)|(<em>)|(<li>)|(<img\s+)|(<table\s+)|(<table>)|(&nbsp;)|(&amp;)|(h[1-6]>)|(<span[\s>])|(<div[\s>])",True,False,False,False) Then
 			textToHTML = Replace(Replace(Replace(Server.HTMLEncode(strText),vbCrLf,"&nbsp;<br>"),vbLf,"&nbsp;<br>"),vbCr,"&nbsp;<br>")
-		ElseIf Not reEquals(strText,"(<br ?\/?>)|(<p>)",True,False,False,False) Then
+		ElseIf Not reEquals(strText,"(<br ?\/?>)|(<p>)|(<li>)|(<table\s+)|(<table>)",True,False,False,False) Then
 			textToHTML = Replace(Replace(Replace(strText,vbCrLf,"&nbsp;<br>"),vbLf,"&nbsp;<br>"),vbCr,"&nbsp;<br>")
 		Else
 			textToHTML = strText
