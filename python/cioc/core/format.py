@@ -22,10 +22,10 @@ from markupsafe import escape, Markup
 
 
 _lots_of_html = re.compile(
-    r"(<br>)|(<br ?/>)|(<p>)|(<a\s+href)|(<b>)|(<strong>)|(<i>)|(<em>)|(<li>)|(<img\s+)|(<table\s+)|(<table>)|(&nbsp;)|(&amp;)|(h[1-6]>)|(<span[\s>])|(<div[\s>])",
+    r"(<br ?\/?>)|(<p>)|(<a\s+href)|(<b>)|(<strong>)|(<i>)|(<em>)|(<li>)|(<img\s+)|(<table\s+)|(<table>)|(&nbsp;)|(&amp;)|(h[1-6]>)|(<span[\s>])|(<div[\s>])",
     re.I,
 )
-_html_line_breaks = re.compile(r"(<br>)|(<br ?/>)|(<p>)", re.I)
+_html_line_breaks = re.compile(r"(<br ?\/?>)|(<p>)", re.I)
 
 
 def textToHTML(strText):

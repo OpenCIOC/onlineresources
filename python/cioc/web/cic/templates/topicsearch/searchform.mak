@@ -40,47 +40,48 @@ from cioc.core.modelstate import convert_options
 %endif
 
 <form action="${request.route_path('cic_topicsearch', tag=topicsearch_tag) if topicsearch.NextStep else '/results.asp'}" class="form-horizontal">
-<div class="NotVisible">
-${request.passvars.cached_form_vals|n}
-%for name, value in hidden_fields:
-${tags.hidden(name, value)}
-<input type="hidden" name="TopicSearch" value="${topicsearch_tag}">
-%endfor
-</div>
-%for f in formitems:
-<% search_items = searches.get(f.SearchType) %>
-%if f.IsRequired or search_items:
-	<h3>${f.Title}
-	%if f.Missing:
-	<br>
-<p class="AlertBubble">${_('Required')}</p>
-	%elif f.IsRequired:
-<span class="Alert">*</span>
-	%endif
-	</h3>
-%if f.Help:
-	${f.Help|n}
-%elif search_items and f.IsRequired:
-	<p class="SmallNote">${_('Please select at least one item from the list below.')}</p>
-%endif
-	<div class="clear-line-below">
-%if not search_items:
-	<em>${_('No values available')}</em>
-%elif f.SearchType == 'A':
-	${bsearch.age_groups_form(search_items)}
-%elif f.SearchType == 'C':
-	${community_form(search_items, request.viewdata.cic.OtherCommunity, idsuffix=topicsearch.TopicSearchID)}
-%elif f.SearchType == 'G1':
-	${bsearch.quicklist_form(search_items, f.ListType, force_heading=True)}
-%elif f.SearchType == 'G2':
-	${bsearch.quicklist_form(search_items, f.ListType, '_2', force_heading=True)}
-%elif f.SearchType == 'L':
-	${tags.select('LNID', [], convert_options([('','')] + [tuple(x)[:2] for x in search_items]))}
-%endif
+	<div class="NotVisible">
+		${request.passvars.cached_form_vals|n}
+		%for name, value in hidden_fields:
+		${tags.hidden(name, value)}
+		<input type="hidden" name="TopicSearch" value="${topicsearch_tag}">
+		%endfor
 	</div>
-%endif
-%endfor
-<div>
-<input type="Submit" value="${_('Search')}" class="btn btn-default">
-</div>
+	%for f in formitems:
+	<% search_items = searches.get(f.SearchType) %>
+	%if f.IsRequired or search_items:
+	<h3>
+		${f.Title}
+		%if f.Missing:
+		<br>
+		<p class="AlertBubble">${_('Required')}</p>
+		%elif f.IsRequired:
+		<span class="Alert">*</span>
+		%endif
+	</h3>
+	%if f.Help:
+	${f.Help|n}
+	%elif search_items and f.IsRequired:
+	<p class="SmallNote">${_('Please select at least one item from the list below.')}</p>
+	%endif
+	<div class="clear-line-below">
+		%if not search_items:
+		<em>${_('No values available')}</em>
+		%elif f.SearchType == 'A':
+		${bsearch.age_groups_form(search_items)}
+		%elif f.SearchType == 'C':
+		${community_form(search_items, request.viewdata.cic.OtherCommunity, idsuffix=topicsearch.TopicSearchID)}
+		%elif f.SearchType == 'G1':
+		${bsearch.quicklist_form(search_items, f.ListType, force_heading=True)}
+		%elif f.SearchType == 'G2':
+		${bsearch.quicklist_form(search_items, f.ListType, '_2', force_heading=True)}
+		%elif f.SearchType == 'L':
+		${tags.select('LNID', [], convert_options([('','')] + [tuple(x)[:2] for x in search_items]))}
+		%endif
+	</div>
+	%endif
+	%endfor
+	<div>
+		<input type="Submit" value="${_('Search')}" class="btn btn-default">
+	</div>
 </form>
