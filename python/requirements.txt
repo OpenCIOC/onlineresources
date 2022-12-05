@@ -16,7 +16,7 @@ cffi==1.15.1
     # via cryptography
 charset-normalizer==2.1.1
     # via requests
-cryptography==38.0.1
+cryptography==38.0.3
     # via -r requirements.in
 decorator==5.1.1
     # via dogpile-cache
