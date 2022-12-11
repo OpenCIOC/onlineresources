@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -87,7 +87,7 @@ Function makeSearchList(intSelected, strSelectName, strJSName, bIncludeBlank, in
 			If Not .RecordCount = 0 Then
 				.MoveFirst
 			End If
-			strReturn = strReturn & "<select name=" & AttrQs(strSelectName) & " title=" & AttrQs(TXT_EXECUTE_OR_EDIT_SEARCH) & " onChange=""changeList('" & strJSName & "',this,false);"">"
+			strReturn = strReturn & "<select id=" & AttrQs(strSelectName & "_" & strJSName) & " name=" & AttrQs(strSelectName) & " title=" & AttrQs(TXT_EXECUTE_OR_EDIT_SEARCH) & "class=""form-control"" onChange=""changeList('" & strJSName & "',this,false);"">"
 			strJS = "<script type='text/javascript'>" & vbCrLf & _
 				"newSavedSearchList(" & JsQs(strJSName) & ");"
 			
@@ -133,7 +133,7 @@ Function makeSharedSearchList(intSelected, strSelectName, strJSName, bIncludeBla
 				.MoveFirst
 			End If
 			
-			strReturn = strReturn & "<select name=" & AttrQs(strSelectName) & " title=" & AttrQs(TXT_SHARED_SEARCHES) & " onChange=""changeList('" & strJSName & "',this,true);"">"
+			strReturn = strReturn & "<select id=" & AttrQs(strSelectName & "_" & strJSName) & " name=" & AttrQs(strSelectName) & " title=" & AttrQs(TXT_SHARED_SEARCHES) & "class=""form-control"" onChange=""changeList('" & strJSName & "',this,true);"">"
 			strJS = "<script type='text/javascript'>" & vbCrLf & _
 				"newSavedSearchList(" & JsQs(strJSName) & ");"
 

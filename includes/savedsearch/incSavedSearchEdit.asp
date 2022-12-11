@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -109,36 +109,50 @@ Else
 End If
 
 %>
+<div class="btn-group" role="group">
+    <a role="button" class="btn btn-default" href="<%=makeLinkB("savedsearch.asp")%>"><%=TXT_RETURN_SEARCHES%></a>
+    <%If Not bNew Then%>
+    <a role="button" class="btn btn-default" href="<%=makeLink("sresults.asp", "SRCHID=" & intSrchID,vbNullString)%>"><%=TXT_EXECUTE_SEARCH%></a>
+    <%End If%>
+</div>
 
-<p style="font-weight:bold">[ <a href="<%=makeLinkB("savedsearch.asp")%>"><%=TXT_RETURN_SEARCHES%></a> 
-<%If Not bNew Then%>| <a href="<%=makeLink("sresults.asp", "SRCHID=" & intSrchID,vbNullString)%>"><%=TXT_EXECUTE_SEARCH%></a><%End If%>
-]</p>
 <form action="savedsearch_edit2.asp" method="post">
-<%=g_strCacheFormVals%>
-<input type="hidden" name="SRCHID" value="<%=intSrchID%>">
-<input type="hidden" name="LangID" value="<%=IIf(intLangID,"on",vbNullString)%>">
-<table class="BasicBorder cell-padding-4">
-<tr><th colspan="2" class="RevTitleBox"><%=TXT_USE_FORM_EDIT_SEARCH%></th></tr>
-<%
+    <div class="hidden">
+        <%=g_strCacheFormVals%>
+        <input type="hidden" name="SRCHID" value="<%=intSrchID%>">
+        <input type="hidden" name="LangID" value="<%=IIf(intLangID,"on",vbNullString)%>">
+    </div>
+    <div class="panel panel-default max-width-lg">
+        <div class="panel-heading">
+            <h2><%=TXT_USE_FORM_EDIT_SEARCH%></h2>
+        </div>
+        <div class="panel-body no-padding">
+
+            <table class="BasicBorder cell-padding-4 full-width form-table inset-table responsive-table">
+                <%
 If Not bNew Then
-%>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_DATE_CREATED%></td>
-	<td><%=strCreatedDate%></td>
-</tr>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_LAST_MODIFIED%></td>
-	<td><%=strModifiedDate%></td>
-</tr>
-<%
+                %>
+                <tr>
+                    <td class="field-label-cell"><%=TXT_DATE_CREATED%></td>
+                    <td class="field-data-cell"><%=strCreatedDate%></td>
+                </tr>
+                <tr>
+                    <td class="field-label-cell"><%=TXT_LAST_MODIFIED%></td>
+                    <td class="field-data-cell"><%=strModifiedDate%></td>
+                </tr>
+                <%
 End If
-%>
-<tr>
-	<td class="FieldLabelLeft" valign="top"><label for="SearchName"><%=TXT_NAME%></label> <span class="Alert">*</span></td>
-	<td><input name="SearchName" id="SearchName" value=<%=AttrQs(strSearchName)%> size="<%=TEXT_SIZE%>" maxlength="255">
-	<br><%=TXT_INST_SEARCH_NAME%></td>
-</tr>
-<%
+                %>
+                <tr>
+                    <td class="field-label-cell" valign="top">
+                        <label for="SearchName"><%=TXT_NAME%></label>
+                        <span class="Alert">*</span></td>
+                    <td class="field-data-cell">
+                        <p><%=TXT_INST_SEARCH_NAME%></p>
+                        <input class="form-control" name="SearchName" id="SearchName" value=<%=AttrQs(strSearchName)%> size="<%=TEXT_SIZE%>" maxlength="255">
+                    </td>
+                </tr>
+                <%
 If user_bCanAddSQLDOM Then
 
 If Nl(strWhereClause) Then
@@ -147,19 +161,28 @@ Else
 	intLen = Len(strWhereClause)
 	strWhereClause = Server.HTMLEncode(strWhereClause)
 End If
-%>
-<tr>
-	<td class="FieldLabelLeft" valign="top"><label for="WhereClause"><%=TXT_WHERE_CLAUSE%></label> <span class="Alert">*</span></td>
-	<td><span class="SmallNote"><%=TXT_INST_MAX_30000%></span>
-	<br><textarea name="WhereClause" id="WhereClause" wrap="soft" rows="<%=getTextAreaRows(intLen,3)%>" cols="<%=TEXTAREA_COLS%>"><%=strWhereClause%></textarea>
-	<br><%=TXT_INST_WHERE_CLAUSE_1%>
-	<br><span class="Alert"><%=TXT_INST_WHERE_CLAUSE_2%></span></td>
-</tr>
-<%
+                %>
+                <tr>
+                    <td class="field-label-cell" valign="top">
+                        <label for="WhereClause"><%=TXT_WHERE_CLAUSE%></label>
+                        <span class="Alert">*</span></td>
+                    <td class="field-data-cell">
+                        <p>
+                            <%=TXT_INST_WHERE_CLAUSE_1%>
+                            <br>
+                            <span class="Alert"><%=TXT_INST_WHERE_CLAUSE_2%></span>
+                        </p>
+                        <p class="SmallNote"><%=TXT_INST_MAX_30000%></p>
+                        <textarea class="form-control" name="WhereClause" id="WhereClause" rows="<%=getTextAreaRows(intLen,3)%>"><%=strWhereClause%></textarea>
+                    </td>
+                </tr>
+                <%
 Else
-%>
-<div style="display:none"><input type="hidden" name="WhereClause" value=<%=AttrQs(strWhereClause)%>></div>
-<%
+                %>
+                <div style="display: none">
+                    <input type="hidden" name="WhereClause" value="<%=AttrQs(strWhereClause)%>">
+                </div>
+                <%
 End If
 
 If Nl(strNotes) Then
@@ -168,30 +191,39 @@ Else
 	intLen = Len(strNotes)
 	strNotes = Server.HTMLEncode(strNotes)
 End If
-%>
-<tr>
-	<td class="FieldLabelLeft" valign="top"><label for="Notes"><%=TXT_NOTES%></label></td>
-	<td><span class="SmallNote"><%=TXT_INST_MAX_2000%></span>
-	<br><textarea name="Notes" id="Notes" wrap="soft" rows="<%=getTextAreaRows(intLen,3)%>" cols="<%=TEXTAREA_COLS%>"><%=strNotes%></textarea>
-	<br><%=TXT_INST_SEARCH_NOTES%></td>
-</tr>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_DELETED_RECORDS%></td>
-	<td><label for="IncludeDeleted"><input name="IncludeDeleted" id="IncludeDeleted" type="checkbox"<%If bIncludeDeleted Then%> checked<%End If%>> <%=TXT_INCLUDE_DELETED%></label></td>
-</tr>
-<%If user_bCanManageUsers And Not Nl(strSharedWithSLs) then%>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_SHARED%></td>
-	<td><%=TXT_INST_SHARE%>
-	<%=strSharedWithSLs%></td>
-</tr>
-<%End If%>
-<tr>
-	<td colspan="2"><input type="submit" name="Submit" value="<%=TXT_SUBMIT_UPDATES%>"><%If Not bNew Then %><input type="submit" name="Submit" value="<%=TXT_DELETE%>"><%End If%> <input type="reset" value="<%=TXT_RESET_FORM%>"></td>
-</tr>
-</table>
+                %>
+                <tr>
+                    <td class="field-label-cell" valign="top">
+                        <label for="Notes"><%=TXT_NOTES%></label></td>
+                    <td class="field-data-cell">
+                        <p><%=TXT_INST_SEARCH_NOTES%></p>
+                        <p class="SmallNote"><%=TXT_INST_MAX_2000%></p>
+                        <textarea class="form-control" name="Notes" id="Notes" rows="<%=getTextAreaRows(intLen,5)%>"><%=strNotes%></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="field-label-cell"><%=TXT_DELETED_RECORDS%></td>
+                    <td class="field-data-cell">
+                        <label for="IncludeDeleted">
+                            <input name="IncludeDeleted" id="IncludeDeleted" type="checkbox" <%If bIncludeDeleted Then%> checked<%End If%>>
+                            <%=TXT_INCLUDE_DELETED%></label></td>
+                </tr>
+                <%If user_bCanManageUsers And Not Nl(strSharedWithSLs) then%>
+                <tr>
+                    <td class="field-label-cell"><%=TXT_SHARED%></td>
+                    <td class="field-data-cell"><%=TXT_INST_SHARE%>
+                        <%=strSharedWithSLs%></td>
+                </tr>
+                <%End If%>
+            </table>
+        </div>
+    </div>
+    <input class="btn btn-default" type="submit" name="Submit" value="<%=TXT_SUBMIT_UPDATES%>">
+    <%If Not bNew Then %>
+    <input class="btn btn-default" type="submit" name="Submit" value="<%=TXT_DELETE%>">
+    <%End If%>
+    <input class="btn btn-default" type="reset" value="<%=TXT_RESET_FORM%>">
 </form>
-
 <%
 Call makePageFooter(True)
 %>

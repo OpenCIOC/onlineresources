@@ -28,9 +28,9 @@ Dim UPDATE_BUTTON, _
 	DELETE_BUTTON, _
 	SEARCH_BUTTON
 
-UPDATE_BUTTON = "<input type=""Submit"" name=""Submit"" value=""" & TXT_UPDATE & """>"
-DELETE_BUTTON = "<input type=""Submit"" name=""Submit"" value=""" & TXT_DELETE & """>"
-SEARCH_BUTTON = "<input type=""Submit"" name=""Submit"" value=""" & TXT_SEARCH & """>"
+UPDATE_BUTTON = "<input class=""btn btn-default"" type=""Submit"" name=""Submit"" value=""" & TXT_UPDATE & """>"
+DELETE_BUTTON = "<input class=""btn btn-default"" type=""Submit"" name=""Submit"" value=""" & TXT_DELETE & """>"
+SEARCH_BUTTON = "<input class=""btn btn-default"" type=""Submit"" name=""Submit"" value=""" & TXT_SEARCH & """>"
 
 If Not user_bDOM Then
 	Call securityFailure()
@@ -39,79 +39,85 @@ End If
 <p><span class="AlertBubble"><%=TXT_UPGRADE_WARNING%></span></p>
 
 <form action="savedsearch2.asp" method="get" name="PersonalSearches">
-    <table class="BasicBorder cell-padding-3">
+    <%=g_strCacheFormVals%>
+<%
+Call openSearchListRst(user_intID, ps_intDbArea)
+%>
+    <table class="BasicBorder cell-padding-4 full-width form-table">
         <tr>
-            <th class="RevTitleBox" colspan="3"><%=TXT_EXECUTE_OR_EDIT_SEARCH%></th>
+            <th class="RevTitleBox" colspan="3"><label for="SRCHID_P"><%=TXT_EXECUTE_OR_EDIT_SEARCH%></label></th>
         </tr>
         <tr>
-            <%=g_strCacheFormVals%>
-            <%
-Call openSearchListRst(user_intID, ps_intDbArea)
-            %>
+            
+
         <tr>
-            <td colspan="2">
-                <span class="SmallNote"><%=Replace(TXT_MAX_SEARCHES, "[MAX]", user_intSavedSearchQuota)%></span>
-                <br>
+            <td class="field-data-cell" colspan="2">
+                <p class="SmallNote"><%=Replace(TXT_MAX_SEARCHES, "[MAX]", user_intSavedSearchQuota)%></p>
                 <%=makeSearchList(vbNullString,"SRCHID","P",True,True)%>
             </td>
         </tr>
         <%If Not rsListSearch.RecordCount=0 Then%>
         <tr>
-            <td class="FieldLabelLeft"><%=TXT_LAST_MODIFIED%></td>
-            <td>
-                <input type="text" name="PMod" id="PMod" title="<%=AttrQs(TXT_LAST_MODIFIED)%>" size="<%=TEXT_SIZE%>" readonly></td>
+            <td class="field-label-cell"><label for="PMod"><%=TXT_LAST_MODIFIED%></label></td>
+            <td class="field-data-cell">
+                <input class="form-control" type="text" name="PMod" id="PMod" title="<%=AttrQs(TXT_LAST_MODIFIED)%>" size="<%=TEXT_SIZE%>" readonly>
+            </td>
         </tr>
         <tr>
-            <td class="FieldLabelLeft"><%=TXT_NOTES%></td>
-            <td>
-                <textarea name="PNotes" id="PNotes" title="<%=AttrQs(TXT_NOTES)%>" rows="<%=TEXTAREA_ROWS_LONG%>" cols="<%=TEXTAREA_COLS%>" readonly></textarea></td>
+            <td class="field-label-cell"><label for="PNotes"><%=TXT_NOTES%></label></td>
+            <td class="field-data-cell">
+                <textarea class="form-control" name="PNotes" id="PNotes" title="<%=AttrQs(TXT_NOTES)%>" rows="<%=TEXTAREA_ROWS_LONG%>" readonly></textarea>
+            </td>
         </tr>
         <tr>
-            <td colspan="2" align="center"><%=SEARCH_BUTTON & " " & UPDATE_BUTTON & " " & DELETE_BUTTON%></td>
+            <td colspan="2"><%=SEARCH_BUTTON & " " & UPDATE_BUTTON & " " & DELETE_BUTTON%></td>
         </tr>
         <%End If%>
-        <%
-Call closeSearchListRst()
-        %>
     </table>
+<%
+Call closeSearchListRst()
+%>
 </form>
-<br>
+
+<hr>
+
 <form action="savedsearch2.asp" method="get" name="SharedSearches">
-    <table class="BasicBorder cell-padding-3">
-        <tr>
-            <th class="RevTitleBox" colspan="3"><%=TXT_SHARED_SEARCHES%></th>
-        </tr>
-        <%=g_strCacheFormVals%>
-        <%
+    <%=g_strCacheFormVals%>
+<%
 Call openSharedSearchListRst(ps_intDbArea)
-        %>
+%>
+    <table class="BasicBorder cell-padding-4 full-width form-table">
+        <tr>
+            <th class="RevTitleBox" colspan="3"><label for="SRCHID_S"><%=TXT_SHARED_SEARCHES%></label></th>
+        </tr>
         <tr>
             <td colspan="2"><%=makeSharedSearchList(vbNullString,"SRCHID","S",True,True)%></td>
         </tr>
         <%If Not rsListSharedSearch.RecordCount=0 Then%>
         <tr>
-            <td class="FieldLabelLeft"><%=TXT_OWNER%></td>
-            <td>
-                <input type="text" name="SOwner" id="SOwner" size="<%=TEXT_SIZE%>" title="<%=AttrQs(TXT_OWNER)%>" readonly></td>
+            <td class="field-label-cell"><label for="SOwner"><%=TXT_OWNER%></label></td>
+            <td class="field-data-cell">
+                <input class="form-control" type="text" name="SOwner" id="SOwner" size="<%=TEXT_SIZE%>" title="<%=AttrQs(TXT_OWNER)%>" readonly></td>
         </tr>
         <tr>
-            <td class="FieldLabelLeft"><%=TXT_LAST_MODIFIED%></td>
-            <td>
-                <input type="text" name="SMod" id="SMod" size="<%=TEXT_SIZE%>" title="<%=AttrQs(TXT_LAST_MODIFIED)%>" readonly></td>
+            <td class="field-label-cell"><label for="SMod"><%=TXT_LAST_MODIFIED%></label></td>
+            <td class="field-data-cell">
+                <input class="form-control" type="text" name="SMod" id="SMod" size="<%=TEXT_SIZE%>" title="<%=AttrQs(TXT_LAST_MODIFIED)%>" readonly>
+            </td>
         </tr>
         <tr>
-            <td class="FieldLabelLeft"><%=TXT_NOTES%></td>
-            <td>
-                <textarea name="SNotes" id="SNotes" rows="<%=TEXTAREA_ROWS_LONG%>" cols="<%=TEXTAREA_COLS%>" title="<%=AttrQs(TXT_NOTES)%>" readonly></textarea></td>
+            <td class="field-label-cell"><label for="SNotes"><%=TXT_NOTES%></label></td>
+            <td class="field-data-cell">
+                <textarea class="form-control" name="SNotes" id="SNotes" rows="<%=TEXTAREA_ROWS_LONG%>" title="<%=AttrQs(TXT_NOTES)%>" readonly></textarea></td>
         </tr>
         <tr>
-            <td colspan="2" align="center"><%=SEARCH_BUTTON%></td>
+            <td colspan="2"><%=SEARCH_BUTTON%></td>
         </tr>
         <%End If%>
-        <%
-Call closeSharedSearchListRst()
-        %>
     </table>
+<%
+Call closeSharedSearchListRst()
+%>
 </form>
 <%
 Call makePageFooter(True)

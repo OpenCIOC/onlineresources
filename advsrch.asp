@@ -542,21 +542,22 @@ If bASrchOwner Then
 %>
             <tr>
                 <td class="field-label-cell-widelabel"><%=TXT_RECORD_OWNER%></td>
-                <td class="field-data-cell"><span class="SmallNote"><%=TXT_HOLD_CTRL%></span>
-                    <br>
+                <td class="field-data-cell">
+                    <p class="SmallNote"><%=TXT_HOLD_CTRL%></p>
                     <select name="RO" id="RO" class="form-control" multiple>
 <%
 			While Not .EOF
 				strOrgName = IIf(Nl(.Fields("ORG_NAME_FULL")),vbNullString," - " & Server.HTMLEncode(.Fields("ORG_NAME_FULL")))
-				If Len(strOrgName) > 80 Then
-					strOrgName = Left(strOrgName,80) & " ..."
+				If Len(strOrgName) > 100 Then
+					strOrgName = Left(strOrgName,100) & " ..."
 				End If
                         %><option value="<%=.Fields("AgencyCode")%>"><%=.Fields("AgencyCode") & strOrgName%></option>
 <%
 				.MoveNext
 			Wend
 %>
-                    </select></td>
+                    </select>
+                </td>
             </tr>
 <%
 		End If
