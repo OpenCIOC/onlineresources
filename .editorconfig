@@ -1,5 +1,6 @@
 # top-most EditorConfig file
 root = true
+tab_width = 4
 
 # Unix-style newlines with a newline ending every file
 [*]
@@ -15,3 +16,6 @@ charset = utf-8-bom
 indent_style = space
 indent_size = 4
 charset = utf-8
+
+[*.asp]
+indent_style = tab
