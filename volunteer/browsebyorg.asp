@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -96,7 +96,7 @@ End If
 With rsOrg
 	While Not .EOF
 %>
-	<li><a style="font-weight:bold;" href="<%=makeLink("results.asp","NUM=" & rsOrg("NUM"),vbNullString)%>"><%=.Fields("ORG_NAME_FULL")%></a> <span class="badge"><%=rsOrg("OpCount")%></span></li>
+	<li><a style="font-weight:bold;" href="<%=makeLink("results.asp","ORGNUM=" & rsOrg("NUM"),vbNullString)%>"><%=.Fields("ORG_NAME_FULL")%></a> <span class="badge"><%=rsOrg("OpCount")%></span></li>
 	<%
 		.MoveNext
 	Wend

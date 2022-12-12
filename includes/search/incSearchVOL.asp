@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -199,17 +199,14 @@ Set dicCheckListSearch("SM") = New CheckListSearch
 Call dicCheckListSearch("SM").setValues("SM","SM", "SOCIAL_MEDIA", True, False, "vo", "VNUM", "VOL_OP_SM", "GBL_SocialMedia", Null, "ISNULL(frn.Name,fr.DefaultName)", Null, True, Null, Null, False)
 
 '--------------------------------------------------
-' P. RSN (Transitional)
+' P. Organization NUM
 '--------------------------------------------------
 
-Dim intRSN
-intRSN = Request("RSN")
-If Not Nl(intRSN) Then
-	If Not IsIDType(intRSN) Then
-		intRSN = Null
-	End If
-Else
-	intRSN = Null
+Dim strOrgNUM
+
+strOrgNUM = Request("ORGNUM")
+If Not IsNUMType(strOrgNUM) Then
+	strOrgNUM = Null
 End If
 
 '--------------------------------------------------
@@ -601,12 +598,19 @@ End Select
 Call dicCheckListSearch("SM").excludeValuesSearch()
 
 '--------------------------------------------------
-' P. RSN (Transitional)
+' P. Organization NUM
 '--------------------------------------------------
 
-If Not Nl(intRSN) Then
-	strWhere = strWhere & strCon & "(bt.RSN=" & intRSN & ")"
+If Not Nl(strOrgNUM) Then
+	strWhere = strWhere & strCon & "(" & QsNl(strOrgNUM) & " IN (bt.NUM, bt.ORG_NUM))"
 	strCon = AND_CON
+	
+	If bSearchDisplay Then
+		strSearchInfoSQL = strSearchInfoSQL & vbCrLf & _
+			"SET @searchData = NULL" & vbCrLf & _
+			"SET @searchData = dbo.fn_GBL_DisplayFullOrgName(" & QsNl(strOrgNUM) & ",@@LANGID)" & vbCrLf & _
+			"IF @searchData IS NOT NULL SET @searchText = @searchText + " & QsNl(vbCrLf & "<search_display_item>" & Nz(get_view_data_cic("Organization"), TXT_ORGANIZATION) & TXT_COLON & "<em>") & " + @searchData + '</em></search_display_item>'"
+	End If
 End If
 
 '--------------------------------------------------

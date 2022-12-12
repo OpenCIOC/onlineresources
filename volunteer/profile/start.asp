@@ -70,15 +70,17 @@ End If
 Const SHOW_REFERRALS = 0
 Const SHOW_CRITERIA = 1
 Const SHOW_PERSONAL = 2
+
 Dim intShow, strShow
 strShow = LCase(Trim(Request("ShowTab")))
+
 Select Case strShow
-Case "criteria"
-	intShow = SHOW_CRITERIA
-Case "personal"
-	intShow = SHOW_PERSONAL
-Case Else
-	intShow = SHOW_REFERRALS
+    Case "criteria"
+	    intShow = SHOW_CRITERIA
+    Case "personal"
+	    intShow = SHOW_PERSONAL
+    Case Else
+	    intShow = SHOW_REFERRALS
 End Select
 
 Dim objReturn, objErrMsg
@@ -302,14 +304,14 @@ With rsProfileInfo
     If Not .EOF Then
     %>
     <div id="referral_tab">
-        <table class="BasicBorder cell-padding-3 sortable_table" data-sortdisabled="[4]" data-default-sort="[0,1]">
+        <table class="BasicBorder cell-padding-3 sortable_table responsive-table-multicol" data-sortdisabled="[4]" data-default-sort="[0,1]">
             <thead>
-                <tr>
+                <tr class="field-header-row">
                     <th class="RevTitleBox"><%=TXT_APPLICATION_DATE%></th>
-                    <th class="RevTitleBox"><%=TXT_POSITION_TITLE%></th>
-                    <th class="RevTitleBox"><%=TXT_ORG_NAMES%></th>
-                    <th class="RevTitleBox"><%=TXT_OUTCOME%></th>
-                    <th class="RevTitleBox"><%=TXT_ACTION%></th>
+                    <th class="RevTitleBox field-header-cell"><%=TXT_POSITION_TITLE%></th>
+                    <th class="RevTitleBox field-header-cell"><%=TXT_ORG_NAMES%></th>
+                    <th class="RevTitleBox field-header-cell"><%=TXT_OUTCOME%></th>
+                    <th class="RevTitleBox field-header-cell"><%=TXT_ACTION%></th>
                 </tr>
             </thead>
             <tbody>
@@ -326,8 +328,8 @@ With rsProfileInfo
 		bOutcomeSuccessful = .Fields("VolunteerSuccessfulPlacement")
 		strOutcomeNotes = Server.HTMLEncode(Ns(.Fields("VolunteerOutcomeNotes")))
 		dReferralDate = .Fields("ReferralDate")
-		strPositionTitle = Server.HTMLEncode(Ns(.Fields("POSITION_TITLE")))
-		strOrgName = .Fields("ORG_NAME_FULL")
+		strPositionTitle = Nz(Server.HTMLEncode(Ns(.Fields("POSITION_TITLE"))),TXT_UNKNOWN)
+		strOrgName = Nz(.Fields("ORG_NAME_FULL"),TXT_UNKNOWN)
 		intRefID = .Fields("REF_ID")
 
 		If Nl(bOutcomeSuccessful) Then
@@ -340,21 +342,28 @@ With rsProfileInfo
 
                 %>
                 <tr valign="top" id="referral_table_row_<%=intRefID%>" data-refid="<%=intRefID%>">
-                    <td class="ReferralDate" data-tbl-key="<%=Nz(ISODateTimeString(dReferralDate), "1900-01-01 00:00:00")%>"><%=Nz(DateString(dReferralDate, True), "&nbsp;")%></td>
-                    <td class="PositionTitle"><%= Nz(strPositionTitle, "") %></td>
-
-                    <td><%=strOrgName%></td>
-                    <td id="referral_outcome_<%=intRefID%>" data-outcome="<%=strOutcome%>">
-                        <div class="OutcomeContainer" <%=StringIf(strOutcome="N", "style=""display: None""")%>>
+                    <td class="ReferralDate" data-tbl-key="<%=Nz(ISODateTimeString(dReferralDate), "1900-01-01 00:00:00")%>">
+                        <%=Nz(DateString(dReferralDate, True), "&nbsp;")%>
+                    </td>
+                    <td class="field-data-cell PositionTitle">
+                        <strong><%=strPositionTitle%></strong>
+                    </td>
+                    <td class="field-data-cell">
+                        <%=strOrgName%>
+                    </td>
+                    <td class="field-data-cell" id="referral_outcome_<%=intRefID%>" data-outcome="<%=strOutcome%>">
+                        <div class="OutcomeContainer">
                             <strong><%=TXT_OUTCOME & TXT_COLON%></strong>
+                            <span class="OutcomeUnknown" <%=StringIf(strOutcome <> "N", "style=""display: none;""")%>><%=TXT_UNKNOWN%></span>
                             <span class="OutcomeSuccessfull" <%=StringIf(strOutcome <> "S", "style=""display: none;""")%>><%=TXT_SUCCESSFUL%></span>
-                            <span class="OutcomeUnsuccessful" <%= StringIf(strOutcome <> "U", "style=""display: none""")%>><%= TXT_UNSUCCESSFUL %></span>
+                            <span class="OutcomeUnsuccessful" <%= StringIf(strOutcome <> "U", "style=""display: none;""")%>><%= TXT_UNSUCCESSFUL %></span>
                         </div>
-                        <div class="OutcomeNotesContainer" <%= StringIf(Nl(strOutcomeNotes), "style=""display: none""") %>>
-                            <strong><%= TXT_NOTES %>:</strong> <span class="OutcomeNotes"><%=Server.HTMLEncode(strOutcomeNotes)%></span>
+                        <div class="OutcomeNotesContainer" <%=StringIf(Nl(strOutcomeNotes), "style=""display: none;""")%>>
+                            <strong><%=TXT_NOTES & TXT_COLON%></strong>
+                            <span class="OutcomeNotes"><%=Server.HTMLEncode(strOutcomeNotes)%></span>
                         </div>
                     </td>
-                    <td>
+                    <td class="field-data-cell">
                         <button id="referral_outcome_edit_<%=intRefID%>" class="referral_outcome_edit btn btn-sm btn-info btn-action-list"><span class="fa fa-edit" aria-hidden="true"></span> <%=TXT_OUTCOME%></button>
                         <button id="referral_hide_<%=intRefID%>" class="referral_hide btn btn-sm btn-danger btn-action-list"><span class="fa fa-remove" aria-hidden="true"></span> <%=TXT_HIDE%></button>
                     </td>
@@ -368,7 +377,7 @@ With rsProfileInfo
 
     </div>
     <%
-End If
+    End If
 End With
     %>
     <div id="search_tab">

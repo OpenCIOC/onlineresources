@@ -125,7 +125,7 @@ def make_popular_interest_feed(request):
 
 def make_popular_org_feed(request):
     item_template = _popular_org_item_templ % request.passvars.makeLink(
-        "~/volunteer/results.asp", "NUM={NUM}"
+        "~/volunteer/results.asp", "ORGNUM={NUM}"
     )
     return partial(
         _generic_feed,

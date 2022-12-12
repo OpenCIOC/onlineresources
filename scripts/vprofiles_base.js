@@ -65,17 +65,18 @@
 			notes = $.trim($("#outcome_notes")[0].value);
 
 		parent.data('outcome', state);
-		if(state === 'N') {
-			parent.find('.OutcomeContainer').hide();
-		}else{
-			if (state === 'S') {
-				parent.find('.OutcomeSuccessfull').show();
-				parent.find('.OutcomeUnsuccessful').hide();
-			} else {
-				parent.find('.OutcomeSuccessfull').hide();
-				parent.find('.OutcomeUnsuccessful').show();
-			}
-			parent.find('.OutcomeContainer').show();
+		if (state === 'N') {
+			parent.find('.OutcomeSuccessfull').hide();
+			parent.find('.OutcomeUnsuccessful').hide();
+			parent.find('.OutcomeUnknown').show();
+		} else if (state === 'S') {
+			parent.find('.OutcomeSuccessfull').show();
+			parent.find('.OutcomeUnsuccessful').hide();
+			parent.find('.OutcomeUnknown').hide();
+		} else {
+			parent.find('.OutcomeSuccessfull').hide();
+			parent.find('.OutcomeUnsuccessful').show();
+			parent.find('.OutcomeUnknown').hide();
 		}
 
 		parent.find('.OutcomeNotes').text(notes);

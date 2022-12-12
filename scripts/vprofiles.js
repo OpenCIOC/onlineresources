@@ -3310,8 +3310,6 @@ window['init_schedule'] = function($) {
 (function($) {
 	window['init_vprofiles'] = function (show_tab, root_path, strRemove, txt_not_found, interest_complete_url) {
 
-		console.log(interest_complete_url);
-
 	var tabs, default_results_area = null, initial_interest = null,
 	onbeforeunload = function(cache) {
 		cache['personal_values'] = get_form_values('#personalform');
@@ -3360,17 +3358,18 @@ window['init_schedule'] = function($) {
 			notes = $.trim($("#outcome_notes")[0].value);
 
 		parent.data('outcome', state);
-		if(state === 'N') {
-			parent.find('.OutcomeContainer').hide();
-		}else{
-			if (state === 'S') {
-				parent.find('.OutcomeSuccessfull').show();
-				parent.find('.OutcomeUnsuccessful').hide();
-			} else {
-				parent.find('.OutcomeSuccessfull').hide();
-				parent.find('.OutcomeUnsuccessful').show();
-			}
-			parent.find('.OutcomeContainer').show();
+		if (state === 'N') {
+			parent.find('.OutcomeSuccessfull').hide();
+			parent.find('.OutcomeUnsuccessful').hide();
+			parent.find('.OutcomeUnknown').show();
+		} else if (state === 'S') {
+			parent.find('.OutcomeSuccessfull').show();
+			parent.find('.OutcomeUnsuccessful').hide();
+			parent.find('.OutcomeUnknown').hide();
+		} else {
+			parent.find('.OutcomeSuccessfull').hide();
+			parent.find('.OutcomeUnsuccessful').show();
+			parent.find('.OutcomeUnknown').hide();
 		}
 
 		parent.find('.OutcomeNotes').text(notes);

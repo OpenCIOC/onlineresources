@@ -249,6 +249,7 @@ strSQL = "SELECT vo.MemberID, vod.POSITION_TITLE," & _
 	"dbo.fn_VOL_RecordInView(vo.VNUM," & g_intViewTypeVOL & ",vod.LangID,0,GETDATE()) AS IN_VIEW," & _
 	IIf(user_bVOL,"dbo.fn_VOL_RecordInView(vo.VNUM," & user_intViewVOL & ",vod.LangID,0,GETDATE()) AS IN_DEFAULT_VIEW,","0 AS IN_DEFAULT_VIEW,") & _
 	"dbo.fn_CIC_RecordInView(bt.NUM," & g_intViewTypeCIC & ",btd.LangID,0,GETDATE()) AS IN_CIC_VIEW," & _
+	"bt.NUM, bt.ORG_NUM," & _
 	"dbo.fn_VOL_VNUMToReferrals(" & g_intMemberID & ",vo.VNUM) AS REFERRALS,"
 If user_bLoggedIn Then
 	'SQL for information Flags:
@@ -765,7 +766,7 @@ End If
 <%
 		End If
 %>
-			<a role="button" class="btn btn-info" href="<%=makeLink("~/volunteer/results.asp","NUM=" & rsOrg("NUM"),vbNullString)%>"><span class="fa fa-users" aria-hidden="true"></span> <%= TXT_OTHER_OPPORTUNITIES %></a>
+			<a role="button" class="btn btn-info" href="<%=makeLink("~/volunteer/results.asp","ORGNUM=" & Nz(rsOrg("ORG_NUM"),rsOrg("NUM")),vbNullString)%>"><span class="fa fa-users" aria-hidden="true"></span> <%= TXT_OTHER_OPPORTUNITIES %></a>
 <%
 		If user_bAddVOL Then
 %>
