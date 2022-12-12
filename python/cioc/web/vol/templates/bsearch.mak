@@ -86,7 +86,7 @@ makeLink = passvars.makeLink
 </%def>
 
 <%def name="searchform_start()">
-<form id='SearchForm' action="results.asp" method="get" name="Search">
+<form id="SearchForm" action="results.asp" method="get" name="Search">
 <div style="display:none">
 ${request.passvars.cached_form_vals}
 </div>

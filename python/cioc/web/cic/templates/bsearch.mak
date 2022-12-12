@@ -202,7 +202,7 @@ ${tags.select("AgeGroup", None, convert_options([('', _('Select an age group'))]
 </%def>
 
 <%def name="searchform_start()">
-<form id='SearchForm' action="results.asp" method="get" name="Search" role="form">
+<form id="SearchForm" action="results.asp" method="get" name="Search" role="form">
 <div style="display:none">
 ${request.passvars.cached_form_vals}
 </div>
