@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -120,146 +120,159 @@ If Not bNUMError Then
 Call makePageHeader(TXT_COPY_RECORD, TXT_COPY_RECORD, True, True, True, True)
 %>
 <h2><%=IIf(Nl(strCopyLanguage),TXT_COPY_RECORD_ID,TXT_CREATE_EQUIVALENT_ID) & strNUM & StringIf(Not Nl(strCopyLanguage)," (" & strCopyLanguage & ")")%>
-<br><a href="<%=makeDetailsLink(strNUM,StringIf(intCurSearchNumber >= 0,"Number=" & intCurSearchNumber),vbNullString)%>"><%=strOrgName%></a></h2>
+	<br>
+	<a href="<%=makeDetailsLink(strNUM,StringIf(intCurSearchNumber >= 0,"Number=" & intCurSearchNumber),vbNullString)%>"><%=strOrgName%></a></h2>
 <% If Nl(strCopyLanguage) Then %>
 <p class="HideJs Alert">
-<%= TXT_JAVASCRIPT_REQUIRED %>
+	<%= TXT_JAVASCRIPT_REQUIRED %>
 </p>
 <div class="HideNoJs">
-<% End If %>
-<p><%=IIf(Nl(strCopyLanguage),TXT_INST_ABOUT_NEW_RECORD,TXT_INST_ABOUT_NEW_RECORD_LANG)%></p>
-<hr>
-<form action="copy2.asp" method="post" name="RecordList" id="RecordList">
-<div style="display:none">
-<%=g_strCacheFormVals%>
-<input type="hidden" name="NUM" value="<%=strNUM%>">
-<%If Not Nl(strCopyLanguage) Then%>
-<input type="hidden" name="CopyLn" value="<%=strCopyCulture%>">
-<%End If%>
-<%If intCurSearchNumber >= 0 Then%>
-<input type="hidden" name="Number" value="<%=intCurSearchNumber%>">
-<%End If%>
-</div>
-<%
+	<% End If %>
+	<p><%=IIf(Nl(strCopyLanguage),TXT_INST_ABOUT_NEW_RECORD,TXT_INST_ABOUT_NEW_RECORD_LANG)%></p>
+	<hr>
+	<form action="copy2.asp" method="post" name="RecordList" id="RecordList">
+		<div style="display: none">
+			<%=g_strCacheFormVals%>
+			<input type="hidden" name="NUM" value="<%=strNUM%>">
+			<%If Not Nl(strCopyLanguage) Then%>
+			<input type="hidden" name="CopyLn" value="<%=strCopyCulture%>">
+			<%End If%>
+			<%If intCurSearchNumber >= 0 Then%>
+			<input type="hidden" name="Number" value="<%=intCurSearchNumber%>">
+			<%End If%>
+		</div>
+		<%
 If Nl(strCopyLanguage) Then
-%>
-<table class="BasicBorder cell-padding-3">
-<tr valign="top">
-	<td class="FieldLabelLeft" id="FIELD_RECORD_NUM"><%=TXT_RECORD_NUM%> <span class="Alert">*</span></td>
-	<td data-field-display-name="<%=TXT_RECORD_NUM%>" data-field-required="true">
-		<input type="checkbox" name="AutoAssignNUM" checked onClick="changeAutoAssign(this, document.RecordList.NewNUM, document.RecordList.NewNUMButton);">&nbsp;<%=TXT_AUTO_ASSIGN_LOWEST_NUM%>
-		<br><input type="text" id="NewNUM" name="NewNUM" maxlength="8" size="9" disabled class="record-num">
-		<input type="button" id="NewNUMButton" value="<%=TXT_LOWEST_UNUSED_FOR & user_strAgency%>" onClick="document.RecordList.NewNUM.value='<%=strNewNUM%>';" disabled>
-		[ <a href="javascript:openWin('<%=makeLinkB("numfind.asp")%>','aFind')"><%=TXT_LOWEST_UNUSED_FOR & TXT_ALL_AGENCIES%></a> ]</td>
-</tr>
-<%
+		%>
+		<table class="BasicBorder cell-padding-3 full-width clear-line-below form-table responsive-table">
+			<tr valign="top">
+				<td class="field-label-cell" id="FIELD_RECORD_NUM"><%=TXT_RECORD_NUM%> <span class="Alert">*</span></td>
+				<td class="field-data-cell form-inline" data-field-display-name="<%=TXT_RECORD_NUM%>" data-field-required="true">
+					<input class="form-control" type="checkbox" name="AutoAssignNUM" checked onclick="changeAutoAssign(this, document.RecordList.NewNUM, document.RecordList.NewNUMButton);"> <%=TXT_AUTO_ASSIGN_LOWEST_NUM%>
+					<br>
+					<input class="form-control" type="text" id="NewNUM" name="NewNUM" maxlength="8" size="9" disabled class="record-num">
+					<input type="button" id="NewNUMButton" value="<%=TXT_LOWEST_UNUSED_FOR & user_strAgency%>" onclick="document.RecordList.NewNUM.value='<%=strNewNUM%>';" disabled>
+					[ <a href="javascript:openWin('<%=makeLinkB("numfind.asp")%>','aFind')"><%=TXT_LOWEST_UNUSED_FOR & TXT_ALL_AGENCIES%></a> ]
+				</td>
+			</tr>
+			<%
 	If user_bSuperUserCIC Then
 		Call openAgencyListRst(DM_CIC, True, True)
-%>
-<tr valign="top">
-	<td class="FieldLabelLeft"><%=TXT_RECORD_OWNER%></td>
-	<td><%=makeRecordOwnerAgencyList(user_strAgency, "Owner", True)%></td>
-</tr>
-<%
+			%>
+			<tr valign="top">
+				<td class="field-label-cell"><%=TXT_RECORD_OWNER%></td>
+				<td><%=makeRecordOwnerAgencyList(user_strAgency, "Owner", True)%></td>
+			</tr>
+			<%
 		Call closeAgencyListRst()
 	End If
 	If user_intCanUpdatePubs = UPDATE_ALL Then
-%>
-<tr valign="top">
-	<td class="FieldLabelLeft"><%=TXT_COPY_PUBS%></td>
-	<td><input type="radio" name="CopyPubs" id="CopyPubs_N" value="" checked>&nbsp;<%=TXT_NO%>
-		<input type="radio" name="CopyPubs" id="CopyPubs_Y" value="on">&nbsp;<%=TXT_YES%></td>
-</tr>
-<%
+			%>
+			<tr valign="top">
+				<td class="field-label-cell"><%=TXT_COPY_PUBS%></td>
+				<td>
+					<input type="radio" name="CopyPubs" id="CopyPubs_N" value="" checked> <%=TXT_NO%>
+					<input type="radio" name="CopyPubs" id="CopyPubs_Y" value="on"> <%=TXT_YES%>
+				</td>
+			</tr>
+			<%
 	End If
 	If user_intCanIndexTaxonomy <> UPDATE_NONE Then
-%>
+			%>
 
-<tr valign="top">
-	<td class="FieldLabelLeft"><%=TXT_COPY_TAXONOMY%></td>
-	<td><input type="radio" name="CopyTaxonomy" id="CopyTaxonomy_N" value="" checked>&nbsp;<%=TXT_NO%>
-		<input type="radio" name="CopyTaxonomy" id="CopyTaxonomy_Y" value="on">&nbsp;<%=TXT_YES%></td>
-</tr>
-<%
+			<tr valign="top">
+				<td class="field-label-cell"><%=TXT_COPY_TAXONOMY%></td>
+				<td>
+					<input type="radio" name="CopyTaxonomy" id="CopyTaxonomy_N" value="" checked> <%=TXT_NO%>
+					<input type="radio" name="CopyTaxonomy" id="CopyTaxonomy_Y" value="on"> <%=TXT_YES%>
+				</td>
+			</tr>
+			<%
 	End If
-%>
-<tr valign="top">
-	<td class="FieldLabelLeft"><%=TXT_LANGUAGES%></td>
-	<td><input type="radio" name="CopyOnlyCurrentLang" id="CopyOnlyCurrentLang_N" value="" checked>&nbsp;<%=TXT_COPY_ALL_LANGUAGES%>
-		<br><input type="radio" name="CopyOnlyCurrentLang" id="CopyOnlyCurrentLang_Y" value="on">&nbsp;<%=TXT_COPY_CURRENT_LANGUAGE%></td>
-</tr>
-<%
+			%>
+			<tr valign="top">
+				<td class="field-label-cell"><%=TXT_LANGUAGES%></td>
+				<td>
+					<input type="radio" name="CopyOnlyCurrentLang" id="CopyOnlyCurrentLang_N" value="" checked> <%=TXT_COPY_ALL_LANGUAGES%>
+					<br>
+					<input type="radio" name="CopyOnlyCurrentLang" id="CopyOnlyCurrentLang_Y" value="on"> <%=TXT_COPY_CURRENT_LANGUAGE%></td>
+			</tr>
+			<%
 	If g_bCanSeeNonPublicCIC Then
-%>
-<tr valign="top">
-	<td class="FieldLabelLeft"><%=TXT_NON_PUBLIC%></td>
-	<td><input type="radio" name="NonPublic" value="on" checked>&nbsp;<%=TXT_YES%>
-		<input type="radio" name="NonPublic" value="">&nbsp;<%=TXT_NO%></td>
-</tr>
-<%
+			%>
+			<tr valign="top">
+				<td class="field-label-cell"><%=TXT_NON_PUBLIC%></td>
+				<td>
+					<input type="radio" name="NonPublic" value="on" checked> <%=TXT_YES%>
+					<input type="radio" name="NonPublic" value=""> <%=TXT_NO%>
+				</td>
+			</tr>
+			<%
 	End If
-%>
-</table>
-<%
+			%>
+		</table>
+		<%
 	Call printCopyFieldsForm(intCopyRTID, strNUM, strRecordTypeName)
 End If
 
-%>
-<p id="required_field_error_box" class="NotVisible">
-<span class="Alert"><%= TXT_REQUIRED_FIELDS_EMPTY %></span>
-<div id="required_field_error_list">
-</div>
-</p>
-<% If g_intPreventDuplicateOrgNames <> 0 Then %>
-<div id="duplicate_name_error_box" class="NotVisible">
-<p><span class="AlertBubble"><%= TXT_DUPLICATE_ORG_NAME_ERROR %></span></p>
-</div>
-<% End If %>
-<div id="validation_error_box" class="NotVisible">
-<p><span class="AlertBubble"><%= TXT_VALIDATION_ERRORS_MESSAGE %></span></p>
-</div>
-<p><input type="submit" value="<%=TXT_CREATE_RECORD & StringIf(Not Nl(strCopyLanguage)," (" & strCopyLanguage & ")")%>"></p>
-</form>
-<%
+		%>
+		<p id="required_field_error_box" class="NotVisible">
+			<span class="Alert"><%= TXT_REQUIRED_FIELDS_EMPTY %></span>
+			<div id="required_field_error_list">
+			</div>
+		</p>
+		<% If g_intPreventDuplicateOrgNames <> 0 Then %>
+		<div id="duplicate_name_error_box" class="NotVisible">
+			<p><span class="AlertBubble"><%= TXT_DUPLICATE_ORG_NAME_ERROR %></span></p>
+		</div>
+		<% End If %>
+		<div id="validation_error_box" class="NotVisible">
+			<p><span class="AlertBubble"><%= TXT_VALIDATION_ERRORS_MESSAGE %></span></p>
+		</div>
+		<p>
+			<input class="btn btn-default" type="submit" value="<%=TXT_CREATE_RECORD & StringIf(Not Nl(strCopyLanguage)," (" & strCopyLanguage & ")")%>">
+		</p>
+	</form>
+	<%
 End If
 If Nl(strCopyLanguage) Then
-%>
+	%>
 </div>
 <% End If %>
 <%= makeJQueryScriptTags() %>
 <%= JSVerScriptTag("scripts/copy.js") %>
 <% g_bListScriptLoaded = True %>
 <script type="text/javascript">
-(function() {
-init_client_validation('#RecordList', '<%= TXT_VALIDATION_ERRORS_TITLE %>');
+	(function() {
+		init_client_validation('#RecordList', '<%= TXT_VALIDATION_ERRORS_TITLE %>');
 
-var org_levels = {
+		var org_levels = {
 <%
-	Dim key, field
-	key = Array("ORG_LEVEL_1", "ORG_LEVEL_2", "ORG_LEVEL_3", "ORG_LEVEL_4", "ORG_LEVEL_5", "LOCATION_NAME", "SERVICE_NAME_LEVEL_1", "SERVICE_NAME_LEVEL_2")
+			Dim key, field
+		key = Array("ORG_LEVEL_1", "ORG_LEVEL_2", "ORG_LEVEL_3", "ORG_LEVEL_4", "ORG_LEVEL_5", "LOCATION_NAME", "SERVICE_NAME_LEVEL_1", "SERVICE_NAME_LEVEL_2")
 	For Each field in key
-		Response.Write(StringIf(field <> "ORG_LEVEL_1", ",") & JSONQs(field,True) & ": " & JSONQs(dicOrgName(field), True))
-	Next
-%>
+		Response.Write(StringIf(field <> "ORG_LEVEL_1", ",") & JSONQs(field, True) & ": " & JSONQs(dicOrgName(field), True))
+		Next
+			%>
 };
-init_record_type_form('<%= strNUM %>', '<%= makeLinkB("copy_form.asp") %>', org_levels);
+	init_record_type_form('<%= strNUM %>', '<%= makeLinkB("copy_form.asp") %>', org_levels);
 
 <% If g_intPreventDuplicateOrgNames <> 0 And Nl(strCopyCulture) Then %>
-jQuery(function() {
-	init_validate_duplicate_org_names({
-		selector: '#RecordList',
-		org_levels: org_levels,
-		confirm_string: <%= JSONQs(TXT_DUPLICATE_ORG_NAME_PROMPT, True) %>,
-		prefix: "O",
+		jQuery(function() {
+			init_validate_duplicate_org_names({
+				selector: '#RecordList',
+				org_levels: org_levels,
+				confirm_string: <%= JSONQs(TXT_DUPLICATE_ORG_NAME_PROMPT, True) %>,
+				prefix: "O",
 		<% If g_intPreventDuplicateOrgNames = 2 Then %>
-		only_warn: false,
+			only_warn: false,
 		<% End If %>
-		url: <%= JSONQs(makeLinkB("jsonfeeds/orgname_checker.asp"),True) %>
+			url: <%= JSONQs(makeLinkB("jsonfeeds/orgname_checker.asp"), True) %>
 	});
 });
 <% End If %>
 
-})();
+}) ();
 </script>
 <%
 

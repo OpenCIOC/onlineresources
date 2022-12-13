@@ -60,13 +60,13 @@ Call openSearchListRst(user_intID, ps_intDbArea)
         <tr>
             <td class="field-label-cell"><label for="PMod"><%=TXT_LAST_MODIFIED%></label></td>
             <td class="field-data-cell">
-                <input class="form-control" type="text" name="PMod" id="PMod" title="<%=AttrQs(TXT_LAST_MODIFIED)%>" size="<%=TEXT_SIZE%>" readonly>
+                <input class="form-control" type="text" name="PMod" id="PMod" title=<%=AttrQs(TXT_LAST_MODIFIED)%> size="<%=TEXT_SIZE%>" readonly>
             </td>
         </tr>
         <tr>
             <td class="field-label-cell"><label for="PNotes"><%=TXT_NOTES%></label></td>
             <td class="field-data-cell">
-                <textarea class="form-control" name="PNotes" id="PNotes" title="<%=AttrQs(TXT_NOTES)%>" rows="<%=TEXTAREA_ROWS_LONG%>" readonly></textarea>
+                <textarea class="form-control" name="PNotes" id="PNotes" title=<%=AttrQs(TXT_NOTES)%> rows="<%=TEXTAREA_ROWS_LONG%>" readonly></textarea>
             </td>
         </tr>
         <tr>
@@ -97,18 +97,18 @@ Call openSharedSearchListRst(ps_intDbArea)
         <tr>
             <td class="field-label-cell"><label for="SOwner"><%=TXT_OWNER%></label></td>
             <td class="field-data-cell">
-                <input class="form-control" type="text" name="SOwner" id="SOwner" size="<%=TEXT_SIZE%>" title="<%=AttrQs(TXT_OWNER)%>" readonly></td>
+                <input class="form-control" type="text" name="SOwner" id="SOwner" size="<%=TEXT_SIZE%>" title=<%=AttrQs(TXT_OWNER)%> readonly></td>
         </tr>
         <tr>
             <td class="field-label-cell"><label for="SMod"><%=TXT_LAST_MODIFIED%></label></td>
             <td class="field-data-cell">
-                <input class="form-control" type="text" name="SMod" id="SMod" size="<%=TEXT_SIZE%>" title="<%=AttrQs(TXT_LAST_MODIFIED)%>" readonly>
+                <input class="form-control" type="text" name="SMod" id="SMod" size="<%=TEXT_SIZE%>" title=<%=AttrQs(TXT_LAST_MODIFIED)%> readonly>
             </td>
         </tr>
         <tr>
             <td class="field-label-cell"><label for="SNotes"><%=TXT_NOTES%></label></td>
             <td class="field-data-cell">
-                <textarea class="form-control" name="SNotes" id="SNotes" rows="<%=TEXTAREA_ROWS_LONG%>" title="<%=AttrQs(TXT_NOTES)%>" readonly></textarea></td>
+                <textarea class="form-control" name="SNotes" id="SNotes" rows="<%=TEXTAREA_ROWS_LONG%>" title=<%=AttrQs(TXT_NOTES)%> readonly></textarea></td>
         </tr>
         <tr>
             <td colspan="2"><%=SEARCH_BUTTON%></td>

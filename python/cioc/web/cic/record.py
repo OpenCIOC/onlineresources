@@ -751,7 +751,7 @@ SET NOCOUNT OFF
                 else "EXISTS(SELECT * FROM CIC_View_Description WHERE ViewType=@ViewTypeCIC AND LangID=LANG.LangID)",
                 # Does this record have Volunteer Opportunities?
                 vol_ops=(
-                    "CASE WHEN EXISTS(SELECT vo.VNUM FROM VOL_Opportunity vo INNER JOIN VOL_Opportunity_Description vod ON vo.VNUM=vod.VNUM WHERE vo.NUM=bt.NUM AND "
+                    "CASE WHEN EXISTS(SELECT vo.VNUM FROM VOL_Opportunity vo INNER JOIN VOL_Opportunity_Description vod ON vo.VNUM=vod.VNUM WHERE vo.NUM IN (bt.ORG_NUM,bt.NUM) AND "
                     + (
                         "(vo.DISPLAY_UNTIL IS NULL OR vo.DISPLAY_UNTIL >= GETDATE()) AND "
                         if request.viewdata.vol.CanSeeExpired
@@ -887,7 +887,9 @@ SET NOCOUNT OFF
 
         search_list, number = get_search_list_and_number(request, record)
         num = record.NUM
+        orgnum = record.ORG_NUM if record.ORG_NUM else record.NUM 
         num_link = "NUM=" + num
+        orgnum_link = "ORGNUM=" + orgnum
         number_link = "" if number is None else ("&Number=%d" % number)
         num_number_link = num_link + number_link
         idlist_link = "IDList=" + num + number_link
@@ -958,6 +960,7 @@ SET NOCOUNT OFF
             "inline_results": model_state.value("InlineResults"),
             "num_link": num_link,
             "num_number_link": num_number_link,
+            "orgnum_link": orgnum_link,
             "idlist_link": idlist_link,
             "record": record,
             "field_groups": field_groups,

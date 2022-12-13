@@ -180,7 +180,7 @@ End If
 Else
                 %>
                 <div style="display: none">
-                    <input type="hidden" name="WhereClause" value="<%=AttrQs(strWhereClause)%>">
+                    <input type="hidden" name="WhereClause" value=<%=AttrQs(strWhereClause)%>>
                 </div>
                 <%
 End If

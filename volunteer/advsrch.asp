@@ -145,7 +145,7 @@ End If
                     <%=TXT_BOOLEAN%></label>
                 <%End If%>
                 <br>
-                <input name="STerms" title="<%=AttrQs(TXT_SEARCH_ORG_NAME)%>" type="text" size="<%=TEXT_SIZE-10%>" maxlength="250" class="form-control">
+                <input name="STerms" title=<%=AttrQs(TXT_SEARCH_ORG_NAME)%> type="text" size="<%=TEXT_SIZE-10%>" maxlength="250" class="form-control">
             </td>
         </tr>
         <tr>
@@ -163,7 +163,7 @@ End If
                     <%=TXT_BOOLEAN%></label>
                 <%End If%>
                 <br>
-                <input name="STermsPos" title="<%=AttrQs(TXT_SEARCH_OPPORTUNITY)%>" type="text" size="<%=TEXT_SIZE-10%>" maxlength="250" class="form-control">
+                <input name="STermsPos" title=<%=AttrQs(TXT_SEARCH_OPPORTUNITY)%> type="text" size="<%=TEXT_SIZE-10%>" maxlength="250" class="form-control">
                 <br>
                 <label for="STypePos_A">
                     <input type="radio" name="STypePos" id="STypePos_A" value="A" checked>
@@ -206,7 +206,7 @@ If bASrchAges Then
             <td class="field-data-cell">
                 <div class="form-inline">
                 <%=TXT_FOR_VOLUNTEER_AGED%>
-                <input type="text" name="Age" title="<%=AttrQs(TXT_AGE)%>" id="Age" size="3" maxlength="3" class="form-control">
+                <input type="text" name="Age" title=<%=AttrQs(TXT_AGE)%> id="Age" size="3" maxlength="3" class="form-control">
                 (<%=TXT_IN_YEARS%>)
                 </div>
             </td>

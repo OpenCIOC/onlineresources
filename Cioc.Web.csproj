@@ -322,6 +322,7 @@
     <Content Include="python\cioc\core\templates\layouts\header_tabbed.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\cicsearch_dualpanel.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\volsearch_dualpanel.en_CA.html" />
+    <Content Include="python\cioc\core\templates\layouts\volsearch_multipanel2.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\volsearch_multipanel.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\cicsearch_singleform.en_CA.html" />
     <None Include="python\cioc\core\templates\layouts\cicsearch_tabbed.scss" />
@@ -333,6 +334,7 @@
     <None Include="python\cioc\core\templates\layouts\header_tabbed_alternate.scss" />
     <Content Include="python\cioc\core\templates\layouts\header_tabbed_alternate.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\cicsearch_dualpanel.scss" />
+    <Content Include="python\cioc\core\templates\layouts\volsearch_multipanel2.scss" />
     <None Include="python\cioc\core\templates\layouts\volsearch_singleform.scss" />
     <Content Include="python\cioc\core\templates\layouts\volsearch_singleform.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\volsearch_singleform.fr_CA.html" />

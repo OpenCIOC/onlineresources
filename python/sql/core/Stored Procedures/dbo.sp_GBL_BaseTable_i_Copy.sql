@@ -30,14 +30,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.7
-	Checked by: KL
-	Checked on: 30-Nov-2015
-	Action: TESTING REQUIRED
-	Notes: Should come back and parameterize all dynamically generated SQL
-*/
-
 DECLARE	@Error	int
 SET @Error = 0
 
@@ -54,7 +46,7 @@ DECLARE @CanSeeNonPublicPub bit,
 		@AddToPub int
 
 SELECT @CanSeeNonPublicPub=CanSeeNonPublicPub, @LimitedView=LimitedView, @AddToPub=PB_ID
-	FROM CIC_View WHERE ViewType=@ViewType
+	FROM dbo.CIC_View WHERE ViewType=@ViewType
 
 SET @NUM = RTRIM(LTRIM(@NUM))
 SET @NewNUM = RTRIM(LTRIM(@NewNUM))
@@ -77,7 +69,7 @@ DECLARE @CopyFields TABLE (
 
 SET @MODIFIED_DATE = GETDATE()
 
-EXEC @CheckNUM = sp_GBL_UCheck_NUM NULL, @NewNUM OUTPUT, NULL, NULL, @Owner
+EXEC @CheckNUM = dbo.sp_GBL_UCheck_NUM NULL, @NewNUM OUTPUT, NULL, NULL, @Owner
 
 SET @Org1 = RTRIM(LTRIM(@Org1))
 IF @Org1 = '' SET @Org1 = NULL
@@ -106,7 +98,7 @@ END ELSE IF @CheckNUM = 1 BEGIN
 	SET @Error = 6 -- Value in use
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @NewNUM, @RecordNumberName)
 -- Copy Record exists ?
-END ELSE IF NOT EXISTS(SELECT * FROM GBL_BaseTable_Description WHERE NUM=@NUM AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)) BEGIN
+END ELSE IF NOT EXISTS(SELECT * FROM dbo.GBL_BaseTable_Description WHERE NUM=@NUM AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @NUM, @OrganizationObjectName)
 END ELSE BEGIN
@@ -122,7 +114,7 @@ END ELSE BEGIN
 			WHEN FormFieldType <> 'f' OR FieldName IN ('LOCATED_IN_CM','ORG_NUM') THEN FieldName
 			ELSE UpdateFieldList
 		END AS UpdateFieldList
-	FROM GBL_FieldOption fo
+	FROM dbo.GBL_FieldOption fo
 	WHERE CanUseUpdate=1
 		AND EXISTS(SELECT * FROM dbo.fn_GBL_ParseVarCharIDList(@FieldList,',') tm WHERE tm.ItemID=fo.FieldName COLLATE Latin1_General_100_CI_AI)
 		AND FieldName NOT LIKE 'ORG_LEVEL_[1-5]'
@@ -131,7 +123,7 @@ END ELSE BEGIN
 	ORDER BY FieldName
 
 	IF @RecordType IS NOT NULL BEGIN
-		IF NOT EXISTS(SELECT * FROM CIC_RecordType WHERE RT_ID=@RecordType) BEGIN
+		IF NOT EXISTS(SELECT * FROM dbo.CIC_RecordType WHERE RT_ID=@RecordType) BEGIN
 			SET @RecordType = NULL
 		END ELSE BEGIN
 			DELETE FROM @CopyFields WHERE FieldName='RECORD_TYPE'
@@ -190,7 +182,7 @@ END ELSE BEGIN
 	' + CASE WHEN @BaseTableFieldList IS NULL THEN '' ELSE ',' + @BaseTableFieldList END + '
 	FROM GBL_BaseTable WHERE NUM=@NUM'
 
-	EXEC sp_executesql @SQL, @ParamList, @MemberID=@MemberID, @NUM=@NUM, @NewNUM=@NewNUM, @MODIFIED_DATE=@MODIFIED_DATE, @MODIFIED_BY=@MODIFIED_BY, @Owner=@Owner
+	EXEC dbo.sp_executesql @SQL, @ParamList, @MemberID=@MemberID, @NUM=@NUM, @NewNUM=@NewNUM, @MODIFIED_DATE=@MODIFIED_DATE, @MODIFIED_BY=@MODIFIED_BY, @Owner=@Owner
 
 	EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 
@@ -299,7 +291,7 @@ END ELSE BEGIN
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
-	INSERT INTO GBL_Contact(
+	INSERT INTO dbo.GBL_Contact (
 		CREATED_DATE, CREATED_BY, MODIFIED_DATE, MODIFIED_BY,
 		GblContactType, GblNUM, LangID, 
 		NAME_HONORIFIC, NAME_FIRST, NAME_LAST, NAME_SUFFIX,
@@ -311,18 +303,18 @@ END ELSE BEGIN
 	) SELECT
 		@MODIFIED_DATE, @MODIFIED_BY, @MODIFIED_DATE, @MODIFIED_BY,
 		cf.FieldName, @NewNUM, LangID,
-		NAME_HONORIFIC, NAME_FIRST, NAME_LAST, NAME_SUFFIX,
-		TITLE, ORG, EMAIL,
+		c.NAME_HONORIFIC, c.NAME_FIRST, c.NAME_LAST, c.NAME_SUFFIX,
+		c.TITLE, c.ORG, c.EMAIL,
 		FAX_NOTE, FAX_NO, FAX_EXT, FAX_CALLFIRST,
 		PHONE_1_TYPE, PHONE_1_NOTE, PHONE_1_NO, PHONE_1_EXT, PHONE_1_OPTION,
 		PHONE_2_TYPE, PHONE_2_NOTE, PHONE_2_NO, PHONE_2_EXT, PHONE_2_OPTION,
 		PHONE_3_TYPE, PHONE_3_NOTE, PHONE_3_NO, PHONE_3_EXT, PHONE_3_OPTION
-	FROM GBL_Contact c
+	FROM dbo.GBL_Contact c
 	INNER JOIN @CopyFields cf
 		ON c.GblContactType=cf.FieldName
 	WHERE c.GblNUM=@NUM AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
 	
-	INSERT INTO GBL_RecordNote(
+	INSERT INTO dbo.GBL_RecordNote(
 		CREATED_DATE, CREATED_BY, MODIFIED_DATE, MODIFIED_BY,
 		GblNoteType, GblNUM, LangID,
 		CANCELLED_DATE, CANCELLED_BY, CancelError,
@@ -330,17 +322,17 @@ END ELSE BEGIN
 		Value
 	) SELECT
 		@MODIFIED_DATE, @MODIFIED_BY, @MODIFIED_DATE, @MODIFIED_BY,
-		cf.FieldName, @NewNUM, LangID,
-		CANCELLED_DATE, CANCELLED_BY, CancelError,
-		NoteTypeID,
-		Value
-	FROM GBL_RecordNote c
+		cf.FieldName, @NewNUM, c.LangID,
+		c.CANCELLED_DATE, c.CANCELLED_BY, c.CancelError,
+		c.NoteTypeID,
+		c.Value
+	FROM dbo.GBL_RecordNote c
 	INNER JOIN @CopyFields cf
 		ON c.GblNoteType=cf.FieldName
 	WHERE c.GblNUM=@NUM AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName IN ('SCHOOL_ESCORT','SCHOOLS_IN_AREA')) BEGIN
-		INSERT INTO CCR_BT_SCH (
+		INSERT INTO dbo.CCR_BT_SCH (
 			NUM,
 			SCH_ID,
 			Escort,
@@ -350,10 +342,10 @@ END ELSE BEGIN
 				SCH_ID,
 				Escort,
 				InArea
-			FROM CCR_BT_SCH WHERE NUM=@NUM
+			FROM dbo.CCR_BT_SCH WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 
-		INSERT INTO CCR_BT_SCH_Notes (
+		INSERT INTO dbo.CCR_BT_SCH_Notes (
 			BT_SCH_ID,
 			LangID,
 			EscortNotes,
@@ -363,26 +355,26 @@ END ELSE BEGIN
 				ck3.LangID,
 				ck3.EscortNotes,
 				ck3.InAreaNotes
-			FROM CCR_BT_SCH ck1
-			INNER JOIN CCR_BT_SCH ck2
+			FROM dbo.CCR_BT_SCH ck1
+			INNER JOIN dbo.CCR_BT_SCH ck2
 				ON ck2.NUM=@NUM AND ck1.SCH_ID=ck2.SCH_ID
-			INNER JOIN CCR_BT_SCH_Notes ck3
+			INNER JOIN dbo.CCR_BT_SCH_Notes ck3
 				ON ck2.BT_SCH_ID=ck3.BT_SCH_ID AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
 			WHERE ck1.NUM=@NewNUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='TYPE_OF_CARE') BEGIN
-		INSERT INTO CCR_BT_TOC (
+		INSERT INTO dbo.CCR_BT_TOC (
 			NUM,
 			TOC_ID
 		)
 		SELECT	@NewNUM,
 				TOC_ID
-			FROM CCR_BT_TOC WHERE NUM=@NUM
+			FROM dbo.CCR_BT_TOC WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 
-		INSERT INTO CCR_BT_TOC_Notes (
+		INSERT INTO dbo.CCR_BT_TOC_Notes (
 			BT_TOC_ID,
 			LangID,
 			Notes
@@ -390,37 +382,37 @@ END ELSE BEGIN
 		SELECT	ck1.BT_TOC_ID,
 				ck3.LangID,
 				ck3.Notes
-			FROM CCR_BT_TOC ck1
-			INNER JOIN CCR_BT_TOC ck2
+			FROM dbo.CCR_BT_TOC ck1
+			INNER JOIN dbo.CCR_BT_TOC ck2
 				ON ck2.NUM=@NUM AND ck1.TOC_ID=ck2.TOC_ID
-			INNER JOIN CCR_BT_TOC_Notes ck3
+			INNER JOIN dbo.CCR_BT_TOC_Notes ck3
 				ON ck2.BT_TOC_ID=ck3.BT_TOC_ID AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
 			WHERE ck1.NUM=@NewNUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='BUS_ROUTES') BEGIN
-		INSERT INTO CIC_BT_BR (
+		INSERT INTO dbo.CIC_BT_BR (
 			NUM,
 			BR_ID
 		)
 		SELECT	@NewNUM,
 				BR_ID
-			FROM CIC_BT_BR WHERE NUM=@NUM
+			FROM dbo.CIC_BT_BR WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='AREAS_SERVED') BEGIN
-		INSERT INTO CIC_BT_CM (
+		INSERT INTO dbo.CIC_BT_CM (
 			NUM,
 			CM_ID
 		)
 		SELECT	@NewNUM,
 				CM_ID
-			FROM CIC_BT_CM WHERE NUM=@NUM
+			FROM dbo.CIC_BT_CM WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 
-		INSERT INTO CIC_BT_CM_Notes (
+		INSERT INTO dbo.CIC_BT_CM_Notes (
 			BT_CM_ID,
 			LangID,
 			Notes
@@ -428,63 +420,63 @@ END ELSE BEGIN
 		SELECT	ck1.BT_CM_ID,
 				ck3.LangID,
 				ck3.Notes
-			FROM CIC_BT_CM ck1
-			INNER JOIN CIC_BT_CM ck2
+			FROM dbo.CIC_BT_CM ck1
+			INNER JOIN dbo.CIC_BT_CM ck2
 				ON ck2.NUM=@NUM AND ck1.CM_ID=ck2.CM_ID
-			INNER JOIN CIC_BT_CM_Notes ck3
+			INNER JOIN dbo.CIC_BT_CM_Notes ck3
 				ON ck2.BT_CM_ID=ck3.BT_CM_ID AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
 			WHERE ck1.NUM=@NewNUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='DISTRIBUTION') BEGIN
-		INSERT INTO CIC_BT_DST (
+		INSERT INTO dbo.CIC_BT_DST (
 			NUM,
 			DST_ID
 		)
 		SELECT	@NewNUM,
 				DST_ID
-			FROM CIC_BT_DST WHERE NUM=@NUM
+			FROM dbo.CIC_BT_DST WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
-	INSERT INTO CIC_BT_EXTRA_DATE (FieldName, NUM, [Value])
+	INSERT INTO dbo.CIC_BT_EXTRA_DATE (FieldName, NUM, [Value])
 	SELECT cf.FieldName, @NewNUM, [Value]
-	FROM CIC_BT_EXTRA_DATE e
+	FROM dbo.CIC_BT_EXTRA_DATE e
 	INNER JOIN @CopyFields cf
 		ON e.FieldName=cf.FieldName
 	WHERE e.NUM=@NUM
 
-	INSERT INTO CIC_BT_EXTRA_EMAIL (FieldName, NUM, [LangID], [Value])
+	INSERT INTO dbo.CIC_BT_EXTRA_EMAIL (FieldName, NUM, [LangID], [Value])
 	SELECT cf.FieldName, @NewNUM, [LangID], [Value]
-	FROM CIC_BT_EXTRA_EMAIL e
+	FROM dbo.CIC_BT_EXTRA_EMAIL e
 	INNER JOIN @CopyFields cf
 		ON e.FieldName=cf.FieldName
 	WHERE e.NUM=@NUM AND (@CopyOnlyCurrentLang=0 OR [LangID]=@@LANGID)
 
-	INSERT INTO CIC_BT_EXTRA_RADIO (FieldName, NUM, [Value])
+	INSERT INTO dbo.CIC_BT_EXTRA_RADIO (FieldName, NUM, [Value])
 	SELECT cf.FieldName, @NewNUM, [Value]
-	FROM CIC_BT_EXTRA_RADIO e
+	FROM dbo.CIC_BT_EXTRA_RADIO e
 	INNER JOIN @CopyFields cf
 		ON e.FieldName=cf.FieldName
 	WHERE e.NUM=@NUM
 
-	INSERT INTO CIC_BT_EXTRA_TEXT (FieldName, NUM, [LangID], [Value])
+	INSERT INTO dbo.CIC_BT_EXTRA_TEXT (FieldName, NUM, [LangID], [Value])
 	SELECT cf.FieldName, @NewNUM, [LangID], [Value]
-	FROM CIC_BT_EXTRA_TEXT e
+	FROM dbo.CIC_BT_EXTRA_TEXT e
 	INNER JOIN @CopyFields cf
 		ON e.FieldName=cf.FieldName
 	WHERE e.NUM=@NUM AND (@CopyOnlyCurrentLang=0 OR [LangID]=@@LANGID)
 
-	INSERT INTO CIC_BT_EXTRA_WWW (FieldName, NUM, [LangID], [Value])
+	INSERT INTO dbo.CIC_BT_EXTRA_WWW (FieldName, NUM, [LangID], [Value])
 	SELECT cf.FieldName, @NewNUM, [LangID], [Value]
-	FROM CIC_BT_EXTRA_WWW e
+	FROM dbo.CIC_BT_EXTRA_WWW e
 	INNER JOIN @CopyFields cf
 		ON e.FieldName=cf.FieldName
 	WHERE e.NUM=@NUM AND (@CopyOnlyCurrentLang=0 OR [LangID]=@@LANGID)
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName LIKE 'EXTRA_CHECKLIST_%') BEGIN
-		INSERT INTO CIC_BT_EXC (
+		INSERT INTO dbo.CIC_BT_EXC (
 			FieldName_Cache,
 			NUM,
 			EXC_ID
@@ -492,7 +484,7 @@ END ELSE BEGIN
 		SELECT	FieldName_Cache,
 				@NewNUM,
 				EXC_ID
-			FROM CIC_BT_EXC exc
+			FROM dbo.CIC_BT_EXC exc
 			INNER JOIN @CopyFields cf
 				ON exc.FieldName_Cache=cf.FieldName
 			WHERE NUM=@NUM
@@ -501,7 +493,7 @@ END ELSE BEGIN
 	END
 	
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName LIKE 'EXTRA_DROPDOWN_%') BEGIN
-		INSERT INTO CIC_BT_EXD (
+		INSERT INTO dbo.CIC_BT_EXD (
 			FieldName_Cache,
 			NUM,
 			EXD_ID
@@ -509,7 +501,7 @@ END ELSE BEGIN
 		SELECT	FieldName_Cache,
 				@NewNUM,
 				EXD_ID
-			FROM CIC_BT_EXD exd
+			FROM dbo.CIC_BT_EXD exd
 			INNER JOIN @CopyFields cf
 				ON exd.FieldName_Cache=cf.FieldName
 			WHERE NUM=@NUM
@@ -518,16 +510,16 @@ END ELSE BEGIN
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='FUNDING') BEGIN
-		INSERT INTO CIC_BT_FD (
+		INSERT INTO dbo.CIC_BT_FD (
 			NUM,
 			FD_ID
 		)
 		SELECT	@NewNUM,
 				FD_ID
-			FROM CIC_BT_FD WHERE NUM=@NUM
+			FROM dbo.CIC_BT_FD WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 
-		INSERT INTO CIC_BT_FD_Notes (
+		INSERT INTO dbo.CIC_BT_FD_Notes (
 			BT_FD_ID,
 			LangID,
 			Notes
@@ -535,26 +527,26 @@ END ELSE BEGIN
 		SELECT	ck1.BT_FD_ID,
 				ck3.LangID,
 				ck3.Notes
-			FROM CIC_BT_FD ck1
-			INNER JOIN CIC_BT_FD ck2
+			FROM dbo.CIC_BT_FD ck1
+			INNER JOIN dbo.CIC_BT_FD ck2
 				ON ck2.NUM=@NUM AND ck1.FD_ID=ck2.FD_ID
-			INNER JOIN CIC_BT_FD_Notes ck3
+			INNER JOIN dbo.CIC_BT_FD_Notes ck3
 				ON ck2.BT_FD_ID=ck3.BT_FD_ID AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
 			WHERE ck1.NUM=@NewNUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='FEES') BEGIN
-		INSERT INTO CIC_BT_FT (
+		INSERT INTO dbo.CIC_BT_FT (
 			NUM,
 			FT_ID
 		)
 		SELECT	@NewNUM,
 				FT_ID
-			FROM CIC_BT_FT WHERE NUM=@NUM
+			FROM dbo.CIC_BT_FT WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 
-		INSERT INTO CIC_BT_FT_Notes (
+		INSERT INTO dbo.CIC_BT_FT_Notes (
 			BT_FT_ID,
 			LangID,
 			Notes
@@ -562,26 +554,26 @@ END ELSE BEGIN
 		SELECT	ck1.BT_FT_ID,
 				ck3.LangID,
 				ck3.Notes
-			FROM CIC_BT_FT ck1
-			INNER JOIN CIC_BT_FT ck2
+			FROM dbo.CIC_BT_FT ck1
+			INNER JOIN dbo.CIC_BT_FT ck2
 				ON ck2.NUM=@NUM AND ck1.FT_ID=ck2.FT_ID
-			INNER JOIN CIC_BT_FT_Notes ck3
+			INNER JOIN dbo.CIC_BT_FT_Notes ck3
 				ON ck2.BT_FT_ID=ck3.BT_FT_ID AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
 			WHERE ck1.NUM=@NewNUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='LANGUAGES') BEGIN
-		INSERT INTO CIC_BT_LN (
+		INSERT INTO dbo.CIC_BT_LN (
 			NUM,
 			LN_ID
 		)
 		SELECT	@NewNUM,
 				LN_ID
-			FROM CIC_BT_LN WHERE NUM=@NUM
+			FROM dbo.CIC_BT_LN WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 
-		INSERT INTO CIC_BT_LN_Notes (
+		INSERT INTO dbo.CIC_BT_LN_Notes (
 			BT_LN_ID,
 			LangID,
 			Notes
@@ -589,10 +581,10 @@ END ELSE BEGIN
 		SELECT	ck1.BT_LN_ID,
 				ck3.LangID,
 				ck3.Notes
-			FROM CIC_BT_LN ck1
-			INNER JOIN CIC_BT_LN ck2
+			FROM dbo.CIC_BT_LN ck1
+			INNER JOIN dbo.CIC_BT_LN ck2
 				ON ck2.NUM=@NUM AND ck1.LN_ID=ck2.LN_ID
-			INNER JOIN CIC_BT_LN_Notes ck3
+			INNER JOIN dbo.CIC_BT_LN_Notes ck3
 				ON ck2.BT_LN_ID=ck3.BT_LN_ID AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
 			WHERE ck1.NUM=@NewNUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
@@ -601,50 +593,50 @@ END ELSE BEGIN
 		        ( BT_LN_ID, LND_ID )
 		SELECT	ck1.BT_LN_ID,
 				ck3.LND_ID
-			FROM CIC_BT_LN ck1
-			INNER JOIN CIC_BT_LN ck2
+			FROM dbo.CIC_BT_LN ck1
+			INNER JOIN dbo.CIC_BT_LN ck2
 				ON ck2.NUM=@NUM AND ck1.LN_ID=ck2.LN_ID
-			INNER JOIN CIC_BT_LN_LND ck3
+			INNER JOIN dbo.CIC_BT_LN_LND ck3
 				ON ck2.BT_LN_ID=ck3.BT_LN_ID
 			WHERE ck1.NUM=@NewNUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='LOCATION_SERVICES') BEGIN
-		INSERT INTO GBL_BT_LOCATION_SERVICE (
+		INSERT INTO dbo.GBL_BT_LOCATION_SERVICE (
 			LOCATION_NUM,
 			SERVICE_NUM
 		)
 		SELECT	@NewNUM,
 				SERVICE_NUM
-			FROM GBL_BT_LOCATION_SERVICE WHERE LOCATION_NUM=@NUM
+			FROM dbo.GBL_BT_LOCATION_SERVICE WHERE LOCATION_NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='MEMBERSHIP') BEGIN
-		INSERT INTO CIC_BT_MT (
+		INSERT INTO dbo.CIC_BT_MT (
 			NUM,
 			MT_ID
 		)
 		SELECT	@NewNUM,
 				MT_ID
-			FROM CIC_BT_MT WHERE NUM=@NUM
+			FROM dbo.CIC_BT_MT WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='NAICS') BEGIN
-		INSERT INTO CIC_BT_NC (
+		INSERT INTO dbo.CIC_BT_NC (
 			NUM,
 			Code
 		)
 		SELECT	@NewNUM,
 				Code
-			FROM CIC_BT_NC WHERE NUM=@NUM
+			FROM dbo.CIC_BT_NC WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='OTHER_ADDRESSES') BEGIN
-		INSERT INTO CIC_BT_OTHERADDRESS (
+		INSERT INTO dbo.CIC_BT_OTHERADDRESS (
 			NUM,
 			LangID,
 			TITLE,
@@ -667,63 +659,63 @@ END ELSE BEGIN
 		)
 		SELECT	@NewNUM,
 				oa.LangID,
-				TITLE,
-				SITE_CODE,
-				CARE_OF,
-				BOX_TYPE,
-				PO_BOX,
-				BUILDING,
-				STREET_NUMBER,
-				STREET,
-				STREET_TYPE,
-				STREET_TYPE_AFTER,
-				STREET_DIR,
-				SUFFIX,
-				CITY,
-				PROVINCE,
-				COUNTRY,
-				POSTAL_CODE,
-				MAP_LINK
-			FROM CIC_BT_OTHERADDRESS oa
-			INNER JOIN GBL_BaseTable_Description btd
+				oa.TITLE,
+				oa.SITE_CODE,
+				oa.CARE_OF,
+				oa.BOX_TYPE,
+				oa.PO_BOX,
+				oa.BUILDING,
+				oa.STREET_NUMBER,
+				oa.STREET,
+				oa.STREET_TYPE,
+				oa.STREET_TYPE_AFTER,
+				oa.STREET_DIR,
+				oa.SUFFIX,
+				oa.CITY,
+				oa.PROVINCE,
+				oa.COUNTRY,
+				oa.POSTAL_CODE,
+				oa.MAP_LINK
+			FROM dbo.CIC_BT_OTHERADDRESS oa
+			INNER JOIN dbo.GBL_BaseTable_Description btd
 				ON btd.NUM=@NewNUM AND oa.LangID=btd.LangID
 			WHERE oa.NUM=@NUM AND (@CopyOnlyCurrentLang=0 OR oa.LangID=@@LANGID)
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 	
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='ORG_LOCATION_SERVICE') BEGIN
-		INSERT INTO GBL_BT_OLS (
+		INSERT INTO dbo.GBL_BT_OLS (
 			NUM,
 			OLS_ID
 		)
 		SELECT	@NewNUM,
 				OLS_ID
-			FROM GBL_BT_OLS WHERE NUM=@NUM
+			FROM dbo.GBL_BT_OLS WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF @CopyPubs = 1 BEGIN
 		DECLARE PublicationCursor CURSOR LOCAL FOR
 			SELECT BT_PB_ID
-				FROM CIC_BT_PB pr
+				FROM dbo.CIC_BT_PB pr
 			WHERE NUM=@NUM
-			AND EXISTS(SELECT * FROM CIC_Publication pb
+			AND EXISTS(SELECT * FROM dbo.CIC_Publication pb
 				WHERE pb.PB_ID=pr.PB_ID
 					AND (
 						pb.MemberID=@MemberID
-						OR (pb.MemberID IS NULL AND NOT EXISTS(SELECT * FROM CIC_Publication_InactiveByMember pbi WHERE pbi.PB_ID=pb.PB_ID AND pbi.MemberID=@MemberID))
+						OR (pb.MemberID IS NULL AND NOT EXISTS(SELECT * FROM dbo.CIC_Publication_InactiveByMember pbi WHERE pbi.PB_ID=pb.PB_ID AND pbi.MemberID=@MemberID))
 					)
 					AND (
 						@LimitedView=1
 						OR @CanSeeNonPublicPub=1
 						OR (@CanSeeNonPublicPub=0 AND pb.NonPublic=0)
-						OR (@CanSeeNonPublicPub IS NULL AND EXISTS(SELECT * FROM CIC_View_QuickListPub WHERE ViewType=@ViewType AND PB_ID=pb.PB_ID))
+						OR (@CanSeeNonPublicPub IS NULL AND EXISTS(SELECT * FROM dbo.CIC_View_QuickListPub WHERE ViewType=@ViewType AND PB_ID=pb.PB_ID))
 					)
 				)
 		OPEN PublicationCursor
 		FETCH NEXT FROM PublicationCursor INTO @BT_ID
 		WHILE @@FETCH_STATUS = 0 BEGIN
-			INSERT INTO CIC_BT_PB (
+			INSERT INTO dbo.CIC_BT_PB (
 				CREATED_DATE,
 				CREATED_BY,
 				MODIFIED_DATE,
@@ -737,11 +729,11 @@ END ELSE BEGIN
 					@MODIFIED_BY,
 					@NewNUM,
 					PB_ID
-				FROM CIC_BT_PB
+				FROM dbo.CIC_BT_PB
 					WHERE BT_PB_ID=@BT_ID
 			SET @NEW_BT_ID = SCOPE_IDENTITY()
 
-			INSERT INTO CIC_BT_PB_Description (
+			INSERT INTO dbo.CIC_BT_PB_Description (
 				BT_PB_ID,
 				LangID,
 				Description
@@ -749,10 +741,10 @@ END ELSE BEGIN
 			SELECT	@NEW_BT_ID,
 					LangID,
 					Description
-				FROM CIC_BT_PB_Description
+				FROM dbo.CIC_BT_PB_Description
 					WHERE BT_PB_ID=@BT_ID
 
-			INSERT INTO CIC_BT_PB_GH (
+			INSERT INTO dbo.CIC_BT_PB_GH (
 				CREATED_DATE,
 				CREATED_BY,
 				MODIFIED_DATE,
@@ -768,7 +760,7 @@ END ELSE BEGIN
 					@NEW_BT_ID,
 					GH_ID,
 					@NewNUM
-				FROM CIC_BT_PB_GH
+				FROM dbo.CIC_BT_PB_GH
 					WHERE BT_PB_ID=@BT_ID
 
 			FETCH NEXT FROM PublicationCursor INTO @BT_ID
@@ -778,58 +770,58 @@ END ELSE BEGIN
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='SERVICE_LEVEL') BEGIN
-		INSERT INTO CIC_BT_SL (
+		INSERT INTO dbo.CIC_BT_SL (
 			NUM,
 			SL_ID
 		)
 		SELECT	@NewNUM,
 				SL_ID
-			FROM CIC_BT_SL WHERE NUM=@NUM
+			FROM dbo.CIC_BT_SL WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 	
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='SERVICE_LOCATIONS') BEGIN
-		INSERT INTO GBL_BT_LOCATION_SERVICE (
+		INSERT INTO dbo.GBL_BT_LOCATION_SERVICE (
 			LOCATION_NUM,
 			SERVICE_NUM
 		)
 		SELECT	LOCATION_NUM,
 				@NewNUM
-			FROM GBL_BT_LOCATION_SERVICE WHERE SERVICE_NUM=@NUM
+			FROM dbo.GBL_BT_LOCATION_SERVICE WHERE SERVICE_NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 	
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='SUBJECTS') BEGIN
-		INSERT INTO CIC_BT_SBJ (
+		INSERT INTO dbo.CIC_BT_SBJ (
 			NUM,
 			Subj_ID
 		)
 		SELECT	@NewNUM,
 				Subj_ID
-			FROM CIC_BT_SBJ WHERE NUM=@NUM
+			FROM dbo.CIC_BT_SBJ WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF @CopyTaxonomy = 1 BEGIN
 		DECLARE TaxTermCursor CURSOR LOCAL FOR
-			SELECT BT_TAX_ID FROM CIC_BT_TAX WHERE NUM=@NUM
+			SELECT BT_TAX_ID FROM dbo.CIC_BT_TAX WHERE NUM=@NUM
 		OPEN TaxTermCursor
 		FETCH NEXT FROM TaxTermCursor INTO @BT_ID
 		WHILE @@FETCH_STATUS = 0 BEGIN
-			INSERT INTO CIC_BT_TAX (
+			INSERT INTO dbo.CIC_BT_TAX (
 				NUM
 			)
 			VALUES (
 				@NewNUM
 			)
 			SET @NEW_BT_ID = SCOPE_IDENTITY()
-			INSERT INTO CIC_BT_TAX_TM (
+			INSERT INTO dbo.CIC_BT_TAX_TM (
 				BT_TAX_ID,
 				Code
 			)
 			SELECT	@NEW_BT_ID,
 					Code
-				FROM CIC_BT_TAX_TM
+				FROM dbo.CIC_BT_TAX_TM
 					WHERE BT_TAX_ID=@BT_ID
 
 			FETCH NEXT FROM TaxTermCursor INTO @BT_ID
@@ -840,11 +832,11 @@ END ELSE BEGIN
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='VACANCY_INFO') BEGIN
 		DECLARE VacancyCursor CURSOR LOCAL FOR
-			SELECT BT_VUT_ID FROM CIC_BT_VUT WHERE NUM=@NUM
+			SELECT BT_VUT_ID FROM dbo.CIC_BT_VUT WHERE NUM=@NUM
 		OPEN VacancyCursor
 		FETCH NEXT FROM VacancyCursor INTO @BT_ID
 		WHILE @@FETCH_STATUS = 0 BEGIN
-			INSERT INTO CIC_BT_VUT (
+			INSERT INTO dbo.CIC_BT_VUT (
 				NUM,
 				VUT_ID,
 				Capacity,
@@ -871,10 +863,10 @@ END ELSE BEGIN
 					WaitList,
 					WaitListDate,
 					MODIFIED_DATE
-				FROM CIC_BT_VUT WHERE BT_VUT_ID=@BT_ID
+				FROM dbo.CIC_BT_VUT WHERE BT_VUT_ID=@BT_ID
 			SET @NEW_BT_ID = SCOPE_IDENTITY()
 
-			INSERT INTO CIC_BT_VUT_Notes (
+			INSERT INTO dbo.CIC_BT_VUT_Notes (
 				BT_VUT_ID,
 				LangID,
 				ServiceTitle,
@@ -884,16 +876,16 @@ END ELSE BEGIN
 					LangID,
 					ServiceTitle,
 					Notes
-				FROM CIC_BT_VUT_Notes
+				FROM dbo.CIC_BT_VUT_Notes
 					WHERE BT_VUT_ID=@BT_ID AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
 
-			INSERT INTO CIC_BT_VUT_TP (
+			INSERT INTO dbo.CIC_BT_VUT_TP (
 				BT_VUT_ID,
 				VTP_ID
 			)
 			SELECT	@NEW_BT_ID,
 					VTP_ID
-				FROM CIC_BT_VUT_TP
+				FROM dbo.CIC_BT_VUT_TP
 					WHERE BT_VUT_ID=@BT_ID
 
 			FETCH NEXT FROM VacancyCursor INTO @BT_ID
@@ -904,11 +896,11 @@ END ELSE BEGIN
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='ACTIVITY_INFO') BEGIN
 		DECLARE ActivityCursor CURSOR LOCAL FOR
-			SELECT BT_ACT_ID FROM CIC_BT_ACT WHERE NUM=@NUM
+			SELECT BT_ACT_ID FROM dbo.CIC_BT_ACT WHERE NUM=@NUM
 		OPEN ActivityCursor
 		FETCH NEXT FROM ActivityCursor INTO @BT_ID
 		WHILE @@FETCH_STATUS = 0 BEGIN
-			INSERT INTO CIC_BT_ACT (
+			INSERT INTO dbo.CIC_BT_ACT (
 				NUM,
 				MODIFIED_DATE,
 				ASTAT_ID
@@ -916,10 +908,10 @@ END ELSE BEGIN
 			SELECT	@NewNUM,
 					MODIFIED_DATE,
 					ASTAT_ID
-				FROM CIC_BT_ACT WHERE BT_ACT_ID=@BT_ID
+				FROM dbo.CIC_BT_ACT WHERE BT_ACT_ID=@BT_ID
 			SET @NEW_BT_ID = SCOPE_IDENTITY()
 
-			INSERT INTO CIC_BT_ACT_Notes (
+			INSERT INTO dbo.CIC_BT_ACT_Notes (
 				BT_ACT_ID,
 				[LangID],
 				ActivityName,
@@ -931,7 +923,7 @@ END ELSE BEGIN
 					ActivityName,
 					ActivityDescription,
 					Notes
-				FROM CIC_BT_ACT_Notes
+				FROM dbo.CIC_BT_ACT_Notes
 					WHERE BT_ACT_ID=@BT_ID AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
 
 			FETCH NEXT FROM ActivityCursor INTO @BT_ID
@@ -941,16 +933,16 @@ END ELSE BEGIN
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='ACCESSIBILITY') BEGIN
-		INSERT INTO GBL_BT_AC (
+		INSERT INTO dbo.GBL_BT_AC (
 			NUM,
 			AC_ID
 		)
 		SELECT	@NewNUM,
 				AC_ID
-			FROM GBL_BT_AC WHERE NUM=@NUM
+			FROM dbo.GBL_BT_AC WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 
-		INSERT INTO GBL_BT_AC_Notes (
+		INSERT INTO dbo.GBL_BT_AC_Notes (
 			BT_AC_ID,
 			LangID,
 			Notes
@@ -958,17 +950,17 @@ END ELSE BEGIN
 		SELECT	ck1.BT_AC_ID,
 				ck3.LangID,
 				ck3.Notes
-			FROM GBL_BT_AC ck1
-			INNER JOIN GBL_BT_AC ck2
+			FROM dbo.GBL_BT_AC ck1
+			INNER JOIN dbo.GBL_BT_AC ck2
 				ON ck2.NUM=@NUM AND ck1.AC_ID=ck2.AC_ID
-			INNER JOIN GBL_BT_AC_Notes ck3
+			INNER JOIN dbo.GBL_BT_AC_Notes ck3
 				ON ck2.BT_AC_ID=ck3.BT_AC_ID AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
 			WHERE ck1.NUM=@NewNUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='ALT_ORG') BEGIN
-		INSERT INTO GBL_BT_ALTORG (
+		INSERT INTO dbo.GBL_BT_ALTORG (
 			NUM,
 			LangID,
 			ALT_ORG,
@@ -978,12 +970,12 @@ END ELSE BEGIN
 				LangID,
 				ALT_ORG,
 				PUBLISH
-			FROM GBL_BT_ALTORG WHERE NUM=@NUM AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
+			FROM dbo.GBL_BT_ALTORG WHERE NUM=@NUM AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='BILLING_ADDRESSES') BEGIN
-		INSERT INTO GBL_BT_BILLINGADDRESS (
+		INSERT INTO dbo.GBL_BT_BILLINGADDRESS (
 			NUM,
 			LangID,
 			ADDRTYPE,
@@ -999,25 +991,25 @@ END ELSE BEGIN
 		)
 		SELECT	@NewNUM,
 				ba.LangID,
-				ADDRTYPE,
-				SITE_CODE,
-				LINE_1,
-				LINE_2,
-				LINE_3,
-				LINE_4,
-				CITY,
-				PROVINCE,
-				COUNTRY,
-				POSTAL_CODE
-			FROM GBL_BT_BILLINGADDRESS ba
-			INNER JOIN GBL_BaseTable_Description btd
+				ba.ADDRTYPE,
+				ba.SITE_CODE,
+				ba.LINE_1,
+				ba.LINE_2,
+				ba.LINE_3,
+				ba.LINE_4,
+				ba.CITY,
+				ba.PROVINCE,
+				ba.COUNTRY,
+				ba.POSTAL_CODE
+			FROM dbo.GBL_BT_BILLINGADDRESS ba
+			INNER JOIN dbo.GBL_BaseTable_Description btd
 				ON btd.NUM=@NewNUM AND ba.LangID=btd.LangID
 			WHERE ba.NUM=@NUM AND (@CopyOnlyCurrentLang=0 OR ba.LangID=@@LANGID)
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='FORMER_ORG') BEGIN
-		INSERT INTO GBL_BT_FORMERORG (
+		INSERT INTO dbo.GBL_BT_FORMERORG (
 			NUM,
 			LangID,
 			FORMER_ORG,
@@ -1029,23 +1021,23 @@ END ELSE BEGIN
 				FORMER_ORG,
 				DATE_OF_CHANGE,
 				PUBLISH
-			FROM GBL_BT_FORMERORG WHERE NUM=@NUM AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
+			FROM dbo.GBL_BT_FORMERORG WHERE NUM=@NUM AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='MAP_LINK') BEGIN
-		INSERT INTO GBL_BT_MAP (
+		INSERT INTO dbo.GBL_BT_MAP (
 			NUM,
 			MAP_ID
 		)
 		SELECT	@NewNUM,
 				MAP_ID
-			FROM GBL_BT_MAP WHERE NUM=@NUM
+			FROM dbo.GBL_BT_MAP WHERE NUM=@NUM
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM @CopyFields WHERE FieldName='SOCIAL_MEDIA') BEGIN
-		INSERT INTO GBL_BT_SM(
+		INSERT INTO dbo.GBL_BT_SM(
 			NUM,
 			SM_ID,
 			LangID,
@@ -1057,14 +1049,14 @@ END ELSE BEGIN
 				LangID,
 				Protocol,
 				URL
-			FROM GBL_BT_SM WHERE NUM=@NUM
+			FROM dbo.GBL_BT_SM WHERE NUM=@NUM
 				AND (@CopyOnlyCurrentLang=0 OR LangID=@@LANGID)
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 
 	IF EXISTS(SELECT * FROM CIC_Publication WHERE PB_ID=@AddToPub) 
-			AND NOT EXISTS(SELECT * FROM CIC_BT_PB WHERE NUM=@NewNUM AND PB_ID=@AddToPub) BEGIN
-		INSERT INTO CIC_BT_PB (
+			AND NOT EXISTS(SELECT * FROM dbo.CIC_BT_PB WHERE NUM=@NewNUM AND PB_ID=@AddToPub) BEGIN
+		INSERT INTO dbo.CIC_BT_PB (
 			CREATED_DATE,
 			CREATED_BY,
 			MODIFIED_DATE,
@@ -1082,7 +1074,7 @@ END ELSE BEGIN
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @OrganizationObjectName, @ErrMsg
 	END
 	
-	INSERT INTO CIC_BT_PB (
+	INSERT INTO dbo.CIC_BT_PB (
 		CREATED_DATE,
 		CREATED_BY,
 		MODIFIED_DATE,
@@ -1098,15 +1090,15 @@ END ELSE BEGIN
 		@NewNUM,
 		aap.PB_ID
 	FROM CIC_View_AutoAddPub aap
-	LEFT JOIN CIC_BT_PB btpb
+	LEFT JOIN dbo.CIC_BT_PB btpb
 		ON aap.PB_ID=btpb.PB_ID AND btpb.NUM=@NewNUM
 	WHERE aap.ViewType=@ViewType AND btpb.PB_ID IS NULL
 
 	Set @FieldList = 'NUM,RECORD_OWNER,NON_PUBLIC,ORG_LEVEL_1,ORG_LEVEL_2,ORG_LEVEL_3,ORG_LEVEL_4,ORG_LEVEL_5' + CASE WHEN @FieldList IS NULL THEN '' ELSE ',' + @FieldList END
 
 	IF @Error = 0 BEGIN
-		EXEC sp_CIC_SRCH_u
-		EXEC sp_GBL_BaseTable_History_i @MODIFIED_BY, @MODIFIED_DATE, @NewNUM, @FieldList, 1, NULL
+		EXEC dbo.sp_CIC_SRCH_u
+		EXEC dbo.sp_GBL_BaseTable_History_i @MODIFIED_BY, @MODIFIED_DATE, @NewNUM, @FieldList, 1, NULL
 	END
 
 END

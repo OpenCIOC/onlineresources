@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -19,10 +19,10 @@
 
 <%
 Sub printCopyFieldsForm(ByVal intCopyRTID, strNUM, strRecordTypeName)
-	%>
+%>
 <div id="copyFieldsForm">
-<div id="copyFieldsInner">
-	<%
+	<div id="copyFieldsInner">
+		<%
 	Call openRecordTypeListRst(True,True,False,Null)
 
 	Dim bRTFound
@@ -85,42 +85,46 @@ Sub printCopyFieldsForm(ByVal intCopyRTID, strNUM, strRecordTypeName)
 			rsFields.MoveNext
 		Wend
 	End If	
-%>
-<h2><%=TXT_FIELDS & TXT_COLON%></h2>
-<table class="BasicBorder cell-padding-3">
-<%
+		%>
+		<h2><%=TXT_FIELDS & TXT_COLON%></h2>
+		<table class="BasicBorder cell-padding-3 full-width clear-line-below form-table responsive-table">
+			<%
 	If Not rsListRecordType.RecordCount=0 Then
-%>
-<tr>
-	<td class="FieldLabelLeft" id="RecordTypeName"><%=strRecordTypeName%></td>
-	<td><%=makeRecordTypeList(intCopyRTID, "RECORD_TYPE", False, vbNullString)%></td>
-</tr>
-<%
+			%>
+			<tr>
+				<td class="field-label-cell" id="RecordTypeName"><%=strRecordTypeName%></td>
+				<td><%=makeRecordTypeList(intCopyRTID, "RECORD_TYPE", False, vbNullString)%></td>
+			</tr>
+			<%
 	End If
 	Call closeRecordTypeListRst()
 	Dim field
 
 	For Each field in Array("ORG_LEVEL_1", "ORG_LEVEL_2", "ORG_LEVEL_3", "ORG_LEVEL_4", "ORG_LEVEL_5", "LOCATION_NAME", "SERVICE_NAME_LEVEL_1", "SERVICE_NAME_LEVEL_2")
 		If dicOrgUpdate.Exists(field) Then
-%>
-<input type="hidden" name="Old<%= field %>" value=<%=AttrQs(dicOrgDisplay(field))%>>
-<tr>
-	<td class="FieldLabelLeft" id="FIELD_<%=field%>"><%=dicOrgDisplay(field)%><%= StringIf(field="ORG_LEVEL_1", " <span class=""Alert"">*</span>")%></td>
-	<td data-field-display-name="<%=dicOrgDisplay(field)%>" <%=StringIf(field="ORG_LEVEL_1","data-field-required=""true""")%> id="EDIT_<%=field%>"><input type="text" size="<%=TEXT_SIZE%>" maxlength="200" name="<%=field%>" id="<%=field%>" value=<%=AttrQs(dicOrgName(field))%>></td>
-</tr>
-<%
+			%>
+			<input type="hidden" name="Old<%= field %>" value=<%=AttrQs(dicOrgDisplay(field))%>>
+			<tr>
+				<td class="field-label-cell" id="FIELD_<%=field%>"><%=dicOrgDisplay(field)%><%= StringIf(field="ORG_LEVEL_1", " <span class=""Alert"">*</span>")%></td>
+				<td data-field-display-name="<%=dicOrgDisplay(field)%>" <%=StringIf(field="ORG_LEVEL_1","data-field-required=""true""")%> id="EDIT_<%=field%>">
+					<input class="form-control" type="text" size="<%=TEXT_SIZE%>" maxlength="200" name="<%=field%>" id="<%=field%>" value=<%=AttrQs(dicOrgName(field))%>>
+				</td>
+			</tr>
+			<%
 		Else
-%>
-<tr<%=StringIf(Nl(dicOrgName(field)), " style=""display:none;""") %>>
-	<td class="FieldLabelLeft"><%=dicOrgDisplay(field)%></td>
-	<td><input type="hidden" name="<%=field%>" id="HIDDEN_<%=field%>" value=<%=AttrQs(dicOrgName(field))%>><span id="<%=field%>_DISPLAY"><%=dicOrgName(field)%></span></td>
-</tr>
-<%
+			%>
+			<tr <%=StringIf(Nl(dicOrgName(field)), " style=""display:none;""") %>>
+				<td class="field-label-cell"><%=dicOrgDisplay(field)%></td>
+				<td>
+					<input type="hidden" name="<%=field%>" id="HIDDEN_<%=field%>" value=<%=AttrQs(dicOrgName(field))%>><span id="<%=field%>_DISPLAY"><%=dicOrgName(field)%></span>
+				</td>
+			</tr>
+				<%
 		End If
 	Next
-%>
-</table>
-<%
+				%>
+		</table>
+		<%
 	Set rsFields = rsFields.NextRecordset
 	
 	Dim intPrevGroupID, strGroupContents, strGroupHeader, strFieldName, strFieldContents, bFieldsToCopy
@@ -128,40 +132,43 @@ Sub printCopyFieldsForm(ByVal intCopyRTID, strNUM, strRecordTypeName)
 	bFieldsToCopy = False
 	
 	If Not rsFields.EOF Then
-%>
-	<p><input type="button" onClick="CheckAll();" value="<%=TXT_CHECK_ALL%>"> <input type="button" onClick="ClearAll();" value="<%=TXT_UNCHECK_ALL%>"></p>
-	<table class="BasicBorder cell-padding-3"><%
-	While Not rsFields.EOF
-		If intPrevGroupID <> rsFields.Fields("DisplayFieldGroupID") Then
-			If Not Nl(strGroupContents) Then
-				Response.Write(strGroupHeader)
-				Response.Write(strGroupContents)
-				bFieldsToCopy = True
+		%>
+		<p class="clear-line-below">
+			<input class="btn btn-info" type="button" onclick="CheckAll();" value="<%=TXT_CHECK_ALL%>">
+			<input class="btn btn-info" type="button" onclick="ClearAll();" value="<%=TXT_UNCHECK_ALL%>">
+		</p>
+		<table class="BasicBorder cell-padding-3 full-width clear-line-below form-table">
+			<%
+		While Not rsFields.EOF
+			If intPrevGroupID <> rsFields.Fields("DisplayFieldGroupID") Then
+				If Not Nl(strGroupContents) Then
+					Response.Write(strGroupHeader)
+					Response.Write(strGroupContents)
+					bFieldsToCopy = True
+				End If
+				strGroupHeader = "<tr><th colspan=""3"" class=""RevTitleBox"">" & rsFields.Fields("DisplayFieldGroupName") & "</th></tr>"
+				strGroupContents = vbNullString
 			End If
-			strGroupHeader = "<tr><th colspan=""3"" class=""RevTitleBox"">" & rsFields.Fields("DisplayFieldGroupName") & "</th></tr>"
-			strGroupContents = vbNullString
-		End If
-		strFieldName = rsFields.Fields("FieldName")
-		If strFieldName <> "RECORD_TYPE" Then
-			strFieldContents = rsOrg.Fields(strFieldName)
-			If Not Nl(strFieldContents) Then
-				strFieldContents = textToHTML(strFieldContents)
-				strGroupContents = strGroupContents & vbCrLf & "<tr>" & _
-					"<td><input type=""checkbox"" name=""IDList"" value=" & AttrQs(strFieldName) & "></td>" & _
-					"<td class=""FieldLabelLeft"">" & rsFields.Fields("FieldDisplay") & "</td>" & _
-					"<td>" & strFieldContents & "</td>" & _
-					"</tr>"
+			strFieldName = rsFields.Fields("FieldName")
+			If strFieldName <> "RECORD_TYPE" Then
+				strFieldContents = rsOrg.Fields(strFieldName)
+				If Not Nl(strFieldContents) Then
+					strFieldContents = textToHTML(strFieldContents)
+					strGroupContents = strGroupContents & vbCrLf & "<tr>" & _
+						"<td><input type=""checkbox"" name=""IDList"" value=" & AttrQs(strFieldName) & "></td>" & _
+						"<td class=""field-label-cell"">" & rsFields.Fields("FieldDisplay") & "</td>" & _
+						"<td>" & strFieldContents & "</td>" & _
+						"</tr>"
+				End If
 			End If
-		End If
-		intPrevGroupID = rsFields.Fields("DisplayFieldGroupID")
-		rsFields.MoveNext
-	Wend
-	
+			intPrevGroupID = rsFields.Fields("DisplayFieldGroupID")
+			rsFields.MoveNext
+		Wend
 	Else
-%>	
-	<br>
-	<table class="BasicBorder cell-padding-3">
-<%
+			%>
+			<br>
+			<table class="BasicBorder cell-padding-3 full-width clear-line-below">
+				<%
 	End If
 
 	
@@ -180,13 +187,15 @@ Sub printCopyFieldsForm(ByVal intCopyRTID, strNUM, strRecordTypeName)
 	End If
 	
 	If Not bFieldsToCopy Then
-%>
-<tr><td><%=TXT_NO_FIELDS_TO_COPY%></td></tr>
-<%
+				%>
+				<tr>
+					<td><%=TXT_NO_FIELDS_TO_COPY%></td>
+				</tr>
+				<%
 	End If
-%>
-</table>
-</div>
+				%>
+		</table>
+	</div>
 </div>
 <%
 
