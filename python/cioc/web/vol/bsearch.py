@@ -43,7 +43,7 @@ _popular_interest_item_templ = Markup(
 _popular_org_item_templ = """<li><a href="%s">{ORG_NAME_FULL}</a>&nbsp;<span class="badge">{OpCount}</span></li>"""
 _spotlight_template = """
 <p class="update-date">{LAST_UPDATED}</p>
-<h2 class="position-title">{POSITION_TITLE}</h2>
+<h2 class="position-title"><a href="{POSITION_LINK}">{POSITION_TITLE}</a></h2>
 <p class="organization-name">{ORG_NAME_FULL}</p>"""
 _spotlight_location_template = """<h3><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> %s</h3>
 <p>{LOCATION}</p>"""
@@ -161,6 +161,8 @@ class SpotlightFeed:
         if data["DUTIES"]:
             tmpl += _spotlight_duties_template % gettext("Duties", request)
             data["DUTIES"] = textToHTML(data["DUTIES"])
+
+        data["POSITION_LINK"] = self.spotlight_details_link()
 
         return tmpl.format(**data)
 

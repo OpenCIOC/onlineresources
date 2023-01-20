@@ -53,7 +53,6 @@ def should_skip_item(quicksearch):
         return True
 
     if quicksearch.get("QuickSearchID") == "NEW":
-        log.debug("quicksearch: %s", quicksearch)
         if all(
             not v
             for k, v in quicksearch.items()

@@ -76,44 +76,34 @@ class FieldGroup(viewbase.AdminViewBase):
         request = self.request
         user = request.user
 
-        log.debug("before basic info: %s", user)
         ViewType, domain, shown_cultures = self._basic_info()
-        log.debug("after basic info")
 
         groups = []
         viewinfo = None
         with request.connmgr.get_connection("admin") as conn:
-            log.debug("before execute")
+
             cursor = conn.execute(
                 "EXEC sp_%s_View_DisplayFieldGroup_lf ?, ?, ?" % domain.str,
                 request.dboptions.MemberID,
                 user.Agency,
                 ViewType,
             )
-            log.debug("cursor")
 
             viewinfo = cursor.fetchone()
-            log.debug("viewinfo")
+
             if viewinfo:
-
                 cursor.nextset()
-                log.debug("nextset")
-
                 groups = cursor.fetchall()
 
-            log.debug("before close")
             cursor.close()
 
         if not viewinfo:  # not a valid view
             log.debug("redirect")
             self._error_page(_("View Not Found", request))
 
-        log.debug("descriptions")
+
         for group in groups:
             group.Descriptions = self._culture_dict_from_xml(group.Descriptions, "DESC")
-
-        log.debug("record_cultures")
-        # raise Exception
 
         record_cultures = syslanguage.active_record_cultures()
 

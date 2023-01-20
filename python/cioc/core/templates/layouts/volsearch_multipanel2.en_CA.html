@@ -100,22 +100,6 @@
 	[ENDIF:SEARCH_ALERT]
 
 	<div class="row search-panels">
-		[IF:SEARCH_LEFT_CONTENT]
-		<div class="[IF:WHATS_NEW_FEED]col-lg-6 col-md-6[ENDIF:WHATS_NEW_FEED][IFNOT:WHATS_NEW_FEED]col-lg-12 col-md-12[ENDIFNOT:WHATS_NEW_FEED] col-sm-12">
-			<div id="search_left_panel" class="panel panel-info">
-				[IF:SEARCH_LEFT_TITLE]
-				<div class="panel-heading">
-					<h2>[IF:SEARCH_LEFT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_LEFT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_LEFT_GLYPH]
-					[SEARCH_LEFT_TITLE]
-					</h2>
-				</div>
-				[ENDIF:SEARCH_LEFT_TITLE]
-				<div class="panel-body panel-body-no[IFNOT:SEARCH_LEFT_TITLE]header[ENDIFNOT:SEARCH_LEFT_TITLE]footer">
-					[SEARCH_LEFT_CONTENT]
-				</div>
-			</div>
-		</div>
-		[ENDIF:SEARCH_LEFT_CONTENT]
 		[IF:WHATS_NEW_FEED]
 		<div class="[IF:SEARCH_LEFT_CONTENT]col-lg-6 col-md-6[ENDIF:SEARCH_LEFT_CONTENT][IFNOT:SEARCH_LEFT_CONTENT]col-lg-12 col-md-12[ENDIFNOT:SEARCH_LEFT_CONTENT] col-sm-12">
 			<div id="whats_new_panel" class="panel panel-default">
@@ -133,8 +117,61 @@
 			</div>
 		</div>
 		[ENDIF:WHATS_NEW_FEED]
+		[IF:SEARCH_LEFT_CONTENT]
+		<div class="[IF:WHATS_NEW_FEED]col-lg-6 col-md-6[ENDIF:WHATS_NEW_FEED][IFNOT:WHATS_NEW_FEED]col-lg-12 col-md-12[ENDIFNOT:WHATS_NEW_FEED] col-sm-12">
+			<div id="search_left_panel" class="panel panel-default">
+				[IF:SEARCH_LEFT_TITLE]
+				<div class="panel-heading">
+					<h2>
+						[IF:SEARCH_LEFT_GLYPH]<span class="glyphicon glyphicon-[SEARCH_LEFT_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_LEFT_GLYPH]
+						[SEARCH_LEFT_TITLE]
+					</h2>
+				</div>
+				[ENDIF:SEARCH_LEFT_TITLE]
+				<div class="panel-body panel-body-no[IFNOT:SEARCH_LEFT_TITLE]header[ENDIFNOT:SEARCH_LEFT_TITLE]footer">
+					[SEARCH_LEFT_CONTENT]
+				</div>
+			</div>
+		</div>
+		[ENDIF:SEARCH_LEFT_CONTENT]
 	</div>
 	<div class="row search-panels">
+		<div class="col-lg-4 col-md-6 col-sm-6">
+			<div id="keyword_search_panel" class="panel panel-default">
+				<div class="panel-heading">
+					<h2><span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span> [SEARCH_KEYWORD_TITLE]</h2>
+				</div>
+				<div class="panel-body panel-body-nofooter panel-body-scroll">
+					<div class="panel-body-scroll-bottommargin">
+						<div class="form-group" id="CIOC_volsearch_keyword">
+							[SEARCH_FORM_START]
+							<div class="CIOC_form_wrapper_sm">
+								<div class="CIOC_form_left_sm">
+									[KEYWORD_SEARCH_BOX]
+								</div>
+								<div class="CIOC_form_right_sm">
+									<button class="btn btn-default CIOC_search_button" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</button>
+								</div>
+							</div>
+							[KEYWORD_SEARCH_IN]
+							</form>
+						</div>
+						[IF:USE_VOL_PROFILES_VIEW]
+						<p>
+							A <strong><em>Volunteer Profile</em></strong> makes it easier to apply for positions, and can notify you of new positions that meet your criteria. [PROFILE_LINKS]
+						</p>
+						[ENDIF:USE_VOL_PROFILES_VIEW]
+
+						<p>Other Searching Resources:</p>
+						<ul>
+							<li><a href="[FN:MAKE_LINK]/volunteer/search1.asp[ENDFN:MAKE_LINK]" style="font-weight:bold;">Step-by-Step Search</a></li>
+							<li><a href="[FN:MAKE_LINK]/volunteer/student.asp[ENDFN:MAKE_LINK]" style="font-weight:bold;">Student Step-by-Step Search</a></li>
+							<li><a href="[FN:MAKE_LINK]/volunteer/search_help.asp[ENDFN:MAKE_LINK]" style="font-weight:bold;">Search Tips</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
 		[IF:POPULAR_INTEREST_FEED]
 		<div class="col-lg-4 col-md-6 col-sm-6">
 			<div id="pop_categories_panel" class="panel panel-default">
@@ -169,63 +206,11 @@
 			</div>
 		</div>
 		[ENDIF:POPULAR_ORG_FEED]
-		<div class="col-lg-4 col-md-6 col-sm-6">
-			<div id="keyword_search_panel" class="panel panel-default">
-				<div class="panel-heading">
-					<h2><span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span> [SEARCH_KEYWORD_TITLE]</h2>
-				</div>
-				<div class="panel-body panel-body-nofooter panel-body-scroll">
-					<div class="panel-body-scroll-bottommargin">
-						<div class="form-group" id="CIOC_volsearch_keyword">
-							[SEARCH_FORM_START]
-							<div class="CIOC_form_wrapper_sm">
-								<div class="CIOC_form_left_sm">
-									[KEYWORD_SEARCH_BOX]
-								</div>
-								<div class="CIOC_form_right_sm">
-									<button class="btn btn-default CIOC_search_button" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</button>
-								</div>
-							</div>
-							[KEYWORD_SEARCH_IN]
-							</form>
-						</div>
-						[IF:USE_VOL_PROFILES_VIEW]
-						<p>
-							A <strong><em>Volunteer Profile</em></strong> makes it easier to apply for positions, and can notify you of new positions that meet your criteria. [PROFILE_LINKS]</p>
-							[ENDIF:USE_VOL_PROFILES_VIEW]
-
-						<p>Other Searching Resources:</p>
-						<ul>
-							<li><a href="[FN:MAKE_LINK]/volunteer/search1.asp[ENDFN:MAKE_LINK]" style="font-weight:bold;">Step-by-Step Search</a></li>
-							<li><a href="[FN:MAKE_LINK]/volunteer/student.asp[ENDFN:MAKE_LINK]" style="font-weight:bold;">Student Step-by-Step Search</a></li>
-							<li><a href="[FN:MAKE_LINK]/volunteer/search_help.asp[ENDFN:MAKE_LINK]" style="font-weight:bold;">Search Tips</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-		[IF:SPOTLIGHT_FEED]
-		<div class="[IFALL:SEARCH_CENTRE_CONTENT,SEARCH_RIGHT_CONTENT]col-lg-4[ENDIFALL:SEARCH_CENTRE_CONTENT,SEARCH_RIGHT_CONTENT][IFNOTALL:SEARCH_CENTRE_CONTENT,SEARCH_RIGHT_CONTENT]col-lg-6[ENDIFNOTALL:SEARCH_CENTRE_CONTENT,SEARCH_RIGHT_CONTENT] col-md-6 col-sm-6">
-			<div id="spotlight_panel" class="panel panel-info">
-				<div class="panel-heading">
-					<h2><span class="glyphicon glyphicon-star" aria-hidden="true"></span> In the Spotlight...</h2>
-				</div>
-				<div class="panel-body panel-body-scroll" id="CIOC_opp_spotlight">
-					<div class="panel-body-scroll-bottommargin">
-						[SPOTLIGHT_FEED]
-					</div>
-				</div>
-				<div class="panel-footer"><a class="btn btn-info" href="[SPOTLIGHT_LINK]" role="button">More Information &raquo;</a></div>
-			</div>
-		</div>
-		[ENDIF:SPOTLIGHT_FEED]
 		[IF:SEARCH_CENTRE_CONTENT]
-		<div class="[IFALL:SPOTLIGHT_FEED,SEARCH_RIGHT_CONTENT]col-lg-4 col-md-6 col-sm-6[ENDIFALL:SPOTLIGHT_FEED,SEARCH_RIGHT_CONTENT]
-					[IFNOTALL:SPOTLIGHT_FEED,SEARCH_RIGHT_CONTENT]col-lg-6
-						[IFANY:SPOTLIGHT_FEED,SEARCH_RIGHT_CONTENT]col-md-12 col-sm-12[ENDIFANY:SPOTLIGHT_FEED,SEARCH_RIGHT_CONTENT]
-						[IFNOTANY:SPOTLIGHT_FEED,SEARCH_RIGHT_CONTENT]col-md-6 col-sm-6[ENDIFNOTANY:SPOTLIGHT_FEED,SEARCH_RIGHT_CONTENT]
-					[ENDIFNOTALL:SPOTLIGHT_FEED,SEARCH_RIGHT_CONTENT]">
-			<div id="search_centre_panel" class="panel panel-info">
+		<div class="[IFALL:SPOTLIGHT_FEED,SEARCH_RIGHT_CONTENT]col-lg-4[ENDIFALL:SPOTLIGHT_FEED,SEARCH_RIGHT_CONTENT]
+					[IFNOTALL:SPOTLIGHT_FEED,SEARCH_RIGHT_CONTENT]col-lg-6[ENDIFNOTALL:SPOTLIGHT_FEED,SEARCH_RIGHT_CONTENT]
+					col-md-6 col-sm-6">
+			<div id="search_centre_panel" class="panel panel-default">
 				[IF:SEARCH_CENTRE_TITLE]
 				<div class="panel-heading">
 					<h2>
@@ -240,13 +225,32 @@
 			</div>
 		</div>
 		[ENDIF:SEARCH_CENTRE_CONTENT]
+		[IF:SPOTLIGHT_FEED]
+		<div class="[IFALL:SEARCH_CENTRE_CONTENT,SEARCH_RIGHT_CONTENT]col-lg-4 col-md-6 col-sm-6[ENDIFALL:SEARCH_CENTRE_CONTENT,SEARCH_RIGHT_CONTENT]
+					[IFNOTALL:SEARCH_CENTRE_CONTENT,SEARCH_RIGHT_CONTENT]col-lg-6
+						[IFANY:SEARCH_CENTRE_CONTENT,SEARCH_RIGHT_CONTENT]col-md-12 col-sm-12[ENDIFANY:SEARCH_CENTRE_CONTENT,SEARCH_RIGHT_CONTENT]
+						[IFNOTANY:SEARCH_CENTRE_CONTENT,SEARCH_RIGHT_CONTENT]col-md-6 col-sm-6[ENDIFNOTANY:SEARCH_CENTRE_CONTENT,SEARCH_RIGHT_CONTENT]
+					[ENDIFNOTALL:SEARCH_CENTRE_CONTENT,SEARCH_RIGHT_CONTENT]">
+			<div id="spotlight_panel" class="panel panel-default">
+				<div class="panel-heading">
+					<h2><span class="glyphicon glyphicon-star" aria-hidden="true"></span> In the Spotlight...</h2>
+				</div>
+				<div class="panel-body panel-body-scroll" id="CIOC_opp_spotlight">
+					<div class="panel-body-scroll-bottommargin">
+						[SPOTLIGHT_FEED]
+					</div>
+				</div>
+				<div class="panel-footer"><a class="btn btn-default" href="[SPOTLIGHT_LINK]" role="button">More Information &raquo;</a></div>
+			</div>
+		</div>
+		[ENDIF:SPOTLIGHT_FEED]
 		[IF:SEARCH_RIGHT_CONTENT]
 		<div class="[IFALL:SPOTLIGHT_FEED,SEARCH_CENTRE_CONTENT]col-lg-4 col-md-6 col-sm-6[ENDIFALL:SPOTLIGHT_FEED,SEARCH_CENTRE_CONTENT]
 					[IFNOTALL:SPOTLIGHT_FEED,SEARCH_CENTRE_CONTENT]col-lg-6
 						[IFANY:SPOTLIGHT_FEED,SEARCH_CENTRE_CONTENT]col-md-12 col-sm-12[ENDIFANY:SPOTLIGHT_FEED,SEARCH_CENTRE_CONTENT]
 						[IFNOTANY:SPOTLIGHT_FEED,SEARCH_CENTRE_CONTENT]col-md-6 col-sm-6[ENDIFNOTANY:SPOTLIGHT_FEED,SEARCH_CENTRE_CONTENT]
 					[ENDIFNOTALL:SPOTLIGHT_FEED,SEARCH_CENTRE_CONTENT]">
-			<div id="search_right_panel" class="panel panel-info">
+			<div id="search_right_panel" class="panel panel-default">
 				[IF:SEARCH_RIGHT_TITLE]
 				<div class="panel-heading">
 					<h2>

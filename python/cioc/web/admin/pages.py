@@ -110,7 +110,6 @@ class PagesView(AdminViewBase):
                 ",".join(map(str, model_state.value("views", []))),
             ]
 
-            log.debug("args %s", args)
             with request.connmgr.get_connection("admin") as conn:
                 sql = """
                 DECLARE @ErrMsg as nvarchar(500),

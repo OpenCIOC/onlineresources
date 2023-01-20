@@ -103,14 +103,20 @@
 		}
 
 		.search-panels {
+			.panel-default > .panel-footer {
+				background-color: darken($bgColorContent,6%);
+			}
+
 			.panel-default, .panel-danger, .panel-info {
 				> .panel-body {
 					height: 230px;
 					overflow: auto;
 				}
+
 				> .panel-body-nofooter {
 					height: 284px;
 				}
+
 				> .panel-body-noheaderfooter {
 					height: 328px;
 				}
@@ -118,6 +124,7 @@
 				> .panel-footer {
 					height: 54px;
 				}
+
 				> .panel-header {
 					height: 44px;
 				}
