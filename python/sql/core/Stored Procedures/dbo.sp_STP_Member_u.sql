@@ -20,13 +20,13 @@ CREATE PROCEDURE [dbo].[sp_STP_Member_u]
 	@SiteCodeLength [tinyint],
 	@DaysSinceLastEmail [smallint],
 	@DefaultEmailCIC [varchar](100),
-	@DefaultEmailVOL [VARCHAR](100),
-	@DefaultEmailVOLProfile [VARCHAR](100),
-    @DefaultEmailNameCIC NVARCHAR(100),
-	@DefaultEmailNameVOL NVARCHAR(100),
+	@DefaultEmailVOL [varchar](100),
+	@DefaultEmailVOLProfile [varchar](100),
+    @DefaultEmailNameCIC nvarchar(100),
+	@DefaultEmailNameVOL nvarchar(100),
 	@BaseURLCIC [varchar](100),
 	@BaseURLVOL [varchar](100),
-	@DefaultProvince VARCHAR(2),
+	@DefaultProvince varchar(2),
 	@DefaultGCType [tinyint],
 	@CanDeleteRecordNoteCIC [tinyint],
 	@CanUpdateRecordNoteCIC [tinyint],
@@ -38,7 +38,7 @@ CREATE PROCEDURE [dbo].[sp_STP_Member_u]
 	@UseOfflineTools bit,
 	@UseLowestNUM [bit],
 	@OnlySpecificInterests bit,
-	@LoginRetryLimit TINYINT,
+	@LoginRetryLimit tinyint,
 	@ImportNotificationEmailCIC [varchar](500),
     @ContactOrgCIC bit,
     @ContactPhone1CIC bit,
@@ -88,7 +88,10 @@ DECLARE @DescTable TABLE (
 	FeedbackMsgCIC nvarchar(max) NULL,
 	FeedbackMsgVOL nvarchar(max) NULL,
 	VolProfilePrivacyPolicy nvarchar(max) NULL,
-	VolProfilePrivacyPolicyOrgName nvarchar(255) NULL
+	VolProfilePrivacyPolicyOrgName nvarchar(255) NULL,
+    SubsidyNamedProgram nvarchar(255) NULL,
+    SubsidyNamedProgramDesc nvarchar(1000) NULL,
+    SubsidyNamedProgramSearchLabel nvarchar(255) NULL
 )
 
 DECLARE @UsedNames nvarchar(max),
@@ -102,7 +105,10 @@ INSERT INTO @DescTable (
 	FeedbackMsgCIC,
 	FeedbackMsgVOL,
 	VolProfilePrivacyPolicy,
-	VolProfilePrivacyPolicyOrgName
+	VolProfilePrivacyPolicyOrgName,
+    SubsidyNamedProgram,
+    SubsidyNamedProgramDesc,
+    SubsidyNamedProgramSearchLabel
 )
 SELECT
 	N.query('Culture').value('/', 'varchar(5)') AS Culture,
@@ -112,7 +118,10 @@ SELECT
 	CASE WHEN N.exist('FeedbackMsgCIC')=1 THEN N.query('FeedbackMsgCIC').value('/', 'nvarchar(max)') ELSE NULL END AS FeedbackMsgCIC,
 	CASE WHEN N.exist('FeedbackMsgVOL')=1 THEN N.query('FeedbackMsgVOL').value('/', 'nvarchar(max)') ELSE NULL END AS FeedbackMsgVOL,
 	CASE WHEN N.exist('VolProfilePrivacyPolicy')=1 THEN N.query('VolProfilePrivacyPolicy').value('/', 'nvarchar(max)') ELSE NULL END AS VolProfilePrivacyPolicy,
-	CASE WHEN N.exist('VolProfilePrivacyPolicyOrgName')=1 THEN N.query('VolProfilePrivacyPolicyOrgName').value('/', 'nvarchar(255)') ELSE NULL END AS VolProfilePrivacyPolicyOrgName
+	CASE WHEN N.exist('VolProfilePrivacyPolicyOrgName')=1 THEN N.query('VolProfilePrivacyPolicyOrgName').value('/', 'nvarchar(255)') ELSE NULL END AS VolProfilePrivacyPolicyOrgName,
+    N.value('SubsidyNamedProgram[1]', 'nvarchar(255)') AS SubsidyNamedProgram,
+    N.value('SubsidyNamedProgramDesc[1]', 'nvarchar(1000)') AS SubsidyNamedProgramDesc,
+    N.value('SubsidyNamedProgramSearchLabel[1]', 'nvarchar(255)') AS SubsidyNamedProgramSearchLabel
 FROM @Descriptions.nodes('//DESC') as T(N)
 
 SELECT @BadCultures = COALESCE(@BadCultures + cioc_shared.dbo.fn_SHR_STP_ObjectName(' ; '),'') + ISNULL(Culture,cioc_shared.dbo.fn_SHR_STP_ObjectName('Unknown'))
@@ -246,15 +255,18 @@ IF @Error = 0 BEGIN
 			FeedbackMsgCIC = CASE WHEN @UseCIC=1 THEN nt.FeedbackMsgCIC ELSE memd.FeedbackMsgCIC END,
 			FeedbackMsgVOL = CASE WHEN @UseVOL=1 THEN nt.FeedbackMsgVOL ELSE memd.FeedbackMsgVOL END,
 			VolProfilePrivacyPolicy = CASE WHEN @UseVOL=1 THEN nt.VolProfilePrivacyPolicy ELSE memd.VolProfilePrivacyPolicy END,
-			VolProfilePrivacyPolicyOrgName = CASE WHEN @UseVOL=1 THEN nt.VolProfilePrivacyPolicyOrgName ELSE memd.VolProfilePrivacyPolicyOrgName END
-		FROM STP_Member_Description memd
+			VolProfilePrivacyPolicyOrgName = CASE WHEN @UseVOL=1 THEN nt.VolProfilePrivacyPolicyOrgName ELSE memd.VolProfilePrivacyPolicyOrgName END,
+            SubsidyNamedProgram = CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgram ELSE memd.SubsidyNamedProgram END,
+            SubsidyNamedProgramDesc = CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgramDesc ELSE memd.SubsidyNamedProgramDesc END,
+            SubsidyNamedProgramSearchLabel = CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgramSearchLabel ELSE memd.SubsidyNamedProgramSearchLabel END
+		FROM dbo.STP_Member_Description memd
 		INNER JOIN @DescTable nt
 			ON memd.LangID=nt.LangID
 		WHERE memd.MemberID=@MemberID
 
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @GeneralSetupObjectName, @ErrMsg
 	
-		INSERT INTO STP_Member_Description (
+		INSERT INTO dbo.STP_Member_Description (
 			MemberID,
 			LangID,
 			CREATED_BY,
@@ -266,11 +278,14 @@ IF @Error = 0 BEGIN
 			FeedbackMsgCIC,
 			FeedbackMsgVOL,
 			VolProfilePrivacyPolicy,
-			VolProfilePrivacyPolicyOrgName
+			VolProfilePrivacyPolicyOrgName,
+            SubsidyNamedProgram,
+            SubsidyNamedProgramDesc,
+            SubsidyNamedProgramSearchLabel
 		)
 		SELECT
 			@MemberID,
-			LangID,
+			nt.LangID,
 			@MODIFIED_BY,
 			GETDATE(),
 			@MODIFIED_BY,
@@ -280,9 +295,12 @@ IF @Error = 0 BEGIN
 			CASE WHEN @UseCIC=1 THEN nt.FeedbackMsgCIC ELSE NULL END,
 			CASE WHEN @UseVOL=1 THEN nt.FeedbackMsgVOL ELSE NULL END,
 			CASE WHEN @UseVOL=1 THEN nt.VolProfilePrivacyPolicy ELSE NULL END,
-			CASE WHEN @UseVOL=1 THEN nt.VolProfilePrivacyPolicyOrgName ELSE NULL END
+			CASE WHEN @UseVOL=1 THEN nt.VolProfilePrivacyPolicyOrgName ELSE NULL END,
+            CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgram ELSE NULL END,
+            CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgramDesc ELSE NULL END,
+            CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgramSearchLabel ELSE NULL END
 		FROM @DescTable nt
-		WHERE NOT EXISTS(SELECT * FROM STP_Member_Description WHERE LangID=nt.LangID AND MemberID=@MemberID)
+		WHERE NOT EXISTS(SELECT * FROM dbo.STP_Member_Description WHERE LangID=nt.LangID AND MemberID=@MemberID)
 		
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @GeneralSetupObjectName, @ErrMsg
 	END

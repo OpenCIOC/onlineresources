@@ -23,7 +23,7 @@ only_vol = request.dboptions.UseVOL and not request.dboptions.UseCIC
 <%inherit file="cioc.web:templates/master.mak" />
 
 <p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> ]</p>
-<form method="post" action="${request.route_path('admin_generalsetup')}" class="form-horizontal">
+<form method="post" action="${request.route_path('admin_generalsetup')}" class="form-horizontal" autocomplete="off">
 	<div class="NotVisible">
 		${request.passvars.cached_form_vals|n}
 	</div>
@@ -405,6 +405,63 @@ only_vol = request.dboptions.UseVOL and not request.dboptions.UseCIC
 					</td>
 				</tr>
 				%endif
+
+				%if use_cic:
+				<tr>
+					${self.fieldLabelCell(None,_('Child Care Subsidy'),
+					_('Details of Specific Named Child Care Subsidy Program (e.g. $10/day care)'),False)}
+					<td class="field-data-cell">
+						<h4>${_('Name')} ${self.requiredFieldMarker()}</h4>
+						%for culture in active_cultures:
+						<%
+						lang = culture_map[culture]
+						field = "descriptions." +lang.FormCulture + ".SubsidyNamedProgram"
+						label = lang.LanguageName
+						%>
+						<div class="form-group row">
+							${renderer.label(field,label,class_='control-label col-sm-3 col-md-2')}
+							<div class="col-sm-9 col-md-10">
+								${renderer.errorlist(field)}
+								${renderer.text(field, maxlength=255, class_='form-control')}
+							</div>
+						</div>
+						%endfor
+						<hr />
+						<h4>${_('Description')}</h4>
+						%for culture in active_cultures:
+						<%
+						lang = culture_map[culture]
+						field = "descriptions." +lang.FormCulture + ".SubsidyNamedProgramDesc"
+						label = lang.LanguageName
+						%>
+						<div class="form-group row">
+							${renderer.label(field,label,class_='control-label col-sm-3 col-md-2')}
+							<div class="col-sm-9 col-md-10">
+								${renderer.errorlist(field)}
+								${renderer.textarea(field, maxlength=1000, class_='form-control')}
+							</div>
+						</div>
+						%endfor
+						<hr />
+						<h4>${_('Search Label')}</h4>
+						%for culture in active_cultures:
+						<%
+						lang = culture_map[culture]
+						field = "descriptions." +lang.FormCulture + ".SubsidyNamedProgramSearchLabel"
+						label = lang.LanguageName
+						%>
+						<div class="form-group row">
+							${renderer.label(field,label,class_='control-label col-sm-3 col-md-2')}
+							<div class="col-sm-9 col-md-10">
+								${renderer.errorlist(field)}
+								${renderer.text(field, maxlength=255, class_='form-control')}
+							</div>
+						</div>
+						%endfor
+					</td>
+				</tr>
+				%endif
+
 				<% sections = [] %>
 				%if use_cic or only_vol:
 				<%	sections.append((_('CIC'), 'CIC')) %>
@@ -422,19 +479,19 @@ only_vol = request.dboptions.UseVOL and not request.dboptions.UseCIC
 					_('Contact Options'),True)}
 					<td class="field-data-cell">
 						<% contact_types  = [
-							('Org', _('Org')),
-							('Phone1', _('Phone 1')),
-							('Phone2', _('Phone 2')),
-							('Phone3', _('Phone 3')),
-							('Fax', _('Fax')),
-							('Email', _('Email')),
+						('Org', _('Org')),
+						('Phone1', _('Phone 1')),
+						('Phone2', _('Phone 2')),
+						('Phone3', _('Phone 3')),
+						('Fax', _('Fax')),
+						('Email', _('Email')),
 						]%>
 						%for i, (ct_type, ct_name) in enumerate(contact_types):
-							%if i:
-							 <br>
-							%endif
-							${renderer.errorlist(f'settings.Contact{ct_type}{domain}')}
-							${renderer.checkbox(f'settings.Contact{ct_type}{domain}', label=ct_name)}
+						%if i:
+						<br>
+						%endif
+						${renderer.errorlist(f'settings.Contact{ct_type}{domain}')}
+						${renderer.checkbox(f'settings.Contact{ct_type}{domain}', label=ct_name)}
 						%endfor
 					</td>
 				</tr>

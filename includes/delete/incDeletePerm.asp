@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -256,7 +256,7 @@ Else
 <%=g_strCacheFormVals%>
 <input type="hidden" name="IDList" value="<%=strNewIDList%>">
 <input type="hidden" name="Confirmed" value="on">
-<input type="submit" value="<%=TXT_DELETE%>">
+<input type="submit" value="<%=TXT_DELETE%>" class="btn btn-default">
 </form>
 <%
 	End If

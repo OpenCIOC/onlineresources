@@ -460,7 +460,7 @@ class LayoutSearch:
             "HAS_KEYWORD_SEARCH": not not search_info.BSrchKeywords,
             "KEYWORD_SEARCH_BOX": kwargs["searchform_keyword"],
             "KEYWORD_SEARCH_IN": kwargs["searchform_in_values"],
-            "USE_VOL_PROFILES_VIEW": not not (user and viewdata.UseProfilesView),
+            "USE_VOL_PROFILES_VIEW": viewdata.UseProfilesView and not user,
             "PROFILE_LINKS": kwargs["searchform_profilelinks"],
             "MAKE_LINK": template.make_linkify_fn(request),
             "VIEWS_LIST": [

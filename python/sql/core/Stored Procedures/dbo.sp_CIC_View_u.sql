@@ -6,116 +6,117 @@ GO
 
 CREATE PROCEDURE [dbo].[sp_CIC_View_u]
 	@ViewType INT,
-	@MODIFIED_BY VARCHAR(50),
+	@MODIFIED_BY varchar(50),
 	@MemberID INT,
 	@AgencyCode CHAR(3),
 	@Owner CHAR(3),
-	@CanSeeNonPublic BIT,
-	@CanSeeDeleted BIT,
+	@CanSeeNonPublic bit,
+	@CanSeeDeleted bit,
 	@HidePastDueBy SMALLINT,
-	@AlertColumn BIT,
+	@AlertColumn bit,
 	@Template INT,
 	@PrintTemplate INT,
-	@PrintVersionResults BIT,
-	@DataMgmtFields BIT,
-	@LastModifiedDate BIT,
-	@SocialMediaShare BIT,
+	@PrintVersionResults bit,
+	@DataMgmtFields bit,
+	@LastModifiedDate bit,
+	@SocialMediaShare bit,
 	@CommSrchWrapAt TINYINT,
-	@ASrchAges BIT,
-	@ASrchBool BIT,
-	@ASrchEmail BIT,
-	@ASrchLastRequest BIT,
-	@ASrchOwner BIT,
-	@BSrchAutoComplete BIT,
-	@BSrchBrowseByOrg BIT,
-	@BSrchKeywords BIT,
-	@DataUseAuth BIT,
-	@DataUseAuthPhone BIT,
-	@MyList BIT,
-	@ViewOtherLangs BIT,
-	@AllowFeedbackNotInView BIT,
-	@AssignSuggestionsTo VARCHAR(3),
-	@AllowPDF BIT,
-	@CommSrchDropDown BIT,
-	@OtherCommunity BIT,
-	@RespectPrivacyProfile BIT,
+	@ASrchAges bit,
+	@ASrchBool bit,
+	@ASrchEmail bit,
+	@ASrchLastRequest bit,
+	@ASrchOwner bit,
+	@BSrchAutoComplete bit,
+	@BSrchBrowseByOrg bit,
+	@BSrchKeywords bit,
+	@DataUseAuth bit,
+	@DataUseAuthPhone bit,
+	@MyList bit,
+	@ViewOtherLangs bit,
+	@AllowFeedbackNotInView bit,
+	@AssignSuggestionsTo varchar(3),
+	@AllowPDF bit,
+	@CommSrchDropDown bit,
+	@OtherCommunity bit,
+	@RespectPrivacyProfile bit,
 	@PB_ID INT,
-	@LimitedView BIT,
-	@VolunteerLink BIT,
-	@SrchCommunityDefault BIT,
-	@ASrchAddress BIT,
-	@ASrchEmployee BIT,
-	@ASrchNear BIT,
-	@ASrchVacancy BIT,
-	@ASrchVOL BIT,
-	@BSrchAges BIT,
-	@BSrchLanguage BIT,
-	@BSrchNUM BIT,
-	@BSrchOCG BIT,
-	@BSrchVacancy BIT,
-	@BSrchVOL BIT,
-	@BSrchWWW BIT,
+	@LimitedView bit,
+	@VolunteerLink bit,
+	@SrchCommunityDefault bit,
+	@ASrchAddress bit,
+	@ASrchEmployee bit,
+	@ASrchNear bit,
+	@ASrchVacancy bit,
+	@ASrchVOL bit,
+	@BSrchAges bit,
+	@BSrchLanguage bit,
+	@BSrchNUM bit,
+	@BSrchOCG bit,
+	@BSrchVacancy bit,
+	@BSrchVOL bit,
+	@BSrchWWW bit,
 	@BSrchDefaultTab TINYINT,
-	@BSrchNear2 BIT,
-	@BSrchNear5 BIT,
-	@BSrchNear10 BIT,
-	@BSrchNear15 BIT,
-	@BSrchNear25 BIT,
-	@BSrchNear50 BIT,
-	@BSrchNear100 BIT,
-	@CSrch BIT,
-	@CSrchBusRoute BIT,
-	@CSrchKeywords BIT,
-	@CSrchLanguages BIT,
-	@CSrchNear BIT,
-	@CSrchSchoolEscort BIT,
-	@CSrchSchoolsInArea BIT,
-	@CSrchSpaceAvailable BIT,
-	@CSrchSubsidy BIT,
-	@CSrchTypeOfProgram BIT,
-	@CCRFields BIT,
+	@BSrchNear2 bit,
+	@BSrchNear5 bit,
+	@BSrchNear10 bit,
+	@BSrchNear15 bit,
+	@BSrchNear25 bit,
+	@BSrchNear50 bit,
+	@BSrchNear100 bit,
+	@CSrch bit,
+	@CSrchBusRoute bit,
+	@CSrchKeywords bit,
+	@CSrchLanguages bit,
+	@CSrchNear bit,
+	@CSrchSchoolEscort bit,
+	@CSrchSchoolsInArea bit,
+	@CSrchSpaceAvailable bit,
+	@CSrchSubsidy bit,
+    @CSrchSubsidyNamedProgram bit,
+	@CSrchTypeOfProgram bit,
+	@CCRFields bit,
 	@QuickListDropDown TINYINT,
 	@QuickListWrapAt TINYINT,
-	@QuickListMatchAll BIT,
-	@QuickListSearchGroups BIT,
+	@QuickListMatchAll bit,
+	@QuickListSearchGroups bit,
 	@QuickListPubHeadings INT,
-	@LinkOrgLevels BIT,
-	@CanSeeNonPublicPub BIT,
-	@UsePubNamesOnly BIT,
-	@UseNAICSView BIT,
-	@UseTaxonomyView BIT,
+	@LinkOrgLevels bit,
+	@CanSeeNonPublicPub bit,
+	@UsePubNamesOnly bit,
+	@UseNAICSView bit,
+	@UseTaxonomyView bit,
 	@TaxDefnLevel TINYINT,
-	@UseThesaurusView BIT,
-	@UseLocalSubjects BIT,
-	@UseZeroSubjects BIT,
-	@AlsoNotify VARCHAR(100),
-	@NoProcessNotify BIT,
-	@UseSubmitChangesTo BIT,
-	@MapSearchResults BIT,
-	@AutoMapSearchResults BIT,
+	@UseThesaurusView bit,
+	@UseLocalSubjects bit,
+	@UseZeroSubjects bit,
+	@AlsoNotify varchar(100),
+	@NoProcessNotify bit,
+	@UseSubmitChangesTo bit,
+	@MapSearchResults bit,
+	@AutoMapSearchResults bit,
 	@ResultsPageSize SMALLINT,
-	@ShowID BIT,
-	@ShowOwner BIT,
-	@ShowAlert BIT,
-	@ShowOrg BIT,
-	@ShowCommunity BIT,
-	@ShowUpdateSchedule BIT,
-	@LinkUpdate BIT,
-	@LinkEmail BIT,
-	@LinkSelect BIT,
-	@LinkWeb BIT,
-	@LinkListAdd BIT,
+	@ShowID bit,
+	@ShowOwner bit,
+	@ShowAlert bit,
+	@ShowOrg bit,
+	@ShowCommunity bit,
+	@ShowUpdateSchedule bit,
+	@LinkUpdate bit,
+	@LinkEmail bit,
+	@LinkSelect bit,
+	@LinkWeb bit,
+	@LinkListAdd bit,
 	@OrderBy INT,
 	@OrderByCustom INT,
-	@OrderByDesc BIT,
-    @TableSort BIT,
-	@GLinkMail BIT,
-	@GLinkPub BIT,
-	@ShowTable BIT,
-	@VShowPosition BIT,
-	@VShowDuties BIT,
-	@ShowRecordDetailsSidebar BIT,
-	@GoogleTranslateWidget BIT,
+	@OrderByDesc bit,
+    @TableSort bit,
+	@GLinkMail bit,
+	@GLinkPub bit,
+	@ShowTable bit,
+	@VShowPosition bit,
+	@VShowDuties bit,
+	@ShowRecordDetailsSidebar bit,
+	@GoogleTranslateWidget bit,
 	@DefaultPrintProfile INT,
 	@RefineField1 INT,
 	@RefineField2 INT,
@@ -126,12 +127,11 @@ CREATE PROCEDURE [dbo].[sp_CIC_View_u]
 	@AdvSrchCheckLists XML,
 	@Publications XML,
 	@AddPublications XML,
-	@DisplayOptFields VARCHAR(MAX),
+	@DisplayOptFields varchar(MAX),
 	@ErrMsg NVARCHAR(500) OUTPUT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
-
 
 DECLARE	@Error		int
 SET @Error = 0
@@ -346,11 +346,11 @@ FROM @Descriptions.nodes('//DESC') as T(N)
 EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @ViewObjectName, @ErrMsg
 
 UPDATE @DescTable
-	SET  MenuGlyph = CASE WHEN EXISTS(SELECT * FROM STP_Icon WHERE IconName=MenuGlyph AND Type='glyphicon') THEN MenuGlyph ELSE NULL END,
-		SearchLeftGlyph = CASE WHEN EXISTS(SELECT * FROM STP_Icon WHERE IconName=SearchLeftGlyph AND Type='glyphicon') THEN SearchLeftGlyph ELSE NULL END,
-		SearchRightGlyph = CASE WHEN EXISTS(SELECT * FROM STP_Icon WHERE IconName=SearchRightGlyph AND Type='glyphicon') THEN SearchRightGlyph ELSE NULL END,
-		SearchAlertGlyph = CASE WHEN EXISTS(SELECT * FROM STP_Icon WHERE IconName=SearchAlertGlyph AND Type='glyphicon') THEN SearchAlertGlyph ELSE NULL END,
-		QuickSearchGlyph = CASE WHEN EXISTS(SELECT * FROM STP_Icon WHERE IconName=QuickSearchGlyph AND Type='glyphicon') THEN QuickSearchGlyph ELSE NULL END
+	SET  MenuGlyph = CASE WHEN EXISTS(SELECT * FROM dbo.STP_Icon WHERE IconName=MenuGlyph AND Type='glyphicon') THEN MenuGlyph ELSE NULL END,
+		SearchLeftGlyph = CASE WHEN EXISTS(SELECT * FROM dbo.STP_Icon WHERE IconName=SearchLeftGlyph AND Type='glyphicon') THEN SearchLeftGlyph ELSE NULL END,
+		SearchRightGlyph = CASE WHEN EXISTS(SELECT * FROM dbo.STP_Icon WHERE IconName=SearchRightGlyph AND Type='glyphicon') THEN SearchRightGlyph ELSE NULL END,
+		SearchAlertGlyph = CASE WHEN EXISTS(SELECT * FROM dbo.STP_Icon WHERE IconName=SearchAlertGlyph AND Type='glyphicon') THEN SearchAlertGlyph ELSE NULL END,
+		QuickSearchGlyph = CASE WHEN EXISTS(SELECT * FROM dbo.STP_Icon WHERE IconName=QuickSearchGlyph AND Type='glyphicon') THEN QuickSearchGlyph ELSE NULL END
 
 INSERT INTO @ViewTable
 	( ViewType )
@@ -375,7 +375,7 @@ INSERT INTO @PublicationTable(
 SELECT
 	N.value('.','int') AS PB_ID	
 FROM @Publications.nodes('//PBID') as T(N)
-INNER JOIN CIC_Publication pb
+INNER JOIN dbo.CIC_Publication pb
 	ON N.value('.','int')=pb.PB_ID
 EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @PublicationObjectName, @ErrMsg
 
@@ -385,13 +385,13 @@ INSERT INTO @AddPublicationTable(
 SELECT
 	N.value('.','int') AS PB_ID	
 FROM @AddPublications.nodes('//PBID') as T(N)
-INNER JOIN CIC_Publication pb
+INNER JOIN dbo.CIC_Publication pb
 	ON N.value('.','int')=pb.PB_ID
 EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @PublicationObjectName, @ErrMsg
 
 SELECT @UsedNamesDesc = COALESCE(@UsedNamesDesc + cioc_shared.dbo.fn_SHR_STP_ObjectName(' ; '),'') + ViewName
 FROM @DescTable nt
-WHERE EXISTS(SELECT * FROM CIC_View vw INNER JOIN CIC_View_Description vwd ON vw.ViewType=vwd.ViewType WHERE ViewName=nt.ViewName AND LangID=nt.LangID AND vw.ViewType<>@ViewType AND MemberID=@MemberID)
+WHERE EXISTS(SELECT * FROM dbo.CIC_View vw INNER JOIN dbo.CIC_View_Description vwd ON vw.ViewType=vwd.ViewType WHERE ViewName=nt.ViewName AND LangID=nt.LangID AND vw.ViewType<>@ViewType AND MemberID=@MemberID)
 
 SELECT @BadCulturesDesc = COALESCE(@BadCulturesDesc + cioc_shared.dbo.fn_SHR_STP_ObjectName(' ; '),'') + ISNULL(Culture,cioc_shared.dbo.fn_SHR_STP_ObjectName('Unknown'))
 FROM @DescTable nt
@@ -410,23 +410,23 @@ IF @MemberID IS NULL BEGIN
 	SET @Error = 2 -- No ID Given
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL)
 -- Member ID exists ?
-END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
+END ELSE IF NOT EXISTS(SELECT * FROM dbo.STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS VARCHAR), @MemberObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS varchar), @MemberObjectName)
 -- View given ?
 END ELSE IF @ViewType IS NULL BEGIN
 	SET @Error = 2 -- No ID Given
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @ViewObjectName, NULL)
 -- View exists ?
-END ELSE IF NOT EXISTS (SELECT * FROM CIC_View WHERE ViewType=@ViewType) BEGIN
+END ELSE IF NOT EXISTS (SELECT * FROM dbo.CIC_View WHERE ViewType=@ViewType) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@ViewType AS VARCHAR), @ViewObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@ViewType AS varchar), @ViewObjectName)
 -- View belongs to Member ?
-END ELSE IF @ViewType IS NOT NULL AND NOT EXISTS (SELECT * FROM CIC_View WHERE MemberID=@MemberID AND ViewType=@ViewType) BEGIN
+END ELSE IF @ViewType IS NOT NULL AND NOT EXISTS (SELECT * FROM dbo.CIC_View WHERE MemberID=@MemberID AND ViewType=@ViewType) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL)
 -- Ownership OK ?
-END ELSE IF @AgencyCode IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_View WHERE ViewType=@ViewType AND (Owner IS NULL OR Owner=@AgencyCode)) BEGIN
+END ELSE IF @AgencyCode IS NOT NULL AND NOT EXISTS(SELECT * FROM dbo.CIC_View WHERE ViewType=@ViewType AND (Owner IS NULL OR Owner=@AgencyCode)) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @ViewObjectName, NULL)
 -- Template given ?
@@ -436,13 +436,13 @@ END ELSE IF @AgencyCode IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_View WHERE 
 -- Template exists ?
 END ELSE IF NOT EXISTS (SELECT * FROM GBL_Template WHERE Template_ID=@Template) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@Template AS VARCHAR), @TemplateObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@Template AS varchar), @TemplateObjectName)
 -- Template ownership OK?
 END ELSE IF NOT EXISTS (SELECT * FROM GBL_Template
 		WHERE Template_ID=@Template
 			AND (MemberID IS NULL OR MemberID=@MemberID)
 			AND (
-				EXISTS(SELECT * FROM CIC_View WHERE ViewType=@ViewType AND Template=@Template)
+				EXISTS(SELECT * FROM dbo.CIC_View WHERE ViewType=@ViewType AND Template=@Template)
 				OR (Owner IS NULL OR Owner=@AgencyCode)
 			)
 		) BEGIN
@@ -451,38 +451,38 @@ END ELSE IF NOT EXISTS (SELECT * FROM GBL_Template
 -- Print Template exists ?
 END ELSE IF @PrintTemplate IS NOT NULL AND NOT EXISTS (SELECT * FROM GBL_Template WHERE Template_ID=@PrintTemplate) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@PrintTemplate AS VARCHAR), @TemplateObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@PrintTemplate AS varchar), @TemplateObjectName)
 -- Print Template ownership OK?
 END ELSE IF @PrintTemplate IS NOT NULL AND NOT EXISTS (SELECT * FROM GBL_Template
 		WHERE Template_ID=@PrintTemplate
 			AND (MemberID IS NULL OR MemberID=@MemberID)
 			AND (
-				EXISTS(SELECT * FROM CIC_View WHERE ViewType=@ViewType AND PrintTemplate=@PrintTemplate)
+				EXISTS(SELECT * FROM dbo.CIC_View WHERE ViewType=@ViewType AND PrintTemplate=@PrintTemplate)
 				OR (Owner IS NULL OR Owner=@AgencyCode)
 			)
 		) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @TemplateObjectName, NULL)
 -- Publication exists ?
-END ELSE IF @PB_ID IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_Publication pb WHERE pb.PB_ID=@PB_ID) BEGIN
+END ELSE IF @PB_ID IS NOT NULL AND NOT EXISTS(SELECT * FROM dbo.CIC_Publication pb WHERE pb.PB_ID=@PB_ID) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@PB_ID AS VARCHAR), @PublicationObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@PB_ID AS varchar), @PublicationObjectName)
 -- Publication belongs to Member ?
-END ELSE IF @PB_ID IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_Publication pb WHERE pb.PB_ID=@PB_ID AND pb.MemberID=@MemberID OR pb.MemberID IS NULL) BEGIN
+END ELSE IF @PB_ID IS NOT NULL AND NOT EXISTS(SELECT * FROM dbo.CIC_Publication pb WHERE pb.PB_ID=@PB_ID AND pb.MemberID=@MemberID OR pb.MemberID IS NULL) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @PublicationObjectName, NULL)
 -- Publication exists ?
-END ELSE IF @QuickListPubHeadings IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_Publication pb WHERE pb.PB_ID=@QuickListPubHeadings) BEGIN
+END ELSE IF @QuickListPubHeadings IS NOT NULL AND NOT EXISTS(SELECT * FROM dbo.CIC_Publication pb WHERE pb.PB_ID=@QuickListPubHeadings) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@QuickListPubHeadings AS VARCHAR), @PublicationObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@QuickListPubHeadings AS varchar), @PublicationObjectName)
 -- Publication belongs to Member ?
-END ELSE IF @QuickListPubHeadings IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_Publication pb WHERE pb.PB_ID=@QuickListPubHeadings AND pb.MemberID=@MemberID OR pb.MemberID IS NULL) BEGIN
+END ELSE IF @QuickListPubHeadings IS NOT NULL AND NOT EXISTS(SELECT * FROM dbo.CIC_Publication pb WHERE pb.PB_ID=@QuickListPubHeadings AND pb.MemberID=@MemberID OR pb.MemberID IS NULL) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @PublicationObjectName, NULL)
 -- Print Profile Exists ?
 END ELSE IF @DefaultPrintProfile IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_PrintProfile pp WHERE pp.ProfileID=@DefaultPrintProfile AND pp.Domain=1) BEGIN
 	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@DefaultPrintProfile AS VARCHAR), @PrintProfileObjectName)
+	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@DefaultPrintProfile AS varchar), @PrintProfileObjectName)
 -- Print Profile belongs to Member ?
 END ELSE IF @DefaultPrintProfile IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_PrintProfile pp WHERE pp.ProfileID=@DefaultPrintProfile AND pp.Domain=1 AND pp.MemberID=@MemberID OR pp.MemberID IS NULL) BEGIN
 	SET @Error = 8 -- Security Failure
@@ -510,7 +510,7 @@ END ELSE IF @BadCulturesDesc IS NOT NULL BEGIN
 END
 
 IF @Error = 0 BEGIN
-	UPDATE CIC_View
+	UPDATE dbo.CIC_View
 	SET	MODIFIED_DATE			= GETDATE(),
 		MODIFIED_BY				= @MODIFIED_BY,
 		Owner					= @Owner,
@@ -580,6 +580,7 @@ IF @Error = 0 BEGIN
 		CSrchSchoolsInArea		= ISNULL(@CSrchSchoolsInArea,CSrchSchoolsInArea),
 		CSrchSpaceAvailable		= ISNULL(@CSrchSpaceAvailable,CSrchSpaceAvailable),
 		CSrchSubsidy			= ISNULL(@CSrchSubsidy,CSrchSubsidy),
+        CSrchSubsidyNamedProgram    = ISNULL(@CSrchSubsidyNamedProgram,CSrchSubsidyNamedProgram),
 		CSrchTypeOfProgram		= ISNULL(@CSrchTypeOfProgram,CSrchTypeOfProgram),
 		CCRFields				= ISNULL(@CCRFields,CCRFields),
 		QuickListDropDown		= ISNULL(@QuickListDropDown,QuickListDropDown),
@@ -664,36 +665,36 @@ IF @Error = 0 BEGIN
 			GoogleTranslateDisclaimer = nt.GoogleTranslateDisclaimer,
 			TagLine					= nt.TagLine,
 			NoResultsMsg			= nt.NoResultsMsg
-		FROM CIC_View_Description vwd
+		FROM dbo.CIC_View_Description vwd
 		INNER JOIN @DescTable nt
 			ON vwd.LangID=nt.LangID
 		WHERE vwd.ViewType=@ViewType
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @ViewObjectName, @ErrMsg
 	
 		DELETE vr
-		FROM CIC_View_Recurse vr
+		FROM dbo.CIC_View_Recurse vr
 		WHERE vr.ViewType=@ViewType
 			AND NOT EXISTS(SELECT * FROM @ViewTable nt WHERE vr.CanSee=nt.ViewType)
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @ViewObjectName, @ErrMsg
 
-		INSERT INTO CIC_View_Recurse (
+		INSERT INTO dbo.CIC_View_Recurse (
 			ViewType,
 			CanSee
 		) SELECT
 			@ViewType,
 			nt.ViewType
 		FROM @ViewTable nt
-		WHERE EXISTS(SELECT * FROM CIC_View WHERE nt.ViewType=ViewType) AND 
-			NOT EXISTS (SELECT * FROM CIC_View_Recurse WHERE ViewType=@ViewType AND CanSee=nt.ViewType)
+		WHERE EXISTS(SELECT * FROM dbo.CIC_View WHERE nt.ViewType=ViewType) AND 
+			NOT EXISTS (SELECT * FROM dbo.CIC_View_Recurse WHERE ViewType=@ViewType AND CanSee=nt.ViewType)
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @ViewObjectName, @ErrMsg
 				
 		DELETE vchk
-		FROM CIC_View_ChkField vchk
+		FROM dbo.CIC_View_ChkField vchk
 		WHERE vchk.ViewType=@ViewType
 			AND NOT EXISTS(SELECT * FROM @AdvSrchChkTable nt WHERE vchk.FieldID=nt.FieldID)
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @FieldObjectName, @ErrMsg
 
-		INSERT INTO CIC_View_ChkField (
+		INSERT INTO dbo.CIC_View_ChkField (
 			ViewType,
 			FieldID
 		) SELECT
@@ -701,27 +702,27 @@ IF @Error = 0 BEGIN
 			FieldID
 		FROM @AdvSrchChkTable nt
 		WHERE EXISTS(SELECT * FROM GBL_FieldOption WHERE nt.FieldID=FieldID) 
-			AND NOT EXISTS(SELECT * FROM CIC_View_ChkField WHERE ViewType=@ViewType AND FieldID=nt.FieldID)
+			AND NOT EXISTS(SELECT * FROM dbo.CIC_View_ChkField WHERE ViewType=@ViewType AND FieldID=nt.FieldID)
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @FieldObjectName, @ErrMsg
 
 		DELETE qlp
-		FROM CIC_View_QuickListPub qlp
+		FROM dbo.CIC_View_QuickListPub qlp
 		WHERE qlp.ViewType=@ViewType
 			AND NOT EXISTS(SELECT * FROM @PublicationTable nt WHERE qlp.PB_ID=nt.PB_ID)
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @FieldObjectName, @ErrMsg
 		
-		INSERT INTO CIC_View_QuickListPub (
+		INSERT INTO dbo.CIC_View_QuickListPub (
 			ViewType,
 			PB_ID
 		) SELECT
 			@ViewType,
 			PB_ID
 		FROM @PublicationTable nt
-		WHERE EXISTS(SELECT * FROM CIC_Publication WHERE nt.PB_ID=PB_ID) 
-			AND NOT EXISTS(SELECT * FROM CIC_View_QuickListPub WHERE ViewType=@ViewType AND PB_ID=nt.PB_ID)
+		WHERE EXISTS(SELECT * FROM dbo.CIC_Publication WHERE nt.PB_ID=PB_ID) 
+			AND NOT EXISTS(SELECT * FROM dbo.CIC_View_QuickListPub WHERE ViewType=@ViewType AND PB_ID=nt.PB_ID)
 		EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @FieldObjectName, @ErrMsg
 		
-		MERGE INTO CIC_View_AutoAddPub aap
+		MERGE INTO dbo.CIC_View_AutoAddPub aap
 		USING (SELECT DISTINCT PB_ID FROM @AddPublicationTable) nt
 			ON aap.ViewType=@ViewType AND aap.PB_ID=nt.PB_ID
 		WHEN NOT MATCHED BY TARGET THEN

@@ -56,6 +56,7 @@ CREATE TABLE [dbo].[CIC_View]
 [CSrchSchoolsInArea] [bit] NOT NULL CONSTRAINT [DF_CIC_View_CSrchSchoolsInArea] DEFAULT ((1)),
 [CSrchSpaceAvailable] [bit] NOT NULL CONSTRAINT [DF_CIC_View_CSrchSpaceAvailable] DEFAULT ((1)),
 [CSrchSubsidy] [bit] NOT NULL CONSTRAINT [DF_CIC_View_CSrchSubsidy] DEFAULT ((1)),
+[CSrchSubsidyNamedProgram] [bit] NOT NULL CONSTRAINT [DF_CIC_View_CSrchSubsidyNamedProgram] DEFAULT ((0)),
 [CSrchTypeOfProgram] [bit] NOT NULL CONSTRAINT [DF_CIC_View_CSrchTypeOfProgram] DEFAULT ((1)),
 [CCRFields] [bit] NOT NULL CONSTRAINT [DF_CIC_View_CCRFields] DEFAULT ((0)),
 [QuickListDropDown] [tinyint] NOT NULL CONSTRAINT [DF_CIC_View_QuickListDropDown] DEFAULT ((1)),
@@ -99,7 +100,8 @@ CREATE TABLE [dbo].[CIC_View]
 [RefineField1] [int] NULL,
 [RefineField2] [int] NULL,
 [RefineField3] [int] NULL,
-[RefineField4] [int] NULL
+[RefineField4] [int] NULL,
+[iCarolAPIExportEnabled] [bit] NOT NULL CONSTRAINT [DF_CIC_View_iCarolAPIExportEnabled] DEFAULT ((0))
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_View] WITH NOCHECK ADD CONSTRAINT [CK_CIC_View_TaxDefnLevel] CHECK (([TaxDefnLevel]>=(0) AND [TaxDefnLevel]<=(5)))

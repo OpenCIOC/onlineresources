@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -80,7 +80,7 @@ Else
 <%=g_strCacheFormVals%>
 <input type="hidden" name="RCID" value="<%=intRCID%>">
 <input type="hidden" name="Confirmed" value="on">
-<input type="submit" value="<%=TXT_DELETE%>">
+<input type="submit" value="<%=TXT_DELETE%>" class="btn btn-default">
 </form>
 <%
 		Call makePageFooter(True)

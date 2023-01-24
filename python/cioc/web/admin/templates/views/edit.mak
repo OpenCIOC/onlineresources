@@ -1213,27 +1213,55 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 						<td class="field-data-cell">
 							${renderer.errorlist("item.CSrch")}
 							${renderer.checkbox("item.CSrch", label=_('Link to Child Care Resource Advanced Search form'))}
-							<p>
-								${_('Include the following search types on the Child Care Search page:')}
-								<br>${renderer.errorlist("item.CSrchSchoolEscort")}
-								${renderer.checkbox("item.CSrchSchoolEscort", label=_('Escorts to / from School'))}
-								<br>${renderer.errorlist("item.CSrchKeywords")}
-								${renderer.checkbox("item.CSrchKeywords", label=_('Keywords'))}
-								<br>${renderer.errorlist("item.CSrchLanguages")}
-								${renderer.checkbox("item.CSrchLanguages", label=_('Languages'))}
-								<br>${renderer.errorlist("item.CSrchNear")}
-								${renderer.checkbox("item.CSrchNear", label=_('Located Near'))}
-								<br>${renderer.errorlist("item.CSrchSchoolsInArea")}
-								${renderer.checkbox("item.CSrchSchoolsInArea", label=_('Local Schools'))}
-								<br>${renderer.errorlist("item.CSrchBusRoute")}
-								${renderer.checkbox("item.CSrchBusRoute", label=_('On / Near Bus Route'))}
-								<br>${renderer.errorlist("item.CSrchSpaceAvailable")}
-								${renderer.checkbox("item.CSrchSpaceAvailable", label=_('Space Available'))}
-								<br>${renderer.errorlist("item.CSrchSubsidy")}
-								${renderer.checkbox("item.CSrchSubsidy", label=_('Subsidy'))}
-								<br>${renderer.errorlist("item.CSrchTypeOfProgram")}
-								${renderer.checkbox("item.CSrchTypeOfProgram", label=_('Type of Program'))}
-							</p>
+							<hr />
+							${_('Include the following search types on the Child Care Search page:')}
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="checkbox">
+										${renderer.errorlist("item.CSrchSchoolEscort")}
+										${renderer.checkbox("item.CSrchSchoolEscort", label=_('Escorts to / from School'))}
+									</div>
+									<div class="checkbox">
+										${renderer.errorlist("item.CSrchKeywords")}
+										${renderer.checkbox("item.CSrchKeywords", label=_('Keywords'))}
+									</div>
+									<div class="checkbox">
+										${renderer.errorlist("item.CSrchLanguages")}
+										${renderer.checkbox("item.CSrchLanguages", label=_('Languages'))}
+									</div>
+									<div class="checkbox">
+										${renderer.errorlist("item.CSrchNear")}
+										${renderer.checkbox("item.CSrchNear", label=_('Located Near'))}
+									</div>
+									<div class="checkbox">
+										${renderer.errorlist("item.CSrchSchoolsInArea")}
+										${renderer.checkbox("item.CSrchSchoolsInArea", label=_('Local Schools'))}
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										${renderer.errorlist("item.CSrchBusRoute")}
+										${renderer.checkbox("item.CSrchBusRoute", label=_('On / Near Bus Route'))}
+									</div>
+									<div class="checkbox">
+										${renderer.errorlist("item.CSrchSpaceAvailable")}
+										${renderer.checkbox("item.CSrchSpaceAvailable", label=_('Space Available'))}
+									</div>
+									<div class="checkbox">
+										${renderer.errorlist("item.CSrchSubsidy")}
+										${renderer.checkbox("item.CSrchSubsidy", label=_('Subsidy'))}
+									</div>
+									<div class="checkbox">
+										${renderer.errorlist("item.CSrchSubsidyNamedProgram")}
+										${renderer.checkbox("item.CSrchSubsidyNamedProgram", label=dboptions.get_best_lang('SubsidyNamedProgram'))}
+									</div>
+									<div class="checkbox">
+										${renderer.errorlist("item.CSrchTypeOfProgram")}
+										${renderer.checkbox("item.CSrchTypeOfProgram", label=_('Type of Program'))}
+									</div>
+								</div>
+							</div>
+
 							%for culture in culture_order:
 							<% lang = culture_map[culture] %>
 							<p>

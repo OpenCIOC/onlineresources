@@ -14,16 +14,21 @@ CREATE TABLE [dbo].[STP_Member_Description]
 [MemberNameVOL] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [FeedbackMsgVOL] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL CONSTRAINT [DF_STP_Member_Description_FeedbackMsgVOL] DEFAULT ('Thank you for your submission. Your suggestions will be processed within 10 business days.<BR>If you provided an e-mail address, you will be notified by email once your suggestions have been processed.'),
 [VolProfilePrivacyPolicy] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[VolProfilePrivacyPolicyOrgName] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+[VolProfilePrivacyPolicyOrgName] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[SubsidyNamedProgram] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[SubsidyNamedProgramDesc] [nvarchar] (1000) COLLATE Latin1_General_100_CI_AI NULL,
+[SubsidyNamedProgramSearchLabel] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[STP_Member_Description] ADD CONSTRAINT [PK_STP_Member_Description] PRIMARY KEY CLUSTERED  ([MemberID], [LangID]) ON [PRIMARY]
+ALTER TABLE [dbo].[STP_Member_Description] ADD CONSTRAINT [PK_STP_Member_Description] PRIMARY KEY CLUSTERED ([MemberID], [LangID]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[STP_Member_Description] ADD CONSTRAINT [FK_STP_Member_Description_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
 GO
 ALTER TABLE [dbo].[STP_Member_Description] ADD CONSTRAINT [FK_STP_Member_Description_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
-GRANT SELECT ON  [dbo].[STP_Member_Description] TO [cioc_login_role]
 GRANT INSERT ON  [dbo].[STP_Member_Description] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[STP_Member_Description] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[STP_Member_Description] TO [cioc_login_role]
 GO

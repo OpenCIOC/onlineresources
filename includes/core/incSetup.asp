@@ -180,6 +180,7 @@ def getDbOptions(handleDBConnetionError):
 		g_strDefaultCountry, g_strDefaultProvState, \
 		g_bContactOrgCIC, g_bContactPhone1CIC, g_bContactPhone2CIC, g_bContactPhone3CIC, g_bContactFaxCIC, g_bContactEmailCIC, \
 		g_bContactOrgVOL, g_bContactPhone1VOL, g_bContactPhone2VOL, g_bContactPhone3VOL, g_bContactFaxVOL, g_bContactEmailVOL, \
+		g_strSubsidyNamedProgram, \
 		g_intMemberID, g_bOtherMembers, g_bOtherMembersActive, g_bSSL, g_intLoginRetryLimit
 
 	try:
@@ -196,6 +197,7 @@ def getDbOptions(handleDBConnetionError):
 	g_strDatabaseNameVOL = dboptions.get_best_lang('DatabaseNameVOL')
 	g_strMemberNameCIC = dboptions.get_best_lang('MemberNameCIC')
 	g_strMemberNameVOL = dboptions.get_best_lang('MemberNameVOL')
+	g_strSubsidyNamedProgram = dboptions.get_best_lang('SubsidyNamedProgram')
 
 	g_bAllowPublicAccess = dboptions.AllowPublicAccess
 	g_intDefaultPrintTemplate = dboptions.DefaultPrintTemplate

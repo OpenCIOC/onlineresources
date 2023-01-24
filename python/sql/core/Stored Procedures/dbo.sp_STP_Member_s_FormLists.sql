@@ -13,13 +13,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 23-Jul-2012
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE	@Error	int
 SET @Error = 0
 
@@ -27,7 +20,7 @@ SET @Error = 0
 IF @MemberID IS NULL BEGIN
 	SET @Error = 2 -- No ID Given
 -- Member ID exists ?
-END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
+END ELSE IF NOT EXISTS(SELECT * FROM dbo.STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @MemberID = NULL
 END
@@ -39,7 +32,7 @@ Declare @DefaultViewCIC varchar(20),
 SELECT	@DefaultViewCIC=DefaultViewCIC,
 		@DefaultViewVOL=DefaultViewVOL,
 		@TemplateOverride=CAST(ISNULL(DefaultTemplate,'') AS varchar) + ',' + CAST(ISNULL(DefaultPrintTemplate,'') AS varchar)
-FROM STP_Member
+FROM dbo.STP_Member
 WHERE MemberID=@MemberID
 
 /* Templates */

@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -63,7 +63,7 @@ With rsStatD
 	Wend
 %>
 </table>
-<input type="submit" value="<%=TXT_DELETE%>">
+<input type="submit" value="<%=TXT_DELETE%>" class="btn btn-default">
 <%
 End With
 %>

@@ -137,6 +137,7 @@ class ViewBaseCICSchema(ViewBaseSchema):
     CSrchSchoolsInArea = validators.Bool()
     CSrchSpaceAvailable = validators.Bool()
     CSrchSubsidy = validators.Bool()
+    CSrchSubsidyNamedProgram = validators.Bool()
     CSrchTypeOfProgram = validators.Bool()
 
     CCRFields = validators.DictConverter(CCRFieldsOptions, if_empty=False)

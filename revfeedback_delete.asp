@@ -97,7 +97,7 @@ Else
 <%=g_strCacheFormVals%>
 <input type="hidden" name="<%=IIf(bPub,"PBFBID","FBID")%>" value="<%=intRevFBID%>">
 <input type="hidden" name="Confirmed" value="on">
-<input type="submit" value="<%=TXT_DELETE%>">
+<input type="submit" value="<%=TXT_DELETE%>" class="btn btn-default">
 </form>
 <%
 	Call makePageFooter(True)

@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -92,7 +92,7 @@ With rsStatD
 	Wend
 %>
 </table>
-<input type="submit" value="<%=TXT_DELETE%>">
+<input type="submit" value="<%=TXT_DELETE%>" class="btn btn-default">
 <%
 End With
 %>

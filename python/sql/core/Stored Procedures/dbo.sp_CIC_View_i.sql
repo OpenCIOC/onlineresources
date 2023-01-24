@@ -15,12 +15,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked by: KL
-	Checked on: 25-Jul-2019
-	Action:	NO ACTION REQUIRED
-*/
-
 DECLARE	@Error	int
 SET @Error = 0
 
@@ -47,7 +41,7 @@ IF @MemberID IS NULL BEGIN
 	SET @Error = 10 -- Required Field
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, @ViewObjectName)
 -- Member ID exists ?
-END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
+END ELSE IF NOT EXISTS(SELECT * FROM dbo.STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS VARCHAR), @MemberObjectName)
 END
@@ -65,15 +59,15 @@ IF @ViewName IS NULL OR @ViewName = '' BEGIN
 	SET @Error = 10 -- Required field
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @ViewNameObjectName, @ViewObjectName)
 -- View Name already in use ?
-END ELSE IF EXISTS (SELECT * FROM CIC_View vw INNER JOIN CIC_View_Description vwd ON vw.ViewType=vwd.ViewType WHERE ViewName=@ViewName AND MemberID=@MemberID) BEGIN
+END ELSE IF EXISTS (SELECT * FROM dbo.CIC_View vw INNER JOIN dbo.CIC_View_Description vwd ON vw.ViewType=vwd.ViewType WHERE ViewName=@ViewName AND MemberID=@MemberID) BEGIN
 	SET @Error = 6 -- Value in use
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @ViewName, @ViewNameObjectName)
 -- View we are copying exists ?
-END ELSE IF @ViewType IS NOT NULL AND NOT EXISTS (SELECT * FROM CIC_View WHERE ViewType=@ViewType) BEGIN
+END ELSE IF @ViewType IS NOT NULL AND NOT EXISTS (SELECT * FROM dbo.CIC_View WHERE ViewType=@ViewType) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@ViewType AS VARCHAR), @ViewObjectName)
 -- View we are copying owned by this member ?
-END ELSE IF @ViewType IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_View WHERE ViewType=@ViewType AND MemberID=@MemberID) BEGIN
+END ELSE IF @ViewType IS NOT NULL AND NOT EXISTS(SELECT * FROM dbo.CIC_View WHERE ViewType=@ViewType AND MemberID=@MemberID) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL)
 END ELSE BEGIN
@@ -87,7 +81,7 @@ END ELSE BEGIN
 			EXEC @Error = sp_GBL_Template_Default_Check @DefaultTemplate OUTPUT, @ErrMsg OUTPUT
 		END
 		
-		INSERT INTO CIC_View (
+		INSERT INTO dbo.CIC_View (
 			CREATED_DATE,
 			CREATED_BY,
 			MODIFIED_DATE,
@@ -108,7 +102,7 @@ END ELSE BEGIN
 		SELECT @ViewType = SCOPE_IDENTITY()
 
 		IF @Error = 0 BEGIN
-			INSERT INTO CIC_View_Description (
+			INSERT INTO dbo.CIC_View_Description (
 				ViewType,
 				CREATED_DATE,
 				CREATED_BY,
@@ -125,7 +119,7 @@ END ELSE BEGIN
 				@MODIFIED_BY,
 				cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(@ViewName,LangID),
 				LangID
-			FROM STP_Language
+			FROM dbo.STP_Language
 			WHERE Active=1
 		END
 	/*copy over all fields from the selected CIC_View except the View the name*/
@@ -192,6 +186,7 @@ END ELSE BEGIN
 			CSrchSchoolsInArea,
 			CSrchSpaceAvailable,
 			CSrchSubsidy,
+            CSrchSubsidyNamedProgram,
 			CSrchTypeOfProgram,
 			CCRFields,
 			QuickListDropDown,
@@ -291,6 +286,7 @@ END ELSE BEGIN
 			CSrchSchoolsInArea,
 			CSrchSpaceAvailable,
 			CSrchSubsidy,
+            CSrchSubsidyNamedProgram,
 			CSrchTypeOfProgram,
 			CCRFields,
 			QuickListDropDown,
@@ -327,7 +323,7 @@ END ELSE BEGIN
 			RefineField2,
 			RefineField3,
 			RefineField4
-		FROM CIC_View
+		FROM dbo.CIC_View
 		WHERE ViewType = @DefaultView
 
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @ViewObjectName, @ErrMsg
@@ -440,7 +436,7 @@ END ELSE BEGIN
 			PDFBottomMessage,
 			PDFBottomMargin,
 			GoogleTranslateDisclaimer
-		FROM CIC_View_Description
+		FROM dbo.CIC_View_Description
 		WHERE ViewType = @DefaultView
 	END
 
@@ -452,10 +448,10 @@ END ELSE BEGIN
 		DECLARE @DD_ID int,
 				@DD_ID_NEW int
 
-		SELECT @DD_ID = DD_ID FROM GBL_Display WHERE ViewTypeCIC=@DefaultView
+		SELECT @DD_ID = DD_ID FROM dbo.GBL_Display WHERE ViewTypeCIC=@DefaultView
 
 		IF @DD_ID IS NOT NULL BEGIN
-			INSERT INTO GBL_Display (
+			INSERT INTO dbo.GBL_Display (
 				ViewTypeCIC,
 				Domain,
 				ShowID,
@@ -486,26 +482,26 @@ END ELSE BEGIN
 				OrderByCustom,
 				OrderByDesc,
 				TableSort
-			FROM GBL_Display WHERE DD_ID=@DD_ID
+			FROM dbo.GBL_Display WHERE DD_ID=@DD_ID
 			
 			SELECT @DD_ID_NEW = SCOPE_IDENTITY()
 			IF @DD_ID_NEW IS NOT NULL BEGIN
-				INSERT INTO GBL_Display_Fld (DD_ID,FieldID)
+				INSERT INTO dbo.GBL_Display_Fld (DD_ID,FieldID)
 					SELECT @DD_ID_NEW, FieldID
-						FROM GBL_Display_Fld
+						FROM dbo.GBL_Display_Fld
 					WHERE DD_ID=@DD_ID
 			END
 		END
 
 		DECLARE FieldGroupCursor CURSOR LOCAL FOR
 			SELECT DisplayFieldGroupID, DisplayOrder
-				FROM CIC_View_DisplayFieldGroup
+				FROM dbo.CIC_View_DisplayFieldGroup
 			WHERE ViewType = @DefaultView
 		OPEN FieldGroupCursor
 
 		FETCH NEXT FROM FieldGroupCursor INTO @DisplayFieldGroupID, @DisplayFieldGroupDisplayOrder
 		WHILE @@FETCH_STATUS = 0 BEGIN
-			INSERT INTO CIC_View_DisplayFieldGroup (
+			INSERT INTO dbo.CIC_View_DisplayFieldGroup (
 				ViewType,
 				DisplayOrder
 			)
@@ -514,7 +510,7 @@ END ELSE BEGIN
 				@DisplayFieldGroupDisplayOrder
 			)
 			SET @NewDisplayFieldGroupID = SCOPE_IDENTITY()
-			INSERT INTO CIC_View_DisplayFieldGroup_Name (
+			INSERT INTO dbo.CIC_View_DisplayFieldGroup_Name (
 				DisplayFieldGroupID,
 				LangID,
 				[Name]
@@ -523,27 +519,27 @@ END ELSE BEGIN
 				@NewDisplayFieldGroupID,
 				LangID,
 				[Name]
-			FROM CIC_View_DisplayFieldGroup_Name
+			FROM dbo.CIC_View_DisplayFieldGroup_Name
 				WHERE DisplayFieldGroupID=@DisplayFieldGroupID
 
-			INSERT INTO CIC_View_DisplayField (DisplayFieldGroupID, FieldID)
+			INSERT INTO dbo.CIC_View_DisplayField (DisplayFieldGroupID, FieldID)
 				SELECT @NewDisplayFieldGroupID, FieldID
-					FROM  CIC_View_DisplayField
+					FROM  dbo.CIC_View_DisplayField
 				WHERE DisplayFieldGroupID=@DisplayFieldGroupID
 
-			INSERT INTO CIC_View_UpdateField (DisplayFieldGroupID, FieldID, RT_ID)
+			INSERT INTO dbo.CIC_View_UpdateField (DisplayFieldGroupID, FieldID, RT_ID)
 				SELECT @NewDisplayFieldGroupID, FieldID, RT_ID
-					FROM  CIC_View_UpdateField
+					FROM  dbo.CIC_View_UpdateField
 				WHERE DisplayFieldGroupID=@DisplayFieldGroupID
 
-			INSERT INTO CIC_View_FeedbackField (DisplayFieldGroupID, FieldID, RT_ID)
+			INSERT INTO dbo.CIC_View_FeedbackField (DisplayFieldGroupID, FieldID, RT_ID)
 				SELECT @NewDisplayFieldGroupID, FieldID, RT_ID
-					FROM  CIC_View_FeedbackField
+					FROM  dbo.CIC_View_FeedbackField
 				WHERE DisplayFieldGroupID=@DisplayFieldGroupID
 
-			INSERT INTO CIC_View_MailFormField (DisplayFieldGroupID, FieldID)
+			INSERT INTO dbo.CIC_View_MailFormField (DisplayFieldGroupID, FieldID)
 				SELECT @NewDisplayFieldGroupID, FieldID
-					FROM  CIC_View_MailFormField
+					FROM  dbo.CIC_View_MailFormField
 				WHERE DisplayFieldGroupID=@DisplayFieldGroupID
 
 			FETCH NEXT FROM FieldGroupCursor INTO @DisplayFieldGroupID, @DisplayFieldGroupDisplayOrder
@@ -553,28 +549,28 @@ END ELSE BEGIN
 
 		DEALLOCATE FieldGroupCursor
 
-		INSERT INTO CIC_View_Recurse (ViewType, CanSee)
+		INSERT INTO dbo.CIC_View_Recurse (ViewType, CanSee)
 			SELECT @ViewType AS ViewType, CanSee
-				FROM CIC_View_Recurse
+				FROM dbo.CIC_View_Recurse
 			WHERE ViewType = @DefaultView
 
-		INSERT INTO CIC_View_Community (CM_ID, ViewType, DisplayOrder)
+		INSERT INTO dbo.CIC_View_Community (CM_ID, ViewType, DisplayOrder)
 			SELECT CM_ID, @ViewType AS ViewType, DisplayOrder
-				FROM CIC_View_Community
+				FROM dbo.CIC_View_Community
 			WHERE ViewType = @DefaultView
 
-		INSERT INTO CIC_View_ChkField (ViewType, FieldID)
+		INSERT INTO dbo.CIC_View_ChkField (ViewType, FieldID)
 			SELECT @ViewType AS ViewType, FieldID
-				FROM CIC_View_ChkField
+				FROM dbo.CIC_View_ChkField
 			WHERE ViewType = @DefaultView
 
-		INSERT INTO CIC_View_PageMsg (ViewType, PageMsgID)
+		INSERT INTO dbo.CIC_View_PageMsg (ViewType, PageMsgID)
 			SELECT @ViewType AS ViewType, PageMsgID
-				FROM CIC_View_PageMsg
+				FROM dbo.CIC_View_PageMsg
 			WHERE ViewType = @DefaultView
 	END ELSE BEGIN
 		/* we don't have a View to copy from; insert all available fields */
-		INSERT INTO CIC_View_DisplayFieldGroup (
+		INSERT INTO dbo.CIC_View_DisplayFieldGroup (
 			ViewType,
 			DisplayOrder
 		) VALUES (
@@ -582,7 +578,7 @@ END ELSE BEGIN
 			1
 		)
 		SET @DisplayFieldGroupID = SCOPE_IDENTITY()
-		INSERT INTO CIC_View_DisplayFieldGroup_Name (
+		INSERT INTO dbo.CIC_View_DisplayFieldGroup_Name (
 			DisplayFieldGroupID,
 			LangID,
 			[Name]
@@ -591,21 +587,21 @@ END ELSE BEGIN
 			@@LANGID,
 			cioc_shared.dbo.fn_SHR_STP_ObjectName('Record Details')
 		)
-		INSERT INTO CIC_View_DisplayField (DisplayFieldGroupID, FieldID)
+		INSERT INTO dbo.CIC_View_DisplayField (DisplayFieldGroupID, FieldID)
 			SELECT @DisplayFieldGroupID AS DisplayFieldGroupID, FieldID
-				FROM GBL_FieldOption
+				FROM dbo.GBL_FieldOption
 			WHERE CanUseDisplay=1
-		INSERT INTO CIC_View_UpdateField (DisplayFieldGroupID, FieldID)
+		INSERT INTO dbo.CIC_View_UpdateField (DisplayFieldGroupID, FieldID)
 			SELECT @DisplayFieldGroupID AS DisplayFieldGroupID, FieldID
-				FROM GBL_FieldOption
+				FROM dbo.GBL_FieldOption
 			WHERE CanUseDisplay=1
-		INSERT INTO CIC_View_FeedbackField (DisplayFieldGroupID, FieldID)
+		INSERT INTO dbo.CIC_View_FeedbackField (DisplayFieldGroupID, FieldID)
 			SELECT @DisplayFieldGroupID AS DisplayFieldGroupID, FieldID
-				FROM GBL_FieldOption
+				FROM dbo.GBL_FieldOption
 			WHERE CanUseDisplay=1
-		INSERT INTO CIC_View_MailFormField (DisplayFieldGroupID, FieldID)
+		INSERT INTO dbo.CIC_View_MailFormField (DisplayFieldGroupID, FieldID)
 			SELECT @DisplayFieldGroupID AS DisplayFieldGroupID, FieldID
-				FROM GBL_FieldOption
+				FROM dbo.GBL_FieldOption
 			WHERE CanUseDisplay=1
 	END
 END

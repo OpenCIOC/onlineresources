@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -57,8 +57,15 @@ Call dicCheckListSearch("SCHE").setValues("SCHE","SCHE", TXT_ESCORTS_TO, False, 
 ' 5. Child Care Subsidy
 '--------------------------------------------------
 
-Dim bCCSubsidy
+Dim bCCSubsidy, _
+	strCCSubsidyNP
+
 bCCSubsidy = Request("CCSubsidy") = "on"
+strCCSubsidyNP = Request("CCSubsidyNP")
+
+If strCCSubsidyNP = "on" Then
+	strCCSubsidyNP = "Y"
+End If
 
 '--------------------------------------------------
 ' 6. Child Care Space
@@ -204,6 +211,36 @@ Sub setCCRBasicSearchData()
 			aSearch(intCurrentSearch) = TXT_LIMIT_SUBSIDY
 		End If
 	End If
+
+	Select Case strCCSubsidyNP
+		Case "Y"
+			strWhere = strWhere & strCon & "(ccbt.SUBSIDY_NAMED_PROGRAM=" & SQL_TRUE & ")"
+			strCon = AND_CON
+	
+			If bSearchDisplay Then
+				intCurrentSearch = intCurrentSearch + 1
+				ReDim Preserve aSearch(intCurrentSearch)
+				aSearch(intCurrentSearch) = g_strSubsidyNamedProgram
+			End If
+		Case "N"
+			strWhere = strWhere & strCon & "(ccbt.SUBSIDY_NAMED_PROGRAM=" & SQL_FALSE & ")"
+			strCon = AND_CON
+	
+			If bSearchDisplay Then
+				intCurrentSearch = intCurrentSearch + 1
+				ReDim Preserve aSearch(intCurrentSearch)
+				aSearch(intCurrentSearch) = g_strSubsidyNamedProgram & " - " & TXT_NO
+			End If
+		Case "U"
+			strWhere = strWhere & strCon & "(ccbt.SUBSIDY_NAMED_PROGRAM IS NULL)"
+			strCon = AND_CON
+	
+			If bSearchDisplay Then
+				intCurrentSearch = intCurrentSearch + 1
+				ReDim Preserve aSearch(intCurrentSearch)
+				aSearch(intCurrentSearch) = g_strSubsidyNamedProgram & " - " & TXT_UNKNOWN
+			End If
+	End Select
 
 '--------------------------------------------------
 ' 6. Child Care Space

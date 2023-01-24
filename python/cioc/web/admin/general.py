@@ -157,6 +157,9 @@ class GeneralDescriptionSchema(Schema):
     FeedbackMsgVOL = ciocvalidators.UnicodeString(max=2000)
     VolProfilePrivacyPolicyOrgName = ciocvalidators.UnicodeString(max=255)
     VolProfilePrivacyPolicy = ciocvalidators.UnicodeString()
+    SubsidyNamedProgram = ciocvalidators.UnicodeString(max=255)
+    SubsidyNamedProgramDesc = ciocvalidators.UnicodeString(max=1000)
+    SubsidyNamedProgramSearchLabel = ciocvalidators.UnicodeString(max=255)
 
     chained_validators = [
         ciocvalidators.RequireIfPredicate(
@@ -244,8 +247,10 @@ class GeneralSetup(AdminViewBase):
                     kwargs
                 )
 
+                log.debug('submitting values: sql=%s, args=%s', sql, args)
                 cursor = conn.execute(sql, *args)
                 result = cursor.fetchone()
+                log.debug('result: %s', result)
                 cursor.close()
 
             if not result.Return:
