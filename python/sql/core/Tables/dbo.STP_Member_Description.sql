@@ -26,6 +26,16 @@ ALTER TABLE [dbo].[STP_Member_Description] ADD CONSTRAINT [FK_STP_Member_Descrip
 GO
 ALTER TABLE [dbo].[STP_Member_Description] ADD CONSTRAINT [FK_STP_Member_Description_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
+GRANT SELECT ([MemberID]) ON [dbo].[STP_Member_Description] TO [cioc_cic_search_role]
+GO
+GRANT SELECT ([LangID]) ON [dbo].[STP_Member_Description] TO [cioc_cic_search_role]
+GO
+GRANT SELECT ([SubsidyNamedProgram]) ON [dbo].[STP_Member_Description] TO [cioc_cic_search_role]
+GO
+GRANT SELECT ([SubsidyNamedProgramDesc]) ON [dbo].[STP_Member_Description] TO [cioc_cic_search_role]
+GO
+GRANT SELECT ([SubsidyNamedProgramSearchLabel]) ON [dbo].[STP_Member_Description] TO [cioc_cic_search_role]
+GO
 GRANT INSERT ON  [dbo].[STP_Member_Description] TO [cioc_login_role]
 GO
 GRANT SELECT ON  [dbo].[STP_Member_Description] TO [cioc_login_role]

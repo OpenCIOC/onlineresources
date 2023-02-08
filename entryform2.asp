@@ -493,6 +493,32 @@ Sub getSpaceAvailableFields()
 	End If
 End Sub
 
+Sub getSubsidyNamedProgramFields()
+	Dim bSubsidyNamedProgram, _
+		strNotes
+
+	bSubsidyNamedProgram = Trim(Request("SUBSIDY_NAMED_PROGRAM"))
+	If Not IsNumeric(bSubsidyNamedProgram) Then
+		bSubsidyNamedProgram = Null
+	Else
+		bSubsidyNamedProgram = CInt(bSubsidyNamedProgram)
+		If Not (bSubsidyNamedProgram = SQL_TRUE Or bSubsidyNamedProgram = SQL_FALSE) Then
+			bSubsidyNamedProgram = Null
+		End If
+	End If
+
+	strNotes = Trim(Request("SUBSIDY_NAMED_PROGRAM_NOTES"))
+
+	Call checkLength(g_strSubsidyNamedProgram & " (" & TXT_NOTES & ")",strNotes,1000)
+
+	If Nl(strErrorList) Then
+		If addBTInsertField("SUBSIDY_NAMED_PROGRAM", bSubsidyNamedProgram, False, strUpdateListCCBT,strInsertIntoCCBT,strInsertValueCCBT) Or _
+			addBTInsertField("SUBSIDY_NAMED_PROGRAM_NOTES", strNotes, True, strUpdateListCCBTD,strInsertIntoCCBTD,strInsertValueCCBTD) Then
+				Call addChangeField(fldName.Value, Null)
+		End If
+	End If
+End Sub
+
 Sub getActivityInfoEntrySQL(intBTACTID)
 	Dim strPrefix
 	strPrefix = "AI_" & intBTACTID & "_"
@@ -2053,6 +2079,8 @@ If Not bRSNError Then
 				Call getSpaceAvailableFields()
 			Case "SUBJECTS"
 				Call getStdCheckListSQL("CIC", "Subj", False, Null, Null, Null, Null, Null, Null)
+			Case "SUBSIDY_NAMED_PROGRAM"
+				Call getSubsidyNamedProgramFields()
 			Case "TYPE_OF_CARE"
 				Call getStdCheckListSQL("CCR", "TOC", True, Null, Null, fldName.Value, strUpdateListCCBTD, strInsertIntoCCBTD, strInsertValueCCBTD)
 			Case "VACANCY_INFO"
@@ -2524,11 +2552,10 @@ If Not bRSNError Then
 					If Not Nl(strOtherLangList) Then
 %>
 <h2><%=TXT_RECORD_DETAILS & TXT_COLON%><a href="<%=makeDetailsLink(strNUM,StringIf(intCurSearchNumber >= 0,"Number=" & intCurSearchNumber),vbNullString)%>"><%=tmpOrgName%></a></h2>
-<p><%=TXT_EDIT_EQUIVALENT%>
+<p><%=TXT_EDIT_EQUIVALENT%></p>
 <ul>
 	<%=strOtherLangList%>
 </ul>
-</p>
 <%
 					End If
 					Call makePageFooter(True)

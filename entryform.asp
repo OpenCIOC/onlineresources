@@ -809,6 +809,8 @@ While Not rsFields.EOF
 						strFieldVal = makeSortAsContents(rsOrg, Not bNew)
 					Case "SUBJECTS"
 						strFieldVal = makeSubjectContents(rsOrg, Not bNew)
+					Case "SUBSIDY_NAMED_PROGRAM"
+						strFieldVal = makeSubsidyNamedProgramContents(rsOrg, Not bNew)
 					Case "TYPE_OF_CARE"
 						strFieldVal = makeTypeOfCareContents(rsOrg, Not bNew)
 					Case "TYPE_OF_PROGRAM"

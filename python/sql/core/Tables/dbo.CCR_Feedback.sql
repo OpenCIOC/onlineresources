@@ -19,8 +19,10 @@ CREATE TABLE [dbo].[CCR_Feedback]
 [LC_SCHOOLAGE] [nvarchar] (20) COLLATE Latin1_General_CI_AS NULL,
 [LC_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SCHOOLS_IN_AREA] [nvarchar] (max) COLLATE Latin1_General_CI_AS NULL,
-[SCHOOL_ESCORT] [nvarchar] (max) COLLATE Latin1_General_CI_AS NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+[SCHOOL_ESCORT] [nvarchar] (max) COLLATE Latin1_General_CI_AS NULL,
+[SUBSIDY_NAMED_PROGRAM] [nvarchar] (100) COLLATE Latin1_General_CI_AS NULL,
+[SUBSIDY_NAMED_PROGRAM_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -46,12 +48,15 @@ DELETE fbe
 	)
 SET NOCOUNT OFF
 GO
-ALTER TABLE [dbo].[CCR_Feedback] ADD CONSTRAINT [PK_CCR_Feedback] PRIMARY KEY CLUSTERED  ([FB_ID]) ON [PRIMARY]
+ALTER TABLE [dbo].[CCR_Feedback] ADD CONSTRAINT [PK_CCR_Feedback] PRIMARY KEY CLUSTERED ([FB_ID]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CCR_Feedback] ADD CONSTRAINT [FK_CCR_Feedback_GBL_FeedbackEntry] FOREIGN KEY ([FB_ID]) REFERENCES [dbo].[GBL_FeedbackEntry] ([FB_ID]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
-GRANT SELECT ON  [dbo].[CCR_Feedback] TO [cioc_cic_search_role]
 GRANT INSERT ON  [dbo].[CCR_Feedback] TO [cioc_cic_search_role]
-GRANT SELECT ON  [dbo].[CCR_Feedback] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[CCR_Feedback] TO [cioc_cic_search_role]
+GO
 GRANT INSERT ON  [dbo].[CCR_Feedback] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[CCR_Feedback] TO [cioc_login_role]
 GO

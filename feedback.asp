@@ -633,6 +633,8 @@ If (Not Nl(strUpdatePassword) Or Nl(bUpdatePasswordRequired) Or Not bUpdatePassw
 						strFieldVal = makeSpaceAvailableContents(rsOrg, Not bSuggest)
 					Case "SUBJECTS"
 						strFieldVal = makeSubjectContentsFb(rsOrg, Not bSuggest)
+					Case "SUBSIDY_NAMED_PROGRAM"
+						strFieldVal = makeSubsidyNamedProgramContents(rsOrg, Not bSuggest)
 					Case "TAXONOMY"
 						strFieldVal = makeTaxonomyContentsFb(rsOrg, Not bSuggest)
 					Case "TYPE_OF_PROGRAM"

@@ -3044,6 +3044,51 @@ Function makeSubjectContents(rst,bUseContent)
 	makeSubjectContents = strReturn
 End Function
 
+Function makeSubsidyNamedProgramContents(rst,bUseContent)
+	Dim strReturn
+	Dim bSubsidyNamedProgram, _
+		strSubsidyNamedProgramDesc, _
+		strNotes
+	
+	If bUseContent Then
+		bSubsidyNamedProgram = rst.Fields("SUBSIDY_NAMED_PROGRAM")
+		strSubsidyNamedProgramDesc = rst.Fields("SUBSIDY_NAMED_PROGRAM_DESC")
+		strNotes = rst.Fields("SUBSIDY_NAMED_PROGRAM_NOTES")
+		If Not Nl(strNotes) Then
+			strNotes = Server.HTMLEncode(strNotes)
+		End If
+	Else
+		bSubsidyNamedProgram = Null
+		strNotes = vbNullString
+	End If
+
+	If Not Nl(strSubsidyNamedProgramDesc) Then
+		strReturn = "<p>" & strSubsidyNamedProgramDesc & "</p>"
+	Else
+		strReturn = vbNulString
+	End If
+
+	strReturn = strReturn & _
+		"<div class=""form-group row"">" & _
+			"<label for=""SUBSIDY_NAMED_PROGRAM"" class=""control-label col-sm-3"">" & g_strSubsidyNamedProgram & "</label>" & _
+			"<div class=""col-sm-9"">" & _
+				makeCBFieldVal("SUBSIDY_NAMED_PROGRAM",bSubsidyNamedProgram,rsFields.Fields("CheckboxOnText"),rsFields.Fields("CheckboxOffText"),TXT_UNKNOWN,True,True) & _
+			"</div>" & _
+		"</div>" & _
+		"<div class=""form-group row"">" & _
+			"<label for=""SUBSIDY_NAMED_PROGRAM_NOTES"" class=""control-label col-sm-3"">" & TXT_NOTES & "</label>" & _
+			"<div class=""col-sm-9"">" & _
+				"<textarea name=""SUBSIDY_NAMED_PROGRAM_NOTES"" maxlength=""1000"" autocomplete=""off"" class=""form-control"">" & strNotes & "</textarea>"
+	If bFeedback Then
+		strReturn = strReturn & getFeedback("SUBSIDY_NAMED_PROGRAM_NOTES",True,False)
+	End If
+	strReturn = strReturn & _
+ 			"</div>" & _
+		"</div>"
+
+	makeSubsidyNamedProgramContents = strReturn
+End Function
+
 Function makeTypeOfCareContents(rst,bUseContent)
 	Dim strReturn
 	Dim strNUM, strNotes, intNotesLen

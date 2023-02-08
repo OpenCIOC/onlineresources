@@ -12,8 +12,9 @@ CREATE TABLE [dbo].[CCR_BaseTable_Description]
 [SCHOOL_ESCORT_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SCHOOLS_IN_AREA_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [SPACE_AVAILABLE_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[TYPE_OF_CARE_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+[TYPE_OF_CARE_NOTES] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[SUBSIDY_NAMED_PROGRAM_NOTES] [nvarchar] (1000) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -40,7 +41,6 @@ DELETE pr
 
 SET NOCOUNT OFF
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -64,18 +64,21 @@ END
 
 SET NOCOUNT OFF
 GO
-
-ALTER TABLE [dbo].[CCR_BaseTable_Description] ADD CONSTRAINT [PK_CCR_BaseTable_Description] PRIMARY KEY CLUSTERED  ([CCBTD_ID]) ON [PRIMARY]
+ALTER TABLE [dbo].[CCR_BaseTable_Description] ADD CONSTRAINT [PK_CCR_BaseTable_Description] PRIMARY KEY CLUSTERED ([CCBTD_ID]) ON [PRIMARY]
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [IX_CCR_BaseTable_Description] ON [dbo].[CCR_BaseTable_Description] ([NUM], [LangID]) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[CCR_BaseTable_Description] ADD CONSTRAINT [FK_CCR_BaseTable_Description_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
-GO
 ALTER TABLE [dbo].[CCR_BaseTable_Description] ADD CONSTRAINT [FK_CCR_BaseTable_Description_CCR_BaseTable] FOREIGN KEY ([NUM]) REFERENCES [dbo].[CCR_BaseTable] ([NUM]) ON DELETE CASCADE ON UPDATE CASCADE
 GO
+ALTER TABLE [dbo].[CCR_BaseTable_Description] ADD CONSTRAINT [FK_CCR_BaseTable_Description_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
+GO
 GRANT SELECT ON  [dbo].[CCR_BaseTable_Description] TO [cioc_cic_search_role]
-GRANT SELECT ON  [dbo].[CCR_BaseTable_Description] TO [cioc_login_role]
-GRANT INSERT ON  [dbo].[CCR_BaseTable_Description] TO [cioc_login_role]
+GO
 GRANT DELETE ON  [dbo].[CCR_BaseTable_Description] TO [cioc_login_role]
+GO
+GRANT INSERT ON  [dbo].[CCR_BaseTable_Description] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[CCR_BaseTable_Description] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[CCR_BaseTable_Description] TO [cioc_login_role]
 GO

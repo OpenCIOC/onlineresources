@@ -650,6 +650,19 @@ Sub getSubjectFields(strFieldDisplay)
 	End If
 End Sub
 
+
+Sub getSubsidyNamedProgramFields(strFieldDisplay)
+	Dim strFieldVal
+	strFieldVal = getCbSetValue("SUBSIDY_NAMED_PROGRAM", rsFields.Fields("CheckboxOnText"), rsFields.Fields("CheckboxOffText"))
+	If addInsertField("SUBSIDY_NAMED_PROGRAM",QsNNl(strFieldVal),strInsertIntoCCFB,strInsertValueCCFB) Then
+		Call addEmailField(strFieldDisplay,strFieldVal)
+	End If
+	strFieldVal = getStrSetValue("SUBSIDY_NAMED_PROGRAM_NOTES")
+	If addInsertField("SUBSIDY_NAMED_PROGRAM_NOTES",QsNNl(strFieldVal),strInsertIntoCCFB,strInsertValueCCFB) Then
+		Call addEmailField(strFieldDisplay & " " & TXT_NOTES,strFieldVal)
+	End If
+End Sub
+
 Dim strNUM, _
 	bNUMError, _
 	bSuggest, _
@@ -1123,6 +1136,8 @@ While Not rsFields.EOF
 			Call getSpaceAvailableFields(rsFields.Fields("FieldDisplay"))
 		Case "SUBJECTS"
 			Call getSubjectFields(rsFields.Fields("FieldDisplay"))
+		Case "SUBSIDY_NAMED_PROGRAM"
+			Call getSubsidyNamedProgramFields(rsFields.Fields("FieldDisplay"))
 		Case "VOLCONTACT"
 			Call getContactFields(strFieldName, rsFields.Fields("FieldDisplay"),strInsertIntoFB,strInsertValueFB)
 		Case Else
