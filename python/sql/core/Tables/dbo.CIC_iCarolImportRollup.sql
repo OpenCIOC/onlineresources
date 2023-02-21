@@ -190,7 +190,12 @@ CREATE TABLE [dbo].[CIC_iCarolImportRollup]
 [DESCRIPTION] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [Custom_Minimum Age] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [Custom_Maximum Age] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
-[UniqueIDPriorSystem] [nvarchar] (8) COLLATE Latin1_General_100_CI_AI NULL
+[UniqueIDPriorSystem] [nvarchar] (8) COLLATE Latin1_General_100_CI_AI NULL,
+[Custom_Deleted Record] [nvarchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
+[MailingCommunity] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
+[OtherCommunity] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
+[PhysicalCommunity] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
+[SOFT_DELETION_DATE] [smalldatetime] NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_iCarolImportRollup] ADD CONSTRAINT [PK_CIC_iCarolImportRollup] PRIMARY KEY CLUSTERED ([ResourceAgencyNum], [LangID]) ON [PRIMARY]

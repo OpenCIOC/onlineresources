@@ -194,7 +194,12 @@ WHEN MATCHED AND (src.SYNC_DATE > dst.DATE_MODIFIED)  THEN
 		ORG_LEVEL_1=src.PublicName,
 		dst.ORG_DESCRIPTION=src.AgencyDescription,
 		dst.ORG_LOCATION_SERVICE='AGENCY',
-		dst.DELETION_DATE=src.DELETION_DATE
+		dst.DELETION_DATE=src.DELETION_DATE,
+		dst.SOFT_DELETION_DATE=CASE WHEN src.[Custom_Deleted Record] = 'yes' THEN COALESCE(dst.SOFT_DELETION_DATE, GETDATE()) ELSE NULL END,
+		dst.[Custom_Deleted Record]=src.[Custom_Deleted Record],
+		[MailingCommunity]=src.[MailingCommunity],
+		[OtherCommunity]=src.[OtherCommunity],
+		[PhysicalCommunity]=src.[PhysicalCommunity]		
 WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Agency' THEN
 	INSERT (
 		[ResourceAgencyNum],
@@ -377,7 +382,12 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Agency' THEN
 		ORG_LEVEL_1,
 		ORG_DESCRIPTION,
 		ORG_LOCATION_SERVICE,
-		DELETION_DATE
+		DELETION_DATE,
+		SOFT_DELETION_DATE,
+		[Custom_Deleted Record],
+		[MailingCommunity],
+		[OtherCommunity],
+		[PhysicalCommunity]
 	) VALUES (
 		src.[ResourceAgencyNum],
 		src.LangID,
@@ -559,7 +569,12 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Agency' THEN
 		src.PublicName,
 		src.AgencyDescription,
 		'AGENCY',
-		src.DELETION_DATE
+		src.DELETION_DATE,
+		CASE WHEN src.[Custom_Deleted Record] = 'yes' THEN GETDATE() ELSE NULL END,
+		src.[Custom_Deleted Record],
+		src.[MailingCommunity],
+		src.[OtherCommunity],
+		src.[PhysicalCommunity]	
 	)
 OPTION (ROBUST PLAN)
 	;
@@ -583,6 +598,7 @@ SELECT
 		CASE WHEN pas.[MailingAddress1] IS NOT NULL THEN pas.[MailingAddress1] WHEN ISNULL(p.MailingAddressIsPrivate, 'No') = 'No' AND p.[MailingAddress1]  IS NOT NULL THEN p.[MailingAddress1]  WHEN ISNULL(s.MailingAddressIsPrivate, 'No') = 'No' AND s.[MailingAddress1]  IS NOT NULL THEN s.[MailingAddress1]  WHEN ISNULL(a.MailingAddressIsPrivate, 'No') = 'No' AND a.[MailingAddress1]  IS NOT NULL THEN a.[MailingAddress1]  ELSE NULL END AS [MailingAddress1],
 		CASE WHEN pas.[MailingAddress2] IS NOT NULL THEN pas.[MailingAddress2] WHEN ISNULL(p.MailingAddressIsPrivate, 'No') = 'No' AND p.[MailingAddress2]  IS NOT NULL THEN p.[MailingAddress2]  WHEN ISNULL(s.MailingAddressIsPrivate, 'No') = 'No' AND s.[MailingAddress2]  IS NOT NULL THEN s.[MailingAddress2]  WHEN ISNULL(a.MailingAddressIsPrivate, 'No') = 'No' AND a.[MailingAddress2]  IS NOT NULL THEN a.[MailingAddress2]  ELSE NULL END AS [MailingAddress2],
 		CASE WHEN pas.[MailingCity] IS NOT NULL THEN pas.[MailingCity] WHEN ISNULL(p.MailingAddressIsPrivate, 'No') = 'No' AND p.[MailingCity]  IS NOT NULL THEN p.[MailingCity]  WHEN ISNULL(s.MailingAddressIsPrivate, 'No') = 'No' AND s.[MailingCity]  IS NOT NULL THEN s.[MailingCity]  WHEN ISNULL(a.MailingAddressIsPrivate, 'No') = 'No' AND a.[MailingCity]  IS NOT NULL THEN a.[MailingCity]  ELSE NULL END AS [MailingCity],
+		CASE WHEN pas.[MailingCommunity] IS NOT NULL THEN pas.[MailingCommunity] WHEN ISNULL(p.MailingAddressIsPrivate, 'No') = 'No' AND p.[MailingCommunity]  IS NOT NULL THEN p.[MailingCommunity]  WHEN ISNULL(s.MailingAddressIsPrivate, 'No') = 'No' AND s.[MailingCommunity]  IS NOT NULL THEN s.[MailingCommunity]  WHEN ISNULL(a.MailingAddressIsPrivate, 'No') = 'No' AND a.[MailingCommunity]  IS NOT NULL THEN a.[MailingCommunity]  ELSE NULL END AS [MailingCommunity],
 		CASE WHEN pas.[MailingStateProvince] IS NOT NULL THEN pas.[MailingStateProvince] WHEN ISNULL(p.MailingAddressIsPrivate, 'No') = 'No' AND p.[MailingStateProvince]  IS NOT NULL THEN p.[MailingStateProvince]  WHEN ISNULL(s.MailingAddressIsPrivate, 'No') = 'No' AND s.[MailingStateProvince]  IS NOT NULL THEN s.[MailingStateProvince]  WHEN ISNULL(a.MailingAddressIsPrivate, 'No') = 'No' AND a.[MailingStateProvince]  IS NOT NULL THEN a.[MailingStateProvince]  ELSE NULL END AS [MailingStateProvince],
 		CASE WHEN pas.[MailingPostalCode] IS NOT NULL THEN pas.[MailingPostalCode] WHEN ISNULL(p.MailingAddressIsPrivate, 'No') = 'No' AND p.[MailingPostalCode]  IS NOT NULL THEN p.[MailingPostalCode]  WHEN ISNULL(s.MailingAddressIsPrivate, 'No') = 'No' AND s.[MailingPostalCode]  IS NOT NULL THEN s.[MailingPostalCode]  WHEN ISNULL(a.MailingAddressIsPrivate, 'No') = 'No' AND a.[MailingPostalCode]  IS NOT NULL THEN a.[MailingPostalCode]  ELSE NULL END AS [MailingPostalCode],
 		CASE WHEN NULLIF(pas.[MailingCountry], '-1') IS NOT NULL THEN pas.[MailingCountry] WHEN ISNULL(p.MailingAddressIsPrivate, 'No') = 'No' AND NULLIF(p.[MailingCountry], '-1')  IS NOT NULL THEN p.[MailingCountry]  WHEN ISNULL(s.MailingAddressIsPrivate, 'No') = 'No' AND NULLIF(s.[MailingCountry], '-1')  IS NOT NULL THEN s.[MailingCountry]  WHEN ISNULL(a.MailingAddressIsPrivate, 'No') = 'No' AND NULLIF(a.[MailingCountry], '-1')  IS NOT NULL THEN a.[MailingCountry]  ELSE NULL END AS [MailingCountry],
@@ -591,6 +607,7 @@ SELECT
 		CASE WHEN pas.[PhysicalAddress2] IS NOT NULL THEN pas.[PhysicalAddress2] WHEN ISNULL(p.PhysicalAddressIsPrivate, 'No') = 'No' AND p.[PhysicalAddress2]  IS NOT NULL THEN p.[PhysicalAddress2]  WHEN ISNULL(s.PhysicalAddressIsPrivate, 'No') = 'No' AND s.[PhysicalAddress2]  IS NOT NULL THEN s.[PhysicalAddress2]   WHEN ISNULL(a.PhysicalAddressIsPrivate, 'No') = 'No' AND a.[PhysicalAddress2]  IS NOT NULL THEN a.[PhysicalAddress2]  ELSE NULL END AS [PhysicalAddress2],
 		CASE WHEN pas.[PhysicalCity] IS NOT NULL THEN pas.[PhysicalCity] WHEN ISNULL(p.PhysicalAddressIsPrivate, 'No') = 'No' AND p.[PhysicalCity]  IS NOT NULL THEN p.[PhysicalCity]  WHEN ISNULL(s.PhysicalAddressIsPrivate, 'No') = 'No' AND s.[PhysicalCity]  IS NOT NULL THEN s.[PhysicalCity]  WHEN ISNULL(a.PhysicalAddressIsPrivate, 'No') = 'No' AND a.[PhysicalCity]  IS NOT NULL THEN a.[PhysicalCity]  ELSE NULL END AS [PhysicalCity],
 		CASE WHEN pas.[PhysicalCounty] IS NOT NULL THEN pas.[PhysicalCounty] WHEN ISNULL(p.PhysicalAddressIsPrivate, 'No') = 'No' AND p.[PhysicalCounty]  IS NOT NULL THEN p.[PhysicalCounty]  WHEN ISNULL(s.PhysicalAddressIsPrivate, 'No') = 'No' AND s.[PhysicalCounty]  IS NOT NULL THEN s.[PhysicalCounty]  WHEN ISNULL(a.PhysicalAddressIsPrivate, 'No') = 'No' AND a.[PhysicalCounty]  IS NOT NULL THEN a.[PhysicalCounty]  ELSE NULL END AS [PhysicalCounty],
+		CASE WHEN pas.[PhysicalCommunity] IS NOT NULL THEN pas.[PhysicalCommunity] WHEN ISNULL(p.PhysicalAddressIsPrivate, 'No') = 'No' AND p.[PhysicalCommunity]  IS NOT NULL THEN p.[PhysicalCommunity]  WHEN ISNULL(s.PhysicalAddressIsPrivate, 'No') = 'No' AND s.[PhysicalCommunity]  IS NOT NULL THEN s.[PhysicalCommunity]  WHEN ISNULL(a.PhysicalAddressIsPrivate, 'No') = 'No' AND a.[PhysicalCommunity]  IS NOT NULL THEN a.[PhysicalCommunity]  ELSE NULL END AS [PhysicalCommunity],
 		CASE WHEN pas.[PhysicalStateProvince] IS NOT NULL THEN pas.[PhysicalStateProvince] WHEN ISNULL(p.PhysicalAddressIsPrivate, 'No') = 'No' AND p.[PhysicalStateProvince]  IS NOT NULL THEN p.[PhysicalStateProvince]  WHEN ISNULL(s.PhysicalAddressIsPrivate, 'No') = 'No' AND s.[PhysicalStateProvince]  IS NOT NULL THEN s.[PhysicalStateProvince]  WHEN ISNULL(a.PhysicalAddressIsPrivate, 'No') = 'No' AND a.[PhysicalStateProvince]  IS NOT NULL THEN a.[PhysicalStateProvince]  ELSE NULL END AS [PhysicalStateProvince],
 		CASE WHEN pas.[PhysicalPostalCode] IS NOT NULL THEN pas.[PhysicalPostalCode] WHEN ISNULL(p.PhysicalAddressIsPrivate, 'No') = 'No' AND p.[PhysicalPostalCode]  IS NOT NULL THEN p.[PhysicalPostalCode]  WHEN ISNULL(s.PhysicalAddressIsPrivate, 'No') = 'No' AND s.[PhysicalPostalCode]  IS NOT NULL THEN s.[PhysicalPostalCode]  WHEN ISNULL(a.PhysicalAddressIsPrivate, 'No') = 'No' AND a.[PhysicalPostalCode]  IS NOT NULL THEN a.[PhysicalPostalCode]  ELSE NULL END AS [PhysicalPostalCode],
 		CASE WHEN NULLIF(pas.[PhysicalCountry], '-1') IS NOT NULL THEN pas.[PhysicalCountry] WHEN ISNULL(p.PhysicalAddressIsPrivate, 'No') = 'No' AND NULLIF(p.[PhysicalCountry], '-1')  IS NOT NULL THEN p.[PhysicalCountry]  WHEN ISNULL(s.PhysicalAddressIsPrivate, 'No') = 'No' AND NULLIF(s.[PhysicalCountry], '-1')  IS NOT NULL THEN s.[PhysicalCountry]  WHEN ISNULL(a.PhysicalAddressIsPrivate, 'No') = 'No' AND NULLIF(a.[PhysicalCountry], '-1')  IS NOT NULL THEN a.[PhysicalCountry]  ELSE NULL END AS [PhysicalCountry],
@@ -599,6 +616,7 @@ SELECT
 		COALESCE(pas.[OtherAddress2], p.[OtherAddress2], s.[OtherAddress2], a.[OtherAddress2]) AS [OtherAddress2],
 		COALESCE(pas.[OtherCity], p.[OtherCity], s.[OtherCity], a.[OtherCity]) AS [OtherCity],
 		COALESCE(pas.[OtherCounty], p.[OtherCounty], s.[OtherCounty], a.[OtherCounty]) AS [OtherCounty],
+		COALESCE(pas.[OtherCommunity], p.[OtherCommunity], s.[OtherCommunity], a.[OtherCommunity]) AS [OtherCommunity],
 		COALESCE(pas.[OtherStateProvince], p.[OtherStateProvince], s.[OtherStateProvince], a.[OtherStateProvince]) AS [OtherStateProvince],
 		COALESCE(pas.[OtherPostalCode], p.[OtherPostalCode], s.[OtherPostalCode], a.[OtherPostalCode]) AS [OtherPostalCode],
 		COALESCE(NULLIF(pas.[OtherCountry], '-1'), NULLIF(p.[OtherCountry], '-1'), NULLIF(s.[OtherCountry], '-1'), NULLIF(a.[OtherCountry], '-1')) AS [OtherCountry],
@@ -664,17 +682,17 @@ SELECT
 		COALESCE(pas.[EligibilityFemale], p.[EligibilityFemale], s.[EligibilityFemale], a.[EligibilityFemale]) AS [EligibilityFemale],
 		COALESCE(pas.[EligibilityMale], p.[EligibilityMale], s.[EligibilityMale], a.[EligibilityMale]) AS [EligibilityMale],
 		COALESCE(pas.[EligibilityTeen], p.[EligibilityTeen], s.[EligibilityTeen], a.[EligibilityTeen]) AS [EligibilityTeen],
-		p.[SeniorWorkerName],
-		p.[SeniorWorkerTitle],
-		p.[SeniorWorkerEmailAddress],
-		p.[SeniorWorkerPhoneNumber],
-		p.[SeniorWorkerIsPrivate],
-		p.[MainContactName],
-		p.[MainContactTitle],
-		p.[MainContactEmailAddress],
-		p.[MainContactPhoneNumber],
-		p.[MainContactType],
-		p.[MainContactIsPrivate],
+		COALESCE(pas.[SeniorWorkerName], p.SeniorWorkerName) AS SeniorWorkerName,
+		CASE WHEN pas.SeniorWorkerName IS NOT NULL THEN pas.SeniorWorkerTitle ELSE p.[SeniorWorkerTitle] END AS SeniorWorkerTitle,
+		CASE WHEN pas.SeniorWorkerName IS NOT NULL THEN pas.[SeniorWorkerEmailAddress] ELSE p.[SeniorWorkerEmailAddress] END [SeniorWorkerEmailAddress],
+		CASE WHEN pas.SeniorWorkerName IS NOT NULL THEN pas.[SeniorWorkerPhoneNumber] ELSE p.[SeniorWorkerPhoneNumber] END [SeniorWorkerPhoneNumber],
+		CASE WHEN pas.SeniorWorkerName IS NOT NULL THEN pas.[SeniorWorkerIsPrivate] ELSE p.[SeniorWorkerIsPrivate] END [SeniorWorkerIsPrivate],
+		COALESCE(pas.[MainContactName], p.[MainContactName]) AS [MainContactName] ,
+		CASE WHEN pas.MainContactName IS NOT NULL THEN pas.[MainContactTitle] ELSE p.[MainContactTitle] END [MainContactTitle],
+		CASE WHEN pas.MainContactName IS NOT NULL THEN pas.[MainContactEmailAddress] ELSE p.[MainContactEmailAddress] END [MainContactEmailAddress],
+		CASE WHEN pas.MainContactName IS NOT NULL THEN pas.[MainContactPhoneNumber] ELSE p.[MainContactPhoneNumber] END [MainContactPhoneNumber],
+		CASE WHEN pas.MainContactName IS NOT NULL THEN pas.[MainContactType] ELSE p.[MainContactType] END [MainContactType],
+		CASE WHEN pas.MainContactName IS NOT NULL THEN pas.[MainContactIsPrivate] ELSE p.[MainContactIsPrivate] END [MainContactIsPrivate],
 		COALESCE(pas.[LicenseAccreditation], p.[LicenseAccreditation], s.[LicenseAccreditation], a.[LicenseAccreditation]) AS [LicenseAccreditation],
 		COALESCE(pas.[YearIncorporated], p.[YearIncorporated], s.[YearIncorporated], a.[YearIncorporated]) AS [YearIncorporated],
 		COALESCE(pas.[AnnualBudgetTotal], p.[AnnualBudgetTotal], s.[AnnualBudgetTotal], a.[AnnualBudgetTotal]) AS [AnnualBudgetTotal],
@@ -752,7 +770,8 @@ SELECT
 		COALESCE(p.PublicName, pas.PublicName) AS SERVICE_NAME_LEVEL_1,
 		s.PublicName AS SERVICE_NAME_LEVEL_2,
 		COALESCE(pas.AgencyDescription, p.AgencyDescription) AS DESCRIPTION,
-		pas.DELETION_DATE
+		pas.DELETION_DATE,
+		pas.[Custom_Deleted Record]
 	FROM dbo.CIC_iCarolImport pas
 	LEFT JOIN dbo.CIC_iCarolImport p
 		ON p.ResourceAgencyNum=pas.ConnectsToProgramNum AND p.TaxonomyLevelName='Program' AND p.LangID=pas.LangID
@@ -777,6 +796,7 @@ WHEN MATCHED AND src.SYNC_DATE > dst.DATE_MODIFIED THEN
 		[MailingAddress1]=src.[MailingAddress1],
 		[MailingAddress2]=src.[MailingAddress2],
 		[MailingCity]=src.[MailingCity],
+		[MailingCommunity]=src.[MailingCommunity],
 		[MailingStateProvince]=src.[MailingStateProvince],
 		[MailingPostalCode]=src.[MailingPostalCode],
 		[MailingCountry]=src.[MailingCountry],
@@ -785,6 +805,7 @@ WHEN MATCHED AND src.SYNC_DATE > dst.DATE_MODIFIED THEN
 		[PhysicalAddress2]=src.[PhysicalAddress2],
 		[PhysicalCity]=src.[PhysicalCity],
 		[PhysicalCounty]=src.[PhysicalCounty],
+		[PhysicalCommunity]=src.[PhysicalCommunity],
 		[PhysicalStateProvince]=src.[PhysicalStateProvince],
 		[PhysicalPostalCode]=src.[PhysicalPostalCode],
 		[PhysicalCountry]=src.[PhysicalCountry],
@@ -793,6 +814,7 @@ WHEN MATCHED AND src.SYNC_DATE > dst.DATE_MODIFIED THEN
 		[OtherAddress2]=src.[OtherAddress2],
 		[OtherCity]=src.[OtherCity],
 		[OtherCounty]=src.[OtherCounty],
+		[OtherCommunity]=src.[OtherCommunity],
 		[OtherStateProvince]=src.[OtherStateProvince],
 		[OtherPostalCode]=src.[OtherPostalCode],
 		[OtherCountry]=src.[OtherCountry],
@@ -948,7 +970,9 @@ WHEN MATCHED AND src.SYNC_DATE > dst.DATE_MODIFIED THEN
 		SERVICE_NAME_LEVEL_2=src.SERVICE_NAME_LEVEL_2,
 		DESCRIPTION=src.DESCRIPTION,
 		dst.ORG_LOCATION_SERVICE='SERVICE',
-		dst.DELETION_DATE=src.DELETION_DATE
+		dst.DELETION_DATE=src.DELETION_DATE,
+		dst.SOFT_DELETION_DATE=CASE WHEN src.[Custom_Deleted Record] = 'yes' THEN COALESCE(dst.SOFT_DELETION_DATE,GETDATE()) ELSE NULL END,
+		dst.[Custom_Deleted Record]=src.[Custom_Deleted Record]
 WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='ProgramAtSite' THEN
 	INSERT (
 		[ResourceAgencyNum],
@@ -965,6 +989,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='ProgramAtSite' THEN
 		[MailingAddress1],
 		[MailingAddress2],
 		[MailingCity],
+		[MailingCommunity],
 		[MailingStateProvince],
 		[MailingPostalCode],
 		[MailingCountry],
@@ -973,6 +998,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='ProgramAtSite' THEN
 		[PhysicalAddress2],
 		[PhysicalCity],
 		[PhysicalCounty],
+		[PhysicalCommunity],
 		[PhysicalStateProvince],
 		[PhysicalPostalCode],
 		[PhysicalCountry],
@@ -981,6 +1007,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='ProgramAtSite' THEN
 		[OtherAddress2],
 		[OtherCity],
 		[OtherCounty],
+		[OtherCommunity],
 		[OtherStateProvince],
 		[OtherPostalCode],
 		[OtherCountry],
@@ -1136,7 +1163,9 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='ProgramAtSite' THEN
 		SERVICE_NAME_LEVEL_2,
 		DESCRIPTION,
 		ORG_LOCATION_SERVICE,
-		DELETION_DATE
+		DELETION_DATE,
+		SOFT_DELETION_DATE,
+		[Custom_Deleted Record]
 	) VALUES (
 		src.[ResourceAgencyNum],
 		src.LangID,
@@ -1152,6 +1181,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='ProgramAtSite' THEN
 		src.[MailingAddress1],
 		src.[MailingAddress2],
 		src.[MailingCity],
+		src.[MailingCommunity],
 		src.[MailingStateProvince],
 		src.[MailingPostalCode],
 		src.[MailingCountry],
@@ -1160,6 +1190,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='ProgramAtSite' THEN
 		src.[PhysicalAddress2],
 		src.[PhysicalCity],
 		src.[PhysicalCounty],
+		src.[PhysicalCommunity],
 		src.[PhysicalStateProvince],
 		src.[PhysicalPostalCode],
 		src.[PhysicalCountry],
@@ -1168,6 +1199,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='ProgramAtSite' THEN
 		src.[OtherAddress2],
 		src.[OtherCity],
 		src.[OtherCounty],
+		src.[OtherCommunity],
 		src.[OtherStateProvince],
 		src.[OtherPostalCode],
 		src.[OtherCountry],
@@ -1323,7 +1355,9 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='ProgramAtSite' THEN
 		src.SERVICE_NAME_LEVEL_2,
 		src.DESCRIPTION,
 		'SERVICE',
-		src.DELETION_DATE
+		src.DELETION_DATE,
+		CASE WHEN src.[Custom_Deleted Record] = 'yes' THEN GETDATE() ELSE NULL END,
+		src.[Custom_Deleted Record]
 	)
 OPTION (ROBUST PLAN)
 	;
@@ -1346,6 +1380,7 @@ SELECT
 		CASE WHEN s.[MailingAddress1] IS NOT NULL THEN s.[MailingAddress1] WHEN ISNULL(a.[MailingAddressIsPrivate], 'No') = 'No' AND a.[MailingAddress1]  IS NOT NULL THEN a.[MailingAddress1]  ELSE NULL END AS [MailingAddress1],
 		CASE WHEN s.[MailingAddress2] IS NOT NULL THEN s.[MailingAddress2] WHEN ISNULL(a.[MailingAddressIsPrivate], 'No') = 'No' AND a.[MailingAddress2]  IS NOT NULL THEN a.[MailingAddress2]  ELSE NULL END AS [MailingAddress2],
 		CASE WHEN s.[MailingCity] IS NOT NULL THEN s.[MailingCity] WHEN ISNULL(a.[MailingAddressIsPrivate], 'No') = 'No' AND a.[MailingCity]  IS NOT NULL THEN a.[MailingCity]  ELSE NULL END AS [MailingCity],
+		CASE WHEN s.[MailingCommunity] IS NOT NULL THEN s.[MailingCommunity] WHEN ISNULL(a.[MailingAddressIsPrivate], 'No') = 'No' AND a.[MailingCommunity]  IS NOT NULL THEN a.[MailingCommunity]  ELSE NULL END AS [MailingCommunity],
 		CASE WHEN s.[MailingStateProvince] IS NOT NULL THEN s.[MailingStateProvince] WHEN ISNULL(a.[MailingAddressIsPrivate], 'No') = 'No' AND a.[MailingStateProvince]  IS NOT NULL THEN a.[MailingStateProvince]  ELSE NULL END AS [MailingStateProvince],
 		CASE WHEN s.[MailingPostalCode] IS NOT NULL THEN s.[MailingPostalCode] WHEN ISNULL(a.[MailingAddressIsPrivate], 'No') = 'No' AND a.[MailingPostalCode]  IS NOT NULL THEN a.[MailingPostalCode]  ELSE NULL END AS [MailingPostalCode],
 		CASE WHEN NULLIF(s.[MailingCountry], '-1') IS NOT NULL THEN s.[MailingCountry] WHEN ISNULL(a.[MailingAddressIsPrivate], 'No') = 'No' AND NULLIF(a.[MailingCountry], '-1')  IS NOT NULL THEN a.[MailingCountry]  ELSE NULL END AS [MailingCountry],
@@ -1354,6 +1389,7 @@ SELECT
 		CASE WHEN s.[PhysicalAddress2] IS NOT NULL THEN s.[PhysicalAddress2] WHEN ISNULL(a.[PhysicalAddressIsPrivate], 'No') = 'No' AND a.[PhysicalAddress2]  IS NOT NULL THEN a.[PhysicalAddress2]  ELSE NULL END AS [PhysicalAddress2],
 		CASE WHEN s.[PhysicalCity] IS NOT NULL THEN s.[PhysicalCity] WHEN ISNULL(a.[PhysicalAddressIsPrivate], 'No') = 'No' AND a.[PhysicalCity]  IS NOT NULL THEN a.[PhysicalCity]  ELSE NULL END AS [PhysicalCity],
 		CASE WHEN s.[PhysicalCounty] IS NOT NULL THEN s.[PhysicalCounty] WHEN ISNULL(a.[PhysicalAddressIsPrivate], 'No') = 'No' AND a.[PhysicalCounty]  IS NOT NULL THEN a.[PhysicalCounty]  ELSE NULL END AS [PhysicalCounty],
+		CASE WHEN s.[PhysicalCommunity] IS NOT NULL THEN s.[PhysicalCommunity] WHEN ISNULL(a.[PhysicalAddressIsPrivate], 'No') = 'No' AND a.[PhysicalCommunity]  IS NOT NULL THEN a.[PhysicalCommunity]  ELSE NULL END AS [PhysicalCommunity],
 		CASE WHEN s.[PhysicalStateProvince] IS NOT NULL THEN s.[PhysicalStateProvince] WHEN ISNULL(a.[PhysicalAddressIsPrivate], 'No') = 'No' AND a.[PhysicalStateProvince]  IS NOT NULL THEN a.[PhysicalStateProvince]  ELSE NULL END AS [PhysicalStateProvince],
 		CASE WHEN s.[PhysicalPostalCode] IS NOT NULL THEN s.[PhysicalPostalCode] WHEN ISNULL(a.[PhysicalAddressIsPrivate], 'No') = 'No' AND a.[PhysicalPostalCode]  IS NOT NULL THEN a.[PhysicalPostalCode]  ELSE NULL END AS [PhysicalPostalCode],
 		CASE WHEN NULLIF(s.[PhysicalCountry], '-1') IS NOT NULL THEN s.[PhysicalCountry] WHEN ISNULL(a.[PhysicalAddressIsPrivate], 'No') = 'No' AND NULLIF(a.[PhysicalCountry], '-1')  IS NOT NULL THEN a.[PhysicalCountry]  ELSE NULL END AS [PhysicalCountry],
@@ -1362,6 +1398,7 @@ SELECT
 		COALESCE(s.[OtherAddress2], a.[OtherAddress2]) AS [OtherAddress2],
 		COALESCE(s.[OtherCity], a.[OtherCity]) AS [OtherCity],
 		COALESCE(s.[OtherCounty], a.[OtherCounty]) AS [OtherCounty],
+		COALESCE(s.[OtherCommunity], a.[OtherCommunity]) AS [OtherCommunity],
 		COALESCE(s.[OtherStateProvince], a.[OtherStateProvince]) AS [OtherStateProvince],
 		COALESCE(s.[OtherPostalCode], a.[OtherPostalCode]) AS [OtherPostalCode],
 		COALESCE(NULLIF(s.[OtherCountry], '-1'), NULLIF(a.[OtherCountry], '-1')) AS [OtherCountry],
@@ -1512,7 +1549,8 @@ SELECT
 		NULL AS ORG_DESCRIPTION,
 		s.PublicName AS LOCATION_NAME,
 		s.AgencyDescription AS LOCATION_DESCRIPTION,
-		s.DELETION_DATE
+		s.DELETION_DATE,
+		s.[Custom_Deleted Record]
 FROM dbo.CIC_iCarolImport AS s
 LEFT JOIN dbo.CIC_iCarolImport a
 	ON s.ParentAgencyNum=a.ResourceAgencyNum AND a.TaxonomyLevelName='Agency' AND a.LangID=s.LangID
@@ -1533,6 +1571,7 @@ WHEN MATCHED AND src.SYNC_DATE > dst.DATE_MODIFIED THEN
 		[MailingAddress1]=src.[MailingAddress1],
 		[MailingAddress2]=src.[MailingAddress2],
 		[MailingCity]=src.[MailingCity],
+		[MailingCommunity]=src.[MailingCommunity],
 		[MailingStateProvince]=src.[MailingStateProvince],
 		[MailingPostalCode]=src.[MailingPostalCode],
 		[MailingCountry]=src.[MailingCountry],
@@ -1541,6 +1580,7 @@ WHEN MATCHED AND src.SYNC_DATE > dst.DATE_MODIFIED THEN
 		[PhysicalAddress2]=src.[PhysicalAddress2],
 		[PhysicalCity]=src.[PhysicalCity],
 		[PhysicalCounty]=src.[PhysicalCounty],
+		[PhysicalCommunity]=src.[PhysicalCommunity],
 		[PhysicalStateProvince]=src.[PhysicalStateProvince],
 		[PhysicalPostalCode]=src.[PhysicalPostalCode],
 		[PhysicalCountry]=src.[PhysicalCountry],
@@ -1549,6 +1589,7 @@ WHEN MATCHED AND src.SYNC_DATE > dst.DATE_MODIFIED THEN
 		[OtherAddress2]=src.[OtherAddress2],
 		[OtherCity]=src.[OtherCity],
 		[OtherCounty]=src.[OtherCounty],
+		[OtherCommunity]=src.[OtherCommunity],
 		[OtherStateProvince]=src.[OtherStateProvince],
 		[OtherPostalCode]=src.[OtherPostalCode],
 		[OtherCountry]=src.[OtherCountry],
@@ -1701,7 +1742,9 @@ WHEN MATCHED AND src.SYNC_DATE > dst.DATE_MODIFIED THEN
 		LOCATION_NAME=src.LOCATION_NAME,
 		LOCATION_DESCRIPTION=src.LOCATION_DESCRIPTION,
 		dst.ORG_LOCATION_SERVICE='SITE',
-		dst.DELETION_DATE=src.DELETION_DATE
+		dst.DELETION_DATE=src.DELETION_DATE,
+		dst.SOFT_DELETION_DATE=CASE WHEN src.[Custom_Deleted Record] = 'yes' THEN COALESCE(dst.SOFT_DELETION_DATE,GETDATE()) ELSE NULL END,
+		dst.[Custom_Deleted Record]=src.[Custom_Deleted Record]
 WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Site' THEN
 	INSERT (
 		[ResourceAgencyNum],
@@ -1718,6 +1761,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Site' THEN
 		[MailingAddress1],
 		[MailingAddress2],
 		[MailingCity],
+		[MailingCommunity],
 		[MailingStateProvince],
 		[MailingPostalCode],
 		[MailingCountry],
@@ -1726,6 +1770,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Site' THEN
 		[PhysicalAddress2],
 		[PhysicalCity],
 		[PhysicalCounty],
+		[PhysicalCommunity],
 		[PhysicalStateProvince],
 		[PhysicalPostalCode],
 		[PhysicalCountry],
@@ -1734,6 +1779,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Site' THEN
 		[OtherAddress2],
 		[OtherCity],
 		[OtherCounty],
+		[OtherCommunity],
 		[OtherStateProvince],
 		[OtherPostalCode],
 		[OtherCountry],
@@ -1886,7 +1932,9 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Site' THEN
 		LOCATION_NAME,
 		LOCATION_DESCRIPTION,
 		ORG_LOCATION_SERVICE,
-		DELETION_DATE
+		DELETION_DATE,
+		SOFT_DELETION_DATE,
+		[Custom_Deleted Record]
 	) VALUES (
 		src.[ResourceAgencyNum],
 		src.LangID,
@@ -1902,6 +1950,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Site' THEN
 		src.[MailingAddress1],
 		src.[MailingAddress2],
 		src.[MailingCity],
+		src.[MailingCommunity],
 		src.[MailingStateProvince],
 		src.[MailingPostalCode],
 		src.[MailingCountry],
@@ -1910,6 +1959,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Site' THEN
 		src.[PhysicalAddress2],
 		src.[PhysicalCity],
 		src.[PhysicalCounty],
+		src.[PhysicalCommunity],
 		src.[PhysicalStateProvince],
 		src.[PhysicalPostalCode],
 		src.[PhysicalCountry],
@@ -1918,6 +1968,7 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Site' THEN
 		src.[OtherAddress2],
 		src.[OtherCity],
 		src.[OtherCounty],
+		src.[OtherCommunity],
 		src.[OtherStateProvince],
 		src.[OtherPostalCode],
 		src.[OtherCountry],
@@ -2070,7 +2121,9 @@ WHEN NOT MATCHED BY TARGET AND src.TaxonomyLevelName='Site' THEN
 		src.LOCATION_NAME,
 		src.LOCATION_DESCRIPTION,
 		'SITE',
-		src.DELETION_DATE
+		src.DELETION_DATE,
+		CASE WHEN src.[Custom_Deleted Record] = 'yes' THEN GETDATE() ELSE NULL END,
+		src.[Custom_Deleted Record]
 	)
 OPTION (ROBUST PLAN)
 	;

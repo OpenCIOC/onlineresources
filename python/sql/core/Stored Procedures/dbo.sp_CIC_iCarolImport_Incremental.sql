@@ -204,6 +204,12 @@ CREATE TABLE #source (
 	[Custom_YouTube] [NVARCHAR](MAX) COLLATE Latin1_General_100_CI_AI NULL,
 	[Custom_Minimum Age] [NVARCHAR](255) COLLATE Latin1_General_100_CI_AI NULL,
 	[Custom_Maximum Age] [NVARCHAR](255) COLLATE Latin1_General_100_CI_AI NULL,
+	[Custom_Deleted Record] [nvarchar](10) COLLATE Latin1_General_100_CI_AI NULL,
+	[MailingCommunity] [NVARCHAR](500) COLLATE Latin1_General_100_CI_AI NULL,
+	[OtherCommunity] [NVARCHAR](500) COLLATE Latin1_General_100_CI_AI NULL,
+    [PhysicalCommunity] [NVARCHAR](500) COLLATE Latin1_General_100_CI_AI NULL
+
+
 )
 
 DECLARE @sql VARCHAR(MAX)
@@ -402,7 +408,11 @@ WHEN MATCHED THEN
 		[Custom_Twitter]=src.[Custom_Twitter],
 		[Custom_YouTube]=src.[Custom_YouTube],
 		[Custom_Minimum Age]=src.[Custom_Minimum Age],
-		[Custom_Maximum Age]=src.[Custom_Maximum Age]
+		[Custom_Maximum Age]=src.[Custom_Maximum Age],
+		[Custom_Deleted Record]=src.[Custom_Deleted Record],
+		[MailingCommunity]=src.[MailingCommunity],
+		[OtherCommunity]=src.[OtherCommunity],
+		[PhysicalCommunity]=src.[PhysicalCommunity]
 
 WHEN NOT MATCHED BY TARGET THEN
 	INSERT (
@@ -595,7 +605,11 @@ WHEN NOT MATCHED BY TARGET THEN
 		[Custom_Twitter],
 		[Custom_YouTube],
 		[Custom_Minimum Age],
-		[Custom_Maximum Age]
+		[Custom_Maximum Age],
+		[Custom_Deleted Record],
+		[MailingCommunity],
+		[OtherCommunity],
+		[PhysicalCommunity]
 	) VALUES (
 		src.[ResourceAgencyNum],
 		@@LANGID,
@@ -786,7 +800,11 @@ WHEN NOT MATCHED BY TARGET THEN
 		src.[Custom_Twitter],
 		src.[Custom_YouTube],
 		src.[Custom_Minimum Age],
-		src.[Custom_Maximum Age]
+		src.[Custom_Maximum Age],
+		src.[Custom_Deleted Record],
+		src.[MailingCommunity],
+		src.[OtherCommunity],
+		src.[PhysicalCommunity]
 	)
 
 	;

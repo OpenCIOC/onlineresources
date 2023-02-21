@@ -26,7 +26,7 @@ OUTPUT deleted.ResourceAgencyNum, deleted.LangID, deleted.TaxonomyLevelName INTO
 FROM dbo.CIC_iCarolImportRollup i
 LEFT JOIN dbo.GBL_BaseTable ib 
 	ON ib.EXTERNAL_ID=i.ResourceAgencyNum AND ib.SOURCE_DB_CODE = 'ICAROL'
-WHERE (i.DATE_IMPORTED IS NULL OR i.DATE_IMPORTED < i.DATE_MODIFIED OR i.DATE_IMPORTED < i.DELETION_DATE) AND ((ib.EXTERNAL_ID IS NOT NULL AND ib.MemberID=@MemberID) OR EXISTS(SELECT * FROM dbo.GBL_Agency a WHERE a.MemberID=@MemberID AND a.AgencyCode = i.RECORD_OWNER AND a.AutoImportFromICarol=1))
+WHERE (i.DATE_IMPORTED IS NULL OR i.DATE_IMPORTED < i.DATE_MODIFIED OR i.DATE_IMPORTED < i.DELETION_DATE OR i.DATE_IMPORTED < i.SOFT_DELETION_DATE) AND ((ib.EXTERNAL_ID IS NOT NULL AND ib.MemberID=@MemberID) OR EXISTS(SELECT * FROM dbo.GBL_Agency a WHERE a.MemberID=@MemberID AND a.AgencyCode = i.RECORD_OWNER AND a.AutoImportFromICarol=1))
 
 
 SELECT CAST((SELECT (
@@ -208,7 +208,7 @@ SELECT CAST((SELECT (
 				) AS i ORDER BY Preference FOR XML PATH(''),TYPE).value('.', 'nvarchar(max)'), 1, 3, '')	
 			 ) AS [@VF]
 		  FOR XML PATH('CRISIS_PHONE'), TYPE),
-		(SELECT a.DELETION_DATE AS [@V], f.DELETION_DATE AS [@VF] FOR XML PATH('DELETION_DATE'), TYPE),
+		(SELECT COALESCE(a.SOFT_DELETION_DATE, a.DELETION_DATE) AS [@V], COALESCE(f.SOFT_DELETION_DATE, f.DELETION_DATE) AS [@VF] FOR XML PATH('DELETION_DATE'), TYPE),
 		(SELECT a.DESCRIPTION AS [@V], f.DESCRIPTION AS [@VF] FOR XML PATH('DESCRIPTION'), TYPE),
 		(SELECT a.DocumentsRequired AS [@V], f.DocumentsRequired AS [@VF] FOR XML PATH('DOCUMENTS_REQUIRED'), TYPE),
 		(SELECT a.EmailAddressMain AS [@V], f.EmailAddressMain AS [@VF] FOR XML PATH('E_MAIL'), TYPE),
@@ -348,7 +348,7 @@ SELECT CAST((SELECT (
 			FOR XML PATH('LOCATED_IN_CM'),TYPE),
 		(SELECT a.LOCATION_DESCRIPTION AS [@V], f.LOCATION_DESCRIPTION AS [@VF] FOR XML PATH('LOCATION_DESCRIPTION'), TYPE),
 		(SELECT a.LOCATION_NAME AS [@V], f.LOCATION_NAME AS [@VF] FOR XML PATH('LOCATION_NAME'), TYPE),
-		(SELECT DISTINCT irr.ResourceAgencyNum AS [@V] FROM dbo.CIC_iCarolImportRollup irr WHERE a.TaxonomyLevelName = 'Site' AND irr.ConnectsToSiteNum=a.ResourceAgencyNum AND irr.TaxonomyLevelName='ProgramAtSite' AND irr.DELETION_DATE IS NULL FOR XML PATH('SERVICE_NUM'), ROOT('LOCATION_SERVICES'), TYPE),
+		(SELECT DISTINCT irr.ResourceAgencyNum AS [@V] FROM dbo.CIC_iCarolImportRollup irr WHERE a.TaxonomyLevelName = 'Site' AND irr.ConnectsToSiteNum=a.ResourceAgencyNum AND irr.TaxonomyLevelName='ProgramAtSite' AND COALESCE(irr.SOFT_DELETION_DATE, irr.DELETION_DATE) IS NULL FOR XML PATH('SERVICE_NUM'), ROOT('LOCATION_SERVICES'), TYPE),
 		(SELECT 
 			 CASE WHEN a.MailingAddressIsPrivate = 'Yes' THEN NULL ELSE a.MailingAddress1 END AS [@LN1],
 			 CASE WHEN a.MailingAddressIsPrivate = 'Yes' THEN NULL ELSE a.MailingAddress2 END AS [@LN2],

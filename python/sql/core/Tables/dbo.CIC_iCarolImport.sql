@@ -193,8 +193,12 @@ CREATE TABLE [dbo].[CIC_iCarolImport]
 [InternalMemoGUID] [uniqueidentifier] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_InternalMemoGUID] DEFAULT (newid()),
 [DELETION_DATE] [smalldatetime] NULL,
 [Custom_Minimum Age] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
-[Custom_Maximum Age] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+[Custom_Maximum Age] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[Custom_Deleted Record] [nvarchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
+[MailingCommunity] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
+[OtherCommunity] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
+[PhysicalCommunity] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL
+) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[CIC_iCarolImport] ADD CONSTRAINT [PK_CIC_iCarolImport] PRIMARY KEY CLUSTERED  ([ResourceAgencyNum], [LangID]) ON [PRIMARY]
+ALTER TABLE [dbo].[CIC_iCarolImport] ADD CONSTRAINT [PK_CIC_iCarolImport] PRIMARY KEY CLUSTERED ([ResourceAgencyNum], [LangID]) ON [PRIMARY]
 GO

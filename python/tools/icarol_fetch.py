@@ -261,6 +261,24 @@ FieldOrder = [
     "Custom_YouTube",
     "Custom_Minimum Age",
     "Custom_Maximum Age",
+    "Custom_Deleted Record",
+    "MailingCommunity",
+    "OtherCommunity",
+    "PhysicalCommunity",
+]
+other_known_fields = [
+    "Custom_Bed Count",
+    "Custom_ESDCID",
+    "Custom_Elig by Family Comp",
+    "Custom_Elig by Gender",
+    "Custom_Elig by Target Pop",
+    "Custom_FRV update yymmdd",
+    "Custom_Last Updated By",
+    "Custom_Non-211 Record",
+    "Custom_OF Bed Count",
+    "Custom_Priority Level",
+    "Custom_Verification Month",
+    "Custom_iCarol-completed Record",
 ]
 
 AllRecordsFieldOrder = [
