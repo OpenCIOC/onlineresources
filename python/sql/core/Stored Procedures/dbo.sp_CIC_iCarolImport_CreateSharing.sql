@@ -675,6 +675,18 @@ SELECT CAST((SELECT (
 	-- Records will be processed by import system in the order they appear in this file.
 	ORDER BY CASE WHEN a.TaxonomyLevelName = 'Agency' THEN 0 WHEN a.TaxonomyLevelName='ProgramAtSite' THEN 1 WHEN a.TaxonomyLevelName = 'Site' THEN 2 ELSE 3 END
 
+-- Extra import file to ensure any missed deletes happen.
+SELECT CAST((SELECT (
+	-- Agency
+	SELECT 
+	 ib.NUM AS [@NUM], ib.RECORD_OWNER AS [@RECORD_OWNER],
+	 1 AS [@HAS_ENGLISH], CASE WHEN EXISTS(SELECT * FROM dbo.CIC_BaseTable_Description btd WHERE btd.NUM=ib.NUM AND LangID=2) THEN 1 ELSE NULL END AS [@HAS_FRENCH],
+	(SELECT COALESCE((SELECT DELETION_DATE FROM dbo.GBL_BaseTable_Description btd WHERE btd.NUM=ib.NUM AND LangID=0), GETDATE()) AS [@V], COALESCE((SELECT DELETION_DATE FROM dbo.GBL_BaseTable_Description btd WHERE btd.NUM=ib.NUM AND LangID=2), GETDATE()) AS [@VF] FOR XML PATH('DELETION_DATE'), TYPE)
+FOR XML PATH('RECORD'), TYPE)) as nvarchar(MAX)) AS record
+FROM dbo.GBL_BaseTable ib 
+WHERE ib.SOURCE_DB_CODE = 'ICAROL' AND ib.EXTERNAL_ID IS NOT NULL AND ib.MemberID=@MemberID AND NOT EXISTS(SELECT * FROM dbo.CIC_iCarolImportRollup i WHERE ib.EXTERNAL_ID=i.ResourceAgencyNum) AND EXISTS(SELECT * FROM dbo.GBL_BaseTable_Description btd WHERE btd.NUM=ib.NUM AND btd.DELETION_DATE IS NOT NULL)
+
+
 RETURN @Error
 
 SET NOCOUNT OFF

@@ -771,7 +771,7 @@ SELECT
 		s.PublicName AS SERVICE_NAME_LEVEL_2,
 		COALESCE(pas.AgencyDescription, p.AgencyDescription) AS DESCRIPTION,
 		pas.DELETION_DATE,
-		pas.[Custom_Deleted Record]
+		CASE WHEN p.ResourceAgencyNum IS NULL OR s.ResourceAgencyNum IS NULL OR a.ResourceAgencyNum IS NULL OR 'yes' IN (pas.[Custom_Deleted Record], p.[Custom_Deleted Record], s.[Custom_Deleted Record], a.[Custom_Deleted Record]) THEN 'yes' ELSE 'no' END AS [Custom_Deleted Record]
 	FROM dbo.CIC_iCarolImport pas
 	LEFT JOIN dbo.CIC_iCarolImport p
 		ON p.ResourceAgencyNum=pas.ConnectsToProgramNum AND p.TaxonomyLevelName='Program' AND p.LangID=pas.LangID
@@ -1550,7 +1550,7 @@ SELECT
 		s.PublicName AS LOCATION_NAME,
 		s.AgencyDescription AS LOCATION_DESCRIPTION,
 		s.DELETION_DATE,
-		s.[Custom_Deleted Record]
+		CASE WHEN s.ResourceAgencyNum IS NULL OR 'yes' IN (s.[Custom_Deleted Record], a.[Custom_Deleted Record]) THEN 'yes' ELSE 'no' END AS [Custom_Deleted Record]
 FROM dbo.CIC_iCarolImport AS s
 LEFT JOIN dbo.CIC_iCarolImport a
 	ON s.ParentAgencyNum=a.ResourceAgencyNum AND a.TaxonomyLevelName='Agency' AND a.LangID=s.LangID

@@ -638,6 +638,60 @@ def update_db_state(context):
         )
 
 
+def _generate_and_upload_import(
+    context,
+    member_name,
+    member,
+    stdout,
+    stderr,
+    cursor,
+    extra_message="",
+    extra_filename="",
+):
+    total_inserted = 0
+    batch = cursor.fetchmany(5000)
+
+    if not batch:
+        return None, 0
+    else:
+        print(f"Processing{extra_message} Imports for {member_name}.", file=stdout)
+
+    with tempfile.TemporaryFile() as fd:
+        fd.write(
+            b"""<?xml version="1.0" encoding="UTF-8"?>
+        <root xmlns="urn:ciocshare-schema"><SOURCE_DB CD="ICAROL"/><DIST_CODE_LIST/><PUB_CODE_LIST/>"""
+        )
+        while batch:
+            fd.write("".join(x.record for x in batch).encode("utf8"))
+            batch = cursor.fetchmany(5000)
+
+        fd.write(b"</root>")
+        fd.seek(0)
+        cursor.close()
+
+        error_log, total_inserted = process_import(
+            "icarol_import_%s%s.xml"
+            % (
+                extra_filename,
+                context.args.next_modified_since.isoformat(),
+            ),
+            fd,
+            member.MemberID,
+            const.DM_CIC,
+            const.DM_S_CIC,
+            "(import system)",
+            "iCarol Import%s %s"
+            % (
+                extra_message,
+                context.args.next_modified_since.isoformat(),
+            ),
+            context.connmgr,
+            lambda x: x,
+        )
+
+    return error_log, total_inserted
+
+
 def generate_and_upload_import(context):
     sql = "EXEC sp_CIC_iCarolImport_Rollup"
     total_import_count = 0
@@ -657,41 +711,30 @@ def generate_and_upload_import(context):
                 cursor = conn.execute(
                     "EXEC sp_CIC_iCarolImport_CreateSharing ?", member.MemberID
                 )
-                batch = cursor.fetchmany(5000)
+                error_log_base, total_inserted_base = _generate_and_upload_import(
+                    context, member_name, member, stdout, stderr, cursor
+                )
+                cursor.nextset()
+                (
+                    error_log_missed_deletes,
+                    total_inserted_missed_deletes,
+                ) = _generate_and_upload_import(
+                    context,
+                    member_name,
+                    member,
+                    stdout,
+                    stderr,
+                    cursor,
+                    " Missed Deletes",
+                    "_missed_deletes",
+                )
 
-                if not batch:
+                error_log = "\n".join(
+                    x for x in [error_log_base, error_log_missed_deletes] if x
+                )
+                total_inserted = total_inserted_base + total_inserted_missed_deletes
+                if not total_inserted:
                     print(f"No Records for {member_name}, skipping.\n", file=stdout)
-                    cursor.close()
-                    continue
-                else:
-                    print(f"Processing Imports for {member_name}.", file=stdout)
-
-                with tempfile.TemporaryFile() as fd:
-                    fd.write(
-                        b"""<?xml version="1.0" encoding="UTF-8"?>
-                    <root xmlns="urn:ciocshare-schema"><SOURCE_DB CD="ICAROL"/><DIST_CODE_LIST/><PUB_CODE_LIST/>"""
-                    )
-                    while batch:
-                        fd.write("".join(x.record for x in batch).encode("utf8"))
-                        batch = cursor.fetchmany(5000)
-
-                    fd.write(b"</root>")
-                    fd.seek(0)
-                    cursor.close()
-
-                    error_log, total_inserted = process_import(
-                        "icarol_import_%s.xml"
-                        % (context.args.next_modified_since.isoformat(),),
-                        fd,
-                        member.MemberID,
-                        const.DM_CIC,
-                        const.DM_S_CIC,
-                        "(import system)",
-                        "iCarol Import %s"
-                        % (context.args.next_modified_since.isoformat(),),
-                        context.connmgr,
-                        lambda x: x,
-                    )
 
                 total_import_count += total_inserted
                 print(
