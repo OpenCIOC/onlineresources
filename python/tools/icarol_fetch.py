@@ -652,7 +652,7 @@ def _generate_and_upload_import(
     batch = cursor.fetchmany(5000)
 
     if not batch:
-        return None, 0
+        return 0
     else:
         print(f"Processing{extra_message} Imports for {member_name}.", file=stdout)
 
@@ -688,7 +688,24 @@ def _generate_and_upload_import(
             lambda x: x,
         )
 
-    return error_log, total_inserted
+    print(
+        "Import%s Complete for Member %s. %s records imported."
+        % (extra_filename, member_name, total_inserted),
+        file=stdout,
+    )
+    if error_log:
+        print(
+            "A problem was encountered validating%s input for Member %s, see below."
+            % (extra_message.lower(), member_name),
+            file=stderr,
+        )
+
+    for record, errmsg in error_log:
+        if record:
+            print(": ".join((record, errmsg)).encode("utf8"), file=stderr)
+        else:
+            print(errmsg.encode("utf8"), file=stderr)
+    return total_inserted
 
 
 def generate_and_upload_import(context):
@@ -710,14 +727,11 @@ def generate_and_upload_import(context):
                 cursor = conn.execute(
                     "EXEC sp_CIC_iCarolImport_CreateSharing ?", member.MemberID
                 )
-                error_log_base, total_inserted_base = _generate_and_upload_import(
+                total_inserted_base = _generate_and_upload_import(
                     context, member_name, member, stdout, stderr, cursor
                 )
                 cursor.nextset()
-                (
-                    error_log_missed_deletes,
-                    total_inserted_missed_deletes,
-                ) = _generate_and_upload_import(
+                (total_inserted_missed_deletes) = _generate_and_upload_import(
                     context,
                     member_name,
                     member,
@@ -730,32 +744,12 @@ def generate_and_upload_import(context):
 
                 cursor.close()
 
-                error_log = "\n".join(
-                    x for x in [error_log_base, error_log_missed_deletes] if x
-                )
                 total_inserted = total_inserted_base + total_inserted_missed_deletes
                 if not total_inserted:
                     print(f"No Records for {member_name}, skipping.\n", file=stdout)
                     continue
 
                 total_import_count += total_inserted
-                print(
-                    "Import Complete for Member %s. %s records imported."
-                    % (member_name, total_inserted),
-                    file=stdout,
-                )
-                if error_log:
-                    print(
-                        "A problem was encountered validating input for Member %s, see below."
-                        % (member_name,),
-                        file=stderr,
-                    )
-
-                for record, errmsg in error_log:
-                    if record:
-                        print(": ".join((record, errmsg)).encode("utf8"), file=stderr)
-                    else:
-                        print(errmsg.encode("utf8"), file=stderr)
 
                 if context.args.email and member.ImportNotificationEmailCIC:
                     # email sending is turned on and this member has a configured email target.
