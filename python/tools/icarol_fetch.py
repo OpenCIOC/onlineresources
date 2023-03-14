@@ -667,7 +667,6 @@ def _generate_and_upload_import(
 
         fd.write(b"</root>")
         fd.seek(0)
-        cursor.close()
 
         error_log, total_inserted = process_import(
             "icarol_import_%s%s.xml"
@@ -729,12 +728,15 @@ def generate_and_upload_import(context):
                     "_missed_deletes",
                 )
 
+                cursor.close()
+
                 error_log = "\n".join(
                     x for x in [error_log_base, error_log_missed_deletes] if x
                 )
                 total_inserted = total_inserted_base + total_inserted_missed_deletes
                 if not total_inserted:
                     print(f"No Records for {member_name}, skipping.\n", file=stdout)
+                    continue
 
                 total_import_count += total_inserted
                 print(
