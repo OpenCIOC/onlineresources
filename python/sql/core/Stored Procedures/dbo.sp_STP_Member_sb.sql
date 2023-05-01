@@ -91,6 +91,11 @@ SELECT
     GlobalGoogleAnalyticsLanguageDimension,
     GlobalGoogleAnalyticsDomainDimension,
     GlobalGoogleAnalyticsResultsCountMetric,
+    GlobalGoogleAnalytics4Code,
+    GlobalGoogleAnalytics4AgencyDimension,
+    GlobalGoogleAnalytics4LanguageDimension,
+    GlobalGoogleAnalytics4DomainDimension,
+    GlobalGoogleAnalytics4ResultsCountMetric,
     BillingInfoPassword
 FROM    dbo.STP_Member mem
 WHERE   MemberID = @MemberID AND Active = 1;

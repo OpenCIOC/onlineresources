@@ -52,6 +52,16 @@ class DomainSchema(Schema):
     SecondGoogleAnalyticsLanguageDimension = validators.Int(min=1, max=20)
     SecondGoogleAnalyticsDomainDimension = validators.Int(min=1, max=20)
     SecondGoogleAnalyticsResultsCountMetric = validators.Int(min=1, max=20)
+    GoogleAnalytics4Code = validators.UnicodeString(max=50)
+    GoogleAnalytics4AgencyDimension = validators.Int(min=1, max=20)
+    GoogleAnalytics4LanguageDimension = validators.Int(min=1, max=20)
+    GoogleAnalytics4DomainDimension = validators.Int(min=1, max=20)
+    GoogleAnalytics4ResultsCountMetric = validators.Int(min=1, max=20)
+    SecondGoogleAnalytics4Code = validators.UnicodeString(max=50)
+    SecondGoogleAnalytics4AgencyDimension = validators.Int(min=1, max=20)
+    SecondGoogleAnalytics4LanguageDimension = validators.Int(min=1, max=20)
+    SecondGoogleAnalytics4DomainDimension = validators.Int(min=1, max=20)
+    SecondGoogleAnalytics4ResultsCountMetric = validators.Int(min=1, max=20)
 
 
 class DomainMapSchema(validators.RootSchema):

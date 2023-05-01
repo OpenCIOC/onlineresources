@@ -30,7 +30,7 @@ ${request.passvars.getHTTPVals(bForm=True)}
 	<tr>
 		<th class="RevTitleBox">${_("Domain Name")}</th>
 		<th class="RevTitleBox">${_("Code")}</th>
-		<th class="RevTitleBox">${_('Google Universal Analytics Code:')}</th>
+		<th class="RevTitleBox">${_('Google Analytics Code')}</th>
 		<th class="RevTitleBox">${_('Agency Dimension')}</th>
 		<th class="RevTitleBox">${_('Language Dimension')}</th>
 		<th class="RevTitleBox">${_('View Dimension')}</th>
@@ -40,11 +40,11 @@ ${request.passvars.getHTTPVals(bForm=True)}
 	%for i,domain in enumerate(model_state.value('domain')):
 		<% prefix = 'domain-%d.' %i %>
 		<% domain_name = domain_names.get(str(model_state.value(prefix + 'DMAP_ID'))) %>
-		%for field_prefix, number in [('', '1'), ('Second', '2')]:
+		%for field_prefix, number in [('GoogleAnalytics', 'UA 1'), ('SecondGoogleAnalytics', 'UA 2'), ('GoogleAnalytics4', 'GA4 1'), ('SecondGoogleAnalytics4', 'GA4 2')]:
 	<tr>
 		<td>
 		${domain_name}
-		%if not field_prefix:
+		%if field_prefix == 'GoogleAnalytics':
 		${renderer.errorlist(prefix + 'DMAP_ID')}
 		${renderer.hidden(prefix + 'DMAP_ID')}
 		%endif
@@ -53,24 +53,24 @@ ${request.passvars.getHTTPVals(bForm=True)}
 		${number}
 		</td>
 		<td>
-			${renderer.errorlist(prefix + field_prefix + 'GoogleAnalyticsCode')}
-			${renderer.text(prefix + field_prefix + 'GoogleAnalyticsCode', maxlength=50, size=15, title=domain_name + _(': Google Universal Analytics Code'))}
+			${renderer.errorlist(prefix + field_prefix + 'Code')}
+			${renderer.text(prefix + field_prefix + 'Code', maxlength=50, size=15, title=domain_name + _(': Google Analytics Code'))}
 		</td>
 		<td>
-			${renderer.errorlist(prefix + field_prefix + 'GoogleAnalyticsAgencyDimension')}
-			${renderer.text(prefix + field_prefix + 'GoogleAnalyticsAgencyDimension', maxlength=2, size=2, title=domain_name + _(': Google Universal Analytics Agency Dimension'))}
+			${renderer.errorlist(prefix + field_prefix + 'AgencyDimension')}
+			${renderer.text(prefix + field_prefix + 'AgencyDimension', maxlength=2, size=2, title=domain_name + _(': Google Analytics Agency Dimension'))}
 		</td>
 		<td>
-			${renderer.errorlist(prefix + field_prefix + 'GoogleAnalyticsLanguageDimension')}
-			${renderer.text(prefix + field_prefix + 'GoogleAnalyticsLanguageDimension', maxlength=2, size=2, title=domain_name + _(': Google Universal Analytics Language Dimension'))}
+			${renderer.errorlist(prefix + field_prefix + 'LanguageDimension')}
+			${renderer.text(prefix + field_prefix + 'LanguageDimension', maxlength=2, size=2, title=domain_name + _(': Google Universal Analytics Language Dimension'))}
 		</td>
 		<td>
-			${renderer.errorlist(prefix + field_prefix + 'GoogleAnalyticsDomainDimension')}
-			${renderer.text(prefix + field_prefix + 'GoogleAnalyticsDomainDimension', maxlength=2, size=2, title=domain_name + _(': Google Universal Analytics View Dimension'))}
+			${renderer.errorlist(prefix + field_prefix + 'DomainDimension')}
+			${renderer.text(prefix + field_prefix + 'DomainDimension', maxlength=2, size=2, title=domain_name + _(': Google Analytics View Dimension'))}
 		</td>
 		<td>
-			${renderer.errorlist(prefix + field_prefix + 'GoogleAnalyticsResultsCountMetric')}
-			${renderer.text(prefix + field_prefix + 'GoogleAnalyticsResultsCountMetric', maxlength=2, size=2, title=domain_name + _(': Google Universal Analytics Results Count Metric'))}
+			${renderer.errorlist(prefix + field_prefix + 'ResultsCountMetric')}
+			${renderer.text(prefix + field_prefix + 'ResultsCountMetric', maxlength=2, size=2, title=domain_name + _(': Google Analytics Results Count Metric'))}
 		</td>
 	</tr>
 	%endfor

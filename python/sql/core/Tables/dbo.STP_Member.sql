@@ -77,7 +77,13 @@ CREATE TABLE [dbo].[STP_Member]
 [ContactPhone2VOL] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactPhone2CIC1_1] DEFAULT ((1)),
 [ContactPhone3VOL] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactPhone3CIC1] DEFAULT ((1)),
 [ContactFaxVOL] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactFaxCIC1] DEFAULT ((1)),
-[ContactEmailVOL] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactEmailCIC1] DEFAULT ((1))
+[ContactEmailVOL] [bit] NOT NULL CONSTRAINT [DF_STP_Member_ContactEmailCIC1] DEFAULT ((1)),
+[iCarolAPIExportEnabled] [bit] NOT NULL CONSTRAINT [DF_STP_Member_iCarolExportEnabled] DEFAULT ((0)),
+[GlobalGoogleAnalytics4Code] [nvarchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
+[GlobalGoogleAnalytics4AgencyDimension] [tinyint] NULL,
+[GlobalGoogleAnalytics4LanguageDimension] [tinyint] NULL,
+[GlobalGoogleAnalytics4DomainDimension] [tinyint] NULL,
+[GlobalGoogleAnalytics4ResultsCountMetric] [tinyint] NULL
 ) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON

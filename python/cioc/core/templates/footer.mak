@@ -17,11 +17,11 @@
 </%doc>
 
 <%def name="footer()">
-<%! 
+<%!
 import json
 
 from datetime import date
-from cioc.core import gtranslate 
+from cioc.core import gtranslate
 %>
 <% email_messages = request.session.pop('email_messages', []) %>
 %if email_messages:
@@ -39,7 +39,7 @@ from cioc.core import gtranslate
 		</div>
 		%endif
 		</div>
-		
+
 		%if renderinfo.print_table:
 			${makeLayoutFooter()|n}
 
@@ -127,16 +127,29 @@ from cioc.core import gtranslate
 	%if request.template_values['JavaScriptBottomUrl']:
 	<script type="text/javascript" src="${request.template_values['JavaScriptBottomUrl']}"></script>
 	%endif
-
-	%if request.dboptions.domain_info.get('GoogleAnalyticsCode') or request.dboptions.dbopts.get('GlobalGoogleAnalyticsCode'):
+	<%
+	has_ga_ua = request.dboptions.domain_info.get('GoogleAnalyticsCode') or request.dboptions.dbopts.get('GlobalGoogleAnalyticsCode')
+	has_ga4 = request.dboptions.domain_info.get('GoogleAnalytics4Code') or request.dboptions.dbopts.get('GlobalGoogleAnalytics4Code')
+	%>
+	%if has_ga_ua or has_ga4:
 	<!-- Google Analytics -->
+	%if has_ga4:
+	<script async src="https://www.googletagmanager.com/gtag/js?id=${request.dboptions.domain_info.get('GoogleAnalytics4Code') or request.dboptions.dbopts.get('GlobalGoogleAnalytics4Code')}"></script>
+	%endif
 	<script type="text/javascript">
 	%if not request.params.get('InlineResults')=='on':
 		(function() {
+		%if has_ga_ua:
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		%endif
+		%if has_ga4:
+		window.dataLayer = window.dataLayer || [];
+		window.gtag = function(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		%endif
 		%for prefix, name, source in [('','', request.dboptions.domain_info), ('Global', 'cioc_all_views.', request.dboptions.dbopts), ('Second', 'second.', request.dboptions.domain_info)]:
 			<% name_prefix = (prefix.lower() + '_') if prefix else '' %>
 		%if source.get(prefix + 'GoogleAnalyticsCode'):
@@ -153,33 +166,80 @@ from cioc.core import gtranslate
 			%endif
 			%if source.get(prefix + 'GoogleAnalyticsResultsCountMetric'):
 				if (window.cioc_results_count) {
-					ga('${name}set', 'dimension${source[prefix + 'GoogleAnalyticsResultsCountMetric']}', window.cioc_results_count);
+					ga('${name}set', 'metric${source[prefix + 'GoogleAnalyticsResultsCountMetric']}', window.cioc_results_count);
 				}
 			%endif
 			ga('${name}send', 'pageview');
+		%endif
+		%if source.get(prefix + 'GoogleAnalytics4Code'):
+		{
+			<%
+			dimensions = [
+			   (source.get(prefix + 'GoogleAnalytics4AgencyDimension'), request.user.Agency if request.user else 'PUBLIC'),
+			   (source.get(prefix + 'GoogleAnalytics4LanguageDimension'), request.language.Culture),
+			   (source.get(prefix + 'GoogleAnalytics4DomainDimension'), request.pageinfo.DbAreaS + ('' if not request.viewdata.dom else f'-{request.viewdata.dom.ViewType}')),
+			]
+			dimensions = json.dumps({f'dimension{k}': v for k, v in dimensions if k is not None})
+			%>
+			let d = ${dimensions|n};
+			%if source.get(prefix + 'GoogleAnalytics4ResultsCountMetric'):
+			if(window.cioc_results_count) {
+			   d['metric${source[prefix + 'GoogleAnalytics4ResultsCountMetric']}'] = window.cioc_results_count;
+			}
+			%endif
+
+			window.${name_prefix}cioc_ga4_code = '${source[prefix + 'GoogleAnalytics4Code'].replace("'", "\\'")}';
+			window.${name_prefix}cioc_ga4_dimensions = d;
+			gtag('config', window.${name_prefix}cioc_ga4_code,  {send_page_view: false});
+			gtag('event', 'page_view', jQuery.merge(
+				{page_title: document.title,
+				page_location: location.href, send_to:
+				window.${name_prefix}cioc_ga4_code}, d)
+			);
+		}
 		%endif
 		%endfor
 		})();
 	%else:
 		if (ga) {
-			<% 
+			<%
 			url = request.path_qs
 			if url.startswith('/details.asp'):
 				exclude = ['NUM', 'UseCICVw', 'UseVOLVw', 'Ln', 'UseEq', 'InlineResults']
-				
+
 				new_params = [(x, request.params[x]) for x in request.GET if x not in exclude]
 				num = request.params.get('NUM')
 				url = request.passvars.makeDetailsLink(request.params.get('NUM'), new_params)
 			if url.startswith('/volunteer/details.asp'):
 				exclude = ['VNUM', 'UseCICVw', 'UseVOLVw', 'Ln', 'UseEq', 'InlineResults']
-				
+
 				new_params = [(x, request.params[x]) for x in request.GET if x not in exclude]
 				num = request.params.get('VNUM')
 				url = request.passvars.makeVOLDetailsLink(request.params.get('VNUM'), new_params)
 			%>
-			%for prefix, name in [('', ''), ('global_', 'cioc_all_views.'), ('second_', 'second.')]:
-				if (window.${prefix}cioc_ga_code) {
+			%for prefix, name, source in [('', '', request.dboptions.domain_info), ('Global', 'cioc_all_views.', request.dboptions.dbopts), ('Second', 'second.', request.dboptions.domain_info)]:
+				<% name_prefix = (prefix.lower() + '_') if prefix else '' %>
+				if (window.${name_prefix}cioc_ga_code) {
 					ga('${name}send', 'pageview', {'page': ${json.dumps(url)|n}, 'title': ${json.dumps((renderinfo.doc_title or '').replace('<br>', ' ').replace('&nbsp;', ' '))|n} });
+				}
+				if (window.${name_prefix}cioc_ga4_code) {
+					let d = jQuery.merge(
+					{
+					    'page_location': ${json.dumps(url)|n},
+					    'page_title': ${json.dumps((renderinfo.doc_title or '').replace('<br>', ' ').replace('&nbsp;', ' '))|n},
+					    'send_to': window.${name_prefix}cioc_ga4_code
+					}, window.${name_prefix}cioc_ga4_dimensions );
+					%if source.get(name_prefix, 'GoogleAnalytics4ResultsCountMetric'):
+					    %if url.startswith(('/record/', '/volunteer/record/')):
+					if (d['metric${source[prefix + 'GoogleAnalytics4ResultsCountMetric']}']){
+					    delete d['metric${source[prefix + 'GoogleAnalytics4ResultsCountMetric']}'];
+					} else
+						%endif
+						if (window.cioc_results_count) {
+					    d['metric${source[prefix + 'GoogleAnalytics4ResultsCountMetric']}'] = window.cioc_results_count;
+					}
+					%endif
+					gtag('event', 'page_view', d);
 				}
 			%endfor
 		}

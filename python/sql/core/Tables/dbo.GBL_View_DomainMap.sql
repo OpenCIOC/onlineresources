@@ -27,12 +27,22 @@ CREATE TABLE [dbo].[GBL_View_DomainMap]
 [SecondGoogleAnalyticsAgencyDimension] [tinyint] NULL,
 [SecondGoogleAnalyticsLanguageDimension] [tinyint] NULL,
 [SecondGoogleAnalyticsDomainDimension] [tinyint] NULL,
-[SecondGoogleAnalyticsResultsCountMetric] [tinyint] NULL
+[SecondGoogleAnalyticsResultsCountMetric] [tinyint] NULL,
+[GoogleAnalytics4Code] [nvarchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
+[GoogleAnalytics4AgencyDimension] [tinyint] NULL,
+[GoogleAnalytics4LanguageDimension] [tinyint] NULL,
+[GoogleAnalytics4DomainDimension] [tinyint] NULL,
+[GoogleAnalytics4ResultsCountMetric] [tinyint] NULL,
+[SecondGoogleAnalytics4Code] [nvarchar] (50) COLLATE Latin1_General_100_CI_AI NULL,
+[SecondGoogleAnalytics4AgencyDimension] [tinyint] NULL,
+[SecondGoogleAnalytics4LanguageDimension] [tinyint] NULL,
+[SecondGoogleAnalytics4DomainDimension] [tinyint] NULL,
+[SecondGoogleAnalytics4ResultsCountMetric] [tinyint] NULL
 ) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[GBL_View_DomainMap] ADD CONSTRAINT [PK_GBL_View_DomainMap] PRIMARY KEY CLUSTERED  ([DMAP_ID]) ON [PRIMARY]
+ALTER TABLE [dbo].[GBL_View_DomainMap] ADD CONSTRAINT [PK_GBL_View_DomainMap] PRIMARY KEY CLUSTERED ([DMAP_ID]) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[GBL_View_DomainMap] ADD CONSTRAINT [IX_GBL_View_DomainMap] UNIQUE NONCLUSTERED  ([DomainName]) ON [PRIMARY]
+ALTER TABLE [dbo].[GBL_View_DomainMap] ADD CONSTRAINT [IX_GBL_View_DomainMap] UNIQUE NONCLUSTERED ([DomainName]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[GBL_View_DomainMap] WITH NOCHECK ADD CONSTRAINT [FK_GBL_View_DomainMap_CIC_View] FOREIGN KEY ([CICViewType]) REFERENCES [dbo].[CIC_View] ([ViewType])
 GO
