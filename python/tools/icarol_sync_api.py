@@ -66,9 +66,11 @@ def prepare_client(args) -> None:
 
     args.client = ICarolClient(host, token)
     args.dbinfo = args.client.database_info()
-    args.dbid = args.dbinfo[0]["id"]
+    args.dbid = args.dbinfo[0].id
 
     args.fields = args.client.get_custom_fields(args.dbid)
+    if args.test:
+        print(args.fields)
     args.idmap = {}
 
 
@@ -78,8 +80,8 @@ def get_changes_to_send(conn: "Connection") -> list["Row"]:
 
 
 def parse_sub_xml(
-    element: etree.Element,
-) -> t.Union[list[t.Union[dict[str, t.Any], str]], dict[str, t.Any]]:
+    element: etree._Element,
+) -> t.Union[list[t.Union[dict[str, t.Any], str]], dict[str, t.Any], str]:
     if len(element) and element[0].tag == "item":
         return t.cast(
             list[t.Union[dict[str, t.Any], str]],
@@ -91,9 +93,9 @@ def parse_sub_xml(
 
     base = dict(element.attrib)
     for sub in element:
-        base[sub.tag] = parse_sub_xml(sub)
+        base[sub.tag] = t.cast(str, parse_sub_xml(sub))
 
-    return base
+    return t.cast(dict[str, t.Any], base)
 
 
 def fix_custom_fields(args: MyArgsType, records: list[dict], num: str):
@@ -106,9 +108,9 @@ def fix_custom_fields(args: MyArgsType, records: list[dict], num: str):
                 continue
 
             try:
-                custom["selectedValues"] = list(
-                    {str(field.label_to_id[x]) for x in selected_values.values()}
-                )
+                custom["selectedValues"] = {
+                    str(field.label_to_id[x]): x for x in selected_values
+                }
             except KeyError as e:
                 raise Exception(
                     f"Unable to map value '{e.args[0]}' to a custom field selection for {custom['label']} on {record['type']} {num}."
@@ -178,9 +180,9 @@ def make_program_at_site(
             model.RelatedRecordInfo(id=program_id),
         ],
     )
-    if program_at_site_id is not model.unset_value:
+    if program_at_site_id is not model.unset_value and program_at_site_id is not None:
         if not args.test:
-            args.client.update_resource(program_at_site)
+            args.client.update_resource(program_at_site_id, program_at_site)
     else:
         if not args.test:
             result = args.client.create_resource(program_at_site)
@@ -205,6 +207,7 @@ def update_program_at_sites(
     program_at_site_ids = {
         site_num: id for site_num, id in (x.split("/") for x in external_ids)
     }
+    print("Program At Site IDs", program_at_site_ids)
 
     linked_site_nums = set()
     for prog_at_site in related_sites:
@@ -235,6 +238,7 @@ def update_program_at_sites(
             if prog_at_site.program_at_site_id is model.unset_value:
                 prog_at_site.program_at_site_id = None
 
+            traceback.print_exc(file=sys.stderr)
             print(
                 f"Failed to create/update ProgramAtSite {prog_at_site.site_num}/{prog_at_site.program_at_site_id} for Program {num} due to an error.",
                 "This may have leaked a ProgramAtSite record.",
@@ -326,6 +330,7 @@ def sync_record(
                     args, record_id, agency_id, external_ids, related_sites, record_num
                 )
             except Exception as e:
+                traceback.print_exc(file=sys.stderr)
                 print(
                     "Error encountered while attempting to update program_at_site. May have leaked ids.",
                     e,
@@ -410,6 +415,7 @@ def parse_args(argv: list[str]) -> MyArgsType:
 def main(argv):
     args = parse_args(argv)
     context = Context(args)
+    capture_io = StringIO()
     retval = 0
     try:
         args.config = context.config
@@ -425,7 +431,7 @@ def main(argv):
             )
             return 3
         else:
-            sys.stdout = StringIO()
+            sys.stdout = capture_io
             sys.stderr = sys.stdout
 
     sys.stderr = FileWriteDetector(sys.stderr)
@@ -440,7 +446,7 @@ def main(argv):
         retval = 1
 
     if args.email:
-        email_log(args, sys.stdout, sys.stderr.is_dirty(), "icarol_export")
+        email_log(args, capture_io, sys.stderr.is_dirty(), "icarol_export")
 
     return retval
 
