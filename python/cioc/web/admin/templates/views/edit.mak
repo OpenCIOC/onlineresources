@@ -1295,9 +1295,17 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 					<tr>
 						<td class="field-data-cell">
 							${renderer.errorlist("item.SrchCommunityDefault")}
-							${_('Default to')}
-							${renderer.radio("item.SrchCommunityDefault", value='L', label=_('Located in Community'))}
-							${renderer.radio("item.SrchCommunityDefault", value='S', label=_('Serving Community'))}
+							<div class="row form-group">
+								<label class="control-label col-md-3">
+									${_('Default to')}
+								</label>
+								<div class="col-md-9">
+									${renderer.radio("item.SrchCommunityDefault", value='L', label=_('Located in Community'))}
+									<br />${renderer.radio("item.SrchCommunityDefault", value='S', label=_('Serving Community'))}
+								</div>
+							</div>						
+							${renderer.errorlist("item.SrchCommunityDefaultOnly")}
+							${renderer.checkbox("item.SrchCommunityDefaultOnly", label=_('Always use the default option (hide other values)'))}
 						</td>
 					</tr>
 					<tr>
@@ -1590,7 +1598,7 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 				$('#override-instructions').show();
 			}
 		};
-		on_click($('#HasLabelOverrides').on('change', function () { return on_click(this); })[0]);
+		on_click($('#haslabeloverrides').on('change', function () { return on_click(this); })[0]);
 	});
 </script>
 </%def>

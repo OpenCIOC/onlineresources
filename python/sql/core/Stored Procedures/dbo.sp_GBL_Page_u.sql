@@ -21,13 +21,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.7.3
-	Checked by: CL
-	Checked on: 08-May-2016
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE	@Error	int
 SET @Error = 0
 
@@ -50,7 +43,7 @@ DECLARE @ViewIDs table (
 IF @DM=1 BEGIN
 	INSERT INTO @ViewIDs 
 	SELECT tm.ItemID
-		FROM fn_GBL_ParseIntIDList(@ViewList, ',') tm
+		FROM dbo.fn_GBL_ParseIntIDList(@ViewList, ',') tm
 		INNER JOIN CIC_View vw
 			ON vw.ViewType = tm.ItemID
 				AND (vw.MemberID IS NULL OR vw.MemberID=@MemberID)
@@ -59,7 +52,7 @@ IF @DM=1 BEGIN
 END ELSE BEGIN
 	INSERT INTO @ViewIDs 
 	SELECT tm.ItemID
-		FROM fn_GBL_ParseIntIDList(@ViewList, ',') tm
+		FROM dbo.fn_GBL_ParseIntIDList(@ViewList, ',') tm
 		INNER JOIN VOL_View vw
 			ON vw.ViewType = tm.ItemID
 				AND (vw.MemberID IS NULL OR vw.MemberID=@MemberID)
@@ -73,15 +66,15 @@ IF @MemberID IS NULL BEGIN
 	SET @Error = 10 -- Required Field
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, @PageObjectName)
 -- Member ID exists ?
-END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
+END ELSE IF NOT EXISTS(SELECT * FROM dbo.STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS varchar), @MemberObjectName)
 -- Page ID exists ?
-END ELSE IF @PageID IS NOT NULL AND NOT EXISTS (SELECT * FROM GBL_Page WHERE PageID=@PageID) BEGIN
+END ELSE IF @PageID IS NOT NULL AND NOT EXISTS (SELECT * FROM dbo.GBL_Page WHERE PageID=@PageID) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@PageID AS varchar(20)), @PageObjectName)
 -- Page belongs to Member ?
-END ELSE IF @PageID IS NOT NULL AND NOT EXISTS(SELECT * FROM GBL_Page WHERE PageID=@PageID AND MemberID=@MemberID) BEGIN
+END ELSE IF @PageID IS NOT NULL AND NOT EXISTS(SELECT * FROM dbo.GBL_Page WHERE PageID=@PageID AND MemberID=@MemberID) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL)
 -- Message slug given ?
@@ -97,7 +90,7 @@ END ELSE IF @PageContent IS NULL BEGIN
 	SET @Error = 10 -- Required field
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @PageObjectName, @PageObjectName)
 -- Message title already exists ?
-END ELSE IF EXISTS (SELECT * FROM GBL_Page WHERE (@PageID IS NULL OR PageID<>@PageID) AND Slug=@Slug AND MemberID=@MemberID) BEGIN
+END ELSE IF EXISTS (SELECT * FROM dbo.GBL_Page WHERE (@PageID IS NULL OR PageID<>@PageID) AND Slug=@Slug AND MemberID=@MemberID) BEGIN
 	SET @Error = 6 -- Value In Use
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @Slug, cioc_shared.dbo.fn_SHR_STP_ObjectName('Slug'))
 -- At Least one View chosen ?
@@ -109,7 +102,7 @@ END ELSE IF @PageID IS NULL AND @Culture IS NULL BEGIN
 	SET @Error = 10 -- Required field
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @LanguageObjectName, @PageObjectName)
 -- Language exists and is active ?
-END ELSE IF @PageID IS NULL AND NOT EXISTS (SELECT * FROM STP_Language WHERE Culture=@Culture AND Active=1) BEGIN
+END ELSE IF @PageID IS NULL AND NOT EXISTS (SELECT * FROM dbo.STP_Language WHERE Culture=@Culture AND Active=1) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@Culture AS varchar), @LanguageObjectName)
 END
@@ -126,7 +119,7 @@ IF @Error = 0 BEGIN
 		WHERE (PageID = @PageID)
 		EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @PageObjectName, @ErrMsg
 	END ELSE BEGIN
-		INSERT INTO GBL_Page (
+		INSERT INTO dbo.GBL_Page (
 			CREATED_DATE,
 			CREATED_BY,
 			MODIFIED_DATE,
@@ -170,21 +163,21 @@ IF @Error = 0 BEGIN
 			INSERT INTO CIC_Page_View (ViewType, PageID)
 				SELECT tm.ViewType AS ViewType, @PageID AS PageID
 					FROM @ViewIDs tm
-				WHERE NOT EXISTS(SELECT * FROM CIC_Page_View WHERE ViewType=tm.ViewType AND PageID=@PageID)
+				WHERE NOT EXISTS(SELECT * FROM dbo.CIC_Page_View WHERE ViewType=tm.ViewType AND PageID=@PageID)
 			EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @PageObjectName, @ErrMsg
 		END ELSE BEGIN
 			DELETE FROM VOL_Page_View
 				WHERE (
 					PageID = @PageID
 					AND NOT EXISTS(SELECT * FROM @ViewIDs tm WHERE tm.ViewType=VOL_Page_View.ViewType)
-					AND NOT EXISTS(SELECT * FROM VOL_View vw WHERE vw.ViewType=VOL_Page_View.ViewType AND (ISNULL(vw.Owner,@AgencyCode)<>@AgencyCode))
+					AND NOT EXISTS(SELECT * FROM dbo.VOL_View vw WHERE vw.ViewType=VOL_Page_View.ViewType AND (ISNULL(vw.Owner,@AgencyCode)<>@AgencyCode))
 				)
 			EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @PageObjectName, @ErrMsg
 			
 			INSERT INTO VOL_Page_View (ViewType, PageID)
 				SELECT tm.ViewType AS ViewType, @PageID AS PageID
 					FROM @ViewIDs tm
-				WHERE NOT EXISTS(SELECT * FROM VOL_Page_View WHERE ViewType=tm.ViewType AND PageID=@PageID)
+				WHERE NOT EXISTS(SELECT * FROM dbo.VOL_Page_View WHERE ViewType=tm.ViewType AND PageID=@PageID)
 			EXEC @Error =  cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @PageObjectName, @ErrMsg
 
 		END

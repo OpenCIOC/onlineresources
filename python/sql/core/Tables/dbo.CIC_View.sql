@@ -101,7 +101,8 @@ CREATE TABLE [dbo].[CIC_View]
 [RefineField2] [int] NULL,
 [RefineField3] [int] NULL,
 [RefineField4] [int] NULL,
-[iCarolAPIExportEnabled] [bit] NOT NULL CONSTRAINT [DF_CIC_View_iCarolAPIExportEnabled] DEFAULT ((0))
+[iCarolAPIExportEnabled] [bit] NOT NULL CONSTRAINT [DF_CIC_View_iCarolAPIExportEnabled] DEFAULT ((0)),
+[SrchCommunityDefaultOnly] [bit] NOT NULL CONSTRAINT [DF_CIC_View_SrchCommunityDefaultOnly] DEFAULT ((0))
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_View] WITH NOCHECK ADD CONSTRAINT [CK_CIC_View_TaxDefnLevel] CHECK (([TaxDefnLevel]>=(0) AND [TaxDefnLevel]<=(5)))

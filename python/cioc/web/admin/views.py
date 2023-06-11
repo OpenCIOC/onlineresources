@@ -106,6 +106,7 @@ class ViewBaseCICSchema(ViewBaseSchema):
     LimitedView = validators.Bool()
     VolunteerLink = validators.Bool()
     SrchCommunityDefault = validators.DictConverter(SrchCommunityDefaultOptions)
+    SrchCommunityDefaultOnly = validators.Bool()
 
     ASrchAddress = validators.Bool()
     ASrchEmployee = validators.Bool()

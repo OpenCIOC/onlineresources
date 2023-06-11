@@ -87,6 +87,7 @@ Select Case g_objCurrentLang.Culture
 End Select
 
 Dim	bSrchCommunityDefault, _
+    bSrchCommunityDefaultOnly, _
 	bASrchAddress, _
 	bASrchAges, _
 	bASrchBool, _
@@ -115,6 +116,7 @@ Set rsASrchViewData = cmdASrchViewData.Execute
 With rsASrchViewData
 	If Not .EOF Then
 		bSrchCommunityDefault = .Fields("SrchCommunityDefault")
+        bSrchCommunityDefaultOnly = .Fields("SrchCommunityDefaultOnly")
 		bASrchAddress = .Fields("ASrchAddress")
 		bASrchAges	= .Fields("ASrchAges")
 		bASrchBool = .Fields("ASrchBool")

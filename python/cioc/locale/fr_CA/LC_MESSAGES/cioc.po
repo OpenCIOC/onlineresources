@@ -8706,10 +8706,10 @@ msgstr ""
 
 #: ../python/cioc/web/cic/templates/csearch_form.mak:62
 msgid ""
-"For the most accurate search, enter the date(s) of birth of the "
-"child(ren) requiring care:"
+"For the most accurate search, enter the date of birth of the "
+"child requiring care:"
 msgstr ""
-"Pour une recherche fiable, saisir les dates de naissance des enfants "
+"Pour une recherche fiable, saisir la date de naissance de l'enfant "
 "nécessitant une garde :"
 
 #: ../python/cioc/web/cic/templates/csearch_form.mak:65

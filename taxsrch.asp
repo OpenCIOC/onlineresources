@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -189,7 +189,8 @@ Call addToHeader("<script type='text/javascript'>" & strMatchScript & "</script>
 
 Call makePageHeader(TXT_ADVANCED_TAXONOMY_SEARCH, TXT_ADVANCED_TAXONOMY_SEARCH, True, False, True, True)
 
-Dim	bSrchCommunityDefault
+Dim	bSrchCommunityDefault, _
+	bSrchCommunityDefaultOnly
 
 ' Get Advanced Search View data
 Dim cmdASrchViewData, rsASrchViewData
@@ -207,6 +208,7 @@ Set rsASrchViewData = cmdASrchViewData.Execute
 With rsASrchViewData
 	If Not .EOF Then
 		bSrchCommunityDefault = .Fields("SrchCommunityDefault")
+		bSrchCommunityDefaultOnly = .Fields("SrchCommunityDefaultOnly")
 	End If
 End With
 

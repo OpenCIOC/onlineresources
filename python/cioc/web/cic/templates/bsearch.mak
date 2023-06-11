@@ -369,14 +369,15 @@ ${request.passvars.cached_form_vals}
 </%def>
 
 <div id="cic-search">
-${makeSearchForm(
-		searchform,
-		searchform_start=partial(capture, searchform_start),
-		searchform_keyword=partial(capture, searchform_keyword),
-		searchform_in_values=partial(capture, searchform_in_values),
-		searchform_community=partial(capture, partial(community_form, communities, request.viewdata.cic.OtherCommunity)),
-		searchform_quicklist=partial(capture, partial(quicklist_form, quicklist, request.viewdata.cic.QuickListDropDown, expand_class='input-expand', force_heading=request.viewdata.cic.QuickListPubHeadings)),
-		searchform_num=partial(capture, searchform_num),
-		searchform_languages=partial(capture, searchform_languages),
+	${makeSearchForm(
+	searchform,
+	searchform_start=partial(capture, searchform_start),
+	searchform_keyword=partial(capture, searchform_keyword),
+	searchform_in_values=partial(capture, searchform_in_values),
+	searchform_community=partial(capture, partial(community_form, communities, request.viewdata.cic.OtherCommunity)),
+	searchform_quicklist=partial(capture, partial(quicklist_form, quicklist, request.viewdata.cic.QuickListDropDown, expand_class='input-expand', force_heading=request.viewdata.cic.QuickListPubHeadings)),
+	searchform_num=partial(capture, searchform_num),
+	searchform_languages=partial(capture, searchform_languages),
+	age_groups_form=partial(capture, age_groups_form),
 	)|n}
 </div>

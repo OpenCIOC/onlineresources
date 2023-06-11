@@ -17,6 +17,7 @@
 import os
 import logging
 import itertools
+from functools import partial
 
 from markupsafe import Markup
 from webhelpers2.html import tags
@@ -52,6 +53,8 @@ class LayoutSearch:
         quicklist,
         communities,
         languages,
+        ages,
+        ages_cc,
         csearchform,
     ):
         self.request = request
@@ -64,6 +67,8 @@ class LayoutSearch:
         self.quicklist = quicklist
         self.communities = communities
         self.languages = languages
+        self.ages = ages
+        self.ages_cc = ages_cc
         self.csearchform = csearchform
 
     def __call__(self, search_form, **kwargs):
@@ -575,7 +580,11 @@ class LayoutSearch:
             "KEYWORD_SEARCH_IN": kwargs["searchform_in_values"],
             "COMMUNITY_SEARCH": kwargs["searchform_community"],
             "LANGUAGES_SEARCH": kwargs["searchform_languages"],
+            "AGES_SEARCH": partial(kwargs["age_groups_form"], ages=self.ages),
+            "AGES_SEARCH_CC": partial(kwargs["age_groups_form"], ages=self.ages_cc),
             "HAS_LANGUAGES_SEARCH": self.languages,
+            "HAS_AGES_SEARCH": self.ages,
+            "HAS_AGES_SEARCH_CC": self.ages_cc,
             "HAS_COMMUNITY_SEARCH": self.communities
             or (
                 request.viewdata.cic.QuickListDropDown
@@ -684,6 +693,7 @@ class BasicSearch(CicViewBase):
             args = [cic_view.ViewType, preview_template_id, request.dboptions.MemberID]
             if search_info.BSrchAges:
                 sql += "\nEXEC dbo.sp_GBL_AgeGroup_l @MemberID, 0"
+                sql += "\nEXEC dbo.sp_GBL_AgeGroup_l @MemberID, 1"
 
             if search_info.BSrchVacancy:
                 sql += "\nEXEC dbo.sp_CIC_Vacancy_TargetPop_l @MemberID, 0, NULL"
@@ -723,6 +733,8 @@ class BasicSearch(CicViewBase):
             if search_info.BSrchAges:
                 cursor.nextset()
                 ages = cursor.fetchall()
+                cursor.nextset()
+                ages_cc = cursor.fetchall()
 
             if search_info.BSrchVacancy:
                 cursor.nextset()
@@ -800,6 +812,8 @@ class BasicSearch(CicViewBase):
             quicklist,
             communities,
             languages,
+            ages,
+            ages_cc,
             csearchform,
         )
         if mapsbottomjs and "[CHILDCARE_SEARCH_FORM]" in layout_info.SearchLayoutHTML:

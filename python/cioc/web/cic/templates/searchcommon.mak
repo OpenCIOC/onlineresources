@@ -26,30 +26,42 @@ from cioc.core.utils import grouper
 <% is_dropdown = type_override %>
 %endif
 %if is_dropdown:
-	%if communities or show_other_box:
+	%if communities or show_other_box or located_near:
 <div class="community-dropdown-search-parent">
+	%if search_info.SrchCommunityDefaultOnly and len(located_near) < 1:
+		%if search_info.SrchCommunityDefault:
+	<input type="hidden" name="CMType" value="S" />
+		%else:
+	<input type="hidden" name="CMType" value="L" />
+		%endif
+	%else:
 	<div class="community-dropdown-search community-dropdown-search-left community-search-type">
 		<select name="CMType" id="CMType${idsuffix}" class="form-control cm-select cm-select${idsuffix}" data-suffix="${idsuffix}">
-			<option value="L" ${'selected' if not search_info.SrchCommunityDefault else ''} >${_('Located in')}</option>
-			<option value="S" ${'selected' if search_info.SrchCommunityDefault else ''}>${_("Serving")}</option>
+			%if not search_info.SrchCommunityDefaultOnly or not search_info.SrchCommunityDefault:
+			<option value="L" ${'selected' if not search_info.SrchCommunityDefault else '' }>${_('Located in')}</option>
+			%endif
+			%if not search_info.SrchCommunityDefaultOnly or search_info.SrchCommunityDefault:
+			<option value="S" ${'selected' if search_info.SrchCommunityDefault else '' }>${_("Serving")}</option>
+			%endif
 			%for distance, label in located_near:
-				<option value="${distance}" style="display: none;" class="cmtype-located-near">${label}</option>
+			<option value="${distance}" style="display: none;" class="cmtype-located-near">${label}</option>
 			%endfor
 		</select>
 	</div>
 	<div class="community-dropdown-search community-dropdown-search-right">
+	%endif
 		<div id="located-serving-community-wrap${idsuffix}">
-		%if communities:
-		<select name="CMID" id="CMID${idsuffix}" class="form-control input-expand">
-			<option>${_('Select a Community')}</option>
-		%for community in communities:
-			<option value="${community[0]}">${community[1]}</option>
-		%endfor
-		</select>
-		%elif show_other_box:
+			%if communities:
+			<select name="CMID" id="CMID${idsuffix}" class="form-control input-expand">
+				<option>${_('Select a Community')}</option>
+				%for community in communities:
+				<option value="${community[0]}">${community[1]}</option>
+				%endfor
+			</select>
+			%elif show_other_box:
 			<input id="OComm${idsuffix}" name="OComm" type="text" placeholder="${_('Enter a community name')}" maxlength="200" class="form-control">
 			<input type="hidden" name="OCommID" id="OCommID${idsuffix}">
-		%endif
+			%endif
 		</div>
 		%if located_near:
 		<div id="located-near-wrap${idsuffix}" style="display:none;">
@@ -60,40 +72,58 @@ from cioc.core.utils import grouper
 			</div>
 		</div>
 		%endif
+	%if not search_info.SrchCommunityDefaultOnly or len(located_near) >= 1:
 	</div>
+	%endif
+</div>
+%endif
+%else:
+	%if search_info.SrchCommunityDefaultOnly and len(located_near) < 1:
+		%if search_info.SrchCommunityDefault:
+	<input type="hidden" name="CMType" value="S" />
+		%else:
+	<input type="hidden" name="CMType" value="L" />
+		%endif
+	%else:
+<div class="inline-radio-list community-search-type">
+		%if not search_info.SrchCommunityDefaultOnly or not search_info.SrchCommunityDefault:
+	<label for="CMType_L${idsuffix}" class="NoWrap radio-inline"><input type="radio" class="cm-select cm-select${idsuffix}" id="CMType_L${idsuffix}" name="CMType" value="L" ${'checked' if not search_info.SrchCommunityDefault else '' } data-suffix="${idsuffix}">${_("Located in Community")}</label>
+		%endif
+		%if not search_info.SrchCommunityDefaultOnly or search_info.SrchCommunityDefault:
+	<label for="CMType_S${idsuffix}" class="NoWrap radio-inline"><input type="radio" class="cm-select cm-select${idsuffix}" id="CMType_S${idsuffix}" name="CMType" value="S" ${'checked' if search_info.SrchCommunityDefault else '' } data-suffix="${idsuffix}">${_("Serving Community")}</label>
+		%endif
+		%for distance, label in located_near:
+	<label for="CMType_${distance}${idsuffix}" class="NoWrap radio-inline"><input type="radio" class="cm-select cm-select${idsuffix} cmtype-located-near" id="CMType_${distance}${idsuffix}" name="CMType" value="${distance}" data-suffix="${idsuffix}">${label}</label>
+		%endfor
 </div>
 	%endif
-%else:
-<div class="inline-radio-list community-search-type">
-	<label for="CMType_L${idsuffix}" class="NoWrap radio-inline"><input type="radio" class="cm-select cm-select${idsuffix}" id="CMType_L${idsuffix}" name="CMType" value="L" ${ 'checked' if not search_info.SrchCommunityDefault else ''} data-suffix="${idsuffix}">${_("Located in Community")}</label>
-	<label for="CMType_S${idsuffix}" class="NoWrap radio-inline"><input type="radio" class="cm-select cm-select${idsuffix}" id="CMType_S${idsuffix}" name="CMType" value="S" ${'checked' if search_info.SrchCommunityDefault else ''} data-suffix="${idsuffix}">${_("Serving Community")}</label>
-	%for distance, label in located_near:
-		<label for="CMType_${distance}${idsuffix}" class="NoWrap radio-inline"><input type="radio" class="cm-select cm-select${idsuffix} cmtype-located-near" id="CMType_${distance}${idsuffix}" name="CMType" value="${distance}" data-suffix="${idsuffix}">${label}</label>
-	%endfor
-</div>
 <div class="inline-no-bold">
 	<div id="located-serving-community-wrap${idsuffix}">
-	%if communities:
-	<table class="NoBorder clear-line-below checkbox-list-table">
-	%for row in grouper(request.viewdata.cic.CommSrchWrapAt, communities):
-		<tr class="search-community-row">
-		%for col in row:
-			%if col:
-			<td class="search-community checkbox-list-item"><label for="CM_${col[0]}${idsuffix}" class="checkbox-inline"><input type="checkbox" name="CMID" id="CM_${col[0]}${idsuffix}" value="${col[0]}"> ${col[1]}</label></td>
-			%endif
-		%endfor
-		</tr>
-	%endfor
-	</table>
-	%endif
-	%if show_other_box:
+		%if communities:
+<%
+if request.viewdata.cic.CommSrchWrapAt < 3:
+	colclass = "col-xs-12 col-sm-6"
+elif request.viewdata.cic.CommSrchWrapAt == 3:
+	colclass = "col-xs-12 col-sm-6 col-md-4"
+elif request.viewdata.cic.CommSrchWrapAt > 3:
+	colclass = "col-xs-12 col-sm-6 col-md-4 col-lg-3"
+else:
+	colclass = "col-xs-12"
+%>
+		<div class="row clear-line-below">
+			%for community in communities:
+			<div class="search-community ${colclass}"><label for="CM_${community[0]}${idsuffix}" class="checkbox-inline"><input type="checkbox" name="CMID" id="CM_${community[0]}${idsuffix}" value="${community[0]}"> ${community[1]}</label></div>
+			%endfor
+		</div>
+		%endif
+		%if show_other_box:
 		%if communities:
 		<strong><label for="OComm${idsuffix}">${_('Other Community')}</label></strong>${_(':')} [ <a href="javascript:openWin('${request.passvars.makeLink(request.pageinfo.PathToStart + 'comfind.asp')}','cfind')">${_('Find Community Name')}</a> ]
 		<br>
 		%endif
-	<input id="OComm${idsuffix}" name="OComm" type="text" placeholder="${_('Enter a community name')}" maxlength="200" class="form-control">
-	<input type="hidden" name="OCommID" id="OCommID${idsuffix}">
-	%endif
+		<input id="OComm${idsuffix}" name="OComm" type="text" placeholder="${_('Enter a community name')}" maxlength="200" class="form-control">
+		<input type="hidden" name="OCommID" id="OCommID${idsuffix}">
+		%endif
 	</div>
 	%if located_near:
 	<div id="located-near-wrap${idsuffix}" style="display:none;">

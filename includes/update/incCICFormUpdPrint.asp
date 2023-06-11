@@ -3065,7 +3065,7 @@ Function makeSubsidyNamedProgramContents(rst,bUseContent)
 	If Not Nl(strSubsidyNamedProgramDesc) Then
 		strReturn = "<p>" & strSubsidyNamedProgramDesc & "</p>"
 	Else
-		strReturn = vbNulString
+		strReturn = vbNullString
 	End If
 
 	strReturn = strReturn & _

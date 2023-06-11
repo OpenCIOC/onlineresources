@@ -27,6 +27,15 @@ from cioc.core.datesearch import add_months, add_years
 
 <%namespace file="cioc.web.cic:templates/searchcommon.mak" import="community_form,map_search_form" />
 
+<%def name="no_values_search_all_text(add_hr)">
+<div class="no-values-search-all-text">
+	<span class="SmallNote">${_('If you do not select any values, all values will be searched.')}</span>
+	%if add_hr:
+	<hr />
+	%endif
+</div>
+</%def>
+
 <%def name="childsearchform()">
 <div id="csrch_top">
 	<form action="cresults.asp" method="get" id="EntryForm" name="EntryForm" ${' onSubmit="formNewWindow(this);" ' if request.user else ' '|n} class="form-horizontal">
@@ -44,8 +53,6 @@ from cioc.core.datesearch import add_months, add_years
 				<tr>
 					<td class="field-label-cell">${_('Communities')}</td>
 					<td class="field-data-cell">
-						<span class="SmallNote">${_('If you do not select any values, all values will be searched.')}</span>
-						<hr>
 						<div class="clear-line-below">
 							${community_form(communities, request.viewdata.cic.OtherCommunity)}
 						</div>
@@ -58,35 +65,18 @@ from cioc.core.datesearch import add_months, add_years
 				<tr>
 					<td class="field-label-cell">${_('Ages')}</td>
 					<td class="field-data-cell">
-						<span class="SmallNote">${_('If you do not select any values, all values will be searched.')}</span>
-						<hr style="border: 1px dashed #999999">
-						<p>${_('For the most accurate search, enter the date(s) of birth of the child(ren) requiring care:')}</p>
-						%for i in range(4):
 						<div class="row form-group">
-							<label for="DOB${i}" class="control-label col-sm-4">${_('Date of Birth #%d') % (i + 1)}</label>
-							<div class="col-sm-8 form-inline">
-								<input type="text" name="DOB${i}" class="DatePicker form-control" id="DOB${i}"> (${_('e.g.')} ${format_date(date.today())})
+							<label for="DOB0" class="control-label col-sm-5 col-md-4 col-lg-3">${_('Date of Birth')}</label>
+							<div class="col-sm-7 col-md-8 col-lg-9 form-inline">
+								<input type="text" name="DOB0" class="DatePicker form-control" id="DOB0" autocomplete="off" data-lpignore="true">
+								<br class="visible-sm" />(${_('e.g.')} ${format_date(date.today())})
 							</div>
 						</div>
-						%endfor
-						<hr>
-						<h4>${_('Are you searching for care for more than one child?')}</h4>
-						<p class="clear-line-below">
-							${renderer.radio("AgeType", id="AgeTypeOne", value='', label=Markup(_("Match programs that serve <strong>any one</strong> child's age")))}
-							<br>${renderer.radio("AgeType", id="AgeTypeAll", value="A", label=Markup(_("Match only programs that can serve <strong>all</strong> the children")))}
-							%if request.user:
-							<br>${renderer.radio("AgeType", id="AgeTypeS", value="S", label=Markup(_("Match programs that serve <strong>child #</strong>")))}
-							%for i in range(4):
-							${renderer.radio("AgeTypeSpecific", value=str(i), checked=not i, id="AgeTypeSpecific%d" % i, label=str(i+1))}
-							%endfor
-							%endif
-						</p>
-						<hr>
-						<h4>${_('Is the care required on a future date?')}</h4>
 						<div class="form-group row">
-							${renderer.label('CareDate', _('Care Required on'),class_='control-label col-sm-4')}
-							<div class="col-sm-8 form-inline">
+							${renderer.label('CareDate', _('Care Required on'),class_='control-label col-sm-5 col-md-4 col-lg-3')}
+							<div class="col-sm-7 col-md-8 col-lg-9 form-inline">
 								${renderer.text("CareDate", size=None, class_='DatePicker form-control')}
+								<br class="visible-sm" />(${_('optional future date')})
 								<div>
 									<input type="button" value="${_('1 Month')}" onClick="document.EntryForm.CareDate.value='${format_date(add_months(date.today(), 1))}';" class="btn btn-default">
 									<input type="button" value="${_('3 Months')}" onClick="document.EntryForm.CareDate.value='${format_date(add_months(date.today(), 3))}';" class="btn btn-default">
@@ -95,8 +85,35 @@ from cioc.core.datesearch import add_months, add_years
 								</div>
 							</div>
 						</div>
+						<div id="multiple-children-search">
+							<div class="panel panel-info">
+								<div class="panel-heading">
+									<a href="#multiple-children" data-toggle="collapse">${_('Are you searching for care for more than one child?')} <span class="caret"></span></a>
+								</div>
+								<div id="multiple-children" class="panel-body panel-collapse collapse ${'in' if request.user else ''}">
+									%for i in range(1,4):
+									<div class="row form-group">
+										<label for="DOB${i}" class="control-label col-sm-5 col-md-4 col-lg-3">${_('Date of Birth #%d') % (i + 1)}</label>
+										<div class="col-sm-7 col-md-8 col-lg-9 form-inline">
+											<input type="text" name="DOB${i}" class="DatePicker form-control" id="DOB${i}" autocomplete="off" data-lpignore="true">
+											<br class="visible-sm" />(${_('e.g.')} ${format_date(date.today())})
+										</div>
+									</div>
+									%endfor
+									<p class="clear-line-below">
+										${renderer.radio("AgeType", id="AgeTypeOne", value='', label=Markup(_("Match programs that serve <strong>any one</strong> child's age")), checked=True)}
+										<br>${renderer.radio("AgeType", id="AgeTypeAll", value="A", label=Markup(_("Match only programs that can serve <strong>all</strong> the children")))}
+										%if request.user:
+										<br>${renderer.radio("AgeType", id="AgeTypeS", value="S", label=Markup(_("Match programs that serve <strong>child #</strong>")))}
+										%for i in range(4):
+										${renderer.radio("AgeTypeSpecific", value=str(i), checked=not i, id="AgeTypeSpecific%d" % i, label=str(i+1)+' ')}
+										%endfor
+										%endif
+									</p>
+								</div>
+							</div>
+						</div>
 						%if age_groups:
-						<hr>
 						<p>${_('<em><strong>Or</strong></em>, you can select the age group of the child at the time they require care')|n}</p>
 						<p>${renderer.select('AgeGroup', options=[('', '')] + list(map(tuple, age_groups)), class_='form-control')}</p>
 						%endif
@@ -106,19 +123,18 @@ from cioc.core.datesearch import add_months, add_years
 				<tr>
 					<td class="field-label-cell">${_('Type of Care Needed')}</td>
 					<td class="field-data-cell">
-						<span class="SmallNote">${_('If you do not select any values, all values will be searched.')}</span>
 						%if request.user:
 						<p>
-							${renderer.radio('TOCType', value='F', label=Markup(_('Match <strong>any</strong> selected types of care')))}
+							${renderer.radio('TOCType', value='F', label=Markup(_('Match <strong>any</strong> selected types of care')), checked=True)}
 							<br>${renderer.radio('TOCType', value='AF', label=Markup(_('Match <strong>all</strong> selected types of care')))}
 						</p>
+						<hr>
 						%else:
 						<input type="hidden" name="TOCType" value="F">
 						%endif
-						<hr>
 						<div class="row">
 							%for toc in types_of_care:
-							<div class="col-sm-6 col-lg-4">
+							<div class="col-sm-6 ${'col-lg-4' if (request.pageinfo.ThisPage == 'csrch') else ''}">
 								${renderer.ms_checkbox('TOCID', value=toc.TOC_ID, label=toc.TypeOfCare)}
 							</div>
 							%endfor
@@ -130,15 +146,13 @@ from cioc.core.datesearch import add_months, add_years
 				<tr>
 					<td class="field-label-cell">${_('Type of Program')}</td>
 					<td class="field-data-cell">
-						<span class="SmallNote">${_('If you do not select any values, all values will be searched.')}</span>
-						<hr>
-						<table class="NoBorder cell-padding-2">
+						<div class="row">
 							%for top in types_of_program:
-							<tr>
-								<td style="padding-left:8px;">${renderer.ms_checkbox('TOPID', value=top.TOP_ID, label=top.TypeOfProgram)}</td>
-							</tr>
+							<div class="col-sm-6 ${'col-lg-4' if (request.pageinfo.ThisPage == 'csrch') else ''}">
+								${renderer.ms_checkbox('TOPID', value=top.TOP_ID, label=top.TypeOfProgram)}
+							</div>
 							%endfor
-						</table>
+						</div>
 					</td>
 				</tr>
 				%endif
@@ -152,11 +166,12 @@ from cioc.core.datesearch import add_months, add_years
 						%endif
 						%if search_info.CSrchSubsidyNamedProgram:
 						%if request.user:
-						<p><strong>${search_info.SubsidyNamedProgramSearchLabel + _(':')}</strong>
-						<br>${renderer.radio("CCSubsidyNP", value='', checked=True, label=_('Any'))}
-						<br>${renderer.radio("CCSubsidyNP", value='Y', label=_('Yes'))}
-						<br>${renderer.radio("CCSubsidyNP", value='N', label=_('No'))}
-						<br>${renderer.radio("CCSubsidyNP", value='U', label=_('Unknown'))}
+						<p>
+							<strong>${search_info.SubsidyNamedProgramSearchLabel + _(':')}</strong>
+							<br>${renderer.radio("CCSubsidyNP", value='', checked=True, label=_('Any'))}
+							<br>${renderer.radio("CCSubsidyNP", value='Y', label=_('Yes'))}
+							<br>${renderer.radio("CCSubsidyNP", value='N', label=_('No'))}
+							<br>${renderer.radio("CCSubsidyNP", value='U', label=_('Unknown'))}
 						</p>
 						%else:
 						<p>${renderer.checkbox("CCSubsidyNP", value='on', label=search_info.SubsidyNamedProgramSearchLabel)}</p>
@@ -216,10 +231,10 @@ from cioc.core.datesearch import add_months, add_years
 							${renderer.radio('SType', id='SType_A', value='A', checked=True, label=_('Keywords'))}
 							${renderer.radio('SType', id='SType_O', value='O', label=request.viewdata.cic.OrganizationNames or _('Organization Name(s)'))}
 						</div>
+					</td>
 				</tr>
 				%endif
 			</table>
-		</div>
 
 		<div style="display:none"><input type="hidden" name="CCRStat" value="R"></div>
 		%if request.user:
@@ -242,7 +257,7 @@ from cioc.core.datesearch import add_months, add_years
 %if search_info.CSrchNear and maps.hasGoogleMapsAPI(request):
 ${request.assetmgr.JSVerScriptTagSingleton("scripts/cultures/globalize.culture." + request.language.Culture + ".js")}
 <script type="text/javascript">
-	jQuery(function() {
+	jQuery(function () {
 		if (!window.pageconstants) {
 			pageconstants = {};
 			pageconstants.culture = "${request.language.Culture}";

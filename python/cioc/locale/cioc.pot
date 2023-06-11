@@ -8049,7 +8049,7 @@ msgstr ""
 
 #: ../python/cioc/web/cic/templates/csearch_form.mak:62
 msgid ""
-"For the most accurate search, enter the date(s) of birth of the child(ren) "
+"For the most accurate search, enter the date of birth of the child "
 "requiring care:"
 msgstr ""
 
