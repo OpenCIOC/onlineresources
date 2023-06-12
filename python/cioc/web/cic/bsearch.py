@@ -660,6 +660,7 @@ class BasicSearch(CicViewBase):
         quick_searches = None
         communities = None
         ages = None
+        ages_cc = None
         vacancy_targets = None
         quicklist = None
         viewslist = None
