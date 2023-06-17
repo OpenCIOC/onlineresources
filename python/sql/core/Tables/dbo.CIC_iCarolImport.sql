@@ -197,7 +197,23 @@ CREATE TABLE [dbo].[CIC_iCarolImport]
 [Custom_Deleted Record] [nvarchar] (10) COLLATE Latin1_General_100_CI_AI NULL,
 [MailingCommunity] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
 [OtherCommunity] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
-[PhysicalCommunity] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL
+[PhysicalCommunity] [nvarchar] (500) COLLATE Latin1_General_100_CI_AI NULL,
+[HasMailingAddress] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasMailingAddress] DEFAULT ((0)),
+[HasPhysicalAddress] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasMailingAddress1] DEFAULT ((0)),
+[HasPhone1] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasPhysicalAddress11] DEFAULT ((0)),
+[HasPhone2] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasPhysicalAddress112] DEFAULT ((0)),
+[HasPhone3] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasPhysicalAddress111] DEFAULT ((0)),
+[HasPhone4] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasPhysicalAddress113] DEFAULT ((0)),
+[HasPhone5] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasPhysicalAddress114] DEFAULT ((0)),
+[HasPhoneFax] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasPhysicalAddress115] DEFAULT ((0)),
+[HasPhoneTollFree] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasPhoneFax1] DEFAULT ((0)),
+[HasPhoneNumberHotline] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasPhoneFax2] DEFAULT ((0)),
+[HasPhoneNumberBusinessLine] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasPhoneFax3] DEFAULT ((0)),
+[HasPhoneNumberOutOfArea] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasPhoneFax4] DEFAULT ((0)),
+[HasPhoneNumberAfterHours] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasPhoneNumberOutOfArea1] DEFAULT ((0)),
+[HasSeniorWorker] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasSeniorWorker1] DEFAULT ((0)),
+[HasMainContact] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasPhoneNumberOutOfArea2] DEFAULT ((0)),
+[HasPhoneTTY] [bit] NOT NULL CONSTRAINT [DF_CIC_iCarolImport_HasMainContact1] DEFAULT ((0))
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_iCarolImport] ADD CONSTRAINT [PK_CIC_iCarolImport] PRIMARY KEY CLUSTERED ([ResourceAgencyNum], [LangID]) ON [PRIMARY]
