@@ -627,7 +627,7 @@ WHEN NOT MATCHED BY TARGET THEN
 		[OtherCommunity],
 		[PhysicalCommunity],
 		[HasMailingAddress],
-		HasPhysicalAddress1,
+		HasPhysicalAddress,
 		HasPhone1,
 		HasPhone2,
 		HasPhone3,
