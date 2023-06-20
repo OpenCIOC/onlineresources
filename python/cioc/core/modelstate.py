@@ -143,7 +143,7 @@ class CiocFormRenderer(FormRenderer):
             pass
 
         return tags.checkbox(
-            name, value, checked, label, self._fix_id(id or name), **attrs
+            name, value, checked, label, id=self._fix_id(id or name), **attrs
         )
 
     def ms_checkbox(
@@ -154,7 +154,7 @@ class CiocFormRenderer(FormRenderer):
         """
         checked = str(value) in self.value(name, []) or checked
         id = self._fix_id(id or ("_".join((name, str(value)))))
-        return tags.checkbox(name, value, checked, label, id, **attrs)
+        return tags.checkbox(name, value, checked, label, id=id, **attrs)
 
     def label(self, name, label=None, **attrs):
         """

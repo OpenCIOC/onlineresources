@@ -235,7 +235,7 @@ from cioc.core.datesearch import add_months, add_years
 				</tr>
 				%endif
 			</table>
-
+		</div>
 		<div style="display:none"><input type="hidden" name="CCRStat" value="R"></div>
 		%if request.user:
 		<p>
