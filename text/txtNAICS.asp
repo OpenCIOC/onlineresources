@@ -19,7 +19,6 @@
 <%
 Dim TXT_BROADER_CLASSIFICATIONS, _
 	TXT_CLASSIFICATION_NAME_ONLY, _
-	TXT_ESTABLISHMENTS, _
 	TXT_EXACT_MATCH, _
 	TXT_EXAMPLES, _
 	TXT_EXCLUSIONS, _
@@ -52,7 +51,6 @@ Sub setTxtNAICS
 		Case CULTURE_ENGLISH_CANADIAN
 			TXT_BROADER_CLASSIFICATIONS = "Broader Classifications"
 			TXT_CLASSIFICATION_NAME_ONLY = "Classification&nbsp;Name Only"
-			TXT_ESTABLISHMENTS = "Establishments primarily engaged in"
 			TXT_EXACT_MATCH = "Exact&nbsp;Match"
 			TXT_EXAMPLES = "Examples"
 			TXT_EXCLUSIONS = "Exclusions"
@@ -82,7 +80,6 @@ Sub setTxtNAICS
 		Case CULTURE_FRENCH_CANADIAN
 			TXT_BROADER_CLASSIFICATIONS = "Niveaux supérieurs"
 			TXT_CLASSIFICATION_NAME_ONLY = "Nom de classe uniquement"
-			TXT_ESTABLISHMENTS = "Établissements dont l'activité principale est"
 			TXT_EXACT_MATCH = "Concordance&nbsp;exacte"
 			TXT_EXAMPLES = "Exemples"
 			TXT_EXCLUSIONS = "Exclusions"

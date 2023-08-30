@@ -21,13 +21,8 @@
 ' Ensure any new languages have their TXT_CONTENT_DELETED value added here
 Const CONTENT_DELETED_PATTERN = "\[(deleted|supprimé)\]"
 
-Dim TXT_ACTIVITY_INFO_ADD_NEW, _
-	TXT_ACTIVITY_INFO_CURRENT_ACTIVITIES, _
-	TXT_ACTIVITY_INFO_DESCRIPTION, _
-	TXT_ACTIVITY_INFO_END_DATE, _
+Dim TXT_ACTIVITY_INFO_DESCRIPTION, _
 	TXT_ACTIVITY_INFO_NAME, _
-	TXT_ACTIVITY_INFO_SCHEDULE_TYPE, _
-	TXT_ACTIVITY_INFO_SERVICE_CATEGORY, _
 	TXT_ACTIVITY_NUMBER, _
 	TXT_ADD_BUS_ROUTES, _
 	TXT_ADD_COMMUNITIES, _
@@ -60,16 +55,13 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_CHECKBOX_FOR_XREF, _
 	TXT_CITY, _
 	TXT_CONTENT_DELETED, _
-	TXT_CONTENT_DELETED_EQ, _
 	TXT_CONTRACT_NUMBER, _
 	TXT_COMMUNITY, _
-	TXT_COMMUNITY_DATABASE, _
 	TXT_COMMUNITY_SET_MANAGEMENT, _
 	TXT_COUNTRY, _
 	TXT_CREATE_NEW_RECORD, _
 	TXT_CREATE_RECORD_FEEDBACK, _
 	TXT_CURRENT_VALUE, _
-	TXT_CUSTOM_COMMUNITY, _
 	TXT_DATE_SIGNED, _
 	TXT_DATE_OF_CHANGE, _
 	TXT_DAY_OF_WEEK, _
@@ -93,19 +85,15 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_HIDE, _
 	TXT_HIDE_CANCELLED, _
 	TXT_IMPORTANT, _
-	TXT_INACTIVE_DATE, _
 	TXT_INDICATES_SET_CANT_BE_CHANGED, _
 	TXT_INDIVIDUALS_WANTED, _
 	TXT_INFANT, _
 	TXT_INFO_COMMUNITIES_1, _
 	TXT_INFO_COMMUNITIES_2, _
-	TXT_INFO_COPY, _
-	TXT_INFO_COPY_OP, _
 	TXT_INFO_CREATE_OP, _
 	TXT_INFO_LANGUAGES, _
 	TXT_INFO_LOCATED, _
 	TXT_INST_APPLICATION_QUESTION, _
-	TXT_INST_COPY_OP, _
 	TXT_INST_DATES_AND_TIMES, _
 	TXT_INST_DISPLAY_UNTIL, _
 	TXT_INST_DUTIES, _
@@ -147,9 +135,7 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_NEW_SUBJECTS, _
 	TXT_NO_CHANGES_REQUIRED, _
 	TXT_NO_LONGER_APPLICABLE, _
-	TXT_NO_UPDATE_UNTIL_CREATED, _
 	TXT_NOT_AVAILABLE, _
-	TXT_NOT_GIVEN, _
 	TXT_NOTE_NUMBER, _
 	TXT_NOTE_TYPE, _
 	TXT_NUM_NEEDED_TOTAL, _
@@ -161,7 +147,6 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_OTHER_NOTES, _
 	TXT_PART_TIME, _
 	TXT_PAST_CHANGES_SUMMARY, _
-	TXT_POSITIONS, _
 	TXT_POSTAL_CODE, _
 	TXT_PUBLICATION, _
 	TXT_PUBLICATION_DATE, _
@@ -193,18 +178,12 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_STREET_TYPE, _
 	TXT_SUFFIX, _
 	TXT_SUFFIX_DESC, _
-	TXT_TO_THE_THESAURUS, _
 	TXT_TODDLER, _
 	TXT_TOTAL_EMPLOYEES, _
-	TXT_TRANSFER_OWNERSHIP, _
 	TXT_UNADDED_CHECKLISTS, _
 	TXT_UNADDED_CHECKLIST_ALERT, _
-	TXT_UNDO, _
 	TXT_UNIQUE_ID, _
 	TXT_UNKNOWN_ERRORS_OCCURED, _
-	TXT_UNMATCHED_SUBJECTS, _
-	TXT_UNPROCESSED_TERMS, _
-	TXT_UNTITLED_ADDRESS, _
 	TXT_UPDATE_ADD_RECORD, _
 	TXT_UPDATE_DATE, _
 	TXT_UPDATE_PASSWORD, _
@@ -214,15 +193,12 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 	TXT_UPDATE_RECORD_TITLE, _
 	TXT_UPDATE_SUCCESSFUL, _
 	TXT_UPDATED_BY, _
-	TXT_VACANCY_INFO_ADD_NEW, _
 	TXT_VACANCY_INFO_AS_OF, _
 	TXT_VACANCY_INFO_CAPACITY_OF, _
-	TXT_VACANCY_INFO_CURRENT_SERVICES, _
 	TXT_VACANCY_INFO_DAYS_PER_WEEK, _
 	TXT_VACANCY_INFO_FULL_TIME_EQUIVALENT, _
 	TXT_VACANCY_INFO_FUNDED_CAPACITY_OF, _
 	TXT_VACANCY_INFO_HOURS_PER_DAY, _
-	TXT_VACANCY_INFO_REMOVE_NOTE, _
 	TXT_VACANCY_INFO_SERVICE_TITLE, _
 	TXT_VACANCY_INFO_TARGET_POPULATION, _
 	TXT_VACANCY_INFO_UNITS, _
@@ -240,12 +216,8 @@ Dim TXT_ACTIVITY_INFO_ADD_NEW, _
 Sub setTxtEntryForm()
 	Select Case g_objCurrentLang.Culture
 		Case CULTURE_FRENCH_CANADIAN
-			TXT_ACTIVITY_INFO_CURRENT_ACTIVITIES = "Activités courantes"
 			TXT_ACTIVITY_INFO_DESCRIPTION = "Description de l'activité"
-			TXT_ACTIVITY_INFO_END_DATE = "Date de fin"
 			TXT_ACTIVITY_INFO_NAME = "Nom de l'activité"
-			TXT_ACTIVITY_INFO_SCHEDULE_TYPE = "Type de calendrier"
-			TXT_ACTIVITY_INFO_SERVICE_CATEGORY = "Catégorie de service"
 			TXT_ACTIVITY_NUMBER = "Activité no."
 			TXT_ADD_BUS_ROUTES = "Ajouter des nouvelles lignes de bus"
 			TXT_ADD_COMMUNITIES = "Ajouter des nouvelles communautés"
@@ -278,7 +250,6 @@ Sub setTxtEntryForm()
 			TXT_CHECKBOX_FOR_XREF = "Cocher la case pour publier le nom comme renvoi"
 			TXT_CITY = "Municipalité"
 			TXT_COMMUNITY = "Communauté"
-			TXT_COMMUNITY_DATABASE = "la base de données d'information communautaire"
 			TXT_COMMUNITY_SET_MANAGEMENT = "Gerer les ensembles de communautés"
 			TXT_CONTENT_DELETED = "[supprimé]"
 			TXT_CONTRACT_NUMBER = "Signature du contrat no."
@@ -286,7 +257,6 @@ Sub setTxtEntryForm()
 			TXT_CREATE_NEW_RECORD = "Créer un nouveau dossier"
 			TXT_CREATE_RECORD_FEEDBACK = "Créer un nouveau dossier à partir de la rétroaction"
 			TXT_CURRENT_VALUE = "La valeur courante :"
-			TXT_CUSTOM_COMMUNITY = "Autre communauté"
 			TXT_DATE_SIGNED = "Date"
 			TXT_DATE_OF_CHANGE = "Date du changement"
 			TXT_DAY_OF_WEEK = "Jour de la semaine"
@@ -310,7 +280,6 @@ Sub setTxtEntryForm()
 			TXT_HIDE = "Cacher"
 			TXT_HIDE_CANCELLED = "Cacher les notes supprimées"
 			TXT_IMPORTANT = "Importante"
-			TXT_INACTIVE_DATE = "Date inactive"
 			TXT_INDICATES_SET_CANT_BE_CHANGED = "<span class=""""Alerte"""">*</span> signifie que cet ensemble des communautés est requis (parce qu'il est utilisé dans la vue actuelle, ou appartient à un autre membre CIOC dans cette base de données avec qui ce dossier est partagé)."
 			TXT_INDIVIDUALS_WANTED = "personnes sont recherchées"
 			TXT_INFANT = "Nourrissons"
@@ -320,14 +289,11 @@ Sub setTxtEntryForm()
 			TXT_INFO_COMMUNITIES_2 = "Pour une recherche exacte, utilisez le niveau de communauté le plus large possible." & _
 				"<br>Les communautés de niveau supérieur et inférieur sont automatiquement comprises dans la recherche. " & _
 				"<br>Vous pouvez préciser la définition de la région desservie en utilisant le champ Notes ou bien le champ Frontières."
-			TXT_INFO_COPY = "Veuillez effectuer les changements appropriés avant de soumettre la page. Vous <em>devez</em> assigner un nouveau numéro de dossier à ce dossier."
-			TXT_INFO_COPY_OP = "Vous copiez un dossier avec l'ID d'occasion :"
 			TXT_INFO_CREATE_OP = "Vous êtes en train de créer une nouvelle occasion pour l'organisme : "
 			TXT_INFO_LANGUAGES = "Vous devez utiliser un nom de langue valide compris dans la liste de contrôle des langues."
 			TXT_INFO_LOCATED = "Pour une recherche exacte, utilisez le niveau de communauté le plus précis possible." & _
 				"<br>Si le champ est vide, le dossier apparaîtra dans <em>toutes</em> les recherches basées sur le champ &quot;Situé dans la communauté &quot;."
 			TXT_INST_APPLICATION_QUESTION = "Optionnel. Les questions de candidature font partie du formulaire lorsqu'un bénévole potentiel exprime son intérêt pour le poste."
-			TXT_INST_COPY_OP = "Veuillez faire les changements appropriés avant de soumettre."
 			TXT_INST_DATES_AND_TIMES = "Sélectionnez toutes les dates et heures où vous pourriez avoir besoin de bénévoles. Les bénévoles utilisant une recherche par date et heure trouveront des postes correspondant à au moins une des dates et heures sélectionnées."
 			TXT_INST_DUTIES = "Fournissez une description détaillée du poste et des activités prévues."
 			TXT_INST_DISPLAY_UNTIL = "Optionnel. Si vous choisissez de fournir une date &quot;Afficher jusqu'au&quot;, l'enregistrement sera <strong>supprimé des nouvelles recherches</strong> à cette date. " & _
@@ -371,9 +337,7 @@ Sub setTxtEntryForm()
 			TXT_NEW_SUBJECTS = "Nouveaux sujets"
 			TXT_NO_CHANGES_REQUIRED = "pas de changement requis"
 			TXT_NO_LONGER_APPLICABLE = "No Longer Applicable"
-			TXT_NO_UPDATE_UNTIL_CREATED = "Vous ne pouvez pas mettre à jour ce champ avant que le dossier n'ait été créé."
 			TXT_NOT_AVAILABLE = "Pas disponible"
-			TXT_NOT_GIVEN = "[non précisé]"
 			TXT_NOTE_NUMBER = "Note # "
 			TXT_NOTE_TYPE = "Type de note"
 			TXT_NUM_NEEDED_TOTAL = "Nombre de bénévoles recherchés"
@@ -385,7 +349,6 @@ Sub setTxtEntryForm()
 			TXT_OTHER_NOTES = "Autre / Notes générales"
 			TXT_PART_TIME = "Temps partiel / Saisonnier"
 			TXT_PAST_CHANGES_SUMMARY = "Changements historiques" & TXT_COLON
-			TXT_POSITIONS = "Nombre de postes pour"
 			TXT_POSTAL_CODE = "Code postal"
 			TXT_PUBLICATION = "Publication"
 			TXT_PUBLICATION_DATE = "Date de publication"
@@ -417,20 +380,14 @@ Sub setTxtEntryForm()
 			TXT_STREET_TYPE = "Type de rue"
 			TXT_SUFFIX = "Suffixe"
 			TXT_SUFFIX_DESC = "(par ex. unité 12, bureau 201, 2e étage, R.R.2)"
-			TXT_TO_THE_THESAURUS = "au Thésaurus"
 			TXT_TODDLER = "Tout-petits"
 			TXT_TOTAL_EMPLOYEES = "Total employés"
-			TXT_TRANSFER_OWNERSHIP = "Cocher cette case pour transférer la propriété des données partagées vers "
 			TXT_UNADDED_CHECKLISTS = "Édition des listes de contrôle incomplète pour :"
 			TXT_UNADDED_CHECKLIST_ALERT = "Il y a une liste de contrôle ou plus qui n'a pas été ajoutée. Voulez-vous continuer ?"
-			TXT_UNDO = "Annuler"
 			TXT_UNIQUE_ID = "Identifiant unique"
 			TXT_UNKNOWN_ERRORS_OCCURED = "Des erreurs d'origine inconnue se sont produites lors du traitement de cette mise à jour. " & _
 				"Le dossier peut ne pas avoir été mis à jour / créé, ou peut n'avoir été mis à jour que partiellement. " & _
 				"L'erreur spécifique était" & TXT_COLON
-			TXT_UNMATCHED_SUBJECTS = "La mise à jour n'a pas été traitée intégralement. Veuillez vérifier les termes de sujets ci-dessous."
-			TXT_UNPROCESSED_TERMS = "Mots-clés non traités"
-			TXT_UNTITLED_ADDRESS = "Adresse sans nom"
 			TXT_UPDATE_ADD_RECORD = "Mettre à jour / Créer un dossier"
 			TXT_UPDATE_DATE = "Date de mise à jour"
 			TXT_UPDATE_PASSWORD = "Mot de passe pour la rétroaction"
@@ -440,15 +397,12 @@ Sub setTxtEntryForm()
 			TXT_UPDATE_RECORD_TITLE = "Mise à jour du dossier"
 			TXT_UPDATE_SUCCESSFUL = "La mise à jour a été traitée avec succès."
 			TXT_UPDATED_BY = "Mis à jour par"
-			TXT_VACANCY_INFO_ADD_NEW = "Ajouter un nouveau type de service" & TXT_COLON
 			TXT_VACANCY_INFO_AS_OF = "à partir du"
 			TXT_VACANCY_INFO_CAPACITY_OF = "<strong>Capacité</strong> de"
-			TXT_VACANCY_INFO_CURRENT_SERVICES = "Services actuels" & TXT_COLON
 			TXT_VACANCY_INFO_DAYS_PER_WEEK = "Jours par semaine"
 			TXT_VACANCY_INFO_FULL_TIME_EQUIVALENT = "Équivalent temps plein (ETP)"
 			TXT_VACANCY_INFO_FUNDED_CAPACITY_OF = "<strong>Capacité financée</strong> de"
 			TXT_VACANCY_INFO_HOURS_PER_DAY = "Heures par jour"
-			TXT_VACANCY_INFO_REMOVE_NOTE = "Effacer la capacité ou la réinitialiser à 0 supprimera le service."
 			TXT_VACANCY_INFO_SERVICE_TITLE = "Titre du service"
 			TXT_VACANCY_INFO_TARGET_POPULATION = "Public(s) cible(s)"
 			TXT_VACANCY_INFO_UNITS = "unités"
@@ -463,12 +417,8 @@ Sub setTxtEntryForm()
 			TXT_WRONG_AGENCY_WARNING = "Agence incorrecte"
 			TXT_XREF = "Nom de renvois réciproque"
 		Case Else
-			TXT_ACTIVITY_INFO_CURRENT_ACTIVITIES = "Current Activities"
 			TXT_ACTIVITY_INFO_DESCRIPTION = "Activity Description"
-			TXT_ACTIVITY_INFO_END_DATE = "End Date"
 			TXT_ACTIVITY_INFO_NAME = "Activity Name"
-			TXT_ACTIVITY_INFO_SCHEDULE_TYPE = "Scheduling Type"
-			TXT_ACTIVITY_INFO_SERVICE_CATEGORY = "Service Category"
 			TXT_ACTIVITY_NUMBER = "Activity #"
 			TXT_ADD_BUS_ROUTES = "Add New Bus Routes"
 			TXT_ADD_COMMUNITIES = "Add New Communities"
@@ -501,7 +451,6 @@ Sub setTxtEntryForm()
 			TXT_CHECKBOX_FOR_XREF = "Select the checkbox to publish the name as a Cross-Reference"
 			TXT_CITY = "City"
 			TXT_COMMUNITY = "Community"
-			TXT_COMMUNITY_DATABASE = "the Community Information database"
 			TXT_COMMUNITY_SET_MANAGEMENT = "Manage Community Sets"
 			TXT_CONTENT_DELETED = "[deleted]"
 			TXT_CONTRACT_NUMBER = "Contract Signature #"
@@ -510,7 +459,6 @@ Sub setTxtEntryForm()
 			TXT_CREATE_NEW_RECORD = "Create New Record"
 			TXT_CREATE_RECORD_FEEDBACK = "Create Record From Feedback"
 			TXT_CURRENT_VALUE = "Current Value:"
-			TXT_CUSTOM_COMMUNITY = "Custom Community"
 			TXT_DATE_SIGNED = "Date"
 			TXT_DATE_OF_CHANGE = "Date of Change"
 			TXT_DAY_OF_WEEK = "Day of Week"
@@ -533,7 +481,6 @@ Sub setTxtEntryForm()
 			TXT_FULL_TIME = "Full-time"
 			TXT_HIDE = "Hide"
 			TXT_HIDE_CANCELLED = "Hide Cancelled Notes"
-			TXT_INACTIVE_DATE = "Inactive Date"
 			TXT_INDICATES_SET_CANT_BE_CHANGED = "<span class=""Alert"">*</span> indicates that this Community Set is required (because it is used in the current View, or belongs to another CIOC Member in this database with whom this record is shared)."
 			TXT_INDIVIDUALS_WANTED = "individuals wanted"
 			TXT_IMPORTANT = "Important"
@@ -544,14 +491,11 @@ Sub setTxtEntryForm()
 			TXT_INFO_COMMUNITIES_2 = "For accurate searching, use the most broad Community applicable." & _
 				"<br>All broader and narrower communities are included in searches automatically. " & _
 				"<br>You can refine the definition of the area served in the notes field provided or in the Boundaries field."
-			TXT_INFO_COPY = "Please make the appropriate changes before submitting. You <em>must</em> give this record a new record number."
-			TXT_INFO_COPY_OP = "You are copying a record with Opportunity ID: "
 			TXT_INFO_CREATE_OP = "You are creating a new opportunity for the organization: "
 			TXT_INFO_LANGUAGES = "You must use a valid language name from the languages checklists."
 			TXT_INFO_LOCATED = "For accurate searching, use the most narrow Community applicable." & _
 				"<br>If you leave this field blank, this record will come up in <em>all</em> &quot;Located In Community&quot; searches."
 			TXT_INST_APPLICATION_QUESTION = "Optional. Application questions become part of the form when a potential volunteer expresses interest in the position."
-			TXT_INST_COPY_OP = "Please make the appropriate changes before submitting."
 			TXT_INST_DATES_AND_TIMES = "Select any / all dates and times you may need volunteers. Volunteers using a date and time search will find positions that match at least one of their selected dates and times."
 			TXT_INST_DISPLAY_UNTIL = "Optional. If you choose to provide a &quot;Display Until&quot; date, the record will be <strong>removed from new searches</strong> on that date. " & _
 				"The record may still be viewed through a direct link, but will be marked as expired, and will not accept applications."
@@ -595,9 +539,7 @@ Sub setTxtEntryForm()
 			TXT_NEW_SUBJECTS = "New Subjects"
 			TXT_NO_CHANGES_REQUIRED = "no changes required"
 			TXT_NO_LONGER_APPLICABLE = "No Longer Applicable"
-			TXT_NO_UPDATE_UNTIL_CREATED = "You cannot update this field until the record has been created."
 			TXT_NOT_AVAILABLE = "Not Available"
-			TXT_NOT_GIVEN = "[not given]"
 			TXT_NOTE_NUMBER = "Note #"
 			TXT_NOTE_TYPE = "Note Type"
 			TXT_NUM_NEEDED_TOTAL = "Number of Volunteers Wanted"
@@ -609,7 +551,6 @@ Sub setTxtEntryForm()
 			TXT_OTHER_NOTES = "Other / General Notes"
 			TXT_PART_TIME = "Part Time / Seasonal"
 			TXT_PAST_CHANGES_SUMMARY = "Past record changes" & TXT_COLON
-			TXT_POSITIONS = "Number of Positions for"
 			TXT_POSTAL_CODE = "Postal Code"
 			TXT_PUBLICATION = "Publication"
 			TXT_PUBLICATION_DATE = "Publication Date"
@@ -641,20 +582,14 @@ Sub setTxtEntryForm()
 			TXT_STREET_TYPE = "Street Type"
 			TXT_SUFFIX = "Suffix"
 			TXT_SUFFIX_DESC = "(e.g. Unit 12, Suite 201, 2nd Flr, RR 2)"
-			TXT_TO_THE_THESAURUS = "to the Thesaurus"
 			TXT_TODDLER = "Toddlers"
 			TXT_TOTAL_EMPLOYEES = "Total Employees"
-			TXT_TRANSFER_OWNERSHIP = "Check this box to transfer shared data ownership to "
 			TXT_UNADDED_CHECKLISTS = "Checklist editing incomplete for:"
 			TXT_UNADDED_CHECKLIST_ALERT = "There is one or more checklist items that have not been added. Do you want to continue?"
-			TXT_UNDO = "Undo"
 			TXT_UNIQUE_ID = "Unique ID"
 			TXT_UNKNOWN_ERRORS_OCCURED = "Unknown errors occurred while processing this update. " & _
 				" The record may not have been updated/created, or may have only been partially updated. " & _
 				" The specific error was" & TXT_COLON
-			TXT_UNMATCHED_SUBJECTS = "The update was not fully processed. Please review the subject terms below."
-			TXT_UNPROCESSED_TERMS = "Unprocessed Terms"
-			TXT_UNTITLED_ADDRESS = "Untitled Address"
 			TXT_UPDATE_ADD_RECORD = "Update/Add Record"
 			TXT_UPDATE_DATE = "Update Date"
 			TXT_UPDATE_PASSWORD = "Feedback password"
@@ -664,15 +599,12 @@ Sub setTxtEntryForm()
 			TXT_UPDATE_RECORD_TITLE = "Update Record"
 			TXT_UPDATE_SUCCESSFUL = "The update was processed successfully"
 			TXT_UPDATED_BY = "Updated&nbsp;By"
-			TXT_VACANCY_INFO_ADD_NEW = "Add New Type of Service" & TXT_COLON
 			TXT_VACANCY_INFO_AS_OF = "as of"
 			TXT_VACANCY_INFO_CAPACITY_OF = "<strong>Capacity</strong> of"
-			TXT_VACANCY_INFO_CURRENT_SERVICES = "Current Services" & TXT_COLON
 			TXT_VACANCY_INFO_DAYS_PER_WEEK = "Days per week"
 			TXT_VACANCY_INFO_FULL_TIME_EQUIVALENT = "Full-time Equivalent (FTE)"
 			TXT_VACANCY_INFO_FUNDED_CAPACITY_OF = "<strong>Funded Capacity</strong> of"
 			TXT_VACANCY_INFO_HOURS_PER_DAY = "Hours per day"
-			TXT_VACANCY_INFO_REMOVE_NOTE = "Clearing or setting the Capacity to 0 will delete the service."
 			TXT_VACANCY_INFO_SERVICE_TITLE = "Service Title"
 			TXT_VACANCY_INFO_TARGET_POPULATION = "Target population(s)"
 			TXT_VACANCY_INFO_UNITS = "units"

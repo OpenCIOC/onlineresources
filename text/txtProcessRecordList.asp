@@ -20,7 +20,6 @@
 Dim TXT_BULK_EMAIL_REQUEST, _
 	TXT_CREATE_NEW_REMINDER, _
 	TXT_EMAIL_RECORD_LIST, _
-	TXT_GENERATE_REPORT, _
 	TXT_NEXT_STEP, _
 	TXT_PREPARE_EMAIL, _
 	TXT_PREPARE_EMAIL_RECORD_LIST, _
@@ -42,7 +41,6 @@ Sub setTxtProcessRecordList()
 			TXT_BULK_EMAIL_REQUEST = "Bulk Email Update Request"
 			TXT_CREATE_NEW_REMINDER = "Create New Reminder"
 			TXT_EMAIL_RECORD_LIST = "Email Record List"
-			TXT_GENERATE_REPORT = "Generate Report"
 			TXT_NEXT_STEP = "Next &gt;&gt;"
 			TXT_PREPARE_EMAIL = "Use the following pages to prepare an Email update request for the selected records."
 			TXT_PREPARE_EMAIL_RECORD_LIST = "Use the following page to prepare an Email of the list of selected records."
@@ -61,7 +59,6 @@ Sub setTxtProcessRecordList()
 			TXT_BULK_EMAIL_REQUEST = "Demande de mise à jour par courriel en nombre"
 			TXT_CREATE_NEW_REMINDER = "Créer un nouveau Rappel"
 			TXT_EMAIL_RECORD_LIST = "Envoyer la liste des dossiers par courriel"
-			TXT_GENERATE_REPORT = "Générer le rapport"
 			TXT_NEXT_STEP = "Prochain &gt;&gt;"
 			TXT_PREPARE_EMAIL = "Utiliser les pages suivantes pour préparer une demande de mise à jour par courriel pour les dossiers sélectionnés."
 			TXT_PREPARE_EMAIL_RECORD_LIST = "Utilisez la page suivante pour préparer un e-mail de la liste des dossiers sélectionnés."

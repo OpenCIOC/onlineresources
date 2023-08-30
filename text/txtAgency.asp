@@ -54,7 +54,6 @@ Dim TXT_ADD_NEW_AGENCY, _
 	TXT_USER_ACCOUNT_UPDATE_DEFAULT, _
 	TXT_USER_PASSWORD_UPDATE_DEFAULT, _
 	TXT_USER_ACCOUNT_UPDATES, _
-	TXT_VIEW_EDIT_AGENCY, _
 	TXT_VOLUNTEER_RECORDS
 
 Sub setTxtAgency()
@@ -96,7 +95,6 @@ Sub setTxtAgency()
 			TXT_USER_ACCOUNT_UPDATE_DEFAULT = "By default, users can update basic information about their account"
 			TXT_USER_PASSWORD_UPDATE_DEFAULT = "By default, users can update their password"
 			TXT_USER_ACCOUNT_UPDATES = "User Account Updates"
-			TXT_VIEW_EDIT_AGENCY = "View / Edit Agency"
 			TXT_VOLUNTEER_RECORDS = "Volunteer records"
 		Case CULTURE_FRENCH_CANADIAN
 			TXT_ADD_NEW_AGENCY = "Ajout d'une nouvelle agence"
@@ -135,7 +133,6 @@ Sub setTxtAgency()
 			TXT_USER_ACCOUNT_UPDATE_DEFAULT = "Par défaut, les utilisateurs peuvent mettre à jour les renseignements de base sur leur compte"
 			TXT_USER_PASSWORD_UPDATE_DEFAULT = "Par défaut, les utilisateurs peuvent mettre à jour leur mot de passe"
 			TXT_USER_ACCOUNT_UPDATES = "Mises à jour des comptes utilisateurs"
-			TXT_VIEW_EDIT_AGENCY = "Voir / Modifier l'agence"
 			TXT_VOLUNTEER_RECORDS = "dossiers de bénévolat"
 	End Select
 End Sub

@@ -30,7 +30,6 @@ Dim	TXT_ADDRESS_POSTAL_CODE, _
 	TXT_GEOCODE, _
 	TXT_GEOCODE_ADDRESS_CHANGED, _
 	TXT_GEOCODE_CODING, _
-	TXT_GEOCODE_INTERSECTION_CHANGED, _
 	TXT_GEOCODE_NO_MAP_KEY, _
 	TXT_GEOCODE_MAP_KEY_FAIL, _
 	TXT_GEOCODE_TOO_MANY_QUERIES, _
@@ -48,7 +47,6 @@ Dim	TXT_ADDRESS_POSTAL_CODE, _
 	TXT_REFRESH_MAP, _
 	TXT_RESTART_PROCESSING, _
 	TXT_RETRY_WITHOUT_POSTAL, _
-	TXT_SAVING, _
 	TXT_SELECTED_GEOCODING, _
 	TXT_SERVER_ERROR, _
 	TXT_SORT_BY_NEAREST, _
@@ -71,7 +69,6 @@ Sub setTxtGeoCode()
 			TXT_GEOCODE = "Emplacement sur la carte"
 			TXT_GEOCODE_ADDRESS_CHANGED = "L'adresse a changé mais le géocodage n'a pas été actualisé. Continuer la soumission ?"
 			TXT_GEOCODE_CODING = "Géocodage"
-			TXT_GEOCODE_INTERSECTION_CHANGED = "L'intersection a changé mais le géocodage n'a pas été actualisé. Continuer la soumission ?"
 			TXT_GEOCODE_NO_MAP_KEY = "Le géocodage n'est pas disponible : il n'existe pas de clé API Google Maps pour ce domaine."
 			TXT_GEOCODE_MAP_KEY_FAIL = "Erreur sur la clé Google Map. Contactez votre administrateur système."
 			TXT_GEOCODE_TOO_MANY_QUERIES = "Il y a trop de requêtes Google. Essayer de nouveau plus tard."
@@ -89,7 +86,6 @@ Sub setTxtGeoCode()
 			TXT_REFRESH_MAP = "Actualiser la carte"
 			TXT_RESTART_PROCESSING = "Recommencer le traitement"
 			TXT_RETRY_WITHOUT_POSTAL = "Si le géocodage par l'adresse échoue, essayez de nouveau sans le code postal."
-			TXT_SAVING = "Sauvegarde"
 			TXT_SELECTED_GEOCODING = "Mettre à jour le géocodage des dossiers sélectionnés"
 			TXT_SERVER_ERROR = "Erreur serveur"
 			TXT_SORT_BY_NEAREST = "Trier par ordre de proximité"
@@ -109,7 +105,6 @@ Sub setTxtGeoCode()
 			TXT_GEOCODE = "Map placement"
 			TXT_GEOCODE_ADDRESS_CHANGED = "The address has changed but the geocode has not been refreshed. Continue submission?"
 			TXT_GEOCODE_CODING = "Geocoding"
-			TXT_GEOCODE_INTERSECTION_CHANGED = "The intersection has changed but the geocode has not been refreshed. Continue submission?"
 			TXT_GEOCODE_NO_MAP_KEY = "Geocoding unavailable: there is no Google Maps API key for this domain."
 			TXT_GEOCODE_MAP_KEY_FAIL = "Google Map Key Error. Contact your system administrator."
 			TXT_GEOCODE_TOO_MANY_QUERIES = "Too many Google requests. Try again later."
@@ -127,7 +122,6 @@ Sub setTxtGeoCode()
 			TXT_REFRESH_MAP = "Refresh Map"
 			TXT_RESTART_PROCESSING = "Restart Processing"
 			TXT_RETRY_WITHOUT_POSTAL = "If geocode by address fails, retry without postal code."
-			TXT_SAVING = "Saving"
 			TXT_SELECTED_GEOCODING = "Update Geocoding on Selected Records"
 			TXT_SERVER_ERROR = "Server Error"
 			TXT_SORT_BY_NEAREST = "Sort by nearest"

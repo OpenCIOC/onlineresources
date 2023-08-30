@@ -4,6 +4,7 @@ set -e
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 siteroot="$(dirname $SCRIPT_DIR)"
+winsiteroot="$(cygpath -m "$siteroot")"
 sitename="$(basename $siteroot)"
 domain=localhost
 
@@ -56,7 +57,7 @@ for i in "${features[@]}"; do
 	for j in "${features_enabled[@]}"; do
 		[[ $i == $j ]] && { skip=1; break; }
 	done
-	[[ -n $skip ]] || newfeatures+=("/featurename:\\[$i\\]")
+	[[ -n $skip ]] || newfeatures+=("/featurename:$i")
 done
 
 if (( "${#newfeatures[@]}" > 0 )) ; then
@@ -75,20 +76,20 @@ if ! wmic product get name | grep "Microsoft Application Request Routing 3.0" > 
 	MSYS_NO_PATHCONV=1 /c/Program\ Files/Microsoft/Web\ Platform\ Installer/WebpiCmd.exe /Install /Products:ARRv3_0 /AcceptEula /SuppressReboot
 fi
 
-echo "Checking for Microsoft ODBC Driver 17 for SQL Server"
-if ! wmic product get name | grep "Microsoft ODBC Driver 17 for SQL Server" > /dev/null ; then
-	echo "Downloading Microsoft ODBC Driver 17 for SQL Server"
+echo "Checking for Microsoft ODBC Driver 18 for SQL Server"
+if ! wmic product get name | grep "Microsoft ODBC Driver 18 for SQL Server" > /dev/null ; then
+	echo "Downloading Microsoft ODBC Driver 18 for SQL Server"
 	curl -o $TEMP/msobdcsql.msi "https://go.microsoft.com/fwlink/?linkid=2186919"
-	echo "Installing Microsoft ODBC Driver 17 for SQL Server"
+	echo "Installing Microsoft ODBC Driver 18 for SQL Server"
 	MSYS_NO_PATHCONV=1 msiexec /passive /i $TEMP\\msodbcsql.msi AgreeToLicense=yes
 	rm $TEMP/msodbcsql.msi
 fi
 
-echo "Checking for Python 3.9.12"
-if ! wmic product get name | grep "Python 3.9.12 Core Interpreter (64-bit)" > /dev/null ; then
-	echo "Downloading Python 3.9.12"
-	curl -o $TEMP/python39-amd64.exe "https://www.python.org/ftp/python/3.9.12/python-3.9.12-amd64.exe"
-	echo "Installing Python 3.9.12"
+echo "Checking for Python 3.9.13"
+if ! wmic product get name | grep "Python 3.9.13 Core Interpreter (64-bit)" > /dev/null ; then
+	echo "Downloading Python 3.9.13"
+	curl -o $TEMP/python39-amd64.exe "https://www.python.org/ftp/python/3.9.13/python-3.9.13-amd64.exe"
+	echo "Installing Python 3.9.13"
 	MSYS_NO_PATHCONV=1 $TEMP\\python39-amd64.exe /quiet InstallAllUsers=1 AssociateFiles=0 CompileAll=1
 	rm $TEMP/python39-amd64.exe
 fi
@@ -121,7 +122,7 @@ echo "Adding App Pool $sitename" && MSYS_NO_PATHCONV=1 $appcmd add apppool /name
 
 ( echo "Checking for Site $sitename" && $appcmd list site | grep "SITE \"$sitename\"" > /dev/null
 ) || (
-echo "Adding Site $sitename" && MSYS_NO_PATHCONV=1 $appcmd add site /name:$sitename /physicalPath:"$siteroot" /bindings:http/*:80:"$domain" )
+echo "Adding Site $sitename" && MSYS_NO_PATHCONV=1 $appcmd add site /name:$sitename /physicalPath:"$winsiteroot" /bindings:http/*:80:"$domain" )
 
 $appcmd set config $sitename -section:system.webServer/asp /session.allowSessionState:False /enableParentPaths:True /codePage:65001 /commit:apphost
 $appcmd set config $sitename  -section:system.webServer/security/requestFiltering /requestLimits.maxQueryString:8192 /requestLimits.maxUrl:8192 /commit:apphost

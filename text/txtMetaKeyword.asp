@@ -17,38 +17,14 @@
 %>
 
 <%
-Dim	TXT_ADD_KEYWORD, _
-	TXT_CHOOSE_KEYWORD, _
-	TXT_CREATE_EDIT_KEYWORD, _
-	TXT_EDIT_KEYWORD, _
-	TXT_INVALID_TAXONOMY_CODE, _
-	TXT_MANAGE_META_KEYWORDS, _
-	TXT_RETURN_TO_KEYWORD_SETUP, _
-	TXT_UPDATE_KEYWORD_FAILED, _
-	TXT_VIEW_EDIT_KEYWORD
+Dim	TXT_INVALID_TAXONOMY_CODE, _
 
 Sub setTxtKeywordSetup()
 	Select Case g_objCurrentLang.Culture
 		Case CULTURE_ENGLISH_CANADIAN
-			TXT_ADD_KEYWORD = "Add META Tag Keyword"
-			TXT_CHOOSE_KEYWORD = "Choose a Keyword from the list below or add a new Keyword."
-			TXT_CREATE_EDIT_KEYWORD = "Create / Edit Meta Tag Keyword"
-			TXT_EDIT_KEYWORD = "Edit Meta Tag Keyword" & TXT_COLON
 			TXT_INVALID_TAXONOMY_CODE = "The following is an invalid Taxonomy Code" & TXT_COLON
-			TXT_MANAGE_META_KEYWORDS = "Manage Meta Tag Keywords"
-			TXT_RETURN_TO_KEYWORD_SETUP = "Return to Meta Tag Keyword Setup"
-			TXT_UPDATE_KEYWORD_FAILED = "Update Keyword Information Failed"
-			TXT_VIEW_EDIT_KEYWORD = "View / Edit Keyword"
 		Case CULTURE_FRENCH_CANADIAN
-			TXT_ADD_KEYWORD = "Ajouter un mot-clé métabalise"
-			TXT_CHOOSE_KEYWORD = "Sélectionnez un mot-clé dans la liste ci-dessous ou ajouter un nouveau mot-clé."
-			TXT_CREATE_EDIT_KEYWORD = "Créer / Modifier un mot-clé métabalise"
-			TXT_EDIT_KEYWORD = "Modifier un mot-clé métabalise" & TXT_COLON
 			TXT_INVALID_TAXONOMY_CODE = "Le code taxonomique suivant est invalide" & TXT_COLON
-			TXT_MANAGE_META_KEYWORDS = "Gestion des Mots-clés métabalise"
-			TXT_RETURN_TO_KEYWORD_SETUP = "Retourner à la gestion des mots-clés métabalise"
-			TXT_UPDATE_KEYWORD_FAILED = "La mise à jour des renseignements sur le mot-clé a échoué"
-			TXT_VIEW_EDIT_KEYWORD = "Voir / Modifier le mot-clé"
 	End Select
 End Sub
 

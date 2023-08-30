@@ -18,8 +18,7 @@
 %>
 
 <%
-Dim TXT_ADD_DD_REPLACES, _
-	TXT_ADD_NOTE_IN, _
+Dim TXT_ADD_NOTE_IN, _
 	TXT_ADD_ONLY_UNUSED, _
 	TXT_AFTER_TEXT, _
 	TXT_BEFORE_TEXT, _
@@ -76,7 +75,6 @@ Dim TXT_ADD_DD_REPLACES, _
 Sub setTxtFindReplace()
 	Select Case g_objCurrentLang.Culture
 		Case CULTURE_ENGLISH_CANADIAN
-			TXT_ADD_DD_REPLACES = "Will replace any existing value set on the record with the one given below."
 			TXT_ADD_NOTE_IN = "New Note in"
 			TXT_ADD_ONLY_UNUSED = "You may only replace with / add a value that is not already being used in the record."
 			TXT_AFTER_TEXT = "After the existing text"
@@ -136,7 +134,6 @@ Sub setTxtFindReplace()
 			TXT_USE_WITH_CAUTION = "Please use this tool with extreme caution, as the results cannot be undone."
 			TXT_WHOLE_FIELD = "Whole Field Only"
 		Case CULTURE_FRENCH_CANADIAN
-			TXT_ADD_DD_REPLACES = "Remplacera tout ensemble de valeurs existant associé au dossier, avec celui donné ci-dessous."
 			TXT_ADD_NOTE_IN = "Nouvelle note dans le"
 			TXT_ADD_ONLY_UNUSED = "Seule une valeur qui n'est pas déjà utilisée dans le dossier peut être ajoutée ou peut remplacer une autre valeur."
 			TXT_AFTER_TEXT = "Après le texte existant"

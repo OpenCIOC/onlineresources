@@ -125,7 +125,7 @@ if [[ $preflight == 'true' ]]; then
 	powershell -noprofile -file preflight.ps1 -domain:"$domain" -sitename:"$sitename"
 fi
 
-[[ -e ../pythonport.config ]] || sed -E "s/(name=\"SetPythonPort\" defaultValue=\")([^\"]*)/\\1$port" ../pythonport-sample.config > pythonport.config
+[[ -e ../pythonport.config ]] || sed -E "s/(name=\"SetPythonPort\" defaultValue=\")([^\"]*)/\\1$port/" ../pythonport-sample.config > pythonport.config
 mkdir -p "$siteroot/../../config"
 configfile="$siteroot/../../config/$sitename.ini"
 if [[ ! -e "$configfile" ]]; then

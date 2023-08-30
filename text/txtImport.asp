@@ -83,7 +83,6 @@ Dim TXT_ADD_PROFILE_FAILED, _
 	TXT_PRIVATE_FIELDS, _
 	TXT_PROCESS_NOW, _
 	TXT_PROFILE_NAME, _
-	TXT_PROFILE_NAME_FRENCH, _
 	TXT_PUBLICATION_LIST, _
 	TXT_QUEUE_ALL, _
 	TXT_QUEUE_RECORDS_FOR_LATER, _
@@ -208,7 +207,6 @@ Sub setTxtImport()
 			TXT_PRIVATE_FIELDS = "Private Fields"
 			TXT_PROCESS_NOW = "Process Now"
 			TXT_PROFILE_NAME = "Profile Name"
-			TXT_PROFILE_NAME_FRENCH = "French Profile Name"
 			TXT_PUBLICATION_LIST = "Publication List"
 			TXT_QUEUE_ALL = "Queue All"
 			TXT_QUEUE_RECORDS_FOR_LATER = "Queue records for later import"
@@ -332,7 +330,6 @@ Sub setTxtImport()
 			TXT_PRIVATE_FIELDS = "Champs confidentiels"
 			TXT_PROCESS_NOW = "Commencer le traitement"
 			TXT_PROFILE_NAME = "Nom anglais du profil"
-			TXT_PROFILE_NAME_FRENCH = "Nom français du profil"
 			TXT_PUBLICATION_LIST = "Liste des publications"
 			TXT_QUEUE_ALL = "Mettre tous les dossiers dans la file d'attente"
 			TXT_QUEUE_RECORDS_FOR_LATER = "Mettre les dossiers dans la file d'attente et les importer plus tard"

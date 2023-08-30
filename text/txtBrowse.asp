@@ -20,7 +20,6 @@
 <%
 Dim TXT_BROWSE_BY_ORG, _
 	TXT_BROWSE_BY_ORG_TITLE, _
-	TXT_BROWSE_BY_SUBJECT, _
 	TXT_BROWSE_BY_SUBJECT_TITLE, _
 	TXT_BROWSE_BY_AREA_OF_INTEREST, _
 	TXT_BROWSE_BUSINESS_USING, _
@@ -34,7 +33,6 @@ Sub setTxtBrowse()
 		Case CULTURE_ENGLISH_CANADIAN
 			TXT_BROWSE_BY_ORG = "Browse by Organization"
 			TXT_BROWSE_BY_ORG_TITLE = "Browse by Organization"
-			TXT_BROWSE_BY_SUBJECT = "Browse by Subject"
 			TXT_BROWSE_BY_SUBJECT_TITLE = "Browse by Subject"
 			TXT_BROWSE_BY_AREA_OF_INTEREST = "Browse by Area of Interest"
 			TXT_BROWSE_BUSINESS_USING = "Browse for a Business / Organization using the "
@@ -45,7 +43,6 @@ Sub setTxtBrowse()
 		Case CULTURE_FRENCH_CANADIAN
 			TXT_BROWSE_BY_ORG = "Explorer par organisme"
 			TXT_BROWSE_BY_ORG_TITLE = "Exploration par organisme"
-			TXT_BROWSE_BY_SUBJECT = "Explorer par sujet"
 			TXT_BROWSE_BY_SUBJECT_TITLE = "Exploration par sujet"
 			TXT_BROWSE_BY_AREA_OF_INTEREST = "Explorer par centre d'intérêt"
 			TXT_BROWSE_BUSINESS_USING = "Chercher une entreprise ou un organisme en utilisant "

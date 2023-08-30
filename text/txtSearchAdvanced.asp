@@ -47,7 +47,6 @@ Dim TXT_ALL_RECORDS, _
 	TXT_ONLY_NOT_MINE, _
 	TXT_ONLY_PUBLIC, _
 	TXT_PUBLIC_STATUS, _
-	TXT_RECORDS_SHARED_WITH_ME, _
 	TXT_SHARED_RECORDS, _
 	TXT_SQL
 
@@ -84,7 +83,6 @@ Sub setTxtSearchAdvanced()
 			TXT_ONLY_NOT_MINE = "NOT "
 			TXT_ONLY_PUBLIC = "Only&nbsp;Public"
 			TXT_PUBLIC_STATUS = "Public&nbsp;Status"
-			TXT_RECORDS_SHARED_WITH_ME = "Records Shared With Me"
 			TXT_SHARED_RECORDS = "Shared Records"
 			TXT_SQL = "SQL"
 		Case CULTURE_FRENCH_CANADIAN
@@ -118,7 +116,6 @@ Sub setTxtSearchAdvanced()
 			TXT_ONLY_NOT_MINE = "PAS "
 			TXT_ONLY_PUBLIC = "Seulement&nbsp;les&nbsp;dossiers&nbsp;publics"
 			TXT_PUBLIC_STATUS = "Statut&nbsp;public"
-			TXT_RECORDS_SHARED_WITH_ME = "Dossiers partagés avec moi"
 			TXT_SHARED_RECORDS = "Dossiers partagés"
 			TXT_SQL = "SQL"
 	End Select
