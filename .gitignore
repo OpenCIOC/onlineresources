@@ -16,6 +16,9 @@ pythonport.config
 *.config
 *.zip
 
+# visual studio cache/options directory
+.vs/
+
 # /docs/
 /docs/build
 
