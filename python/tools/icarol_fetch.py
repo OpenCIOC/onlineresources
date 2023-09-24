@@ -314,7 +314,7 @@ def get_bulk_connection(language):
 
     settings = dict(x.split("=") for x in line.split(";"))
     settings = [
-        ("Driver", "{SQL Server Native Client 10.0}"),
+        ("Driver", "{ODBC Driver 17 for SQL Server}"),
         ("Server", settings["Data Source"]),
         ("Database", settings["Initial Catalog"]),
         ("UID", settings["User ID"]),

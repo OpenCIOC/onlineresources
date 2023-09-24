@@ -207,7 +207,6 @@ def update_program_at_sites(
     program_at_site_ids = {
         site_num: id for site_num, id in (x.split("/") for x in external_ids)
     }
-    print("Program At Site IDs", program_at_site_ids)
 
     linked_site_nums = set()
     for prog_at_site in related_sites:
