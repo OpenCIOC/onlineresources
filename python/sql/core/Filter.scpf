@@ -90,6 +90,10 @@
         <Include>True</Include>
         <Expression>TRUE</Expression>
       </SearchPropertyList>
+      <SecurityPolicy version="1">
+        <Include>True</Include>
+        <Expression>TRUE</Expression>
+      </SecurityPolicy>
       <Sequence version="1">
         <Include>True</Include>
         <Expression>TRUE</Expression>
@@ -134,6 +138,18 @@
         <Include>True</Include>
         <Expression>TRUE</Expression>
       </XmlSchemaCollection>
+      <ExternalFileFormat version="1">
+        <Include>True</Include>
+        <Expression>TRUE</Expression>
+      </ExternalFileFormat>
+      <ExternalDataSource version="1">
+        <Include>True</Include>
+        <Expression>TRUE</Expression>
+      </ExternalDataSource>
+      <ExternalTable version="1">
+        <Include>True</Include>
+        <Expression>TRUE</Expression>
+      </ExternalTable>
     </Filters>
   </Filter>
 </NamedFilter>

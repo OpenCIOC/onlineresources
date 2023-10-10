@@ -117,7 +117,9 @@ class ServiceSettings:
 
             if os.path.exists(
                 os.path.join(
-                    os.environ.get("CIOC_ENV_ROOT", os.path.join(app_dir, "..", "..")),
+                    os.environ.get(
+                        "CIOC_ENV_ROOT", os.path.join(app_dir, "..", "..", "PythonEnvs")
+                    ),
                     possible_env,
                     "scripts",
                     "activate_this.py",
