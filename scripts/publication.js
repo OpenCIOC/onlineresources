@@ -1142,46 +1142,7 @@ window['init_cached_state'] = function(formselector) {
 })();
 
 
-/*! Copyright (c) 2010 Brandon Aaron (http://brandonaaron.net)
- * Licensed under the MIT License (LICENSE.txt).
- *
- * Version 2.1.2
- */
-
-(function($){
-
-$.fn.bgiframe = ($.browser.msie && /msie 6\.0/i.test(navigator.userAgent) ? function(s) {
-    s = $.extend({
-        top     : 'auto', // auto == .currentStyle.borderTopWidth
-        left    : 'auto', // auto == .currentStyle.borderLeftWidth
-        width   : 'auto', // auto == offsetWidth
-        height  : 'auto', // auto == offsetHeight
-        opacity : true,
-        src     : 'javascript:false;'
-    }, s);
-    var html = '<iframe class="bgiframe"frameborder="0"tabindex="-1"src="'+s.src+'"'+
-                   'style="display:block;position:absolute;z-index:-1;'+
-                       (s.opacity !== false?'filter:Alpha(Opacity=\'0\');':'')+
-                       'top:'+(s.top=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderTopWidth)||0)*-1)+\'px\')':prop(s.top))+';'+
-                       'left:'+(s.left=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderLeftWidth)||0)*-1)+\'px\')':prop(s.left))+';'+
-                       'width:'+(s.width=='auto'?'expression(this.parentNode.offsetWidth+\'px\')':prop(s.width))+';'+
-                       'height:'+(s.height=='auto'?'expression(this.parentNode.offsetHeight+\'px\')':prop(s.height))+';'+
-                '"/>';
-    return this.each(function() {
-        if ( $(this).children('iframe.bgiframe').length === 0 )
-            this.insertBefore( document.createElement(html), this.firstChild );
-    });
-} : function() { return this; });
-
-// old alias
-$.fn.bgIframe = $.fn.bgiframe;
-
-function prop(n) {
-    return n && n.constructor === Number ? n + 'px' : n;
-}
-
-})(jQuery);
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -1207,7 +1168,7 @@ var string_ci_ai = function(s) {
 	r = r.replace(new RegExp("ç","g"),"c");
 	r = r.replace(new RegExp("[èéêë]","g"),"e");
 	r = r.replace(new RegExp("[ìíîï]","g"),"i");
-	r = r.replace(new RegExp("ñ","g"),"n");                
+	r = r.replace(new RegExp("ñ","g"),"n");
 	r = r.replace(new RegExp("[òóôõö]","g"),"o");
 	r = r.replace(new RegExp("","g"),"oe");
 	r = r.replace(new RegExp("[ùúûü]","g"),"u");
@@ -1215,6 +1176,14 @@ var string_ci_ai = function(s) {
 	return r;
 };
 window['string_ci_ai'] = string_ci_ai;
+
+var slugify = function(s) {
+	s = string_ci_ai(s);
+	s = s.replace(/-/g, ' ').replace(/[^a-z0-9\s]/g, '');
+	s = s.trim();
+	return s.replace(/\s+/g, '-');
+};
+window['slugify'] = slugify;
 
 var default_cache_search_fn = function($, cache, prop, regex_pre, regex_post) {
 	prop = prop || 'value';
@@ -1338,13 +1307,12 @@ var init_community_autocomplete = function($, id, url, minLength, cmidfield) {
 		});
 	}
 
-	
+
 
 };
 
 window['init_community_autocomplete'] = init_community_autocomplete;
 })();
-
 ﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //

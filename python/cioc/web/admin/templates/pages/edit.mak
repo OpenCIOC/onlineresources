@@ -107,6 +107,7 @@ ${self.makeMgmtInfo(page)}
 </form>
 
 <%def name="bottomjs()">
+${request.assetmgr.JSVerScriptTag('scripts/admin.js')}
 <script type="text/javascript">
 $(document).ready(function(){
     $('[data-toggle="popover"]').popover();
