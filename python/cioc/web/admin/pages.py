@@ -17,6 +17,7 @@
 
 # std library
 import logging
+from wsgiref.validate import validator
 
 # 3rd party libs
 from pyramid.view import view_config, view_defaults
@@ -36,7 +37,12 @@ class PageSchemaBase(validators.RootSchema):
     Slug = validators.SlugValidator(not_empty=True, max=50)
     Title = validators.UnicodeString(max=200, not_empty=True)
     PageContent = validators.UnicodeString(not_empty=True)
-
+    PublishAsArticle = validators.Bool()
+    DisplayPublishDate = validators.DateConverter()
+    Author = validators.UnicodeString(max=200)
+    Category = validators.UnicodeString(max=200)
+    PreviewText = validators.UnicodeString()
+    ThumbnailImageURL = validators.URLWithProto(max=255)
 
 templateprefix = "cioc.web.admin:templates/pages/"
 
@@ -108,6 +114,12 @@ class PagesView(AdminViewBase):
                 model_state.value("page.Owner"),
                 model_state.value("page.PageContent"),
                 ",".join(map(str, model_state.value("views", []))),
+                model_state.value("page.PublishAsArticle"),
+                model_state.value("page.Author"),
+                model_state.value("page.DisplayPublishDate"),
+                model_state.value("page.Category"),
+                model_state.value("page.PreviewText"),
+                model_state.value("page.ThumbnailImageURL"),
             ]
 
             with request.connmgr.get_connection("admin") as conn:
@@ -118,7 +130,7 @@ class PagesView(AdminViewBase):
 
                 SET @PageID = ?
 
-                EXECUTE @RC = dbo.sp_GBL_Page_u @PageID OUTPUT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
+                EXECUTE @RC = dbo.sp_GBL_Page_u @PageID OUTPUT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @ErrMsg=@ErrMsg OUTPUT
 
                 SELECT @RC as [Return], @ErrMsg AS ErrMsg, @PageID as PageID
                 """
