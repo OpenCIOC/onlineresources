@@ -18,15 +18,16 @@ SET @Error = 0;
 SELECT
     p.Slug,
     p.Title,
-	p.DisplayPublishDate,
+	cioc_shared.dbo.fn_SHR_GBL_DateString(p.DisplayPublishDate) AS DisplayPublishDate,
 	p.Author,
 	p.Category,
+	p.ThumbnailImageURL,
 	p.PreviewText
 FROM    dbo.GBL_Page p
     INNER JOIN dbo.CIC_Page_View pv
 		ON p.PageID=pv.PageID AND pv.ViewType=@ViewType
 WHERE p.PublishAsArticle = 1
-	AND (p.DisplayPublishDate IS NULL OR p.DisplayPublishDate >= GETDATE())
+	AND (p.DisplayPublishDate IS NULL OR p.DisplayPublishDate <= GETDATE())
 	AND p.LangID=@@LANGID
 ORDER BY
 	ISNULL(p.DisplayPublishDate,p.MODIFIED_DATE), p.Title;

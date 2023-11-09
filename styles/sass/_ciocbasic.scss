@@ -103,6 +103,11 @@
 	}
 }
 
+.panel-heading h2.ArticleTitle {
+	font-size: $font-size-h2 * 0.7;
+	color: $fcTitle !important;
+}
+
 .Info {
 	font-weight: bold;
 }

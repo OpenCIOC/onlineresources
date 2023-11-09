@@ -29,8 +29,8 @@ FROM    dbo.GBL_Page p
         ON p.LangID = l.LangID
 WHERE   p.MemberID = @MemberID AND p.DM = @DM AND (p.Owner IS NULL OR p.Owner = @AgencyCode)
 ORDER BY
-	p.PublishAsArticle,
     l.LangID,
+	p.PublishAsArticle,
     p.Title;
 
 

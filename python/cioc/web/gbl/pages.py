@@ -23,6 +23,7 @@ from cioc.core import viewbase
 from cioc.core.i18n import gettext as _
 
 template = "cioc.web.gbl:templates/pages.mak"
+index_template = "cioc.web.gbl:templates/articles.mak"
 log = logging.getLogger(__name__)
 
 
@@ -58,7 +59,32 @@ class PagesBase(viewbase.ViewBase):
                 "page": page,
                 "other_langs": other_langs,
             },
-            no_index=True,
+            no_index=False,
+        )
+
+class ArticlesBase(viewbase.ViewBase):
+    def __init__(self, request):
+        viewbase.ViewBase.__init__(self, request, False)
+
+    def __call__(self):
+        request = self.request
+
+        with request.connmgr.get_connection() as conn:
+            cursor = conn.execute(
+                """EXEC sp_%s_Page_l_Index ?""" % request.pageinfo.DbAreaS,
+                request.viewdata.dom.ViewType,
+            )
+
+            articles = cursor.fetchall()
+
+        title = _("Index of Articles")
+        return self._create_response_namespace(
+            title,
+            title,
+            {
+                "articles": articles
+            },
+            no_index=False,
         )
 
 
@@ -66,7 +92,14 @@ class PagesBase(viewbase.ViewBase):
 class PagesCIC(PagesBase):
     pass
 
-
 @view_config(route_name="pages_vol", renderer=template)
 class PagesVOL(PagesBase):
+    pass
+
+@view_config(route_name="articles_cic", renderer=index_template)
+class ArticlesCIC(ArticlesBase):
+    pass
+
+@view_config(route_name="articles_vol", renderer=index_template)
+class ArticlesVOL(ArticlesBase):
     pass

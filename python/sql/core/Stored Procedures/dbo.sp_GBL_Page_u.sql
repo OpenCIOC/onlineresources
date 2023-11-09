@@ -33,7 +33,8 @@ SET @Error = 0;
 DECLARE
     @MemberObjectName   nvarchar(100),
     @PageObjectName     nvarchar(100),
-    @LanguageObjectName nvarchar(100);
+    @LanguageObjectName nvarchar(100),
+	@LangID				smallint;
 
 SET @MemberObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('CIOC Membership');
 SET @PageObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Page');
@@ -42,6 +43,7 @@ SET @LanguageObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Language');
 SET @Slug = RTRIM(LTRIM(@Slug));
 SET @Title = RTRIM(LTRIM(@Title));
 SET @PageContent = RTRIM(LTRIM(@PageContent));
+SELECT @LangID = LangID FROM dbo.STP_Language WHERE  Culture = @Culture
 
 DECLARE @ViewIDs table (ViewType int NOT NULL);
 
@@ -67,7 +69,6 @@ ELSE BEGIN
         @PageObjectName,
         @ErrMsg;
 END;
-
 
 -- Member ID given ?
 IF @MemberID IS NULL BEGIN
@@ -108,7 +109,7 @@ END;
 ELSE IF EXISTS (
     SELECT  *
     FROM    dbo.GBL_Page
-    WHERE   (@PageID IS NULL OR PageID <> @PageID) AND  Slug = @Slug AND MemberID = @MemberID
+    WHERE   (@PageID IS NULL OR PageID <> @PageID) AND  Slug = @Slug AND MemberID = @MemberID AND LangID=@LangID
 ) BEGIN
     SET @Error = 6; -- Value In Use
     SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @Slug, cioc_shared.dbo.fn_SHR_STP_ObjectName('Slug'));
@@ -183,7 +184,7 @@ IF @Error = 0 BEGIN
 			@MODIFIED_BY,
 			@MemberID,
 			@DM,
-			(SELECT  LangID FROM STP_Language WHERE  Culture = @Culture),
+			@LangID,
 			@Owner,
 			@Slug,
 			@Title,
@@ -222,7 +223,7 @@ IF @Error = 0 BEGIN
                 @PageObjectName,
                 @ErrMsg;
 
-            INSERT INTO CIC_Page_View (ViewType, PageID)
+            INSERT INTO dbo.CIC_Page_View (ViewType, PageID)
             SELECT
                 tm.ViewType AS ViewType,
                 @PageID AS PageID
