@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -47,20 +47,38 @@ Call Response.AddHeader("Access-Control-Allow-Origin", "*")
 
 Call run_response_callbacks()
 
-Dim strSearch
+Dim strSearch, intCMID
 strSearch = Left(Trim(Request("term")), 100)
+
+intCMID = Trim(Request("CMID"))
+If Nl(intCMID) Then
+	intCMID = Null
+ElseIf IsIDType(intCMID) Then
+	intCMID = CInt(intCMID)
+Else
+	Response.Status = "400 Invalid parameter CMID"
+	Response.Write("[]")
+%>
+	<!--#include file="../includes/core/incClose.asp" -->
+<%
+	Response.End()
+End If
+
 
 
 Dim cmdCommFinder, rsCommFinder
 Set cmdCommFinder = Server.CreateObject("ADODB.Command")
 With cmdCommFinder
 	.ActiveConnection = getCurrentCICBasicCnn()
-	If Nl(strSearch) Then
-		.CommandText = "sp_CIC_View_Community_l"
-		.Parameters.Append .CreateParameter("@ViewType", adInteger, adParamInput, 4, g_intViewTypeCIC)
-	Else
+	If Not Nl(strSearch) Then
 		.CommandText = "dbo.sp_GBL_Community_ls"
 		.Parameters.Append .CreateParameter("@searchStr", adVarChar, adParamInput, 100, strSearch)
+	ElseIf Not Nl(intCMID) Then
+		.CommandText = "dbo.sp_GBL_Community_l_Children"
+		.Parameters.Append .CreateParameter("@CMID", adInteger, adParamInput, 4, intCMID)
+	Else
+		.CommandText = "sp_CIC_View_Community_l"
+		.Parameters.Append .CreateParameter("@ViewType", adInteger, adParamInput, 4, g_intViewTypeCIC)
 	End If
 	.CommandType = adCmdStoredProc
 	.CommandTimeout = 0
@@ -90,7 +108,7 @@ With rsCommFinder
 
 	Response.Write("[")
 	While Not .EOF
-		Response.Write(strJSONCon & "{""chkid"":" & JSONQs(.Fields("CM_ID"), True) & _ 
+		Response.Write(strJSONCon & "{""chkid"":" & JSONQs(.Fields("CM_ID"), True) & _
 				",""value"":" & JSONQs(fldCommunity, True) & _
 				",""label"":" & JSONQs(fldDisplay & _
 					StringIf(Not Nl(fldParent), _
@@ -102,7 +120,7 @@ With rsCommFinder
 	Response.Write("]")
 	.Close
 End With
-	
+
 Set rsCommFinder = Nothing
 Set cmdCommFinder = Nothing
 %>

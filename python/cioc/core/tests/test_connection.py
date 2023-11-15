@@ -65,7 +65,7 @@ class Test_ConnectionMgr:
             base = cnstr_base % {"perm": perm}
             assert cnnmgr.get_connection_string_base(perm) == base
             assert cnnmgr.get_connection_string(perm) == (
-                "Driver={SQL Server Native Client 10.0};" + base
+                "Driver={ODBC Driver 17 for SQL Server};" + base
             )
 
         for p in permissions:

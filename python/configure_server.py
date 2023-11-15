@@ -4,16 +4,14 @@ import subprocess
 import argparse
 from cioc.core.utils import write_file
 
-site_root = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..")
-)
+site_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 config_tmpl = """
 [global]
 server=%(server)s
 database=%(database)s
-driver=SQL Server Native Client 10.0
-provider=SQLNCLI10
+driver=ODBC Driver 17 for SQL Server
+provider=MSOLEDBSQL
 
 session.type=redis
 session.url=127.0.0.1:6379

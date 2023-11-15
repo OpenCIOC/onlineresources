@@ -57,17 +57,17 @@ class ConnectionManager:
         return ";".join("=".join(x) for x in settings)
 
     def get_connection_string(self, perm: PermType) -> str:
+        driver = self.config.get("driver", "ODBC Driver 17 for SQL Server")
         return ";".join(
             [
-                "Driver={%s}"
-                % self.config.get("driver", "SQL Server Native Client 10.0"),
+                f"Driver={driver}",
                 self.get_connection_string_base(perm),
             ]
         )
 
     def get_asp_connection_string(self, perm: PermType, language: str) -> str:
         settings = [
-            ("Provider", self.config.get("provider", "SQLNCLI10")),
+            ("Provider", self.config.get("provider", "MSOLEDBSQL")),
             ("DataTypeCompatibility", "80"),
             ("Persist Security Info", "True"),
             ("Current Language", language),

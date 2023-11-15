@@ -28,8 +28,15 @@ def includeme(config):
     factory = partial(EmailListContext, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
     config.add_route("record_list_cic", urlprefix + "recordlist", factory=factory)
 
+    # /pages/{slug}
     factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
     config.add_route("pages_cic", urlprefix + "pages/{slug}", factory=factory)
+
+    # /articles
+    factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
+    config.add_route(
+        "articles_cic", urlprefix + "articles", factory=factory
+    )
 
     factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
     config.add_route(
@@ -42,16 +49,21 @@ def includeme(config):
         "record_list_vol", "/volunteer" + urlprefix + "recordlist", factory=factory
     )
 
+    # /volunteer/pages/{slug}
     factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
     config.add_route(
         "pages_vol", "/volunteer" + urlprefix + "pages/{slug}", factory=factory
     )
 
+    # /volunteer/articles
     factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
     config.add_route(
-        "sched_upcoming_vol",
-        "/volunteer" + urlprefix + "events/upcoming",
-        factory=factory,
+        "articles_vol", "/volunteer" + urlprefix + "articles", factory=factory
+    )
+
+    factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
+    config.add_route(
+        "sched_upcoming_vol", "/volunteer" + urlprefix + "events/upcoming", factory=factory,
     )
 
     # /shortcodes

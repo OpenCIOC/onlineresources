@@ -4,41 +4,39 @@ SET ANSI_NULLS ON
 GO
 
 
-CREATE PROCEDURE [dbo].[sp_GBL_Page_l] (
-	@MemberID [int],
-	@DM [tinyint],
-	@AgencyCode char(3)
-)
+CREATE PROCEDURE [dbo].[sp_GBL_Page_l] (@MemberID [int], @DM [tinyint], @AgencyCode char(3))
 WITH EXECUTE AS CALLER
 AS
-SET NOCOUNT ON
+SET NOCOUNT ON;
 
-/*
-	Checked for Release: 3.7
-	Checked by: CL
-	Checked on: 04-May-2016
-	Action: NO ACTION REQUIRED
-*/
-
-DECLARE	@Error	int
-SET @Error = 0
+DECLARE @Error int;
+SET @Error = 0;
 
 -- Member ID exists ?
-IF @MemberID IS NOT NULL AND NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
-	SET @Error = 3 -- No Such Record
-END
+IF @MemberID IS NOT NULL AND NOT EXISTS (SELECT * FROM  dbo.STP_Member WHERE MemberID = @MemberID) BEGIN
+    SET @Error = 3; -- No Such Record
+END;
 
-SELECT PageID, Slug, Title, l.Culture
-FROM GBL_Page p
-INNER JOIN STP_Language l
-	ON p.LangID=l.LangID
-WHERE MemberID=@MemberID AND DM=@DM AND (Owner IS NULL OR Owner=@AgencyCode)
-ORDER BY l.LangID, Title
+SELECT
+    p.PageID,
+    p.Slug,
+    p.Title,
+	p.PublishAsArticle,
+	p.DisplayPublishDate,
+    l.Culture
+FROM    dbo.GBL_Page p
+    INNER JOIN dbo.STP_Language l
+        ON p.LangID = l.LangID
+WHERE   p.MemberID = @MemberID AND p.DM = @DM AND (p.Owner IS NULL OR p.Owner = @AgencyCode)
+ORDER BY
+    l.LangID,
+	p.PublishAsArticle,
+    p.Title;
 
 
-RETURN @Error
+RETURN @Error;
 
-SET NOCOUNT OFF
+SET NOCOUNT OFF;
 
 
 

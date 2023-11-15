@@ -26,11 +26,31 @@ CREATE TABLE #allrecords (
 	[TaxonomyLevelName] [nvarchar](max)  COLLATE Latin1_General_100_CI_AI NULL,
 	[iCarolManaged] [nvarchar](max)  COLLATE Latin1_General_100_CI_AI NULL,
 	[RecordOwner] [nvarchar](max)  COLLATE Latin1_General_100_CI_AI NULL,
-	[UpdatedOn] [nvarchar](max)  COLLATE Latin1_General_100_CI_AI NULL,
+	[UpdatedOn] [nvarchar](max)  COLLATE Latin1_General_100_CI_AI NULL
 )
 
 DECLARE @sql VARCHAR(MAX)
-SET @sql = 'BULK INSERT #allrecords FROM ''' + @source_file + '''WITH (CODEPAGE=''65001'',DATAFILETYPE=''Char'',  FIELDTERMINATOR=''' + CHAR(3) + ''', ROWTERMINATOR=''' + CHAR(4) + ''', FIRSTROW=1)'
+SET @sql = '
+INSERT INTO #allrecords 
+SELECT 
+	ResourceAgencyNum, ParentAgencyNum, ConnectsToSiteNum, ConnectsToProgramNum, UniqueIDPriorSystem,  PublicName, TaxonomyLevelName, iCarolManaged, RecordOwner, UpdatedOn 
+FROM OPENROWSET ( BULK ''' + @source_file + '''
+	, CODEPAGE = ''RAW''
+    , FORMAT = ''CSV''
+    , DATA_SOURCE = ''s3_bulkimport''
+	, FIRSTROW=1
+) WITH (
+	[ResourceAgencyNum] [NVARCHAR](50),
+	[ParentAgencyNum] [NVARCHAR](MAX),
+	[ConnectsToSiteNum] [nvarchar](max),
+	[ConnectsToProgramNum] [nvarchar](max),
+	[UniqueIDPriorSystem] [nvarchar](max),
+	[PublicName] [nvarchar](max),
+	[TaxonomyLevelName] [nvarchar](max),
+	[iCarolManaged] [nvarchar](max),
+	[RecordOwner] [nvarchar](max),
+	[UpdatedOn] [nvarchar](max)
+) as csvimport'
 EXEC (@sql)
 
 MERGE INTO dbo.CIC_iCarolImportAllRecords dst

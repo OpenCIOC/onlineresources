@@ -14,14 +14,16 @@
 #  limitations under the License.
 # =========================================================================================
 
+from __future__ import annotations
+
 import argparse
-import pprint
 import json
+import pprint
 import time
 import re
 from queue import Queue
 from collections import namedtuple
-from io import StringIO
+from io import StringIO, TextIOWrapper
 import os
 import sys
 import tempfile
@@ -33,9 +35,17 @@ from datetime import datetime
 from threading import Thread
 from operator import itemgetter
 
+import boto3
 import isodate
-
 import requests
+import pyarrow as pa
+import pyarrow.parquet as pq
+
+import typing as t
+
+if t.TYPE_CHECKING:
+    from boto3_type_annotations.s3 import Client
+
 
 try:
     import cioc  # NOQA
@@ -48,6 +58,7 @@ from tools.toolslib import (
     get_config_item,
     email_log,
 )
+
 
 from cioc.core import constants as const
 from cioc.core import syslanguage
@@ -299,6 +310,14 @@ dts_file_template = os.path.join(
 )
 
 
+class ICarolFetchContext(Context):
+    s3_client: Client
+
+    def __init__(self, args, s3_client):
+        super().__init__(args)
+        self.s3_client = s3_client
+
+
 def get_bulk_connection(language):
     dts = dts_file_template % const._app_name
     with open(dts, "rb") as dts_file:
@@ -314,7 +333,7 @@ def get_bulk_connection(language):
 
     settings = dict(x.split("=") for x in line.split(";"))
     settings = [
-        ("Driver", "{SQL Server Native Client 10.0}"),
+        ("Driver", "{ODBC Driver 17 for SQL Server}"),
         ("Server", settings["Data Source"]),
         ("Database", settings["Initial Catalog"]),
         ("UID", settings["User ID"]),
@@ -460,30 +479,33 @@ def _to_unicode(value):
 def to_csv(records, target_file, headings):
     fn = itemgetter(*headings)
 
-    writer = UTF8CSVWriter(target_file, dialect=SQLServerBulkDialect)
+    writer = UTF8CSVWriter(target_file)  # , dialect=SQLServerBulkDialect)
     out_stream = (list(map(_to_unicode, fn(x))) for x in records)
     writer.writerows(out_stream)
 
 
 class CsvFileWriter:
     def __init__(self, context, headings):
-        self.target_dir = context.csv_target_dir
-        self.source_dir = context.csv_source_dir
+        self.s3_bulk_import_bucket = context.s3_bulk_import_bucket
+        self.s3_bulk_import_prefix = context.s3_bulk_import_prefix
+        self.s3_client = context.s3_client
         self.fd = None
-        self.full_name = None
+        self.file_name = None
         self.headings = headings
 
     def __enter__(self):
-        self.fd = tempfile.NamedTemporaryFile(
-            "w", encoding="utf-8", suffix=".csv", dir=self.target_dir, delete=False
-        )
-        self.full_name = self.fd.name
+        self.fd = tempfile.TemporaryFile(suffix=".csv")
+        self.wrapped_fd = TextIOWrapper(self.fd, encoding="utf-16", newline="")
+        self.file_name = os.path.basename(self.fd.name)
         return self
 
     def __exit__(self, type, value, tb):
-        if self.full_name:
+        if self.file_name:
             try:
-                os.remove(self.full_name)
+                self.s3_client.delete_object(
+                    Bucket=self.s3_bulk_import_bucket,
+                    Key=self.s3_bulk_import_prefix + self.source_file,
+                )
             except Exception:
                 pass
 
@@ -491,23 +513,86 @@ class CsvFileWriter:
         if not self.fd:
             raise Exception("File not opened yet")
 
-        to_csv(records, self.fd, self.headings)
+        to_csv(records, self.wrapped_fd, self.headings)
 
     def close(self):
         if self.fd:
+            self.wrapped_fd.flush()
+            self.fd.seek(0)
+            self.s3_client.upload_fileobj(
+                self.fd,
+                self.s3_bulk_import_bucket,
+                self.source_file,
+            )
+            self.wrapped_fd.close()
+            self.wrapped_fd = None
             self.fd.close()
             self.fd = None
 
     @property
     def source_file(self):
-        return os.path.join(self.source_dir, os.path.basename(self.full_name))
+        return self.s3_bulk_import_prefix + self.file_name
+
+
+class ParquetFileWriter:
+    def __init__(self, context, headings):
+        self.s3_bulk_import_bucket = context.s3_bulk_import_bucket
+        self.s3_bulk_import_prefix = context.s3_bulk_import_prefix
+        self.s3_client = context.s3_client
+        self.fd = None
+        self.file_name = None
+        self.headings = headings
+        self.schema = pa.schema([(x, pa.string()) for x in headings])
+
+    def __enter__(self):
+        self.fd = tempfile.TemporaryFile(suffix=".parquet")
+        self.file_name = os.path.basename(self.fd.name)
+        return self
+
+    def __exit__(self, type, value, tb):
+        if self.file_name and False:
+            try:
+                self.s3_client.delete_object(
+                    Bucket=self.s3_bulk_import_bucket,
+                    Key=self.s3_bulk_import_prefix + self.source_file,
+                )
+            except Exception:
+                pass
+
+    def serialize_records(self, records):
+        if not self.fd:
+            raise Exception("File not opened yet")
+
+        fn = itemgetter(*self.headings)
+
+        out_stream = (list(map(_to_unicode, fn(x))) for x in records)
+        tbl = pa.table(out_stream, schema=self.schema)
+        pq.write_table(tbl, self.fd)
+
+    def close(self):
+        if self.fd:
+            self.fd.seek(0)
+            self.s3_client.upload_fileobj(
+                self.fd,
+                self.s3_bulk_import_bucket,
+                self.source_file,
+            )
+            self.fd.close()
+            self.fd = None
+
+    @property
+    def source_file(self):
+        return self.s3_bulk_import_prefix + self.file_name
 
 
 def push_bulk(context, conn, sql, headings, batch, *args):
     with CsvFileWriter(context, headings) as writer:
         writer.serialize_records(batch)
         writer.close()
-        cursor = conn.execute(sql, *(args + (writer.source_file,)))
+        cursor = conn.execute(
+            sql,
+            *(args + ("/" + context.s3_bulk_import_bucket + "/" + writer.source_file,)),
+        )
 
     return cursor
 
@@ -773,7 +858,8 @@ def generate_and_upload_import(context):
 
 def main(argv):
     args = parse_args(argv)
-    context = Context(args)
+
+    context = ICarolFetchContext(args, boto3.client("s3"))
     retval = 0
     try:
         args.config = context.config
@@ -798,8 +884,8 @@ def main(argv):
         prepare_session(args)
         check_db_state(context)
         format_modified_date(context)
-        context.csv_target_dir = get_config_item(args, "o211_import_csv_target")
-        context.csv_source_dir = get_config_item(args, "o211_import_csv_source")
+        context.s3_bulk_import_bucket = get_config_item(args, "s3_bulk_import_bucket")
+        context.s3_bulk_import_prefix = get_config_item(args, "s3_bulk_import_prefix")
 
         langs = get_config_item(args, "o211_import_languages", "en-CA").split(",")
         for culture in langs:
