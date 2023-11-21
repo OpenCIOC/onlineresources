@@ -455,7 +455,7 @@ def get_records(args, id, lang="en"):
     tmp = {
         x["ResourceAgencyNum"]: x
         for x in json.loads(
-            response.text.encode("latin1").decode("utf-8"),
+            response.text,
             object_pairs_hook=OrderedDict,
         )
     }
