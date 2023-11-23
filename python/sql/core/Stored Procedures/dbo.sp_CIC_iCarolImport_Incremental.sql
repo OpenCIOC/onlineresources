@@ -647,7 +647,7 @@ WHEN MATCHED THEN
 		[PhysicalPostalCode]=src.[PhysicalPostalCode],
 		[PhysicalCountry]=NULLIF(src.[PhysicalCountry], '-1'),
 		[PhysicalAddressIsPrivate]=ISNULL(src.[PhysicalAddressIsPrivate], 'No'),
-		[HasPhysicalAddress]=CASE WHEN COALESCE(src.PhysicalAddress1, src.PhysicalAddress2, src.PhysicalCity, src.PhysicalCounty, src.PhysicalStateProvince, src.PhysicalPostalCode, src.PhysicalCommunity) IS NOT NULL THEN 1 ELSE 0 END,
+		[HasPhysicalAddress]=CASE WHEN COALESCE(src.PhysicalAddress1, src.PhysicalAddress2, src.PhysicalCity, src.PhysicalStateProvince, src.PhysicalPostalCode, src.PhysicalCommunity) IS NOT NULL THEN 1 ELSE 0 END,
 		[OtherAddress1]=src.[OtherAddress1],
 		[OtherAddress2]=src.[OtherAddress2],
 		[OtherCity]=src.[OtherCity],
