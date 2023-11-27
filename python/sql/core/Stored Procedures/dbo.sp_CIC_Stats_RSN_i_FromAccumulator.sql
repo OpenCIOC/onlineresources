@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -10,24 +9,15 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.6
-	Checked by: CL
-	Checked on: 11-Mar-2014
-	Action: TESTING REQUIRED
-*/
-
-
 DECLARE @tmpdeleted table (
 	[MemberID] [int] NOT NULL,
-	[AccessDate] [datetime],
+	[AccessDate] [datetime] NOT NULL,
 	[IPAddress] [varchar](20) COLLATE Latin1_General_100_CI_AI NULL,
 	[RSN] [int] NULL,
 	[LangID] [smallint] NOT NULL,
 	[User_ID] [int] NULL,
 	[ViewType] [int] NULL,
-	[RobotID] [int] NULL,
-	[API] [bit],
+	[API] [bit] NOT NULL,
 	[NUM] [varchar](8) COLLATE Latin1_General_100_CI_AI NULL
 )
 
@@ -38,7 +28,7 @@ WHILE @LASTCOUNT = 10000 BEGIN
 	BEGIN TRANSACTION
 	BEGIN TRY
 
-		DELETE TOP (10000) FROM CIC_Stats_RSN_Accumulator
+		DELETE TOP (10000) FROM dbo.CIC_Stats_RSN_Accumulator
 		OUTPUT Deleted.MemberID,
 			   Deleted.AccessDate,
 			   Deleted.IPAddress,
@@ -46,12 +36,11 @@ WHILE @LASTCOUNT = 10000 BEGIN
 			   Deleted.LangID,
 			   Deleted.User_ID,
 			   Deleted.ViewType,
-			   Deleted.RobotID,
 			   Deleted.API,
 			   Deleted.NUM
 		INTO @tmpdeleted
 
-		INSERT INTO CIC_Stats_RSN
+		INSERT INTO dbo.CIC_Stats_RSN
 				(MemberID,
 				 AccessDate,
 				 IPAddress,
@@ -59,7 +48,6 @@ WHILE @LASTCOUNT = 10000 BEGIN
 				 LangID,
 				 User_ID,
 				 ViewType,
-				 RobotID,
 				 API,
 				 NUM
 				)
@@ -70,7 +58,6 @@ WHILE @LASTCOUNT = 10000 BEGIN
 			   LangID,
 			   User_ID,
 			   ViewType,
-			   RobotID,
 			   API,
 			   NUM
 		FROM @tmpdeleted

@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -38,7 +38,6 @@ Dim strIDList, _
 	strStartDate, _
 	strEndDate, _
 	strIPAddress, _
-	intRobotID, _
 	intUserType, _
 	intViewType, _
 	intLimitLangID, _
@@ -114,13 +113,6 @@ Select Case Request("StaffStatus")
 		bStaff = Null
 End Select
 
-intRobotID = Nz(Request("RobotStatus"),Null)
-If Not IsNumeric(intRobotID) Then
-	intRobotID = Null
-Else
-	intRobotID = CInt(intRobotID)
-End If
-
 If Not g_bPrintMode Then
 	Dim strViewName
 	strViewName = vbNullString
@@ -169,7 +161,6 @@ With cmdStat1
 	.Parameters.Append .CreateParameter("@IPAddress", adVarChar, adParamInput, 50, strIPAddress)
 	.Parameters.Append .CreateParameter("@Staff", adBoolean, adParamInput, 1, bStaff)
 	.Parameters.Append .CreateParameter("@LimitLangID", adInteger, adParamInput, 2, intLimitLangID)
-	.Parameters.Append .CreateParameter("@RobotID", adInteger, adParamInput, 4, intRobotID)
 	Set rsStat1 = .Execute
 End With
 

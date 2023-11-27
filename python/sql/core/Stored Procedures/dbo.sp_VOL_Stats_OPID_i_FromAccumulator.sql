@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -20,14 +19,13 @@ SET NOCOUNT ON
 
 DECLARE @tmpdeleted TABLE (
 	[MemberID] [int] NOT NULL,
-	[AccessDate] [datetime],
+	[AccessDate] [datetime] NOT NULL,
 	[IPAddress] [varchar](20) COLLATE Latin1_General_100_CI_AI NULL,
 	[OP_ID] [int] NULL,
 	[LangID] [smallint] NOT NULL,
 	[User_ID] [int] NULL,
 	[ViewType] [int] NULL,
-	[RobotID] [int] NULL,
-	[API] [bit],
+	[API] [bit] NOT NULL,
 	[VNUM] [varchar](10) COLLATE Latin1_General_100_CI_AI NULL
 )
 
@@ -38,7 +36,7 @@ WHILE @LASTCOUNT = 10000 BEGIN
 	BEGIN TRANSACTION
 	BEGIN TRY
 
-		DELETE TOP (10000) FROM VOL_Stats_OPID_Accumulator
+		DELETE TOP (10000) FROM dbo.VOL_Stats_OPID_Accumulator
 		OUTPUT Deleted.MemberID,
 			   Deleted.AccessDate,
 			   Deleted.IPAddress,
@@ -46,12 +44,11 @@ WHILE @LASTCOUNT = 10000 BEGIN
 			   Deleted.LangID,
 			   Deleted.User_ID,
 			   Deleted.ViewType,
-			   Deleted.RobotID,
 			   Deleted.API,
 			   Deleted.VNUM
 		INTO @tmpdeleted
 
-		INSERT INTO VOL_Stats_OPID
+		INSERT INTO dbo.VOL_Stats_OPID
 				(MemberID,
 				 AccessDate,
 				 IPAddress,
@@ -59,7 +56,6 @@ WHILE @LASTCOUNT = 10000 BEGIN
 				 LangID,
 				 User_ID,
 				 ViewType,
-				 RobotID,
 				 API,
 				 VNUM
 				)
@@ -70,7 +66,6 @@ WHILE @LASTCOUNT = 10000 BEGIN
 			   LangID,
 			   User_ID,
 			   ViewType,
-			   RobotID,
 			   API,
 			   VNUM
 		FROM @tmpdeleted

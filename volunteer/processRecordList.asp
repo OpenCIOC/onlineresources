@@ -63,7 +63,6 @@ Call setPageInfo(True, DM_VOL, DM_VOL, "../", "volunteer", vbNullString)
 <!--#include file="../includes/list/incAgencyList.asp" -->
 <!--#include file="../includes/list/incInterestGroupList.asp" -->
 <!--#include file="../includes/list/incInterestList.asp" -->
-<!--#include file="../includes/list/incRobotNamesList.asp" -->
 <!--#include file="../includes/list/incSysLanguageList.asp" -->
 <!--#include file="../includes/list/incUserTypeList.asp" -->
 <!--#include file="../includes/list/incViewList.asp" -->

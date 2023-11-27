@@ -16,13 +16,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 01-Jan-2012
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE	@Error	int
 SET @Error = 0
 
@@ -30,12 +23,12 @@ SET @Error = 0
 IF @MemberID IS NULL BEGIN
 	SET @Error = 10 -- Required Field
 -- Member ID exists ?
-END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
+END ELSE IF NOT EXISTS(SELECT * FROM dbo.STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
 END
 
 IF @Error=0 BEGIN
-	INSERT INTO VOL_Stats_OPID_Accumulator (
+	INSERT INTO dbo.VOL_Stats_OPID_Accumulator (
 		MemberID,
 		AccessDate,
 		IPAddress,
@@ -43,7 +36,6 @@ IF @Error=0 BEGIN
 		LangID,
 		[User_ID],
 		ViewType,
-		RobotID,
 		API,
 		VNUM
 	) 
@@ -56,7 +48,6 @@ IF @Error=0 BEGIN
 		@@LANGID,
 		@User_ID,
 		@ViewType,
-		(SELECT TOP 1 RobotID FROM GBL_Robot_IPPattern WHERE @IPAddress LIKE IPPattern),
 		@API,
 		@VNUM
 	)

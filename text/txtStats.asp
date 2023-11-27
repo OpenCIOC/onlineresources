@@ -17,8 +17,7 @@
 %>
 
 <%
-Dim TXT_ANY_ROBOT, _
-	TXT_ANYONE, _
+Dim TXT_ANYONE, _
 	TXT_ARE_YOU_SURE_DELETE_STATS, _
 	TXT_AUTO_REPORTS, _
 	TXT_CREATE_STATS_REPORT, _
@@ -27,8 +26,6 @@ Dim TXT_ANY_ROBOT, _
 	TXT_DELETE_UP_TO, _
 	TXT_EXAMPLE, _
 	TXT_INST_DELETE_STATS, _
-	TXT_EXCLUDE_ROBOTS, _
-	TXT_INCLUDE_ROBOTS, _
 	TXT_IP_BEGINS_WITH, _
 	TXT_LOCAL_RECORDS, _
 	TXT_LOGGED_IN_USERS, _
@@ -41,9 +38,7 @@ Dim TXT_ANY_ROBOT, _
 	TXT_RANK, _
 	TXT_RECORD_VIEWS_BY, _
 	TXT_RECORD_VIEWS_IN, _
-	TXT_RECORD_VIEWS_ROBOTS, _
 	TXT_RECORDS_OWNED_BY, _
-	TXT_SPECIFIC_ROBOT, _
 	TXT_STATS_RESULTS, _
 	TXT_STATS_WERE_DELETED, _
 	TXT_TOO_MANY_RECORDS, _
@@ -56,7 +51,6 @@ Dim TXT_ANY_ROBOT, _
 Sub setTxtStats()
 	Select Case g_objCurrentLang.Culture
 		Case CULTURE_ENGLISH_CANADIAN
-			TXT_ANY_ROBOT = "Any search engine traffic"
 			TXT_ANYONE = "Anyone"
 			TXT_ARE_YOU_SURE_DELETE_STATS = "Are you sure you want to delete all statistics prior to "
 			TXT_AUTO_REPORTS = "Quick Reports"
@@ -74,8 +68,6 @@ Sub setTxtStats()
 				"This is especially important if you permanently delete records. " & _
 				"It is a requirement of your CIOC membership that you leave at least 6 months of statistics in your database; keeping one full fiscal year of statistics is recommended." & _
 				"You may want to time your archiving to your year end etc."
-			TXT_EXCLUDE_ROBOTS = "Exclude search engine traffic"
-			TXT_INCLUDE_ROBOTS = "Include search engine traffic"
 			TXT_IP_BEGINS_WITH = "User's IP address begins with" & TXT_COLON
 			TXT_LOCAL_RECORDS = "Local Records"
 			TXT_LOGGED_IN_USERS = "Logged In Users Only"
@@ -88,9 +80,7 @@ Sub setTxtStats()
 			TXT_RANK = "Rank"
 			TXT_RECORD_VIEWS_BY = "Record views by"
 			TXT_RECORD_VIEWS_IN = "Record views in"
-			TXT_RECORD_VIEWS_ROBOTS = "Search engine record views"
 			TXT_RECORDS_OWNED_BY = "Records owned by"
-			TXT_SPECIFIC_ROBOT = "Specific search engine" & TXT_COLON
 			TXT_STATS_RESULTS = "Statistics Search Results"
 			TXT_STATS_WERE_DELETED = "The selected statistics were deleted."
 			TXT_TOO_MANY_RECORDS = "You have selected too many records for this report. Please select fewer records and try again."
@@ -100,7 +90,6 @@ Sub setTxtStats()
 			TXT_USE_BY_AGENCY = "Use by Agency"
 			TXT_USERS_WITH_TYPE = "Users with the User Type"
 		Case CULTURE_FRENCH_CANADIAN
-			TXT_ANY_ROBOT = "N'importe quel moteur de recherche"
 			TXT_ANYONE = "N'importe quel"
 			TXT_ARE_YOU_SURE_DELETE_STATS = "Êtes-vous certain de vouloir supprimer toutes les statistiques antérieures au "
 			TXT_AUTO_REPORTS = "Rapports rapides"
@@ -118,8 +107,6 @@ Sub setTxtStats()
 				"Cela est d'autant plus important si vous supprimez les dossiers de manière définitive. " & _
 				"C'est une exigence de votre adhésion au CIOC que vous gardez dans votre base de données statistiques pour les six derniers mois; Il est recommandé de conserver les statistiques d'un exercice complet. " & _
 				"Vous pouvez procéder à l'archivage à chaque fin d'année, etc."
-			TXT_EXCLUDE_ROBOTS = "Exclure le trafic par moteur de recherche"
-			TXT_INCLUDE_ROBOTS = "Inclure le trafic par moteur de recherche"
 			TXT_IP_BEGINS_WITH = "L'adresse IP de l'utilisateur commence par" & TXT_COLON
 			TXT_LOCAL_RECORDS = "Dossiers locaux"
 			TXT_LOGGED_IN_USERS = "Utilisateurs connectés uniquement"
@@ -132,9 +119,7 @@ Sub setTxtStats()
 			TXT_RANK = "Classement"
 			TXT_RECORD_VIEWS_BY = "Dossier consulté par"
 			TXT_RECORD_VIEWS_IN = "Dossier consulté en"
-			TXT_RECORD_VIEWS_ROBOTS = "Vues des dossiers sur les moteurs de recherche"
 			TXT_RECORDS_OWNED_BY = "Dossiers appartenant à"
-			TXT_SPECIFIC_ROBOT = "Spécifier un moteur de recherche" & TXT_COLON
 			TXT_STATS_RESULTS = "Résultats de la recherche sur les statistiques"
 			TXT_STATS_WERE_DELETED = "Les statistiques sélectionnées ont été supprimées."
 			TXT_TOO_MANY_RECORDS = "Vous avez sélectionné trop de dossiers pour ce rapport. Veuillez sélectionner moins de dossiers et essayer de nouveau."
