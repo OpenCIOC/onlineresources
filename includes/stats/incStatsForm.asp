@@ -31,28 +31,31 @@ Sub printStatsForm(strIDList)
 	strViewTypeHidden = vbNullString
 
 %>
-<form action="stats1.asp" method="post" name="EntryForm" onSubmit="formPrintMode(this);" id="EntryForm">
-<div style="display:none">
-<%=g_strCacheFormVals%>
-<input type="hidden" name="IDList" value="<%=strIDList%>">
-</div>
-<table class="BasicBorder cell-padding-3">
-<tr>
-	<th colspan="2" class="RevTitleBox"><%=TXT_CREATE_STATS_REPORT%></th>
-</tr>
-<tr>
-	<td class="FieldLabel"><label for="IPAddress"><%=TXT_IP_BEGINS_WITH%></label></td>
-	<td><input type="text" name="IPAddress" id="IPAddress" size="12" maxlength="40"> (<%=TXT_EXAMPLE%> 199.235)</td>
-</tr>
-<%
+<form action="stats1.asp" method="post" name="EntryForm" onsubmit="formPrintMode(this);" id="EntryForm">
+	<div style="display: none">
+		<%=g_strCacheFormVals%>
+		<input type="hidden" name="IDList" value="<%=strIDList%>">
+	</div>
+	<table class="BasicBorder cell-padding-3">
+		<tr>
+			<th colspan="2" class="RevTitleBox"><%=TXT_CREATE_STATS_REPORT%></th>
+		</tr>
+		<tr>
+			<td class="FieldLabel">
+				<label for="IPAddress"><%=TXT_IP_BEGINS_WITH%></label></td>
+			<td>
+				<input type="text" name="IPAddress" id="IPAddress" size="12" maxlength="40">
+				(<%=TXT_EXAMPLE%> 199.235)</td>
+		</tr>
+		<%
 If user_bSuperUserDOM Then
 	Call openUserTypeListRst(ps_intDbArea, user_strAgency, user_intUserTypeDOM)
-%>
-<tr>
-	<td class="FieldLabel"><%=TXT_USERS_WITH_TYPE%></td>
-	<td><%=makeUserTypeList(vbNullString,"SLID",True,False)%></td>
-</tr>
-<%
+		%>
+		<tr>
+			<td class="FieldLabel"><%=TXT_USERS_WITH_TYPE%></td>
+			<td><%=makeUserTypeList(vbNullString,"SLID",True,False)%></td>
+		</tr>
+		<%
 	Call closeUserTypeListRst()
 	Call openViewListRst(ps_intDbArea, user_strAgency, g_intViewTypeDOM)
 	intNumViews = 0
@@ -61,16 +64,16 @@ Else
 	intNumViews = rsListChangeViews.RecordCount
 End If
 If user_bSuperUserDOM Or intNumViews > 1 Then
-%>
-<tr>
-	<td class="FieldLabel"><%=TXT_VIEW%></td>
-	<td><%If user_bSuperUserDOM Then
+		%>
+		<tr>
+			<td class="FieldLabel"><%=TXT_VIEW%></td>
+			<td><%If user_bSuperUserDOM Then
 			Response.Write(makeViewList(vbNullString,"ViewType",False, True))
 		Else
 			Response.Write(makeChangeViewsList(ps_intDbAreaViewType, "ViewType", False, True))
 		End If%></td>
-</tr>
-<%
+		</tr>
+		<%
 Else
 	rsListChangeViews.MoveFirst
 	strViewTypeHidden = "<div style=""display:none""><input type=""hidden"" name=""ViewType"" value=" & AttrQs(rsListChangeViews("ViewType")) & "></div>"
@@ -80,70 +83,76 @@ If user_bSuperUserDOM Then
 Else
 	Call closeChangeViewsListRst()
 End If
-%>
-<tr>
-	<td class="FieldLabel"><label for="StartDate"><%=TXT_ON_AFTER_DATE%></label></td>
-	<td><input type="text" name="StartDate" id="StartDate" size="15" maxlength="40" class="DatePicker"> <input type="BUTTON" value="<%=TXT_FIRST_OF_LAST_MONTH%>" onClick="document.EntryForm.StartDate.value='<%=dateLastMonthFirst%>'"></td>
-</tr>
-<tr>
-	<td class="FieldLabel"><label for="EndDate"><%=TXT_BEFORE_DATE%></label></td>
-	<td><input type="text" name="EndDate" id="EndDate" size="15" maxlength="40" class="DatePicker"> <input type="BUTTON" value="<%=TXT_FIRST_OF_THIS_MONTH%>" onClick="document.EntryForm.EndDate.value='<%=dateThisMonthFirst%>'"></td>
-</tr>
-<%
+		%>
+		<tr>
+			<td class="FieldLabel">
+				<label for="StartDate"><%=TXT_ON_AFTER_DATE%></label></td>
+			<td>
+				<input type="text" name="StartDate" id="StartDate" size="15" maxlength="40" class="DatePicker">
+				<input type="BUTTON" value="<%=TXT_FIRST_OF_LAST_MONTH%>" onclick="document.EntryForm.StartDate.value='<%=dateLastMonthFirst%>'"></td>
+		</tr>
+		<tr>
+			<td class="FieldLabel">
+				<label for="EndDate"><%=TXT_BEFORE_DATE%></label></td>
+			<td>
+				<input type="text" name="EndDate" id="EndDate" size="15" maxlength="40" class="DatePicker">
+				<input type="BUTTON" value="<%=TXT_FIRST_OF_THIS_MONTH%>" onclick="document.EntryForm.EndDate.value='<%=dateThisMonthFirst%>'"></td>
+		</tr>
+		<%
 If Nl(strIDList) Then
 	Call openAgencyListRst(ps_intDbArea, True, True)
 		If Not rsListAgency.EOF Then
-%>
-<tr>	
-	<td class="FieldLabel"><%=TXT_RECORDS_OWNED_BY%></td>
-	<td><%=makeAgencyList(vbNullString,"RecordOwner",True,True)%></td>
-</tr>
-<%
+		%>
+		<tr>
+			<td class="FieldLabel"><%=TXT_RECORDS_OWNED_BY%></td>
+			<td><%=makeAgencyList(vbNullString,"RecordOwner",True,True)%></td>
+		</tr>
+		<%
 		End If
 	Call closeAgencyListRst()
 End If
-%>
-<tr>
-	<td class="FieldLabel"><%=TXT_RECORD_VIEWS_BY%></td>
-	<td><label for="StaffStatus_A"><input type="radio" name="StaffStatus" id="StaffStatus_A" value="" checked> <%=TXT_ANYONE%></label>
-	<br><label for="StaffStatus_L"><input type="radio" name="StaffStatus" id="StaffStatus_L" value="L"> <%=TXT_LOGGED_IN_USERS%></label>
-	<br><label for="StaffStatus_P"><input type="radio" name="StaffStatus" id="StaffStatus_P" value="P"> <%=TXT_PUBLIC_USERS%></label></td>
-</tr>
-<%
+		%>
+		<tr>
+			<td class="FieldLabel"><%=TXT_RECORD_VIEWS_BY%></td>
+			<td>
+				<label for="StaffStatus_A">
+					<input type="radio" name="StaffStatus" id="StaffStatus_A" value="" checked>
+					<%=TXT_ANYONE%></label>
+				<br>
+				<label for="StaffStatus_L">
+					<input type="radio" name="StaffStatus" id="StaffStatus_L" value="L">
+					<%=TXT_LOGGED_IN_USERS%></label>
+				<br>
+				<label for="StaffStatus_P">
+					<input type="radio" name="StaffStatus" id="StaffStatus_P" value="P">
+					<%=TXT_PUBLIC_USERS%></label></td>
+		</tr>
+		<%
 Call openSysLanguageListRst(True)
-%>
-<tr>
-	<td class="FieldLabel"><%=TXT_RECORD_VIEWS_IN%></td>
-	<td><%=makeSysLanguageList(vbNullString, "LimitLangID", True, vbNullString)%></td>
-</tr>
-<%
+		%>
+		<tr>
+			<td class="FieldLabel"><%=TXT_RECORD_VIEWS_IN%></td>
+			<td><%=makeSysLanguageList(vbNullString, "LimitLangID", True, vbNullString)%></td>
+		</tr>
+		<%
 Call closeSysLanguageListRst()
 
-Call openRobotNamesListRst()
-If Not rsListRobotNames.EOF Then
-	Dim strExtraOptions
-	strExtraOptions = "<option value="""" selected>" & TXT_INCLUDE_ROBOTS & "</option>" & vbCrLf & _
-		"<option value=""-1"">" & TXT_EXCLUDE_ROBOTS & "</option>" & vbCrLf & _
-		"<option value=""0"">" & TXT_ANY_ROBOT & "</option>" & vbCrLf 
-%>
-<tr>
-	<td class="FieldLabel"><%=TXT_RECORD_VIEWS_ROBOTS%></td>
-	<td><%=makeRobotNamesList(vbNullString,"RobotStatus", strExtraOptions, TXT_SPECIFIC_ROBOT)%></td>
-</tr>
-<%
-Call closeRobotNamesListRst()
-End If
-%>
-<tr>	
-	<td class="FieldLabel"><%=TXT_PRINT_VERSION_NW%></td>
-	<td><label for="PrintMd_Yes"><input type="radio" name="PrintMd" id="PrintMd_Yes" value="on">&nbsp;<%=TXT_YES%></label>
-	<label for="PrintMd_No"><input type="radio" name="PrintMd" id="PrintMd_No" value="" checked>&nbsp;<%=TXT_NO%></label></td>
-</tr>
-<tr>
-	<td colspan="2" align="center"><input type="submit" value="<%=TXT_SEARCH%>"> <input type="reset" value="<%=TXT_CLEAR_FORM%>"></td>
-</tr>
-</table>
-<%=strViewTypeHidden%>
+		%>
+		<tr>
+			<td class="FieldLabel"><%=TXT_PRINT_VERSION_NW%></td>
+			<td>
+				<label for="PrintMd_Yes">
+					<input type="radio" name="PrintMd" id="PrintMd_Yes" value="on">&nbsp;<%=TXT_YES%></label>
+				<label for="PrintMd_No">
+					<input type="radio" name="PrintMd" id="PrintMd_No" value="" checked>&nbsp;<%=TXT_NO%></label></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center">
+				<input type="submit" value="<%=TXT_SEARCH%>">
+				<input type="reset" value="<%=TXT_CLEAR_FORM%>"></td>
+		</tr>
+	</table>
+	<%=strViewTypeHidden%>
 </form>
 <%
 End Sub

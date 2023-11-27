@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -49,7 +49,6 @@ Call setPageInfo(True, DM_CIC, DM_CIC, vbNullString, vbNullString, vbNullString)
 <!--#include file="includes/core/incChangeViews.asp" -->
 <!--#include file="includes/core/incFormat.asp" -->
 <!--#include file="includes/list/incAgencyList.asp" -->
-<!--#include file="includes/list/incRobotNamesList.asp" -->
 <!--#include file="includes/list/incSysLanguageList.asp" -->
 <!--#include file="includes/list/incUserTypeList.asp" -->
 <!--#include file="includes/list/incViewList.asp" -->

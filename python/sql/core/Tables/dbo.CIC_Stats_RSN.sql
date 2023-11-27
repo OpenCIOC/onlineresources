@@ -8,7 +8,6 @@ CREATE TABLE [dbo].[CIC_Stats_RSN]
 [LangID] [smallint] NOT NULL,
 [User_ID] [int] NULL,
 [ViewType] [int] NULL,
-[RobotID] [int] NULL,
 [API] [bit] NOT NULL CONSTRAINT [DF_CIC_Stats_RSN_API] DEFAULT ((0)),
 [NUM] [varchar] (8) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
@@ -22,8 +21,6 @@ GO
 CREATE NONCLUSTERED INDEX [IX_CIC_Stats_RSN_MemberIDAccessDateViewTypeIPAddress_incLogIDRSNUserIDNUM] ON [dbo].[CIC_Stats_RSN] ([MemberID], [AccessDate], [ViewType], [IPAddress]) INCLUDE ([Log_ID], [RSN], [User_ID], [NUM]) ON [PRIMARY]
 GO
 CREATE NONCLUSTERED INDEX [IX_CIC_Stats_RSN_MemberIDViewTypeRSN_incAccessDateUserID] ON [dbo].[CIC_Stats_RSN] ([MemberID], [ViewType], [RSN]) INCLUDE ([AccessDate], [User_ID]) ON [PRIMARY]
-GO
-CREATE NONCLUSTERED INDEX [IX_CIC_Stats_RSN_RobotID] ON [dbo].[CIC_Stats_RSN] ([RobotID]) ON [PRIMARY]
 GO
 CREATE STATISTICS [ST_CIC_Stats_RSN_AccessDateRSNLogID] ON [dbo].[CIC_Stats_RSN] ([AccessDate], [RSN], [Log_ID])
 GO
@@ -60,6 +57,8 @@ GO
 CREATE STATISTICS [IX_CIC_Stats_RSN_RSNUserIDNUMMemberID] ON [dbo].[CIC_Stats_RSN] ([RSN], [User_ID], [NUM], [MemberID])
 GO
 CREATE STATISTICS [ST_CIC_Stats_RSN_RSNViewtype] ON [dbo].[CIC_Stats_RSN] ([RSN], [ViewType])
+GO
+CREATE STATISTICS [ST_CIC_Stats_RSN_UserIDNUMMemberID] ON [dbo].[CIC_Stats_RSN] ([User_ID], [NUM], [MemberID])
 GO
 CREATE STATISTICS [ST_CIC_Stats_RSN_ViewTypeMemberID] ON [dbo].[CIC_Stats_RSN] ([ViewType], [MemberID])
 GO

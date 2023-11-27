@@ -63,7 +63,6 @@ Call setPageInfo(True, DM_CIC, DM_CIC, vbNullString, vbNullString, vbNullString)
 <!--#include file="includes/display/incCICDisplayOptionsFields.asp" -->
 <!--#include file="includes/list/incAgencyList.asp" -->
 <!--#include file="includes/list/incDistList.asp" -->
-<!--#include file="includes/list/incRobotNamesList.asp" -->
 <!--#include file="includes/list/incSysLanguageList.asp" -->
 <!--#include file="includes/list/incUserTypeList.asp" -->
 <!--#include file="includes/list/incViewList.asp" -->

@@ -64,113 +64,142 @@
 	<div class="clearfix clear-line-below"></div>
 	[ENDIF:CUSTOM_MENU_ITEMS]
 
-	[IFANY:HAS_KEYWORD_SEARCH,QUICKLIST_SEARCH]
-	<div class="row search-panels">
-		[IF:HAS_KEYWORD_SEARCH]
-		<div class="col-sm-12[IF:QUICKLIST_SEARCH] col-md-6[ENDIF:QUICKLIST_SEARCH][IFNOT:QUICKLIST_SEARCH][IF:SEARCH_CENTRE_CONTENT] col-md-8[ENDIF:SEARCH_CENTRE_CONTENT][ENDIFNOT:QUICKLIST_SEARCH]">
-			<div class="panel panel-default">
-				<div class="panel-heading"><h2><span class="glyphicon glyphicon-[SEARCH_KEYWORD_GLYPH]" aria-hidden="true"></span> [SEARCH_KEYWORD_TITLE]</h2></div>
-				<div class="panel-body">
-					<div class="form-group" id="CIOC_cicsearch_keyword">
-						[SEARCH_FORM_START]
-						<div class="main-search-box">
-							<div class="table search-table no-line-below">
-								<div class="table-row form-group">
-									<div class="table-cell table-cell-100">
-										[KEYWORD_SEARCH_BOX]
+	[IF:HAS_KEYWORD_SEARCH]
+	<div id="keyword-search-panel" class="panel panel-default">
+		<div class="panel-heading"><h2><span class="glyphicon glyphicon-[SEARCH_KEYWORD_GLYPH]" aria-hidden="true"></span> [SEARCH_KEYWORD_TITLE]</h2></div>
+		<div class="panel-body">
+			<div class="form-group" id="CIOC_cicsearch_keyword">
+				[SEARCH_FORM_START]
+				<div class="main-search-box">
+					<div class="table search-table no-line-below">
+						<div class="table-row form-group">
+							<div class="table-cell table-cell-100">
+								[IF:HAS_COMMUNITY_SEARCH]
+								<div class="row">
+									<div class="col-md-6">
+								[ENDIF:HAS_COMMUNITY_SEARCH]
+										<div class="form-group">
+											[KEYWORD_SEARCH_BOX]
+											<div id="keyword-search-in">
+												[KEYWORD_SEARCH_IN]
+											</div>
+										</div>
+								[IF:HAS_COMMUNITY_SEARCH]
 									</div>
-									<div class="table-cell search-button-wrapper">
-										<button class="btn btn-default CIOC_search_button" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> [SEARCH]</button>
-									</div>
-								</div>
-							</div>
-							<div id="keyword-search-in">
-								[KEYWORD_SEARCH_IN]
-							</div>
-						</div>
-
-						[IF:HAS_COMMUNITY_SEARCH]
-						<div class="form-group">
-						[FN:COMMUNITY_SEARCH][ENDFN:COMMUNITY_SEARCH]
-						</div>
-						[ENDIF:HAS_COMMUNITY_SEARCH]
-						[IF:HAS_LANGUAGES_SEARCH]
-						<div class="form-group">
-						[FN:LANGUAGES_SEARCH][ENDFN:LANGUAGES_SEARCH]
-						</div>
-						[ENDIF:HAS_LANGUAGES_SEARCH]
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-		[ENDIF:HAS_KEYWORD_SEARCH]
-
-		[IF:QUICKLIST_SEARCH]
-		<div class="col-sm-12[IF:HAS_KEYWORD_SEARCH] col-md-6[ENDIF:HAS_KEYWORD_SEARCH][IFNOT:HAS_KEYWORD_SEARCH][IF:SEARCH_CENTRE_CONTENT] col-md-8[ENDIF:SEARCH_CENTRE_CONTENT][ENDIFNOT:HAS_KEYWORD_SEARCH]">
-			<div class="panel panel-default">
-				<div class="panel-heading"><h2><span class="glyphicon glyphicon-[SEARCH_OTHER_GLYPH]" aria-hidden="true"></span> [SEARCH_OTHER_TITLE]</h2></div>
-				<div class="panel-body">
-					<div class="form-group" id="CIOC_cicsearch_category">
-						[SEARCH_FORM_START]
-						<div class="main-search-box">
-							<div class="table search-table no-line-below">
-								<div class="table-row form-group">
-									<div class="table-cell table-cell-100">
-										[QUICKLIST_SEARCH]
-									</div>
-									<div class="table-cell search-button-wrapper">
-										<button class="btn btn-default CIOC_search_button" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> [SEARCH]</button>
+									<div class="col-md-6">
+										<div class="form-group">
+											[FN:COMMUNITY_SEARCH][ENDFN:COMMUNITY_SEARCH]
+										</div>
 									</div>
 								</div>
+								[ENDIF:HAS_COMMUNITY_SEARCH]
+							</div>
+							<div class="table-cell search-button-wrapper hidden-xxs">
+								<button class="btn btn-default CIOC_search_button" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> [SEARCH]</button>
 							</div>
 						</div>
-						[IF:HAS_COMMUNITY_SEARCH]
-						<div class="form-group">
-						[FN:COMMUNITY_SEARCH]_2[ENDFN:COMMUNITY_SEARCH]
-						</div>
-						[ENDIF:HAS_COMMUNITY_SEARCH]
-						[IF:HAS_LANGUAGES_SEARCH]
-						<div class="form-group">
-							[FN:LANGUAGES_SEARCH]_2[ENDFN:LANGUAGES_SEARCH]
-						</div>
-						[ENDIF:HAS_LANGUAGES_SEARCH]
-						</form>
 					</div>
 				</div>
+
+				[IF:HAS_LANGUAGES_SEARCH]
+				<div class="form-group">
+					[FN:LANGUAGES_SEARCH][ENDFN:LANGUAGES_SEARCH]
+				</div>
+				[ENDIF:HAS_LANGUAGES_SEARCH]
+				<div class="visible-xxs">
+					<button class="btn btn-default CIOC_search_button" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> [SEARCH]</button>
+				</div>
+				</form>
 			</div>
 		</div>
-		[ENDIF:QUICKLIST_SEARCH]
-	[IFALL:HAS_KEYWORD_SEARCH,QUICKLIST_SEARCH]
 	</div>
-	[ENDIFALL:HAS_KEYWORD_SEARCH,QUICKLIST_SEARCH]
-	[IFNOT:SEARCH_CENTRE_CONTENT]
-		[IFNOTALL:HAS_KEYWORD_SEARCH,QUICKLIST_SEARCH]
+	[ENDIF:HAS_KEYWORD_SEARCH]
+
+	[IF:QUICKLIST]
+	<div id="heading-search-panel" class="panel panel-default">
+		<div class="panel-heading"><h2><span class="glyphicon glyphicon-[SEARCH_OTHER_GLYPH]" aria-hidden="true"></span> [SEARCH_OTHER_TITLE]</h2></div>
+		<div class="panel-body">
+			[SEARCH_FORM_START]
+			[IF:HAS_COMMUNITY_SEARCH]
+			<div class="form-group">
+				[FN:COMMUNITY_SEARCH]_2[ENDFN:COMMUNITY_SEARCH]
+			</div>
+			[ENDIF:HAS_COMMUNITY_SEARCH]
+			<div class="heading-search-box">
+				<div class="row">
+				[FOR:QUICKLIST]
+				<div class="[QUICKLIST_COL_CLASS]">
+					[IFNOT:HEADINGS]
+					<div class="panel-group">
+						<div class="panel panel-active">
+							<div class="panel-heading">
+								<h4 class="panel-title">
+									<button type="submit" name="[IDTYPE]" value="[ID]" class="large-heading-icon">
+										<div class="heading-list-icon">
+											[ICON]
+										</div>
+										<div class="heading-list-name">
+										[NAME]
+										</div>
+									</button>
+								</h4>
+							</div>
+						</div>
+					</div>
+					[ENDIFNOT:HEADINGS]
+					[IF:HEADINGS]
+					<div class="panel-group" id="collapseheading[ID]" role="tablist">
+						<div class="panel panel-active">
+							<div class="panel-heading">
+								<h4 class="panel-title">
+									<a class="accordion-toggle large-heading-icon" data-toggle="collapse" data-parent="#collapseheading[ID]" href="#collapseheadingsub[ID]" aria-expanded="true" role="button">
+										<div class="heading-list-icon">
+											[ICON]
+										</div>
+										<div class="heading-list-name">
+											[NAME]
+										</div>
+									</a>
+								</h4>
+							</div>
+							<div class="panel-collapse collapse" id="collapseheadingsub[ID]" aria-labelledby="#collapseheading[ID]" role="tabpanel" aria-expanded="true">
+								<div class="list-group">
+									[IF:QUICKLIST_SEARCH_GROUPS]
+									<button type="submit" name="[IDTYPE]" value="[IDLIST]" class="list-group-item">
+										<span class="heading-search-all">[SEARCH_ALL_TITLE]</span>
+									</button>
+									[ENDIF:QUICKLIST_SEARCH_GROUPS]
+									[FOR:HEADINGS]
+									<button type="submit" name="[IDTYPE]" value="[ID]" class="list-group-item">
+										[IF:ICON]<span class="heading-list-icon">[ICON]</span>[ENDIF:ICON]
+										[NAME]
+									</button>
+									[ENDFOR:HEADINGS]
+								</div>
+							</div>
+						</div>
+					</div>
+					[ENDIF:HEADINGS]
+				</div>
+				[IF:CLEAR_CLASS]
+					<div class="clearfix [CLEAR_CLASS]"></div>
+				[ENDIF:CLEAR_CLASS]
+				[ENDFOR:QUICKLIST]
+				</div>
+			</div>
+			</form>
+		</div>
 	</div>
-		[ENDIFNOTALL:HAS_KEYWORD_SEARCH,QUICKLIST_SEARCH]
-	[ENDIFNOT:SEARCH_CENTRE_CONTENT]
-	[ENDIFANY:HAS_KEYWORD_SEARCH,QUICKLIST_SEARCH]
+	[ENDIF:QUICKLIST]
+
 
 	[IF:SEARCH_CENTRE_CONTENT]
-	[IFALL:HAS_KEYWORD_SEARCH,QUICKLIST_SEARCH]
-	<div class="row search-panels">
-		<div class="col-sm-12">
-	[ENDIFALL:HAS_KEYWORD_SEARCH,QUICKLIST_SEARCH]
-	[IFNOTANY:HAS_KEYWORD_SEARCH,QUICKLIST_SEARCH]
-	<div class="row search-panels">
-		<div class="col-sm-12">
-	[ENDIFNOTANY:HAS_KEYWORD_SEARCH,QUICKLIST_SEARCH]
-		[IFNOTALL:HAS_KEYWORD_SEARCH,QUICKLIST_SEARCH][IFANY:HAS_KEYWORD_SEARCH,QUICKLIST_SEARCH]
-		<div class="col-sm-12 col-md-4">
-		[ENDIFANY:HAS_KEYWORD_SEARCH,QUICKLIST_SEARCH][ENDIFNOTALL:HAS_KEYWORD_SEARCH,QUICKLIST_SEARCH]
-			<div class="panel panel-default">
-				[IF:SEARCH_CENTRE_TITLE]
-				<div class="panel-heading"><h2>[IF:SEARCH_CENTRE_GLYPH]<span class="glyphicon glyphicon-[SEARCH_CENTRE_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_CENTRE_GLYPH][SEARCH_CENTRE_TITLE]</h2></div>
-				[ENDIF:SEARCH_CENTRE_TITLE]
-				<div class="panel-body panel-body-nofooter">
-					[SEARCH_CENTRE_CONTENT]
-				</div>
-			</div>
+	<div class="panel panel-default">
+		[IF:SEARCH_CENTRE_TITLE]
+		<div class="panel-heading"><h2>[IF:SEARCH_CENTRE_GLYPH]<span class="glyphicon glyphicon-[SEARCH_CENTRE_GLYPH]" aria-hidden="true"></span> [ENDIF:SEARCH_CENTRE_GLYPH][SEARCH_CENTRE_TITLE]</h2></div>
+		[ENDIF:SEARCH_CENTRE_TITLE]
+		<div class="panel-body panel-body-nofooter">
+			[SEARCH_CENTRE_CONTENT]
 		</div>
 	</div>
 	[ENDIF:SEARCH_CENTRE_CONTENT]
