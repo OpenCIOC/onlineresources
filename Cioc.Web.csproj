@@ -305,17 +305,21 @@
     <Content Include="python\cioc\core\session.py" />
     <Content Include="python\cioc\core\stat.py" />
     <Content Include="python\cioc\core\systeminfo.py" />
+    <Content Include="python\cioc\core\templates\layouts\cicsearch_ccpanel.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\cicsearch_headingpanel.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\cicsearch_headingpanel2.en_CA.html" />
+    <Content Include="python\cioc\core\templates\layouts\cicsearch_headingpanel_largeicons.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\cicsearch_tabbed_bstrap.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\cicsearch_singleform_bstrap.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\cicsearch_headingpanel.scss" />
-    <Content Include="python\cioc\core\templates\layouts\cicsearch_headingpanel2.scss" />
+    <Content Include="python\cioc\core\templates\layouts\cicsearch_ccpanel.scss" />
     <None Include="python\cioc\core\templates\layouts\cicsearch_singleform_bstrap.scss" />
     <Content Include="python\cioc\core\templates\layouts\footer_large_narrow.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\footer_large_alternate.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\footer_large_narrow_3colalt.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\footer_large_narrow_3col.en_CA.html" />
+    <Content Include="python\cioc\core\templates\layouts\footer_slim.en_CA.html" />
+    <Content Include="python\cioc\core\templates\layouts\footer_slim_wide.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\header_banner.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\header_dualbcrumb.en_CA.html" />
     <Content Include="python\cioc\core\templates\layouts\header_fixed.en_CA.html" />
@@ -393,6 +397,7 @@
     <Content Include="python\cioc\web\gbl\shortcodes.py" />
     <Content Include="python\cioc\web\gbl\templates\emaillist.mak" />
     <Content Include="python\cioc\web\gbl\templates\iconlist.mak" />
+    <Content Include="python\cioc\web\gbl\templates\articles.mak" />
     <Content Include="python\cioc\web\gbl\templates\schedules.mak" />
     <Content Include="python\cioc\web\gbl\templates\pages.mak" />
     <Content Include="python\cioc\web\gbl\templates\shortcodes.mak" />
@@ -723,7 +728,6 @@
     <Content Include="includes\list\incQualityList.asp" />
     <Content Include="includes\list\incRecordNoteTypeList.asp" />
     <Content Include="includes\list\incRecordTypeList.asp" />
-    <Content Include="includes\list\incRobotNamesList.asp" />
     <Content Include="includes\list\incSchoolList.asp" />
     <Content Include="includes\list\incSearchTipsList.asp" />
     <Content Include="includes\list\incSeasonsList.asp" />
@@ -1117,7 +1121,6 @@
     <Content Include="python\cioc\core\templates\jqueryui\textures\23_fine_grain.png" />
     <Content Include="python\cioc\core\templates\layouts\cicsearch_tabbed.fr_CA.html" />
     <None Include="python\cioc\core\templates\layouts\footer_slim.scss" />
-    <Content Include="python\cioc\core\templates\layouts\footer_slim.en_CA.html" />
     <None Include="python\cioc\core\templates\layouts\header_tabbed.scss" />
     <None Include="python\cioc\core\templates\layouts\volsearch_tabbed.scss" />
     <Content Include="python\cioc\core\templates\layouts\volsearch_tabbed.en_CA.html" />

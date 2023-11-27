@@ -14,34 +14,41 @@
 // limitations under the License.
 // ========================================================================================= */
 
-.container-contrast footer, .container-fluid footer {
-	margin-right: -$navbar-padding-horizontal;
-	margin-left:  -$navbar-padding-horizontal;
+
+
+.cioc-attribution {
+	float: right;
+	padding: 1em 0.25em;
+	font-size: 0.9em;
 }
 
-.site-footer:before, .site-footer:after {
-	content: "\0020";
-	display: block;
-	height: 0;
-	visibility: hidden;
-}
-.site-footer:after {
-	clear: both;
+.copyright {
+	float: left;
+	padding: 1em 0.25em;
+	font-size: 0.9em;
 }
 
-.site-footer {
-	zoom: 1;
-	border-top: 1px solid $borderColorFooter; 
-	border-bottom: 1px solid $borderColorFooter; 
-	background-color: $bgColorFooter; 
+.footer {
 	color: $fcFooter;
-	padding: ($grid-gutter-width / 4) ($grid-gutter-width / 2);
+	background-color: $bgColorFooter;
+	padding: ($grid-gutter-width/3);
+	-webkit-box-shadow: 2px 5px 4px 2px rgba(102,102,102,0.25);
+	-moz-box-shadow: 2px 5px 4px 2px rgba(102,102,102,0.25);
+	box-shadow: 2px 5px 4px 2px rgba(102,102,102,0.25);
 
 	.glyphicon, .fa {
 		color: $iconColorFooter;
 	}
 
-	a {
+	.fa-inverse {
+		color: $bgColorFooter;
+	}
+
+	.other-links {
+		padding: 0 0.5em;
+	}
+
+	a, a:visited {
 		color: $fcFooter;
 		text-decoration: none;
 
@@ -50,30 +57,43 @@
 			color: $fcFooter;
 		}
 	}
+}
 
-	nav li { 
-		display: block; 
-		float: left; 
-		padding-right: ($grid-gutter-width / 2);
+.footer-contrast {
+	-webkit-box-shadow: 2px 2px 4px 2px rgba(102,102,102,0.25);
+	-moz-box-shadow: 2px 2px 4px 2px rgba(102,102,102,0.25);
+	box-shadow: 2px 2px 4px 2px rgba(102,102,102,0.25);
+}
+
+.footer-wide {
+	width: 100%;
+	border-top: thin solid $borderColorFooter;
+	border-bottom: thin solid $borderColorFooter;
+}
+
+.footer-narrow {
+	@extend .basic-corner-style;
+	border: thin solid $borderColorFooter;
+
+	> .row {
+		margin: 0;
 	}
 }
 
-.cioc-attribution, .copyright {
-	padding: 0.5em 0;
-	font-size: 0.9em;
+.container-contrast .footer-narrow {
+	box-shadow: none;
+	margin-right: -$navbar-padding-horizontal;
+	margin-left: -$navbar-padding-horizontal;
+	-moz-border-radius-topleft: 0;
+	-webkit-border-top-left-radius: 0;
+	border-top-left-radius: 0;
+	-moz-border-radius-topright: 0;
+	-webkit-border-top-right-radius: 0;
+	border-top-right-radius: 0;
 }
 
-.cioc-attribution {
-	float: right;
-	font-style: italic;
-}
-
-.copyright {
-	float: left;
-}
-
-.other-links {
-	li {
-		float: left;
-	}
+.container-fluid.container-contrast .footer-narrow {
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
 }

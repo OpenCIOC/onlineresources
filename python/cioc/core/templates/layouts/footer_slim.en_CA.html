@@ -1,14 +1,10 @@
 [IF:NOT_PRINT_MODE]
 
 [IF:FOOTER_MENU]
-<footer class="site-footer">
-	<nav class="other-links">
-		<ul>
-			[FOR:FOOTER_MENU]
-			<li><a href="[LINK]">[DISPLAY]</a></li>
-			[ENDFOR:FOOTER_MENU]
-		</ul> 
-	</nav>
+<footer class="footer footer-narrow [IF:CONTAINER_CONTRAST]footer-contrast[ENDIF:CONTAINER_CONTRAST]">
+	[FOR:FOOTER_MENU]
+		<span class="other-links"><a href="[LINK]">[DISPLAY]</a></span>
+	[ENDFOR:FOOTER_MENU]
 </footer>  
 [ENDIF:FOOTER_MENU]
 

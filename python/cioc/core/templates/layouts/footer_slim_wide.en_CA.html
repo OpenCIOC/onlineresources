@@ -1,0 +1,12 @@
+</div> <!-- end container -->
+[IF:NOT_PRINT_MODE]
+	[IF:FOOTER_MENU]
+<div class="footer footer-wide [IF:CONTAINER_CONTRAST]footer-contrast[ENDIF:CONTAINER_CONTRAST]">
+	<div class="container[IF:CONTAINER_FLUID]-fluid[ENDIF:CONTAINER_FLUID]">
+		[FOR:FOOTER_MENU]
+		<span class="other-links"><a href="[LINK]">[DISPLAY]</a></span>
+		[ENDFOR:FOOTER_MENU]
+	</div>
+</div>
+	[ENDIF:FOOTER_MENU]
+[ENDIF:NOT_PRINT_MODE]

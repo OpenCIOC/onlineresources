@@ -409,7 +409,7 @@ class LayoutSearch:
             quicklist_col_class = "col-sm-6"
             quicklist_clear_at = [(2, ["sm", "md", "lg"])]
         elif viewdata.QuickListWrapAt == 3:
-            quicklist_col_class = "col-md-6 col-lg-4"
+            quicklist_col_class = "col-sm-6 col-md-6 col-lg-4"
             quicklist_clear_at = [(2, ["sm", "md"]), (3, ["lg"])]
         else:
             quicklist_col_class = "col-sm-6 col-md-4 col-lg-3"

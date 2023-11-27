@@ -48,7 +48,7 @@ ol.breadcrumb {
 .container.container-contrast {
 	@extend .basic-corner-style;
 	margin-top: $line-height-computed;
-	margin-bottom: $line-height-computed * 1.5;
+	margin-bottom: $line-height-computed;
 
 	.site-header {
 		margin-right: -$navbar-padding-horizontal;
