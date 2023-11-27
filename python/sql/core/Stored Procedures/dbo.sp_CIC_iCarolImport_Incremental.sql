@@ -1233,8 +1233,8 @@ WHEN NOT MATCHED BY TARGET THEN
 		src.[MailingCommunity],
 		src.[OtherCommunity],
 		src.[PhysicalCommunity],
-		CASE WHEN COALESCE(src.MailingAttentionName, src.MailingAddress1, src.MailingAddress2, src.MailingCity, src.MailingStateProvince, src.MailingPostalCode, NULLIF(src.MailingCountry, '-1'), src.MailingCommunity) IS NOT NULL THEN 1 ELSE 0 END,
-		CASE WHEN COALESCE(src.PhysicalAddress1, src.PhysicalAddress2, src.PhysicalCity, src.PhysicalCounty, src.PhysicalStateProvince, src.PhysicalPostalCode, NULLIF(src.PhysicalCountry, '-1'), src.PhysicalCommunity) IS NOT NULL THEN 1 ELSE 0 END,
+		CASE WHEN COALESCE(src.MailingAttentionName, src.MailingAddress1, src.MailingAddress2, src.MailingCity, src.MailingStateProvince, src.MailingPostalCode, src.MailingCommunity) IS NOT NULL THEN 1 ELSE 0 END,
+		CASE WHEN COALESCE(src.PhysicalAddress1, src.PhysicalAddress2, src.PhysicalCity, src.PhysicalCounty, src.PhysicalStateProvince, src.PhysicalPostalCode, src.PhysicalCommunity) IS NOT NULL THEN 1 ELSE 0 END,
 		CASE WHEN COALESCE(src.Phone1Number, src.Phone1Name, src.Phone1Description, src.Phone1Type) IS NOT NULL THEN 1 ELSE 0 END,
 		CASE WHEN COALESCE(src.Phone2Number, src.Phone2Name, src.Phone2Description, src.Phone2Type) IS NOT NULL THEN 1 ELSE 0 END,
 		CASE WHEN COALESCE(src.Phone3Number, src.Phone3Name, src.Phone3Description, src.Phone3Type) IS NOT NULL THEN 1 ELSE 0 END,
@@ -1247,8 +1247,8 @@ WHEN NOT MATCHED BY TARGET THEN
 		CASE WHEN COALESCE(src.PhoneNumberBusinessLine, src.PhoneNumberBusinessLineDescription) IS NOT NULL THEN 1 ELSE 0 END,
 		CASE WHEN COALESCE(src.PhoneNumberOutOfArea, src.PhoneNumberOutOfAreaDescription) IS NOT NULL THEN 1 ELSE 0 END,
 		CASE WHEN COALESCE(src.PhoneNumberAfterHours, src.PhoneNumberAfterHoursDescription) IS NOT NULL THEN 1 ELSE 0 END,
-		CASE WHEN COALESCe(src.SeniorWorkerName, src.SeniorWorkerTitle, src.SeniorWorkerEmailAddress, src.SeniorWorkerPhoneNumber) IS NULL THEN 1 ELSE 0 END,
-		CASE WHEN COALESCe(src.MainContactName, src.MainContactTitle, src.MainContactEmailAddress, src.MainContactPhoneNumber, src.MainContactType) IS NULL THEN 1 ELSE 0 END
+		CASE WHEN COALESCe(src.SeniorWorkerName, src.SeniorWorkerTitle, src.SeniorWorkerEmailAddress, src.SeniorWorkerPhoneNumber) IS NOT NULL THEN 1 ELSE 0 END,
+		CASE WHEN COALESCe(src.MainContactName, src.MainContactTitle, src.MainContactEmailAddress, src.MainContactPhoneNumber, src.MainContactType) IS NOT NULL THEN 1 ELSE 0 END
 	)
 
 	;
