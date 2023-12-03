@@ -513,40 +513,43 @@ table.cell-border-top > tbody > tr > td,
 	}
 
 	table.ResponsiveResults {
-		border-left: 1px solid $borderColorContent;
-		border-right: 1px solid $borderColorContent;
-		border-top: none;
-		border-bottom: none;
+		border-collapse: collapse;
+		border-bottom: 1px solid $borderColorContent;
 	}
 
 	.ResponsiveResults > tbody > tr {
-		border-top: 1px solid $borderColorContent;
-		border-bottom: 1px solid $borderColorContent;
+		&:not(:first-of-type) {
+			border-top: 1px solid $borderColorContent;
+		}
 	}
 
 	table.ResponsiveResults > tbody > tr > td {
 		/* Behave  like a "row" */
 		border: none;
-		border-bottom: 1px solid $borderColorContent;
 		position: relative;
-		padding: 6px;
-		padding-left: 40%;
+		padding: 0.5em 0.5em 0.5em 16.5em;
 	}
 
 	table.ResponsiveResults > tbody > tr > td.MobileShowField {
-		padding: 6px;
+		padding: 0.5em;
+
+		h3 {
+			margin-top: ($line-height-computed / 2);
+		}
 	}
 
 	.ResponsiveResults > tbody > tr > td:before {
 		/* Now like a table header */
 		position: absolute;
 		/* Top/left values mimic padding */
-		top: 6px;
-		left: 6px;
-		width: 38%;
+		top: 0.5em;
+		left: 0.5em;
+		width: 15em;
 		white-space: nowrap;
 		font-weight: bold;
 		overflow-x: hidden;
+		padding-top: 0.3em;
+		border-top: 1px solid lighten($fcContent,80%)
 	}
 
 	.MobileMiniColumnSpan {
@@ -578,9 +581,8 @@ table.cell-border-top > tbody > tr > td,
 	table.ResponsiveResults > tbody > tr > td {
 		/* Behave  like a "row" */
 		border: none;
-		border-bottom: 1px solid $borderColorContent;
 		position: static;
-		padding: 6px;
+		padding: 0.5em;
 	}
 
 	.ResponsiveResults > tbody > tr > td:before {
@@ -588,7 +590,7 @@ table.cell-border-top > tbody > tr > td,
 		display: block;
 		position: static;
 		/* Top/left values mimic padding */
-		padding-bottom: 10px;
+		padding-bottom: 0.2em;
 		white-space: nowrap;
 		font-weight: bold;
 		width: 100%;

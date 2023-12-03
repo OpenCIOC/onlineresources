@@ -101,17 +101,6 @@
 		min-height: 67px;
 	}
 
-	#CIOC_cicsearch {
-		padding: 8px;
-		background-color: $bgColorActive;
-		background-image: linear-gradient(to top, $borderColorActive 0px, $bgColorActive 100%);
-
-		h2 {
-			font-weight: normal;
-			margin-top: 5px;
-		}
-	}
-
 	.CIOC_search_button {
 		background-color: $BackgroundColour;
 		background-image: linear-gradient(to bottom, $BackgroundColour 0px, darken($BackgroundColour,10%) 100%);

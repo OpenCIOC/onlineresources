@@ -172,8 +172,12 @@ table.responsive-table {
 			display: inline-block;
 		}
 
-		&.BasicBorder.form-table .field-data-cell {
-			border-top-width: 1px;
+		&.BasicBorder.responsive-table .field-data-cell {
+			border: none;
+		}
+
+		&.BasicBorder.responsive-table .field-label-cell {
+			border-width: 1px 0 0;
 		}
 	}
 }
@@ -281,3 +285,25 @@ table.inset-table {
 		border-bottom-right-radius: $cornerRadius;
 	}
 }
+
+table.dataTable {
+	margin-right: 0;
+}
+
+.dataTables_info, .dataTables_filter {
+	padding: 0.5em;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.dataTables_filter > label > input {
+	border: 1px solid $input-border;
+	border-radius: $input-border-radius;
+	@include box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+	@include transition(border-color ease-in-out .15s, box-shadow ease-in-out .15s);
+	height: $input-height-base; 
+	padding: $padding-base-vertical $padding-base-horizontal;
+	font-size: $font-size-base;
+	line-height: $line-height-base;
+}
+

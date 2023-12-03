@@ -128,17 +128,6 @@
 		min-height: 67px;
 	}
 
-	#CIOC_cicsearch {
-		padding: 8px;
-		background-color: $bgColorActive;
-		background-image: linear-gradient(to top, $borderColorActive 0px, $bgColorActive 100%);
-
-		h2 {
-			font-weight: normal;
-			margin-top: 5px;
-		}
-	}
-
 	.CIOC_search_button {
 		background-color: $BackgroundColour;
 		background-image: linear-gradient(to bottom, $BackgroundColour 0px, darken($BackgroundColour,10%) 100%);
@@ -300,12 +289,17 @@
 	padding-top: 7px;
 }
 
+.heading-search-box .panel-heading {
+	padding: 0.5em 0;
+}
+
 a.large-heading-icon, .panel-heading > .panel-title > button.large-heading-icon {
 	&:hover, &:focus {
 		text-decoration: underline;
 	}
 
 	.heading-list-name {
+		font-size: $font-size-base;
 		text-transform: uppercase;
 		font-weight: normal;
 	}
@@ -316,17 +310,16 @@ a.large-heading-icon, .panel-heading > .panel-title > button.large-heading-icon 
 		text-align: center;
 
 		.heading-list-icon {
-			height: 4em;
-			padding-bottom: 0.5em;
+			height: 3.4em;
 
 			i.heading-icon, span.heading-icon {
-				font-size: 4em;
+				font-size: 3.1em;
 				margin: auto;
 			}
 		}
 
 		.heading-list-name {
-			margin-top: 0.6em;
+			margin-top: 0.5em;
 			min-height: 2em;
 		}
 	}
@@ -339,8 +332,9 @@ a.large-heading-icon, .panel-heading > .panel-title > button.large-heading-icon 
 		}
 
 		i.heading-icon, span.heading-icon {
+			font-size: large;
 			margin-left: 0;
-			width: 1.3em;
+			width: 1.2em;
 		}
 	}
 }

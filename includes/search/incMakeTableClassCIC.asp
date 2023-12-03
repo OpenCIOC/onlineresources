@@ -1044,12 +1044,6 @@ Else
 <%
 		i= i + 1
 	End If
-	If Not g_bPrintMode And (opt_bListAddRecordCIC Or bEnableListViewMode) Then
-%>
-	.ResponsiveResults td:nth-of-type(<%=i%>):before { content: "<%=IIf(g_bEnableListModeCT, TXT_CT_CLIENT_TRACKER,TXT_MY_LIST)%>"; }
-<%
-		i= i + 1
-	End If
 	If opt_bDispTableCIC Then
 %>
 }
@@ -1134,8 +1128,9 @@ Else
 		End If 'Facet Search
 	End If 'Print Mode
 %>
-
-	<table class="BasicBorder cell-padding-3 HideListUI HideMapColumn <% If Not g_bPrintMode Then %>ResponsiveResults <%If Not opt_bDispTableCIC Then %>CompactResults<%End If %><% End If %>" id="results_table">
+	<div class="panel panel-default">
+	<div class="panel-body no-padding">
+	<table class="BasicBorder inset-table cell-padding-3 HideListUI HideMapColumn <% If Not g_bPrintMode Then %>ResponsiveResults <%If Not opt_bDispTableCIC Then %>CompactResults<%End If %><% End If %>" id="results_table">
 		<thead>
 			<tr class="RevTitleBox">
 <%
@@ -1431,6 +1426,8 @@ Else
 %>
 		</tbody>
 	</table>
+	</div>
+	</div>
 <%
 	End With
 
