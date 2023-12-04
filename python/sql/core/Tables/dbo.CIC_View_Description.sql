@@ -56,7 +56,12 @@ CREATE TABLE [dbo].[CIC_View_Description]
 [GoogleTranslateDisclaimer] [nvarchar] (1000) COLLATE Latin1_General_100_CI_AI NULL,
 [TagLine] [nvarchar] (300) COLLATE Latin1_General_100_CI_AI NULL,
 [NoResultsMsg] [nvarchar] (2000) COLLATE Latin1_General_100_CI_AI NULL,
-[OtherSearchMessage] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
+[OtherSearchMessage] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[AcceptCookiePromptText] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[AcceptCookieDetails] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[AcceptCookieOptionalText] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[AcceptCookieOptionalDetails] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[RegionSelectorMap] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_View_Description] ADD CONSTRAINT [PK_CIC_View_Description] PRIMARY KEY CLUSTERED ([ViewType], [LangID]) ON [PRIMARY]

@@ -51,38 +51,29 @@ CREATE TABLE [dbo].[VOL_View]
 [AllowPDF] [bit] NOT NULL CONSTRAINT [DF_VOL_View_AllowPDF] DEFAULT ((0)),
 [GoogleTranslateWidget] [bit] NOT NULL CONSTRAINT [DF_VOL_View_GoogleTranslateWidget] DEFAULT ((0)),
 [DataUseAuthPhone] [bit] NOT NULL CONSTRAINT [DF_VOL_View_DataUseAuthPhone] DEFAULT ((1)),
-[DefaultPrintProfile] [int] NULL
+[DefaultPrintProfile] [int] NULL,
+[AcceptCookiePrompt] [bit] NOT NULL CONSTRAINT [DF_VOL_View_AcceptCookiePrompt] DEFAULT ((0))
 ) ON [PRIMARY]
-ALTER TABLE [dbo].[VOL_View] ADD
-CONSTRAINT [FK_VOL_View_GBL_PrintProfile] FOREIGN KEY ([DefaultPrintProfile]) REFERENCES [dbo].[GBL_PrintProfile] ([ProfileID])
-ALTER TABLE [dbo].[VOL_View] ADD 
-CONSTRAINT [PK_VOL_View] PRIMARY KEY CLUSTERED  ([ViewType]) ON [PRIMARY]
-CREATE UNIQUE NONCLUSTERED INDEX [IX_VOL_View_ViewTypeInclViewCriteria] ON [dbo].[VOL_View] ([ViewType]) INCLUDE ([CanSeeDeleted], [CanSeeExpired], [CanSeeNonPublic], [HidePastDueBy], [MemberID]) ON [PRIMARY]
-
-
-
-
-
-
-
-
-
-
-
-
-
 GO
-
-ALTER TABLE [dbo].[VOL_View] ADD CONSTRAINT [FK_VOL_View_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
+ALTER TABLE [dbo].[VOL_View] ADD CONSTRAINT [PK_VOL_View] PRIMARY KEY CLUSTERED ([ViewType]) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_VOL_View_ViewTypeInclViewCriteria] ON [dbo].[VOL_View] ([ViewType]) INCLUDE ([MemberID], [CanSeeNonPublic], [CanSeeDeleted], [CanSeeExpired], [HidePastDueBy]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[VOL_View] ADD CONSTRAINT [FK_VOL_View_GBL_Agency] FOREIGN KEY ([Owner]) REFERENCES [dbo].[GBL_Agency] ([AgencyCode]) ON DELETE SET NULL ON UPDATE CASCADE
 GO
-ALTER TABLE [dbo].[VOL_View] ADD CONSTRAINT [FK_VOL_View_GBL_Template_Print] FOREIGN KEY ([PrintTemplate]) REFERENCES [dbo].[GBL_Template] ([Template_ID])
+ALTER TABLE [dbo].[VOL_View] ADD CONSTRAINT [FK_VOL_View_GBL_PrintProfile] FOREIGN KEY ([DefaultPrintProfile]) REFERENCES [dbo].[GBL_PrintProfile] ([ProfileID])
 GO
 ALTER TABLE [dbo].[VOL_View] ADD CONSTRAINT [FK_VOL_View_GBL_Template] FOREIGN KEY ([Template]) REFERENCES [dbo].[GBL_Template] ([Template_ID])
 GO
-GRANT SELECT ON  [dbo].[VOL_View] TO [cioc_login_role]
+ALTER TABLE [dbo].[VOL_View] ADD CONSTRAINT [FK_VOL_View_GBL_Template_Print] FOREIGN KEY ([PrintTemplate]) REFERENCES [dbo].[GBL_Template] ([Template_ID])
+GO
+ALTER TABLE [dbo].[VOL_View] ADD CONSTRAINT [FK_VOL_View_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID])
+GO
 GRANT DELETE ON  [dbo].[VOL_View] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[VOL_View] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[VOL_View] TO [cioc_login_role]
+GO
 GRANT SELECT ON  [dbo].[VOL_View] TO [cioc_vol_search_role]
 GO
