@@ -98,11 +98,11 @@ from cioc.core import gtranslate
 			%if not bEnableListViewMode:
 			already_added: list_nums,
 			%if renderinfo.ct_launched:
-			in_request: "${request.passvars.makeLink(request.pageinfo.PathToStart + "ct/inrequest")}",
+			in_request: ${request.passvars.makeLink(request.pageinfo.PathToStart + "ct/inrequest")|json.dumps},
 			%endif
 			%endif
-			ct_update_url: "${request.passvars.makeLink(request.pageinfo.PathToStart + "ct/push")}",
-			list_update_url: "${request.passvars.makeLink(request.pageinfo.PathToStart + "jsonfeeds/updatelist.asp")}",
+			ct_update_url: ${request.passvars.makeLink(request.pageinfo.PathToStart + "ct/push")|json.dumps},
+			list_update_url: ${request.passvars.makeLink(request.pageinfo.PathToStart + "jsonfeeds/updatelist.asp")|json.dumps},
 			domain: '${request.pageinfo.DbAreaS}'
 			});
 	}

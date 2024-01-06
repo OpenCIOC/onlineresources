@@ -76,11 +76,11 @@ def initialize_session():
 
 def l_set_session_value(key, value):
 	#Response.Write("SET: %s, %s<br>" %(key, repr(value)))
-	pyrequest.session[six.text_type(key)] = value
+	pyrequest.session[str(key)] = value
 
 def l_get_session_value(key):
 	try:
-		value = pyrequest.session[six.text_type(key)]
+		value = pyrequest.session[str(key)]
 		#Response.Write("GET: %s, %s<br>" %(key, repr(value)))
 		if isinstance(value, tuple) and not len(value):
 			return None
