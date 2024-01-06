@@ -41,7 +41,6 @@ Dim	TXT_ABOUT_AGENCY, _
 	TXT_MORE_AGENCY_INFO, _
 	TXT_NA, _
 	TXT_OPPORTUNITY_DETAILS, _
-	TXT_ORGNAME, _
 	TXT_OTHER_OPPORTUNITIES, _
 	TXT_READ_LESS, _
 	TXT_READ_MORE, _
@@ -86,7 +85,6 @@ Sub setTxtDetails()
 			TXT_NA = "S/O"
 			TXT_MORE_AGENCY_INFO = "Informations sur l'agence"
 			TXT_OPPORTUNITY_DETAILS = "Détails de l'opportunité : "
-			TXT_ORGNAME = "Nom de l'organisme"
 			TXT_OTHER_OPPORTUNITIES = "Autres occasions"
 			TXT_READ_LESS = "[moins]"
 			TXT_READ_MORE = "[lire plus]"
@@ -128,7 +126,6 @@ Sub setTxtDetails()
 			TXT_MORE_AGENCY_INFO = "More Agency Info"
 			TXT_NA = "N/A"
 			TXT_OPPORTUNITY_DETAILS = "Opportunity Details: "
-			TXT_ORGNAME = "Organization Name"
 			TXT_OTHER_OPPORTUNITIES = "Other Opportunities"
 			TXT_READ_LESS = "[less]"
 			TXT_READ_MORE = "[read more]"

@@ -35,7 +35,6 @@ Dim TXT_ERROR, _
 	TXT_SRCH_ERROR, _
 	TXT_UNKNOWN_ERROR_OCCURED, _
 	TXT_USE_BACK_BUTTON, _
-	TXT_USING_GOOGLE_SEARCH, _
 	TXT_VALIDATION_ERRORS_MESSAGE, _
 	TXT_VALIDATION_ERRORS_TITLE, _
 	TXT_WARNING
@@ -60,7 +59,6 @@ Sub setTxtError()
 			TXT_SRCH_ERROR = "Une erreur s'est produite pendant la recherche" & TXT_COLON
 			TXT_UNKNOWN_ERROR_OCCURED = "Une erreur d'origine inconnue s'est produite"
 			TXT_USE_BACK_BUTTON = "Veuillez utiliser le bouton Retour pour revenir au formulaire."
-			TXT_USING_GOOGLE_SEARCH = "Utiliser la recherche Google quand CIOC est hors ligne"
 			TXT_VALIDATION_ERRORS_MESSAGE = "Ce dossier contient des erreurs de validation."
 			TXT_VALIDATION_ERRORS_TITLE = "Erreurs de validation"
 			TXT_WARNING = "Attention : "
@@ -82,7 +80,6 @@ Sub setTxtError()
 			TXT_SRCH_ERROR = "An Error occurred during the search" & TXT_COLON
 			TXT_UNKNOWN_ERROR_OCCURED = "An unknown error occurred"
 			TXT_USE_BACK_BUTTON = "Please use your back button to return to the form."
-			TXT_USING_GOOGLE_SEARCH = "Using Google to search when CIOC is offline"
 			TXT_VALIDATION_ERRORS_MESSAGE = "This record contains validation errors."
 			TXT_VALIDATION_ERRORS_TITLE = "Validation Errors"
 			TXT_WARNING = "Warning: "

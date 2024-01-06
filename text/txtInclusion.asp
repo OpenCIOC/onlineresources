@@ -25,7 +25,6 @@ Dim TXT_ADD_POLICY, _
 	TXT_EDIT_POLICY, _
 	TXT_ERR_POLICY_LANGUAGE, _
 	TXT_ERR_POLICY_TEXT, _
-	TXT_INCLUSION_POLICY_TEXT, _
 	TXT_INST_POLICY_TITLE, _
 	TXT_MANAGE_INCLUSION_POLICIES, _
 	TXT_POLICY_CONTENT, _
@@ -48,7 +47,6 @@ Sub setTxtInclusion()
 			TXT_EDIT_POLICY = "Edit Inclusion Policy" & TXT_COLON
 			TXT_ERR_POLICY_LANGUAGE = "You must select a valid language for the Policy."
 			TXT_ERR_POLICY_TEXT = "Inclusion Policy must not exceed 20,000 characters."
-			TXT_INCLUSION_POLICY_TEXT = "Inclusion Policy Text"
 			TXT_INST_POLICY_TITLE = "Unique title to identify this policy. Used only while managing policies."
 			TXT_MANAGE_INCLUSION_POLICIES = "Manage Inclusion Policies"
 			TXT_POLICY_CONTENT = "Policy Content"
@@ -68,7 +66,6 @@ Sub setTxtInclusion()
 			TXT_EDIT_POLICY = "Modifier la politique d'inclusion" & TXT_COLON
 			TXT_ERR_POLICY_LANGUAGE = "Vous devez sélectionner une langue valide pour la politique."
 			TXT_ERR_POLICY_TEXT = "La politique d'inclusion ne doit pas dépasser 20 000 caractères."
-			TXT_INCLUSION_POLICY_TEXT = "Texte de la politique d'inclusion"
 			TXT_INST_POLICY_TITLE = "Titre unique qui identifie cette politique. Utilisé uniquement pour la gestion des politiques."
 			TXT_MANAGE_INCLUSION_POLICIES = "Gérer les politiques d'inclusion"
 			TXT_POLICY_CONTENT = "Contenu de la politique"

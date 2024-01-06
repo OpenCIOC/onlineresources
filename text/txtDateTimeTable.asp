@@ -25,13 +25,6 @@ Dim TXT_DAY_FRIDAY, _
 	TXT_DAY_THURSDAY, _
 	TXT_DAY_TUESDAY, _
 	TXT_DAY_WEDNESDAY, _
-	TXT_DAY_FR, _
-	TXT_DAY_MO, _
-	TXT_DAY_SA, _
-	TXT_DAY_SU, _
-	TXT_DAY_TH, _
-	TXT_DAY_TU, _
-	TXT_DAY_WE, _
 	TXT_TIME_12_6, _
 	TXT_TIME_AFTER_6, _
 	TXT_TIME_BEFORE_12, _
@@ -51,13 +44,6 @@ Sub setTxtDateTimeTable()
 			TXT_DAY_THURSDAY = "jeudi"
 			TXT_DAY_TUESDAY = "mardi"
 			TXT_DAY_WEDNESDAY = "mercredi"
-			TXT_DAY_FR = "Ve"
-			TXT_DAY_MO = "Lu"
-			TXT_DAY_SA = "Sa"
-			TXT_DAY_SU = "Di"
-			TXT_DAY_TH = "Je"
-			TXT_DAY_TU = "Ma"
-			TXT_DAY_WE = "Me"
 			TXT_TIME_12_6 = "12 h-18 h"
 			TXT_TIME_AFTER_6 = "Après 18 h"
 			TXT_TIME_BEFORE_12 = "Avant 12 h"
@@ -74,13 +60,6 @@ Sub setTxtDateTimeTable()
 			TXT_DAY_THURSDAY = "Thursday"
 			TXT_DAY_TUESDAY = "Tuesday"
 			TXT_DAY_WEDNESDAY = "Wednesday"
-			TXT_DAY_FR = "Fr"
-			TXT_DAY_MO = "Mo"
-			TXT_DAY_SA = "Sa"
-			TXT_DAY_SU = "Su"
-			TXT_DAY_TH = "Th"
-			TXT_DAY_TU = "Tu"
-			TXT_DAY_WE = "We"
 			TXT_TIME_12_6 = "12pm-6pm"
 			TXT_TIME_AFTER_6 = "After 6pm"
 			TXT_TIME_BEFORE_12 = "Before 12pm"

@@ -27,7 +27,6 @@ Dim TXT_ADD_FIELD, _
 	TXT_DEFAULT_MSG, _
 	TXT_EDIT_PROFILE, _
 	TXT_FIELDS, _
-	TXT_FIELD_INFO, _
 	TXT_FIELD_LABEL, _
 	TXT_FIELD_LABEL_STYLE, _
 	TXT_FIELD_SEPARATOR, _
@@ -37,7 +36,6 @@ Dim TXT_ADD_FIELD, _
 	TXT_HEADER, _
 	TXT_HEADING_LEVEL, _
 	TXT_INST_APPLY_ENGLISH_OR_FRENCH, _
-	TXT_INST_DEFAULT_MSG, _
 	TXT_INST_MSG_LOCATION, _
 	TXT_INST_PAGE_BREAK, _
 	TXT_INST_PAGE_TITLE, _
@@ -78,7 +76,6 @@ Sub setTxtPrintProfile()
 			TXT_DEFAULT_MSG = "Default Message"
 			TXT_EDIT_PROFILE = "Edit Print Profile"
 			TXT_FIELDS = "Fields"
-			TXT_FIELD_INFO = "Field Information"
 			TXT_FIELD_LABEL = "Label"
 			TXT_FIELD_LABEL_STYLE = "Label Style"
 			TXT_FIELD_TYPE = "Field Type"
@@ -88,7 +85,6 @@ Sub setTxtPrintProfile()
 			TXT_HEADER = "Header"
 			TXT_HEADING_LEVEL = "Heading Level"
 			TXT_INST_APPLY_ENGLISH_OR_FRENCH = "Find and Replace command must apply to at least one of English or French"
-			TXT_INST_DEFAULT_MSG = "Message to appear at the top of the report or before each record. This message can be customized at the time the report is run."
 			TXT_INST_MSG_LOCATION = "Repeat the message before each record"
 			TXT_INST_PAGE_BREAK = "Start each record on a new page when printing"
 			TXT_INST_PAGE_TITLE = "Title to appear in the title bar of the web browser."
@@ -126,7 +122,6 @@ Sub setTxtPrintProfile()
 			TXT_DEFAULT_MSG = "Message par défaut"
 			TXT_EDIT_PROFILE = "Éditer le profil d'impression"
 			TXT_FIELDS = "Champs"
-			TXT_FIELD_INFO = "L'information du champ"
 			TXT_FIELD_LABEL = "Label du champ"
 			TXT_FIELD_LABEL_STYLE = "Le style du label"
 			TXT_FIELD_TYPE = "Type de champ"
@@ -136,7 +131,6 @@ Sub setTxtPrintProfile()
 			TXT_HEADER = "En-tête"
 			TXT_HEADING_LEVEL = "Niveau de titre"
 			TXT_INST_APPLY_ENGLISH_OR_FRENCH = "La commande Trouver et remplacer doit se rapporter à au moins un des dossiers anglais ou français."
-			TXT_INST_DEFAULT_MSG = "Le message qui apparaîtra au début du rapport ou avant chaque dossier. Ce message peut être personnalisé lors de la production du rapport."
 			TXT_INST_MSG_LOCATION = "Répéter le message avant chaque dossier"
 			TXT_INST_PAGE_BREAK = "Présenter chaque dossier sur une nouvelle page, lors de l'impression"
 			TXT_INST_PAGE_TITLE = "Titre apparaissant dans la barre de titre du navigateur Web."

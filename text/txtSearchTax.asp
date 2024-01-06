@@ -24,7 +24,6 @@ Dim TXT_ADMIN_MODE, _
 	TXT_ADVANCED_TAXONOMY_SEARCH, _
 	TXT_ANYWHERE, _
 	TXT_ARE_YOU_SURE_SUBMIT, _
-	TXT_BASIC_TAXONOMY_SEARCH, _
 	TXT_BROADER_TERM, _
 	TXT_BUILD_TERM_LIST, _
 	TXT_CODE_SEARCH, _
@@ -64,7 +63,6 @@ Sub setTxtTaxSearch()
 			TXT_ADVANCED_TAXONOMY_SEARCH = "Advanced Taxonomy Record Search"
 			TXT_ANYWHERE = "Anywhere"
 			TXT_ARE_YOU_SURE_SUBMIT = "Are you sure you want to submit your changes?"
-			TXT_BASIC_TAXONOMY_SEARCH = "Basic Taxonomy Search"
 			TXT_BROADER_TERM = "Broader Term"
 			TXT_BUILD_TERM_LIST = "Build Term List"
 			TXT_CODE_SEARCH = "Code"
@@ -101,7 +99,6 @@ Sub setTxtTaxSearch()
 			TXT_ADVANCED_TAXONOMY_SEARCH = "Recherche avancée sur la Taxonomie"
 			TXT_ANYWHERE = "Partout"
 			TXT_ARE_YOU_SURE_SUBMIT = "Êtes-vous sûr de vouloir appliquer ces modifications ?"
-			TXT_BASIC_TAXONOMY_SEARCH = "Recherche simple sur la Taxonomie"
 			TXT_BROADER_TERM = "Terme générique"
 			TXT_BUILD_TERM_LIST = "Créer la liste des termes"
 			TXT_CODE_SEARCH = "Code"

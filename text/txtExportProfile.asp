@@ -45,8 +45,7 @@ Dim TXT_ADD_PUB_CODE_FAILED, _
 	TXT_PRIVACY_PROFILE_SKIP, _
 	TXT_RETURN_TO_PROFILES, _
 	TXT_SOURCE_DATABASE_INFO, _
-	TXT_SUBMIT_RECORD_CHANGES_TO, _
-	TXT_UPDATE_PUB_CODE_FAILED
+	TXT_SUBMIT_RECORD_CHANGES_TO
 
 Sub setTxtExportProfile()
 	Select Case g_objCurrentLang.Culture
@@ -79,7 +78,6 @@ Sub setTxtExportProfile()
 			TXT_RETURN_TO_PROFILES = "Retourner aux profils d'exportation"
 			TXT_SOURCE_DATABASE_INFO = "Renseignements sur la base de données source"
 			TXT_SUBMIT_RECORD_CHANGES_TO = "Envoyer les modifications aux dossier à"
-			TXT_UPDATE_PUB_CODE_FAILED = "La mise à jour du code de publication pour l'exportation a échoué."
 		Case Else
 			TXT_ADD_PUB_CODE_FAILED = "Add Publication Code Failed"
 			TXT_CHOOSE_PUBLICATION = "Choose a Publication from the list below"
@@ -109,7 +107,6 @@ Sub setTxtExportProfile()
 			TXT_RETURN_TO_PROFILES = "Return to Export Profiles"
 			TXT_SOURCE_DATABASE_INFO = "Source Database Info"
 			TXT_SUBMIT_RECORD_CHANGES_TO = "Submit Record Changes To"
-			TXT_UPDATE_PUB_CODE_FAILED = "Update Export Publication Failed"
 	End Select
 End Sub
 

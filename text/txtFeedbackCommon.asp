@@ -33,15 +33,13 @@ Dim TXT_AUTH_APPROVE, _
 	TXT_FEEDBACK_OWNER, _
 	TXT_INTERNAL_REVIEW, _
 	TXT_PLEASE_SELECT_OPTIONS, _
-	TXT_SUBMIT_DATE, _
 	TXT_SUBMITTED_BY, _
 	TXT_SUBMITTER_EMAIL, _
 	TXT_USE_INQUIRY, _
 	TXT_USE_OF_INFO, _
 	TXT_USE_ONLINE, _
 	TXT_USE_PRINT, _
-	TXT_VIEW_RECORD_AT, _
-	TXT_VOL_ID
+	TXT_VIEW_RECORD_AT
 
 Sub setTxtFeedbackCommon()
 	Select Case g_objCurrentLang.Culture
@@ -61,7 +59,6 @@ Sub setTxtFeedbackCommon()
 			TXT_FEEDBACK_OWNER = "Propriétaire de la rétroaction"
 			TXT_INTERNAL_REVIEW = "Ceci n'a été qu'une révision interne."
 			TXT_PLEASE_SELECT_OPTIONS = "PRIÈRE DE CHOISIR L'UNE DES OPTIONS SUIVANTES" & TXT_COLON
-			TXT_SUBMIT_DATE = "Soumis le" & TXT_COLON
 			TXT_SUBMITTED_BY = "Soumis par"
 			TXT_SUBMITTER_EMAIL = "Le courriel de la personne faisant la soumission"
 			TXT_USE_INQUIRY = "Demandes d'information par téléphone et en personne"
@@ -69,7 +66,6 @@ Sub setTxtFeedbackCommon()
 			TXT_USE_ONLINE = "Recherches en ligne pour le grand public"
 			TXT_USE_PRINT = "Publications imprimées"
 			TXT_VIEW_RECORD_AT = "Vous pouvez visualiser le dossier au" & TXT_COLON
-			TXT_VOL_ID = "ID :"
 		Case Else
 			TXT_AUTH_APPROVE = "I authorize this information for use as outlined in the Terms of Use policy."
 			TXT_AUTH_CONTACT = "I cannot authorize this record at this time. Please contact me directly."
@@ -86,7 +82,6 @@ Sub setTxtFeedbackCommon()
 			TXT_FEEDBACK_OWNER = "Feedback Owner"
 			TXT_INTERNAL_REVIEW = "This was an internal review only."
 			TXT_PLEASE_SELECT_OPTIONS = "PLEASE SELECT ONE OF THE FOLLOWING OPTIONS" & TXT_COLON
-			TXT_SUBMIT_DATE = "Submitted On" & TXT_COLON
 			TXT_SUBMITTED_BY = "Submitted By"
 			TXT_SUBMITTER_EMAIL = "Submitter Email"
 			TXT_USE_INQUIRY = "Telephone and in-person inquiries"
@@ -94,7 +89,6 @@ Sub setTxtFeedbackCommon()
 			TXT_USE_ONLINE = "Online public searches"
 			TXT_USE_PRINT = "Printed Publications"
 			TXT_VIEW_RECORD_AT = "You can view the record at" & TXT_COLON
-			TXT_VOL_ID = "ID:"
 	End Select
 End Sub
 

@@ -38,7 +38,6 @@ Dim TXT_COMPRESSED, _
 	TXT_NO_EXPORT_FORMAT, _
 	TXT_NO_PROFILE, _
 	TXT_NO_RECORDS_TO_EXPORT, _
-	TXT_OLDER_EXPORT_VERSION, _
 	TXT_PROFILES_NOT_AVAILABLE_ALL_FORMATS, _
 	TXT_RECORDS_TO_EXPORT, _
 	TXT_SHARE_FORMAT, _
@@ -70,7 +69,6 @@ Sub setTxtExport()
 			TXT_NO_EXPORT_FORMAT = "No type of Export was chosen."
 			TXT_NO_PROFILE = "You must select an export profile."
 			TXT_NO_RECORDS_TO_EXPORT = "No records to export."
-			TXT_OLDER_EXPORT_VERSION = "Please note that the formats below are deprecated and may not be supported in future software releases."
 			TXT_PROFILES_NOT_AVAILABLE_ALL_FORMATS = "Some Export Profile fields may not be available in all formats."
 			TXT_RECORDS_TO_EXPORT = " record(s) to export."
 			TXT_SHARE_FORMAT = "CIOC Sharing Format (XML)"
@@ -99,7 +97,6 @@ Sub setTxtExport()
 			TXT_NO_EXPORT_FORMAT = "Aucun format d'export n'a été sélectionné."
 			TXT_NO_PROFILE = "Vous devez sélectionner un profil d'export."
 			TXT_NO_RECORDS_TO_EXPORT = "Aucun dossier à exporter."
-			TXT_OLDER_EXPORT_VERSION = "Veuillez noter que les formats ci-dessous sont dépréciés et pourraient ne pas fonctionner avec des versions futures du logiciel."
 			TXT_PROFILES_NOT_AVAILABLE_ALL_FORMATS = "Certains champs du profil d'export peuvent ne pas être disponible dans tous les formats."
 			TXT_RECORDS_TO_EXPORT = " dossier(s) à exporter."
 			TXT_SHARE_FORMAT = "Format de partage CIOC (XML)"

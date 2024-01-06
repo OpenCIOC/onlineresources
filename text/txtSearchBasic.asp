@@ -20,7 +20,6 @@
 Dim TXT_AGES, _
 	TXT_FIND, _
 	TXT_HAS_ANY, _
-	TXT_LIMIT_TO, _
 	TXT_REFINE_SEARCH
 
 Sub setTxtSearchBasic()
@@ -29,13 +28,11 @@ Sub setTxtSearchBasic()
 			TXT_AGES = "&Acirc;ges"
 			TXT_FIND = "Trouver"
 			TXT_HAS_ANY = "Avec un code au moins"
-			TXT_LIMIT_TO = "Limiter à"
 			TXT_REFINE_SEARCH = "Préciser la recherche"
 		Case Else
 			TXT_AGES = "Ages"
 			TXT_FIND = "Find"
 			TXT_HAS_ANY = "Has any"
-			TXT_LIMIT_TO = "Limit To"
 			TXT_REFINE_SEARCH = "Refine Search"
 	End Select
 End Sub

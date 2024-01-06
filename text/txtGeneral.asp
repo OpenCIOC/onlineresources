@@ -35,8 +35,6 @@ Dim TXT_ACTION, _
 	TXT_CODE, _
 	TXT_COLON, _
 	TXT_COMMUNITIES, _
-	TXT_DATABASE_ADMIN_AREA, _
-	TXT_DATE_APPLIES_TO, _
 	TXT_DELETE, _
 	TXT_DELETED, _
 	TXT_DUTIES, _
@@ -49,11 +47,8 @@ Dim TXT_ACTION, _
 	TXT_HELP, _
 	TXT_ID, _
 	TXT_IN, _
-	TXT_IN_TRAINING_MODE, _
 	TXT_IN_YEARS, _
 	TXT_INACTIVE, _
-	TXT_INDICATES_NON_AUTHORIZED, _
-	TXT_INDICATES_NON_PUBLIC, _
 	TXT_JAVASCRIPT_REQUIRED, _
 	TXT_LANGUAGE, _
 	TXT_LAST, _
@@ -89,7 +84,6 @@ Dim TXT_ACTION, _
 	TXT_PREVIOUS, _
 	TXT_PRINT_VERSION, _
 	TXT_PRINT_VERSION_NW, _
-	TXT_PRINTED_ON_DATE, _
 	TXT_PROFILE, _
 	TXT_PUBLICATIONS, _
 	TXT_RECORD_NUM, _
@@ -99,10 +93,8 @@ Dim TXT_ACTION, _
 	TXT_REMOVE, _
 	TXT_REQUEST_DATE, _
 	TXT_RETURN_PREVIOUS_SEARCH, _
-	TXT_RSN, _
 	TXT_SEARCH, _
 	TXT_SEARCH_TIPS, _
-	TXT_SENDING_EMAIL_BLOCKED, _
 	TXT_SHARED, _
 	TXT_SQL_HELP, _
 	TXT_STATUS, _
@@ -115,15 +107,13 @@ Dim TXT_ACTION, _
 	TXT_UPDATED, _
 	TXT_USAGE, _
 	TXT_USER_BANNED, _
-	TXT_VIEW_LIST, _
 	TXT_VOLUNTEER, _
 	TXT_VOLUNTEER_OPPS, _
 	TXT_VOLUNTEER_SEARCH, _
 	TXT_WHATS_NEW, _
 	TXT_WITH, _
 	TXT_WITH_LC, _
-	TXT_YES, _
-	TXT_YOU_MUST_BE_SIGNED_IN
+	TXT_YES
 
 Sub setTxtGeneral()
 	Select Case g_objCurrentLang.Culture
@@ -146,8 +136,6 @@ Sub setTxtGeneral()
 			TXT_COLON = " : "
 			TXT_COMMUNITIES = "Communautés"
 			TXT_CREATE_NEW = "&gt;&gt; CRÉER &lt;&lt;"
-			TXT_DATABASE_ADMIN_AREA = "Domaine de la gestion de la base de données"
-			TXT_DATE_APPLIES_TO = "TR_FR -- Date Applies To"
 			TXT_DELETE = "Supprimer"
 			TXT_DELETED = "supprimé(s)"
 			TXT_DUTIES = "Fonctions"
@@ -160,11 +148,8 @@ Sub setTxtGeneral()
 			TXT_HELP = "Aide"
 			TXT_ID = "Identificateur"
 			TXT_IN = "dans"
-			TXT_IN_TRAINING_MODE = "La base de données est en mode Formation."
 			TXT_IN_YEARS = "en années"
 			TXT_INACTIVE = "Inactif"
-			TXT_INDICATES_NON_AUTHORIZED = "* signifie non-autorisé (local)"
-			TXT_INDICATES_NON_PUBLIC = "* signifie interne"
 			TXT_JAVASCRIPT_REQUIRED = "Cet page requiert JavaScript pour fonctionner correctement."
 			TXT_LANGUAGE = "Langue"
 			TXT_LAST = "Dernier"
@@ -200,18 +185,17 @@ Sub setTxtGeneral()
 			TXT_PREVIOUS = "Précédent"
 			TXT_PRINT_VERSION = "Version imprimable"
 			TXT_PRINT_VERSION_NW = TXT_PRINT_VERSION & " " & TXT_NEW_WINDOW
-			TXT_PRINTED_ON_DATE = "Imprimé le" & TXT_COLON
 			TXT_PROFILE = "Profil"
 			TXT_PUBLICATIONS = "Publications"
 			TXT_RECORD_NUM = "No. de dossier"
 			TXT_RECORD_OWNER = "Propriétaire du dossier"
 			TXT_RECORDS_WERE_NOT = "Les dossiers n'ont pas été "
 			TXT_RECORDS_WERE_SUCCESSFULLY = "Les dossiers ont bien été "
+			TXT_REMOVE = "TR -- Remove"
+			TXT_REQUEST_DATE = "TR -- Request Date"
 			TXT_RETURN_PREVIOUS_SEARCH = "Retourner aux résultats de la recherche précédente"
-			TXT_RSN = "RSN"
 			TXT_SEARCH = "Rechercher"
 			TXT_SEARCH_TIPS = "Conseils de recherche"
-			TXT_SENDING_EMAIL_BLOCKED = "Cette base de données a été configurée pour bloquer les courriels sortants."
 			TXT_SHARED = "Partagé"
 			TXT_SQL_HELP = "Aide SQL"
 			TXT_STATUS = "Statut"
@@ -224,14 +208,13 @@ Sub setTxtGeneral()
 			TXT_UPDATED = "mis à jour"
 			TXT_USAGE = "Utilisation"
 			TXT_USER_BANNED = "Votre accès à la base de données a été suspendu en raison d'un usage douteux. Si vous croyez qu'il s'agit d'une erreur, veuillez nous contacter."
-			TXT_VIEW_LIST = "Voir la liste"
 			TXT_VOLUNTEER = "Bénévolat"
 			TXT_VOLUNTEER_OPPS = "Occasions de bénévolat"
 			TXT_VOLUNTEER_SEARCH = "Rechercher des occasions de bénévolat"
+			TXT_WHATS_NEW = "TR -- What's New"
 			TXT_WITH = "Avec"
 			TXT_WITH_LC = "avec"
 			TXT_YES = "Oui"
-			TXT_YOU_MUST_BE_SIGNED_IN = "Vous devez vous connecter à la base de données pour accéder à la page demandée."
 		Case Else
 			TXT_ACTION = "Action"
 			TXT_ACTIVE = "Active"
@@ -251,8 +234,6 @@ Sub setTxtGeneral()
 			TXT_COLON = ": "
 			TXT_COMMUNITIES = "Communities"
 			TXT_CREATE_NEW = "&gt;&gt; CREATE NEW &lt;&lt;"
-			TXT_DATABASE_ADMIN_AREA = "Database Admin Area"
-			TXT_DATE_APPLIES_TO = "Date Applies To"
 			TXT_DELETE = "Delete"
 			TXT_DELETED = "deleted"
 			TXT_DUTIES = "Duties"
@@ -265,11 +246,8 @@ Sub setTxtGeneral()
 			TXT_HELP = "Help"
 			TXT_ID = "ID"
 			TXT_IN = "in"
-			TXT_IN_TRAINING_MODE = "The database is in training mode"
 			TXT_IN_YEARS = "in years"
 			TXT_INACTIVE = "Inactive"
-			TXT_INDICATES_NON_AUTHORIZED = "* indicates non-authorized (local)"
-			TXT_INDICATES_NON_PUBLIC = "* indicates non-public"
 			TXT_JAVASCRIPT_REQUIRED = "JavaScript is required to use this page."
 			TXT_LANGUAGE = "Language"
 			TXT_LAST = "Last"
@@ -305,7 +283,6 @@ Sub setTxtGeneral()
 			TXT_PREVIOUS = "Previous"
 			TXT_PRINT_VERSION = "Print Version"
 			TXT_PRINT_VERSION_NW = TXT_PRINT_VERSION & " " & TXT_NEW_WINDOW
-			TXT_PRINTED_ON_DATE = "Printed on" & TXT_COLON
 			TXT_PROFILE = "Profile"
 			TXT_PUBLICATIONS = "Publications"
 			TXT_RECORD_NUM = "Record #"
@@ -315,10 +292,8 @@ Sub setTxtGeneral()
 			TXT_REMOVE = "Remove"
 			TXT_REQUEST_DATE = "Request Date"
 			TXT_RETURN_PREVIOUS_SEARCH = "Return to Previous Search Results"
-			TXT_RSN = "RSN"
 			TXT_SEARCH = "Search"
 			TXT_SEARCH_TIPS = "Search&nbsp;Tips"
-			TXT_SENDING_EMAIL_BLOCKED = "This database has been configured to block all outgoing Email."
 			TXT_SHARED = "Shared"
 			TXT_SQL_HELP = "SQL&nbsp;Help"
 			TXT_STATUS = "Status"
@@ -331,7 +306,6 @@ Sub setTxtGeneral()
 			TXT_UPDATED = "updated"
 			TXT_USAGE = "Usage"
 			TXT_USER_BANNED = "You have been banned from the database because of unusual usage patterns. If you believe this to be an error, please contact us."
-			TXT_VIEW_LIST = "View List"
 			TXT_VOLUNTEER = "Volunteer"
 			TXT_VOLUNTEER_OPPS = "Volunteer Opportunities"
 			TXT_VOLUNTEER_SEARCH = "Volunteer Opportunities Search"
@@ -339,7 +313,6 @@ Sub setTxtGeneral()
 			TXT_WITH = "With"
 			TXT_WITH_LC = "with"
 			TXT_YES = "Yes"
-			TXT_YOU_MUST_BE_SIGNED_IN = "You must be signed in to the database to view the page you requested."
 	End Select
 End Sub
 

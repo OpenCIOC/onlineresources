@@ -19,7 +19,6 @@
 
 <%
 Dim TXT_1_YEAR, _
-	TXT_1_MONTH, _
 	TXT_3_MONTHS, _
 	TXT_6_MONTHS, _
 	TXT_18_MONTHS, _
@@ -31,7 +30,6 @@ Dim TXT_1_YEAR, _
 	TXT_FUTURE, _
 	TXT_LAST_7_DAYS, _
 	TXT_LAST_10_DAYS, _
-	TXT_NEVER, _
 	TXT_NEXT_MONTH, _
 	TXT_ON_AFTER_DATE, _
 	TXT_ON_BEFORE_DATE, _
@@ -39,14 +37,12 @@ Dim TXT_1_YEAR, _
 	TXT_PREVIOUS_MONTH, _
 	TXT_THIS_MONTH, _
 	TXT_TODAY, _
-	TXT_TOMORROW, _
 	TXT_YESTERDAY
 
 Sub setTxtDates()
 	Select Case g_objCurrentLang.Culture
 		Case CULTURE_FRENCH_CANADIAN
 			TXT_1_YEAR = "1 an"
-			TXT_1_MONTH = "1 mois"
 			TXT_3_MONTHS = "3 mois"
 			TXT_6_MONTHS = "6 mois"
 			TXT_18_MONTHS = "18 mois"
@@ -58,7 +54,6 @@ Sub setTxtDates()
 			TXT_FUTURE = "dans le futur"
 			TXT_LAST_7_DAYS = "dans les 7 derniers jours"
 			TXT_LAST_10_DAYS = "dans les 10 derniers jours"
-			TXT_NEVER = "jamais"
 			TXT_NEXT_MONTH = "dans le prochain mois"
 			TXT_ON_AFTER_DATE = "le ou après le"
 			TXT_ON_BEFORE_DATE = "le ou avant le"
@@ -66,11 +61,9 @@ Sub setTxtDates()
 			TXT_PREVIOUS_MONTH = "dans le dernier mois"
 			TXT_THIS_MONTH = "dans le présent mois"
 			TXT_TODAY = "aujourd'hui"
-			TXT_TOMORROW = "demain"
 			TXT_YESTERDAY = "hier"
 		Case Else
 			TXT_1_YEAR = "1 Year"
-			TXT_1_MONTH = "1 Month"
 			TXT_3_MONTHS = "3 Months"
 			TXT_6_MONTHS = "6 Months"
 			TXT_18_MONTHS = "18 Months"
@@ -82,7 +75,6 @@ Sub setTxtDates()
 			TXT_FUTURE = "Future"
 			TXT_LAST_7_DAYS = "Last 7 Days"
 			TXT_LAST_10_DAYS = "Last 10 Days"
-			TXT_NEVER = "Never"
 			TXT_NEXT_MONTH = "Next Month"
 			TXT_ON_AFTER_DATE = "on or after the date"
 			TXT_ON_BEFORE_DATE = "on or before the date"
@@ -90,7 +82,6 @@ Sub setTxtDates()
 			TXT_PREVIOUS_MONTH = "Previous Month"
 			TXT_THIS_MONTH = "This Month"
 			TXT_TODAY = "Today"
-			TXT_TOMORROW = "Tomorrow"
 			TXT_YESTERDAY = "Yesterday"
 	End Select
 End Sub

@@ -24,8 +24,6 @@ Dim TXT_ABOUT_NAICS, _
 	TXT_AT_LEAST, _
 	TXT_AREAS_SERVED_EXACT, _
 	TXT_BEGINS_WITH, _
-	TXT_DISTRIBUTIONS, _
-	TXT_EXCLUDE_DISTRIBUTIONS, _
 	TXT_EXCLUDE_HEADINGS, _
 	TXT_EXCLUDE_PUBLICATIONS, _
 	TXT_FULL_TIME, _
@@ -36,11 +34,9 @@ Dim TXT_ABOUT_NAICS, _
 	TXT_HAS_PUBLIC_OPPS, _
 	TXT_HIDE_SUBJECT_SIDEBAR, _
 	TXT_IN_THIS_VIEW, _
-	TXT_INCLUDE_DISTRIBUTIONS, _
 	TXT_INCLUDE_HEADINGS, _
 	TXT_INCLUDE_PUBLICATIONS, _
 	TXT_LOCATED_IN_EXACT, _
-	TXT_MEMBERSHIPS, _
 	TXT_MAX_AGE, _
 	TXT_MIN_AGE, _
 	TXT_NAICS_SHORT, _
@@ -57,7 +53,6 @@ Dim TXT_ABOUT_NAICS, _
 	TXT_STREET_DIR, _
 	TXT_STREET_NAME, _
 	TXT_STREET_TYPE, _
-	TXT_SUBJECT_SIDEBAR, _
 	TXT_TOTAL_EMPLOYEES, _
 	TXT_WARNING_EMPLOYEES, _
 	TXT_WARNING_EMPLOYEES_CRITERIA
@@ -74,8 +69,6 @@ Sub setTxtSearchAdvancedCIC()
 			TXT_AREAS_SERVED_EXACT = "Areas Served Community - Exact Match"
 			TXT_AT_LEAST = "At least"
 			TXT_BEGINS_WITH = "Begins with"
-			TXT_DISTRIBUTIONS = "Distributions"
-			TXT_EXCLUDE_DISTRIBUTIONS = "Exclude Distribution(s)"
 			TXT_EXCLUDE_HEADINGS = "Exclude Heading(s)"
 			TXT_EXCLUDE_PUBLICATIONS = "Exclude Publication(s)"
 			TXT_FULL_TIME = "Full-Time"
@@ -86,11 +79,9 @@ Sub setTxtSearchAdvancedCIC()
 			TXT_HAS_PUBLIC_OPPS = "Has <strong>current, public, non-deleted</strong> opportunities"
 			TXT_HIDE_SUBJECT_SIDEBAR = "Hide&nbsp;Subject&nbsp;Sidebar"
 			TXT_IN_THIS_VIEW = "in this View"
-			TXT_INCLUDE_DISTRIBUTIONS = "Include Distribution(s)"
 			TXT_INCLUDE_HEADINGS = "Include Heading(s)"
 			TXT_INCLUDE_PUBLICATIONS = "Include Publication(s)"
 			TXT_LOCATED_IN_EXACT = "Located In Community - Exact Match"
-			TXT_MEMBERSHIPS = "Memberships"
 			TXT_MAX_AGE = "Maximum Age"
 			TXT_MIN_AGE = "Minimum Age"
 			TXT_NAICS_SHORT = "NAICS"
@@ -107,7 +98,6 @@ Sub setTxtSearchAdvancedCIC()
 			TXT_STREET_DIR = "Street Direction"
 			TXT_STREET_NAME = "Street Name"
 			TXT_STREET_TYPE = "Street Type"
-			TXT_SUBJECT_SIDEBAR = "Subject Sidebar"
 			TXT_TOTAL_EMPLOYEES = "Total Employees"
 			TXT_WARNING_EMPLOYEES = "Warning: Employee information is not available for all records." & _
 				"<br>Records without employee information will be excluded from a # Employees search."
@@ -122,8 +112,6 @@ Sub setTxtSearchAdvancedCIC()
 			TXT_AREAS_SERVED_EXACT = "Communautés desservies - Correspondance exacte"
 			TXT_AT_LEAST = "Au moins"
 			TXT_BEGINS_WITH = "Commence par"
-			TXT_DISTRIBUTIONS = "Distributions"
-			TXT_EXCLUDE_DISTRIBUTIONS = "Exclure les distributions"
 			TXT_EXCLUDE_HEADINGS = "Exclure les en-têtes"
 			TXT_EXCLUDE_PUBLICATIONS = "Exclure les publications"
 			TXT_FULL_TIME = "Temps plein"
@@ -134,11 +122,9 @@ Sub setTxtSearchAdvancedCIC()
 			TXT_HAS_PUBLIC_OPPS = "Offre des occasions de bénévolat <strong>courantes, publiques et non supprimées</strong>"
 			TXT_HIDE_SUBJECT_SIDEBAR = "Cacher le menu des sujets"
 			TXT_IN_THIS_VIEW = "dans cette Vue"
-			TXT_INCLUDE_DISTRIBUTIONS = "Inclure les distributions"
 			TXT_INCLUDE_HEADINGS = "Inclure les en-têtes"
 			TXT_INCLUDE_PUBLICATIONS = "Inclure les publications"
 			TXT_LOCATED_IN_EXACT = "Situé dans la communauté - Correspondance exacte"
-			TXT_MEMBERSHIPS = "Membriété"
 			TXT_MAX_AGE = "TR_FR -- Maximum Age"
 			TXT_MIN_AGE = "TR_FR -- Minimum Age"
 			TXT_NAICS_SHORT = "SCIAN"
@@ -155,7 +141,6 @@ Sub setTxtSearchAdvancedCIC()
 			TXT_STREET_DIR = "Orientation"
 			TXT_STREET_NAME = "Nom de la rue"
 			TXT_STREET_TYPE = "Type de rue"
-			TXT_SUBJECT_SIDEBAR = "Menu des sujets"
 			TXT_TOTAL_EMPLOYEES = "Total employés"
 			TXT_VACANCY = "Disponibilité"
 			TXT_WARNING_EMPLOYEES = "Attention : les renseignements sur les employés ne sont pas disponibles pour tous les dossiers." & _

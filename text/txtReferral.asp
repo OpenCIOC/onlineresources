@@ -88,7 +88,6 @@ Dim TXT_ABOUT_VOLUNTEER, _
 	TXT_SHOW_PLACEMENT_COUNT, _
 	TXT_SUCCESSFUL_PLACEMENT, _
 	TXT_THRESHOLD, _
-	TXT_VIEW_PROFILE_LINK, _
 	TXT_VOL_LAST_CONTACT, _
 	TXT_VOL_LAST_CONTACT_DATE, _
 	TXT_VOLUNTEER_CONTACT, _
@@ -176,7 +175,6 @@ Sub setTxtReferral()
 			TXT_SHOW_PLACEMENT_COUNT = "Afficher le nombre de placements"
 			TXT_SUCCESSFUL_PLACEMENT = "Placement réussi"
 			TXT_THRESHOLD = "Limite"
-			TXT_VIEW_PROFILE_LINK = "Voir le lien du profil"
 			TXT_VOL_LAST_CONTACT = "Le bénévole potentiel a été contacté à propos de ce poste pour la dernière fois :"
 			TXT_VOL_LAST_CONTACT_DATE = "Dernière date de contact du bénévole potentiel"
 			TXT_VOLUNTEER_CONTACT = "Contact du bénévole"
@@ -261,7 +259,6 @@ Sub setTxtReferral()
 			TXT_SHOW_PLACEMENT_COUNT = "Show Placement Count"
 			TXT_SUCCESSFUL_PLACEMENT = "Successful Placement"
 			TXT_THRESHOLD = "Threshold"
-			TXT_VIEW_PROFILE_LINK = "View Profile Link"
 			TXT_VOL_LAST_CONTACT = "The Potential Volunteer was last contacted about this position:"
 			TXT_VOL_LAST_CONTACT_DATE = "Potential Volunteer's Last Contact Date"
 			TXT_VOLUNTEER_CONTACT = "Volunteer Contact"

@@ -18,35 +18,23 @@
 %>
 
 <%
-Dim TXT_CANNOT_PRINT_PAGE_HELP, _
-	TXT_CANNOT_PRINT_FIELD_HELP, _
+Dim TXT_CANNOT_PRINT_FIELD_HELP, _
 	TXT_NO_FIELD_SELECTED, _
 	TXT_NO_HELP_FOR_FIELD, _
-	TXT_NO_HELP_FOR_PAGE, _
-	TXT_NO_PAGE_CHOSEN, _
-	TXT_NO_SQL_HELP, _
-	TXT_VIEW_CURRENT_HELP
+	TXT_NO_SQL_HELP
 
 Sub setTxtHelp()
 	Select Case g_objCurrentLang.Culture
 		Case CULTURE_ENGLISH_CANADIAN
-			TXT_CANNOT_PRINT_PAGE_HELP = "Cannot print page help" & TXT_COLON
 			TXT_CANNOT_PRINT_FIELD_HELP = "Cannot print field help"
 			TXT_NO_FIELD_SELECTED = "No field was selected"
 			TXT_NO_HELP_FOR_FIELD = "No help was found for the selected field."
-			TXT_NO_HELP_FOR_PAGE = "No help was found for the selected page."
-			TXT_NO_PAGE_CHOSEN = "No page was chosen"
 			TXT_NO_SQL_HELP = "Sorry...There is currently no SQL search help available"
-			TXT_VIEW_CURRENT_HELP = "View the current help"
 		Case CULTURE_FRENCH_CANADIAN
-			TXT_CANNOT_PRINT_PAGE_HELP = "Impossible d'imprimer l'Aide à la page" & TXT_COLON
 			TXT_CANNOT_PRINT_FIELD_HELP = "Impossible d'imprimer l'Aide pour les champs de renseignements."
 			TXT_NO_FIELD_SELECTED = "Aucun champ n'a éte sélectionné."
 			TXT_NO_HELP_FOR_FIELD = "L'aide pour le champ sélectionné n'a pas été trouvée."
-			TXT_NO_HELP_FOR_PAGE = "L'aide pour la page sélectionnée n'a pas été trouvée."
-			TXT_NO_PAGE_CHOSEN = "Aucune page n'a été sélectionnée."
 			TXT_NO_SQL_HELP = "Désolé, l'aide à la recherche SQL en Français n'est pas disponible en ce moment."
-			TXT_VIEW_CURRENT_HELP = "Visualiser l'aide courante"
 	End Select
 End Sub
 

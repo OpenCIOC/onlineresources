@@ -27,11 +27,10 @@ Dim TXT_ARE_YOU_SURE, _
 	TXT_CANNOT_DELETE_SITE, _
 	TXT_CANNOT_DELETE_VOL_MEMBER_ORG, _
 	TXT_CANNOT_DELETE_VOL_W_REFERRAL, _
-		TXT_CHANGE_DATE, _
+	TXT_CHANGE_DATE, _
 	TXT_CHECK_ALL, _
 	TXT_CONFIRM_DELETE, _
 	TXT_CURRENT_PUBLIC, _
-	TXT_DELETE_FRENCH_WARNING, _
 	TXT_DELETE_INSTRUCTIONS, _
 	TXT_DELETE_SELECTED, _
 	TXT_DELETION_DATE, _
@@ -69,7 +68,6 @@ Sub setTxtDelete()
 			TXT_CHECK_ALL = "Check All"
 			TXT_CONFIRM_DELETE = "Confirm Permanent Record Deletion"
 			TXT_CURRENT_PUBLIC = "Current &amp; Public"
-			TXT_DELETE_FRENCH_WARNING = "You are about to permanently delete the <strong>French version</strong> of this record."
 			TXT_DELETE_INSTRUCTIONS = "Set the date to mark the record deleted. If you leave the date blank or enter an invalid date, today's date is used." & _
 				"<br>Records with deletion dates of today or in the past are <strong>deleted</strong>." & _
 				"<br>Records with a deletion date in the future are <strong>scheduled for deletion</strong>."
@@ -108,7 +106,6 @@ Sub setTxtDelete()
 			TXT_CHECK_ALL = "Sélectionner tout"
 			TXT_CONFIRM_DELETE = "Confirmation de la suppression définitive du dossier"
 			TXT_CURRENT_PUBLIC = "Dossier public actif"
-			TXT_DELETE_FRENCH_WARNING = "La <strong>version française</strong> de ce dossier va être supprimée."
 			TXT_DELETE_INSTRUCTIONS = "Saisir la date de suppression du dossier. Si aucune date n'est indiquée ou si la date utilisée n'est pas valide, la date d'aujourd'hui sera automatiquement utilisée." & _
 				"<br>Les dossiers ayant comme date de suppression la date d'aujourd'hui ou une date dans le passé seront <strong>supprimés</strong>." & _
 				"<br>Les dossiers ayant comme date de suppression une date dans le futur seront <strong>conservés pour suppression ultérieure</strong>."
