@@ -79,12 +79,12 @@ var update_form_make_required_org_level = function() {
 };
 window['update_form_make_required_org_level'] = update_form_make_required_org_level;
 
-var init_client_validation = function(selector, txt_validation_error) {
-	var form = $(selector), culture = form.prop('lang') || form.parents('[lang]').first().prop('lang') || 'en-CA';
 
-	var checkable = function(element) {
-		return (/radio|checkbox/i).test(element.type);
-	};
+var checkable = function(element) {
+	return (/radio|checkbox/i).test(element.type);
+};
+var init_client_validators = function(selector) {
+	var form = $(selector), culture = form.prop('lang') || form.parents('[lang]').first().prop('lang') || 'en-CA';
 	/*
 	var idOrName = function(element) {
 		return this.checkable(element) ? element.name : element.id || element.name;
@@ -119,17 +119,25 @@ var init_client_validation = function(selector, txt_validation_error) {
 		return one_not_empty;
 	};
 
+	var one_email = "([A-Za-z0-9!#-'\\*\\+\\-/=\\?\\^_`\\{-~]+(\\.[A-Za-z0-9!#-'\\*\\+\\-/=\\?\\^_`\\{-~]+)*@[A-Za-z0-9!#-'\\*\\+\\-/=\\?\\^_`\\{-~]+(\\.[A-Za-z0-9!#-'\\*\\+\\-/=\\?\\^_`\\{-~]+)*)";
 	var email_regex = null;
 	$.validator.addMethod('email', function(value, element) {
 		if (!email_regex) {
-			var one_email = "([A-Za-z0-9!#-'\\*\\+\\-/=\\?\\^_`\\{-~]+(\\.[A-Za-z0-9!#-'\\*\\+\\-/=\\?\\^_`\\{-~]+)*@[A-Za-z0-9!#-'\\*\\+\\-/=\\?\\^_`\\{-~]+(\\.[A-Za-z0-9!#-'\\*\\+\\-/=\\?\\^_`\\{-~]+)*)";
 			var many_email = "^((" + one_email + "(\\s*,*\\s*))*)$";
-			//email_regex = /^([A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+(\.[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+)*@[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+(\.[A-Za-z0-9!#-'\*\+\-/=\?\^_`\{-~]+)*)$/
 
 			email_regex = new RegExp(many_email);
 
 		}
 		return this.optional(element) || email_regex.test(value);
+
+	});
+	var single_email_regex = null;
+	$.validator.addMethod('single-email', function(value, element) {
+		if (!single_email_regex) {
+			single_email_regex = new RegExp("^" + one_email + "$");
+
+		}
+		return this.optional(element) || single_email_regex.test(value);
 
 	});
 	var url_regex = null;
@@ -250,6 +258,87 @@ var init_client_validation = function(selector, txt_validation_error) {
 
 	}, "Field Required");
 
+	if (culture === 'fr-CA') {
+		jQuery.extend(jQuery.validator.messages, {
+			/* default messages */
+			required: "Ce champ est requis.",
+			remote: "Veuillez remplir ce champ pour continuer.",
+			email: "Veuillez entrer une adresse email valide.",
+			url: "Veuillez entrer une URL valide.",
+			date: "Veuillez entrer une date valide.",
+			dateISO: "Veuillez entrer une date valide (ISO).",
+			number: "Veuillez entrer un nombre valide.",
+			digits: "Veuillez entrer (seulement) une valeur num\u00e9rique.",
+			creditcard: "Veuillez entrer un num\u00e9ro de carte de cr\u00e9dit valide.",
+			equalTo: "Veuillez entrer une nouvelle fois la m\u00eame valeur.",
+			notEqualTo: "Veuillez fournir une valeur différente, les valeurs ne doivent pas être identiques.",
+			extension: "Veuillez entrer une valeur avec une extension valide.",
+			maxlength: jQuery.validator.format("Veuillez ne pas entrer plus de {0} caract\u00e8res."),
+			minlength: jQuery.validator.format("Veuillez entrer au moins {0} caract\u00e8res."),
+			rangelength: jQuery.validator.format("Veuillez entrer entre {0} et {1} caract\u00e8res."),
+			range: jQuery.validator.format("Veuillez entrer une valeur entre {0} et {1}."),
+			max: jQuery.validator.format("Veuillez entrer une valeur inf\u00e9rieure ou \u00e9gale \u00e0 {0}."),
+			min: jQuery.validator.format("Veuillez entrer une valeur sup\u00e9rieure ou \u00e9gale \u00e0 {0}."),
+			step: $.validator.format( "Veuillez fournir une valeur multiple de {0}." ),
+			maxWords: $.validator.format( "Veuillez fournir au plus {0} mots." ),
+			minWords: $.validator.format( "Veuillez fournir au moins {0} mots." ),
+			rangeWords: $.validator.format( "Veuillez fournir entre {0} et {1} mots." ),
+			letterswithbasicpunc: "Veuillez fournir seulement des lettres et des signes de ponctuation.",
+			alphanumeric: "Veuillez fournir seulement des lettres, nombres, espaces et soulignages.",
+			lettersonly: "Veuillez fournir seulement des lettres.",
+			nowhitespace: "Veuillez ne pas inscrire d'espaces blancs.",
+			ziprange: "Veuillez fournir un code postal entre 902xx-xxxx et 905-xx-xxxx.",
+			integer: "Veuillez fournir un nombre non décimal qui est positif ou négatif.",
+			vinUS: "Veuillez fournir un numéro d'identification du véhicule (VIN).",
+			dateITA: "Veuillez fournir une date valide.",
+			time: "Veuillez fournir une heure valide entre 00:00 et 23:59.",
+			phoneUS: "Veuillez fournir un numéro de téléphone valide.",
+			phoneUK: "Veuillez fournir un numéro de téléphone valide.",
+			mobileUK: "Veuillez fournir un numéro de téléphone mobile valide.",
+			strippedminlength: $.validator.format( "Veuillez fournir au moins {0} caractères." ),
+			email2: "Veuillez fournir une adresse électronique valide.",
+			url2: "Veuillez fournir une adresse URL valide.",
+			creditcardtypes: "Veuillez fournir un numéro de carte de crédit valide.",
+			currency: "Veuillez fournir une monnaie valide.",
+			ipv4: "Veuillez fournir une adresse IP v4 valide.",
+			ipv6: "Veuillez fournir une adresse IP v6 valide.",
+			require_from_group: $.validator.format( "Veuillez fournir au moins {0} de ces champs." ),
+			nifES: "Veuillez fournir un numéro NIF valide.",
+			nieES: "Veuillez fournir un numéro NIE valide.",
+			cifES: "Veuillez fournir un numéro CIF valide.",
+			postalCodeCA: "Veuillez fournir un code postal valide.",
+			pattern: "Format non valide.",
+
+			/* new messages */
+			protourl: "Veuillez entrer une URL valide.",
+			posint: 'Veuillez entrer un nombre positif.',
+			posdbl: 'Veuillez entrer un nombre positif.',
+			'record-num': 'Please enter a valid record number.',
+			'require-group': 'Ce champ est requis.',
+			unique: 'Une valeur unique est requise.',
+			"single-email": "Veuillez entrer une adresse email valide."
+
+		});
+	} else {
+		jQuery.extend(jQuery.validator.messages, {
+			/* new messages */
+			protourl: "Please enter a valid URL.",
+			posint: 'Please enter a positive number.',
+			posdbl: 'Please enter a positive number.',
+			'record-num': 'Please enter a valid record number.',
+			'require-group': 'Field Required.',
+			unique: 'A unique value is required.',
+			"single-email": "Please enter a valid email address."
+		});
+	}
+	return form;
+}
+
+window['init_client_validators'] = init_client_validators;
+
+var init_client_validation = function(selector, txt_validation_error) {
+	var form = init_client_validators(selector);
+
 	var errorsDialog = $('<div id="a_test"></div>').dialog({
 		autoOpen: false,
 		title: txt_validation_error,
@@ -272,9 +361,9 @@ var init_client_validation = function(selector, txt_validation_error) {
 			});
 	$(".ValidationErrors.ui-dialog").css({position: "fixed"}).position({my: 'right bottom', at: 'right bottom', of: window});
 
-	make_required($(selector).find('td[data-field-required]'));
+	make_required(form.find('td[data-field-required]'));
 
-	var validator = $(selector).validate({
+	var validator = form.validate({
 			ignore: 'input[type=hidden]',
 			ignoreTitle: true,
 			errorPlacement: function(error,element) {
@@ -345,48 +434,6 @@ var init_client_validation = function(selector, txt_validation_error) {
 
 
 		});
-
-	if (culture === 'fr-CA') {
-		jQuery.extend(jQuery.validator.messages, {
-			/* default messages */
-			required: "Ce champ est requis.",
-			remote: "Veuillez remplir ce champ pour continuer.",
-			email: "Veuillez entrer une adresse email valide.",
-			url: "Veuillez entrer une URL valide.",
-			date: "Veuillez entrer une date valide.",
-			dateISO: "Veuillez entrer une date valide (ISO).",
-			number: "Veuillez entrer un nombre valide.",
-			digits: "Veuillez entrer (seulement) une valeur num\u00e9rique.",
-			creditcard: "Veuillez entrer un num\u00e9ro de carte de cr\u00e9dit valide.",
-			equalTo: "Veuillez entrer une nouvelle fois la m\u00eame valeur.",
-			accept: "Veuillez entrer une valeur avec une extension valide.",
-			maxlength: jQuery.validator.format("Veuillez ne pas entrer plus de {0} caract\u00e8res."),
-			minlength: jQuery.validator.format("Veuillez entrer au moins {0} caract\u00e8res."),
-			rangelength: jQuery.validator.format("Veuillez entrer entre {0} et {1} caract\u00e8res."),
-			range: jQuery.validator.format("Veuillez entrer une valeur entre {0} et {1}."),
-			max: jQuery.validator.format("Veuillez entrer une valeur inf\u00e9rieure ou \u00e9gale \u00e0 {0}."),
-			min: jQuery.validator.format("Veuillez entrer une valeur sup\u00e9rieure ou \u00e9gale \u00e0 {0}."),
-
-			/* new messages */
-			protourl: "Veuillez entrer une URL valide.",
-			posint: 'Veuillez entrer un nombre positif.',
-			posdbl: 'Veuillez entrer un nombre positif.',
-			'record-num': 'Please enter a valid record number.',
-			'require-group': 'Ce champ est requis.',
-			unique: 'Une valeur unique est requise.'
-
-		});
-	} else {
-		jQuery.extend(jQuery.validator.messages, {
-			/* new messages */
-			protourl: "Please enter a valid URL.",
-			posint: 'Please enter a positive number.',
-			posdbl: 'Please enter a positive number.',
-			'record-num': 'Please enter a valid record number.',
-			'require-group': 'Field Required.',
-			unique: 'A unique value is required.'
-		});
-	}
 
 	return validator;
 };

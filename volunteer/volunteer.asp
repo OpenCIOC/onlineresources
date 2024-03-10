@@ -56,7 +56,7 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../", "volunteer/", vbNullString)
 <!--#include file="../includes/vprofile/incProfileSecurity.asp" -->
 <%
 Dim strVNUM, _
-	bVNUMError
+        bVNUMError
 
 bVNUMError = False
 strVNUM = Request("VNUM")
@@ -64,84 +64,62 @@ strVNUM = Request("VNUM")
 Call makePageHeader(TXT_YES_VOLUNTEER, TXT_YES_VOLUNTEER, True, False, True, True)
 
 If Nl(strVNUM) Then
-	bVNUMError = True
-	Call handleError(TXT_NO_RECORD_CHOSEN, vbNullString, vbNullString)
+        bVNUMError = True
+        Call handleError(TXT_NO_RECORD_CHOSEN, vbNullString, vbNullString)
 ElseIf Not IsVNUMType(strVNUM) Then
-	bVNUMError = True
-	Call handleError(TXT_INVALID_OPID & Server.HTMLEncode(strVNUM) & ".", vbNullString, vbNullString)
+        bVNUMError = True
+        Call handleError(TXT_INVALID_OPID & Server.HTMLEncode(strVNUM) & ".", vbNullString, vbNullString)
 End If
 
 If Not bVNUMError Then
-%>
-<script type="text/javascript"><!--
-    function validateForm() {
-        formObj = document.EntryForm;
-<% If Not user_bLoggedIn Then %>
-		if (formObj.VolunteerName.value == "") {
-            formObj.VolunteerName.focus();
-            alert(<%=JsQs(TXT_INST_FULL_NAME) %>);
-            return false;
-        } else if ((formObj.VolunteerEmail.value == "") && (formObj.VolunteerPhone.value == "")) {
-            formObj.VolunteerEmail.focus();
-            alert(<%=JsQs(TXT_INST_EMAIL_PHONE) %>);
-            return false;
-<% Else %>
-		if (false) {
-<% End If %>
-		} else {
-                return true;
-            }
-        }
-//--></script>
-<%
-	Call setOpInfo()
-	If Nl(strPosition) Then
-		Call handleError(TXT_NO_RECORD_EXISTS_ID & Server.HTMLEncode(strVNUM) & ".", vbNullString, vbNullString)
-	ElseIf Not (bInView Or bInDefaultView) Then
-		Call handleError(TXT_ERROR & TXT_RECORD_YOU_REQUESTED & TXT_RECORD_EXISTS_BUT, vbNullString, vbNullString)
+        Call setOpInfo()
+        If Nl(strPosition) Then
+                Call handleError(TXT_NO_RECORD_EXISTS_ID & Server.HTMLEncode(strVNUM) & ".", vbNullString, vbNullString)
+        ElseIf Not (bInView Or bInDefaultView) Then
+                Call handleError(TXT_ERROR & TXT_RECORD_YOU_REQUESTED & TXT_RECORD_EXISTS_BUT, vbNullString, vbNullString)
 %>
 <p><%=TXT_CONCERNS & TXT_COLON%><strong><%=strROName%></strong></p>
 <%
-		Call getROInfo(strRecordOwner,DM_VOL)
-		Call printROContactInfo(False)
-	ElseIf bExpired Then
-		Call handleError(TXT_ERROR & TXT_RECORD_YOU_REQUESTED & " " & TXT_HAS_EXPIRED, vbNullString, vbNullString)
+                Call getROInfo(strRecordOwner,DM_VOL)
+                Call printROContactInfo(False)
+        ElseIf bExpired Then
+                Call handleError(TXT_ERROR & TXT_RECORD_YOU_REQUESTED & " " & TXT_HAS_EXPIRED, vbNullString, vbNullString)
 %>
 <p><%=TXT_CONCERNS & TXT_COLON%><strong><%=strROName%></strong></p>
 <%
-		Call getROInfo(strRecordOwner,DM_VOL)
-		Call printROContactInfo(False)
-	Else
-		Call getROInfo(strRecordOwner,DM_VOL)
-		Dim dicContactInfo
-		Set dicContactInfo = Server.CreateObject("Scripting.Dictionary")
-		If vprofile_bLoggedIn Then
-		
-			Dim objReturn, objErrMsg
-			Dim cmdProfileInfo, rsProfileInfo
-			Set cmdProfileInfo = Server.CreateObject("ADODB.Command")
-			With cmdProfileInfo
-				.ActiveConnection = getCurrentVOLBasicCnn()
-				.CommandText = "sp_VOL_Profile_s_ReferralForm"
-				.CommandType = adCmdStoredProc
-				.CommandTimeout = 0
-				Set objReturn = .CreateParameter("@RETURN_VALUE", adInteger, adParamReturnValue, 4)
-				.Parameters.Append objReturn
-				.Parameters.Append .CreateParameter("@ProfileID", adGUID, adParamInput, 16, vprofile_strID)
-				Set objErrMsg = .CreateParameter("@ErrMsg", adVarWChar, adParamOutput, 500)
-				.Parameters.Append objErrMsg
-			End With
-			Set rsProfileInfo = cmdProfileInfo.Execute()
+                Call getROInfo(strRecordOwner,DM_VOL)
+                Call printROContactInfo(False)
+        Else
+                Call getROInfo(strRecordOwner,DM_VOL)
+                Dim dicContactInfo
+                Set dicContactInfo = Server.CreateObject("Scripting.Dictionary")
+                If vprofile_bLoggedIn Then
 
-			Dim objField
-			For Each objField in rsProfileInfo.Fields
-				dicContactInfo(objField.Name) = objField.Value
-			Next
+                        Dim objReturn, objErrMsg
+                        Dim cmdProfileInfo, rsProfileInfo
+                        Set cmdProfileInfo = Server.CreateObject("ADODB.Command")
+                        With cmdProfileInfo
+                                .ActiveConnection = getCurrentVOLBasicCnn()
+                                .CommandText = "sp_VOL_Profile_s_ReferralForm"
+                                .CommandType = adCmdStoredProc
+                                .CommandTimeout = 0
+                                Set objReturn = .CreateParameter("@RETURN_VALUE", adInteger, adParamReturnValue, 4)
+                                .Parameters.Append objReturn
+                                .Parameters.Append .CreateParameter("@ProfileID", adGUID, adParamInput, 16, vprofile_strID)
+                                Set objErrMsg = .CreateParameter("@ErrMsg", adVarWChar, adParamOutput, 500)
+                                .Parameters.Append objErrMsg
+                        End With
+                        Set rsProfileInfo = cmdProfileInfo.Execute()
 
-			rsProfileInfo.Close()
-			Set rsProfileInfo = Nothing
-			Set cmdProfileInfo = Nothing
-		End If
+                        Dim objField
+                        For Each objField in rsProfileInfo.Fields
+                                dicContactInfo(objField.Name) = objField.Value
+                        Next
+
+                        rsProfileInfo.Close()
+                        Set rsProfileInfo = Nothing
+                        Set cmdProfileInfo = Nothing
+                End If
 %>
 <div class="panel panel-info">
     <div class="panel-body">
@@ -163,13 +141,13 @@ Call printROContactInfo(False)
 Dim strProfileLoginReturnArgs
 strProfileLoginReturnArgs = "VNUM=" & strVNUM
 %>
-<form name="EntryForm" action="volunteer2.asp" role="form" method="POST" onsubmit="return validateForm()" class="form">
+<form name="EntryForm" id="EntryForm" action="volunteer2.asp" role="form" method="POST" class="form">
     <%=g_strCacheFormVals%>
     <input type="hidden" name="VNUM" value="<%=strVNUM%>">
     <%If intCurSearchNumber >= 0 Then%>
     <input type="hidden" name="Number" value="<%=intCurSearchNumber%>">
     <%
-	strProfileLoginReturnArgs = strProfileLoginReturnArgs & "&Number=" & intCurSearchNumber
+        strProfileLoginReturnArgs = strProfileLoginReturnArgs & "&Number=" & intCurSearchNumber
     %>
     <%End If%>
     <div class="panel panel-default max-width-lg clear-line-below">
@@ -183,8 +161,8 @@ strProfileLoginReturnArgs = "VNUM=" & strVNUM
                         <p class="AlertBubble"><span class="glyphicon glyphicon-star" aria-hidden="true"></span><%=TXT_INST_FILL_FORM%></p>
 <%
 If Not user_bLoggedIn And g_bUseProfilesView And Not vprofile_bLoggedIn Then
-	Dim strProfileLoginReturnParams
-	strProfileLoginReturnParams = "page="& Server.URLEncode(ps_strThisPageFull) & "&args=" & Server.URLEncode(strProfileLoginReturnArgs)
+        Dim strProfileLoginReturnParams
+        strProfileLoginReturnParams = "page="& Server.URLEncode(ps_strThisPageFull) & "&args=" & Server.URLEncode(strProfileLoginReturnArgs)
 %>
                         <p><strong><em><%= TXT_DO_YOU_HAVE_PROFILE %></em></strong> <a class="btn btn-info" href="<%=makeLink("profile/login.asp", strProfileLoginReturnParams, vbNullString)%>"><%=TXT_LOGIN_TO_YOUR_VOLUNTEER_PROFILE %></a> <%=TXT_OR%> <a class="btn btn-info" href="<%=makeLink("profile/create.asp", strProfileLoginReturnParams, vbNullString)%>"><%= TXT_CREATE_A_PROFILE_NEW %></a></p>
 <%
@@ -197,7 +175,7 @@ End If
                         <label for="VolunteerName"><%=TXT_NAME%> <span class="Alert" title="<%=TXT_REQUIRED%>"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></span></label>
                     </td>
                     <td class="field-data-cell">
-                        <input type="Text" name="VolunteerName" id="VolunteerName" maxlength="100" value=<%=AttrQs(Server.HTMLEncode(Ns(dicContactInfo("FirstName")) & StringIf(Not Nl(dicContactInfo("FirstName")) And Not Nl(dicContactInfo("LastName"))," ") & Ns(dicContactInfo("LastName"))))%> class="form-control" aria-required="true">
+                        <input type="Text" name="VolunteerName" id="VolunteerName" maxlength="100" value=<%=AttrQs(Server.HTMLEncode(Ns(dicContactInfo("FirstName")) & StringIf(Not Nl(dicContactInfo("FirstName")) And Not Nl(dicContactInfo("LastName"))," ") & Ns(dicContactInfo("LastName"))))%> class="form-control<%=StringIf(not user_bLoggedIn, " required")%>" aria-required="true">
                     </td>
                 </tr>
                 <tr>
@@ -205,7 +183,7 @@ End If
                         <label for="VolunteerEmail"><%=TXT_EMAIL%> <span class="Alert" title="<%=TXT_REQUIRED%>"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></span></label>
                     </td>
                     <td class="field-data-cell">
-                        <input type="Text" name="VolunteerEmail" id="VolunteerEmail" maxlength="100" value=<%=AttrQs(Server.HTMLEncode(Ns(vprofile_strEmail)))%> class="form-control" aria-required="true">
+                        <input type="Text" name="VolunteerEmail" id="VolunteerEmail" maxlength="100" value=<%=AttrQs(Server.HTMLEncode(Ns(vprofile_strEmail)))%> class="form-control single-email<%=StringIf(not user_bLoggedIn, " required-contact")%>" aria-required="true">
                     </td>
                 </tr>
                 <tr>
@@ -213,7 +191,7 @@ End If
                         <label for="VolunteerPhone"><%=TXT_PHONE%></label>
                     </td>
                     <td class="field-data-cell">
-                        <input type="Text" name="VolunteerPhone" id="VolunteerPhone" maxlength="100" value=<%=AttrQs(Server.HTMLEncode(Ns(dicContactInfo("Phone"))))%> class="form-control"></td>
+                        <input type="Text" name="VolunteerPhone" id="VolunteerPhone" maxlength="100" value=<%=AttrQs(Server.HTMLEncode(Ns(dicContactInfo("Phone"))))%> class="form-control<%=StringIf(not user_bLoggedIn, " required-contact")%>"></td>
                 </tr>
                 <tr>
                     <td class="field-label-cell"><%=TXT_ADDRESS%></td>
@@ -227,7 +205,7 @@ End If
                         <div class="row form-group">
                             <label class="control-label col-sm-3" for="VolunteerCity"><%=TXT_CITY%> <span class="Alert" title="<%=TXT_REQUIRED%>"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></span></label>
                             <div class="col-sm-9">
-                                <input type="Text" name="VolunteerCity" id="VolunteerCity" maxlength="100" value=<%=AttrQs(Server.HTMLEncode(Ns(dicContactInfo("City"))))%> class="form-control" aria-required="true">
+                                <input type="Text" name="VolunteerCity" id="VolunteerCity" maxlength="100" value=<%=AttrQs(Server.HTMLEncode(Ns(dicContactInfo("City"))))%> class="form-control required" aria-required="true">
                             </div>
                         </div>
                         <div class="row form-group">
@@ -316,11 +294,28 @@ End If
     </p>
 </form>
     <%
-	End If
+        End If
 End If
     %>
     <%= makeJQueryScriptTags() %>
-    <%= JSVerScriptTag("scripts/search_params.js") %>
+    <%= JSVerScriptTag("scripts/volunteer.js") %>
+<script type="text/javascript">
+jQuery(function($) {
+    var form = init_client_validators('#EntryForm');
+    var rules = Object.fromEntries(
+        $('.required-contact').get().map(
+           function(current) { return [current.id, {require_from_group: [1, '.required-contact'] }]; }
+        )
+    );
+    var validator = form.validate({
+        ignore: 'input[type=hidden]',
+        ignoreTitle: true,
+        rules: rules,
+        focusInvalid: false, onfocusout: false,
+        onkeyup: false, onclick: false
+    });
+});
+</script>
     <%
 Call makePageFooter(True)
     %>
