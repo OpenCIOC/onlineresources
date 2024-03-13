@@ -442,7 +442,7 @@ Sub setTxtEntryForm()
 			TXT_UPDATED_BY = "Mis à jour par"
 			TXT_VACANCY_INFO_ADD_NEW = "Ajouter un nouveau type de service" & TXT_COLON
 			TXT_VACANCY_INFO_AS_OF = "à partir du"
-			TXT_VACANCY_INFO_CAPACITY_OF = "<strong>Capacité</strong> de"
+			TXT_VACANCY_INFO_CAPACITY_OF = "Capacité de"
 			TXT_VACANCY_INFO_CURRENT_SERVICES = "Services actuels" & TXT_COLON
 			TXT_VACANCY_INFO_DAYS_PER_WEEK = "Jours par semaine"
 			TXT_VACANCY_INFO_FULL_TIME_EQUIVALENT = "Équivalent temps plein (ETP)"
@@ -666,7 +666,7 @@ Sub setTxtEntryForm()
 			TXT_UPDATED_BY = "Updated&nbsp;By"
 			TXT_VACANCY_INFO_ADD_NEW = "Add New Type of Service" & TXT_COLON
 			TXT_VACANCY_INFO_AS_OF = "as of"
-			TXT_VACANCY_INFO_CAPACITY_OF = "<strong>Capacity</strong> of"
+			TXT_VACANCY_INFO_CAPACITY_OF = "Capacity of"
 			TXT_VACANCY_INFO_CURRENT_SERVICES = "Current Services" & TXT_COLON
 			TXT_VACANCY_INFO_DAYS_PER_WEEK = "Days per week"
 			TXT_VACANCY_INFO_FULL_TIME_EQUIVALENT = "Full-time Equivalent (FTE)"

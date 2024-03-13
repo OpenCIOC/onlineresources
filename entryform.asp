@@ -432,9 +432,8 @@ End Select
 	<% End If %>
 </table>
 
-<form name="EntryForm" id="EntryForm" action="entryform2.asp" role="form" class="form-horizontal" method="post" lang="<%=objUpdateLang.Culture%>">
+<form name="EntryForm" id="EntryForm" action="entryform2.asp" role="form" class="form-horizontal" method="post" lang="<%=objUpdateLang.Culture%>" autocomplete="off">
 <div style="display:none">
-<input name="transaction-amount" autocomplete="transaction-amount">
 <%=g_strCacheFormVals%>
 <input type="hidden" name="UpdateLn" value="<%=objUpdateLang.Culture%>">
 <%
@@ -939,7 +938,7 @@ If Not bNew And g_bUseCIC Then
 End If
 
 %>
-<form class="NotVisible" name="stateForm" id="stateForm">
+<form class="NotVisible" name="stateForm" id="stateForm" autocomplete="off">
 <textarea id="cache_form_values"></textarea>
 </form>
 

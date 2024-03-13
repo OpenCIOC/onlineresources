@@ -3219,93 +3219,111 @@ Function makeVacancyInfoEntry(dicBTVUT, strHeading, strPrefix, dicBTVTP, dicVaca
 	strReturn = strReturn & "<div class=""EntryFormItemBox"" id=""" & strPrefix & "container"">" & _
 		"<div style=""float: right;""><button type=""button"" class=""EntryFormItemDelete ui-state-default ui-corner-all"" id=""" & strPrefix & "DELETE"">" & TXT_DELETE & "</button></div>" & _
 		"<h4 class=""EntryFormItemHeader"">" & strHeading & "</h4>" & vbCrLf & _ 
-		"<div id=""" & strPrefix & "DISPLAY"" class=""EntryFormItemContent"">" & _
-		"<table class=""NoBorder cell-padding-2"">"
+		"<div id=""" & strPrefix & "DISPLAY"" class=""EntryFormItemContent"">"
 
 	If bUseContent Then
 		strReturn = strReturn & _
-			"<tr>" & _
-				"<td class=""FieldLabelLeftClr"">" & TXT_UNIQUE_ID & "</td>" & _
-				"<td>" & dicBTVUT("GUID") & "</td>" & _
-			"</tr>"
+			"<div class=""form-group"">" & _
+				"<label class=""control-label col-sm-3"">" & TXT_UNIQUE_ID & "</label>" & _
+				"<div class=""col-sm-9"">" & dicBTVUT("GUID") & "</div>" & _
+			"</div>"
 	End If
 	strReturn = strReturn & _
-		"<tr>" & _
-			"<td class=""FieldLabelLeftClr"">" & TXT_VACANCY_INFO_SERVICE_TITLE & "</td>" & _
-			"<td><input class=""ui-autocomplete-input ServiceTitleField Info"" type=""text"" name=""" & strPrefix & "ServiceTitle"" maxlength=""100"" size=""" & TEXT_SIZE-20 & """ value=""" & Server.HTMLEncode(Ns(dicBTVUT("ServiceTitle"))) & """ id=""" & strPrefix &"vacancy_service_title""></td>" & _
-		"</tr>" & _
-		"<tr>" & _
-			"<td class=""FieldLabelLeftClr"">" & TXT_VACANCY_INFO_CAPACITY_OF & "</td>" & _
-			"<td><input type=""text"" name=""" & strPrefix & "VUT_Capacity"" size=""4"" maxlength=""4"" value=""" & StringIf(bUseContent, dicBTVUT("Capacity")) & """ class=""posint"">"
+		"<div class=""form-group"">" & _
+			"<label class=""control-label col-sm-3"" for=""" & strPrefix & "ServiceTitle"">" & TXT_VACANCY_INFO_SERVICE_TITLE & "</label>" & _
+			"<div class=""col-sm-9""><input class=""ui-autocomplete-input ServiceTitleField Info form-control"" type=""text"" name=""" & strPrefix & "ServiceTitle"" maxlength=""100"" value=""" & Server.HTMLEncode(Ns(dicBTVUT("ServiceTitle"))) & """ id=""" & strPrefix &"vacancy_service_title""></div>" & _
+		"</div>" & _
+		"<div class=""form-group form-inline"">" & _
+			"<label class=""control-label col-sm-3"" for=""" & strPrefix & "VUT_Capacity"">" & TXT_VACANCY_INFO_CAPACITY_OF & "</label>" & _
+			"<div class=""col-sm-9""><input type=""text"" name=""" & strPrefix & "VUT_Capacity"" size=""4"" maxlength=""4"" value=""" & StringIf(bUseContent, dicBTVUT("Capacity")) & """ class=""form-control posint"">"
 			
 	If bUseContent Then
-		strReturn = strReturn & "&nbsp;<em>" & Server.HTMLEncode(Ns(dicBTVUT("UnitTypeName"))) & "</em>"
+		strReturn = strReturn & " <em>" & Server.HTMLEncode(Ns(dicBTVUT("UnitTypeName"))) & "</em>"
 	Else
 		Call openVacancyUnitTypeListRst(False)
 		strReturn = strReturn & "&nbsp;" & makeVacancyUnitTypeList(vbNullString, strPrefix & "VUT_ID", False, vbNullString)
 		Call closeVacancyUnitTypeListRst()
 	End If
 	
-	strReturn = strReturn & "</td>" & _
-		"</tr>" & _
-		StringIf(bVacancyFundedCapacity, _
-		"<tr>" & _
-			"<td class=""FieldLabelLeftClr"">" & TXT_VACANCY_INFO_FUNDED_CAPACITY_OF & "</td>" & _
-			"<td><input type=""text"" name=""" & strPrefix & "VUT_FundedCapacity"" size=""4"" maxlength=""4"" value=""" & StringIf(bUseContent, dicBTVUT("FundedCapacity")) & """ class=""posint"">&nbsp;" & _
-			IIf(bUseContent,"<em>" & Server.HTMLEncode(Ns(dicBTVUT("UnitTypeName"))) & "</em>",TXT_VACANCY_INFO_UNITS) & "</td>" & _
-		"</tr>") & _
-		StringIf(bVacancyServiceHours, _
-		"<tr>" & _
-			"<td class=""FieldLabelLeftClr"">" & TXT_VACANCY_INFO_HOURS_PER_DAY & "</td>" & _
-			"<td><input type=""text"" name=""" & strPrefix & "VUT_HoursPerDay"" size=""4"" maxlength=""6"" value=""" & StringIf(bUseContent, dicBTVUT("HoursPerDay")) & """ class=""posdbl""></td>" & _
-		"</tr>") & _
-		StringIf(bVacancyServiceDays, _
-		"<tr>" & _
-			"<td class=""FieldLabelLeftClr"">" & TXT_VACANCY_INFO_DAYS_PER_WEEK & "</td>" & _
-			"<td><input type=""text"" name=""" & strPrefix & "VUT_DaysPerWeek"" size=""4"" maxlength=""6"" value=""" & StringIf(bUseContent, dicBTVUT("DaysPerWeek")) & """ class=""posdbl""></td>" & _
-		"</tr>") & _
-		StringIf(bVacancyServiceWeeks, _
-		"<tr>" & _
-			"<td class=""FieldLabelLeftClr"">" & TXT_VACANCY_INFO_WEEKS_PER_YEAR & "</td>" & _
-			"<td><input type=""text"" name=""" & strPrefix & "VUT_WeeksPerYear"" size=""4"" maxlength=""6"" value=""" & StringIf(bUseContent, dicBTVUT("WeeksPerYear")) & """ class=""posdbl""></td>" & _
-		"</tr>") & _
-		StringIf(bVacancyServiceFTE, _
-		"<tr>" & _
-			"<td class=""FieldLabelLeftClr"">" & TXT_VACANCY_INFO_FULL_TIME_EQUIVALENT & "</td>" & _
-			"<td><input type=""text"" name=""" & strPrefix & "VUT_FTE"" size=""4"" maxlength=""6"" value=""" & StringIf(bUseContent, dicBTVUT("FullTimeEquivalent")) & """ class=""posdbl""></td>" & _
-		"</tr>") & _
-		"<tr>" & _
-			"<td class=""FieldLabelLeftClr"">" & TXT_VACANCY_INFO_VACANCY & TXT_OF & "</td>" & _
-			"<td><input type=""hidden"" name=""" & strPrefix & "VUT_LastVacancyChange"" value=""" & StringIf(bUseContent, dicBTVUT("LastVacancyChange")) & """><input type=""text"" name=""" & strPrefix & "VUT_Vacancy"" size=""4"" maxlength=""4"" value=""" & StringIf(bUseContent, dicBTVUT("Vacancy")) & """>&nbsp;" & _
-			IIf(bUseContent,"<em>" & Server.HTMLEncode(Ns(dicBTVUT("UnitTypeName"))) & "</em>",TXT_VACANCY_INFO_UNITS) & _
-			", <strong>" & TXT_VACANCY_INFO_AS_OF & "</strong> " & makeDateFieldVal(strPrefix & "VacancyModifiedDate", StringIf(bUseContent, Ns(dicBTVUT("MODIFIED_DATE"))), True, False, False, False, False, False) & "</td>" & _
-		"</tr>" & _
-		"<tr>" & _
-			"<td class=""FieldLabelLeftClr"">" & TXT_VACANCY_INFO_TARGET_POPULATION & "</td>" & _
-			"<td>"
+	strReturn = strReturn & "</div>" & _
+		"</div>" & _
+ 		StringIf(bVacancyFundedCapacity, _
+		"<div class=""form-group form-inline"">" & _
+			"<label class=""control-label col-sm-3"" for=""" & strPrefix & "VUT_FundedCapacity"">" & TXT_VACANCY_INFO_FUNDED_CAPACITY_OF & "</label>" & _
+			"<div class=""col-sm-9""><input type=""text"" name=""" & strPrefix & "VUT_FundedCapacity"" size=""4"" maxlength=""4"" value=""" & StringIf(bUseContent, dicBTVUT("FundedCapacity")) & """class=""form-control posint""> " & _
+			IIf(bUseContent,"<em>" & Server.HTMLEncode(Ns(dicBTVUT("UnitTypeName"))) & "</em>",TXT_VACANCY_INFO_UNITS) & "</div>" & _
+		"</div>") & _
+	 	StringIf(bVacancyServiceHours, _
+		"<div class=""form-group form-inline"">" & _
+			"<label class=""control-label col-sm-3"" for=""" & strPrefix & "VUT_HoursPerDay"">" & TXT_VACANCY_INFO_HOURS_PER_DAY & "</label>" & _
+			"<div class=""col-sm-9""><input type=""text"" name=""" & strPrefix & "VUT_HoursPerDay"" size=""4"" maxlength=""6"" value=""" & StringIf(bUseContent, dicBTVUT("HoursPerDay")) & """class=""form-control posdbl""> " & _
+			"</div>" & _
+		"</div>") & _
+	 	StringIf(bVacancyServiceDays, _
+		"<div class=""form-group form-inline"">" & _
+			"<label class=""control-label col-sm-3"" for=""" & strPrefix & "VUT_DaysPerWeek"">" & TXT_VACANCY_INFO_DAYS_PER_WEEK & "</label>" & _
+			"<div class=""col-sm-9""><input type=""text"" name=""" & strPrefix & "VUT_DaysPerWeek"" size=""4"" maxlength=""6"" value=""" & StringIf(bUseContent, dicBTVUT("DaysPerWeek")) & """class=""form-control posdbl""> " & _
+			"</div>" & _
+		"</div>") & _
+	 	StringIf(bVacancyServiceWeeks, _
+		"<div class=""form-group form-inline"">" & _
+			"<label class=""control-label col-sm-3"" for=""" & strPrefix & "VUT_WeeksPerYear"">" & TXT_VACANCY_INFO_WEEKS_PER_YEAR & "</label>" & _
+			"<div class=""col-sm-9""><input type=""text"" name=""" & strPrefix & "VUT_WeeksPerYear"" size=""4"" maxlength=""6"" value=""" & StringIf(bUseContent, dicBTVUT("WeeksPerYear")) & """class=""form-control posdbl""> " & _
+			"</div>" & _
+		"</div>") & _
+	 	StringIf(bVacancyServiceFTE, _
+		"<div class=""form-group form-inline"">" & _
+			"<label class=""control-label col-sm-3"" for=""" & strPrefix & "VUT_FTE"">" & TXT_VACANCY_INFO_FULL_TIME_EQUIVALENT & "</label>" & _
+			"<div class=""col-sm-9""><input type=""text"" name=""" & strPrefix & "VUT_FTE"" size=""4"" maxlength=""6"" value=""" & StringIf(bUseContent, dicBTVUT("FullTimeEquivalent")) & """class=""form-control posdbl""> " & _
+			"</div>" & _
+		"</div>") & _
+		"<div class=""form-group form-inline"">" & _
+			"<label class=""control-label col-sm-3"" for=""" & strPrefix & "VUT_Vacancy"">" & TXT_VACANCY_INFO_VACANCY & TXT_OF & "</label>" & _
+			"<div class=""col-sm-9""><input type=""hidden"" name=""" & strPrefix & "VUT_LastVacancyChange"" value=""" & StringIf(bUseContent, dicBTVUT("LastVacancyChange")) & """>" & _
+				"<input type=""text"" name=""" & strPrefix & "VUT_Vacancy"" size=""4"" maxlength=""4"" value=""" & StringIf(bUseContent, dicBTVUT("Vacancy")) & """ class=""form-control posint""> " & _
+				IIf(bUseContent,"<em>" & Server.HTMLEncode(Ns(dicBTVUT("UnitTypeName"))) & "</em>",TXT_VACANCY_INFO_UNITS) & _
+				", <label for=""" & strPrefix & "VacancyModifiedDate"">" & TXT_VACANCY_INFO_AS_OF & "</label> " & makeDateFieldVal(strPrefix & "VacancyModifiedDate", StringIf(bUseContent, Ns(dicBTVUT("MODIFIED_DATE"))), True, False, False, False, False, False) & "</div>" & _
+		"</div>"
 
-	Dim strVTPCON, intVTPID
-	strVTPCON = vbNullString
+	If dicVacancyTargetPop.Count > 0 Then
+		strReturn = strReturn & _
+			"<div class=""form-group"">" & _
+				"<label class=""control-label col-sm-3"">" & TXT_VACANCY_INFO_TARGET_POPULATION & "</label>" & _
+				"<div class=""col-sm-9"">"
+
+		Dim strVTPCON, intVTPID
+		strVTPCON = "<label>"
 	
-	For Each intVTPID in aVacancyTargetPopOrder
-		strReturn = strReturn & strVTPCON 
-		strReturn = strReturn & "<input type=""checkbox"" name=""" & strPrefix & "VTP_ID"" value=""" & intVTPID & """" & _
-		Checked(dicBTVTP.Exists(strPrefix & intVTPID)) & ">&nbsp;"
-		strReturn = strReturn & Server.HTMLEncode(Ns(dicVacancyTargetPop(intVTPID)))
-		strVTPCON = "," & vbCrLf
-	Next
+		For Each intVTPID in aVacancyTargetPopOrder
+			strReturn = strReturn & strVTPCON  & _
+				"<input type=""checkbox"" name=""" & strPrefix & "VTP_ID"" value=""" & intVTPID & """" & _
+				Checked(dicBTVTP.Exists(strPrefix & intVTPID)) & ">" & _
+				Server.HTMLEncode(Ns(dicVacancyTargetPop(intVTPID)))
+			strVTPCON = "</label>, <label>" & vbCrLf
+		Next
 
-	strReturn = strReturn & "</td>" & _
-		"</tr>" & _
-		"</table>" & _
-		"<p><strong>" & TXT_VACANCY_INFO_WAIT_LIST & "</strong> " & TXT_IS & " " & _
-		"<input type=""radio"" name=""" & strPrefix & "WaitList"" value=""""" & Checked(Nl(dicBTVUT("WaitList"))) & ">&nbsp;" & TXT_UNKNOWN & _
-		"<input type=""radio"" name=""" & strPrefix & "WaitList"" value=""" & SQL_TRUE & """" & Checked(dicBTVUT("WaitList") = True) & ">&nbsp;" & TXT_AVAILABLE & _
-		"<input type=""radio"" name=""" & strPrefix & "WaitList"" value=""" & SQL_FALSE & """" & Checked(dicBTVUT("WaitList") = False) & ">&nbsp;" & TXT_NOT_AVAILABLE & vbCrLf & _
-		"<br>" & TXT_VACANCY_INFO_NEXT_WAIT_LIST_DATE & _
-		" " & makeDateFieldVal(strPrefix & "WaitListDate", StringIf(bUseContent, Ns(dicBTVUT("WaitListDate"))), False, False, False, False, False, False) & "</p>" & _
-		"<p><strong>" & TXT_NOTES & "</strong>" & TXT_COLON & _
-		"<br><textarea name=""" & strPrefix & "VacancyServiceNotes"" cols=""" & TEXTAREA_COLS & """ rows=""" & TEXTAREA_ROWS_SHORT & """>" & Server.HTMLEncode(StringIf(bUseContent, Ns(dicBTVUT("Notes")))) & "</textarea></p>" & _
+		strReturn = strReturn & "</div>" & _
+			"</div>"
+	End If
+
+	strReturn = strReturn & _
+		"<div class=""form-group form-inline"">" & _
+			"<label class=""control-label col-sm-3"">" & TXT_VACANCY_INFO_WAIT_LIST & " " & TXT_IS & "</label>" & _
+			"<div class=""col-sm-9""><p>" & _
+			"<label><input type=""radio"" name=""" & strPrefix & "WaitList"" value=""""" & Checked(Nl(dicBTVUT("WaitList"))) & ">" & TXT_UNKNOWN & "</label> " & _
+			"<label><input type=""radio"" name=""" & strPrefix & "WaitList"" value=""" & SQL_TRUE & """" & Checked(dicBTVUT("WaitList") = True) & ">" & TXT_AVAILABLE & "</label> " & _
+			"<label><input type=""radio"" name=""" & strPrefix & "WaitList"" value=""" & SQL_FALSE & """" & Checked(dicBTVUT("WaitList") = False) & ">" & TXT_NOT_AVAILABLE & "</label> " & _
+			"</p><p><label for=""WaitListDate"">" & TXT_VACANCY_INFO_NEXT_WAIT_LIST_DATE & "</label>" & _
+			" " & makeDateFieldVal(strPrefix & "WaitListDate", StringIf(bUseContent, Ns(dicBTVUT("WaitListDate"))), False, False, False, False, False, False) & "</p>" & _
+			"</div>" & _
+		"</div>"
+
+	strReturn = strReturn & _
+		"<div class=""form-group"">" & _
+			"<label class=""control-label col-sm-3"" for=""" & strPrefix & "VacancyServiceNotes"">" & TXT_NOTES & TXT_COLON & "</label>" & _
+			"<div class=""col-sm-9""><textarea class=""form-control"" name=""" & strPrefix & "VacancyServiceNotes"" cols=""" & TEXTAREA_COLS & """ rows=""" & TEXTAREA_ROWS_SHORT & """>" & _
+				Server.HTMLEncode(StringIf(bUseContent, Ns(dicBTVUT("Notes")))) & "</textarea></div>" & _
+		"</div>" & _
 		"</div><div style=""clear: both;""></div></div>"
 
 	makeVacancyInfoEntry = strReturn
