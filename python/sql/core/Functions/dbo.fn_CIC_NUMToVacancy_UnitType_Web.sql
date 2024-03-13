@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -24,33 +23,26 @@ RETURNS nvarchar(max) WITH EXECUTE AS CALLER
 AS 
 BEGIN
 
-/*
-	Checked for Release: 3.6.3
-	Checked by: CL
-	Checked on: 04-Apr-2015
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE	@returnStr	nvarchar(MAX)
 
-SET @returnStr = '<table border="1" class="BasicBorder cell-padding-2">'
+SET @returnStr = '<table class="BasicBorder cell-padding-3 full-width clear-line-below">'
 	/* Service Title */
 	+ CASE
 		WHEN @ServiceTitle IS NULL
 		THEN ''
-		ELSE '<tr><th colspan="2" class="TitleBoxSm" style="text-align:left">'
+		ELSE '<tr><th colspan="2" class="RevTitleBox" style="text-align:left">'
 			+ cioc_shared.dbo.fn_SHR_STP_ObjectName('Service') + cioc_shared.dbo.fn_SHR_STP_ObjectName(': ')
 			+ @ServiceTitle
 			+ '</th></tr>'
 	END
 	/* Capacity Details */
-	+ '<tr><td class="FieldLabelLeftClr">' + cioc_shared.dbo.fn_SHR_STP_ObjectName('Capacity') + '</td><td>'
+	+ '<tr><td class="field-label-cell-clr">' + cioc_shared.dbo.fn_SHR_STP_ObjectName('Capacity') + '</td><td class="field-data-cell">'
 	+ CAST(@Capacity AS varchar) + ' ' + @UnitTypeName
 	+ CASE WHEN @TargetPop IS NULL THEN '' ELSE ' ' + cioc_shared.dbo.fn_SHR_STP_ObjectName('for /the plural') + ' ' + @TargetPop END
 	+ CASE WHEN @FundedCapacity IS NULL THEN '' ELSE '; ' + cioc_shared.dbo.fn_SHR_STP_ObjectName('Funded Capacity of ') + CAST(@FundedCapacity AS varchar) + ' ' + @UnitTypeName END
 	+ '.</td></tr>'
 	/* Vacancy */
-	+ '<tr><td class="FieldLabelLeftClr">' + cioc_shared.dbo.fn_SHR_STP_ObjectName('Vacancy') + '</td><td><span class="vacancy-count" data-vut-id="' + CAST(@BT_VUT_ID AS varchar) + '" id="vacancy-count-' + CAST(@BT_VUT_ID AS varchar) + '">'
+	+ '<tr><td class="field-label-cell-clr">' + cioc_shared.dbo.fn_SHR_STP_ObjectName('Vacancy') + '</td><td class="field-data-cell"><span class="vacancy-count" data-vut-id="' + CAST(@BT_VUT_ID AS varchar) + '" id="vacancy-count-' + CAST(@BT_VUT_ID AS varchar) + '">'
 	+ CASE
 		WHEN @Vacancy IS NULL THEN ' ' + cioc_shared.dbo.fn_SHR_STP_ObjectName('Vacancy is unknown')
 		WHEN @Vacancy=0 THEN ' ' + cioc_shared.dbo.fn_SHR_STP_ObjectName('No vacancy')
@@ -64,7 +56,7 @@ SET @returnStr = '<table border="1" class="BasicBorder cell-padding-2">'
 	+ CASE 
 		WHEN @HoursPerDay IS NULL AND @DaysPerWeek IS NULL AND @WeeksPerYear IS NULL AND @FullTimeEquivalent IS NULL
 		THEN ''
-		ELSE '<tr><td class="FieldLabelLeftClr">' + cioc_shared.dbo.fn_SHR_STP_ObjectName('Other Details') + '</td><td>'
+		ELSE '<tr><td class="field-label-cell-clr">' + cioc_shared.dbo.fn_SHR_STP_ObjectName('Other Details') + '</td><td class="field-data-cell">'
 			+ CASE
 				WHEN @HoursPerDay IS NULL
 				THEN ''
@@ -95,7 +87,7 @@ SET @returnStr = '<table border="1" class="BasicBorder cell-padding-2">'
 	+ CASE
 		WHEN @WaitList IS NULL
 		THEN ''
-		ELSE '<tr><td class="FieldLabelLeftClr">' + cioc_shared.dbo.fn_SHR_STP_ObjectName('Wait List') + '</td><td>'
+		ELSE '<tr><td class="field-label-cell-clr">' + cioc_shared.dbo.fn_SHR_STP_ObjectName('Wait List') + '</td><td class="field-data-cell">'
 			+ CASE
 				WHEN @WaitList=0 THEN cioc_shared.dbo.fn_SHR_STP_ObjectName('A wait list is not available.')
 				WHEN @WaitList=1 THEN cioc_shared.dbo.fn_SHR_STP_ObjectName('A wait list is available') +
@@ -110,7 +102,7 @@ SET @returnStr = '<table border="1" class="BasicBorder cell-padding-2">'
 	+ CASE 
 		WHEN @Notes IS NULL
 		THEN ''
-		ELSE '<tr><td class="FieldLabelLeftClr">' + cioc_shared.dbo.fn_SHR_STP_ObjectName('Notes') + '</td><td>'
+		ELSE '<tr><td class="field-label-cell-clr">' + cioc_shared.dbo.fn_SHR_STP_ObjectName('Notes') + '</td><td class="field-data-cell">'
 			+ @Notes
 			+ '</td></tr>'
 	END
