@@ -70,7 +70,7 @@ End If
 If IsDate(Request("LastDate")) Then
 	dEnd = CDate(Request("LastDate"))
 Else
-	dEnd = DateAdd("d",1,Date())
+	dEnd = Date()
 End If
 
 Dim cmdProfileSummary, rsProfileSummary
@@ -753,14 +753,16 @@ With rsProfileSummary
 	End If
 End With
 
+Dim intRowCount
+
 Set rsProfileSummary = rsProfileSummary.NextRecordset
 
 With rsProfileSummary
 	If Not .EOF Then
 %>
 <hr />
-<h2><%=TXT_COMMUNITIES%></h2>
-<p><%=TXT_OF_UC%><strong><%=intTotalProfiles%></strong><%=TXT_TOTAL_PROFILES%><strong><%=.Fields("NO_COMMUNITIES_SPECIFIED")%></strong><%=TXT_DID_NOT_SELECT_ANY%></p>
+<h2><%=TXT_CITY%></h2>
+<p><%=TXT_OF_UC%><strong><%=intTotalProfiles%></strong><%=TXT_TOTAL_PROFILES%><strong><%=.Fields("NO_CITY_SPECIFIED")%></strong> did not provide a home city.</p>
 	<%
 	End If
 End With
@@ -768,7 +770,113 @@ End With
 <div class="row">
 <%
 
-Dim intRowCount
+intRowCount = 0
+
+Set rsProfileSummary = rsProfileSummary.NextRecordset
+
+With rsProfileSummary
+	If Not .EOF Then
+	%>
+	<div class="col-md-6">
+		<table class="BasicBorder cell-padding-3 full-width clear-line-below">
+			<tr>
+				<th colspan="2">
+					<h3><%=TXT_TOTAL%></h3>
+				</th>
+			</tr>
+			<tr>
+				<th class="RevTitleBox"><%=TXT_CITY%></th>
+				<th class="RevTitleBox"><%=TXT_COUNT%></th>
+			</tr>
+			<tbody>
+				<%
+		While Not .EOF
+		intRowCount = intRowCount + 1
+		If intRowCount = 25 Then
+				%>
+			</tbody>
+			<tbody class="collapse" id="CityShowAll">
+				<%
+		End If
+				%>
+				<tr>
+					<td class="field-label-cell"><%=.Fields("City")%></td>
+					<td><%=.Fields("TOTAL")%></td>
+				</tr>
+				<%
+			.MoveNext
+		Wend
+				%>
+			</tbody>
+		</table>
+		<button class="btn btn-default" data-toggle="collapse" href="#CityShowAll" aria-expanded="false" aria-controls="CityShowAll"><%=TXT_TOGGLE_DISPLAY_ALL%></button>
+	</div>
+	<%
+	End If
+End With
+
+Set rsProfileSummary = rsProfileSummary.NextRecordset
+
+intRowCount = 0
+
+With rsProfileSummary
+	If Not .EOF Then
+	%>
+	<div class="col-md-6">
+		<table class="BasicBorder cell-padding-3 full-width clear-line-below">
+			<tr>
+				<th colspan="2">
+					<h3><%=strYearRange%> (<%=TXT_CREATED & " / " & TXT_MODIFIED%>)</h3>
+				</th>
+			</tr>
+			<tr>
+				<th class="RevTitleBox"><%=TXT_CITY%></th>
+				<th class="RevTitleBox"><%=TXT_COUNT%></th>
+			</tr>
+			<tbody>
+				<%
+		While Not .EOF
+		intRowCount = intRowCount + 1
+		If intRowCount = 25 Then
+				%>
+			</tbody>
+			<tbody class="collapse" id="CityShowAll2">
+				<%
+		End If
+				%>
+				<tr>
+					<td class="field-label-cell"><%=.Fields("City")%></td>
+					<td><%=.Fields("THIS_YEAR")%></td>
+				</tr>
+				<%
+			.MoveNext
+		Wend
+				%>
+			</tbody>
+		</table>
+		<button class="btn btn-default" data-toggle="collapse" href="#CityShowAll2" aria-expanded="false" aria-controls="CityShowAll2"><%=TXT_TOGGLE_DISPLAY_ALL%></button>
+	</div>
+<%
+	End If
+End With
+%>
+</div>
+<%
+
+Set rsProfileSummary = rsProfileSummary.NextRecordset
+
+With rsProfileSummary
+	If Not .EOF Then
+%>
+<hr />
+<h2><%=TXT_SEARCH & TXT_COLON & TXT_COMMUNITIES%></h2>
+<p><%=TXT_OF_UC%><strong><%=intTotalProfiles%></strong><%=TXT_TOTAL_PROFILES%><strong><%=.Fields("NO_COMMUNITIES_SPECIFIED")%></strong><%=TXT_DID_NOT_SELECT_ANY%></p>
+	<%
+	End If
+End With
+%>
+<div class="row">
+<%
 
 intRowCount = 0
 
@@ -869,7 +977,7 @@ With rsProfileSummary
 	If Not .EOF Then
 %>
 <hr />
-<h2><%=TXT_AREAS_OF_INTEREST%></h2>
+<h2><%=TXT_SEARCH & TXT_COLON & TXT_AREAS_OF_INTEREST%></h2>
 <p><%=TXT_OF_UC%><strong><%=intTotalProfiles%></strong><%=TXT_TOTAL_PROFILES%><strong><%=.Fields("NO_INTERESTS_SPECIFIED")%></strong> did not select any specific areas of interest.</p>
 	<%
 	End If

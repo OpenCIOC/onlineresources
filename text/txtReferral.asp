@@ -49,6 +49,7 @@ Dim TXT_ABOUT_VOLUNTEER, _
 	TXT_INST_DELETE_REFERRALS_7, _
 	TXT_INST_SPECIFIC_OPORTUNITY, _
 	TXT_INST_VOL_DETAILS, _
+	TXT_LOCATION_CONTAINS, _
 	TXT_MIN_REFERRALS, _
 	TXT_MODIFIED_DATE, _
 	TXT_NO_PROFILE_GIVEN, _
@@ -58,12 +59,15 @@ Dim TXT_ABOUT_VOLUNTEER, _
 	TXT_OPPS_WITH, _
 	TXT_OR_MORE_REFERRALS, _
 	TXT_ORG_LAST_CONTACT, _
+	TXT_ORG_LOCATION, _
 	TXT_ORGANIZATION_KEYWORDS, _
 	TXT_OTHER, _
 	TXT_OTHER_REFERRAL_TOOLS, _
 	TXT_OUTCOME_NOTES, _
 	TXT_PAST_REFERRALS_FOR_POSITION, _
 	TXT_PLACEMENTS, _
+	TXT_POS_COMMUNITIES, _
+	TXT_POS_LOCATION, _
 	TXT_POS_TITLE_KEYWORDS, _
 	TXT_POS_LAST_CONTACT, _
 	TXT_POSITION_CONTACT, _
@@ -82,6 +86,7 @@ Dim TXT_ABOUT_VOLUNTEER, _
 	TXT_REMOVE_FOLLOW_UP_FLAG, _
 	TXT_IS_REQUIRED, _
 	TXT_RETURN_TO_STATISTICS_SEARCH, _
+	TXT_SELECTED_LOCATIONS_CONTAIN_THE_STRING, _
 	TXT_SEND_TO_ORGANIZATION, _
 	TXT_SEND_TO_VOLUNTEER, _
 	TXT_SHOW, _
@@ -91,6 +96,7 @@ Dim TXT_ABOUT_VOLUNTEER, _
 	TXT_VIEW_PROFILE_LINK, _
 	TXT_VOL_LAST_CONTACT, _
 	TXT_VOL_LAST_CONTACT_DATE, _
+	TXT_VOLUNTEER_CITY, _
 	TXT_VOLUNTEER_CONTACT, _
 	TXT_VOLUNTEER_CONTACT_MISSING, _
 	TXT_VOLUNTEER_EMAIL, _
@@ -137,6 +143,7 @@ Sub setTxtReferral()
 			TXT_INST_DELETE_REFERRALS_7 = "Il est recommandé de conserver les mises en relation dans la base de données pendant au moins 6 mois ; toutefois, vous pouvez prévoir votre archivage à chaque fin d'année, etc."
 			TXT_INST_SPECIFIC_OPORTUNITY = "Pour obtenir la liste des mises en relations pour une occasion spécifique, ou pour créer une nouvelle mise en relation, consulter la page d'information de l'occasion."
 			TXT_INST_VOL_DETAILS = "Veuillez préciser le <strong>nom</strong> et la <strong>ville</strong> du bénévole potentiel, ainsi qu'une manière de le contacter : <strong>courriel</strong> ou <strong>téléphone</strong>."
+			TXT_LOCATION_CONTAINS = "L'emplacement contient" 
 			TXT_MIN_REFERRALS = "TR_FR -- Minimum Referrals"
 			TXT_MODIFIED_DATE = "Date de modification"
 			TXT_NO_PROFILE_GIVEN = "Aucun courriel de profil de bénévole n'a été fourni."
@@ -146,12 +153,15 @@ Sub setTxtReferral()
 			TXT_OPPS_WITH = "Occasions avec"
 			TXT_OR_MORE_REFERRALS = "mise(s) en relation ou plus"
 			TXT_ORG_LAST_CONTACT = "La personne contact pour ce poste a été contactée pour la dernière fois au sujet de cette mise en relation :"
+			TXT_ORG_LOCATION = "Emplacement de l'organisation"
 			TXT_ORGANIZATION_KEYWORDS = "Mots-clés d'organisme"
 			TXT_OTHER = "Autre"
 			TXT_OTHER_REFERRAL_TOOLS = "Autres outils sur les mises en relation"
 			TXT_OUTCOME_NOTES = "Notes sur le résultat"
 			TXT_PAST_REFERRALS_FOR_POSITION = "Mises en relation passées pour ce poste :"
 			TXT_PLACEMENTS = "Placements"
+			TXT_POS_COMMUNITIES = "Communautés du poste"
+			TXT_POS_LOCATION = "Emplacement du poste"
 			TXT_POS_TITLE_KEYWORDS = "Mots-clés du titre du poste"
 			TXT_POS_LAST_CONTACT = "Date du dernier contact avec la personne contact pour le poste"
 			TXT_POSITION_CONTACT = "Contact du poste"
@@ -170,6 +180,7 @@ Sub setTxtReferral()
 			TXT_REMOVE_FOLLOW_UP_FLAG = "Supprimer le marqueur de suivi"
 			TXT_IS_REQUIRED = "Requis"
 			TXT_RETURN_TO_STATISTICS_SEARCH = "Revenir à la recherche sur les rapports statistiques"
+			TXT_SELECTED_LOCATIONS_CONTAIN_THE_STRING = "Les types d'emplacements sélectionnés contiennent la chaîne de texte donnée :"
 			TXT_SEND_TO_ORGANIZATION = "Envoyer à l'organisme"
 			TXT_SEND_TO_VOLUNTEER = "Envoyer au bénévole"
 			TXT_SHOW = "Afficher :"
@@ -179,6 +190,7 @@ Sub setTxtReferral()
 			TXT_VIEW_PROFILE_LINK = "Voir le lien du profil"
 			TXT_VOL_LAST_CONTACT = "Le bénévole potentiel a été contacté à propos de ce poste pour la dernière fois :"
 			TXT_VOL_LAST_CONTACT_DATE = "Dernière date de contact du bénévole potentiel"
+			TXT_VOLUNTEER_CITY = "Ville du bénévole"
 			TXT_VOLUNTEER_CONTACT = "Contact du bénévole"
 			TXT_VOLUNTEER_CONTACT_MISSING = "Vous devez fournir un téléphone, un courriel ou une adresse pour le bénévole potentiel"
 			TXT_VOLUNTEER_EMAIL = "Courriel du bénévole"
@@ -222,6 +234,7 @@ Sub setTxtReferral()
 			TXT_INST_DELETE_REFERRALS_7 = "It is recommended to leave at least 6 months of Referrals in your database, however you may want to time your archiving to your year end etc."
 			TXT_INST_SPECIFIC_OPORTUNITY = "To get a list of Referrals for a specific Opportunity, or to create a new Referral, go to the details page of the Opportunity."
 			TXT_INST_VOL_DETAILS = "Please fill in the potential Volunteer's <strong>Name</strong>, their <strong>City / Town</strong> and one way of contacting them: <strong>Email</strong> or <strong>Phone</strong>."
+			TXT_LOCATION_CONTAINS = "Location Contains"
 			TXT_MIN_REFERRALS = "Minimum Referrals"
 			TXT_MODIFIED_DATE = "Modified Date"
 			TXT_NO_PROFILE_GIVEN = "Aucun courriel de profil de bénévole n'a été fourni."
@@ -231,12 +244,15 @@ Sub setTxtReferral()
 			TXT_OPPS_WITH = "Opportunities with"
 			TXT_OR_MORE_REFERRALS = "or more Referrals"
 			TXT_ORG_LAST_CONTACT = "The Contact Person for this position was last contacted about this Referral:"
+			TXT_ORG_LOCATION = "Organization Location"
 			TXT_ORGANIZATION_KEYWORDS = "Organization Keywords"
 			TXT_OTHER = "Other"
 			TXT_OTHER_REFERRAL_TOOLS = "Other Referral Tools"
 			TXT_OUTCOME_NOTES = "Outcome Notes"
 			TXT_PAST_REFERRALS_FOR_POSITION = "Past Referrals for the Position:"
 			TXT_PLACEMENTS = "Placements"
+			TXT_POS_COMMUNITIES = "Position Communities"
+			TXT_POS_LOCATION = "Position Location"
 			TXT_POS_TITLE_KEYWORDS = "Position Title Keywords"
 			TXT_POS_LAST_CONTACT = "Position Contact Person's Last Contact Date"
 			TXT_POSITION_CONTACT = "Position Contact"
@@ -255,6 +271,7 @@ Sub setTxtReferral()
 			TXT_REMOVE_FOLLOW_UP_FLAG = "Remove Follow-Up Flag"
 			TXT_IS_REQUIRED = "Required"
 			TXT_RETURN_TO_STATISTICS_SEARCH = "Return to Statistics Report Search"
+			TXT_SELECTED_LOCATIONS_CONTAIN_THE_STRING = "Selected Location types contain the given text string:"
 			TXT_SEND_TO_ORGANIZATION = "Send to Organization"
 			TXT_SEND_TO_VOLUNTEER = "Send to Volunteer"
 			TXT_SHOW = "Show:"
@@ -264,6 +281,7 @@ Sub setTxtReferral()
 			TXT_VIEW_PROFILE_LINK = "View Profile Link"
 			TXT_VOL_LAST_CONTACT = "The Potential Volunteer was last contacted about this position:"
 			TXT_VOL_LAST_CONTACT_DATE = "Potential Volunteer's Last Contact Date"
+			TXT_VOLUNTEER_CITY = "Volunteer City"
 			TXT_VOLUNTEER_CONTACT = "Volunteer Contact"
 			TXT_VOLUNTEER_CONTACT_MISSING = "You must provide a phone, Email, or addressfor the Potential Volunteer"
 			TXT_VOLUNTEER_EMAIL = "Volunteer Email"

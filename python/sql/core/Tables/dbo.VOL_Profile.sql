@@ -50,7 +50,9 @@ CREATE TABLE [dbo].[VOL_Profile]
 [ConfirmationDate] [smalldatetime] NULL,
 [Verified] [bit] NOT NULL CONSTRAINT [DF_VOL_Profile_AccountVerified] DEFAULT ((0)),
 [AgreedToPrivacyPolicy] [bit] NOT NULL CONSTRAINT [DF_VOL_Profile_AgreeToPrivacyPolicy] DEFAULT ((0)),
-[UnsubscribeToken] [uniqueidentifier] NOT NULL CONSTRAINT [DF_VOL_Profile_UnsubscribeKey] DEFAULT (newid())
+[UnsubscribeToken] [uniqueidentifier] NOT NULL CONSTRAINT [DF_VOL_Profile_UnsubscribeKey] DEFAULT (newid()),
+[LastSuccessfulLogin] [datetime] NULL,
+[LastSuccessfulLoginIP] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[VOL_Profile] ADD CONSTRAINT [PK_VOL_Profile] PRIMARY KEY CLUSTERED ([ProfileID]) ON [PRIMARY]

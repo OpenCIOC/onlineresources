@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -152,9 +152,6 @@ End If
 <tr>
 	<th class="RevTitleBox">&nbsp;</th>
 	<th class="RevTitleBox">&nbsp;</th>
-	<% If g_bMultiLingualActive Then %>
-	<th class="RevTitleBox"><%= TXT_LANGUAGE %></th>
-	<% End If %>
 	<th class="RevTitleBox"><%= TXT_REFERRAL_DATE %></th>
 <%If user_bSuperUserVOL And bShowOwner Then%>
 	<th class="RevTitleBox"><%=TXT_RECORD_OWNER%></th>
@@ -164,6 +161,7 @@ End If
 	<th class="RevTitleBox"><%=TXT_ORG_NAMES%></th>
 <%End If%>
 	<th class="RevTitleBox"><%= TXT_VOLUNTEER_NAME %></th>
+	<th class="RevTitleBox"><%= TXT_VOLUNTEER_CITY %></th>
 <%If bShowEmail Then %>
 	<th class="RevTitleBox"><%= TXT_VOLUNTEER_EMAIL %></th>
 <%End If%>
@@ -182,6 +180,7 @@ End If
 			strRecordOwner, _
 			strPositionTitle, _
 			strVolunteerName, _
+			strVolunteerCity, _
 			dModifiedDate, _
 			intRefID, _
 			strVolunteerEmail, _
@@ -201,6 +200,7 @@ End If
 				strPositionTitle = .Fields("POSITION_TITLE")
 			End If
 			strVolunteerName = .Fields("VolunteerName")
+			strVolunteerCity = .Fields("VolunteerCity")
 			dModifiedDate = .Fields("MODIFIED_DATE")
 			intRefID = .Fields("REF_ID")
 	
@@ -219,19 +219,17 @@ End If
 	<td style="white-space: nowrap;" data-tbl-key="<%=CInt(Nz(bFollowUpFlag, "0"))%>"><input name="FollowUpCheck" type="checkbox" value="<%=intRefID%>" title=<%=AttrQs(TXT_FOLLOW_UP)%> class="FollowUpUIChecks NotVisible" id="FollowUpCheck_<%=intRefID%>"> 
 		<img width="15" height="15" src="<%=ps_strPathToStart%>images/<%=IIf(bFollowUpFlag, "redflag.gif", "spacer.gif")%>"></td>
 	<td data-tbl-key="<%=CInt(Nz(bPlacement, "1"))%>"><%If Nl(bPlacement) Then%>&nbsp;<%Else%><img src="<%=ps_strPathToStart%>images/<%=IIf(bPlacement, "greencheck.gif", "redx.gif")%>"><%End If%></td>
-	<% If g_bMultiLingualActive Then %>
-		<td><%= strLanguageName %></td>
-	<% End If %>
 	<td data-tbl-key="<%=Nz(ISODateTimeString(dReferralDate), "1900-01-01 00:00:00")%>"><%=Nz(DateString(dReferralDate, True), "&nbsp;")%></td>
 <%If user_bSuperUserVOL And bShowOwner Then%>
 	<td><%= Nz(strRecordOwner, "&nbsp;") %></td>
 <%End If%>
 <%If bShowOrgAndPos Then %>
-	<td><%= Nz(strPositionTitle, "&nbsp;") %></td>
+	<td title="<%=.Fields("VNUM")%>"><%= Nz(strPositionTitle, "&nbsp;") %></td>
 
-	<td data-tbl-key="<%=strOrgSortKey%>"><%=strOrgName%></td>
+	<td title="<%=.Fields("NUM")%>" data-tbl-key="<%=strOrgSortKey%>"><%=strOrgName%></td>
 <%End If%>
 	<td><%= Nz(strVolunteerName, "&nbsp;")%></td>
+	<td><%= Nz(strVolunteerCity, "&nbsp;")%></td>
 <%If bShowEmail Then%>
 	<td data-tbl-key="<%=strVolunteerEmail%>"><%If Nl(strVolunteerEmail) Then%>&nbsp;<%Else%><a href="mailto:<%=strVolunteerEmail%>"><%=strVolunteerEmail%></a><%End If%></td>
 <%End If%>
