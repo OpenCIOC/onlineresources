@@ -59,6 +59,64 @@ from cioc.core import gtranslate
 			%endif
 		%endif
 
+	%if request.dboptions.dbopts.get('AcceptCookiePrompt'):
+	<!-- Modal -->
+	<div class="modal fade" id="cioc-cookie-prompt-modal" tabindex="-1" role="dialog" aria-labelledby="cioc-cookie-prompt-modal-label">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="cioc-cookie-prompt-modal-label">${_('Cookie Details')}</h4>
+		  </div>
+		  <div class="modal-body">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					${_('We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.')}
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div
+				class="panel-heading">
+					${request.dboptions.get_best_lang('AcceptCookiePromptText') or _('Necessary')}
+				</div>
+				<div class="panel-body">
+					${request.dboptions.get_best_lang('AcceptCookieDetails') or _('These cookies allow the site to work and last for the duration of your session. No personal information is tracked with these cookies.')}
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					${request.dboptions.get_best_lang('AcceptCookieOptionalText') or _('Optional Cookies')}
+				</div>
+				<div class="panel-body">
+					${request.dboptions.get_best_lang('AcceptCookieOptionalDetails') or _('These cookies are used to understand how visitors interact with the website. These cookies help provide information on metrics such as the number of visitors, bounce rate, traffic source, etc.')}
+				</div>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">${_('Close')}</button>
+			<button type="button" class="btn btn-default cioc-cookie-only-necessary">${_('Only Necessary')}</button>
+			<button type="button" class="btn btn-primary cioc-cookie-accept-all">${_('Accept All')}</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div class="cioc-inline-cookie-container modal-content" id="cioc-inline-cookie-prompt"
+	 style="display: none;" role="dialog" aria-labelledby="cioc-inline-cookie-prompt-title">
+		 <div class="cioc-inline-cookie-prompt-header modal-header">
+			<h4 class="modal-title" id="cioc-inline-cookie-prompt-title">${_('We value your privacy')}</h4>
+		</div>
+		 <div class="cioc-incline-cookie-prompt modal-body">
+			${_('We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.')}
+		 </div>
+		 <div class="cioc-inline-cookie-notice-actions modal-footer">
+			 <button type="button" class="btn btn-default cioc-cookie-details" data-toggle="modal"
+						data-target="#cioc-cookie-prompt-modal">${_('Details')}</button>
+			 <button type="button" class="btn btn-default cioc-cookie-only-necessary">${_('Only Necessary')}</button>
+			 <button type="button" class="btn btn-primary cioc-cookie-accept-all">${_('Accept All')}</button>
+		 </div>
+	</div>
+	%endif
+
 	</div> <!--! end of #container -->
 
 	%if not request.params.get("InlineResults")=="on":
@@ -68,6 +126,87 @@ from cioc.core import gtranslate
 	%if hasattr(caller, 'bottomjs') and not request.params.get("InlineResults")=="on":
 		${caller.bottomjs()}
 	%endif
+	<script type="text/javascript">
+	 (
+	  function() {
+		  class CiocCookieConsent extends EventTarget {
+			constructor() {
+				super();
+				this.COOKIE_CONSENT_KEY = 'cioc_cookie_consent';
+				this.prompt_enabled = ${"true" if request.dboptions.dbopts.get('AcceptCookiePrompt') else "false"};
+				window.addEventListener("storage", this.onStorageChange);
+				this.consent_state = this.check_stored_consent_state();
+			}
+			check_stored_consent_state() {
+				let value = localStorage.getItem(this.COOKIE_CONSENT_KEY);
+				return this.parse_stored_consent_state(value);
+			}
+			parse_stored_consent_state(value) {
+				if (value) {
+					let parsed = JSON.parse(value);
+					let date_saved = new Date(parsed.date_saved);
+					let maxage = date_saved.getTime() + (3600*24*182*1000);
+					if(Date.now() > maxage) {
+						localStorage.removeItem(this.COOKIE_CONSENT_KEY);
+						return null;
+					}
+					return parsed;
+				}
+				return null;
+			}
+			emitConsentChangeEvent() {
+				this.dispatchEvent(new CustomEvent("cookieconsentchanged", { detail: this.consent_state }));
+			}
+			onStorageChange(e) {
+				if(e.key == this.COOKIE_CONSENT_KEY){
+					this.consent_state = this.parse_stored_consent_state(e.newvalue);
+					this.emitConsentChangeEvent();
+				}
+			}
+			isAnalyticsAllowed() {
+				if (!this.prompt_enabled) {
+					return true;
+				}
+				return this.consent_state && this.consent_state.cookies_allowed === 'all';
+			}
+			storeConsentChange(cookies_allowed) {
+				this.consent_state = {'date_saved': (new Date()).toISOString(),
+						'cookies_allowed': cookies_allowed}
+				let value = JSON.stringify(this.consent_state);
+				localStorage.setItem(this.COOKIE_CONSENT_KEY, value);
+				this.emitConsentChangeEvent();
+				jQuery('#cioc-inline-cookie-prompt').hide();
+				jQuery('#cioc-cookie-prompt-modal').modal('hide');
+			}
+			acceptAll() {
+				this.storeConsentChange('all');
+			}
+			acceptNeccessary() {
+				this.storeConsentChange('necessary');
+			}
+			configureUI($){
+				var self = this;
+				if(!this.consent_state) {
+					$('#cioc-inline-cookie-prompt').show();
+				}
+				$("#body_content").on('click', '.cioc-cookie-accept-all', function() {
+					self.acceptAll();
+				}).on('click', '.cioc-cookie-only-necessary', function() {
+					self.acceptNeccessary();
+				});
+			}
+		  }
+		  if(!window.cioc_cookie_consent) {
+			  window.cioc_cookie_consent = new CiocCookieConsent();
+			  if (window.cioc_cookie_consent.prompt_enabled) {
+				  jQuery(function(){
+					window.cioc_cookie_consent.configureUI(jQuery);
+				  });
+			  }
+		  }
+
+	  })();
+	 </script>
 
 	%if request.viewdata.PrintMode:
 		<script type="text/javascript">
@@ -128,49 +267,34 @@ from cioc.core import gtranslate
 	<script type="text/javascript" src="${request.template_values['JavaScriptBottomUrl']}"></script>
 	%endif
 	<%
-	has_ga_ua = request.dboptions.domain_info.get('GoogleAnalyticsCode') or request.dboptions.dbopts.get('GlobalGoogleAnalyticsCode')
 	has_ga4 = request.dboptions.domain_info.get('GoogleAnalytics4Code') or request.dboptions.dbopts.get('GlobalGoogleAnalytics4Code')
 	%>
-	%if has_ga_ua or has_ga4:
-	<!-- Google Analytics -->
 	%if has_ga4:
-	<script async src="https://www.googletagmanager.com/gtag/js?id=${request.dboptions.domain_info.get('GoogleAnalytics4Code') or request.dboptions.dbopts.get('GlobalGoogleAnalytics4Code')}"></script>
-	%endif
+	<!-- Google Analytics -->
 	<script type="text/javascript">
 	%if not request.params.get('InlineResults')=='on':
 		(function() {
-		%if has_ga_ua:
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-		%endif
-		%if has_ga4:
 		window.dataLayer = window.dataLayer || [];
 		window.gtag = function(){dataLayer.push(arguments);}
+		if (window.cioc_cookie_consent.prompt_enabled) {
+			gtag('consent', 'default', {
+				'ad_user_data': 'denied',
+				'ad_personalization': 'denied',
+				'ad_storage': 'denied',
+				'analytics_storage': 'denied',
+			});
+		}
 		gtag('js', new Date());
-		%endif
+		var record_page_event = function() {
+		  var gtagScript = document.createElement('script');
+		  gtagScript.async = true;
+		  gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=${request.dboptions.domain_info.get('GoogleAnalytics4Code') or request.dboptions.dbopts.get('GlobalGoogleAnalytics4Code')}";
+
+		  var firstScript = document.getElementsByTagName('script')[0];
+		  firstScript.parentNode.insertBefore(gtagScript,firstScript);
+
 		%for prefix, name, source in [('','', request.dboptions.domain_info), ('Global', 'cioc_all_views.', request.dboptions.dbopts), ('Second', 'second.', request.dboptions.domain_info)]:
 			<% name_prefix = (prefix.lower() + '_') if prefix else '' %>
-		%if source.get(prefix + 'GoogleAnalyticsCode'):
-			window.${name_prefix}cioc_ga_code = '${source[prefix + 'GoogleAnalyticsCode'].replace("'", "\\'")}';
-			ga('create', window.${name_prefix}cioc_ga_code, 'auto' ${(", '" + name[:-1] + "'") if name else '' |n});
-			%if source.get(prefix + 'GoogleAnalyticsAgencyDimension'):
-				ga('${name}set', 'dimension${source[prefix + 'GoogleAnalyticsAgencyDimension']}', '${request.user.Agency if request.user else 'PUBLIC'}');
-			%endif
-			%if source.get(prefix + 'GoogleAnalyticsLanguageDimension'):
-				ga('${name}set', 'dimension${source[prefix + 'GoogleAnalyticsLanguageDimension']}', '${request.language.Culture}');
-			%endif
-			%if source.get(prefix + 'GoogleAnalyticsDomainDimension'):
-				ga('${name}set', 'dimension${source[prefix + 'GoogleAnalyticsDomainDimension']}', '${request.pageinfo.DbAreaS + ('' if not request.viewdata.dom else ('-%s' % request.viewdata.dom.ViewType))}');
-			%endif
-			%if source.get(prefix + 'GoogleAnalyticsResultsCountMetric'):
-				if (window.cioc_results_count) {
-					ga('${name}set', 'metric${source[prefix + 'GoogleAnalyticsResultsCountMetric']}', window.cioc_results_count);
-				}
-			%endif
-			ga('${name}send', 'pageview');
-		%endif
 		%if source.get(prefix + 'GoogleAnalytics4Code'):
 		{
 			<%
@@ -197,11 +321,35 @@ from cioc.core import gtranslate
 				window.${name_prefix}cioc_ga4_code}, d)
 			);
 		}
+		}
+		var record_consent = function() {
+			gtag('consent', 'update', {
+				'ad_user_data': 'denied',
+				'ad_personalization': 'denied',
+				'ad_storage': 'denied',
+				'analytics_storage': 'granted',
+			});
+		}
+		if (window.cioc_cookie_consent.prompt_enabled) {
+			if (window.cioc_cookie_consent.isAnalyticsAllowed()) {
+				record_consent();
+				record_page_event();
+			} else {
+				window.cioc_cookie_consent.addEventListener('cookieconsentchanged', function() {
+					if (window.cioc_cookie_consent.isAnalyticsAllowed()) {
+						record_consent();
+						record_page_event();
+					}
+				});
+			}
+		} else {
+			record_page_event();
+		}
 		%endif
 		%endfor
 		})();
 	%else:
-		if (ga) {
+		if (gtag) {
 			<%
 			url = request.path_qs
 			if url.startswith('/details.asp'):
@@ -219,9 +367,6 @@ from cioc.core import gtranslate
 			%>
 			%for prefix, name, source in [('', '', request.dboptions.domain_info), ('Global', 'cioc_all_views.', request.dboptions.dbopts), ('Second', 'second.', request.dboptions.domain_info)]:
 				<% name_prefix = (prefix.lower() + '_') if prefix else '' %>
-				if (window.${name_prefix}cioc_ga_code) {
-					ga('${name}send', 'pageview', {'page': ${json.dumps(url)|n}, 'title': ${json.dumps((renderinfo.doc_title or '').replace('<br>', ' ').replace('&nbsp;', ' '))|n} });
-				}
 				if (window.${name_prefix}cioc_ga4_code) {
 					let d = jQuery.merge(
 					{
@@ -254,9 +399,9 @@ from cioc.core import gtranslate
 	jQuery(function(){
 		window.googleTranslateElementInit = function() {
 			var settings = {pageLanguage: '${request.language.Culture}', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}
-			if (window.cioc_ga_code) {
+			if (window.cioc_ga4_code) {
 				settings.gaTrack = true;
-				settings.gaId = window.cioc_ga_code;
+				settings.gaId = window.cioc_ga4_code;
 			}
 			jQuery('#google-translate-element-parent').show();
 			new google.translate.TranslateElement(settings, 'google-translate-element');

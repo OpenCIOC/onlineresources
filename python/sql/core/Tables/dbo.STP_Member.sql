@@ -83,7 +83,8 @@ CREATE TABLE [dbo].[STP_Member]
 [GlobalGoogleAnalytics4AgencyDimension] [tinyint] NULL,
 [GlobalGoogleAnalytics4LanguageDimension] [tinyint] NULL,
 [GlobalGoogleAnalytics4DomainDimension] [tinyint] NULL,
-[GlobalGoogleAnalytics4ResultsCountMetric] [tinyint] NULL
+[GlobalGoogleAnalytics4ResultsCountMetric] [tinyint] NULL,
+[AcceptCookiePrompt] [bit] NOT NULL CONSTRAINT [DF_STP_Member_AcceptCookiePrompt] DEFAULT ((0))
 ) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON
