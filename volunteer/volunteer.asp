@@ -316,6 +316,7 @@ jQuery(function($) {
         focusInvalid: false, onfocusout: false,
         onkeyup: false, onclick: false
     });
+	init_community_autocomplete($, "VolunteerCity", "<%= makeLinkB(ps_strPathToStart & "jsonfeeds/community_generator.asp") %>", 3);
 });
 </script>
     <%

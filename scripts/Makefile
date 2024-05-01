@@ -147,7 +147,7 @@ vfeedback.js: ciocbasic.js jquery-ui-combobox.js jquery.validate.js globalize.js
 vprofiles.js: tablesort.js cached_state.js autocomplete.js autocomplete_extra.js entryform_common.js interests_checkbox.js vprofiles_base.js
 	type $^ > $@
 
-volunteer.js: copy.js jquery.validate.require_from_group.js search_params.js
+volunteer.js: copy.js jquery.validate.require_from_group.js autocomplete.js search_params.js
 	type $^ > $@
 
 ../python/cioc/core/assetversions.json: $(patsubst %.js,%.min.js, $(SCRIPTS)) ../styles/*.css
