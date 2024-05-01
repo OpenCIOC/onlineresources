@@ -34,6 +34,7 @@ Dim TXT_AT_NOSPACE, _
 	TXT_LOGIN_TO_YOUR_VOLUNTEER_PROFILE, _
 	TXT_NAME_REQUIRED, _
 	TXT_NOTES_COMMENTS, _
+	TXT_OPTIONAL_SURVEY, _
 	TXT_ORG_SUBJECT, _
 	TXT_OTHER_INFO, _
 	TXT_PROBLEM_EMAIL, _
@@ -41,6 +42,8 @@ Dim TXT_AT_NOSPACE, _
 	TXT_SOMEONE, _
 	TXT_SUBMITTING_INFORMATION_FOR, _
 	TXT_SUPPLIED_QUESTONS, _
+	TXT_SURVEY_DISCLAIMER_1, _
+	TXT_SURVEY_DISCLAIMER_2, _
 	TXT_THEY_PROVIDED_INFORMATION, _
 	TXT_TO_DISCUSS_THIS_OPP, _
 	TXT_TO_DISCUSS_THIS_OPP_AT, _
@@ -74,6 +77,7 @@ Sub setTxtVolunteer()
 			TXT_LOGIN_TO_YOUR_VOLUNTEER_PROFILE = "Ouvrir une session à votre profil de bénévole maintenant"
 			TXT_NAME_REQUIRED = "Vous devez fournir votre nom.<br>Veuillez utiliser le bouton Retour pour revenir au formulaire."
 			TXT_NOTES_COMMENTS = "Notes/Commentaires"
+			TXT_OPTIONAL_SURVEY = "Enquête facultative"
 			TXT_ORG_SUBJECT = "Un bénévole pour :"
 			TXT_OTHER_INFO = "Informations Complémentaires"
 			TXT_PROBLEM_EMAIL = "Un problème est survenu lors de l'envoi d'un courriel à"
@@ -81,6 +85,8 @@ Sub setTxtVolunteer()
 			TXT_SOMEONE = "Quelqu'un"
 			TXT_SUBMITTING_INFORMATION_FOR = "Vous soumettez des informations pour le poste :"
 			TXT_SUPPLIED_QUESTONS = " a demandé les informations supplémentaires suivantes :"
+			TXT_SURVEY_DISCLAIMER_1 = "Nous apprécions votre temps pour nous fournir des informations supplémentaires pour nous aider à comprendre et à améliorer notre service. Les informations de cette section ne seront pas envoyées à "
+			TXT_SURVEY_DISCLAIMER_2 = ", et n'est pas connecté à vos informations personnelles."
 			TXT_THEY_PROVIDED_INFORMATION = "Ils ont fourni les renseignements suivants :"
 			TXT_TO_DISCUSS_THIS_OPP = "Pour discuter de cette occasion, veuillez contacter"
 			TXT_TO_DISCUSS_THIS_OPP_AT = "pour discuter de cette occasion à :"
@@ -112,6 +118,7 @@ Sub setTxtVolunteer()
 			TXT_LOGIN_TO_YOUR_VOLUNTEER_PROFILE = "Login to your Volunteer Profile now"
 			TXT_NAME_REQUIRED = "You must provide your name.<br>Please use your back button to return to the form."
 			TXT_NOTES_COMMENTS = "Notes / Comments"
+			TXT_OPTIONAL_SURVEY = "Optional Survey"
 			TXT_ORG_SUBJECT = "A volunteer for:"
 			TXT_OTHER_INFO = "Additional Information"
 			TXT_PROBLEM_EMAIL = "There was a problem sending an Email to"
@@ -119,6 +126,8 @@ Sub setTxtVolunteer()
 			TXT_SOMEONE = "Someone"
 			TXT_SUBMITTING_INFORMATION_FOR = "You are submitting information for the position:"
 			TXT_SUPPLIED_QUESTONS = " has requested the following additional information:"
+			TXT_SURVEY_DISCLAIMER_1 = "We appreciate your time in providing additional information to help us understand and improve our service. Information in this section will not be sent to "
+			TXT_SURVEY_DISCLAIMER_2 = ", and is not connected to your personal information."
 			TXT_THEY_PROVIDED_INFORMATION = "They provided the following information:"
 			TXT_TO_DISCUSS_THIS_OPP = "To discuss this opportunity, please contact"
 			TXT_TO_DISCUSS_THIS_OPP_AT = "to discuss this opportunity at:"

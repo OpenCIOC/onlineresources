@@ -45,6 +45,8 @@ END
 
 IF @ShowVOL=1 BEGIN
 	EXEC dbo.sp_VOL_View_l @MemberID, @AgencyCode, 1, @DefaultViewVOL
+	EXEC dbo.sp_VOL_ApplicationSurvey_l @MemberID, 1
+	
 END
 
 RETURN @Error

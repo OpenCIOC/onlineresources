@@ -19,6 +19,7 @@
 use_cic = request.user.cic.SuperUser
 use_vol = request.user.vol.SuperUser and request.dboptions.UseVOL
 only_vol = request.dboptions.UseVOL and not request.dboptions.UseCIC
+culture_order = [x for x in active_cultures if x in active_cultures]
 %>
 <%inherit file="cioc.web:templates/master.mak" />
 
@@ -496,6 +497,29 @@ only_vol = request.dboptions.UseVOL and not request.dboptions.UseCIC
 					</td>
 				</tr>
 				%endfor
+
+				%if use_vol:
+				<tr>
+					${self.fieldLabelCell(None,_('Volunteer Surveys'), _('Optional Surveys to present to those indicating their interest in a volunteer position.'),False)}
+					<td class="field-data-cell">
+						%for culture in culture_order:
+						<% lang = culture_map[culture] %>
+						<div class="form-group row">
+							${renderer.label("descriptions." + lang.FormCulture + ".VolunteerApplicationSurvey",lang.LanguageName,class_='control-label col-sm-3 col-md-2')}
+							<% surveys = [tuple(x) for x in vol_surveys if x.LangID==lang.LangID] %>
+							<div class="col-sm-9 col-md-10">
+								%if surveys:
+								${renderer.errorlist("descriptions." + lang.FormCulture + ".VolunteerApplicationSurvey")}
+								${renderer.select("descriptions." + lang.FormCulture + ".VolunteerApplicationSurvey", [('','')] + surveys, class_="form-control")}
+								%else:
+								<em>${_('There are no surveys available.')}</em>
+								%endif
+							</div>
+						</div>
+						%endfor
+					</td>
+				</tr>
+				%endif
 
 				<tr>
 					<td colspan="2" class="field-data-cell">

@@ -39,7 +39,8 @@ SELECT
     c.CMP_PhoneFull AS CONTACT_PHONE,
     c.CMP_Fax AS CONTACT_FAX,
     c.EMAIL AS CONTACT_EMAIL,
-    dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM, btd.ORG_LEVEL_1, btd.ORG_LEVEL_2, btd.ORG_LEVEL_3, btd.ORG_LEVEL_4, btd.ORG_LEVEL_5, btd.LOCATION_NAME, btd.SERVICE_NAME_LEVEL_1, btd.SERVICE_NAME_LEVEL_2, bt.DISPLAY_LOCATION_NAME, bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL
+    dbo.fn_GBL_DisplayFullOrgName_2(bt.NUM, btd.ORG_LEVEL_1, btd.ORG_LEVEL_2, btd.ORG_LEVEL_3, btd.ORG_LEVEL_4, btd.ORG_LEVEL_5, btd.LOCATION_NAME, btd.SERVICE_NAME_LEVEL_1, btd.SERVICE_NAME_LEVEL_2, bt.DISPLAY_LOCATION_NAME, bt.DISPLAY_ORG_NAME) AS ORG_NAME_FULL,
+	(SELECT memd.VolunteerApplicationSurvey FROM dbo.STP_Member_Description memd WHERE memd.MemberID=@MemberID AND memd.LangID=@@LANGID) AS VolunteerApplicationSurvey
 FROM    dbo.VOL_Opportunity vo
     INNER JOIN dbo.VOL_Opportunity_Description vod
         ON vo.VNUM = vod.VNUM

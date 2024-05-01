@@ -352,9 +352,12 @@
     <Content Include="python\cioc\web\admin\datafeedapikey.py" />
     <Content Include="python\cioc\web\admin\ganalytics.py" />
     <Content Include="python\cioc\web\admin\icarolunmatched.py" />
+    <Content Include="python\cioc\web\admin\applicationsurvey.py" />
     <Content Include="python\cioc\web\admin\pages.py" />
     <Content Include="python\cioc\web\admin\quicksearch.py" />
     <Content Include="python\cioc\web\admin\sysinfo.py" />
+    <Content Include="python\cioc\web\admin\templates\applicationsurvey\edit.mak" />
+    <Content Include="python\cioc\web\admin\templates\applicationsurvey\index.mak" />
     <Content Include="python\cioc\web\admin\templates\community\list.mak" />
     <Content Include="python\cioc\web\admin\templates\datafeedapikey\confirm.mak" />
     <Content Include="python\cioc\web\admin\templates\datafeedapikey\edit.mak" />

@@ -1,6 +1,6 @@
 CREATE TABLE [dbo].[VOL_ApplicationSurvey_Referral]
 (
-[APP_REF_ID] [smalldatetime] NOT NULL,
+[APP_REF_ID] [int] NOT NULL IDENTITY(1, 1),
 [SURVEY_DATE] [smalldatetime] NULL,
 [APP_ID] [int] NOT NULL,
 [ApplicantCity] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,

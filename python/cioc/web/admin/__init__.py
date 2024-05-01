@@ -172,3 +172,7 @@ def includeme(config):
     # /admin/view/*
     config.add_route("admin_view_index", urlprefix + "view")
     config.add_route("admin_view", urlprefix + "view/{action}")
+
+    # /admin/applicationsurvey/*
+    config.add_route("admin_applicationsurvey_index", urlprefix + "applicationsurvey")
+    config.add_route("admin_applicationsurvey", urlprefix + "applicationsurvey/{action}")

@@ -3,7 +3,6 @@ GO
 SET ANSI_NULLS ON
 GO
 
-
 CREATE PROCEDURE [dbo].[sp_STP_Member_u]
 	@MemberID [int],
 	@MODIFIED_BY [varchar](50),
@@ -22,7 +21,7 @@ CREATE PROCEDURE [dbo].[sp_STP_Member_u]
 	@DefaultEmailCIC [varchar](100),
 	@DefaultEmailVOL [varchar](100),
 	@DefaultEmailVOLProfile [varchar](100),
-    @DefaultEmailNameCIC nvarchar(100),
+	@DefaultEmailNameCIC nvarchar(100),
 	@DefaultEmailNameVOL nvarchar(100),
 	@BaseURLCIC [varchar](100),
 	@BaseURLVOL [varchar](100),
@@ -40,18 +39,18 @@ CREATE PROCEDURE [dbo].[sp_STP_Member_u]
 	@OnlySpecificInterests bit,
 	@LoginRetryLimit tinyint,
 	@ImportNotificationEmailCIC [varchar](500),
-    @ContactOrgCIC bit,
-    @ContactPhone1CIC bit,
-    @ContactPhone2CIC bit,
-    @ContactPhone3CIC bit,
-    @ContactFaxCIC bit,
-    @ContactEmailCIC bit,
-    @ContactOrgVOL bit,
-    @ContactPhone1VOL bit,
-    @ContactPhone2VOL bit,
-    @ContactPhone3VOL bit,
-    @ContactFaxVOL bit,
-    @ContactEmailVOL bit,
+	@ContactOrgCIC bit,
+	@ContactPhone1CIC bit,
+	@ContactPhone2CIC bit,
+	@ContactPhone3CIC bit,
+	@ContactFaxCIC bit,
+	@ContactEmailCIC bit,
+	@ContactOrgVOL bit,
+	@ContactPhone1VOL bit,
+	@ContactPhone2VOL bit,
+	@ContactPhone3VOL bit,
+	@ContactFaxVOL bit,
+	@ContactEmailVOL bit,
 	@Descriptions [xml],
 	@ErrMsg [nvarchar](500) OUTPUT
 WITH EXECUTE AS CALLER
@@ -89,9 +88,10 @@ DECLARE @DescTable TABLE (
 	FeedbackMsgVOL nvarchar(max) NULL,
 	VolProfilePrivacyPolicy nvarchar(max) NULL,
 	VolProfilePrivacyPolicyOrgName nvarchar(255) NULL,
-    SubsidyNamedProgram nvarchar(255) NULL,
-    SubsidyNamedProgramDesc nvarchar(1000) NULL,
-    SubsidyNamedProgramSearchLabel nvarchar(255) NULL
+	SubsidyNamedProgram nvarchar(255) NULL,
+	SubsidyNamedProgramDesc nvarchar(1000) NULL,
+	SubsidyNamedProgramSearchLabel nvarchar(255) NULL,
+	VolunteerApplicationSurvey int NULL
 )
 
 DECLARE @UsedNames nvarchar(max),
@@ -106,9 +106,10 @@ INSERT INTO @DescTable (
 	FeedbackMsgVOL,
 	VolProfilePrivacyPolicy,
 	VolProfilePrivacyPolicyOrgName,
-    SubsidyNamedProgram,
-    SubsidyNamedProgramDesc,
-    SubsidyNamedProgramSearchLabel
+	SubsidyNamedProgram,
+	SubsidyNamedProgramDesc,
+	SubsidyNamedProgramSearchLabel,
+	VolunteerApplicationSurvey
 )
 SELECT
 	N.query('Culture').value('/', 'varchar(5)') AS Culture,
@@ -119,9 +120,14 @@ SELECT
 	CASE WHEN N.exist('FeedbackMsgVOL')=1 THEN N.query('FeedbackMsgVOL').value('/', 'nvarchar(max)') ELSE NULL END AS FeedbackMsgVOL,
 	CASE WHEN N.exist('VolProfilePrivacyPolicy')=1 THEN N.query('VolProfilePrivacyPolicy').value('/', 'nvarchar(max)') ELSE NULL END AS VolProfilePrivacyPolicy,
 	CASE WHEN N.exist('VolProfilePrivacyPolicyOrgName')=1 THEN N.query('VolProfilePrivacyPolicyOrgName').value('/', 'nvarchar(255)') ELSE NULL END AS VolProfilePrivacyPolicyOrgName,
-    N.value('SubsidyNamedProgram[1]', 'nvarchar(255)') AS SubsidyNamedProgram,
-    N.value('SubsidyNamedProgramDesc[1]', 'nvarchar(1000)') AS SubsidyNamedProgramDesc,
-    N.value('SubsidyNamedProgramSearchLabel[1]', 'nvarchar(255)') AS SubsidyNamedProgramSearchLabel
+	N.value('SubsidyNamedProgram[1]', 'nvarchar(255)') AS SubsidyNamedProgram,
+	N.value('SubsidyNamedProgramDesc[1]', 'nvarchar(1000)') AS SubsidyNamedProgramDesc,
+	N.value('SubsidyNamedProgramSearchLabel[1]', 'nvarchar(255)') AS SubsidyNamedProgramSearchLabel,
+	(SELECT APP_ID FROM dbo.VOL_ApplicationSurvey
+		WHERE MemberID=@MemberID
+		AND LangID=(SELECT LangID FROM STP_Language sl WHERE sl.Culture = N.query('Culture').value('/', 'varchar(5)'))
+		AND APP_ID=N.value('VolunteerApplicationSurvey[1]', 'int')
+		) AS VolunteerApplicationSurvey
 FROM @Descriptions.nodes('//DESC') as T(N)
 
 SELECT @BadCultures = COALESCE(@BadCultures + cioc_shared.dbo.fn_SHR_STP_ObjectName(' ; '),'') + ISNULL(Culture,cioc_shared.dbo.fn_SHR_STP_ObjectName('Unknown'))
@@ -230,18 +236,18 @@ IF @Error = 0 BEGIN
 			OnlySpecificInterests = CASE WHEN @UseVOL=1 THEN @OnlySpecificInterests ELSE OnlySpecificInterests END,
 			ImportNotificationEmailCIC = CASE WHEN @UseCIC=1 THEN @ImportNotificationEmailCIC ELSE ImportNotificationEmailCIC END,
 			LoginRetryLimit = CASE WHEN @LoginRetryLimit = 0 THEN NULL ELSE @LoginRetryLimit END,
-            ContactOrgCIC = CASE WHEN @UseCIC=1 THEN @ContactOrgCIC ELSE ContactOrgCIC END,
-            ContactPhone1CIC = CASE WHEN @UseCIC=1 THEN @ContactPhone1CIC ELSE ContactPhone1CIC END,
-            ContactPhone2CIC = CASE WHEN @UseCIC=1 THEN @ContactPhone2CIC ELSE ContactPhone2CIC END,
-            ContactPhone3CIC = CASE WHEN @UseCIC=1 THEN @ContactPhone3CIC ELSE ContactPhone3CIC END,
-            ContactFaxCIC = CASE WHEN @UseCIC=1 THEN @ContactFaxCIC ELSE ContactFaxCIC END,
-            ContactEmailCIC = CASE WHEN @UseCIC=1 THEN @ContactEmailCIC ELSE ContactEmailCIC END,
-            ContactOrgVOL = CASE WHEN @UseVOL=1 THEN @ContactOrgVOL ELSE ContactOrgVOL END,
-            ContactPhone1VOL = CASE WHEN @UseVOL=1 THEN @ContactPhone1VOL ELSE ContactPhone1VOL END,
-            ContactPhone2VOL = CASE WHEN @UseVOL=1 THEN @ContactPhone2VOL ELSE ContactPhone2VOL END,
-            ContactPhone3VOL = CASE WHEN @UseVOL=1 THEN @ContactPhone3VOL ELSE ContactPhone3VOL END,
-            ContactFaxVOL = CASE WHEN @UseVOL=1 THEN @ContactFaxVOL ELSE ContactFaxVOL END,
-            ContactEmailVOL = CASE WHEN @UseVOL=1 THEN @ContactEmailVOL ELSE ContactEmailVOL END
+			ContactOrgCIC = CASE WHEN @UseCIC=1 THEN @ContactOrgCIC ELSE ContactOrgCIC END,
+			ContactPhone1CIC = CASE WHEN @UseCIC=1 THEN @ContactPhone1CIC ELSE ContactPhone1CIC END,
+			ContactPhone2CIC = CASE WHEN @UseCIC=1 THEN @ContactPhone2CIC ELSE ContactPhone2CIC END,
+			ContactPhone3CIC = CASE WHEN @UseCIC=1 THEN @ContactPhone3CIC ELSE ContactPhone3CIC END,
+			ContactFaxCIC = CASE WHEN @UseCIC=1 THEN @ContactFaxCIC ELSE ContactFaxCIC END,
+			ContactEmailCIC = CASE WHEN @UseCIC=1 THEN @ContactEmailCIC ELSE ContactEmailCIC END,
+			ContactOrgVOL = CASE WHEN @UseVOL=1 THEN @ContactOrgVOL ELSE ContactOrgVOL END,
+			ContactPhone1VOL = CASE WHEN @UseVOL=1 THEN @ContactPhone1VOL ELSE ContactPhone1VOL END,
+			ContactPhone2VOL = CASE WHEN @UseVOL=1 THEN @ContactPhone2VOL ELSE ContactPhone2VOL END,
+			ContactPhone3VOL = CASE WHEN @UseVOL=1 THEN @ContactPhone3VOL ELSE ContactPhone3VOL END,
+			ContactFaxVOL = CASE WHEN @UseVOL=1 THEN @ContactFaxVOL ELSE ContactFaxVOL END,
+			ContactEmailVOL = CASE WHEN @UseVOL=1 THEN @ContactEmailVOL ELSE ContactEmailVOL END
 	WHERE MemberID=@MemberID
 	
 	EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @GeneralSetupObjectName, @ErrMsg
@@ -256,9 +262,10 @@ IF @Error = 0 BEGIN
 			FeedbackMsgVOL = CASE WHEN @UseVOL=1 THEN nt.FeedbackMsgVOL ELSE memd.FeedbackMsgVOL END,
 			VolProfilePrivacyPolicy = CASE WHEN @UseVOL=1 THEN nt.VolProfilePrivacyPolicy ELSE memd.VolProfilePrivacyPolicy END,
 			VolProfilePrivacyPolicyOrgName = CASE WHEN @UseVOL=1 THEN nt.VolProfilePrivacyPolicyOrgName ELSE memd.VolProfilePrivacyPolicyOrgName END,
-            SubsidyNamedProgram = CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgram ELSE memd.SubsidyNamedProgram END,
-            SubsidyNamedProgramDesc = CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgramDesc ELSE memd.SubsidyNamedProgramDesc END,
-            SubsidyNamedProgramSearchLabel = CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgramSearchLabel ELSE memd.SubsidyNamedProgramSearchLabel END
+			SubsidyNamedProgram = CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgram ELSE memd.SubsidyNamedProgram END,
+			SubsidyNamedProgramDesc = CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgramDesc ELSE memd.SubsidyNamedProgramDesc END,
+			SubsidyNamedProgramSearchLabel = CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgramSearchLabel ELSE memd.SubsidyNamedProgramSearchLabel END,
+			memd.VolunteerApplicationSurvey = CASE WHEN @UseVOL=1 THEN nt.VolunteerApplicationSurvey ELSE memd.VolunteerApplicationSurvey END
 		FROM dbo.STP_Member_Description memd
 		INNER JOIN @DescTable nt
 			ON memd.LangID=nt.LangID
@@ -279,9 +286,10 @@ IF @Error = 0 BEGIN
 			FeedbackMsgVOL,
 			VolProfilePrivacyPolicy,
 			VolProfilePrivacyPolicyOrgName,
-            SubsidyNamedProgram,
-            SubsidyNamedProgramDesc,
-            SubsidyNamedProgramSearchLabel
+			SubsidyNamedProgram,
+			SubsidyNamedProgramDesc,
+			SubsidyNamedProgramSearchLabel,
+			VolunteerApplicationSurvey
 		)
 		SELECT
 			@MemberID,
@@ -296,9 +304,10 @@ IF @Error = 0 BEGIN
 			CASE WHEN @UseVOL=1 THEN nt.FeedbackMsgVOL ELSE NULL END,
 			CASE WHEN @UseVOL=1 THEN nt.VolProfilePrivacyPolicy ELSE NULL END,
 			CASE WHEN @UseVOL=1 THEN nt.VolProfilePrivacyPolicyOrgName ELSE NULL END,
-            CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgram ELSE NULL END,
-            CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgramDesc ELSE NULL END,
-            CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgramSearchLabel ELSE NULL END
+			CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgram ELSE NULL END,
+			CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgramDesc ELSE NULL END,
+			CASE WHEN @UseCIC=1 THEN nt.SubsidyNamedProgramSearchLabel ELSE NULL END,
+			CASE WHEN @UseVOL=1 THEN nt.VolunteerApplicationSurvey ELSE NULL END
 		FROM @DescTable nt
 		WHERE NOT EXISTS(SELECT * FROM dbo.STP_Member_Description WHERE LangID=nt.LangID AND MemberID=@MemberID)
 		

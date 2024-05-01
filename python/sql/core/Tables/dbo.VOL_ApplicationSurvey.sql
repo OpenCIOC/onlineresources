@@ -29,18 +29,30 @@ CREATE TABLE [dbo].[VOL_ApplicationSurvey]
 [DDQuestion1Opt4] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [DDQuestion1Opt5] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [DDQuestion1Opt6] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[DDQuestion1Opt7] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[DDQuestion1Opt8] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[DDQuestion1Opt9] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[DDQuestion1Opt10] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [DDQuestion2Opt1] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [DDQuestion2Opt2] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [DDQuestion2Opt3] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [DDQuestion2Opt4] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [DDQuestion2Opt5] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [DDQuestion2Opt6] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[DDQuestion2Opt7] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[DDQuestion2Opt8] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[DDQuestion2Opt9] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[DDQuestion2Opt10] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [DDQuestion3Opt1] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [DDQuestion3Opt2] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [DDQuestion3Opt3] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [DDQuestion3Opt4] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
 [DDQuestion3Opt5] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
-[DDQuestion3Opt6] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL
+[DDQuestion3Opt6] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[DDQuestion3Opt7] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[DDQuestion3Opt8] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[DDQuestion3Opt9] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL,
+[DDQuestion3Opt10] [nvarchar] (150) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[VOL_ApplicationSurvey] ADD CONSTRAINT [PK_VOL_ApplicationSurvey] PRIMARY KEY NONCLUSTERED ([APP_ID]) ON [PRIMARY]

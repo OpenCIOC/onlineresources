@@ -262,6 +262,8 @@ End If
         </div>
     </div>
 
+    <%Call printSurveyInfo()%>
+
     <%If Not user_bLoggedIn And Not vprofile_bLoggedIn Then%>
     <div class="panel panel-default">
         <div class="panel-heading">
