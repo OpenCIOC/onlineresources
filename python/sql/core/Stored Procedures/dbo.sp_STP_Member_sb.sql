@@ -96,7 +96,8 @@ SELECT
     GlobalGoogleAnalytics4LanguageDimension,
     GlobalGoogleAnalytics4DomainDimension,
     GlobalGoogleAnalytics4ResultsCountMetric,
-    BillingInfoPassword
+    BillingInfoPassword,
+	AcceptCookiePrompt
 FROM    dbo.STP_Member mem
 WHERE   MemberID = @MemberID AND Active = 1;
 
@@ -112,7 +113,11 @@ SELECT
     memd.FeedbackMsgVOL,
     memd.VolProfilePrivacyPolicy,
     memd.VolProfilePrivacyPolicyOrgName,
-    memd.SubsidyNamedProgram
+    memd.SubsidyNamedProgram,
+	memd.AcceptCookiePromptText,
+	memd.AcceptCookieDetails,
+	memd.AcceptCookieOptionalText,
+	memd.AcceptCookieOptionalDetails
 FROM    dbo.STP_Language sln
     LEFT JOIN dbo.STP_Member_Description memd
         ON sln.LangID = memd.LangID AND memd.MemberID = @MemberID

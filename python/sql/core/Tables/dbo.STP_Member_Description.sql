@@ -17,7 +17,11 @@ CREATE TABLE [dbo].[STP_Member_Description]
 [VolProfilePrivacyPolicyOrgName] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [SubsidyNamedProgram] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
 [SubsidyNamedProgramDesc] [nvarchar] (1000) COLLATE Latin1_General_100_CI_AI NULL,
-[SubsidyNamedProgramSearchLabel] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
+[SubsidyNamedProgramSearchLabel] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[AcceptCookiePromptText] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[AcceptCookieDetails] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[AcceptCookieOptionalText] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[AcceptCookieOptionalDetails] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[STP_Member_Description] ADD CONSTRAINT [PK_STP_Member_Description] PRIMARY KEY CLUSTERED ([MemberID], [LangID]) ON [PRIMARY]
