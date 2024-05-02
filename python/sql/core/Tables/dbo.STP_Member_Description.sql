@@ -21,7 +21,8 @@ CREATE TABLE [dbo].[STP_Member_Description]
 [AcceptCookiePromptText] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [AcceptCookieDetails] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
 [AcceptCookieOptionalText] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
-[AcceptCookieOptionalDetails] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
+[AcceptCookieOptionalDetails] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL,
+[VolunteerApplicationSurvey] [int] NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[STP_Member_Description] ADD CONSTRAINT [PK_STP_Member_Description] PRIMARY KEY CLUSTERED ([MemberID], [LangID]) ON [PRIMARY]
@@ -29,6 +30,10 @@ GO
 ALTER TABLE [dbo].[STP_Member_Description] ADD CONSTRAINT [FK_STP_Member_Description_STP_Language] FOREIGN KEY ([LangID]) REFERENCES [dbo].[STP_Language] ([LangID])
 GO
 ALTER TABLE [dbo].[STP_Member_Description] ADD CONSTRAINT [FK_STP_Member_Description_STP_Member] FOREIGN KEY ([MemberID]) REFERENCES [dbo].[STP_Member] ([MemberID]) ON DELETE CASCADE ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[STP_Member_Description] ADD CONSTRAINT [FK_STP_Member_Description_STP_Member_Description] FOREIGN KEY ([MemberID], [LangID]) REFERENCES [dbo].[STP_Member_Description] ([MemberID], [LangID])
+GO
+ALTER TABLE [dbo].[STP_Member_Description] ADD CONSTRAINT [FK_STP_Member_Description_VOL_ApplicationSurvey] FOREIGN KEY ([VolunteerApplicationSurvey]) REFERENCES [dbo].[VOL_ApplicationSurvey] ([APP_ID]) ON DELETE SET NULL ON UPDATE CASCADE
 GO
 GRANT SELECT ([MemberID]) ON [dbo].[STP_Member_Description] TO [cioc_cic_search_role]
 GO

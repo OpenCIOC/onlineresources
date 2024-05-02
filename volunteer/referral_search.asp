@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -110,6 +110,7 @@ Dim strAgency, _
 	strModEndDate, _
 	strOrgKeywords, _
 	strPosKeywords, _
+	strLocName, _
 	strVolunteerName, _
 	bFollowup
 	
@@ -118,6 +119,8 @@ If Not Nl(Request("RecordOwner")) Then strAgency = Request("RecordOwner") End If
 
 strOrgKeywords = keywordSearchString(Request("STerms"))
 strPosKeywords = keywordSearchString(Request("PTitle"))
+
+strLocName = Left(Trim(Request("LocName")), 250)
 
 strVolunteerName = Left(Trim(Request("VolunteerName")), 100)
 
@@ -156,6 +159,11 @@ With cmdListReferrals
 	.Parameters.Append .CreateParameter("@ModEndDate", adDBDate, adParamInput, 4, strModEndDate)
 	.Parameters.Append .CreateParameter("@OrgKeywords", adVarWChar, adParamInput, 1000, Nz(strOrgKeywords,Null))
 	.Parameters.Append .CreateParameter("@PosKeywords", adVarWChar, adParamInput, 1000, Nz(strPosKeywords,Null))
+	.Parameters.Append .CreateParameter("@LocName", adVarWChar, adParamInput, 250, strLocName)
+	.Parameters.Append .CreateParameter("@LocTypeCM", adBoolean, adParamInput, 1, IIf(Request("LocTypeCM") = "on",SQL_TRUE,SQL_FALSE))
+	.Parameters.Append .CreateParameter("@LocTypeP", adBoolean, adParamInput, 1, IIf(Request("LocTypeP") = "on",SQL_TRUE,SQL_FALSE))
+	.Parameters.Append .CreateParameter("@LocTypeO", adBoolean, adParamInput, 1, IIf(Request("LocTypeO") = "on",SQL_TRUE,SQL_FALSE))
+	.Parameters.Append .CreateParameter("@LocTypeV", adBoolean, adParamInput, 1, IIf(Request("LocTypeV") = "on",SQL_TRUE,SQL_FALSE))
 	.Parameters.Append .CreateParameter("@VolunteerName", adVarWChar, adParamInput, 100, strVolunteerName)
 	.Parameters.Append .CreateParameter("@FollowUp", adBoolean, adParamInput, 1, bFollowup)
 	.CommandTimeout = 0

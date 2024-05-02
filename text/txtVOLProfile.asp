@@ -30,6 +30,7 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_APPLICATION_COUNT, _
 	TXT_APPLICATION_DATE, _
 	TXT_APPLICATIONS, _
+	TXT_APPLICATIONS_OVER_TIME, _
 	TXT_ARE_YOU_SURE_DEACTIVATE_ACCOUNT, _
 	TXT_AREA_OF_INTEREST, _
 	TXT_AREA_OF_INTEREST_ERROR, _
@@ -140,6 +141,8 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_SEARCH_NOW, _
 	TXT_SEARCH_PROFILE, _
 	TXT_SELECTED_INTERESTS, _
+	TXT_SET_DATE_RANGE, _
+	TXT_SINCE, _
 	TXT_START_A_NEW, _
 	TXT_SUBSCRIPTIONS, _
 	TXT_SUBSCRIPTIONS_NEW, _
@@ -154,6 +157,7 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_THE_PROFILE_ID, _
 	TXT_THE_VOLUNTEER_CENTRE, _
 	TXT_THERE_WERE_VALIDIATION_ERRORS, _
+	TXT_TOGGLE_DISPLAY_ALL, _
 	TXT_TOTAL_PROFILES, _
 	TXT_UNBLOCK, _
 	TXT_UNBLOCKED, _
@@ -167,6 +171,8 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_UPDATE_VOL_PROFILE_CRITERIA, _
 	TXT_USE_MY_SAVED_SEARCH_PROFILE, _
 	TXT_USER_NOT_AGREED_TO_CONTACT, _
+	TXT_USERS_WITH_A_PROFILE, _
+	TXT_USERS_WITHOUT_A_PROFILE, _
 	TXT_VIEW_NAME, _
 	TXT_VIEW_NUMBER, _
 	TXT_VIEW_OR_UPDATE, _
@@ -182,6 +188,7 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_VOLUNTEER_PROFILE, _
 	TXT_WELCOME, _
 	TXT_WOULD_YOU_LIKE_TO_REACTIVATE, _
+	TXT_YEAR, _
 	TXT_YOU_HAVE_BEEN_SENT_PASSWORD, _
 	TXT_YOU_MUST_FIRST, _
 	TXT_YOU_REQUESTED_PW_RESET, _
@@ -214,6 +221,7 @@ Sub setTxtVOLProfile()
 			TXT_APPLICATION_COUNT = "Nombre de candidatures"
 			TXT_APPLICATION_DATE = "Date"
 			TXT_APPLICATIONS = "Candidatures"
+			TXT_APPLICATIONS_OVER_TIME = "Applications sur la durée"
 			TXT_ARE_YOU_SURE_DEACTIVATE_ACCOUNT = "Êtes-vous certain de vouloir désactiver votre compte de profil de bénévole ?"
 			TXT_AREA_OF_INTEREST = "Centre d'intérêt :"
 			TXT_AREA_OF_INTEREST_ERROR = "Centres d'intérêt n'est pas un ID de liste valide."
@@ -325,6 +333,8 @@ Sub setTxtVOLProfile()
 			TXT_SEARCH_NOW = "Rechercher maintenant"
 			TXT_SEARCH_PROFILE = "Rechercher les Profils"
 			TXT_SELECTED_INTERESTS = "Intérêts sélectionnés"
+			TXT_SET_DATE_RANGE = "Définir une période"
+			TXT_SINCE = "Depuis "
 			TXT_START_A_NEW = "Commencer une nouvelle "
 			TXT_SUBSCRIPTIONS = "Abonnements par courriel"
 			TXT_SUBSCRIPTIONS_NEW = "TRANSLATE_FR -- This profile is receiving notifications for new opportunities by email."
@@ -339,6 +349,7 @@ Sub setTxtVOLProfile()
 			TXT_THE_PROFILE_ID = "l'ID du profil"
 			TXT_THE_VOLUNTEER_CENTRE = "Le centre de bénévolat"
 			TXT_THERE_WERE_VALIDIATION_ERRORS = "Il y a des erreurs de validation :"
+			TXT_TOGGLE_DISPLAY_ALL = "Activer/Désactiver afficher tout"
 			TXT_TOTAL_PROFILES = " profils au total, "
 			TXT_UNBLOCK = "Bloqué"
 			TXT_UNBLOCKED = "Débloqué"
@@ -352,6 +363,8 @@ Sub setTxtVOLProfile()
 			TXT_UPDATE_VOL_PROFILE_CRITERIA = "Mettre à jour les Critères de recherche sur les profils de bénévole"
 			TXT_USE_MY_SAVED_SEARCH_PROFILE = "Utiliser mon profil enregistré"
 			TXT_USER_NOT_AGREED_TO_CONTACT = "Cet utilisateur n'a pas accepté d'être contacté."
+			TXT_USERS_WITH_A_PROFILE = "Utilisateurs avec un profil"
+			TXT_USERS_WITHOUT_A_PROFILE = "Utilisateurs sans profil"
 			TXT_VIEW_NAME = "Afficher le nom"
 			TXT_VIEW_NUMBER = "No de vue"
 			TXT_VIEW_OR_UPDATE = "Afficher ou mettre à jour"
@@ -367,6 +380,7 @@ Sub setTxtVOLProfile()
 			TXT_VOLUNTEER_PROFILE = "Profil du bénévole"
 			TXT_WELCOME = "Bienvenue,"
 			TXT_WOULD_YOU_LIKE_TO_REACTIVATE = "Souhaitez-vous réactiver votre compte ?"
+			TXT_YEAR = "Année"
 			TXT_YOU_HAVE_BEEN_SENT_PASSWORD = "Un courriel avec votre nouveau mot de passe vous a été envoyé."
 			TXT_YOU_MUST_FIRST = "Vous devez d'abord"
 			TXT_YOU_REQUESTED_PW_RESET = "Vous venez de demander un nouveau mot de passe pour votre profil sur"
@@ -396,6 +410,7 @@ Sub setTxtVOLProfile()
 			TXT_APPLICATION_COUNT = "Application Count"
 			TXT_APPLICATION_DATE = "Date"
 			TXT_APPLICATIONS = "Applications"
+			TXT_APPLICATIONS_OVER_TIME = "Applications over Time"
 			TXT_ARE_YOU_SURE_DEACTIVATE_ACCOUNT = "Are you sure you want to deactivate your Volunteer Profile account?"
 			TXT_AREA_OF_INTEREST = "Area of Interest:"
 			TXT_AREA_OF_INTEREST_ERROR = "Areas of Interest is not a valid ID List."
@@ -507,6 +522,8 @@ Sub setTxtVOLProfile()
 			TXT_SEARCH_NOW = "Search Now"
 			TXT_SEARCH_PROFILE = "Search Profile"
 			TXT_SELECTED_INTERESTS = "Selected Interests"
+			TXT_SET_DATE_RANGE = "Set Date Range"
+			TXT_SINCE = "Since "
 			TXT_START_A_NEW = "Start a new "
 			TXT_SUBSCRIPTIONS = "Email Subscriptions"
 			TXT_SUBSCRIPTIONS_NEW = "This profile is receiving notifications for new opportunities by email."
@@ -521,6 +538,7 @@ Sub setTxtVOLProfile()
 			TXT_THE_PROFILE_ID = "the Profile ID"
 			TXT_THE_VOLUNTEER_CENTRE = "The Volunteer Centre"
 			TXT_THERE_WERE_VALIDIATION_ERRORS = "There were validation errors" & TXT_COLON
+			TXT_TOGGLE_DISPLAY_ALL = "Toggle Display All"
 			TXT_TOTAL_PROFILES = " total Profiles, "
 			TXT_UNBLOCK = "Unblock"
 			TXT_UNBLOCKED = "Unblocked"
@@ -534,6 +552,8 @@ Sub setTxtVOLProfile()
 			TXT_UPDATE_VOL_PROFILE_CRITERIA = "Update Volunteer Profile Search Criteria"
 			TXT_USE_MY_SAVED_SEARCH_PROFILE = "Use my saved Search Profile"
 			TXT_USER_NOT_AGREED_TO_CONTACT = "This User has not agreed to be contacted."
+			TXT_USERS_WITH_A_PROFILE = "Users with a Profile"
+			TXT_USERS_WITHOUT_A_PROFILE = "Users without a Profile"
 			TXT_VIEW_NAME = "View Name"
 			TXT_VIEW_NUMBER = "View #"
 			TXT_VIEW_OR_UPDATE = "View or Update"
@@ -549,6 +569,7 @@ Sub setTxtVOLProfile()
 			TXT_VOLUNTEER_PROFILE = "Volunteer Profile"
 			TXT_WELCOME = "Welcome,"
 			TXT_WOULD_YOU_LIKE_TO_REACTIVATE = "Would you like to reactivate your account?"
+			TXT_YEAR = "Year"
 			TXT_YOU_HAVE_BEEN_SENT_PASSWORD = "You have been sent an Email with your new password."
 			TXT_YOU_MUST_FIRST = "You must first"
 			TXT_YOU_REQUESTED_PW_RESET = "You recently requested a new password for your profile on"

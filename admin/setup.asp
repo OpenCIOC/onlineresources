@@ -170,6 +170,7 @@ Call makePageHeader(TXT_DATABASE_SETUP, TXT_DATABASE_SETUP, True, True, True, Tr
 							<li><a href="<%=makeLink("setup_searchtips.asp","DM=" & DM_VOL,vbNullString)%>"><%=TXT_SEARCH_TIPS%></a></li>
 							<li><a href="<%=makeLinkB("comms_vol.asp")%>"><%=TXT_COMMUNITIES%></a></li>
 							<li><a href="<%=makeLink("pages", "DM=" & DM_VOL, vbNullString)%>"><%=TXT_PAGES%></a></li>
+							<li><a href="<%=makeLink("applicationsurvey", vbNullString, vbNullString)%>"><%=TXT_APPLICATION_SURVEYS%></a></li>
 						</ul>
 					</div>
 					<%End If%>

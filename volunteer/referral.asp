@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@  language="VBSCRIPT" %>
 <%Option Explicit%>
 
 <%
@@ -72,93 +72,146 @@ Call makePageHeader(TXT_VOLUNTEER_REFERRALS, TXT_VOLUNTEER_REFERRALS, True, Fals
 	dateLastMonthFirst = DateString(DateAdd("m",-1,dateThisMonthFirst),True)
 
 %>
-<form action="referral_search.asp" method="post" name="EntryForm" id="EntryForm">
-<%=g_strCacheFormVals%>
-<table class="BasicBorder cell-padding-3">
-<tr>
-	<th colspan="2" class="RevTitleBox"><%= TXT_CUSTOM_REFERRAL_SEARCH %></th>
-</tr>
-<tr>
-	<td class="FieldLabel"><%= TXT_REFERRAL_DATE %></td>
-	<td>
-		<table class="NoBorder cell-padding-2">
+<form action="referral_search.asp" method="post" name="EntryForm" id="EntryForm" class="form">
+	<%=g_strCacheFormVals%>
+	<table class="BasicBorder cell-padding-3 max-width-lg clear-line-below">
 		<tr>
-			<td class="FieldLabelLeftClr"><label for="RefStartDate"><%=TXT_ON_AFTER_DATE & TXT_COLON%></label></td>
-			<td><input type="text" name="RefStartDate" id="RefStartDate" size="15" maxlength="40" class="DatePicker"> <input type="BUTTON" value="<%=TXT_FIRST_OF_LAST_MONTH%>" onClick="document.EntryForm.RefStartDate.value='<%=dateLastMonthFirst%>'"></td>
-		</tr><tr>
-			<td class="FieldLabelLeftClr"><label for="RefEndDate"><%=TXT_BEFORE_DATE & TXT_COLON%></label></td>
-			<td><input type="text" name="RefEndDate" id="RefEndDate" size="15" maxlength="40" class="DatePicker"> <input type="BUTTON" value="<%=TXT_FIRST_OF_THIS_MONTH%>" onClick="document.EntryForm.RefEndDate.value='<%=dateThisMonthFirst%>'"></td>
+			<th colspan="2" class="RevTitleBox"><%= TXT_CUSTOM_REFERRAL_SEARCH %></th>
 		</tr>
-		</table>
-</tr>
-<tr>
-	<td class="FieldLabel"><%= TXT_MODIFIED_DATE %></td>
-	<td>
-		<table class="NoBorder cell-padding-2">
 		<tr>
-			<td class="FieldLabelLeftClr"><label for="ModStartDate"><%=TXT_ON_AFTER_DATE & TXT_COLON%></label></td>
-			<td><input type="text" name="ModStartDate" id="ModStartDate" size="15" maxlength="40" class="DatePicker"> <input type="BUTTON" value="<%=TXT_FIRST_OF_LAST_MONTH%>" onClick="document.EntryForm.ModStartDate.value='<%=dateLastMonthFirst%>'"></td>
-		</tr><tr>
-			<td class="FieldLabelLeftClr"><label for="ModEndDate"><%=TXT_BEFORE_DATE & TXT_COLON%></label></td>
-			<td><input type="text" name="ModEndDate" id="ModEndDate" size="15" maxlength="40" class="DatePicker"> <input type="BUTTON" value="<%=TXT_FIRST_OF_THIS_MONTH%>" onClick="document.EntryForm.ModEndDate.value='<%=dateThisMonthFirst%>'"></td>
+			<td class="field-label-cell"><%= TXT_REFERRAL_DATE %></td>
+			<td class="field-data-cell">
+				<div class="row form-group form-inline">
+					<label for="RefStartDate" class="col-xs-6 col-sm-4 control-label"><%=TXT_ON_AFTER_DATE & TXT_COLON%></label>
+					<div class="col-xs-6 col-sm-4">
+						<input type="text" name="RefStartDate" id="RefStartDate" size="15" maxlength="40" class="DatePicker form-control">
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<input type="BUTTON" value="<%=TXT_FIRST_OF_LAST_MONTH%>" onclick="document.EntryForm.RefStartDate.value='<%=dateLastMonthFirst%>'" class="btn btn-default">
+					</div>
+				</div>
+				<div class="row form-group form-inline">
+					<label for="RefEndDate" class="col-xs-6 col-sm-4 control-label"><%=TXT_BEFORE_DATE & TXT_COLON%></label>
+					<div class="col-xs-6 col-sm-4">
+						<input type="text" name="RefEndDate" id="RefEndDate" size="15" maxlength="40" class="DatePicker form-control">
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<input type="BUTTON" value="<%=TXT_FIRST_OF_THIS_MONTH%>" onclick="document.EntryForm.RefEndDate.value='<%=dateThisMonthFirst%>'" class="btn btn-default">
+					</div>
+				</div>
+			</td>
 		</tr>
-		</table>
-</tr>
-<tr>	
-	<td class="FieldLabel"><label for="STerms"><%= TXT_ORGANIZATION_KEYWORDS %></label></td>
-	<td><input name="STerms" id="STerms" type="text" size="<%=TEXT_SIZE-20%>" maxlength="250"></td>
-</tr>
-<tr>	
-	<td class="FieldLabel"><label for="PTitle"><%= TXT_POS_TITLE_KEYWORDS %></label></td>
-	<td><input name="PTitle" id="PTitle" type="text" size="<%=TEXT_SIZE-20%>" maxlength="250"></td>
-</tr>
-<tr>	
-	<td class="FieldLabel"><label for="VolunteerName"><%= TXT_VOLUNTEER_NAME %></label></td>
-	<td><%=TXT_CONTAINS & TXT_COLON%>&nbsp;<input name="VolunteerName" id="VolunteerName" type="text" size="<%=TEXT_SIZE-30%>" maxlength="100"></td>
-</tr>
-<tr>	
-	<td class="FieldLabel"><%= TXT_FOLLOW_UP %></td>
-	<td>
-		<label for="HasFollowUpAny"><input id="HasFollowUpAny" type="radio" name="HasFollowUp" value="" checked> <%= TXT_ANY %></label> 
-		<label for="HasFollowUpReq"><input id="HasFollowUpReq" type="radio" name="HasFollowUp" value="R"> <%= TXT_IS_REQUIRED %></label> 
-		<label for="HasFollowUpNotReq"><input id="HasFollowUpNotReq" type="radio" name="HasFollowUp" value="N"> <%= TXT_NOT_REQUIRED %></label> 
-	</td>
-</tr>
-<%
+		<tr>
+			<td class="field-label-cell"><%= TXT_MODIFIED_DATE %></td>
+			<td class="field-data-cell">
+				<div class="row form-group form-inline">
+					<label for="ModStartDate" class="col-xs-6 col-sm-4 control-label"><%=TXT_ON_AFTER_DATE & TXT_COLON%></label>
+					<div class="col-xs-6 col-sm-4">
+						<input type="text" name="ModStartDate" id="ModStartDate" size="15" maxlength="40" class="DatePicker form-control">
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<input type="BUTTON" value="<%=TXT_FIRST_OF_LAST_MONTH%>" onclick="document.EntryForm.ModStartDate.value='<%=dateLastMonthFirst%>'" class="btn btn-default">
+					</div>
+				</div>
+				<div class="row form-group form-inline">
+					<label for="ModEndDate" class="col-xs-6 col-sm-4 control-label"><%=TXT_BEFORE_DATE & TXT_COLON%></label>
+					<div class="col-xs-6 col-sm-4">
+						<input type="text" name="ModEndDate" id="ModEndDate" size="15" maxlength="40" class="DatePicker form-control">
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<input type="BUTTON" value="<%=TXT_FIRST_OF_THIS_MONTH%>" onclick="document.EntryForm.ModEndDate.value='<%=dateThisMonthFirst%>'" class="btn btn-default">
+					</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="field-label-cell">
+				<label for="STerms"><%= TXT_ORGANIZATION_KEYWORDS %></label></td>
+			<td class="field-data-cell">
+				<input name="STerms" id="STerms" type="text" maxlength="250" class="form-control"></td>
+		</tr>
+		<tr>
+			<td class="field-label-cell">
+			<label for="PTitle"><%= TXT_POS_TITLE_KEYWORDS %></label></td>
+			<td class="field-data-cell">
+				<input name="PTitle" id="PTitle" type="text" maxlength="250" class="form-control"></td>
+		</tr>
+		<tr>
+			<td class="field-label-cell">
+				<label for="LocName"><%= TXT_LOCATION_CONTAINS %></label></td>
+			<td class="field-data-cell">
+				<p><%=TXT_SELECTED_LOCATIONS_CONTAIN_THE_STRING%></p>
+				<input name="LocName" id="LocName" type="text" maxlength="250" class="form-control">
+				<div class="checkbox">
+					<label><input name="LocTypeCM" type="checkbox" /> <%=TXT_POS_COMMUNITIES%></label>
+				</div>
+				<div class="checkbox">
+					<label><input name="LocTypeP" type="checkbox" /> <%=TXT_POS_LOCATION%></label>
+				</div>
+				<div class="checkbox">
+					<label><input name="LocTypeO" type="checkbox" /> <%=TXT_ORG_LOCATION%></label>
+				</div>
+				<div class="checkbox">
+					<label><input name="LocTypeV" type="checkbox" /> <%=TXT_VOLUNTEER_CITY%></label>
+				</div>
+			</td>
+				
+		</tr>
+		<tr>
+			<td class="field-label-cell">
+				<label for="VolunteerName"><%= TXT_VOLUNTEER_NAME %></label></td>
+			<td class="field-data-cell"><%=TXT_CONTAINS & TXT_COLON%>
+				<input name="VolunteerName" id="VolunteerName" type="text" maxlength="100" class="form-control"></td>
+		</tr>
+		<tr>
+			<td class="field-label-cell"><%= TXT_FOLLOW_UP %></td>
+			<td class="field-data-cell">
+				<label for="HasFollowUpAny">
+					<input id="HasFollowUpAny" type="radio" name="HasFollowUp" value="" checked>
+					<%= TXT_ANY %></label>
+				<label for="HasFollowUpReq">
+					<input id="HasFollowUpReq" type="radio" name="HasFollowUp" value="R">
+					<%= TXT_IS_REQUIRED %></label>
+				<label for="HasFollowUpNotReq">
+					<input id="HasFollowUpNotReq" type="radio" name="HasFollowUp" value="N">
+					<%= TXT_NOT_REQUIRED %></label>
+			</td>
+		</tr>
+		<%
 Call openAgencyListRst(DM_VOL, True, True)
 	If Not rsListAgency.EOF Then
-%>
-<tr>	
-	<td class="FieldLabel"><label for="RecordOwner"><%= TXT_RECORD_OWNER %></label></td>
-	<td><%=makeAgencyList(vbNullString,"RecordOwner",True,True)%></td>
-</tr>
-<%
+		%>
+		<tr>
+			<td class="field-label-cell">
+				<label for="RecordOwner"><%= TXT_RECORD_OWNER %></label></td>
+			<td class="field-data-cell"><%=makeAgencyList(vbNullString,"RecordOwner",True,True)%></td>
+		</tr>
+		<%
 	End If
 Call closeAgencyListRst()
-%>
-<tr>
-	<td colspan="2" align="center"><input type="submit" value="<%=TXT_SEARCH%>"> <input type="reset" value="<%=TXT_CLEAR_FORM%>"></td>
-</tr>
-</table>
+		%>
+	</table>
+	<input type="submit" value="<%=TXT_SEARCH%>" class="btn btn-info">
+	<input type="reset" value="<%=TXT_CLEAR_FORM%>" class="btn btn-info">
 </form>
 
 <h3><%= TXT_OTHER_REFERRAL_TOOLS %></h3>
 <ul>
-<li><a href="<%=makeLinkB("referral_stats.asp")%>"><%= TXT_REFERRAL_STATS_REPORT %></a></li>
-<%If user_bSuperUserVOL Then%>
-<li><a href="<%=makeLinkB("referral_delete.asp")%>"><%= TXT_DELETE_OLD_REFERRALS %></a></li>
-<%End If%>
+	<li><a href="<%=makeLinkB("referral_stats.asp")%>"><%= TXT_REFERRAL_STATS_REPORT %></a></li>
+	<%If user_bSuperUserVOL Then%>
+	<li><a href="<%=makeLinkB("referral_delete.asp")%>"><%= TXT_DELETE_OLD_REFERRALS %></a></li>
+	<%End If%>
 </ul>
 <form class="NotVisible" name="stateForm" id="stateForm">
-<textarea id="cache_form_values"></textarea>
+	<textarea id="cache_form_values"></textarea>
 </form>
 <%= makeJQueryScriptTags() %>
 <%= JSVerScriptTag("scripts/datepicker.js") %>
 <script type="text/javascript">
-jQuery(function() {
+	jQuery(function () {
 		init_cached_state();
 		restore_cached_state();
-		});
+	});
 </script>
 
 <%

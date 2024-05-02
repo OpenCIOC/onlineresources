@@ -22,7 +22,7 @@
 from itertools import groupby
 from operator import attrgetter
 %>
-<%def name="makeLayoutList(name, add_empty=False)">
+<%def name="makePageList(name, add_empty=False)">
 <p class="SmallNote">${_('** Denotes pages published as an article')}</p>
 <select name="${name}" id="${name}" class="form-control">
 	%if add_empty:
@@ -47,7 +47,7 @@ from operator import attrgetter
 	%if pages:
 	<h2><label for="PageID">${_('Edit Page')}</h2>
 	<div class="max-width-sm">
-		${makeLayoutList('PageID')}
+		${makePageList('PageID')}
 		<br /><input type="submit" value="${_('View/Edit Page')}" class="btn btn-default">
 	</div>
 	%endif
@@ -63,7 +63,7 @@ from operator import attrgetter
 		%if pages:
 		<div class="form-group">
 			<label for="PageID" class="control-label">${_('Copy Existing Page:')}</label>
-			${makeLayoutList('PageID', add_empty=True)}
+			${makePageList('PageID', add_empty=True)}
 		</div>
 		%endif
 		<input type="submit" value="${_('Add Page')}" class="btn btn-default">

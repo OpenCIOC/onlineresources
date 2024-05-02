@@ -33,7 +33,8 @@ Dim strRecordOwner, _
 	strContactEmail, _
 	bInView, _
 	bInDefaultView, _
-	bExpired
+	bExpired, _
+	intSurvey
 	
 Sub setOpInfo()
 	Dim cmdOp, rsOp
@@ -67,6 +68,7 @@ Sub setOpInfo()
 			bInView = .Fields("IN_VIEW")
 			bInDefaultView = .Fields("IN_DEFAULT_VIEW")
 			bExpired = .Fields("EXPIRED")
+			intSurvey = .Fields("VolunteerApplicationSurvey")
 		Else
 			strRecordOwner = vbNullString
 			strPosition = vbNullString
@@ -83,9 +85,85 @@ Sub setOpInfo()
 			bInView = False
 			bInDefaultView = False
 			bExpired = False
+			intSurvey = Null
 		End If
 	End With
 	Set rsOp = Nothing
 	Set cmdOp = Nothing	
 End Sub
+
+Sub printSurveyInfo()
+	Dim cmdSurvey, rsSurvey
+	Set cmdSurvey = Server.CreateObject("ADODB.Command")
+	With cmdSurvey
+		.ActiveConnection = getCurrentVOLBasicCnn()
+		.CommandType = adCmdStoredProc
+		.CommandText = "dbo.sp_VOL_ApplicationSurvey_s"
+		.CommandTimeout = 0
+		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
+		.Parameters.Append .CreateParameter("@APP_ID", adInteger, adParamInput, 4, intSurvey)
+		Set rsSurvey = .Execute
+	End With
+
+	dim i, j
+
+	With rsSurvey
+		If Not .EOF Then
+%>
+	<input type="hidden" name="APP_ID" value="<%=intSurvey%>" />
+    <div class="panel panel-default max-width-lg clear-line-below">
+        <div class="panel-heading">
+            <h3><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%=Nz(rsSurvey.Fields("Title"),TXT_OPTIONAL_SURVEY)%></h3>
+        </div>
+		<div class="panel-body">
+			<div class="AlertBubble">
+				<%=TXT_SURVEY_DISCLAIMER_1 %> <%=strContactOrg%> <%=TXT_SURVEY_DISCLAIMER_2 %>
+			</div>
+			<%=.Fields("Description") %>
+<%
+			For i = 1 to 3
+				If Not Nl(.Fields("TextQuestion" + CStr(i))) Then
+%>
+				<hr />
+				<h3><label for="TextQuestion<%=i%>"><%=.Fields("TextQuestion" + CStr(i))%></label></h3>
+				<%=.Fields("TextQuestion"  + CStr(i) + "Help")%>
+				<textarea name="TextQuestion<%=i%>" id="TextQuestion<%=i%>" class="form-control"></textarea>
+<%
+				End If
+			Next
+%>
+<%
+			For i = 1 to 3
+				If Not Nl(.Fields("DDQuestion" + CStr(i))) Then
+%>
+				<hr />
+				<h3><label for="DDQuestion<%=i%>"><%=.Fields("DDQuestion" + CStr(i))%></label></h3>
+				<%=.Fields("DDQuestion"  + CStr(i) + "Help")%>
+				<select name="DDQuestion<%=i%>" id="DDQuestion<%=i%>" class="form-control">
+					<option value="" selected> -- </option>
+<%
+				For j = 1 to 10
+					If Not Nl(.Fields("DDQuestion" + CStr(i) + "Opt" + CStr(j))) Then
+%>
+					<option value=<%=AttrQs(.Fields("DDQuestion" + CStr(i) + "Opt" + CStr(j)))%>"><%=Server.HTMLEncode(.Fields("DDQuestion" + CStr(i) + "Opt" + CStr(j)))%></option>
+<%
+					End If
+				Next
+%>
+				</select>
+<%
+				End If
+			Next
+%>
+        </div>
+    </div>
+<%
+		End If
+	End With
+
+	Set rsSurvey = Nothing
+	Set cmdSurvey = Nothing	
+End Sub
+
+
 %>

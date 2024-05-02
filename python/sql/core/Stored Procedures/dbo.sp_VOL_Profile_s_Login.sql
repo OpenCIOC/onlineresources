@@ -44,10 +44,18 @@ END ELSE IF @LoginKey IS NULL OR NOT EXISTS(SELECT * FROM VOL_Profile WHERE Emai
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @VolunteerProfileObjectName, NULL)
 END ELSE BEGIN
 	SELECT @ProfileID = ProfileID
-		FROM VOL_Profile
+		FROM dbo.VOL_Profile vp
 	WHERE MemberID=@MemberID
 		AND Email=@Email
 		AND Active=1 And Blocked=0
+
+	UPDATE vp
+		SET
+			LastSuccessfulLogin = GETDATE()
+	FROM dbo.VOL_Profile vp
+	WHERE MemberID=@MemberID
+		AND Email=@Email
+		AND Active=1 And Blocked=0	
 END
 
 RETURN @Error

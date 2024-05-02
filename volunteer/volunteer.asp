@@ -262,6 +262,8 @@ End If
         </div>
     </div>
 
+    <%Call printSurveyInfo()%>
+
     <%If Not user_bLoggedIn And Not vprofile_bLoggedIn Then%>
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -314,6 +316,7 @@ jQuery(function($) {
         focusInvalid: false, onfocusout: false,
         onkeyup: false, onclick: false
     });
+	init_community_autocomplete($, "VolunteerCity", "<%= makeLinkB(ps_strPathToStart & "jsonfeeds/community_generator.asp") %>", 3);
 });
 </script>
     <%

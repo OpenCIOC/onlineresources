@@ -21,6 +21,7 @@ Dim TXT_ACTIVITY_SETUP, _
 	TXT_AGENCIES, _
 	TXT_ACTIVITY_STATUS, _
 	TXT_APIS_SHARING_EXPORT, _
+	TXT_APPLICATION_SURVEYS, _
 	TXT_CLASSIFICATION_SYSTEMS, _
 	TXT_CHECKLIST, _
 	TXT_DATA_FEED_API_KEY, _
@@ -93,6 +94,7 @@ Sub setTxtSetup()
 			TXT_AGENCIES = "Agencies"
 			TXT_ACTIVITY_STATUS = "Activity Statuses"
 			TXT_APIS_SHARING_EXPORT = "APIs, Sharing, and Export"
+			TXT_APPLICATION_SURVEYS = "Application Surveys"
 			TXT_CLASSIFICATION_SYSTEMS = "Classification Systems"
 			TXT_CHECKLIST = "Checklist"
 			TXT_DATA_FEED_API_KEY = "Basic Data Feed API Keys"
@@ -162,6 +164,7 @@ Sub setTxtSetup()
 			TXT_AGENCIES = "Agences"
 			TXT_ACTIVITY_STATUS = "Statuts des activités"
 			TXT_APIS_SHARING_EXPORT = "Les API, le partage, et l'exportation"
+			TXT_APPLICATION_SURVEYS = "Enquêtes de candidature"
 			TXT_CLASSIFICATION_SYSTEMS = "Systèmes de classification"
 			TXT_CHECKLIST = "Liste de contrôle"
 			TXT_DATA_FEED_API_KEY = "Clés API pour le flux de données de base"

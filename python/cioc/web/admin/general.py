@@ -160,6 +160,7 @@ class GeneralDescriptionSchema(Schema):
     SubsidyNamedProgram = ciocvalidators.UnicodeString(max=255)
     SubsidyNamedProgramDesc = ciocvalidators.UnicodeString(max=1000)
     SubsidyNamedProgramSearchLabel = ciocvalidators.UnicodeString(max=255)
+    VolunteerApplicationSurvey = ciocvalidators.IDValidator()
 
     chained_validators = [
         ciocvalidators.RequireIfPredicate(
@@ -231,7 +232,7 @@ class GeneralSetup(AdminViewBase):
                 ET.SubElement(desc, "Culture").text = culture.replace("_", "-")
                 for name, value in data.items():
                     if value:
-                        ET.SubElement(desc, name).text = value
+                        ET.SubElement(desc, name).text = str(value)
 
             args.append(ET.tostring(root, encoding="unicode"))
 
@@ -280,6 +281,7 @@ class GeneralSetup(AdminViewBase):
         cic_views = []
         publications = []
         vol_views = []
+        vol_surveys = []
 
         with request.connmgr.get_connection("admin") as conn:
             cursor = conn.execute(
@@ -305,6 +307,11 @@ class GeneralSetup(AdminViewBase):
                 cursor.nextset()
 
                 vol_views = cursor.fetchall()
+
+                cursor.nextset()
+
+                vol_surveys = cursor.fetchall()
+                
             cursor.close()
 
             cursor = conn.execute(
@@ -348,6 +355,7 @@ class GeneralSetup(AdminViewBase):
                 cic_views=format_list(cic_views),
                 publications=format_pub_list(publications, True),
                 vol_views=format_list(vol_views),
+                vol_survey=vol_surveys,
                 ErrMsg=ErrMsg,
             ),
             no_index=True,
@@ -367,6 +375,7 @@ class GeneralSetup(AdminViewBase):
         cic_views = []
         publications = []
         vol_views = []
+        vol_surveys = []
 
         with request.connmgr.get_connection("admin") as conn:
             cursor = conn.execute(
@@ -408,6 +417,10 @@ class GeneralSetup(AdminViewBase):
 
                 vol_views = cursor.fetchall()
 
+                cursor.nextset()
+
+                vol_surveys = cursor.fetchall()
+
             cursor.close()
 
         model_state = request.model_state
@@ -448,6 +461,7 @@ class GeneralSetup(AdminViewBase):
                 cic_views=format_list(cic_views),
                 publications=format_pub_list(publications, True),
                 vol_views=format_list(vol_views),
+                vol_surveys=vol_surveys
             ),
             no_index=True,
         )

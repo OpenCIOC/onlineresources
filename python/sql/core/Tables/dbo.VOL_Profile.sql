@@ -50,10 +50,14 @@ CREATE TABLE [dbo].[VOL_Profile]
 [ConfirmationDate] [smalldatetime] NULL,
 [Verified] [bit] NOT NULL CONSTRAINT [DF_VOL_Profile_AccountVerified] DEFAULT ((0)),
 [AgreedToPrivacyPolicy] [bit] NOT NULL CONSTRAINT [DF_VOL_Profile_AgreeToPrivacyPolicy] DEFAULT ((0)),
-[UnsubscribeToken] [uniqueidentifier] NOT NULL CONSTRAINT [DF_VOL_Profile_UnsubscribeKey] DEFAULT (newid())
+[UnsubscribeToken] [uniqueidentifier] NOT NULL CONSTRAINT [DF_VOL_Profile_UnsubscribeKey] DEFAULT (newid()),
+[LastSuccessfulLogin] [datetime] NULL,
+[LastSuccessfulLoginIP] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[VOL_Profile] ADD CONSTRAINT [PK_VOL_Profile] PRIMARY KEY CLUSTERED ([ProfileID]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_VOL_Profile_MemberIDInclProfileIDMODIFIEDDATECREATEDDATE] ON [dbo].[VOL_Profile] ([MemberID]) INCLUDE ([ProfileID], [MODIFIED_DATE], [CREATED_DATE]) ON [PRIMARY]
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [IX_VOL_Profile_UniqueEmail] ON [dbo].[VOL_Profile] ([MemberID], [Email]) ON [PRIMARY]
 GO
