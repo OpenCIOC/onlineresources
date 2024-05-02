@@ -24,11 +24,11 @@ from operator import attrgetter
 %>
 <%
 if None not in (start_date,end_date):
-    str(start_date) + _(' to ') + str(end_date)
+    date_range = format_date(start_date) + _(' to ') + format_date(end_date)
 elif start_date is not None:
-    date_range = _('after ') + str(start_date)
+    date_range = _('after ') + format_date(start_date)
 elif end_date is not None:
-    date_range = _('until ') + str(end_date)
+    date_range = _('until ') + format_date(end_date)
 else:
     date_range = _('all available dates')
 %>

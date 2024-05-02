@@ -15,6 +15,7 @@
 # =========================================================================================
 
 
+import itertools
 import logging
 import tempfile
 import zipfile
@@ -452,11 +453,12 @@ class TemplateApplicationSurvey(viewbase.AdminViewBase):
             )
 
             if export_csv:
+                headings = [d[0] for d in cursor.description]
                 file = tempfile.TemporaryFile()
                 with BufferedZipFile(file, "w", zipfile.ZIP_DEFLATED) as zip:
                     write_csv_to_zip(
                         zip,
-                        cursor,
+                        itertools.chain([headings], cursor),
                         "applicationsurveys.csv",
                     )
 
@@ -494,8 +496,8 @@ class TemplateApplicationSurvey(viewbase.AdminViewBase):
                     counts_by_survey=counts_by_survey,
                     counts_by_city=counts_by_city,
                     counts_by_answer=counts_by_answer,
-                    start_date = StartDate,
-                    end_date = EndDate
+                    start_date=StartDate,
+                    end_date=EndDate,
                 ),
                 no_index=True,
             )
