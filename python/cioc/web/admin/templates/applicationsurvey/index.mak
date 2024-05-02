@@ -23,7 +23,7 @@ from itertools import groupby
 from operator import attrgetter
 %>
 
-<%def name="makeApplicationSurveyList(name, add_empty=False)">
+<%def name="makeApplicationSurveyList(name, id=None, *, add_empty=False)">
 <select name="${name}" id="${name}" class="form-control">
 	%if add_empty:
 	<option value=""> -- </option>
@@ -53,8 +53,32 @@ ${request.passvars.cached_form_vals|n}
 <h2>${_('Create New Application Survey')}</h2>
 <div class="max-width-sm">
 	<div class="form-group">
-		<label for="APP_ID" class="control-label">${_('Copy Existing Application Survey:')}</label>
-		${makeApplicationSurveyList('APP_ID', add_empty=True)}
+		<label for="APP_ID2" class="control-label">${_('Copy Existing Application Survey:')}</label>
+		${makeApplicationSurveyList('APP_ID', 'APP_ID2', add_empty=True)}
+	</div>
+	<input type="submit" value="${_('Add Application Survey')}" class="btn btn-default">
+</div>
+</form>
+
+
+<form action="${request.route_path('admin_applicationsurvey', action='report')}" method="get" class="form">
+${request.passvars.cached_form_vals|n}
+<h2>${_('Application Survey Report')}</h2>
+<div class="max-width-sm">
+	<div class="form-group">
+		<label for="APP_ID3" class="control-label">${_('Application Survey:')}</label>
+		${makeApplicationSurveyList('APP_ID', 'APP_ID3')}
+	</div>
+	<div class="form-group">
+		${renderer.label('StartDate',_('Start Date'), class_='contol-label')}
+		${renderer.date('StartDate', class_='form-control')}
+	</div>
+	<div class="form-group">
+		${renderer.label('EndDate',_('End Date'), class_='contol-label')}
+		${renderer.date('EndDate', class_='form-control')}
+	</div>
+	<div class="form-group">
+		${renderer.checkbox("ExportCSV", "1", label=_('Export as CSV'), label_class='control-label')}
 	</div>
 	<input type="submit" value="${_('Add Application Survey')}" class="btn btn-default">
 </div>
