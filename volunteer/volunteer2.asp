@@ -393,10 +393,59 @@ If Not bVNUMError Then
 				Call handleErrorSelected(TXT_WARNING & TXT_UNABLE_TO_CREATE_RECORD_OF_REQUEST, _
 					vbNullString, _
 					vbNullString)
+			Else
+				Dim intSurveyID
+				intSurveyID = Request("APP_ID")
+
+				If IsIDType (intSurveyID) Then
+					Dim strTA1, strTA2, strTA3, _
+						strDA1, strDA2, strDA3
+		
+					strTA1 = NlNl(Left(Trim(Request("TextQuestion1")),4000))
+					strTA2 = NlNl(Left(Trim(Request("TextQuestion2")),4000))
+					strTA3 = NlNl(Left(Trim(Request("TextQuestion3")),4000))
+					strDA1 = NlNl(Left(Trim(Request("DDQuestion1")),150))
+					strDA2 = NlNl(Left(Trim(Request("DDQuestion2")),150))
+					strDA3 = NlNl(Left(Trim(Request("DDQuestion3")),150))
+
+					Dim cmdInsertSurvey, rsInsertSurvey
+					Set cmdInsertSurvey = Server.CreateObject("ADODB.Command")
+					With cmdInsertSurvey
+						.ActiveConnection = getCurrentVOLBasicCnn()
+						.CommandText = "dbo.sp_VOL_ApplicationSurvey_Referral_i"
+						.CommandType = adCmdStoredProc
+						.CommandTimeout = 0
+						.Parameters.Append .CreateParameter("@RETURN_VALUE", adInteger, adParamReturnValue, 4)
+						.Parameters.Append .CreateParameter("@APP_ID", adInteger, adParamInput, 4, intSurveyID)
+						.Parameters.Append .CreateParameter("@ApplicantCity", adVarWChar, adParamInput, 100, strVolunteerCity)
+						.Parameters.Append .CreateParameter("@TextQuestion1", adVarWChar, adParamInput, 4000, strTA1)
+						.Parameters.Append .CreateParameter("@TextQuestion2", adVarWChar, adParamInput, 4000, strTA2)
+						.Parameters.Append .CreateParameter("@TextQuestion3", adVarWChar, adParamInput, 4000, strTA3)
+						.Parameters.Append .CreateParameter("@DDQuestion1", adVarWChar, adParamInput, 150, strDA1)
+						.Parameters.Append .CreateParameter("@DDQuestion2", adVarWChar, adParamInput, 150, strDA2)
+						.Parameters.Append .CreateParameter("@DDQuestion3", adVarWChar, adParamInput, 150, strDA3)
+						.Parameters.Append .CreateParameter("@ErrMsg", adVarChar, adParamOutput, 500)
+					End With
+					Set rsInsertSurvey = cmdInsertSurvey.Execute
+					Set rsInsertSurvey = rsInsertSurvey.NextRecordset
+			
+					If cmdInsertSurvey.Parameters("@RETURN_VALUE").Value <> 0 Or Err.Number <> 0 Then
+						Call handleErrorSelected(TXT_WARNING & TXT_UNABLE_TO_CREATE_RECORD_OF_REQUEST, _
+							vbNullString, _
+							vbNullString)
+					End If
+			
+					Set rsInsertSurvey = Nothing			
+					Set cmdInsertSurvey = Nothing
+				End If
+
 			End If
 			
 			Set rsInsertReferral = Nothing			
 			Set cmdInsertReferral = Nothing
+
+
+
 If Not bApi Then
 %>
 <p class="Info"><%= TXT_VOL_THANK_YOU_INTEREST %></p>

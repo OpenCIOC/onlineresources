@@ -93,7 +93,7 @@ all_fields = tuple(ApplicationSurveySchema.fields.keys())
 
 class ApplicationReportSchema(Schema):
 
-    APP_ID = ciocvalidators.IDValidator(not_empty=True)
+    APP_ID = ciocvalidators.IDValidator()
     StartDate = ciocvalidators.DateConverter()
     EndDate = ciocvalidators.DateConverter()
     ExportCSV = ciocvalidators.Bool()
@@ -474,7 +474,7 @@ class TemplateApplicationSurvey(viewbase.AdminViewBase):
                 )
                 return res
 
-            counts_by_language = cursor.fetchall()
+            counts_by_survey = cursor.fetchall()
 
             cursor.nextset()
 
@@ -491,9 +491,11 @@ class TemplateApplicationSurvey(viewbase.AdminViewBase):
                 dict(
                     id_name="APP_ID",
                     id_value=APP_ID,
-                    counts_by_language=counts_by_language,
+                    counts_by_survey=counts_by_survey,
                     counts_by_city=counts_by_city,
                     counts_by_answer=counts_by_answer,
+                    start_date = StartDate,
+                    end_date = EndDate
                 ),
                 no_index=True,
             )

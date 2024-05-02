@@ -102,10 +102,6 @@ END ELSE IF EXISTS(SELECT *
 		) BEGIN
 	SET @Error = 6 -- Value in use
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @Name, @NameObjectName)
--- Survey ID Exists ?
-END ELSE IF @APP_ID IS NOT NULL AND NOT EXISTS(SELECT * FROM dbo.VOL_ApplicationSurvey WHERE APP_ID=@APP_ID) BEGIN
-	SET @Error = 3 -- No Such Record
-	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@APP_ID AS varchar), @SurveyObjectName)
 END ELSE BEGIN
 	IF @APP_ID IS NULL BEGIN
 		INSERT INTO dbo.VOL_ApplicationSurvey (

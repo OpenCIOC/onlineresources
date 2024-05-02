@@ -41,45 +41,70 @@ from operator import attrgetter
 </%def>
 
 <p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> ]</p>
-<form action="${request.route_path('admin_applicationsurvey', action='edit')}" method="get" class="form-inline">
-${request.passvars.cached_form_vals|n}
-<h2><label for="APP_ID">${_('Edit Application Survey')}</h2>
-<br>${makeApplicationSurveyList('APP_ID')}
-<input type="submit" value="${_('View/Edit Application Survey')}" class="btn btn-default">
-</form>
 
-<form action="${request.route_path('admin_applicationsurvey', action='add')}" method="get" class="form">
-${request.passvars.cached_form_vals|n}
-<h2>${_('Create New Application Survey')}</h2>
-<div class="max-width-sm">
-	<div class="form-group">
-		<label for="APP_ID2" class="control-label">${_('Copy Existing Application Survey:')}</label>
-		${makeApplicationSurveyList('APP_ID', 'APP_ID2', add_empty=True)}
+<div class="row">
+	<div class="col-md-6">
+		<form action="${request.route_path('admin_applicationsurvey', action='report')}" method="get" class="form">
+			${request.passvars.cached_form_vals|n}
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h2>${_('Application Survey Report')}</h2>
+				</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label for="APP_ID3" class="control-label">${_('Application Survey:')}</label>
+						${makeApplicationSurveyList('APP_ID', 'APP_ID3', add_empty=True)}
+					</div>
+					<div class="form-group">
+						${renderer.label('StartDate',_('On or after the date'), class_='contol-label')}
+						${renderer.date('StartDate', class_='form-control')}
+					</div>
+					<div class="form-group">
+						${renderer.label('EndDate',_('Before the date'), class_='contol-label')}
+						${renderer.date('EndDate', class_='form-control')}
+					</div>
+					<div class="form-group">
+						${renderer.checkbox("ExportCSV", "1", label=_('Export as CSV'), label_class='control-label')}
+					</div>
+					<input type="submit" value="${_('Run Survey Report')}" class="btn btn-default">
+					<input type="reset" value="${_('Reset')}" class="btn btn-default">
+				</div>
+			</div>
+		</form>
 	</div>
-	<input type="submit" value="${_('Add Application Survey')}" class="btn btn-default">
+	<div class="col-md-6">
+		<form action="${request.route_path('admin_applicationsurvey', action='edit')}" method="get" class="form-inline">
+			${request.passvars.cached_form_vals|n}
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h2><label for="APP_ID">${_('Edit Application Survey')}</label></h2>
+				</div>
+				<div class="panel-body">
+					<br>${makeApplicationSurveyList('APP_ID')}
+					<input type="submit" value="${_('View/Edit Application Survey')}" class="btn btn-default">
+				</div>
+			</div>
+		</form>
+		<form action="${request.route_path('admin_applicationsurvey', action='add')}" method="get" class="form">
+			${request.passvars.cached_form_vals|n}
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h2>${_('Create New Application Survey')}</h2>
+				</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label for="APP_ID2" class="control-label">${_('Copy Existing Application Survey:')}</label>
+						${makeApplicationSurveyList('APP_ID', 'APP_ID2', add_empty=True)}
+					</div>
+					<input type="submit" value="${_('Add Application Survey')}" class="btn btn-default">
+				</div>
+			</div>
+		</form>
+	</div>
 </div>
-</form>
 
 
-<form action="${request.route_path('admin_applicationsurvey', action='report')}" method="get" class="form">
-${request.passvars.cached_form_vals|n}
-<h2>${_('Application Survey Report')}</h2>
-<div class="max-width-sm">
-	<div class="form-group">
-		<label for="APP_ID3" class="control-label">${_('Application Survey:')}</label>
-		${makeApplicationSurveyList('APP_ID', 'APP_ID3')}
-	</div>
-	<div class="form-group">
-		${renderer.label('StartDate',_('Start Date'), class_='contol-label')}
-		${renderer.date('StartDate', class_='form-control')}
-	</div>
-	<div class="form-group">
-		${renderer.label('EndDate',_('End Date'), class_='contol-label')}
-		${renderer.date('EndDate', class_='form-control')}
-	</div>
-	<div class="form-group">
-		${renderer.checkbox("ExportCSV", "1", label=_('Export as CSV'), label_class='control-label')}
-	</div>
-	<input type="submit" value="${_('Add Application Survey')}" class="btn btn-default">
-</div>
-</form>
+
+
+
+

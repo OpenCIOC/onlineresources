@@ -358,6 +358,7 @@
     <Content Include="python\cioc\web\admin\sysinfo.py" />
     <Content Include="python\cioc\web\admin\templates\applicationsurvey\edit.mak" />
     <Content Include="python\cioc\web\admin\templates\applicationsurvey\index.mak" />
+    <Content Include="python\cioc\web\admin\templates\applicationsurvey\report.mak" />
     <Content Include="python\cioc\web\admin\templates\community\list.mak" />
     <Content Include="python\cioc\web\admin\templates\datafeedapikey\confirm.mak" />
     <Content Include="python\cioc\web\admin\templates\datafeedapikey\edit.mak" />

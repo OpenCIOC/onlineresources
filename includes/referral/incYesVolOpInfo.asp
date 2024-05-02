@@ -110,6 +110,7 @@ Sub printSurveyInfo()
 	With rsSurvey
 		If Not .EOF Then
 %>
+	<input type="hidden" name="APP_ID" value="<%=intSurvey%>" />
     <div class="panel panel-default max-width-lg clear-line-below">
         <div class="panel-heading">
             <h3><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%=Nz(rsSurvey.Fields("Title"),TXT_OPTIONAL_SURVEY)%></h3>
@@ -126,7 +127,7 @@ Sub printSurveyInfo()
 				<hr />
 				<h3><label for="TextQuestion<%=i%>"><%=.Fields("TextQuestion" + CStr(i))%></label></h3>
 				<%=.Fields("TextQuestion"  + CStr(i) + "Help")%>
-				<textarea name="TextQuestion<%=i%>)" id="TextQuestion<%=i%>" class="form-control"></textarea>
+				<textarea name="TextQuestion<%=i%>" id="TextQuestion<%=i%>" class="form-control"></textarea>
 <%
 				End If
 			Next
@@ -138,8 +139,8 @@ Sub printSurveyInfo()
 				<hr />
 				<h3><label for="DDQuestion<%=i%>"><%=.Fields("DDQuestion" + CStr(i))%></label></h3>
 				<%=.Fields("DDQuestion"  + CStr(i) + "Help")%>
-				<select name="DDQuestion<%=i%>)" id="DDQuestion<%=i%>" class="form-control">
-					<option selected> -- </option>
+				<select name="DDQuestion<%=i%>" id="DDQuestion<%=i%>" class="form-control">
+					<option value="" selected> -- </option>
 <%
 				For j = 1 to 10
 					If Not Nl(.Fields("DDQuestion" + CStr(i) + "Opt" + CStr(j))) Then
