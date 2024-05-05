@@ -475,7 +475,7 @@ With rsProfileSummary
 <h2><%=TXT_PROFILE_COUNT & TXT_COLON & TXT_CREATED_DATE%></h2>
 <table class="BasicBorder cell-padding-3">
 	<tr>
-		<th class="RevTitleBox"><%=TXT_YEAR%></th>
+		<th class="RevTitleBox"><%=TXT_YEAR_GROUP%></th>
 		<%
 		For intCurMonth = 1 to 12
 		%>
@@ -524,7 +524,7 @@ With rsProfileSummary
 <h2><%=TXT_PROFILE_COUNT & TXT_COLON & TXT_LAST_MODIFIED%></h2>
 <table class="BasicBorder cell-padding-3">
 	<tr>
-		<th class="RevTitleBox"><%=TXT_YEAR%></th>
+		<th class="RevTitleBox"><%=TXT_YEAR_GROUP%></th>
 		<%
 		For intCurMonth = 1 to 12
 		%>
@@ -573,7 +573,7 @@ With rsProfileSummary
 <h2><%=TXT_PROFILE_COUNT & TXT_COLON & TXT_REFERRAL_DATE%></h2>
 <table class="BasicBorder cell-padding-3">
 	<tr>
-		<th class="RevTitleBox"><%=TXT_YEAR%></th>
+		<th class="RevTitleBox"><%=TXT_YEAR_GROUP%></th>
 		<%
 		For intCurMonth = 1 to 12
 		%>
@@ -627,7 +627,7 @@ With rsProfileSummary
 <h2><%=TXT_APPLICATION_COUNT & TXT_COLON & TXT_USERS_WITH_A_PROFILE%></h2>
 <table class="BasicBorder cell-padding-3">
 	<tr>
-		<th class="RevTitleBox"><%=TXT_YEAR%></th>
+		<th class="RevTitleBox"><%=TXT_YEAR_GROUP%></th>
 		<%
 		For intCurMonth = 1 to 12
 		%>
@@ -676,7 +676,7 @@ With rsProfileSummary
 <h2><%=TXT_APPLICATION_COUNT & TXT_COLON & TXT_USERS_WITHOUT_A_PROFILE%></h2>
 <table class="BasicBorder cell-padding-3">
 	<tr>
-		<th class="RevTitleBox"><%=TXT_YEAR%></th>
+		<th class="RevTitleBox"><%=TXT_YEAR_GROUP%></th>
 		<%
 		For intCurMonth = 1 to 12
 		%>

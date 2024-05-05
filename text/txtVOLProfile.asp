@@ -188,7 +188,7 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_VOLUNTEER_PROFILE, _
 	TXT_WELCOME, _
 	TXT_WOULD_YOU_LIKE_TO_REACTIVATE, _
-	TXT_YEAR, _
+	TXT_YEAR_GROUP, _
 	TXT_YOU_HAVE_BEEN_SENT_PASSWORD, _
 	TXT_YOU_MUST_FIRST, _
 	TXT_YOU_REQUESTED_PW_RESET, _
@@ -380,7 +380,7 @@ Sub setTxtVOLProfile()
 			TXT_VOLUNTEER_PROFILE = "Profil du bénévole"
 			TXT_WELCOME = "Bienvenue,"
 			TXT_WOULD_YOU_LIKE_TO_REACTIVATE = "Souhaitez-vous réactiver votre compte ?"
-			TXT_YEAR = "Année"
+			TXT_YEAR_GROUP = "Année"
 			TXT_YOU_HAVE_BEEN_SENT_PASSWORD = "Un courriel avec votre nouveau mot de passe vous a été envoyé."
 			TXT_YOU_MUST_FIRST = "Vous devez d'abord"
 			TXT_YOU_REQUESTED_PW_RESET = "Vous venez de demander un nouveau mot de passe pour votre profil sur"
@@ -569,7 +569,7 @@ Sub setTxtVOLProfile()
 			TXT_VOLUNTEER_PROFILE = "Volunteer Profile"
 			TXT_WELCOME = "Welcome,"
 			TXT_WOULD_YOU_LIKE_TO_REACTIVATE = "Would you like to reactivate your account?"
-			TXT_YEAR = "Year"
+			TXT_YEAR_GROUP = "Year"
 			TXT_YOU_HAVE_BEEN_SENT_PASSWORD = "You have been sent an Email with your new password."
 			TXT_YOU_MUST_FIRST = "You must first"
 			TXT_YOU_REQUESTED_PW_RESET = "You recently requested a new password for your profile on"
