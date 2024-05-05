@@ -383,8 +383,26 @@ dd {
     width: 440px;
     box-sizing: border-box;
     z-index: 1039;
-    border-radius: 6px;
+    border-radius: $cornerRadius;
+	.modal-footer {
+		text-align: center;
+		padding-bottom: 10px;
+		.btn {
+			margin-bottom: 5px;
+		}
+	}
 }
+
+.cioc-inline-cookie-container, #cioc-cookie-prompt-modal{
+	.modal-footer {
+		text-align: center;
+		padding-bottom: 10px;
+		.btn {
+			margin-bottom: 5px;
+		}
+	}
+}
+
 @media (max-width: $screen-xs-max) {
 	.cioc-inline-cookie-container {
 		bottom: 0px;

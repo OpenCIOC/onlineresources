@@ -38,8 +38,9 @@ from operator import itemgetter
 import boto3
 import isodate
 import requests
-import pyarrow as pa
-import pyarrow.parquet as pq
+
+# import pyarrow as pa
+# import pyarrow.parquet as pq
 
 import typing as t
 
@@ -534,55 +535,55 @@ class CsvFileWriter:
         return self.s3_bulk_import_prefix + self.file_name
 
 
-class ParquetFileWriter:
-    def __init__(self, context, headings):
-        self.s3_bulk_import_bucket = context.s3_bulk_import_bucket
-        self.s3_bulk_import_prefix = context.s3_bulk_import_prefix
-        self.s3_client = context.s3_client
-        self.fd = None
-        self.file_name = None
-        self.headings = headings
-        self.schema = pa.schema([(x, pa.string()) for x in headings])
+# class ParquetFileWriter:
+#     def __init__(self, context, headings):
+#         self.s3_bulk_import_bucket = context.s3_bulk_import_bucket
+#         self.s3_bulk_import_prefix = context.s3_bulk_import_prefix
+#         self.s3_client = context.s3_client
+#         self.fd = None
+#         self.file_name = None
+#         self.headings = headings
+#         self.schema = pa.schema([(x, pa.string()) for x in headings])
 
-    def __enter__(self):
-        self.fd = tempfile.TemporaryFile(suffix=".parquet")
-        self.file_name = os.path.basename(self.fd.name)
-        return self
+#     def __enter__(self):
+#         self.fd = tempfile.TemporaryFile(suffix=".parquet")
+#         self.file_name = os.path.basename(self.fd.name)
+#         return self
 
-    def __exit__(self, type, value, tb):
-        if self.file_name and False:
-            try:
-                self.s3_client.delete_object(
-                    Bucket=self.s3_bulk_import_bucket,
-                    Key=self.s3_bulk_import_prefix + self.source_file,
-                )
-            except Exception:
-                pass
+#     def __exit__(self, type, value, tb):
+#         if self.file_name and False:
+#             try:
+#                 self.s3_client.delete_object(
+#                     Bucket=self.s3_bulk_import_bucket,
+#                     Key=self.s3_bulk_import_prefix + self.source_file,
+#                 )
+#             except Exception:
+#                 pass
 
-    def serialize_records(self, records):
-        if not self.fd:
-            raise Exception("File not opened yet")
+#     def serialize_records(self, records):
+#         if not self.fd:
+#             raise Exception("File not opened yet")
 
-        fn = itemgetter(*self.headings)
+#         fn = itemgetter(*self.headings)
 
-        out_stream = (list(map(_to_unicode, fn(x))) for x in records)
-        tbl = pa.table(out_stream, schema=self.schema)
-        pq.write_table(tbl, self.fd)
+#         out_stream = (list(map(_to_unicode, fn(x))) for x in records)
+#         tbl = pa.table(out_stream, schema=self.schema)
+#         pq.write_table(tbl, self.fd)
 
-    def close(self):
-        if self.fd:
-            self.fd.seek(0)
-            self.s3_client.upload_fileobj(
-                self.fd,
-                self.s3_bulk_import_bucket,
-                self.source_file,
-            )
-            self.fd.close()
-            self.fd = None
+#     def close(self):
+#         if self.fd:
+#             self.fd.seek(0)
+#             self.s3_client.upload_fileobj(
+#                 self.fd,
+#                 self.s3_bulk_import_bucket,
+#                 self.source_file,
+#             )
+#             self.fd.close()
+#             self.fd = None
 
-    @property
-    def source_file(self):
-        return self.s3_bulk_import_prefix + self.file_name
+#     @property
+#     def source_file(self):
+#         return self.s3_bulk_import_prefix + self.file_name
 
 
 def push_bulk(context, conn, sql, headings, batch, *args):

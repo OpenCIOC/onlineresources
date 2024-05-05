@@ -108,7 +108,6 @@ def main(global_config, **settings):
     config.include("cioc.web.ct")
     config.include("cioc.web.export")
     config.include("cioc.web.import_")
-    config.include("cioc.web.offline")
     config.include("cioc.web.special")
     config.include("cioc.web.vol")
     config.include("cioc.web.rpc")

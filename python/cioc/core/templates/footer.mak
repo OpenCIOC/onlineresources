@@ -132,9 +132,11 @@ from cioc.core import gtranslate
 		  class CiocCookieConsent extends EventTarget {
 			constructor() {
 				super();
+				var self = this;
 				this.COOKIE_CONSENT_KEY = 'cioc_cookie_consent';
 				this.prompt_enabled = ${"true" if request.dboptions.dbopts.get('AcceptCookiePrompt') else "false"};
-				window.addEventListener("storage", this.onStorageChange);
+				window.addEventListener("storage", function(e)
+						{self.onStorageChange(e)});
 				this.consent_state = this.check_stored_consent_state();
 			}
 			check_stored_consent_state() {

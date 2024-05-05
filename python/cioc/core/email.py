@@ -22,11 +22,8 @@ from threading import Thread
 from email.utils import parseaddr, formataddr
 
 # 3rd party
-from dkim import sign as dkim_sign, DKIMException, UnparsableKeyError
-from dkim.crypto import parse_pem_private_key
 from markupsafe import Markup, escape_silent
 from marrow.mailer import Mailer, Message
-from marrow.mailer.transport.smtp import SMTPTransport
 from concurrent.futures import ThreadPoolExecutor
 from marrow.mailer.manager.dynamic import DynamicManager, ScalingPoolExecutor
 
@@ -45,69 +42,6 @@ class ScalingPoolExecutorHotFix(ScalingPoolExecutor):
 
 class DynamicManagerHotFix(DynamicManager):
     Executor = ScalingPoolExecutorHotFix
-
-
-class DKIMSigningSMTPTransport(SMTPTransport):
-    __slots__ = tuple(
-        "_dkim_selector _dkim_domain _dkim_suffix _dkim_private_key _sign_params".split()
-    )
-
-    def __init__(self, config):
-        super().__init__(config)
-        self._dkim_selector = config.get("dkim_selector")
-        self._dkim_domain = config.get("dkim_domain")
-        self._dkim_suffix = "@" + self._dkim_domain
-        self._dkim_private_key = config.get("dkim_private_key")
-        self._sign_params = {}
-        if self._dkim_private_key:
-            try:
-                parse_pem_private_key(self._dkim_private_key)
-                self._sign_params = {
-                    "selector": self._dkim_selector.encode("ascii"),
-                    "privkey": self._dkim_private_key,
-                    "domain": self._dkim_domain.encode("ascii"),
-                }
-            except UnparsableKeyError:
-                # log error
-                log.exception("Unable to parse private key")
-
-    def sign_message(self, msg):
-        """
-        Add DKIM header to email.message
-        """
-
-        # py3 pydkim requires bytes to compute dkim header
-        # but py3 smtplib requires str to send DATA command (#
-        # so we have to convert msg.as_string
-        dkim_header = self.get_sign_header(msg.as_bytes())
-        if dkim_header:
-            msg._headers.insert(0, dkim_header)
-
-        return msg
-
-    def get_sign_header(self, message):
-        # pydkim returns string, so we should split
-        s = self.get_sign_string(message)
-        if s:
-            (header, value) = s.decode("ascii").split(": ", 1)
-            if value.endswith("\r\n"):
-                value = value[:-2]
-            return header, value
-
-    def get_sign_string(self, message):
-        try:
-            return dkim_sign(message=message, **self._sign_params)
-        except DKIMException:
-            return None
-
-    def send_with_smtp(self, message):
-        if self._dkim_private_key and message.author[0].address.endswith(
-            self._dkim_suffix
-        ):
-            # only sign messages for which we have a key for the author
-            self.sign_message(message.mime)
-
-        return super().send_with_smtp(message)
 
 
 _mailer = None
@@ -144,27 +78,6 @@ def _get_mailer(request):
         }
         # print transport['host']
         transport = {k: v for k, v in transport.items() if v is not None}
-        if request.config.get("mailer.transport", "smtp") == "dkim-smtp":
-            try:
-                with open(request.config["mailer.dkim_private_key"]) as fd:
-                    private_key = fd.read().encode("ascii")
-
-                transport.update(
-                    {
-                        "use": DKIMSigningSMTPTransport,
-                        "dkim_private_key": private_key,
-                        "dkim_domain": request.config["mailer.dkim_domain"],
-                        "dkim_selector": request.config.get(
-                            "mailer.dkim_selector", "default"
-                        ),
-                    }
-                )
-            except OSError:
-                transport["use"] = "smtp"
-                log.exception(
-                    "Unable to read dkim private key: %s",
-                    request.config["mailer.dkim_private_key"],
-                )
 
         manager = request.config.get("mailer.manager", "immediate")
         if manager == "dynamic":
