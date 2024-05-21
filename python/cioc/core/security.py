@@ -540,7 +540,7 @@ description_allowed_attributes["td"] = ["style", "rowspan", "colspan"]
 sanitize_html_description = partial(
     bleach.clean,
     tags=bleach.sanitizer.ALLOWED_TAGS
-    + [
+    | {
         "p",
         "br",
         "h1",
@@ -555,7 +555,7 @@ sanitize_html_description = partial(
         "thead",
         "tbody",
         "img",
-    ],
+    },
     attributes=description_allowed_attributes,
     strip=True,
     css_sanitizer=description_css_sanitizer,
@@ -563,5 +563,5 @@ sanitize_html_description = partial(
 
 
 sanitize_html_passvars = partial(
-    bleach.clean, tags=bleach.sanitizer.ALLOWED_TAGS + ["p", "br", "div"]
+    bleach.clean, tags=bleach.sanitizer.ALLOWED_TAGS | {"p", "br", "div"}
 )
