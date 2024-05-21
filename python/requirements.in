@@ -38,5 +38,4 @@ libsass
 cryptography
 bleach[css]
 pyramid-exclog
-dkimpy
 boto3
