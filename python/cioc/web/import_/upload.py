@@ -57,7 +57,7 @@ def get_xmlschema():
         schema_doc = etree.parse(schema_path)
 
         for element in schema_doc.iterfind(
-            "/%(xsd)selement[@name='ROOT']/%(xsd)scomplexType/%(xsd)ssequence/%(xsd)selement"
+            "./%(xsd)selement[@name='ROOT']/%(xsd)scomplexType/%(xsd)ssequence/%(xsd)selement"
             % {"xsd": XSD}
         ):
             new_doc = copy.deepcopy(schema_doc)
@@ -88,7 +88,7 @@ def get_xmlschema():
         )
 
         for element in schema_doc.iterfind(
-            "/%(xsd)selement[@name='ROOT']/%(xsd)scomplexType/%(xsd)ssequence/%(xsd)selement"
+            "./%(xsd)selement[@name='ROOT']/%(xsd)scomplexType/%(xsd)ssequence/%(xsd)selement"
             % {"xsd": XSD}
         ):
             element[:] = [copy.deepcopy(inner)]
@@ -99,7 +99,6 @@ def get_xmlschema():
 
 
 class UploadSchema(validators.RootSchema):
-
     ImportFile = validators.FieldStorageUploadConverter(not_empty=True)
     DisplayName = validators.String(max=255, if_empty=None)
 
@@ -216,7 +215,6 @@ def process_import(
         id_column = "VNUM"
 
     with connmgr.get_connection("admin") as conn:
-
         EFID = conn.execute(
             """
                 DECLARE @EF_ID int
