@@ -18,6 +18,8 @@ pythonport.config
 
 # /docs/
 /docs/build
+/.vs/
+Corel Auto-Preserve/
 
 # /docs/source/
 
