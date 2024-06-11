@@ -41,7 +41,11 @@ END
 
 
 
+
 GO
 GRANT EXECUTE ON  [dbo].[fn_CIC_NUMToServiceLevel] TO [cioc_cic_search_role]
+GO
 GRANT EXECUTE ON  [dbo].[fn_CIC_NUMToServiceLevel] TO [cioc_login_role]
+GO
+GRANT EXECUTE ON  [dbo].[fn_CIC_NUMToServiceLevel] TO [cioc_maintenance_role]
 GO

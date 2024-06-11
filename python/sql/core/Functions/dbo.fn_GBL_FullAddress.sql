@@ -176,10 +176,13 @@ IF @returnStr = '' SET @returnStr = NULL
 RETURN @returnStr
 END
 
+
 GO
-
-
 GRANT EXECUTE ON  [dbo].[fn_GBL_FullAddress] TO [cioc_cic_search_role]
+GO
 GRANT EXECUTE ON  [dbo].[fn_GBL_FullAddress] TO [cioc_login_role]
+GO
+GRANT EXECUTE ON  [dbo].[fn_GBL_FullAddress] TO [cioc_maintenance_role]
+GO
 GRANT EXECUTE ON  [dbo].[fn_GBL_FullAddress] TO [cioc_vol_search_role]
 GO

@@ -17,7 +17,7 @@
 
 import os
 import logging
-from io import StringIO
+from io import BytesIO
 from zipfile import ZipFile
 
 from pyramid.view import view_config, view_defaults
@@ -138,7 +138,7 @@ class CommunityUpload(AdminViewBase):
             data = file.read()
             file.close()
 
-        xmlfile = StringIO(data)
+        xmlfile = BytesIO(data)
 
         error_log = []
         sqlargs = None
@@ -157,6 +157,8 @@ class CommunityUpload(AdminViewBase):
                 )
 
             if not error_log:
+                data = data.decode('utf-8')
+                data = data.split("?>", 1)[-1]
                 sqlargs = self.get_sql_args(data, community_doc)
 
         except etree.XMLSyntaxError as e:

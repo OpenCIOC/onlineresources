@@ -36,7 +36,11 @@ RETURN @returnStr
 END
 
 
+
 GO
 GRANT EXECUTE ON  [dbo].[fn_CIC_NUMToBusRoutes] TO [cioc_cic_search_role]
+GO
 GRANT EXECUTE ON  [dbo].[fn_CIC_NUMToBusRoutes] TO [cioc_login_role]
+GO
+GRANT EXECUTE ON  [dbo].[fn_CIC_NUMToBusRoutes] TO [cioc_maintenance_role]
 GO

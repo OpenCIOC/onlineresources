@@ -55,9 +55,13 @@ RETURN @OrgName
 END
 
 
-GO
 
+GO
 GRANT EXECUTE ON  [dbo].[fn_GBL_DisplayFullOrgName_2] TO [cioc_cic_search_role]
+GO
 GRANT EXECUTE ON  [dbo].[fn_GBL_DisplayFullOrgName_2] TO [cioc_login_role]
+GO
+GRANT EXECUTE ON  [dbo].[fn_GBL_DisplayFullOrgName_2] TO [cioc_maintenance_role]
+GO
 GRANT EXECUTE ON  [dbo].[fn_GBL_DisplayFullOrgName_2] TO [cioc_vol_search_role]
 GO

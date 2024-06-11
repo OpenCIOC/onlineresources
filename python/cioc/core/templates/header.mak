@@ -79,7 +79,7 @@ template_stylesheet=${template_style_sheet_url}
 	<link rel="stylesheet" type="text/css" href="${template_style_sheet_url}" id="template_style">
 
 	%if hasattr(caller, 'headerextra'):
-		${caller.headerextra()}
+	${caller.headerextra()}
 	%endif
 
 
@@ -94,60 +94,73 @@ template_stylesheet=${template_style_sheet_url}
 	<![endif]-->
 
 
-<script type="text/javascript"><!--
+	<script type="text/javascript"><!--
 
-function add_class(el, classname) {
-	if (!el) {
-		return;
-	}
-	var myRE = new RegExp("\\b" + classname + "\\b");
-	if ( !myRE.test(el.className) ) {
-		if (el.className) {
-			classname = ' ' + classname;
+		function add_class(el, classname) {
+			if (!el) {
+				return;
+			}
+			var myRE = new RegExp("\\b" + classname + "\\b");
+			if (!myRE.test(el.className)) {
+				if (el.className) {
+					classname = ' ' + classname;
+				}
+				el.className += classname;
+			}
 		}
-		el.className += classname;
-	}
-}
 
-function remove_class(el, classname) {
-	if (!el) {
-		return;
-	}
-	var classnames = el.className.split(' ');
-	var newclasses = [];
-	for (var i = 0; i < classnames.length; i++) {
-		var cn = classnames[i];
-		if (cn != classname) {
-			newclasses.push(cn);
+		function remove_class(el, classname) {
+			if (!el) {
+				return;
+			}
+			var classnames = el.className.split(' ');
+			var newclasses = [];
+			for (var i = 0; i < classnames.length; i++) {
+				var cn = classnames[i];
+				if (cn != classname) {
+					newclasses.push(cn);
+				}
+			}
+			el.className = newclasses.join(' ')
 		}
-	}
-	el.className = newclasses.join(' ')
-}
 
-function hide(el) {
-	add_class(el, 'NotVisible');
-}
+		function hide(el) {
+			add_class(el, 'NotVisible');
+		}
 
-function show(el) {
-	remove_class(el, 'NotVisible');
-}
+		function show(el) {
+			remove_class(el, 'NotVisible');
+		}
 
-function openWin(pageToOpen,windowName)  {
-	popWin = window.open(pageToOpen,windowName,"toolbar=no,width=490,height=485,location=no,scrollBars=yes,resizable=no,titlebar=yes");
-	popWin.focus();
-}
+		function openWin(pageToOpen, windowName) {
+			popWin = window.open(pageToOpen, windowName, "toolbar=no,width=490,height=485,location=no,scrollBars=yes,resizable=no,titlebar=yes");
+			popWin.focus();
+		}
 
-function openWinL(pageToOpen,windowName)  {
-	popWin = window.open(pageToOpen,windowName,"toolbar=no,width=650,height=520,location=no,scrollBars=yes,resizable=no,titlebar=yes");
-	popWin.focus();
-}
+		function openWinL(pageToOpen, windowName) {
+			popWin = window.open(pageToOpen, windowName, "toolbar=no,width=650,height=520,location=no,scrollBars=yes,resizable=no,titlebar=yes");
+			popWin.focus();
+		}
 
-function openWinXL(pageToOpen,windowName)  {
-	popWin = window.open(pageToOpen,windowName,"toolbar=no,width=755,height=550,location=no,scrollBars=yes,resizable=no,titlebar=yes");
-	popWin.focus();
-}
+		function openWinXL(pageToOpen, windowName) {
+			popWin = window.open(pageToOpen, windowName, "toolbar=no,width=755,height=550,location=no,scrollBars=yes,resizable=no,titlebar=yes");
+			popWin.focus();
+		}
 
-//--></script>
+	//--></script>
+
+	<meta name="og:site_name" value="${request.viewdata.structured_site_name}" />
+	<script type="application/ld+json">
+		{
+			"@context" : "https://schema.org",
+			"@type" : "WebSite",
+			"name" : "${request.viewdata.structured_site_name}",
+		%if hasattr(request.viewdata,'structured_site_name_alt'):
+			"alternateName" : "${request.viewdata.structured_site_name_alt}",
+		%endif
+			"url" : "${request.host}"
+		}
+	</script>
 
 </head>
 

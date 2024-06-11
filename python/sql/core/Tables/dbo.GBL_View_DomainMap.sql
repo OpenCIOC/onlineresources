@@ -37,7 +37,9 @@ CREATE TABLE [dbo].[GBL_View_DomainMap]
 [SecondGoogleAnalytics4AgencyDimension] [tinyint] NULL,
 [SecondGoogleAnalytics4LanguageDimension] [tinyint] NULL,
 [SecondGoogleAnalytics4DomainDimension] [tinyint] NULL,
-[SecondGoogleAnalytics4ResultsCountMetric] [tinyint] NULL
+[SecondGoogleAnalytics4ResultsCountMetric] [tinyint] NULL,
+[StructuredSiteName] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL,
+[StructuredSiteNameAlternate] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[GBL_View_DomainMap] ADD CONSTRAINT [PK_GBL_View_DomainMap] PRIMARY KEY CLUSTERED ([DMAP_ID]) ON [PRIMARY]

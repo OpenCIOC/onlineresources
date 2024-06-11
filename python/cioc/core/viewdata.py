@@ -159,6 +159,10 @@ class ViewData:
             culture = cursor.fetchone()
             if culture:
                 passvars.setDefaultCultureVars(culture.Culture)
+                self.structured_site_name = culture.StructuredSiteName or request.host
+                if culture.StructuredSiteName:
+                    self.structured_site_name_alt = culture.StructuredSiteNameAlternate or request.host
+                     
 
             cursor.nextset()
 
