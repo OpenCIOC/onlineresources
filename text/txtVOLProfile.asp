@@ -34,10 +34,12 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_ARE_YOU_SURE_DEACTIVATE_ACCOUNT, _
 	TXT_AREA_OF_INTEREST, _
 	TXT_AREA_OF_INTEREST_ERROR, _
+	TXT_ATTEMPTED_CONFIRMATION_WITH_EXPIRED_CODE, _
 	TXT_BLOCK, _
 	TXT_BLOCKED, _
 	TXT_BY, _
 	TXT_COMMUNITY_ERROR, _
+	TXT_COMPLETE_CONFIRMATION, _
 	TXT_CONFIRM_APPLICATION_HIDE, _
 	TXT_CONFIRM_DEACTIVATE_ACCOUNT, _
 	TXT_CONFIRM_EMAIL_ADDRESS, _
@@ -63,6 +65,7 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_DO_YOU_HAVE_A_PROFILE_ALREADY, _
 	TXT_EDIT_OUTCOME, _
 	TXT_EMAIL_ADDRESS, _
+	TXT_EMAIL_CONFIRMATION_SUBJECT, _
 	TXT_EMAIL_MY_NEW_PW, _
 	TXT_EMAIL_NOTIFICATIONS, _
 	TXT_EMAIL_REQUIRED, _
@@ -101,6 +104,7 @@ Dim	TXT_ACCEPT_AND_CLOSE, _
 	TXT_MY_APPLICATIONS, _
 	TXT_MY_PERSONAL_INFO, _
 	TXT_MY_SEARCH_PROFILE, _
+	TXT_NEW_EMAIL_SENT, _
 	TXT_NEW_VP, _
 	TXT_NO_COMMUNITIES_HAVE_BEEN_SELECTED, _
 	TXT_NO_INTERESTS_HAVE_BEEN_SELECTED, _
@@ -225,10 +229,12 @@ Sub setTxtVOLProfile()
 			TXT_ARE_YOU_SURE_DEACTIVATE_ACCOUNT = "Êtes-vous certain de vouloir désactiver votre compte de profil de bénévole ?"
 			TXT_AREA_OF_INTEREST = "Centre d'intérêt :"
 			TXT_AREA_OF_INTEREST_ERROR = "Centres d'intérêt n'est pas un ID de liste valide."
+			TXT_ATTEMPTED_CONFIRMATION_WITH_EXPIRED_CODE = "TRANSLATE_FR -- You recently attempted a confirmation of a Volunteer Profile account for our Volunteer Opportunities database, located at"
 			TXT_BLOCK = "Bloquer"
 			TXT_BLOCKED = "Bloqué"
 			TXT_BY = " par "
 			TXT_COMMUNITY_ERROR = "Communautés n'est pas un ID de liste valide."
+			TXT_COMPLETE_CONFIRMATION = "TRANSLATE_FR -- to complete the confirmation."
 			TXT_CONFIRM_APPLICATION_HIDE = "Confirmer le cachement de la candidature"
 			TXT_CONFIRM_DEACTIVATE_ACCOUNT = "Confirmer la désactivation du compte"
 			TXT_CONFIRM_EMAIL_ADDRESS = "confirmer le changement de votre adresse courriel :"
@@ -254,6 +260,7 @@ Sub setTxtVOLProfile()
 			TXT_DO_YOU_HAVE_A_PROFILE_ALREADY = "Avez-vous déjà un profil ?"
 			TXT_EDIT_OUTCOME = "Modifier le résultat"
 			TXT_EMAIL_ADDRESS = "Adresse courriel"
+			TXT_EMAIL_CONFIRMATION_SUBJECT = "TRANSLATE_FR -- Volunteer Profile confirmation"
 			TXT_EMAIL_MY_NEW_PW = "Envoyer mon nouveau mot de passe par courriel"
 			TXT_EMAIL_NOTIFICATIONS = "Notifications par courriel"
 			TXT_EMAIL_REQUIRED = "l'adresse courriel est un champ obligatoire."
@@ -293,6 +300,7 @@ Sub setTxtVOLProfile()
 			TXT_MY_APPLICATIONS = "Mes demandes"
 			TXT_MY_PERSONAL_INFO = "Mes informations personnelles"
 			TXT_MY_SEARCH_PROFILE = "Mon profil de recherche"
+			TXT_NEW_EMAIL_SENT = "TRANSLATE_FR -- You have been sent a new Email message to confirm your Email address. You will need to click the link provided in the Email to complete the confirmation."
 			TXT_NEW_VP = "Nouveau"
 			TXT_NO_COMMUNITIES_HAVE_BEEN_SELECTED = "Aucune communauté n'a été sélectionnée par les utilisateurs du profil"
 			TXT_NO_INTERESTS_HAVE_BEEN_SELECTED = "Aucun centre d'intérêt n'a été sélectionné par les utilisateurs du Profil"
@@ -414,10 +422,12 @@ Sub setTxtVOLProfile()
 			TXT_ARE_YOU_SURE_DEACTIVATE_ACCOUNT = "Are you sure you want to deactivate your Volunteer Profile account?"
 			TXT_AREA_OF_INTEREST = "Area of Interest:"
 			TXT_AREA_OF_INTEREST_ERROR = "Areas of Interest is not a valid ID List."
+			TXT_ATTEMPTED_CONFIRMATION_WITH_EXPIRED_CODE = "You recently attempted a confirmation of a Volunteer Profile account for our Volunteer Opportunities database, located at"
 			TXT_BLOCK = "Block"
 			TXT_BLOCKED = "Blocked"
 			TXT_BY = " by "
 			TXT_COMMUNITY_ERROR = "Communities is not a valid ID List."
+			TXT_COMPLETE_CONFIRMATION = "to complete the confirmation."
 			TXT_CONFIRM_APPLICATION_HIDE = "Confirm Application Hide"
 			TXT_CONFIRM_DEACTIVATE_ACCOUNT = "Confirm Account Deactivation"
 			TXT_CONFIRM_EMAIL_ADDRESS = "confirm your Email address change" & TXT_COLON
@@ -443,6 +453,7 @@ Sub setTxtVOLProfile()
 			TXT_DO_YOU_HAVE_A_PROFILE_ALREADY = "Do you already have a Profile?"
 			TXT_EDIT_OUTCOME = "Edit Outcome"
 			TXT_EMAIL_ADDRESS = "Email Address"
+			TXT_EMAIL_CONFIRMATION_SUBJECT = "Volunteer Profile confirmation"
 			TXT_EMAIL_MY_NEW_PW = "Email My New Password"
 			TXT_EMAIL_NOTIFICATIONS = "Email Notifications"
 			TXT_EMAIL_REQUIRED = "Email Address is a required field."
@@ -482,6 +493,7 @@ Sub setTxtVOLProfile()
 			TXT_MY_APPLICATIONS = "My Applications"
 			TXT_MY_PERSONAL_INFO = "My Personal Info"
 			TXT_MY_SEARCH_PROFILE = "My Search Profile"
+			TXT_NEW_EMAIL_SENT = "You have been sent a new Email message to confirm your Email address. You will need to click the link provided in the Email to complete the confirmation."
 			TXT_NEW_VP = "New"
 			TXT_NO_COMMUNITIES_HAVE_BEEN_SELECTED = "No Communities have been selected by Profile users"
 			TXT_NO_INTERESTS_HAVE_BEEN_SELECTED = "No Areas of Interest have been selected by Profile users"

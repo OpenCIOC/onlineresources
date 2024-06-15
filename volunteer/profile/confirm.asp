@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -42,6 +42,7 @@ Call setPageInfo(False, DM_VOL, DM_VOL, "../../", "volunteer/profile/", vbNullSt
 <!--#include file="../../text/txtMenu.asp" -->
 <% 'End Base includes %>
 <!--#include file="../../text/txtVOLProfile.asp" -->
+<!--#include file="../../includes/core/incSendMail.asp" -->
 <!--#include file="../../includes/vprofile/incProfileSecurity.asp" -->
 
 <%
@@ -54,22 +55,26 @@ Dim strProfileID, _
 	strRedirectPage, _
 	strRedirectArgs, _
 	strError, _
-	strEmail
+	strToEmail, _
+	strFromEmail, _
+	strNewConfirmationToken, _
+	intReturn
 
 strError = Null
 strProfileID = Trim(Request("PID"))
 strConfirmationToken = Trim(Request("CT"))
 strRedirectPage = Ns(Trim(Request("page")))
 strRedirectArgs = Ns(Trim(Request("args")))
+strNewConfirmationToken = LCase(getRandomString(32))
 
 If Not IsGUIDType(strProfileID) Then
 	strError = TXT_INVALID_PID_VALUE
 ElseIf Not IsRandomKey(strConfirmationToken) Then
 	strError = TXT_INVALID_CT_VALUE
-End If 
+End If
 
 If Nl(strError) Then
-	Dim objReturn, objErrMsg, objEmail
+	Dim objReturn, objErrMsg, objToEmail, objFromEmail
 	Dim cmdProfileInfo, rsProfileInfo
 	Set cmdProfileInfo = Server.CreateObject("ADODB.Command")
 	With cmdProfileInfo
@@ -82,18 +87,22 @@ If Nl(strError) Then
 		.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
 		.Parameters.Append .CreateParameter("@ProfileID", adGUID, adParamInput, 16, strProfileID)
 		.Parameters.Append .CreateParameter("@ConfirmationToken", adChar, adParamInput, 32, strConfirmationToken)
-		Set objEmail = .CreateParameter("@FromEmail", adVarChar, adParamOutput, 100)
-		.Parameters.Append objEmail
+		.Parameters.Append .CreateParameter("@NewConfirmationToken", adChar, adParamInput, 32, strNewConfirmationToken)
+		Set objToEmail = .CreateParameter("@ToEmail", adVarChar, adParamOutput, 100)
+		.Parameters.Append objToEmail
+		Set objFromEmail = .CreateParameter("@FromEmail", adVarChar, adParamOutput, 100)
+		.Parameters.Append objFromEmail
 		Set objErrMsg = .CreateParameter("@ErrMsg", adVarWChar, adParamOutput, 500)
 		.Parameters.Append objErrMsg
 	End With
 	Set rsProfileInfo = cmdProfileInfo.Execute()
 
-	If objReturn.Value <> 0 Then
+	intReturn = objReturn.Value
+	If intReturn <> 0 Then
 		strError = Nz(Server.HTMLEncode(objErrMsg.Value),TXT_UNKNOWN_ERROR_OCCURED)
-	Else
-		strEmail = objEmail.Value
 	End If
+	strToEmail = objToEmail.Value
+	strFromEmail = objFromEmail.Value
 
 	Set rsProfileInfo = Nothing
 	Set cmdProfileInfo = Nothing
@@ -103,7 +112,7 @@ If Nl(strError) Then
 	Dim strTargetPage, strTargetArgs, strMessage
 	strTargetArgs = vbNullString
 	If vprofile_strID = strProfileID Then
-		Call updateVProfileLoginCookie(strEmail)
+		Call updateVProfileLoginCookie(strToEmail)
 	End If
 	If vprofile_bLoggedIn Then
 		strTargetPage = "start.asp"
@@ -125,9 +134,30 @@ If Nl(strError) Then
 		End If
 	End If
 	Call handleMessage(strMessage, strTargetPage, strTargetArgs, False)
+
 Else
 	Call makePageHeader(TXT_VOL_PROFILE_CONFIRMATION, TXT_VOL_PROFILE_CONFIRMATION, False, True, True, True)
 	Call handleError(strError, vbNullString, vbNullString)
+	If intReturn = 16 Then
+		' Handle Expired Confirmation Code
+		Dim strAccessURL, bEmailFailed
+		strAccessURL = reReplace(Request.ServerVariables("PATH_INFO"),"(.*)\/" & ps_strThisPageFull,"$1",True,False,False,False)
+		strAccessURL = Request.ServerVariables("HTTP_HOST") & strAccessURL
+
+		Dim strEmailBody
+		strEmailBody = TXT_HI & "," & vbCrLf & vbCrLf & _
+			TXT_ATTEMPTED_CONFIRMATION_WITH_EXPIRED_CODE & _
+			" " & "https://" & strAccessURL & "/volunteer/" & vbCrLf & vbCrLf & _
+			TXT_PLEASE_FOLLOW_LINK & " " & _
+			TXT_COMPLETE_CONFIRMATION & vbCrLf & _
+			"https://" & strAccessURL & makeLink("/volunteer/profile/confirm.asp", "PID=" & Server.URLEncode(strProfileID) & "&CT=" & Server.URLEncode(strNewConfirmationToken),vbNullString) & vbCrLf & vbCrLf & _
+			TXT_LINK_EXPIRE_NOTICE
+					
+		bEmailFailed = sendEmail(False, strFromEmail, strToEmail, TXT_EMAIL_CONFIRMATION_SUBJECT, strEmailBody)
+
+		%><p><%= TXT_NEW_EMAIL_SENT %></p>
+		<%
+	End If
 	Call makePageFooter(True)
 End If
 
