@@ -125,7 +125,7 @@ translationstring==1.4
     # via pyramid
 typing-extensions==4.11.0
     # via dogpile-cache
-urllib3==1.26.18
+urllib3==1.26.19
     # via
     #   botocore
     #   requests

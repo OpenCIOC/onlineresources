@@ -28,8 +28,6 @@ charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via black
-colorama==0.4.6
-    # via click
 cryptography==42.0.7
     # via -r requirements.in
 decorator==5.1.1
@@ -160,7 +158,7 @@ typing-extensions==4.11.0
     # via
     #   black
     #   dogpile-cache
-urllib3==1.26.18
+urllib3==1.26.19
     # via
     #   botocore
     #   requests
