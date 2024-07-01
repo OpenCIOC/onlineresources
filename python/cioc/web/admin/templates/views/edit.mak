@@ -1552,9 +1552,7 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 	</div>
 	<div class="panel-body">
 		<ul class="simple-list">
-			%if domain.id == const.DM_CIC:
 			<li><a href="javascript:openWinL('${request.passvars.route_path('admin_view', action='fieldgroup', _query=[('DM', domain.id), ('ViewType',ViewType)])}','fieldEdit')">${_('Field Groups (New Window)')}</a></li>
-			%endif
 			<li><a href="javascript:openWinL('${makeLinkAdmin('setup_view_edit_fields.asp', dict(FType='D', DM=domain.id, ViewType=ViewType))}','fieldEdit')">${_('Details Fields (New Window)')}</a></li>
 			<li><a href="javascript:openWinL('${makeLinkAdmin('setup_view_edit_fields.asp', dict(FType='U', DM=domain.id, ViewType=ViewType))}','fieldEdit')">${_('Update Fields (New Window)')}</a></li>
 			<li><a href="javascript:openWinL('${makeLinkAdmin('setup_view_edit_fields.asp', dict(FType='F', DM=domain.id, ViewType=ViewType))}','fieldEdit')">${_('Feedback Fields (New Window)')}</a></li>

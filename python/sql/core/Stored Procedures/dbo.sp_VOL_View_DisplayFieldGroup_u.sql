@@ -5,7 +5,8 @@ GO
 
 
 
-CREATE PROCEDURE [dbo].[sp_CIC_View_DisplayFieldGroup_u]
+
+CREATE PROCEDURE [dbo].[sp_VOL_View_DisplayFieldGroup_u]
 	@ViewType int,
 	@MODIFIED_BY [varchar](50),
 	@MemberID int,
@@ -84,7 +85,7 @@ EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @FieldGroupObjec
 
 SELECT @UsedNamesDesc = COALESCE(@UsedNamesDesc + cioc_shared.dbo.fn_SHR_STP_ObjectName(' ; '),'') + Name
 FROM @DescTable nt
-WHERE EXISTS(SELECT * FROM dbo.CIC_View_DisplayFieldGroup fg INNER JOIN CIC_View_DisplayFieldGroup_Name fgn ON fg.DisplayFieldGroupID=fgn.DisplayFieldGroupID WHERE fgn.Name=nt.Name AND LangID=nt.LangID AND fg.DisplayFieldGroupID<>nt.DisplayFieldGroupID AND fg.ViewType=@ViewType)
+WHERE EXISTS(SELECT * FROM dbo.VOL_View_DisplayFieldGroup fg INNER JOIN VOL_View_DisplayFieldGroup_Name fgn ON fg.DisplayFieldGroupID=fgn.DisplayFieldGroupID WHERE fgn.Name=nt.Name AND LangID=nt.LangID AND fg.DisplayFieldGroupID<>nt.DisplayFieldGroupID AND fg.ViewType=@ViewType)
 
 SELECT @BadCulturesDesc = COALESCE(@BadCulturesDesc + cioc_shared.dbo.fn_SHR_STP_ObjectName(' ; '),'') + ISNULL(Culture,cioc_shared.dbo.fn_SHR_STP_ObjectName('Unknown'))
 FROM @DescTable nt
@@ -103,15 +104,15 @@ END ELSE IF @ViewType IS NULL BEGIN
 	SET @Error = 2 -- No ID Given
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @ViewObjectName, NULL)
 -- View exists ?
-END ELSE IF NOT EXISTS (SELECT * FROM dbo.CIC_View WHERE ViewType=@ViewType) BEGIN
+END ELSE IF NOT EXISTS (SELECT * FROM dbo.VOL_View WHERE ViewType=@ViewType) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@ViewType AS varchar), @ViewObjectName)
 -- View belongs to Member ?
-END ELSE IF NOT EXISTS (SELECT * FROM dbo.CIC_View WHERE MemberID=@MemberID AND ViewType=@ViewType) BEGIN
+END ELSE IF NOT EXISTS (SELECT * FROM dbo.VOL_View WHERE MemberID=@MemberID AND ViewType=@ViewType) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL)
 -- Ownership OK ?
-END ELSE IF @AgencyCode IS NOT NULL AND NOT EXISTS(SELECT * FROM dbo.CIC_View WHERE ViewType=@ViewType AND (Owner IS NULL OR Owner = @AgencyCode)) BEGIN
+END ELSE IF @AgencyCode IS NOT NULL AND NOT EXISTS(SELECT * FROM dbo.VOL_View WHERE ViewType=@ViewType AND (Owner IS NULL OR Owner = @AgencyCode)) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @ViewObjectName, NULL)
 -- At least one language used ?
@@ -139,7 +140,7 @@ END ELSE IF @BadCulturesDesc IS NOT NULL BEGIN
 END
 
 IF @Error = 0 BEGIN
-	MERGE INTO dbo.CIC_View_DisplayFieldGroup AS fg
+	MERGE INTO dbo.VOL_View_DisplayFieldGroup AS fg
 	USING @FieldTable AS nt
 	ON fg.DisplayFieldGroupID=nt.DisplayFieldGroupID AND fg.DisplayFieldGroupID <> -1
 	WHEN MATCHED --AND fg.DisplayOrder<>nt.DisplayOrder
@@ -161,7 +162,7 @@ IF @Error = 0 BEGIN
 		
 	IF @Error=0  BEGIN
 		
-		MERGE INTO dbo.CIC_View_DisplayFieldGroup_Name AS fgn
+		MERGE INTO dbo.VOL_View_DisplayFieldGroup_Name AS fgn
 		USING ( 
 			SELECT CASE WHEN nfgn.DisplayFieldGroupID = -1 THEN nid.DisplayFieldGroupID ELSE nfgn.DisplayFieldGroupID END AS DisplayFieldGroupID,
 				nfgn.LangID, nfgn.Name
@@ -194,5 +195,5 @@ SET NOCOUNT OFF
 
 
 GO
-GRANT EXECUTE ON  [dbo].[sp_CIC_View_DisplayFieldGroup_u] TO [cioc_login_role]
+GRANT EXECUTE ON  [dbo].[sp_VOL_View_DisplayFieldGroup_u] TO [cioc_login_role]
 GO
