@@ -23,6 +23,7 @@ Dim TXT_ALL_TYPES, _
 	TXT_COMM_WAS_NOT, _
 	TXT_CONFIRM_DELETE_FORM, _
 	TXT_CREATE_NEW_FORM_FOR_TYPE, _
+	TXT_DEFAULT_GROUP, _
 	TXT_DETAIL_FIELD_GROUP, _
 	TXT_DETAIL_FIELDS, _
 	TXT_EDIT_FORM_FOR_TYPE, _
@@ -56,6 +57,7 @@ Sub setTxtView()
 			TXT_COMM_WAS_NOT = "The search community was not "
 			TXT_CONFIRM_DELETE_FORM = "Confirm Delete Form for Record Type"
 			TXT_CREATE_NEW_FORM_FOR_TYPE = "Create a new form for records of the type" & TXT_COLON
+			TXT_DEFAULT_GROUP = "DEFAULT"
 			TXT_DETAIL_FIELD_GROUP = "Field Group"
 			TXT_DETAIL_FIELDS = "Details Fields"
 			TXT_EDIT_FORM_FOR_TYPE = "Edit form fields for records of the type" & TXT_COLON
@@ -87,6 +89,7 @@ Sub setTxtView()
 			TXT_COMM_WAS_NOT = "La recherche par communauté n'a pas été "
 			TXT_CONFIRM_DELETE_FORM = "Confirmer la suppression du formulaire pour le Type de dossier"
 			TXT_CREATE_NEW_FORM_FOR_TYPE = "Créer un nouveau formulaire pour les dossiers du type" & TXT_COLON
+			TXT_DEFAULT_GROUP = "DÉFAUT"
 			TXT_DETAIL_FIELD_GROUP = "Groupe de champs"
 			TXT_DETAIL_FIELDS = "Champs de renseignements"
 			TXT_EDIT_FORM_FOR_TYPE = "Modifier les champs du formulaire pour les dossiers du type" & TXT_COLON
