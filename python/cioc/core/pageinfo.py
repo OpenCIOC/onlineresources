@@ -1,4 +1,4 @@
-﻿# =========================================================================================
+# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,6 +28,7 @@ class PageInfo:
         self.request = request
         self.Domain = domain
         self.DbArea = db_area
+        self._fetched = False
 
         if db_area == const.DM_CIC:
             self.DbAreaS = const.DM_S_CIC
@@ -78,10 +79,14 @@ class PageInfo:
             self.application_path = self.application_path[:-1]
 
     def fetch(self):
+        if self._fetched:
+            return
+
         with self.request.connmgr.get_connection() as conn:
             page_info = conn.execute(
                 "EXEC dbo.sp_GBL_PageInfo_s ?", self.ThisPageFull
             ).fetchone()
+            self._fetched = True
             if page_info:
                 self.PageTitle = page_info.PageTitle
                 self.HasHelp = page_info.HAS_HELP

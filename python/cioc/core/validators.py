@@ -47,7 +47,18 @@ import cioc.core.i18n as i18n
 log = logging.getLogger(__name__)
 
 # Make PyFlakes Happy
-Pipe, Int, Bool, StringBool, Set, NoDefault, DictConverter, FieldStorageUploadConverter, OneOf, Regex
+(
+    Pipe,
+    Int,
+    Bool,
+    StringBool,
+    Set,
+    NoDefault,
+    DictConverter,
+    FieldStorageUploadConverter,
+    OneOf,
+    Regex,
+)
 
 MAX_INT = 2147483647
 MAX_SMALL_INT = 32767
@@ -910,7 +921,6 @@ class Number(validators.RangeValidator):
 
 
 class ISODateConverter(FancyValidator):
-
     messages = {"invalidDate": _("That is not a valid day (%(exception)s)")}
 
     def _to_python(self, value, state):
@@ -981,7 +991,7 @@ class ForceRequire(validators.FormValidator):
 
 class CSVForEach(ForEach):
     def _convert_to_list(self, value):
-        if isinstance(value, (str, str)):
+        if isinstance(value, str):
             return value.split(",")
 
         return ForEach._convert_to_list(self, value)

@@ -25,7 +25,7 @@
 <%
 'Set default characterset on http content-type header
 Response.CodePage = 65001
-Response.CharSet = "utf-8" 
+Response.CharSet = "utf-8"
 
 Dim g_bPrintMode
 Sub SetPrintMode(bOn)
@@ -191,7 +191,7 @@ def getDbOptions(handleDBConnetionError):
 	g_bMultiLingualActive = pyrequest.multilingual_active
 	g_bMultiLingualRecords = pyrequest.multilingual_records
 	g_bMultiLingual = pyrequest.multilingual
-	
+
 	g_strDatabaseCode = dboptions.DatabaseCode
 	g_strDatabaseNameCIC = dboptions.get_best_lang('DatabaseNameCIC')
 	g_strDatabaseNameVOL = dboptions.get_best_lang('DatabaseNameVOL')
@@ -514,13 +514,9 @@ End Sub
 '***************************************
 %>
 <script language="python" runat="server">
-def init_asset_mgr():
-	import cioc.core.asset as asset
-	pyrequest.assetmgr = asset.AssetManager(pyrequest)
-
 def makeAssetVer(strScriptName):
 	return pyrequest.assetmgr.makeAssetVer(six.text_type(strScriptName))
-	
+
 def JSVerScriptTag(strScriptName):
 	return pyrequest.assetmgr.JSVerScriptTag(six.text_type(strScriptName))
 
@@ -530,7 +526,6 @@ def makeJQueryScriptTags():
 	return pyrequest.assetmgr.makeJQueryScriptTags()
 </script>
 <%
-Call init_asset_mgr()
 '***************************************
 ' End External Asset Management
 '***************************************

@@ -14,6 +14,7 @@
 #  limitations under the License.
 # =========================================================================================
 
+from collections.abc import Mapping
 
 # 3rd party
 from pyramid.decorator import reify
@@ -22,6 +23,7 @@ from webob.cookies import make_cookie
 # this app
 from cioc.core import syslanguage
 from cioc.core.request import CiocRequestMixin
+from cioc.core.modelstate import ModelState
 
 
 class FakeRegistry:
@@ -51,24 +53,88 @@ class CollectionShim:
             return default
 
 
-class MultiCollectionShim:
+class MultiMappingShim(Mapping):
+    def __init__(self, collection):
+        self._collection = collection
+
+    def __getitem__(self, key):
+        val = self._collection(key)
+        if not val.Count:
+            raise KeyError(key)
+        return str(val(val.Count))
+
+    def keys(self):
+        return iter(self._collection)
+
+    __iter__ = keys
+
+    def items(self):
+        for key in self._collection:
+            for val in self._collection(key):
+                yield (key, val)
+
+    def values(self):
+        for key in self._collection:
+            yield from self._collection(key)
+
+    def __len__(self):
+        return sum(self._collection(x).Count for x in self._collection)
+
+    def mixed(self):
+        """
+        Returns a dictionary where the values are either single
+        values, or a list of values when a key/value appears more than
+        once in this dictionary.  This is similar to the kind of
+        dictionary often used to represent the variables in a web
+        request.
+        """
+        result = {}
+        multi = {}
+        for key, value in self.items():
+            if key in result:
+                # We do this to not clobber any lists that are
+                # *actual* values in this dictionary:
+                if key in multi:
+                    result[key].append(value)
+                else:
+                    result[key] = [result[key], value]
+                    multi[key] = None
+            else:
+                result[key] = value
+        return result
+
+
+_dummy = object()
+
+
+class NestedMultiMappingShim(MultiMappingShim):
     def __init__(self, collections):
-        self._collections = [CollectionShim(x) for x in collections]
+        self._collections = collections
 
     def __getitem__(self, key):
         for col in self._collections:
-            try:
-                return col[key]
-            except KeyError:
-                pass
+            value = col.get(key, _dummy)
+            if value is not _dummy:
+                return value
 
         raise KeyError(key)
 
-    def get(self, key, default=None):
-        try:
-            return self[key]
-        except KeyError:
-            return default
+    def keys(self):
+        for col in self._collections:
+            yield from col
+
+    __iter__ = keys
+
+    def items(self):
+        for col in self._collections:
+            yield from col.items()
+
+    def values(self):
+        for col in self._collections:
+            yield from col.values()
+
+    def __len__(self):
+        return sum(len(x) for x in self._collections)
 
 
 class HeaderShim:
@@ -113,9 +179,9 @@ class ResponseShim:
 class RequestShim(CiocRequestMixin):
     def __init__(self, req, response):
         self.req = req
-        self.GET = CollectionShim(req.QueryString)
-        self.POST = CollectionShim(req.Form)
-        self.params = MultiCollectionShim([req.QueryString, req.Form])
+        self.GET = MultiMappingShim(req.QueryString)
+        self.POST = MultiMappingShim(req.Form)
+        self.params = NestedMultiMappingShim([self.GET, self.POST])
         self.cookies = CollectionShim(req.Cookies)
         self.headers = HeaderShim(req.ServerVariables)
         self.appvars = CollectionShim(req.ServerVariables)
@@ -197,6 +263,10 @@ class RequestShim(CiocRequestMixin):
     @reify
     def finished_callbacks(self):
         return []
+
+    @reify
+    def model_state(self):
+        return ModelState(self)
 
     exception = None
 

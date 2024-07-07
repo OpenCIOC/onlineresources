@@ -48,8 +48,6 @@ class ViewBase:
 
         request.pageinfo.fetch()
 
-        request.assetmgr = asset.AssetManager(request)
-
         if security.is_basic_security_failure(request, require_login):
             self._security_failure()
 
@@ -65,7 +63,6 @@ class ViewBase:
         focus="",
         show_message=False,
     ):
-
         args = self._create_response_namespace(
             page_name,
             doc_title,
@@ -90,7 +87,6 @@ class ViewBase:
         focus="",
         show_message=False,
     ):
-
         ri = template.RenderInfo(
             self.request,
             page_name,

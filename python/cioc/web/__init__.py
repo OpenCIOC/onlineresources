@@ -67,7 +67,9 @@ def main(global_config, **settings):
     json_renderer.add_adapter(datetime.date, datetime_adapter)
     json_renderer.add_adapter(Decimal, decimal_adapter)
     config.add_renderer("json", json_renderer)
-    config.include("pyramid_mako")
+    # The include below is a customization of pyramid_renderer that supports
+    # streaming templates to the browser
+    config.include("python.cioc.core.streamingrenderer")
 
     # allow for multiple templated css files with the which match parameter
     config.add_route(

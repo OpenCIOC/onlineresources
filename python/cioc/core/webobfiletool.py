@@ -32,8 +32,9 @@ class FileIterable:
 class FileIterator:
     chunk_size = 4096
 
-    def __init__(self, fileobj, start=None, stop=None):
+    def __init__(self, fileobj, start=None, stop=None, cleanupfn=None):
         self.fileobj = fileobj
+        self.cleanupfn = cleanupfn
         if start:
             self.fileobj.seek(start)
         if stop is not None:
@@ -44,13 +45,19 @@ class FileIterator:
     def __iter__(self):
         return self
 
+    def cleanup(self):
+        if self.cleanupfn:
+            self.cleanupfn()
+
     def __next__(self):
         if self.length is not None and self.length <= 0:
             self.fileobj.close()
+            self.cleanup()
             raise StopIteration
         chunk = self.fileobj.read(self.chunk_size)
         if not chunk:
             self.fileobj.close()
+            self.cleanup()
             raise StopIteration
         if self.length is not None:
             self.length -= len(chunk)

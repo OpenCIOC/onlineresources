@@ -26,18 +26,19 @@ from pyramid.decorator import reify
 # This app
 from cioc.core.syslanguage import SystemLanguage
 from cioc.core import (
-    passvars,
+    asset,
+    cache,
     config,
     connection,
-    dboptions,
-    security,
-    cache,
     constants as const,
+    dboptions,
+    passvars,
     recentsearch,
+    redispool,
+    security,
+    session,
     syslanguage,
     viewdata,
-    session,
-    redispool,
 )
 
 if t.TYPE_CHECKING:
@@ -125,6 +126,10 @@ class CiocRequestMixin:
     @reify
     def multilingual(self):
         return self.multilingual_records or self.multilingual_active
+
+    @reify
+    def assetmgr(self):
+        return asset.AssetManager(self)
 
     @reify
     def email_messages(self):

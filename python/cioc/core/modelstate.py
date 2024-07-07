@@ -174,7 +174,7 @@ class CiocFormRenderer(FormRenderer):
         kw.update(attrs)
         if kw["size"] is not None:
             kw["size"] = min((kw["maxlength"] + 1, kw["size"]))
-        return FormRenderer.text(self, name, value, self._fix_id(id or name), **kw)
+        return super().text(name, value, self._fix_id(id or name), **kw)
 
     def proto_url(self, name, value=None, id=None, **attrs):
         kw = {
@@ -206,7 +206,7 @@ class CiocFormRenderer(FormRenderer):
             rows = default_rows
         kw = {"cols": const.TEXTAREA_COLS, "rows": rows}
         kw.update(attrs)
-        return FormRenderer.textarea(self, name, value, self._fix_id(id or name), **kw)
+        return super().textarea(name, value, self._fix_id(id or name), **kw)
 
     def colour(self, name, value=None, id=None, **attrs):
         kw = {"maxlength": 50, "size": 20}

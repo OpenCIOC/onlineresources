@@ -125,6 +125,8 @@ from cioc.core import gtranslate
 
 	%if hasattr(caller, 'bottomjs') and not request.params.get("InlineResults")=="on":
 		${caller.bottomjs()}
+	%elif context.kwargs.get('bottomjs') and not request.params.get("InlineResults")=="on":
+		${context.kwargs['bottomjs']()}
 	%endif
 	<script type="text/javascript">
 	 (
