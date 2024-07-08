@@ -69,7 +69,7 @@ def main(global_config, **settings):
     config.add_renderer("json", json_renderer)
     # The include below is a customization of pyramid_renderer that supports
     # streaming templates to the browser
-    config.include("python.cioc.core.streamingrenderer")
+    config.include("cioc.core.streamingrenderer")
 
     # allow for multiple templated css files with the which match parameter
     config.add_route(
