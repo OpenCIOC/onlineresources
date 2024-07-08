@@ -64,15 +64,28 @@ if (( "${#newfeatures[@]}" > 0 )) ; then
 	MSYS_NO_PATHCONV=1 $SYSTEMROOT/system32/dism.exe "/Online" "/Enable-Feature" "${newfeatures[@]}" /All
 fi
 
-( echo "Checking for Web Plaform installer" && winget list -e --id Microsoft.webpicmd -s winget > /dev/null ) || ( echo "installing Web Platform installer" &&  winget install -e --id Microsoft.webpicmd -s winget )
 ( echo "Checking for WkHtmlToPDF" && winget list -e --id wkhtmltopdf.wkhtmltox -s winget > /dev/null) || ( echo "Installing WkHtmlToPDF" && winget install -e --id wkhtmltopdf.wkhtmltox -s winget )
 ( echo "Checking for GNU Make" && winget list -e --id GnuWin32.Make -s winget > /dev/null) || ( echo "Installing GNU Make" && winget install -e --id GnuWin32.Make -s winget )
 ( echo "Checking for Node.js" && winget list -e --id OpenJS.NodeJS -s winget > /dev/null) || ( echo "Installing Node.js" && winget install -e --id OpenJS.NodeJS -s winget )
+( echo "Checking for MSYS2" && winget list -e --id MSYS2.MSYS2 -s winget > /dev/null) || ( echo "Installing MSYS2" && winget install -e --id MSYS2.MSYS2 -s winget )
+echo "Installing Pango" && c:/msys64/usr/bin/pacman.exe -S mingw-w64-x86_64-pango --noconfirm --noprogressbar
+
+echo "IIS URL Rewrite Module 2"
+if ! wmic product get name | grep "IIS URL Rewrite Module 2" > /dev/null ; then
+	echo "Downloading IIS URL Rewrite Module 2"
+	curl -o $TEMP/rewrite_amd64_en-US.msi "https://download.microsoft.com/download/1/2/8/128E2E22-C1B9-44A4-BE2A-5859ED1D4592/rewrite_amd64_en-US.msi"
+	echo "Installing IIS URL Rewrite Module 2"
+	MSYS_NO_PATHCONV=1 msiexec /passive /i $TEMP\\rewrite_amd64_en-US.msi AgreeToLicense=yes
+	rm $TEMP/rewrite_amd64_en-US.msi
+fi
 
 echo "Checking for Microsoft Application Request Routing 3.0"
 if ! wmic product get name | grep "Microsoft Application Request Routing 3.0" > /dev/null ; then
+	echo "Downloading Microsoft Application Request Routing 3.0"
+	curl -o $TEMP/requestRouter_amd64.msi "https://download.microsoft.com/download/E/9/8/E9849D6A-020E-47E4-9FD0-A023E99B54EB/requestRouter_amd64.msi"
 	echo "Installing Microsoft Application Request Routing 3.0"
-	MSYS_NO_PATHCONV=1 /c/Program\ Files/Microsoft/Web\ Platform\ Installer/WebpiCmd.exe /Install /Products:ARRv3_0 /AcceptEula /SuppressReboot
+	MSYS_NO_PATHCONV=1 msiexec /passive /i $TEMP\\requestRouter_amd64.msi AgreeToLicense=yes
+	rm $TEMP/requestRouter_amd64.msi
 fi
 
 echo "Checking for Microsoft ODBC Driver 17 for SQL Server"

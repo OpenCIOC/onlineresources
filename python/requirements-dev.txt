@@ -12,36 +12,46 @@ black==24.4.2
     # via -r requirements-dev.in
 bleach[css]==6.1.0
     # via -r requirements.in
-boto3==1.34.108
+boto3==1.34.138
     # via -r requirements.in
 boto3-type-annotations==0.3.1
     # via -r requirements-dev.in
-botocore==1.34.108
+botocore==1.34.138
     # via
     #   boto3
     #   s3transfer
-certifi==2024.2.2
+brotli==1.1.0
+    # via fonttools
+certifi==2024.6.2
     # via requests
 cffi==1.16.0
-    # via cryptography
+    # via
+    #   cryptography
+    #   weasyprint
 charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via black
 colorama==0.4.6
     # via click
-cryptography==42.0.7
+cryptography==42.0.8
     # via -r requirements.in
+cssselect2==0.7.0
+    # via weasyprint
 decorator==5.1.1
     # via dogpile-cache
 dogpile-cache==1.3.3
     # via -r requirements.in
-flake8==7.0.0
+flake8==7.1.0
     # via -r requirements-dev.in
+fonttools[woff]==4.53.0
+    # via weasyprint
 formencode==2.1.0
     # via
     #   -r requirements.in
     #   pyramid-simpleform
+html5lib==1.1
+    # via weasyprint
 hupper==1.12.1
     # via pyramid
 idna==3.7
@@ -74,7 +84,7 @@ mccabe==0.7.0
     # via flake8
 mypy-extensions==1.0.0
     # via black
-packaging==24.0
+packaging==24.1
     # via black
 paste==3.10.1
     # via
@@ -93,6 +103,8 @@ pbr==6.0.0
     # via stevedore
 pdfkit==1.0.0
     # via -r requirements.in
+pillow==10.4.0
+    # via weasyprint
 plaster==1.1.2
     # via
     #   plaster-pastedeploy
@@ -101,16 +113,20 @@ plaster-pastedeploy==1.0.1
     # via pyramid
 platformdirs==4.2.2
     # via black
-pycodestyle==2.11.1
+pycodestyle==2.12.0
     # via flake8
 pycparser==2.22
     # via cffi
+pydyf==0.10.0
+    # via weasyprint
 pyflakes==3.2.0
     # via flake8
 pygments==2.18.0
     # via pyramid-debugtoolbar
 pyodbc==5.1.0
     # via -r requirements.in
+pyphen==0.15.0
+    # via weasyprint
 pyramid==1.10.8
     # via
     #   -r requirements.in
@@ -133,17 +149,18 @@ pyramid-simpleform==0.7.dev0
     # via -r requirements.in
 python-dateutil==2.9.0.post0
     # via botocore
-redis==5.0.4
+redis==5.0.7
     # via
     #   -r requirements.in
     #   pyramid-session-redis
-requests==2.32.0
+requests==2.32.3
     # via -r requirements.in
-s3transfer==0.10.1
+s3transfer==0.10.2
     # via boto3
 six==1.16.0
     # via
     #   bleach
+    #   html5lib
     #   isodate
     #   pyramid-session-redis
     #   python-dateutil
@@ -151,24 +168,31 @@ six==1.16.0
 stevedore==5.2.0
     # via dogpile-cache
 tinycss2==1.2.1
-    # via bleach
+    # via
+    #   bleach
+    #   cssselect2
+    #   weasyprint
 tomli==2.0.1
     # via black
 translationstring==1.4
     # via pyramid
-typing-extensions==4.11.0
+typing-extensions==4.12.2
     # via
     #   black
     #   dogpile-cache
-urllib3==1.26.18
+urllib3==1.26.19
     # via
     #   botocore
     #   requests
 venusian==3.1.0
     # via pyramid
+weasyprint==61.2
+    # via -r requirements.in
 webencodings==0.5.1
     # via
     #   bleach
+    #   cssselect2
+    #   html5lib
     #   tinycss2
 webhelpers2==2.1
     # via
@@ -178,10 +202,12 @@ webob==1.8.7
     # via pyramid
 zope-deprecation==5.0
     # via pyramid
-zope-interface==6.4
+zope-interface==6.4.post2
     # via
     #   pyramid
     #   pyramid-session-redis
+zopfli==0.2.3
+    # via fonttools
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

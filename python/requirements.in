@@ -39,3 +39,4 @@ cryptography
 bleach[css]
 pyramid-exclog
 boto3
+weasyprint

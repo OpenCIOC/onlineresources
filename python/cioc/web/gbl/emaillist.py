@@ -91,7 +91,6 @@ class AccessURLValidator(ciocvalidators.FancyValidator):
     del _
 
     def _to_python(self, value, state):
-
         try:
             listval = parse_access_url(value)
         except ValueError:
@@ -281,7 +280,6 @@ class EmailRecordListBase(viewbase.ViewBase):
 
         model_state = request.model_state
 
-        ErrMsg = None
         if not model_state.validate():
             # form error
             ErrMsg = _("There were validation errors.", request)

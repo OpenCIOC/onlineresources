@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -16,7 +16,17 @@
 ' =========================================================================================
 
 %>
+<script language="python" runat="server">
+from cioc.web.gbl import printlist
+def render_printlist_form():
+	view_class = getattr(printlist, f"PrintRecordList{pyrequest.pageinfo.DbAreaS}")
+	view_object = view_class(pyrequest)
+	form, bottomjs = view_object.render_form_and_get_bottomjs_fn()
+	Response.Write(form)
+	set_bottom_js_fn(bottomjs)
 
+</script>
+<% If True Then %>
 <form action="printlist.asp" method="post" id="EntryForm">
 <%=g_strCacheFormVals%>
 <input type="hidden" name="Picked" value="on">
@@ -113,4 +123,8 @@ jQuery(function($) {
 	restore_cached_state();
 })
 </script>
+
+<% Else
+Call render_printlist_form()
+End If %>
 

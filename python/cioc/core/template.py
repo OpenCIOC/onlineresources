@@ -33,11 +33,11 @@ from functools import partial
 import logging
 
 # 3rd party
-from mako.lookup import TemplateLookup
 
 from markupsafe import escape, Markup
-from pyramid.response import Response
 from pyramid.httpexceptions import HTTPNotFound
+from pyramid.path import caller_package
+from pyramid.response import Response
 from pyramid.view import view_config
 
 # this app
@@ -47,42 +47,72 @@ import cioc.core.jquiicons as jquiicons
 import cioc.core.clienttracker as clienttracker
 from cioc.core.i18n import gettext, ngettext, format_date
 from cioc.core.security import sanitize_html_passvars
+from cioc.core.streamingrenderer import (
+    StreamingMakoRendererFactory,
+    PkgResourceTemplateLookup,
+)
 from cioc.core.utils import read_file
+
 
 log = logging.getLogger(__name__)
 
 _template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "templates"))
 _system_layout_dir = os.path.abspath(os.path.join(_template_dir, "layouts"))
-_template_lookup = None
-_css_template_lookup = None
+_renderer_factories = {}
+_renderer_settings = {
+    ".mak": {
+        "directories": [_template_dir],
+        "default_filters": ["escape_silent"],
+        "imports": ["from markupsafe import escape_silent"],
+        "filesystem_checks": True,
+    },
+}
 
 
-def set_template_lookup(template_lookup):
-    global _template_lookup
-    _template_lookup = template_lookup
+class FakeRendererHelper:
+    def __init__(self, name, package=None):
+        self.name = name
+        self.package = package
 
 
-def get_template(template_name):
-    if template_name.endswith(".css"):
-        global _css_template_lookup
-        if not _css_template_lookup:
-            _css_template_lookup = TemplateLookup(
-                directories=[_template_dir], default_filters=["unicode"]
-            )
-        return _css_template_lookup.get_template(template_name)
-    else:
-        global _template_lookup
-        if not _template_lookup:
-            _template_lookup = TemplateLookup(
-                directories=[_template_dir],
-                default_filters=["escape_silent"],
-                imports=["from markupsafe import escape_silent"],
-            )
-        return _template_lookup.get_template(template_name)
+def create_renderer_factories():
+    for ext, settings in _renderer_settings.items():
+        lookup = PkgResourceTemplateLookup(**settings)
+        factory = StreamingMakoRendererFactory()
+        factory.lookup = lookup
+        _renderer_factories[ext] = factory
 
 
-def render_template(template_name, **namespace):
-    return get_template(template_name).render_unicode(**namespace)
+create_renderer_factories()
+
+
+def get_renderer(template_name, package=None):
+    if package is None:
+        package = caller_package()
+
+    rtype = os.path.splitext(template_name)[1]
+    factory = _renderer_factories.get(rtype)
+    if factory is None:
+        raise ValueError(f"No such renderer factory {rtype}")
+
+    info = FakeRendererHelper(template_name, package)
+    return factory(info)
+
+
+def render_template(template_name, value, system_values, request, package=None):
+    if package is None:
+        package = caller_package()
+    renderer = get_renderer(template_name, package)
+    if system_values is None:
+        system_values = {
+            "view": None,
+            "renderer_name": template_name,  # b/c
+            "renderer_info": FakeRendererHelper(package),
+            "context": getattr(request, "context", None),
+            "request": request,
+            "req": request,
+        }
+    return renderer(value, system_values)
 
 
 def get_view_template_info(request):
@@ -206,13 +236,15 @@ class RenderInfo:
 
     def render_header(self):
         namespace = self.get_html_template_namespace()
-        return render_template("header.mak", **namespace)
+        return render_template("header.mak", namespace, None, self.request)
 
-    def render_footer(self):
+    def render_footer(self, bottomjs=None):
         namespace = self.get_html_template_namespace()
-        return render_template("footer.mak", **namespace)
+        if bottomjs:
+            namespace["bottomjs"] = bottomjs
+        return render_template("footer.mak", namespace, None, self.request)
 
-    def get_html_template_namespace(self, **namespace):
+    def get_html_template_namespace(self):
         def _(s, *args, **kwargs):
             return gettext(s, self.request, *args, **kwargs)
 

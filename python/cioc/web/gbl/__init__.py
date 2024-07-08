@@ -34,36 +34,11 @@ def includeme(config):
 
     # /articles
     factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
-    config.add_route(
-        "articles_cic", urlprefix + "articles", factory=factory
-    )
+    config.add_route("articles_cic", urlprefix + "articles", factory=factory)
 
     factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_CIC)
     config.add_route(
         "sched_upcoming_cic", urlprefix + "events/upcoming", factory=factory
-    )
-
-    # /volunteer/recordlist
-    factory = partial(EmailListContext, domain=const.DM_VOL, db_area=const.DM_VOL)
-    config.add_route(
-        "record_list_vol", "/volunteer" + urlprefix + "recordlist", factory=factory
-    )
-
-    # /volunteer/pages/{slug}
-    factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
-    config.add_route(
-        "pages_vol", "/volunteer" + urlprefix + "pages/{slug}", factory=factory
-    )
-
-    # /volunteer/articles
-    factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
-    config.add_route(
-        "articles_vol", "/volunteer" + urlprefix + "articles", factory=factory
-    )
-
-    factory = partial(BasicRootFactory, domain=const.DM_VOL, db_area=const.DM_VOL)
-    config.add_route(
-        "sched_upcoming_vol", "/volunteer" + urlprefix + "events/upcoming", factory=factory,
     )
 
     # /shortcodes
@@ -77,3 +52,30 @@ def includeme(config):
     # /go
     factory = partial(BasicRootFactory, domain=const.DM_GLOBAL, db_area=const.DM_GLOBAL)
     config.add_route("gbl_go", urlprefix + "go/{slug}")
+
+    # /printlist
+    factory = partial(BasicRootFactory, domain=const.DM_CIC, db_area=const.DM_CIC)
+    config.add_route("print_list_cic", urlprefix + "printlist", factory=factory)
+
+    # Start of Volunteer URLs
+    urlprefix = "/volunteer/"
+
+    # /volunteer/recordlist
+    factory = partial(EmailListContext, domain=const.DM_VOL, db_area=const.DM_VOL)
+    config.add_route("record_list_vol", urlprefix + "recordlist", factory=factory)
+
+    # /volunteer/pages/{slug}
+    config.add_route("pages_vol", urlprefix + "pages/{slug}", factory=factory)
+
+    # /volunteer/articles
+    config.add_route("articles_vol", urlprefix + "articles", factory=factory)
+
+    # /volunteer/events/upcoming
+    config.add_route(
+        "sched_upcoming_vol",
+        urlprefix + "events/upcoming",
+        factory=factory,
+    )
+
+    # /volunteer/printlist
+    config.add_route("print_list_vol", urlprefix + "printlist", factory=factory)

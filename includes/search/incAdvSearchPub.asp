@@ -15,7 +15,7 @@
 '  limitations under the License.
 ' =========================================================================================
 '
-' Purpose: 
+' Purpose:
 '
 %>
 
@@ -26,7 +26,7 @@ Dim strPublicationSearchUI, _
 	bHavePublications, _
 	bHaveGeneralHeadings, _
 	bHavePubsWithGeneralHeadings
-	
+
 bHavePublications = False
 bHavePubsWithGeneralHeadings = False
 bHaveGeneralHeadings = False
@@ -40,7 +40,7 @@ Sub getPublicationOptionList()
 	bHavePubsWithGeneralHeadings = False
 	strPublicationSearchUI = vbNullString
 	strPublicationDropDown = vbNullString
-	
+
 	Call openPubListRst(False, False)
 	With rsListPub
 		If Not .EOF Then
@@ -50,7 +50,7 @@ Sub getPublicationOptionList()
 					"<option value=" & AttrQs(.Fields("PB_ID")) & ">" & Server.HTMLEncode(IIf(g_bUsePubNamesOnly,.Fields("PubName"),.Fields("PubCode"))) &"</option>"
 				.MoveNext
 			Wend
-			
+
 		End If
 	End With
 	Call closePubListRst()
@@ -81,6 +81,7 @@ Sub getGeneralHeadingOptionList(intPBID)
 End Sub
 
 Sub makePublicationUI()
+' NOTE This has been ported to python/Mako in python/cioc/web/gbl/templates/printlist/printoptions.mak
 	If bHavePubsWithGeneralHeadings Then
 %>
 <%=strPublicationDropDown%><br>
@@ -148,10 +149,11 @@ Sub makePublicationUI()
 </div>
 <%
 	End If
-	
+
 End Sub
 
 Sub makeGeneralHeadingUI()
+' NOTE This has been ported to python/Mako in python/cioc/web/gbl/templates/printlist/printoptions.mak
 %>
 <p class="SmallNote"><%=TXT_HOLD_CTRL%></p>
 <div class="row">
