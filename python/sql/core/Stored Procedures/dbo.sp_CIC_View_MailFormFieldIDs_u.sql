@@ -14,13 +14,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 13-Jan-2012
-	Action:	NO ACTION REQUIRED
-*/
-
 DECLARE	@Error		int
 SET @Error = 0
 
@@ -45,7 +38,7 @@ IF @MemberID IS NULL BEGIN
 	SET @Error = 2 -- No ID Given
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL)
 -- Member ID exists ?
-END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
+END ELSE IF NOT EXISTS(SELECT * FROM dbo.STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS varchar), @MemberObjectName)
 -- View given ?
@@ -53,33 +46,33 @@ END ELSE IF @ViewType IS NULL BEGIN
 	SET @Error = 2 -- No ID Given
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @ViewObjectName, NULL)
 -- View exists ?
-END ELSE IF NOT EXISTS (SELECT * FROM CIC_View WHERE ViewType=@ViewType) BEGIN
+END ELSE IF NOT EXISTS (SELECT * FROM dbo.CIC_View WHERE ViewType=@ViewType) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@ViewType AS varchar), @ViewObjectName)
 -- View belongs to Member ?
-END ELSE IF NOT EXISTS (SELECT * FROM CIC_View WHERE MemberID=@MemberID AND ViewType=@ViewType) BEGIN
+END ELSE IF NOT EXISTS (SELECT * FROM dbo.CIC_View WHERE MemberID=@MemberID AND ViewType=@ViewType) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL)
 -- Ownership OK ?
-END ELSE IF @AgencyCode IS NOT NULL AND NOT EXISTS(SELECT * FROM CIC_View WHERE ViewType=@ViewType AND (Owner IS NULL OR Owner = @AgencyCode)) BEGIN
+END ELSE IF @AgencyCode IS NOT NULL AND NOT EXISTS(SELECT * FROM dbo.CIC_View WHERE ViewType=@ViewType AND (Owner IS NULL OR Owner = @AgencyCode)) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @ViewObjectName, NULL)
 END ELSE BEGIN
 	INSERT INTO @MailFormFields
 		SELECT mf2.MailFormFieldID, fo.FieldID, fg.DisplayFieldGroupID
-		FROM dbo.fn_GBL_ParseIntIDPairList(@IdList,',','-') fl
-		INNER JOIN GBL_FieldOption fo
+		FROM dbo.fn_GBL_ParseIntIDPairList(@IdList,',','~') fl
+		INNER JOIN dbo.GBL_FieldOption fo
 			ON fl.LeftID=fo.FieldID
-		LEFT JOIN CIC_View_DisplayFieldGroup fg
+		LEFT JOIN dbo.CIC_View_DisplayFieldGroup fg
 			ON fl.RightID=fg.DisplayFieldGroupID AND fg.ViewType=@ViewType
 		LEFT JOIN (SELECT mf.FieldID, mf.MailFormFieldID
-				FROM CIC_View_MailFormField mf
-				INNER JOIN CIC_View_DisplayFieldGroup fg
+				FROM dbo.CIC_View_MailFormField mf
+				INNER JOIN dbo.CIC_View_DisplayFieldGroup fg
 					ON mf.DisplayFieldGroupID=fg.DisplayFieldGroupID AND fg.ViewType=@ViewType) mf2
 			ON fo.FieldID=mf2.FieldID
 
 	DELETE mf
-		FROM CIC_View_MailFormField mf
+		FROM dbo.CIC_View_MailFormField mf
 		INNER JOIN @MailFormFields fl
 			ON mf.MailFormFieldID=fl.MailFormFieldID AND  fl.DisplayFieldGroupID IS NULL
 
@@ -87,19 +80,19 @@ END ELSE BEGIN
 
 	UPDATE mf
 		SET DisplayFieldGroupID=fl.DisplayFieldGroupID
-		FROM CIC_View_MailFormField mf
+		FROM dbo.CIC_View_MailFormField mf
 		INNER JOIN @MailFormFields fl
 			ON mf.MailFormFieldID=fl.MailFormFieldID
 		WHERE mf.DisplayFieldGroupID<>fl.DisplayFieldGroupID
 
 	DELETE FROM @MailFormFields WHERE MailFormFieldID IS NOT NULL
 
-	INSERT INTO CIC_View_MailFormField (FieldID,DisplayFieldGroupID)
+	INSERT INTO dbo.CIC_View_MailFormField (FieldID,DisplayFieldGroupID)
 	SELECT FieldID, DisplayFieldGroupID FROM @MailFormFields
 
 	EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @ViewFieldObjectName, @ErrMsg
 	IF @Error = 0 BEGIN
-		UPDATE CIC_View
+		UPDATE dbo.CIC_View
 			SET MODIFIED_DATE	= GETDATE(),
 				MODIFIED_BY		= @MODIFIED_BY
 		WHERE ViewType=@ViewType

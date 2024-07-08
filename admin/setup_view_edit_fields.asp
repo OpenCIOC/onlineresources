@@ -190,42 +190,42 @@ End If
 Call makePageHeader(strViewName & TXT_COLON & strFTypeDesc, strViewName & TXT_COLON & strFTypeDesc, False, False, True, False)
 %>
 <p align="center">[ <a href="javascript:parent.close()"><%=TXT_CLOSE_WINDOW%></a><%= makePageHelpLink() %> ]</p>
-<%
-If intDomain = DM_CIC Then
-%>
+
 <h2><%=strFTypeDesc & " (" & strViewName & ")"%></h2>
 <p><%=TXT_SOME_FIELDS_UNAVAILABLE%></p>
 <%
-If strFType = "F" Or strFType = "U" Then
-	Call openRecordTypeFormListRst(intViewType, strFType)
+if intDomain = DM_CIC Then
 
-	With rsListRecordType
-		If Not .EOF Then
+	If strFType = "F" Or strFType = "U" Then
+		Call openRecordTypeFormListRst(intViewType, strFType)
+
+		With rsListRecordType
+			If Not .EOF Then
 %>
 <p><%=TXT_EDIT_FORM_FOR_TYPE%></p>
 <ul>
 <%
-			If Not Nl(intRTID) Then
+				If Not Nl(intRTID) Then
 %>
 	<li><a href="<%=makeLink(ps_strThisPage,"ViewType=" & intViewType & "&FType=" & strFType & "&DM=" & intDomain,vbNullString)%>"><%=TXT_ALL_TYPES%></a></li>
 <%
-			End If
-			While Not .EOF
-				If .Fields("RT_ID") <> intRTID Or Nl(intRTID) Then
+				End If
+				While Not .EOF
+					If .Fields("RT_ID") <> intRTID Or Nl(intRTID) Then
 %>
 	<li><a href="<%=makeLink(ps_strThisPage,"ViewType=" & intViewType & "&FType=" & strFType & "&DM=" & intDomain & "&RTID=" & .Fields("RT_ID"),vbNullString)%>"><%="(" & .Fields("RecordType") & ")" & IIf(Nl(.Fields("RecordTypeName")),vbNullString," " & .Fields("RecordTypeName"))%></a></li>
 <%
-				End If
-				.MoveNext
-			Wend
+					End If
+					.MoveNext
+				Wend
 %>
 </ul>
 <%
-		End If
-	End With
+			End If
+		End With
 	
-	Set rsListRecordType = rsListRecordType.NextRecordset
-	If Not rsListRecordType.EOF Then
+		Set rsListRecordType = rsListRecordType.NextRecordset
+		If Not rsListRecordType.EOF Then
 %>
 <form action="<%=ps_strThisPage%>" class="form form-inline">
 <div style="display:none">
@@ -239,8 +239,9 @@ If strFType = "F" Or strFType = "U" Then
 
 <h3><%=IIf(bRecordTypeHasForm Or Nl(strRecordTypeName),TXT_EDIT_FORM_FOR_TYPE,TXT_CREATE_NEW_FORM_FOR_TYPE) & Nz(strRecordTypeName,TXT_ALL_TYPES)%></h3>
 <%
+		End If
+		Call closeRecordTypeListRst()
 	End If
-	Call closeRecordTypeListRst()
 End If
 %>
 <%=FORM_ACTION%>
@@ -273,8 +274,9 @@ End If
 <input type="hidden" name="FieldID" value="<%=.Fields("FieldID")%>">
 </div>
 <tr valign="top">
-	<td><strong><label for=<%=AttrQs("DisplayFieldGroupID_" & .Fields("FieldID"))%>><%=.Fields("FieldName")%></label></strong> (<%=.Fields("FieldDisplay")%>)</td>
-	<td><%=makeDetailFieldGroupsList(.Fields("DisplayFieldGroupID"),"DisplayFieldGroupID_" & .Fields("FieldID"),True)%></td>
+	<td><strong><label for=<%=AttrQs("DisplayFieldGroupID_" & .Fields("FieldID"))%>><%=.Fields("FieldName")%></label></strong>
+		<br>(<%=.Fields("FieldDisplay")%>)</td>
+	<td><%=makeDetailFieldGroupsList(.Fields("DisplayFieldGroupID"),"DisplayFieldGroupID_" & .Fields("FieldID"),True,IIf(intDomain=DM_CIC,False,True))%></td>
 </tr>
 <%
 			.MoveNext
@@ -286,33 +288,7 @@ End If
 <p><%=SUBMIT_BUTTON%>&nbsp;<%If bRecordTypeHasForm Then%><%=DELETE_BUTTON%><%End If%>&nbsp;<%=RESET_BUTTON%></p>
 </form>
 <p align="center">[ <a href="javascript:parent.close()"><%=TXT_CLOSE_WINDOW%></a> ]</p>
-<%
-Else
-%>
-<h2><%=strFTypeDesc & " (" & strViewName & ")"%></h2>
-<p><%=TXT_SOME_FIELDS_UNAVAILABLE%></p>
-<%=FORM_ACTION%>
-<%=g_strCacheFormVals%>
-<input type="hidden" name="ViewType" value="<%=intViewType%>">
-<input type="hidden" name="FType" value="<%=strFType%>">
-<input type="hidden" name="DM" value="<%=intDomain%>">
-<%
-	With rsViewFields
-		While Not .EOF
-%>
-<label for="FieldID_<%=.Fields("FieldID")%>"><input type="checkbox" name="FieldID" value="<%=.Fields("FieldID")%>" id="FieldID_<%=.Fields("FieldID")%>"<%If .Fields("IS_SELECTED") Then%> checked<%End If%>>&nbsp;<strong><%=.Fields("FieldName")%></strong>&nbsp;(<%=.Fields("FieldDisplay")%>)</label><br>
-<%
-			.MoveNext
-		Wend
-		.Close
-	End With
-%>
-<p><%=SUBMIT_BUTTON%>&nbsp;<%=RESET_BUTTON%></p>
-</form>
-<p align="center">[ <a href="javascript:parent.close()"><%=TXT_CLOSE_WINDOW%></a> ]</p>
-<%
-End If
-%>
+
 <%
 Call makePageFooter(False)
 

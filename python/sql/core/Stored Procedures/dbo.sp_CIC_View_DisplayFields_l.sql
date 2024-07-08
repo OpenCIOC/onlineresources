@@ -37,7 +37,7 @@ WHERE vw.MemberID=@MemberID
 
 SELECT	fo.FieldID,
 		fo.FieldName,
-		ISNULL(FieldDisplay,fo.FieldName) AS FieldDisplay,
+		ISNULL(fod.FieldDisplay,fo.FieldName) AS FieldDisplay,
 		fg.DisplayFieldGroupID
 	FROM dbo.GBL_FieldOption fo
 	LEFT JOIN dbo.GBL_FieldOption_Description fod

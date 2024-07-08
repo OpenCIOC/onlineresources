@@ -14,13 +14,6 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 13-Jan-2012
-	Action:	NO ACTION REQUIRED
-*/
-
 DECLARE	@Error		int
 SET @Error = 0
 
@@ -38,7 +31,7 @@ IF @MemberID IS NULL BEGIN
 	SET @Error = 2 -- No ID Given
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL)
 -- Member ID exists ?
-END ELSE IF NOT EXISTS(SELECT * FROM STP_Member WHERE MemberID=@MemberID) BEGIN
+END ELSE IF NOT EXISTS(SELECT * FROM dbo.STP_Member WHERE MemberID=@MemberID) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS varchar), @MemberObjectName)
 -- View given ?
@@ -46,11 +39,11 @@ END ELSE IF @ViewType IS NULL BEGIN
 	SET @Error = 2 -- No ID Given
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @ViewObjectName, NULL)
 -- View exists ?
-END ELSE IF NOT EXISTS (SELECT * FROM VOL_View WHERE ViewType=@ViewType) BEGIN
+END ELSE IF NOT EXISTS (SELECT * FROM dbo.VOL_View WHERE ViewType=@ViewType) BEGIN
 	SET @Error = 3 -- No Such Record
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@ViewType AS varchar), @ViewObjectName)
 -- View belongs to Member ?
-END ELSE IF NOT EXISTS (SELECT * FROM VOL_View WHERE MemberID=@MemberID AND ViewType=@ViewType) BEGIN
+END ELSE IF NOT EXISTS (SELECT * FROM dbo.VOL_View WHERE MemberID=@MemberID AND ViewType=@ViewType) BEGIN
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL)
 -- Ownership OK ?
@@ -58,17 +51,26 @@ END ELSE IF @AgencyCode IS NOT NULL AND NOT EXISTS(SELECT * FROM VOL_View WHERE 
 	SET @Error = 8 -- Security Failure
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @ViewObjectName, NULL)
 -- Is a Default View ?
-END ELSE IF EXISTS(SELECT * FROM STP_Member WHERE DefaultViewVOL=@ViewType) BEGIN
+END ELSE IF EXISTS(SELECT * FROM dbo.STP_Member WHERE DefaultViewVOL=@ViewType) BEGIN
 	SET @Error = 7 -- Can't delete value in use
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @ViewObjectName, cioc_shared.dbo.fn_SHR_STP_ObjectName('Default View'))
 -- Used by a User Type ?
-END ELSE IF EXISTS(SELECT * FROM VOL_SecurityLevel WHERE ViewType=@ViewType) BEGIN
+END ELSE IF EXISTS(SELECT * FROM dbo.VOL_SecurityLevel WHERE ViewType=@ViewType) BEGIN
 	SET @Error = 7 -- Can't delete value in use
 	SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @ViewObjectName, cioc_shared.dbo.fn_SHR_STP_ObjectName('Security Level'))
 END ELSE BEGIN
 
-	DELETE FROM VOL_View_Recurse
+	DELETE FROM dbo.VOL_View_Recurse
 	WHERE CanSee=@ViewType
+
+	DELETE FROM dbo.VOL_View_DisplayField
+	WHERE ViewType=@ViewType
+
+	DELETE FROM dbo.VOL_View_FeedbackField
+	WHERE ViewType=@ViewType
+
+	DELETE FROM dbo.VOL_View_FeedbackField
+	WHERE ViewType=@ViewType
 	
 	EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @ViewObjectName, @ErrMsg
 

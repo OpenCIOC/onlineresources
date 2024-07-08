@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -27,6 +27,8 @@ Sub openDetailFieldGroupsListRst(intViewType, intDomain)
 		Select Case intDomain
 			Case DM_CIC
 				.CommandText = "dbo.sp_CIC_View_DisplayFieldGroup_l"
+			Case DM_VOL
+				.CommandText = "dbo.sp_VOL_View_DisplayFieldGroup_l"
 		End Select
 		.CommandType = adCmdStoredProc
 		.CommandTimeout = 0
@@ -48,18 +50,21 @@ Sub closeDetailFieldGroupsListRst()
 	Set rsListDetailFieldGroups = Nothing
 End Sub
 
-Function makeDetailFieldGroupsList(intSelected, strSelectName, bIncludeBlank)
+Function makeDetailFieldGroupsList(intSelected, strSelectName, bIncludeBlank, bIncludeDefault)
 	Dim strReturn
 	With rsListDetailFieldGroups
 		If .RecordCount > 0 Then
 			.MoveFirst
 		End If
-		If .EOF Then
+		If .EOF And Not bIncludeDefault Then
 			strReturn = TXT_NO_VALUES_AVAILABLE
 		Else
 			strReturn = strReturn & "<select name=" & AttrQs(strSelectName) & " id=" & AttrQs(strSelectName) & " class=""form-control"">"
 			If bIncludeBlank Then
 				strReturn = strReturn & "<option value=""""> -- </option>"
+			End If
+			If bIncludeDefault Then
+				strReturn = strReturn & "<option value=""-1""" & StringIf(intSelected = -1," selected") & "> ** " & TXT_DEFAULT_GROUP & " ** </option>"
 			End If
 			While Not .EOF
 				strReturn = strReturn & _

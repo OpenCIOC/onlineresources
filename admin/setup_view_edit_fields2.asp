@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -211,23 +211,19 @@ With cmdViewFields
 	.Parameters.Append .CreateParameter("@MemberID", adInteger, adParamInput, 4, g_intMemberID)
 	.Parameters.Append .CreateParameter("@AgencyCode", adChar, adParamInput, 3, user_strAgency)
 	
-	If intDomain = DM_CIC Then
-		aFieldIDs = Split(strIDList,",")
-		For i = 0 To UBound(aFieldIDs)
-			intFieldID = Trim(aFieldIDs(i))
-			intDisplayGroupID = Trim(Request("DisplayFieldGroupID_" & intFieldID))
-			If Not IsNumeric(intDisplayGroupID) Then
-				intDisplayGroupID = vbNullString
-			End If
-			aFieldIDs(i) = intFieldID & "-" & Nz(intDisplayGroupID,vbNullString)
-		Next
-		strIDList = Join(aFieldIDs,",")
-		.Parameters.Append .CreateParameter("@IdList", adLongVarChar, adParamInput, -1, strIDList)
-		If intDomain = DM_CIC And (strFType = "F" Or strFType = "U") Then
-			.Parameters.Append .CreateParameter("@RT_ID", adInteger, adParamInput, 4, intRTID)
+	aFieldIDs = Split(strIDList,",")
+	For i = 0 To UBound(aFieldIDs)
+		intFieldID = Trim(aFieldIDs(i))
+		intDisplayGroupID = Trim(Request("DisplayFieldGroupID_" & intFieldID))
+		If Not IsNumeric(intDisplayGroupID) Then
+			intDisplayGroupID = vbNullString
 		End If
-	Else
-		.Parameters.Append .CreateParameter("@IdList", adLongVarChar, adParamInput, -1, strIDList)
+		aFieldIDs(i) = intFieldID & "~" & Nz(intDisplayGroupID,vbNullString)
+	Next
+	strIDList = Join(aFieldIDs,",")
+	.Parameters.Append .CreateParameter("@IdList", adLongVarChar, adParamInput, -1, strIDList)
+	If intDomain = DM_CIC And (strFType = "F" Or strFType = "U") Then
+		.Parameters.Append .CreateParameter("@RT_ID", adInteger, adParamInput, 4, intRTID)
 	End If
 
 End With
