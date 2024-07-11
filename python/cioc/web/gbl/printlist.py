@@ -345,8 +345,9 @@ class PrintListBase(viewbase.ViewBase):
                 f.writelines(result)
                 f.seek(0)
                 outf = tempfile.TemporaryFile(suffix=".pdf")
-                HTML(file_obj=f, base_url=request.path_url).write_pdf(
-                    outf, font_config=FontConfiguration()
+                HTML(file_obj=f, base_url=request.path_url, encoding="utf-8").write_pdf(
+                    outf,
+                    font_config=FontConfiguration(),
                 )
                 length = outf.tell()
                 outf.seek(0)
@@ -670,13 +671,13 @@ class PrintRecordListCIC(PrintListBase):
                             FROM CIC_GeneralHeading_Group ghg
                             INNER JOIN CIC_GeneralHeading_Group_Name ghgn
                                 ON ghg.GroupID=ghgn.GroupID AND ghgn.LangID=@@LANGID
-                            WHERE ghg.PB_ID=?) ghgn 
+                            WHERE ghg.PB_ID=?) ghgn
                     ON gh.HeadingGroup=ghgn.GroupID
             WHERE (pb.MemberID=? OR pb.MemberID IS NULL)
                 AND pb.PB_ID=?
                 AND (Used=1 OR Used IS NULL)
                 AND (gh.NonPublic=0)
-                AND EXISTS(SELECT * 
+                AND EXISTS(SELECT *
                 {self.base_from}
                 INNER JOIN CIC_BT_PB pb
                     ON bt.NUM=pb.NUM
@@ -749,7 +750,7 @@ class PrintRecordListCIC(PrintListBase):
         return process()
 
     base_from = dedent("""\
-        FROM GBL_BaseTable bt 
+        FROM GBL_BaseTable bt
         INNER JOIN GBL_BaseTable_Description btd ON bt.NUM=btd.NUM AND btd.LangID=@@LANGID
         LEFT JOIN CIC_BaseTable cbt ON bt.NUM=cbt.NUM
         LEFT JOIN CIC_BaseTable_Description cbtd ON cbt.NUM=cbtd.NUM AND cbtd.LangID=@@LANGID
