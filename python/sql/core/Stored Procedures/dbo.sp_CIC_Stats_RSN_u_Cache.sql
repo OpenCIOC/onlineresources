@@ -3,65 +3,61 @@ GO
 SET ANSI_NULLS ON
 GO
 
-CREATE PROCEDURE [dbo].[sp_CIC_Stats_RSN_u_Cache]
+CREATE PROCEDURE [dbo].[sp_CIC_Stats_RSN_u_Cache] (@MemberID int = NULL)
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 31-Jan-2012
-	Action: NO ACTION REQUIRED
-*/
-
-DECLARE @RC int, @NUMBER int
-SET @NUMBER= 10000
-SET @RC=@NUMBER 
-
 DECLARE @NOW smalldatetime
 SET @NOW = GETDATE()
-SET @RC = @NUMBER
 
-WHILE @RC = @NUMBER BEGIN
-	INSERT INTO GBL_BaseTable_StatsCache (
-		NUM,
+INSERT INTO dbo.GBL_BaseTable_StatsCache (
+	NUM,
+	MemberID,
+	CMP_USAGE_COUNT_DATE,
+	CMP_USAGE_COUNT,
+	CMP_USAGE_COUNT_P,
+	CMP_USAGE_COUNT_S
+)
+SELECT	NUM,
 		MemberID,
-		CMP_USAGE_COUNT_DATE,
-		CMP_USAGE_COUNT,
-		CMP_USAGE_COUNT_P,
-		CMP_USAGE_COUNT_S
-	)
-	SELECT TOP (@NUMBER)
-			NUM,
-			MemberID,
-			@NOW,
-			dbo.fn_CIC_UsageCount(v.MemberID,v.RSN),
-			dbo.fn_CIC_UsageCountPublic(v.MemberID,v.RSN),
-			dbo.fn_CIC_UsageCountLogin(v.MemberID,v.RSN)
-	FROM (
-		SELECT DISTINCT st.MemberID, bt.NUM, bt.RSN
-			FROM GBL_BaseTable bt
-			INNER JOIN CIC_Stats_RSN st
-				ON st.RSN=bt.RSN
-			WHERE NOT EXISTS(SELECT * FROM GBL_BaseTable_StatsCache stc WHERE stc.MemberID=st.MemberID AND stc.NUM=bt.NUM)
-	) v
-	SET @RC = @@ROWCOUNT
-END
+		@NOW,
+		v.CMP_USAGE_COUNT,
+		v.CMP_USAGE_COUNT-v.CMP_USAGE_COUNT_S,
+		v.CMP_USAGE_COUNT_S
+FROM (
+	SELECT st.MemberID, bt.NUM, bt.RSN,
+			COUNT(st.RSN) AS CMP_USAGE_COUNT,
+			COUNT(st.User_ID) AS CMP_USAGE_COUNT_S
+		FROM dbo.GBL_BaseTable bt
+		INNER JOIN dbo.CIC_Stats_RSN st
+			ON st.RSN=bt.RSN
+		WHERE NOT EXISTS(SELECT * FROM dbo.GBL_BaseTable_StatsCache stc WHERE stc.MemberID=st.MemberID AND stc.NUM=bt.NUM)
+			AND (@MemberID IS NULL OR st.MemberID=@MemberID)
+	GROUP BY st.MemberID, bt.NUM, bt.RSN
+) v
 
-SET @RC = @NUMBER
-WHILE @RC = @NUMBER BEGIN
-	UPDATE TOP(@NUMBER) stc
+UPDATE  stc
 		SET CMP_USAGE_COUNT_DATE	= @NOW,
-			CMP_USAGE_COUNT			= dbo.fn_CIC_UsageCount(stc.MemberID,bt.RSN),
-			CMP_USAGE_COUNT_P		= dbo.fn_CIC_UsageCountPublic(stc.MemberID,bt.RSN),
-			CMP_USAGE_COUNT_S		= dbo.fn_CIC_UsageCountLogin(stc.MemberID,bt.RSN)
-	FROM GBL_BaseTable_StatsCache stc
-	INNER JOIN GBL_BaseTable bt
+			CMP_USAGE_COUNT			= v.CMP_USAGE_COUNT,
+			CMP_USAGE_COUNT_P		= v.CMP_USAGE_COUNT-v.CMP_USAGE_COUNT_S,
+			CMP_USAGE_COUNT_S		= v.CMP_USAGE_COUNT_S
+	FROM dbo.GBL_BaseTable_StatsCache stc
+	INNER JOIN dbo.GBL_BaseTable bt
 		ON stc.NUM=bt.NUM
-	WHERE CMP_USAGE_COUNT_DATE <> @NOW
-	SET @RC = @@ROWCOUNT
-END
+	INNER JOIN (
+		SELECT
+			st.MemberID, bt.NUM, bt.RSN,
+			COUNT(st.RSN) AS CMP_USAGE_COUNT,
+			COUNT(st.User_ID) AS CMP_USAGE_COUNT_S
+		FROM dbo.GBL_BaseTable bt
+		INNER JOIN dbo.CIC_Stats_RSN st
+			ON st.RSN=bt.RSN
+		WHERE (@MemberID IS NULL OR st.MemberID=@MemberID)
+	GROUP BY st.MemberID, bt.NUM, bt.RSN
+	) v ON stc.NUM=v.NUM AND stc.MemberID=v.MemberID
+WHERE stc.CMP_USAGE_COUNT_DATE <> @NOW
+	AND (@MemberID IS NULL OR stc.MemberID=@MemberID)
 
 SET NOCOUNT OFF
 
