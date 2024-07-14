@@ -18,7 +18,7 @@ SET NOCOUNT ON
 */
 
 EXEC sp_CIC_Stats_RSN_i_FromAccumulator
---EXEC sp_CIC_Stats_RSN_u_Cache
+EXEC sp_CIC_Stats_RSN_u_Cache
 EXEC sp_VOL_Stats_OPID_i_FromAccumulator
 EXEC sp_VOL_Stats_OPID_u_Cache
 EXEC sp_GBL_SharingProfile_Nightly
