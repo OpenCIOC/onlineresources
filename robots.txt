@@ -4,6 +4,9 @@ Disallow: /
 User-Agent: AhrefsBot
 Disallow: /
 
+User-Agent: Amazonbot
+Disallow: /
+
 User-agent: URLAppendBot
 Disallow: /
 
