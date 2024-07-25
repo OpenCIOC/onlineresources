@@ -86,6 +86,15 @@ def includeme(config):
         "cic_topicsearch", urlprefix + "topicsearch/{tag}", factory=factory
     )
 
+    # /customoreport/*
+    config.add_route(
+        "cic_customreport_index", urlprefix + "customreport", factory=factory
+    )
+    config.add_route(
+        "cic_customreport_topic", urlprefix + "customreport/topic", factory=factory
+    )
+
+    # /reminders/*
     config.add_route(
         "reminder_add",
         urlprefix + "reminders/add",
