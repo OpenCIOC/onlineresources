@@ -14,11 +14,15 @@
 #  limitations under the License.
 # =========================================================================================
 
-import os
 import itertools
 import logging
-import tempfile
+import os
 import re
+import shutil
+import subprocess
+import sys
+import tempfile
+
 from collections import defaultdict
 from functools import partial
 from operator import attrgetter
@@ -52,6 +56,31 @@ RECORD_FETCH_BATCH_SIZE = 1000
 
 fix_replace_string_number = re.compile(r"\$([0-9]+)")
 fix_replace_string_amp = re.compile(r"\$&")
+
+if sys.prefix != sys.base_prefix:
+    PYTHON_EXE = os.path.join(sys.prefix, "scripts", "python.exe")
+else:
+    PYTHON_EXE = os.path.join(sys.prefix, "python.exe")
+
+STDERR_VALUE = None
+if sys.executable.lower() != PYTHON_EXE.lower():
+    STDERR_VALUE = subprocess.DEVNULL
+
+PDF_BASE_COMMAND = [
+    PYTHON_EXE,
+    "-m",
+    "weasyprint",
+    "-e",
+    "utf-8",
+]
+if shutil.which("procgov64"):
+    PDF_BASE_COMMAND = [
+        "procgov64",
+        "--maxmem=2G",
+        "--terminate-job-on-exit",
+        "-r",
+        "--",
+    ] + PDF_BASE_COMMAND
 
 
 class PrintListSchemaBase(validators.RootSchema):
@@ -343,12 +372,19 @@ class PrintListBase(viewbase.ViewBase):
             resp = request.response
             with tempfile.TemporaryFile(suffix=".html") as f:
                 f.writelines(result)
+                log.debug("Wrote %sGB to html file", f.tell() / 1024 / 1024)
                 f.seek(0)
                 outf = tempfile.TemporaryFile(suffix=".pdf")
-                HTML(file_obj=f, base_url=request.path_url, encoding="utf-8").write_pdf(
-                    outf,
-                    font_config=FontConfiguration(),
-                )
+                cmd = PDF_BASE_COMMAND + [
+                    "--base-url",
+                    request.path_url,
+                    "-q",
+                    "-",
+                    "-",
+                ]
+                result = subprocess.run(cmd, stdin=f, stdout=outf, stderr=STDERR_VALUE)
+                result.check_returncode()
+                outf.seek(0, 2)
                 length = outf.tell()
                 outf.seek(0)
                 resp.content_length = length
