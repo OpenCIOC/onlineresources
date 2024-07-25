@@ -25,7 +25,7 @@
 
 <form action="${request.route_path('cic_customreport_topic')}" method="post" class="form">
 <div class="NotVisible">
-${request.passvars.cached_form_vals|n}
+    ${request.passvars.cached_form_vals|n}
 </div>
 <div id="parent-list" class="panel-group" role="tablist" aria-multiselectable="true">
 %for community in report_communities[None]:
@@ -47,7 +47,9 @@ ${request.passvars.cached_form_vals|n}
 %endfor
 </div>
 
-<input type="submit" class="btn btn-info clear-line-above" value="${_('Next Step: ') + _('Choose Topics')}">
+<div class="clear-line-above">
+    <input type="submit" class="btn btn-info" value="${_('Next Step: ') + _('Choose Topics')} >>">
+</div>
 </form>
 
 <%def name="community_list(parent_id, communities, hidden)">

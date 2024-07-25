@@ -93,6 +93,9 @@ def includeme(config):
     config.add_route(
         "cic_customreport_topic", urlprefix + "customreport/topic", factory=factory
     )
+    config.add_route(
+        "cic_customreport_format", urlprefix + "customreport/format", factory=factory
+    )
 
     # /reminders/*
     config.add_route(

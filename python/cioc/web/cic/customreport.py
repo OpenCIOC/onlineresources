@@ -18,6 +18,7 @@
 # Logging
 import logging
 from collections import defaultdict
+from re import L
 
 log = logging.getLogger(__name__)
 
@@ -39,8 +40,12 @@ _ = i18n.gettext
 
 
 class SearchValidators(Schema):
+    allow_extra_fields = True
+    filter_extra_fields = True
+
     CMID = ForEach(ciocvalidators.IDValidator(if_invalid=None))
     GHID = ForEach(ciocvalidators.IDValidator(if_invalid=None))
+    PBID = ForEach(ciocvalidators.IDValidator(if_invalid=None))
 
 
 class NOT_FROM_DB:
@@ -48,7 +53,7 @@ class NOT_FROM_DB:
 
 
 @view_defaults(route_name="cic_customreport")
-class TopicSearch(CicViewBase):
+class CustomReport(CicViewBase):
     def __init__(self, request, require_login=False):
         CicViewBase.__init__(self, request, require_login)
 
@@ -83,7 +88,7 @@ class TopicSearch(CicViewBase):
 
         model_state = request.model_state
         model_state.method = None
-        model_state.schema = SearchValidators
+        model_state.schema = SearchValidators()
 
         if not model_state.validate():
             for key in model_state.form.errors:
@@ -101,7 +106,7 @@ class TopicSearch(CicViewBase):
                 cic_view.ViewType,
                 community_ids,
             )
-
+            
             communities = cursor.fetchall()
 
             cursor.nextset()
@@ -113,5 +118,63 @@ class TopicSearch(CicViewBase):
             title,
             title,
             dict(communities=communities, headings=headings),
+            no_index=True,
+        )
+
+    @view_config(
+        route_name="cic_customreport_format", renderer=templateprefix + "format.mak"
+    )
+    def report_format(self):
+        cursor = None
+
+        request = self.request
+        cic_view = request.viewdata.cic
+
+        model_state = request.model_state
+        model_state.method = None
+        model_state.schema = SearchValidators()
+
+        if not model_state.validate():
+            for key in model_state.form.errors:
+                del model_state.form.data[key]
+
+        community_ids = [x for x in model_state.value("CMID", None) or [] if x]
+        community_ids = ",".join(map(str, community_ids)) if community_ids else None
+
+        heading_ids = [x for x in model_state.value("GHID", None) or [] if x]
+        heading_ids = ",".join(map(str, heading_ids)) if heading_ids else None
+
+        pub_ids = [x for x in model_state.value("PBID", None) or [] if x]
+        pub_ids = ",".join(map(str, pub_ids)) if pub_ids else None
+
+        log.debug(pub_ids)
+
+        request = self.request
+        cic_view = request.viewdata.cic
+
+        with request.connmgr.get_connection() as conn:
+            cursor = conn.execute(
+                "EXEC dbo.sp_CIC_View_l_Report ?, ?, ?, ?",
+                cic_view.ViewType,
+                community_ids,
+                heading_ids,
+                pub_ids,
+            )
+
+            communities = cursor.fetchall()
+
+            cursor.nextset()
+
+            pubs = cursor.fetchall()
+
+            cursor.nextset()
+
+            headings = cursor.fetchall()
+
+        title = _("Create a Custom Report", request)
+        return self._create_response_namespace(
+            title,
+            title,
+            dict(communities=communities, headings=headings, pubs=pubs),
             no_index=True,
         )

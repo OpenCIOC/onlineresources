@@ -382,12 +382,16 @@
     <Content Include="python\cioc\web\cic\record.py" />
     <Content Include="python\cioc\web\cic\templates\csearch.mak" />
     <Content Include="python\cioc\web\cic\templates\csearch_form.mak" />
+    <Content Include="python\cioc\web\cic\templates\customreport\index.mak" />
+    <Content Include="python\cioc\web\cic\templates\customreport\format.mak" />
+    <Content Include="python\cioc\web\cic\templates\customreport\topics.mak" />
     <Content Include="python\cioc\web\cic\templates\publication\clearrecords.mak" />
     <Content Include="python\cioc\web\cic\templates\record.mak" />
     <Content Include="python\cioc\web\cic\templates\record_contact_agency.mak" />
     <Content Include="python\cioc\web\cic\templates\searchcommon.mak" />
     <Content Include="python\cioc\web\cic\templates\topicsearch\searchform.mak" />
     <Content Include="python\cioc\web\cic\templates\topicsearch\index.mak" />
+    <Content Include="python\cioc\web\cic\customreport.py" />
     <Content Include="python\cioc\web\cic\topicsearch.py" />
     <Content Include="python\cioc\web\cic\taxonomy_currentactivation.py" />
     <Content Include="python\cioc\web\cic\taxonomy_preferredcompliance.py" />
@@ -1788,7 +1792,6 @@
     <Content Include="text\txtDateTimeTable.asp" />
     <Content Include="text\txtDelete.asp" />
     <Content Include="text\txtDetails.asp" />
-    <Content Include="text\txtDetailsVOL.asp" />
     <Content Include="text\txtDisplay.asp" />
     <Content Include="text\txtDisplayOrder.asp" />
     <Content Include="text\txtDownload.asp" />

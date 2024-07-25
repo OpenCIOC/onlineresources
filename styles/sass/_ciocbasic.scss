@@ -232,6 +232,16 @@ ul.no-bullet-list {
 	}
 }
 
+ul.no-bullet-list-indented {
+	margin-top: 0.2em;
+	margin-bottom: 0.5em;
+
+	li {
+		margin-bottom: 0.2em;
+		list-style-type: none;
+	}
+}
+
 dd {
 	margin: 0 0 0 40px;
 }
