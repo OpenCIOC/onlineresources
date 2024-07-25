@@ -37,9 +37,11 @@ templateprefix = "cioc.web.cic:templates/customreport/"
 
 _ = i18n.gettext
 
+
 class SearchValidators(Schema):
     CMID = ForEach(ciocvalidators.IDValidator(if_invalid=None))
     GHID = ForEach(ciocvalidators.IDValidator(if_invalid=None))
+
 
 class NOT_FROM_DB:
     pass
@@ -67,10 +69,7 @@ class TopicSearch(CicViewBase):
             communities[row.Parent_CM_ID].append(row)
         title = _("Create a Custom Report", request)
         return self._create_response_namespace(
-            title,
-            title,
-            dict(report_communities=communities),
-            no_index=True
+            title, title, dict(report_communities=communities), no_index=True
         )
 
     @view_config(
@@ -98,7 +97,9 @@ class TopicSearch(CicViewBase):
 
         with request.connmgr.get_connection() as conn:
             cursor = conn.execute(
-                "EXEC dbo.sp_CIC_View_QuickList_l_Report ?, ?", cic_view.ViewType, community_ids
+                "EXEC dbo.sp_CIC_View_QuickList_l_Report ?, ?",
+                cic_view.ViewType,
+                community_ids,
             )
 
             communities = cursor.fetchall()
@@ -111,9 +112,6 @@ class TopicSearch(CicViewBase):
         return self._create_response_namespace(
             title,
             title,
-            dict(
-                communities=communities,
-                headings=headings
-            ),
+            dict(communities=communities, headings=headings),
             no_index=True,
         )
