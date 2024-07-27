@@ -18,6 +18,7 @@ from urllib.parse import urlencode
 from urllib.parse import parse_qs
 import posixpath
 
+from pyramid import httpexceptions
 from markupsafe import Markup
 
 import cioc.core.syslanguage as syslanguage
@@ -52,13 +53,16 @@ class PassVars:
         request = self.request
 
         ln = None
-        if request.params.get("UseEq", "").lower() == "on":
-            ln = syslanguage.CULTURE_FRENCH_CANADIAN
-        else:
-            try:
-                ln = request.params["Ln"].strip()[:5]
-            except KeyError:
-                pass
+        try:
+            if request.params.get("UseEq", "").lower() == "on":
+                ln = syslanguage.CULTURE_FRENCH_CANADIAN
+            else:
+                try:
+                    ln = request.params["Ln"].strip()[:5]
+                except KeyError:
+                    pass
+        except UnicodeDecodeError:
+            raise httpexceptions.HTTPBadRequest()
 
         if ln and syslanguage.is_active_culture(ln):
             self.RequestLn = ln

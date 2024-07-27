@@ -145,7 +145,7 @@ class CiocRequest(CiocRequestMixin, Request):
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
 
-        self.passvars
+        # self.passvars
 
     def current_route_url(self, *elements, **kw):
         if "_query" not in kw:

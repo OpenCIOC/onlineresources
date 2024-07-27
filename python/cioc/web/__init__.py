@@ -22,13 +22,35 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.renderers import JSON
 from pyramid.settings import asbool
 
-from pyramid.httpexceptions import HTTPNotFound
+from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from pyramid.exceptions import URLDecodeError
 from pyramid.view import view_config
 
 from cioc.core import constants as const
 import cioc.core.viewbase
 from cioc.core.i18n import gettext as _
+
+
+def invalid_path_tween_factory(handler, registry):
+    def invalid_path_tween(request):
+        # Due to a bug in WebOb accessing request.path (or request.path_info
+        # etc) will raise UnicodeDecodeError if the requested path doesn't
+        # decode with UTF-8, and this will result in a 500 Server Error from
+        # our app.
+        #
+        # Detect this situation and send a 400 Bad Request instead.
+        #
+        # See:
+        # https://github.com/Pylons/webob/issues/115
+        # https://github.com/hypothesis/h/issues/4915
+        try:
+            request.path
+        except UnicodeDecodeError:
+            return HTTPBadRequest()
+
+        return handler(request)
+
+    return invalid_path_tween
 
 
 def datetime_adapter(obj, request):
@@ -39,13 +61,12 @@ def decimal_adapter(obj, request):
     return str(obj)
 
 
-def on_context_found(event):
-    request = event.request
-    context = request.context
-
-
 def notfound_view(request):
     return HTTPNotFound()
+
+
+def bad_request_view(request):
+    return HTTPBadRequest()
 
 
 def main(global_config, **settings):
@@ -62,6 +83,7 @@ def main(global_config, **settings):
         root_factory="cioc.core.rootfactories.BasicRootFactory",
         request_factory="cioc.core.request.CiocRequest",
     )
+    config.add_tween("cioc.web.invalid_path_tween_factory")
     json_renderer = JSON()
     json_renderer.add_adapter(datetime.datetime, datetime_adapter)
     json_renderer.add_adapter(datetime.date, datetime_adapter)
@@ -116,9 +138,8 @@ def main(global_config, **settings):
     config.include("cioc.web.jsonfeeds")
     config.include("cioc.core.xmlrenderer")
 
-    config.add_subscriber(on_context_found, "pyramid.events.ContextFound")
-
     config.add_view(notfound_view, context=URLDecodeError)
+    config.add_view(bad_request_view, context=HTTPBadRequest)
 
     if asbool(settings.get("show_db_warning_page")):
         config.add_view(

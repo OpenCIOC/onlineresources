@@ -176,9 +176,11 @@ def fetch_domain_map(request, reset_db):
 
 
 def get_db_options(request):
-
     # maintain ResetDb so that we can force a reset
-    reset_db = request.GET.get("ResetDb", None) == "True"
+    try:
+        reset_db = request.GET.get("ResetDb", None) == "True"
+    except UnicodeDecodeError:
+        reset_db = False
 
     domain_map = fetch_domain_map(request, reset_db)
 
