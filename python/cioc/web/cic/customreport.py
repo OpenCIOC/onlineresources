@@ -66,7 +66,7 @@ class CustomReport(CicViewBase):
 
         with request.connmgr.get_connection() as conn:
             report_communities = conn.execute(
-                "EXEC dbo.sp_CIC_View_Community_lh ?", cic_view.ViewType
+                "EXEC dbo.sp_CIC_View_Community_l_Report ?", cic_view.ViewType
             ).fetchall()
 
         communities = defaultdict(list)

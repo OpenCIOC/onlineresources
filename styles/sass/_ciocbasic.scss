@@ -26,6 +26,10 @@
 
 // GENERAL FORMATTING
 
+.demi-bold {
+	font-weight: 600;
+}
+
 .container-contrast {
 	background: none;
 	background-color: lighten($BackgroundColour, 25%);

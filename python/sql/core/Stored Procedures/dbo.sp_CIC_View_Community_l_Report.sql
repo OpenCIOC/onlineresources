@@ -4,7 +4,7 @@ SET ANSI_NULLS ON
 GO
 
 
-CREATE PROCEDURE [dbo].[sp_CIC_View_Community_lh]
+CREATE PROCEDURE [dbo].[sp_CIC_View_Community_l_Report]
 	@ViewType int
 WITH EXECUTE AS CALLER
 AS
@@ -44,6 +44,13 @@ INNER JOIN @CMList cp
 	ON cl.Parent_CM_ID=cp.CM_ID
 WHERE cp.Lvl=1
 
+UPDATE cl SET
+	Lvl = 3
+FROM @CMList cl
+INNER JOIN @CMList cp
+	ON cl.Parent_CM_ID=cp.CM_ID
+WHERE cp.Lvl=2
+
 DELETE FROM @CMList WHERE lvl IS NULL
 
 SELECT cm.CM_ID, cm.Lvl, cm.Parent_CM_ID, ISNULL(cmn.Display,cmn.Name) AS Community
@@ -57,7 +64,7 @@ SET NOCOUNT OFF
 
 
 GO
-GRANT EXECUTE ON  [dbo].[sp_CIC_View_Community_lh] TO [cioc_cic_search_role]
+GRANT EXECUTE ON  [dbo].[sp_CIC_View_Community_l_Report] TO [cioc_cic_search_role]
 GO
-GRANT EXECUTE ON  [dbo].[sp_CIC_View_Community_lh] TO [cioc_login_role]
+GRANT EXECUTE ON  [dbo].[sp_CIC_View_Community_l_Report] TO [cioc_login_role]
 GO

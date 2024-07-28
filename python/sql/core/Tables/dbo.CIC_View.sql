@@ -104,7 +104,9 @@ CREATE TABLE [dbo].[CIC_View]
 [iCarolAPIExportEnabled] [bit] NOT NULL CONSTRAINT [DF_CIC_View_iCarolAPIExportEnabled] DEFAULT ((0)),
 [SrchCommunityDefaultOnly] [bit] NOT NULL CONSTRAINT [DF_CIC_View_SrchCommunityDefaultOnly] DEFAULT ((0)),
 [AcceptCookiePrompt] [bit] NOT NULL CONSTRAINT [DF_CIC_View_AcceptCookiePrompt] DEFAULT ((0)),
-[RegionSelector] [bit] NOT NULL CONSTRAINT [DF_CIC_View_RegionSelector] DEFAULT ((0))
+[RegionSelector] [bit] NOT NULL CONSTRAINT [DF_CIC_View_RegionSelector] DEFAULT ((0)),
+[CustomReportTool] [bit] NOT NULL CONSTRAINT [DF_CIC_View_CustomReportTool] DEFAULT ((0)),
+[CustomReportInstructions] [nvarchar] (max) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_View] WITH NOCHECK ADD CONSTRAINT [CK_CIC_View_TaxDefnLevel] CHECK (([TaxDefnLevel]>=(0) AND [TaxDefnLevel]<=(5)))

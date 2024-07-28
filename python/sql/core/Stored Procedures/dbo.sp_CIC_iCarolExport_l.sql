@@ -126,6 +126,7 @@ SELECT TOP (100)
 		(SELECT
 				REPLACE(tax.LinkedCode, ' ~ ', ' * ') AS item
 			FROM fn_CIC_NUMToTaxCodes_rst(bt.NUM) AS tax
+			WHERE ols.Code IN ('SERVICE', 'TOPIC')
 		FOR XML PATH(''), TYPE) AS taxonomy,
 
 
