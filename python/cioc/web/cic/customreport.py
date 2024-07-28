@@ -44,6 +44,7 @@ class SearchValidators(Schema):
     CMID = ForEach(ciocvalidators.IDValidator(if_invalid=None))
     GHID = ForEach(ciocvalidators.IDValidator(if_invalid=None))
     PBID = ForEach(ciocvalidators.IDValidator(if_invalid=None))
+    GHPBID = ciocvalidators.IDValidator(if_invalid=None)
 
 
 class NOT_FROM_DB:
@@ -104,7 +105,7 @@ class CustomReport(CicViewBase):
 
         if not model_state.validate():
             for key in model_state.form.errors:
-                del model_state.form.data[key]
+                model_state.form.data.pop(key, None)
 
         community_ids = [x for x in model_state.value("CMID", None) or [] if x]
         community_ids = ",".join(map(str, community_ids)) if community_ids else None
@@ -151,7 +152,7 @@ class CustomReport(CicViewBase):
 
         if not model_state.validate():
             for key in model_state.form.errors:
-                del model_state.form.data[key]
+                model_state.form.data(key, None)
 
         community_ids = [x for x in model_state.value("CMID", None) or [] if x]
         community_ids = ",".join(map(str, community_ids)) if community_ids else None

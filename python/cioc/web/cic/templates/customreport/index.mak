@@ -91,17 +91,24 @@ ${report_instructions.CustomReportInstructions|n}
 <%def name="bottomjs()">
 <script type="text/javascript">
     jQuery(function ($) {
-        $('#parent-list').on('change', 'input', function () {
+        var on_check_changed = function(duration) {
             var self = $(this);
             var myid = self.prop('value'), checked = self.prop('checked'), child_list = $('#list-' + myid);
 
             if (checked) {
-                child_list.hide('fast');//addClass('NotVisible')
+                child_list.hide(duration);
             } else {
-                child_list.show('fast');//.removeClass('NotVisible')
+                child_list.show(duration);
             }
 
+        };
+        $(window).on("pageshow", function() {
+                $('#parent-list input:checkbox:checked').each(function() {
+                        on_check_changed.call(this, 0);
+                        $('#panel-collapse-' + this.value).collapse('show');
+                    });
         });
+        $('#parent-list').on('change', 'input', function() { on_check_changed.call(this, 'fast'); });
     });
 </script>
 </%def>

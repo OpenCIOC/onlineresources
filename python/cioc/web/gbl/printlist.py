@@ -66,6 +66,7 @@ STDERR_VALUE = None
 if sys.executable.lower() != PYTHON_EXE.lower():
     STDERR_VALUE = subprocess.DEVNULL
 
+PDF_GEN_MAX_MEM_IN_GB = 1
 PDF_BASE_COMMAND = [
     PYTHON_EXE,
     "-m",
@@ -77,7 +78,7 @@ PROCGOV_EXE = shutil.which("procgov64")
 if PROCGOV_EXE:
     PDF_BASE_COMMAND = [
         PROCGOV_EXE,
-        "--maxmem=2G",
+        f"--maxmem={PDF_GEN_MAX_MEM_IN_GB}G",
         "--terminate-job-on-exit",
         "-r",
         "--",
@@ -386,7 +387,16 @@ class PrintListBase(viewbase.ViewBase):
             resp = request.response
             with tempfile.TemporaryFile(suffix=".html") as f:
                 f.writelines(result)
-                log.debug("Wrote %sGB to html file", f.tell() / 1024 / 1024)
+                file_size_in_gb = f.tell() / 1024 / 1024
+                log.debug("Wrote %sGB to html file", file_size_in_gb)
+                if file_size_in_gb > PDF_GEN_MAX_MEM_IN_GB:
+                    return self._render_error_page(
+                        _(
+                            "Report to large. Please reduce the number of records in the report.",
+                            request,
+                        ),
+                        show_close=False,
+                    )
                 f.seek(0)
                 outf = tempfile.TemporaryFile(suffix=".pdf")
                 cmd = PDF_BASE_COMMAND + [
@@ -710,7 +720,7 @@ class PrintRecordListCIC(PrintListBase):
         model_state = self.request.model_state
         sortby = model_state.value("SortBy")
         ghpbid = self.get_ghpbid()
-        include_toc = model_state.value("IncludeTOC")
+        include_toc = model_state.value("IncludeTOC") and sortby == "H" and ghpbid
         include_index = model_state.value("IncludeIndex")
 
         # if (sortby == "H" and not ghpbid) or not (include_toc or include_index):
@@ -723,7 +733,7 @@ class PrintRecordListCIC(PrintListBase):
 
         sql_parts = []
         arguments = []
-        if include_toc and sortby != "H" and ghpbid:
+        if include_toc:
             arguments.extend(
                 [
                     ghpbid,

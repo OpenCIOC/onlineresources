@@ -59,6 +59,7 @@ from cioc.core.modelstate import convert_options
     %if not headings:
     <p><em>${_('None available')}</em></p>
     %else:
+    <div id="topics-container">
     %if request.viewdata.cic.QuickListPubHeadings:
     <div class="NotVisible">
         ${renderer.hidden("GHPBID", request.viewdata.cic.QuickListPubHeadings)}
@@ -104,9 +105,24 @@ from cioc.core.modelstate import convert_options
         %endfor
     </ul>
     %endif
+    </div>
     %endif
     <div class="clear-line-above">
         <a href="${request.passvars.route_path('cic_customreport_index')}" class="btn btn-info"><< ${_('Start Over')}</a>
-        <input type="submit" class="btn btn-info" value="${_('Next Step: ') + _('Choose Format')} >>">
+        <input type="submit" disabled class="btn btn-info" id="submit-button" value="${_('Next Step: ') + _('Choose Format')} >>">
     </div>
 </form>
+
+<%def name="bottomjs()">
+<script type="text/javascript">
+jQuery(function($) {
+    $(window).on("pageshow", function() {
+        $('#submit-button').prop('disabled', !$('#topics-container input:checkbox:checked').size());
+    });
+    $('#submit-button').prop('disabled', !$('#topics-container input:checkbox:checked').size());
+    $('#topics-container').on('change', 'input', function(){
+        $('#submit-button').prop('disabled', !$('#topics-container input:checkbox:checked').size());
+    });
+});
+</script>
+</%def>

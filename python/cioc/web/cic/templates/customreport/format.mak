@@ -69,6 +69,7 @@ from cioc.core.modelstate import convert_options
     %endfor
 </ul>
 <div class="NotVisible">
+    ${renderer.hidden("GHPBID")}
     %for heading in headings:
     <input type="hidden" name="GHID" value="${heading.GH_ID}">
     %endfor
