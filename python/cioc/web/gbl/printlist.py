@@ -73,9 +73,10 @@ PDF_BASE_COMMAND = [
     "-e",
     "utf-8",
 ]
-if shutil.which("procgov64"):
+PROCGOV_EXE = shutil.which("procgov64")
+if PROCGOV_EXE:
     PDF_BASE_COMMAND = [
-        "procgov64",
+        PROCGOV_EXE,
         "--maxmem=2G",
         "--terminate-job-on-exit",
         "-r",
@@ -92,6 +93,7 @@ class PrintListSchemaBase(validators.RootSchema):
     Msg = validators.String()
 
     IncludeDeleted = validators.Bool()
+    IncludeNonPublic = validators.Bool()
     OutputPDF = validators.Bool()
 
 
@@ -111,6 +113,10 @@ class CICPrintListSchema(PrintListSchemaBase):
     SortBy = validators.OneOf(["O", "H"], if_invalid=None)
     IncludeTOC = validators.Bool()
     IncludeIndex = validators.Bool()
+
+    # The IndexType option is from the customreport page. It provides an
+    # override to the SortBy, IncludeTOC, and IncludeIndex Options.
+    IndexType = validators.OneOf(["N", "T"], if_invalid=None)
 
     IDList = validators.CSVForEach(validators.NumValidator(), if_invalid=None)
 
@@ -279,6 +285,11 @@ class PrintListBase(viewbase.ViewBase):
                 )
                 profile = cursor.fetchone()
 
+            if not profile:
+                return self._render_error_page(
+                    _("Could not find print profile.", request)
+                )
+
             title = _("Print Record List")
             model_state.form.data.pop("Msg", None)
             model_state.form.data["Picked"] = True
@@ -422,6 +433,11 @@ class PrintListBase(viewbase.ViewBase):
             "AND shp.Active=1", "AND shp.Active=1 AND shp.CanUsePrint=1"
         )
         where_clause.append(f"({view_where})")
+        if request.viewdata.dom.CanSeeNonPublic and not model_state.value(
+            "IncludeNonPublic"
+        ):
+            tbl = "vod" if request.pageinfo.DbArea == const.DM_VOL else "btd"
+            where_clause.append(f"({tbl}.NON_PUBLIC = 0)")
 
     def get_extra_edit_info_sql(
         self, statements, arguments, recordsets, DbAreaS, namespace
@@ -514,8 +530,22 @@ class PrintRecordListCIC(PrintListBase):
         return ghpbid
 
     def get_where_clause(self, where_clause, arguments):
-        request = self.request
         model_state = self.request.model_state
+
+        # The IndexType option is from the customreport page. It provides an
+        # override to the SortBy, IncludeTOC, and IncludeIndex Options.
+        index_type = model_state.value("IndexType")
+        if index_type:
+            if index_type == "N":
+                # Sort by Name and include Name index
+                model_state.form.data["SortBy"] = "O"
+                model_state.form.data["IncludeTOC"] = False
+                model_state.form.data["IncludeIndex"] = True
+            else:
+                # Sort By Topic (Heading) and include Heading TOC and Name index
+                model_state.form.data["SortBy"] = "H"
+                model_state.form.data["IncludeTOC"] = True
+                model_state.form.data["IncludeIndex"] = True
 
         ghpbid = self.get_ghpbid()
 

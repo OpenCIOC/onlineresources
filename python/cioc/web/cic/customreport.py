@@ -57,6 +57,8 @@ class NOT_FROM_DB:
 class CustomReport(CicViewBase):
     def __init__(self, request, require_login=False):
         CicViewBase.__init__(self, request, require_login)
+        if not request.viewdata.cic.CustomReportTool:
+            raise HTTPNotFound()
 
     @view_config(
         route_name="cic_customreport_index", renderer=templateprefix + "index.mak"
@@ -117,7 +119,7 @@ class CustomReport(CicViewBase):
                 community_ids,
                 cmtype
             )
-            
+
             communities = cursor.fetchall()
 
             cursor.nextset()

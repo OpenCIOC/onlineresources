@@ -85,6 +85,12 @@ ${renderer.hidden('IDList')}
 	</td>
 </tr>
 %endif
+%if request.viewdata.dom.CanSeeNonPublic:
+<tr>
+	<td class="FieldLabelLeft">${_("Non-Public Records")}</td>
+	<td>${renderer.checkbox("IncludeNonPublic", "on", label=_("Include non-public records"))}</td>
+</tr>
+%endif
 %if request.viewdata.dom.CanSeeDeleted:
 <tr>
 	<td class="FieldLabelLeft">${_("Deleted Records")}</td>
