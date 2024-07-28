@@ -341,7 +341,8 @@ def getViewData(SetPrintMode, handleDBConnetionError):
 		g_bUseThesaurusView, g_bUseLocalSubjects, g_bUseZeroSubjects, \
 		g_bMapSearchResults, g_bAutoMapSearchResults, g_bUseSubmitChangesTo, \
 		g_bHasExcelProfile, g_bHasExportProfile, g_bMyListCIC, g_dicCulturesCIC, g_strAlsoNotifyCIC, \
-		g_bViewOtherLangsCIC, g_bAllowFeedbackNotInViewCIC, g_strAssignSuggestionsToCIC
+		g_bViewOtherLangsCIC, g_bAllowFeedbackNotInViewCIC, g_strAssignSuggestionsToCIC, \
+		g_bCustomReportTool
 
 	global g_intViewTypeVOL, g_strViewNameVOL, g_intCommunitySetID, \
 		g_strAreaServed, g_bUseOSSD, g_bUseIndividualCount, g_bCanSeeNonPublicVOL, g_bCanSeeDeletedVOL, \
@@ -413,6 +414,7 @@ def getViewData(SetPrintMode, handleDBConnetionError):
 	g_bViewOtherLangsCIC = vd.cic.ViewOtherLangs
 	g_bAllowFeedbackNotInViewCIC = vd.cic.AllowFeedbackNotInView
 	g_strAssignSuggestionsToCIC = vd.cic.AssignSuggestionsTo
+	g_bCustomReportTool = vd.cic.CustomReportTool
 
 	g_intViewTypeVOL = vd.vol.ViewType
 	g_strViewNameVOL = vd.vol.ViewName

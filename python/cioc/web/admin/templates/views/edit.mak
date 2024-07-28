@@ -1418,6 +1418,20 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 								${renderer.select("item.DefaultPrintProfile", [('','')] + print_profiles, class_="form-control")}
 								<div class="SmallNote">${_('Public Print Profiles denoted by *.')}</div>
 							</div>
+							<hr />
+							<div class="form-group">
+								${renderer.errorlist("item.CustomReportTool")}
+								${renderer.checkbox("item.CustomReportTool", label=_('The Custom Report Tool is available for the above Print Profile'))}
+							</div>
+							%for culture in culture_order:
+							<% lang = culture_map[culture] %>
+							<div class="form-group">
+								${renderer.label("descriptions." + lang.FormCulture + ".CustomReportInstructions", _('Report Tool Introduction / Instructions') + _(': ') + lang.LanguageName)}
+								${renderer.errorlist("descriptions." + lang.FormCulture + ".CustomReportInstructions")}
+								<div class="SmallNote">${_('Maximum 8000 characters. HTML is allowed.')}</div>
+								${renderer.textarea("descriptions." + lang.FormCulture + ".CustomReportInstructions", maxlength=8000, class_="form-control")}
+							</div>
+							%endfor
 						</td>
 					</tr>
 					%endif
@@ -1585,7 +1599,7 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 <script type="text/javascript">
 	jQuery(function () {
 	%if domain.id == const.DM_CIC:
-			init_publication_checklist("${request.passvars.makeLink('~/jsonfeeds/publication_generator.asp') |n}", "${_('Not Found')}");
+		init_publication_checklist("${request.passvars.makeLink('~/jsonfeeds/publication_generator.asp') |n}", "${_('Not Found')}");
 	% endif
 		var on_click = function (chk) {
 			if (chk.checked) {

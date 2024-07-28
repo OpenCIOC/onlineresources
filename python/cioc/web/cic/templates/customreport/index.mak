@@ -23,7 +23,7 @@ from markupsafe import Markup
 
 <h1>${renderinfo.doc_title}</h1>
 %if report_instructions.CustomReportInstructions:
-${report_instructions.CustomReportInstructions}
+${report_instructions.CustomReportInstructions|n}
 %endif
 <h2>${_('Step 1: ') + _('Choose one or more Communities')}</h2>
 

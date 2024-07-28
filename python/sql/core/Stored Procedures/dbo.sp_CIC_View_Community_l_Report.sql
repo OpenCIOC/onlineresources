@@ -60,8 +60,10 @@ SELECT cm.CM_ID, cm.Lvl, cm.Parent_CM_ID, ISNULL(cmn.Display,cmn.Name) AS Commun
 			AND cmn.LangID=(SELECT TOP 1 LangID FROM dbo.GBL_Community_Name WHERE CM_ID=cmn.CM_ID ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
 ORDER BY cm.Lvl, cm.Parent_CM_ID, Community
 
-SELECT vw.CustomReportInstructions, vw.SrchCommunityDefault, vw.SrchCommunityDefaultOnly
+SELECT vwd.CustomReportInstructions, vw.SrchCommunityDefault, vw.SrchCommunityDefaultOnly
 	FROM dbo.CIC_View vw
+	INNER JOIN dbo.CIC_View_Description vwd
+		ON vwd.ViewType = vw.ViewType AND vwd.LangID=@@LANGID
 WHERE vw.ViewType = @ViewType
 
 SET NOCOUNT OFF

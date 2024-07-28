@@ -68,7 +68,7 @@ non_bool_view_values = {
     "PDFBottomMargin",
     "GoogleTranslateDisclaimer",
     "TagLine",
-    "DefaultPrintProfile",
+    "DefaultPrintProfile"
 }
 
 
