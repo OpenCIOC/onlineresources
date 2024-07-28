@@ -32,12 +32,22 @@ from cioc.core.modelstate import convert_options
 %if not communities:
 <p><em>${_('None selected')}</em></p>
 %else:
+    %if cmtype == 'L':
+<p class="demi-bold">${_('Located in the chosen communities: ')}</p>
+    %else:
+<p class="demi-bold">${_('Serving the chosen communities: ')}</p>
+    %endif
 <ul class="row">
     %for community in communities:
     <li class="col-xs-12 col-sm-6 col-md-4">${community.Community}</li>
     %endfor
 </ul>
 <div class="NotVisible">
+    %if cmtype == 'L':
+    <input type="hidden" name="CMType" value="L" />
+    %else:
+    <input type="hidden" name="CMType" value="S" />
+    %endif
     %for community in communities:
     <input type="hidden" name="CMID" value="${community.CM_ID}">
     %endfor
@@ -84,7 +94,7 @@ ${renderer.text('ReportTitle', maxlength=255, class_='form-control')}
     ${renderer.radio("FormatType", value='H', label=_('Printable list (webpage)'), id='FormatType_HTML', checked=True)}
 </div>
 <div class="radio">
-    ${renderer.radio("FormatType", value='P', label=_('PDF Document'), id="FormatType_PDF")}
+    ${renderer.radio("FormatType", value='P', label=_('PDF Document'), id='FormatType_PDF')}
 </div>
 
     <div class="clear-line-above">

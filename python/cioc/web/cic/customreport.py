@@ -43,6 +43,7 @@ class SearchValidators(Schema):
     allow_extra_fields = True
     filter_extra_fields = True
 
+    CMType = ciocvalidators.String(max=1, if_invalid=None)
     CMID = ForEach(ciocvalidators.IDValidator(if_invalid=None))
     GHID = ForEach(ciocvalidators.IDValidator(if_invalid=None))
     PBID = ForEach(ciocvalidators.IDValidator(if_invalid=None))
@@ -65,16 +66,23 @@ class CustomReport(CicViewBase):
         cic_view = request.viewdata.cic
 
         with request.connmgr.get_connection() as conn:
-            report_communities = conn.execute(
+            cursor = conn.execute(
                 "EXEC dbo.sp_CIC_View_Community_l_Report ?", cic_view.ViewType
-            ).fetchall()
+            )
+
+        report_communities = cursor.fetchall()
 
         communities = defaultdict(list)
         for row in report_communities:
             communities[row.Parent_CM_ID].append(row)
+
+        cursor.nextset()
+
+        report_instructions = cursor.fetchone()
+
         title = _("Create a Custom Report", request)
         return self._create_response_namespace(
-            title, title, dict(report_communities=communities), no_index=True
+            title, title, dict(report_communities=communities, report_instructions=report_instructions), no_index=True
         )
 
     @view_config(
@@ -100,11 +108,14 @@ class CustomReport(CicViewBase):
         request = self.request
         cic_view = request.viewdata.cic
 
+        cmtype = model_state.value("CMType")
+
         with request.connmgr.get_connection() as conn:
             cursor = conn.execute(
-                "EXEC dbo.sp_CIC_View_QuickList_l_Report ?, ?",
+                "EXEC dbo.sp_CIC_View_QuickList_l_Report ?, ?, ?",
                 cic_view.ViewType,
                 community_ids,
+                cmtype
             )
             
             communities = cursor.fetchall()
@@ -117,7 +128,7 @@ class CustomReport(CicViewBase):
         return self._create_response_namespace(
             title,
             title,
-            dict(communities=communities, headings=headings),
+            dict(communities=communities, headings=headings, cmtype=cmtype),
             no_index=True,
         )
 
@@ -147,6 +158,8 @@ class CustomReport(CicViewBase):
         pub_ids = [x for x in model_state.value("PBID", None) or [] if x]
         pub_ids = ",".join(map(str, pub_ids)) if pub_ids else None
 
+        cmtype = model_state.value("CMType")
+
         log.debug(pub_ids)
 
         request = self.request
@@ -158,7 +171,7 @@ class CustomReport(CicViewBase):
                 cic_view.ViewType,
                 community_ids,
                 heading_ids,
-                pub_ids,
+                pub_ids
             )
 
             communities = cursor.fetchall()
@@ -175,6 +188,6 @@ class CustomReport(CicViewBase):
         return self._create_response_namespace(
             title,
             title,
-            dict(communities=communities, headings=headings, pubs=pubs),
+            dict(communities=communities, headings=headings, pubs=pubs, cmtype=cmtype),
             no_index=True,
         )

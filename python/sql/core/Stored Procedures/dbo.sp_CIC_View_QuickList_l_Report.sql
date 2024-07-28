@@ -6,7 +6,8 @@ GO
 
 CREATE PROCEDURE [dbo].[sp_CIC_View_QuickList_l_Report] (
 	@ViewType [int],
-	@CMIDList varchar(MAX)
+	@CMIDList varchar(MAX),
+	@CMType varchar(1)
 )
 WITH EXECUTE AS CALLER
 AS
@@ -73,11 +74,17 @@ IF @QuickListPubHeadings IS NULL BEGIN
 						WHERE pr.NUM=bt.NUM AND pr.ShareMemberID_Cache=@MemberID)
 				)
 				AND (@ViewPBID IS NULL OR EXISTS(SELECT * FROM dbo.CIC_BT_PB WHERE PB_ID=@ViewPBID AND NUM=bt.NUM))
-				AND (@CMIDList IS NULL OR EXISTS(SELECT *
-					FROM dbo.CIC_BT_CM cm
-					INNER JOIN dbo.fn_GBL_Community_Search_rst(@CMIDList) cl
-						ON cl.CM_ID=cm.CM_ID
-					WHERE cm.NUM=bt.NUM))
+				AND (@CMIDList IS NULL
+					OR @CMType = 'L' AND (
+						bt.LOCATED_IN_CM IN (SELECT CM_ID FROM dbo.fn_GBL_Community_Search_rst(@CMIDList))
+					)
+					OR (@CMType <> 'L' AND EXISTS(SELECT *
+						FROM dbo.CIC_BT_CM cm
+						INNER JOIN dbo.fn_GBL_Community_Search_rst(@CMIDList) cl
+							ON cl.CM_ID=cm.CM_ID
+						WHERE cm.NUM=bt.NUM)
+					)
+				)
 		INNER JOIN dbo.GBL_BaseTable_Description btd
 			ON bt.NUM=btd.NUM AND btd.LangID=@@LangID
 				AND (btd.DELETION_DATE IS NULL OR btd.DELETION_DATE < GETDATE())
@@ -132,11 +139,17 @@ END ELSE BEGIN
 					WHERE pr.NUM=bt.NUM AND pr.ShareMemberID_Cache=@MemberID)
 			)
 			AND (@ViewPBID IS NULL OR EXISTS(SELECT * FROM dbo.CIC_BT_PB WHERE PB_ID=@ViewPBID AND NUM=bt.NUM))
-			AND (@CMIDList IS NULL OR EXISTS(SELECT *
-				FROM dbo.CIC_BT_CM cm
-				INNER JOIN dbo.fn_GBL_Community_Search_rst(@CMIDList) cl
-					ON cl.CM_ID=cm.CM_ID
-				WHERE cm.NUM=bt.NUM))
+			AND (@CMIDList IS NULL
+				OR @CMType = 'L' AND (
+					bt.LOCATED_IN_CM IN (SELECT CM_ID FROM dbo.fn_GBL_Community_Search_rst(@CMIDList))
+				)
+				OR (@CMType <> 'L' AND EXISTS(SELECT *
+					FROM dbo.CIC_BT_CM cm
+					INNER JOIN dbo.fn_GBL_Community_Search_rst(@CMIDList) cl
+						ON cl.CM_ID=cm.CM_ID
+					WHERE cm.NUM=bt.NUM)
+				)
+			)
 	INNER JOIN dbo.GBL_BaseTable_Description btd
 		ON bt.NUM=btd.NUM AND btd.LangID=@@LangID
 			AND (btd.DELETION_DATE IS NULL OR btd.DELETION_DATE < GETDATE())

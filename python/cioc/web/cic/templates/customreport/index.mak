@@ -22,13 +22,34 @@ from markupsafe import Markup
 <%inherit file="cioc.web:templates/master.mak" />
 
 <h1>${renderinfo.doc_title}</h1>
-<p>... report instructions here</p>
+%if report_instructions.CustomReportInstructions:
+${report_instructions.CustomReportInstructions}
+%endif
 <h2>${_('Step 1: ') + _('Choose one or more Communities')}</h2>
 
 <form action="${request.route_path('cic_customreport_topic')}" method="post" class="form">
     <div class="NotVisible">
         ${request.passvars.cached_form_vals|n}
     </div>
+
+
+    %if report_instructions.SrchCommunityDefaultOnly:
+        %if report_instructions.SrchCommunityDefault:
+    <input type="hidden" name="CMType" value="S" />
+        %else:
+    <input type="hidden" name="CMType" value="L" />
+        %endif
+    %else:
+
+    <div class="radio">
+        ${renderer.radio("CMType", value='L', label=_('Located in the chosen communities: '), id='CMType_L', checked=not report_instructions.SrchCommunityDefault)}
+    </div>
+    <div class="radio">
+        ${renderer.radio("CMType", value='S', label=_('Serving the chosen communities: '), id='CMType_S', checked=report_instructions.SrchCommunityDefault)}
+    </div>
+
+    %endif
+
     <div id="parent-list" class="panel-group" role="tablist" aria-multiselectable="true">
         %for community in report_communities[None]:
         <div class="panel panel-default">
