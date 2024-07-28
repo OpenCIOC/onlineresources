@@ -59,12 +59,12 @@ from cioc.core.modelstate import convert_options
     %if not headings:
     <p><em>${_('None available')}</em></p>
     %else:
+    %if request.viewdata.cic.QuickListPubHeadings:
+    <div class="NotVisible">
+        ${renderer.hidden("GHPBID", request.viewdata.cic.QuickListPubHeadings)}
+    </div>
     <%
-    is_headings = request.viewdata.cic.QuickListPubHeadings
-    %>
-    %if is_headings:
-    <%
-    prev_heading_group = next(iter(headings)).Group
+    prev_heading_group = headings[0].Group
     heading_groups = True
     %>
     <ul class="no-bullet-list-indented report-heading-list">
@@ -106,7 +106,7 @@ from cioc.core.modelstate import convert_options
     %endif
     %endif
     <div class="clear-line-above">
-        <a href="${request.route_path('cic_customreport_index')}" class="btn btn-info"><< ${_('Start Over')}</a>
+        <a href="${request.passvars.route_path('cic_customreport_index')}" class="btn btn-info"><< ${_('Start Over')}</a>
         <input type="submit" class="btn btn-info" value="${_('Next Step: ') + _('Choose Format')} >>">
     </div>
 </form>

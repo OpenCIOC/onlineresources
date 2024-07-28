@@ -23,7 +23,7 @@ from cioc.core.modelstate import convert_options
 %>
 
 <h1>${renderinfo.doc_title}</h1>
-<form action="/printlist" method="post" class="form">
+<form action="${request.route_path('print_list_cic')}" method="post" class="form">
 	<div class="NotVisible">
 		${request.passvars.cached_form_vals|n}
 		${renderer.hidden("ProfileID", request.viewdata.dom.DefaultPrintProfile)}
@@ -83,6 +83,7 @@ from cioc.core.modelstate import convert_options
 <h3>${_('Report Title: ')}</h3>
 ${renderer.text('ReportTitle', maxlength=255, class_='form-control')}
 
+%if headings and not pubs:
 <h3>${_('Organize Records by: ')}</h3>
 <div class="radio">
     ${renderer.radio("IndexType", value='N', label=_('Organization or Program Name'), id='IndexType_Name', checked=True)}
@@ -90,6 +91,11 @@ ${renderer.text('ReportTitle', maxlength=255, class_='form-control')}
 <div class="radio">
     ${renderer.radio("IndexType", value='T', label=_('Topic'), id='IndexType_Topic')}
 </div>
+%else:
+<div class="NotVisible">
+    ${renderer.hidden("IndexType", 'N')}
+</div>
+%endif
 
 <h3>${_('Report Format: ')}</h3>
 <div class="radio">
@@ -113,7 +119,7 @@ ${renderer.text('ReportTitle', maxlength=255, class_='form-control')}
 %endif
 
     <div class="clear-line-above">
-        <a href="${request.route_path('cic_customreport_index')}" class="btn btn-info"><< ${_('Start Over')}</a>
+        <a href="${request.passvars.route_path('cic_customreport_index')}" class="btn btn-info"><< ${_('Start Over')}</a>
         <input type="submit" class="btn btn-info" value="${_('Next Step: ') + _('Generate Report')} >>">
     </div>
 </form>

@@ -114,6 +114,9 @@ class CICPrintListSchema(PrintListSchemaBase):
     IncludeTOC = validators.Bool()
     IncludeIndex = validators.Bool()
 
+    CMType = validators.OneOf(["S", "L"], if_invalid=None)
+    CMID = validators.CSVForEach(validators.IDValidator, if_invalid=None)
+
     # The IndexType option is from the customreport page. It provides an
     # override to the SortBy, IncludeTOC, and IncludeIndex Options.
     IndexType = validators.OneOf(["N", "T"], if_invalid=None)
@@ -654,6 +657,25 @@ class PrintRecordListCIC(PrintListBase):
             arguments.extend(sorted(idlist))
             where_clause.append("(bt.NUM IN (" + ",".join("?" * len(idlist)) + "))")
 
+        cmidlist = model_state.value("CMID")
+        if cmidlist:
+            cmidlist = set(cmidlist)
+            arguments.append(",".join(str(x) for x in cmidlist))
+            if model_state.value("CMType") == "L":
+                where_clause.append(
+                    "(bt.LOCATED_IN_CM IS NULL OR bt.LOCATED_IN_CM IN (SELECT CM_ID FROM dbo.fn_GBL_Community_Search_rst(?)))"
+                )
+            else:
+                where_clause.append(
+                    dedent("""\
+                    (EXISTS(
+                        SELECT * 
+                        FROM CIC_BT_CM cm 
+                        INNER JOIN dbo.fn_GBL_Community_Search_rst(?) cl
+                            ON cl.CM_ID=cm.CM_ID
+                        WHERE cm.NUM=bt.NUM))""")
+                )
+
         return super().get_where_clause(where_clause, arguments)
 
     def get_extra_edit_info_sql(
@@ -691,17 +713,17 @@ class PrintRecordListCIC(PrintListBase):
         include_toc = model_state.value("IncludeTOC")
         include_index = model_state.value("IncludeIndex")
 
-        if sortby != "H" or not ghpbid or not (include_toc or include_index):
-            return {
-                "include_toc": False,
-                "include_index": False,
-                "heading_groups": None,
-                "org_names": None,
-            }
+        # if (sortby == "H" and not ghpbid) or not (include_toc or include_index):
+        #     return {
+        #         "include_toc": False,
+        #         "include_index": False,
+        #         "heading_groups": None,
+        #         "org_names": None,
+        #     }
 
         sql_parts = []
         arguments = []
-        if include_toc:
+        if include_toc and sortby != "H" and ghpbid:
             arguments.extend(
                 [
                     ghpbid,
@@ -773,14 +795,20 @@ class PrintRecordListCIC(PrintListBase):
                 )
             )
 
-        sql = "\n".join(x[-1] for x in sql_parts)
-        log.debug("heading list sql=%s", sql)
-        cursor = conn.execute(sql, *arguments)
-        namespace = {"include_toc": include_toc, "include_index": include_index}
-        for i, (name, process_fn, sql) in enumerate(sql_parts):
-            if i:
-                cursor.nextset()
-            namespace[name] = process_fn(cursor)
+        namespace = {
+            "include_toc": include_toc,
+            "include_index": include_index,
+            "heading_groups": None,
+            "org_names": None,
+        }
+        if sql_parts:
+            sql = "\n".join(x[-1] for x in sql_parts)
+            # log.debug("heading list sql=%s", sql)
+            cursor = conn.execute(sql, *arguments)
+            for i, (name, process_fn, sql) in enumerate(sql_parts):
+                if i:
+                    cursor.nextset()
+                namespace[name] = process_fn(cursor)
 
         return namespace
 

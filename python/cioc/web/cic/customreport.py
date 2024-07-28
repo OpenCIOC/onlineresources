@@ -15,24 +15,21 @@
 # =========================================================================================
 
 
-# Logging
+# Python Libraries
 import logging
 from collections import defaultdict
-from re import L
-
-log = logging.getLogger(__name__)
-
-# Python Libraries
 
 # 3rd Party Libraries
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.view import view_config, view_defaults
 from markupsafe import Markup
-from formencode import validators, ForEach, Schema
+from formencode import ForEach, Schema
 
 # CIOC Libraries
 from cioc.core import i18n, validators as ciocvalidators
 from cioc.web.cic.viewbase import CicViewBase
+
+log = logging.getLogger(__name__)
 
 templateprefix = "cioc.web.cic:templates/customreport/"
 
@@ -84,7 +81,12 @@ class CustomReport(CicViewBase):
 
         title = _("Create a Custom Report", request)
         return self._create_response_namespace(
-            title, title, dict(report_communities=communities, report_instructions=report_instructions), no_index=True
+            title,
+            title,
+            dict(
+                report_communities=communities, report_instructions=report_instructions
+            ),
+            no_index=True,
         )
 
     @view_config(
@@ -117,7 +119,7 @@ class CustomReport(CicViewBase):
                 "EXEC dbo.sp_CIC_View_QuickList_l_Report ?, ?, ?",
                 cic_view.ViewType,
                 community_ids,
-                cmtype
+                cmtype,
             )
 
             communities = cursor.fetchall()
@@ -173,7 +175,7 @@ class CustomReport(CicViewBase):
                 cic_view.ViewType,
                 community_ids,
                 heading_ids,
-                pub_ids
+                pub_ids,
             )
 
             communities = cursor.fetchall()
