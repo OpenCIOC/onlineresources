@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CiocWeb 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-07-26 10:19-0400\n"
+"POT-Creation-Date: 2024-07-28 21:06-0400\n"
 "PO-Revision-Date: 2016-09-12 23:26-0400\n"
 "Last-Translator: Chris Lambacher <chris@kclsoftware.com>\n"
 "Language: fr_CA\n"
@@ -85,7 +85,9 @@ msgstr "Cacher dossiers supprimés"
 
 #: ../python/cioc/core/email.py:141
 msgid "This database has been configured to block all outgoing Email."
-msgstr "Cette base de données a été configurée pour bloquer tous les courriels sortants."
+msgstr ""
+"Cette base de données a été configurée pour bloquer tous les courriels "
+"sortants."
 
 #: ../python/cioc/core/gtranslate.py:31
 msgid "About Google Translations"
@@ -162,18 +164,23 @@ msgstr "Domaine de la gestion de la base de données"
 
 #: ../python/cioc/core/security.py:76
 #, python-format
-msgid "User Name: %s\n"
+msgid ""
+"User Name: %s\n"
 "\n"
-"This account has been locked due to 5 unsuccessful login attempts. A user with\n"
+"This account has been locked due to 5 unsuccessful login attempts. A user"
+" with\n"
 "account management privileges must unlock the account.\n"
 "\n"
 "Last Attempt: %s (%s) %s\n"
 "\n"
-"Note that repeated unauthorized attempts to access the database that lock\n"
+"Note that repeated unauthorized attempts to access the database that lock"
+"\n"
 "multiple accounts will block all login attempts to the database from the\n"
-"above IP Address. Should this occur, you will need to notify your database\n"
+"above IP Address. Should this occur, you will need to notify your "
+"database\n"
 "technical support to have the IP Address block removed.\n"
-msgstr "Nom d'utilisateur : %s\n"
+msgstr ""
+"Nom d'utilisateur : %s\n"
 "\n"
 "Ce compte a été verrouillé suite à 5 tentatives de connexion incorrectes."
 " Le compte doit être déverrouillé par un utilisateur possédant des "
@@ -433,7 +440,9 @@ msgstr "UUID invalide"
 
 #: ../python/cioc/core/validators.py:146
 msgid "Invalid Code: Only upper case letters, numbers and dashes are allowed"
-msgstr "Code invalide : seuls les lettres majuscules, les chiffres et les tirets sont autorisés"
+msgstr ""
+"Code invalide : seuls les lettres majuscules, les chiffres et les tirets "
+"sont autorisés"
 
 #: ../python/cioc/core/validators.py:155
 msgid "Invalid Code: Only upper case letters are allowed"
@@ -465,7 +474,9 @@ msgstr "La liste d'adresse courriel est invalide"
 
 #: ../python/cioc/core/validators.py:300
 msgid "Invalid Slug: Only letters, numbers and dashes are allowed"
-msgstr "Slug non valide : seuls les lettres, les chiffres et les tirets sont autorisés"
+msgstr ""
+"Slug non valide : seuls les lettres, les chiffres et les tirets sont "
+"autorisés"
 
 #: ../python/cioc/core/validators.py:318
 msgid "Not a valid colour"
@@ -516,8 +527,12 @@ msgid "That is not a valid day (%(exception)s)"
 msgstr "Ce jour n'est pas valide (%(exception)s)"
 
 #: ../python/cioc/core/templates/footer.mak:53
-msgid "This database runs on the <a href=\"http://www.opencioc.org/\">OpenCIOC Platform</a>"
-msgstr "Cette base de données fonctionne avec <a href=\"http://www.opencioc.org/\">le logiciel OpenCIOC</a>"
+msgid ""
+"This database runs on the <a href=\"http://www.opencioc.org/\">OpenCIOC "
+"Platform</a>"
+msgstr ""
+"Cette base de données fonctionne avec <a "
+"href=\"http://www.opencioc.org/\">le logiciel OpenCIOC</a>"
 
 #: ../python/cioc/core/templates/footer.mak:55
 msgid "Printed on:"
@@ -529,24 +544,43 @@ msgstr "Détails des cookies"
 
 #: ../python/cioc/core/templates/footer.mak:74
 #: ../python/cioc/core/templates/footer.mak:109
-msgid "We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking \"Accept All\", you consent to our use of cookies."
-msgstr "Nous utilisons des cookies pour améliorer votre expérience de navigation, diffuser du contenu personnalisé et analyser notre trafic. En cliquant sur « Tout accepter », vous consentez à notre utilisation des cookies."
+msgid ""
+"We use cookies to enhance your browsing experience, serve personalized "
+"content, and analyze our traffic. By clicking \"Accept All\", you consent"
+" to our use of cookies."
+msgstr ""
+"Nous utilisons des cookies pour améliorer votre expérience de navigation,"
+" diffuser du contenu personnalisé et analyser notre trafic. En cliquant "
+"sur « Tout accepter », vous consentez à notre utilisation des cookies."
 
 #: ../python/cioc/core/templates/footer.mak:80
 msgid "Necessary"
 msgstr "Nécessaire"
 
 #: ../python/cioc/core/templates/footer.mak:83
-msgid "These cookies allow the site to work and last for the duration of your session. No personal information is tracked with these cookies."
-msgstr "Les cookies nécessaires sont cruciaux pour les fonctions de base du site Web et celui-ci ne fonctionnera pas comme prévu sans eux. Les cookies expirent à la fin de votre session. Ces cookies ne stockent aucune donnée personnellement identifiable."
+msgid ""
+"These cookies allow the site to work and last for the duration of your "
+"session. No personal information is tracked with these cookies."
+msgstr ""
+"Les cookies nécessaires sont cruciaux pour les fonctions de base du site "
+"Web et celui-ci ne fonctionnera pas comme prévu sans eux. Les cookies "
+"expirent à la fin de votre session. Ces cookies ne stockent aucune donnée"
+" personnellement identifiable."
 
 #: ../python/cioc/core/templates/footer.mak:88
 msgid "Optional Cookies"
 msgstr "Cookies optionnels"
 
 #: ../python/cioc/core/templates/footer.mak:91
-msgid "These cookies are used to understand how visitors interact with the website. These cookies help provide information on metrics such as the number of visitors, bounce rate, traffic source, etc."
-msgstr "Les cookies analytiques sont utilisés pour comprendre comment les visiteurs interagissent avec le site Web. Ces cookies aident à fournir des informations sur le nombre de visiteurs, le taux de rebond, la source de trafic, etc."
+msgid ""
+"These cookies are used to understand how visitors interact with the "
+"website. These cookies help provide information on metrics such as the "
+"number of visitors, bounce rate, traffic source, etc."
+msgstr ""
+"Les cookies analytiques sont utilisés pour comprendre comment les "
+"visiteurs interagissent avec le site Web. Ces cookies aident à fournir "
+"des informations sur le nombre de visiteurs, le taux de rebond, la source"
+" de trafic, etc."
 
 #: ../python/cioc/core/templates/footer.mak:97
 #: ../python/cioc/core/templates/footer.mak:114
@@ -627,7 +661,7 @@ msgstr "L'enquête a été mise à jour avec succès."
 #: ../python/cioc/web/admin/template.py:448
 #: ../python/cioc/web/admin/thesaurus.py:283
 #: ../python/cioc/web/admin/thesaurus_source.py:183
-#: ../python/cioc/web/admin/views.py:608 ../python/cioc/web/admin/views.py:1432
+#: ../python/cioc/web/admin/views.py:609 ../python/cioc/web/admin/views.py:1433
 #: ../python/cioc/web/cic/generalheading.py:290
 #: ../python/cioc/web/cic/publication.py:427
 #: ../python/cioc/web/cic/updatepubs.py:160
@@ -675,7 +709,7 @@ msgstr "ID d'enquête non valide"
 #: ../python/cioc/web/admin/template.py:453
 #: ../python/cioc/web/admin/thesaurus.py:286
 #: ../python/cioc/web/admin/thesaurus_source.py:186
-#: ../python/cioc/web/admin/views.py:614 ../python/cioc/web/admin/views.py:1436
+#: ../python/cioc/web/admin/views.py:615 ../python/cioc/web/admin/views.py:1437
 #: ../python/cioc/web/cic/generalheading.py:293
 #: ../python/cioc/web/cic/generalheading_quicktaxonomy.py:168
 #: ../python/cioc/web/cic/publication.py:200
@@ -684,7 +718,7 @@ msgstr "ID d'enquête non valide"
 #: ../python/cioc/web/cic/taxonomy_activationrec.py:209
 #: ../python/cioc/web/cic/updatepubs.py:163
 #: ../python/cioc/web/gbl/emaillist.py:285
-#: ../python/cioc/web/gbl/printlist.py:458
+#: ../python/cioc/web/gbl/printlist.py:487
 #: ../python/cioc/web/import_/community.py:119
 #: ../python/cioc/web/import_/upload.py:144
 #: ../python/cioc/web/stats/auto_datamgmt.py:73
@@ -732,12 +766,12 @@ msgstr "Des erreurs de validation sont survenues."
 #: ../python/cioc/web/admin/template.py:696
 #: ../python/cioc/web/admin/template.py:731
 #: ../python/cioc/web/admin/thesaurus.py:58
-#: ../python/cioc/web/admin/views.py:788 ../python/cioc/web/admin/views.py:1022
-#: ../python/cioc/web/admin/views.py:1070
-#: ../python/cioc/web/admin/views.py:1143
-#: ../python/cioc/web/admin/views.py:1211
-#: ../python/cioc/web/admin/views.py:1258
-#: ../python/cioc/web/admin/views.py:1312
+#: ../python/cioc/web/admin/views.py:789 ../python/cioc/web/admin/views.py:1023
+#: ../python/cioc/web/admin/views.py:1071
+#: ../python/cioc/web/admin/views.py:1144
+#: ../python/cioc/web/admin/views.py:1212
+#: ../python/cioc/web/admin/views.py:1259
+#: ../python/cioc/web/admin/views.py:1313
 #: ../python/cioc/web/cic/reminders.py:175
 #: ../python/cioc/web/cic/reminders.py:234
 #: ../python/cioc/web/cic/reminders.py:293
@@ -828,8 +862,15 @@ msgstr "Bénévolat :"
 
 #: ../python/cioc/web/admin/checklist_model.py:589
 #: ../python/cioc/web/admin/listvalues.py:296
-msgid "<p class=\"Alert\">It is strongly recommended that you do not remove or edit the values that came with the database. Keeping these shared values promotes consistency and facilitates data sharing.</p>"
-msgstr "<p class=\"Alert\">Il est fortement recommandé de ne pas supprimer ou modifier les valeurs fournies avec la base de données. Le fait de garder ces valeurs partagées favorise l'uniformité et facilite le partage de données.</p>"
+msgid ""
+"<p class=\"Alert\">It is strongly recommended that you do not remove or "
+"edit the values that came with the database. Keeping these shared values "
+"promotes consistency and facilitates data sharing.</p>"
+msgstr ""
+"<p class=\"Alert\">Il est fortement recommandé de ne pas supprimer ou "
+"modifier les valeurs fournies avec la base de données. Le fait de garder "
+"ces valeurs partagées favorise l'uniformité et facilite le partage de "
+"données.</p>"
 
 #: ../python/cioc/web/admin/checklist_model.py:669
 #: ../python/cioc/web/admin/checklist_model.py:675
@@ -887,8 +928,14 @@ msgid "Interest Group"
 msgstr "Groupe d'intérêt"
 
 #: ../python/cioc/web/admin/checklist_model.py:1310
-msgid "<p class=\"Alert\">There is no requirement to complete this setup if General Areas of Interest are not being used by any member of the database.</p>"
-msgstr "<p class=\"Alert\">Il n'est pas obligatoire de compléter cette configuration si les Domaines d'intérêt généraux ne sont utilisés par aucun membre de la base de données.</p>"
+msgid ""
+"<p class=\"Alert\">There is no requirement to complete this setup if "
+"General Areas of Interest are not being used by any member of the "
+"database.</p>"
+msgstr ""
+"<p class=\"Alert\">Il n'est pas obligatoire de compléter cette "
+"configuration si les Domaines d'intérêt généraux ne sont utilisés par "
+"aucun membre de la base de données.</p>"
 
 #: ../python/cioc/web/admin/checklist_model.py:1412
 msgid "Note Type"
@@ -916,8 +963,12 @@ msgid "School Board"
 msgstr "Commission scolaire"
 
 #: ../python/cioc/web/admin/checklist_model.py:1756
-msgid "<p class=\"Alert\">The School checklist is shared for the Schools In-Area and School Escort fields.</p>"
-msgstr "<p class=\"Alert\">La liste de contrôle des écoles est partagée pour les champs Écoles avoisinantes et Escorte aux écoles.</p>"
+msgid ""
+"<p class=\"Alert\">The School checklist is shared for the Schools In-Area"
+" and School Escort fields.</p>"
+msgstr ""
+"<p class=\"Alert\">La liste de contrôle des écoles est partagée pour les "
+"champs Écoles avoisinantes et Escorte aux écoles.</p>"
 
 #: ../python/cioc/web/admin/checklist_model.py:1762
 msgid "In Area:"
@@ -1259,7 +1310,9 @@ msgstr "Le texte du courriel normalisé de mise à jour a été ajouté avec suc
 
 #: ../python/cioc/web/admin/email.py:199
 msgid "The Standard Email Update Text was successfully updated."
-msgstr "Le texte du courriel normalisé de mise à jour a été mis à jour avec succès."
+msgstr ""
+"Le texte du courriel normalisé de mise à jour a été mis à jour avec "
+"succès."
 
 #: ../python/cioc/web/admin/email.py:213
 msgid "Invalid Email ID"
@@ -1272,7 +1325,9 @@ msgstr "Le texte du courriel normalisé de mise à jour est introuvable"
 #: ../python/cioc/web/admin/email.py:276
 #, python-format
 msgid "Unable to load Standard Email Update Values: %s"
-msgstr "Les valeurs du courriel normalisé de mise à jour ne peuvent être chargées : %s"
+msgstr ""
+"Les valeurs du courriel normalisé de mise à jour ne peuvent être chargées"
+" : %s"
 
 #: ../python/cioc/web/admin/email.py:331
 #, python-format
@@ -1341,9 +1396,9 @@ msgstr "Les champs ont été mis à jour avec succès."
 
 #: ../python/cioc/web/admin/fieldgroup.py:102
 #: ../python/cioc/web/admin/quicksearch.py:140
-#: ../python/cioc/web/admin/views.py:862 ../python/cioc/web/admin/views.py:1333
-#: ../python/cioc/web/admin/views.py:1492
-#: ../python/cioc/web/admin/views.py:1527
+#: ../python/cioc/web/admin/views.py:863 ../python/cioc/web/admin/views.py:1334
+#: ../python/cioc/web/admin/views.py:1493
+#: ../python/cioc/web/admin/views.py:1528
 msgid "View Not Found"
 msgstr "La vue est introuvable"
 
@@ -1681,7 +1736,7 @@ msgstr "Demande de modification envoyée."
 #: ../python/cioc/web/admin/notices.py:277
 #: ../python/cioc/web/admin/templates/community/edit.mak:261
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:275
-#: ../python/cioc/web/admin/templates/views/edit.mak:1588
+#: ../python/cioc/web/admin/templates/views/edit.mak:1602
 #: ../python/cioc/web/cic/templates/record.mak:404
 #: ../python/cioc/web/cic/templates/reminders/edit.mak:42
 #: ../python/cioc/web/cic/templates/reminders/index.mak:53
@@ -1759,13 +1814,13 @@ msgstr "La page a été supprimée."
 msgid "Unable to delete Page: "
 msgstr "Impossible de supprimer la page : "
 
-#: ../python/cioc/web/admin/pages.py:353 ../python/cioc/web/admin/views.py:434
-#: ../python/cioc/web/admin/views.py:485 ../python/cioc/web/admin/views.py:769
-#: ../python/cioc/web/admin/views.py:1004
-#: ../python/cioc/web/admin/views.py:1052
-#: ../python/cioc/web/admin/views.py:1122
-#: ../python/cioc/web/admin/views.py:1190
-#: ../python/cioc/web/admin/views.py:1237
+#: ../python/cioc/web/admin/pages.py:353 ../python/cioc/web/admin/views.py:435
+#: ../python/cioc/web/admin/views.py:486 ../python/cioc/web/admin/views.py:770
+#: ../python/cioc/web/admin/views.py:1005
+#: ../python/cioc/web/admin/views.py:1053
+#: ../python/cioc/web/admin/views.py:1123
+#: ../python/cioc/web/admin/views.py:1191
+#: ../python/cioc/web/admin/views.py:1238
 msgid "Invalid Domain"
 msgstr "Le domaine n'est pas valide"
 
@@ -1802,15 +1857,21 @@ msgstr "Un profil de partage de dossiers est prêt pour la révision."
 
 #: ../python/cioc/web/admin/sharingprofile.py:47
 #, python-format
-msgid "Hello,\n"
+msgid ""
+"Hello,\n"
 "\n"
-"A member in your CIOC database (%(MemberName)s) has created the Record Sharing\n"
-"Profile '%(ProfileName)s' for you to review. Please go to the Sharing Profile\n"
+"A member in your CIOC database (%(MemberName)s) has created the Record "
+"Sharing\n"
+"Profile '%(ProfileName)s' for you to review. Please go to the Sharing "
+"Profile\n"
 "setup area of your CIOC site to accept it.\n"
-msgstr "Bonjour,\n"
+msgstr ""
+"Bonjour,\n"
 "\n"
-"Un membre de votre base de données CIOC (%(MemberName)s) a créé le profil de partage\n"
-"de dossiers '%(ProfileName)s' que vous pouvez réviser. Veuillez aller dans la rubrique de configuration\n"
+"Un membre de votre base de données CIOC (%(MemberName)s) a créé le profil"
+" de partage\n"
+"de dossiers '%(ProfileName)s' que vous pouvez réviser. Veuillez aller "
+"dans la rubrique de configuration\n"
 "des profils de partage de votre site CIOC pour l'accepter.\n"
 
 #: ../python/cioc/web/admin/sharingprofile.py:57
@@ -1819,13 +1880,17 @@ msgstr "Un profil de partage des dossiers a été accepté."
 
 #: ../python/cioc/web/admin/sharingprofile.py:58
 #, python-format
-msgid "Hello,\n"
+msgid ""
+"Hello,\n"
 "\n"
-"Your Record Sharing Profile '%(ProfileName)s' has been accepted by a member\n"
+"Your Record Sharing Profile '%(ProfileName)s' has been accepted by a "
+"member\n"
 "in your CIOC database (%(MemberName)s).\n"
-msgstr "Bonjour,\n"
+msgstr ""
+"Bonjour,\n"
 "\n"
-"Votre profil de partage de dossiers '%(ProfileName)s' a été accepté par un membre\n"
+"Votre profil de partage de dossiers '%(ProfileName)s' a été accepté par "
+"un membre\n"
 "de votre base de données CIOC (%(MemberName)s).\n"
 
 #: ../python/cioc/web/admin/sharingprofile.py:67
@@ -1835,25 +1900,33 @@ msgstr "Un profil de partage a été révoqué et se terminera le %(ExpireDate)s
 
 #: ../python/cioc/web/admin/sharingprofile.py:70
 #, python-format
-msgid "Hello,\n"
+msgid ""
+"Hello,\n"
 "\n"
-"Your Record Sharing Profile called '%(ProfileName)s' has been revoked by a\n"
-"member participating in the agreement called '%(MemberName)s'. The agreement\n"
+"Your Record Sharing Profile called '%(ProfileName)s' has been revoked by "
+"a\n"
+"member participating in the agreement called '%(MemberName)s'. The "
+"agreement\n"
 "will end on %(ExpireDate)s.\n"
-msgstr "Bonjour,\n"
+msgstr ""
+"Bonjour,\n"
 "\n"
-"Votre profil de partage de dossiers appelé '%(ProfileName)s' a été révoqué par un\n"
+"Votre profil de partage de dossiers appelé '%(ProfileName)s' a été "
+"révoqué par un\n"
 "membre participant à l'accord appelé '%(MemberName)s'. L'accord\n"
 "se terminera le %(ExpireDate)s.\n"
 
 #: ../python/cioc/web/admin/sharingprofile.py:80
 #, python-format
 msgid "Removal of shared records in your database as of %(ExpireDate)s"
-msgstr "Retrait des dossiers partagés dans votre base de données à partir du %(ExpireDate)s"
+msgstr ""
+"Retrait des dossiers partagés dans votre base de données à partir du "
+"%(ExpireDate)s"
 
 #: ../python/cioc/web/admin/sharingprofile.py:83
 #, python-format
-msgid "Hello,\n"
+msgid ""
+"Hello,\n"
 "\n"
 "Some records in your Sharing Profile called '%(ProfileName)s' have been\n"
 "removed by a member called '%(MemberName)s' that is a participant in\n"
@@ -1864,20 +1937,28 @@ msgid "Hello,\n"
 "\n"
 "%%s\n"
 "\n"
-"For more information on which records are available in this sharing profile,\n"
-"review the Sharing Profile and click the link called \"View records associated\n"
+"For more information on which records are available in this sharing "
+"profile,\n"
+"review the Sharing Profile and click the link called \"View records "
+"associated\n"
 "with this profile\" or go to: %(ProfileURL)s\n"
-msgstr "Bonjour,\n"
+msgstr ""
+"Bonjour,\n"
 "\n"
-"Certains dossiers dans votre profil de partage nommé '%(ProfileName)s' ont été\n"
+"Certains dossiers dans votre profil de partage nommé '%(ProfileName)s' "
+"ont été\n"
 "retirés par un membre appelé '%(MemberName)s' qui participe à\n"
-"l'accord. Les dossiers ne seront plus disponibles dans l'accord de partage à partir du %(ExpireDate)s.\n"
+"l'accord. Les dossiers ne seront plus disponibles dans l'accord de "
+"partage à partir du %(ExpireDate)s.\n"
 "\n"
 "Les dossiers affectés sont :\n"
 "\n"
 "%%s\n"
 "\n"
-"Pour des renseignements supplémentaires sur les dossiers disponibles dans ce profil de partage, consulter le Profil de partage et cliquer sur le lien « Voir les dossiers associés à ce profil » ou aller sur : %(ProfileURL)s\n"
+"Pour des renseignements supplémentaires sur les dossiers disponibles dans"
+" ce profil de partage, consulter le Profil de partage et cliquer sur le "
+"lien « Voir les dossiers associés à ce profil » ou aller sur : "
+"%(ProfileURL)s\n"
 
 #: ../python/cioc/web/admin/sharingprofile.py:123
 #: ../python/cioc/web/admin/sharingprofile.py:302
@@ -1925,8 +2006,12 @@ msgid "The Profile was successfully sent."
 msgstr "Le profil a été envoyé avec succès."
 
 #: ../python/cioc/web/admin/sharingprofile.py:972
-msgid "The Profile is available to be accepted, but email notifications could not be sent."
-msgstr "Le profil est prêt à être accepté, mais les notifications par courrier électronique n'ont pas pu être envoyées."
+msgid ""
+"The Profile is available to be accepted, but email notifications could "
+"not be sent."
+msgstr ""
+"Le profil est prêt à être accepté, mais les notifications par courrier "
+"électronique n'ont pas pu être envoyées."
 
 #: ../python/cioc/web/admin/sharingprofile.py:983
 msgid "Unable to send Sharing Profile: "
@@ -1961,12 +2046,22 @@ msgstr "Aucun dossier n'a été sélectionné."
 
 #: ../python/cioc/web/admin/sharingprofile.py:1350
 #, python-format
-msgid "None of the selected records can be added to the Profile. %d records were already in the Profile, and %d records are in another Profile with this Member."
-msgstr "Aucun des enregistrements sélectionnés ne peut être ajouté au profil. %d enregistrements étaient déjà dans le profil et %d enregistrements sont dans un autre profil avec ce membre."
+msgid ""
+"None of the selected records can be added to the Profile. %d records were"
+" already in the Profile, and %d records are in another Profile with this "
+"Member."
+msgstr ""
+"Aucun des enregistrements sélectionnés ne peut être ajouté au profil. %d "
+"enregistrements étaient déjà dans le profil et %d enregistrements sont "
+"dans un autre profil avec ce membre."
 
 #: ../python/cioc/web/admin/sharingprofile.py:1411
-msgid "No records were removed. They may already have been removed, or be scheduled for removal in the next few days."
-msgstr "Aucun dossier n'a été supprimé. Ils ont peut-être déjà été supprimés ou leur suppression est prévue dans les prochains jours."
+msgid ""
+"No records were removed. They may already have been removed, or be "
+"scheduled for removal in the next few days."
+msgstr ""
+"Aucun dossier n'a été supprimé. Ils ont peut-être déjà été supprimés ou "
+"leur suppression est prévue dans les prochains jours."
 
 #: ../python/cioc/web/admin/sharingprofile.py:1513
 #: ../python/cioc/web/admin/templates/views/edit.mak:28
@@ -1999,8 +2094,9 @@ msgstr "Aucun dossier n'a été supprimé. Ils ont peut-être déjà été suppr
 #: ../python/cioc/web/admin/templates/views/edit.mak:1095
 #: ../python/cioc/web/admin/templates/views/edit.mak:1102
 #: ../python/cioc/web/admin/templates/views/edit.mak:1376
-#: ../python/cioc/web/admin/templates/views/edit.mak:1431
-#: ../python/cioc/web/admin/templates/views/edit.mak:1448
+#: ../python/cioc/web/admin/templates/views/edit.mak:1429
+#: ../python/cioc/web/admin/templates/views/edit.mak:1445
+#: ../python/cioc/web/admin/templates/views/edit.mak:1462
 #: ../python/cioc/web/cic/templates/record.mak:400
 #: ../python/cioc/web/cic/templates/topicsearch/searchform.mak:37
 #: ../python/cioc/web/templates/master.mak:90
@@ -2207,80 +2303,80 @@ msgstr "Changement de poste"
 msgid "Total Vacancy"
 msgstr "Total des postes vacants"
 
-#: ../python/cioc/web/admin/views.py:453 ../python/cioc/web/admin/views.py:730
-#: ../python/cioc/web/admin/views.py:962 ../python/cioc/web/admin/views.py:1028
-#: ../python/cioc/web/admin/views.py:1219
+#: ../python/cioc/web/admin/views.py:454 ../python/cioc/web/admin/views.py:731
+#: ../python/cioc/web/admin/views.py:963 ../python/cioc/web/admin/views.py:1029
+#: ../python/cioc/web/admin/views.py:1220
 #, python-format
 msgid "Manage Views (%s)"
 msgstr "Gestion des vues (%s)"
 
-#: ../python/cioc/web/admin/views.py:601
+#: ../python/cioc/web/admin/views.py:602
 msgid "The View has been successfully updated."
 msgstr "La vue a été mise à jour avec succès."
 
-#: ../python/cioc/web/admin/views.py:612
+#: ../python/cioc/web/admin/views.py:613
 msgid "Invalid View ID"
 msgstr "ID de Vue invalide"
 
-#: ../python/cioc/web/admin/views.py:1096
+#: ../python/cioc/web/admin/views.py:1097
 msgid "View Deleted"
 msgstr "La vue a été supprimée avec succès."
 
-#: ../python/cioc/web/admin/views.py:1100
-#: ../python/cioc/web/admin/views.py:1106
+#: ../python/cioc/web/admin/views.py:1101
+#: ../python/cioc/web/admin/views.py:1107
 msgid "Unable to delete View: "
 msgstr "La vue n'a pas été supprimée. : "
 
-#: ../python/cioc/web/admin/views.py:1146
-#: ../python/cioc/web/admin/views.py:1214
-#: ../python/cioc/web/admin/views.py:1261
-#: ../python/cioc/web/admin/views.py:1315
+#: ../python/cioc/web/admin/views.py:1147
+#: ../python/cioc/web/admin/views.py:1215
+#: ../python/cioc/web/admin/views.py:1262
+#: ../python/cioc/web/admin/views.py:1316
 #: ../python/cioc/web/jsonfeeds/cicfeed.py:89
 #: ../python/cioc/web/jsonfeeds/volfeed.py:70
 msgid "Invalid Request"
 msgstr "La requête est invalide"
 
-#: ../python/cioc/web/admin/views.py:1335
-#: ../python/cioc/web/admin/views.py:1443
-#: ../python/cioc/web/admin/views.py:1472
+#: ../python/cioc/web/admin/views.py:1336
+#: ../python/cioc/web/admin/views.py:1444
+#: ../python/cioc/web/admin/views.py:1473
 #, python-format
 msgid "Manage Topic Searches For %s"
 msgstr "Gérer les recherches par sujet pour %s"
 
-#: ../python/cioc/web/admin/views.py:1363
-#: ../python/cioc/web/admin/views.py:1486
-#: ../python/cioc/web/admin/views.py:1530
+#: ../python/cioc/web/admin/views.py:1364
+#: ../python/cioc/web/admin/views.py:1487
+#: ../python/cioc/web/admin/views.py:1531
 msgid "Topic Search Not Found"
 msgstr "La recherche par sujet est introuvable"
 
-#: ../python/cioc/web/admin/views.py:1418
+#: ../python/cioc/web/admin/views.py:1419
 msgid "The Topic Search was successfully updated."
 msgstr "La recherche par sujet a été mise à jour avec succès."
 
-#: ../python/cioc/web/admin/views.py:1420
+#: ../python/cioc/web/admin/views.py:1421
 msgid "The Topic Search was successfully added."
 msgstr "La recherche par sujet a été ajoutée avec succès."
 
-#: ../python/cioc/web/admin/views.py:1555
-#: ../python/cioc/web/admin/views.py:1585
+#: ../python/cioc/web/admin/views.py:1556
+#: ../python/cioc/web/admin/views.py:1586
 msgid "Invalid Topic Search"
 msgstr "Recherche par sujet invalide"
 
-#: ../python/cioc/web/admin/views.py:1558
-#: ../python/cioc/web/admin/views.py:1588
+#: ../python/cioc/web/admin/views.py:1559
+#: ../python/cioc/web/admin/views.py:1589
 msgid "Invalid View"
 msgstr "Vue invalide"
 
-#: ../python/cioc/web/admin/views.py:1560
+#: ../python/cioc/web/admin/views.py:1561
 msgid "Delete Topic Search"
 msgstr "Supprimer la recherche par sujet"
 
-#: ../python/cioc/web/admin/views.py:1611
+#: ../python/cioc/web/admin/views.py:1612
 msgid "Topic Search Deleted"
 msgstr "Recherche par sujet supprimée"
 
-#: ../python/cioc/web/admin/views.py:1618
-#: ../python/cioc/web/admin/views.py:1625
+#: ../python/cioc/web/admin/views.py:1619
+#: ../python/cioc/web/admin/views.py:1626
 msgid "Unable to delete Topic Search: "
 msgstr "Le recherche par sujet ne peut être supprimée : "
 
@@ -2387,12 +2483,23 @@ msgid "Return to Setup"
 msgstr "Retourner à la configuration"
 
 #: ../python/cioc/web/admin/templates/domainmap.mak:29
-msgid "<strong>\"-- Database Default View --\"</strong> represents whichever view is configured as the default view on the general setup page."
-msgstr "<strong>« -- Vue par défaut de la base de données -- »</strong> représente la vue sélectionnée comme vue par défaut dans la page de configuration générale."
+msgid ""
+"<strong>\"-- Database Default View --\"</strong> represents whichever "
+"view is configured as the default view on the general setup page."
+msgstr ""
+"<strong>« -- Vue par défaut de la base de données -- »</strong> "
+"représente la vue sélectionnée comme vue par défaut dans la page de "
+"configuration générale."
 
 #: ../python/cioc/web/admin/templates/domainmap.mak:30
-msgid "<strong>*</strong> represents a non-public View. Only select a non-public View if you are planning to make it public in the future (e.g. for future site launch)."
-msgstr "<strong>*</strong> représente une vue non-publique. Ne sélectionnez une vue non-publique que si vous avez l'intention de la rendre publique dans le futur (p. ex., pour le lancement d'un futur site)."
+msgid ""
+"<strong>*</strong> represents a non-public View. Only select a non-public"
+" View if you are planning to make it public in the future (e.g. for "
+"future site launch)."
+msgstr ""
+"<strong>*</strong> représente une vue non-publique. Ne sélectionnez une "
+"vue non-publique que si vous avez l'intention de la rendre publique dans "
+"le futur (p. ex., pour le lancement d'un futur site)."
 
 #: ../python/cioc/web/admin/templates/domainmap.mak:33
 #: ../python/cioc/web/admin/templates/ganalytics.mak:31
@@ -2509,8 +2616,17 @@ msgid "Javascript is required to use this page."
 msgstr "Cet page requiert JavaScript pour fonctionner correctement."
 
 #: ../python/cioc/web/admin/templates/fielddisplay.mak:41
-msgid "Shared fields, denoted by a <span class=\"Alert\">*</span>, may be used across different CIOC modules (CIC or Volunteer). Please be courteous and contact your database partners (if any) before modifying the names of shared fields. Each module has its own field order and required fields."
-msgstr "Des champs communs, désignés par un <span class=\"Alert\">*</span>, sont utilisés par différents modules du CIOC (CIC et Bénévolat). Prière de communiquer avec vos partenaires (s'il y a lieu) avant de modifier les noms de champs que vous partagez avec eux. Chaque module possède des champs obligatoires et un ordre des champs spécifique."
+msgid ""
+"Shared fields, denoted by a <span class=\"Alert\">*</span>, may be used "
+"across different CIOC modules (CIC or Volunteer). Please be courteous and"
+" contact your database partners (if any) before modifying the names of "
+"shared fields. Each module has its own field order and required fields."
+msgstr ""
+"Des champs communs, désignés par un <span class=\"Alert\">*</span>, sont "
+"utilisés par différents modules du CIOC (CIC et Bénévolat). Prière de "
+"communiquer avec vos partenaires (s'il y a lieu) avant de modifier les "
+"noms de champs que vous partagez avec eux. Chaque module possède des "
+"champs obligatoires et un ordre des champs spécifique."
 
 #: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:42
 #: ../python/cioc/web/admin/templates/community/edit.mak:116
@@ -2663,7 +2779,7 @@ msgstr "Mettre à jour"
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:239
 #: ../python/cioc/web/admin/templates/thesaurus/source.mak:61
 #: ../python/cioc/web/admin/templates/userapicreds/add.mak:50
-#: ../python/cioc/web/admin/templates/views/edit.mak:1542
+#: ../python/cioc/web/admin/templates/views/edit.mak:1556
 #: ../python/cioc/web/admin/templates/views/topicsearch.mak:162
 #: ../python/cioc/web/cic/templates/generalheading/edit.mak:223
 #: ../python/cioc/web/cic/templates/generalheading/edit.mak:256
@@ -2674,7 +2790,9 @@ msgstr "Réinitialiser le formulaire"
 
 #: ../python/cioc/web/admin/templates/fieldgroup.mak:28
 msgid "Note that deleting a field group will remove all the fields in that group!"
-msgstr "Attention : la suppression d'un groupe de champs éliminera tous les champs de ce groupe!"
+msgstr ""
+"Attention : la suppression d'un groupe de champs éliminera tous les "
+"champs de ce groupe!"
 
 #: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:177
 #: ../python/cioc/web/admin/templates/checklists/edit.mak:295
@@ -2703,7 +2821,7 @@ msgstr "Attention : la suppression d'un groupe de champs éliminera tous les cha
 #: ../python/cioc/web/admin/templates/userapicreds/index.mak:45
 #: ../python/cioc/web/admin/templates/views/delete_lang.mak:30
 #: ../python/cioc/web/admin/templates/views/edit.mak:154
-#: ../python/cioc/web/admin/templates/views/edit.mak:1539
+#: ../python/cioc/web/admin/templates/views/edit.mak:1553
 #: ../python/cioc/web/admin/templates/views/topicsearch.mak:156
 #: ../python/cioc/web/admin/templates/views/topicsearch.mak:159
 #: ../python/cioc/web/cic/templates/generalheading/edit.mak:221
@@ -2744,8 +2862,12 @@ msgid ": Order"
 msgstr " : Ordre"
 
 #: ../python/cioc/web/admin/templates/fieldhide.mak:32
-msgid "Shared fields, denoted by a <span class=\"Alert\">*</span>, may be used across different CIOC modules (CIC or Volunteer)."
-msgstr "Les champs partagés, indiqués par <span class=\"Alert\">*</span>, peuvent être utilisés par plusieurs modules CIOC (CIC ou Bénévolat)."
+msgid ""
+"Shared fields, denoted by a <span class=\"Alert\">*</span>, may be used "
+"across different CIOC modules (CIC or Volunteer)."
+msgstr ""
+"Les champs partagés, indiqués par <span class=\"Alert\">*</span>, peuvent"
+" être utilisés par plusieurs modules CIOC (CIC ou Bénévolat)."
 
 #: ../python/cioc/web/admin/templates/checklists/index.mak:338
 #: ../python/cioc/web/admin/templates/fieldhide.mak:54
@@ -2759,8 +2881,15 @@ msgid ": Hide Field"
 msgstr " : Masquer le champ"
 
 #: ../python/cioc/web/admin/templates/fieldradio.mak:43
-msgid "Shared fields, denoted by a <span class=\"Alert\">*</span>, may be used across different CIOC modules (CIC or Volunteer). Please be courteous and contact your database partners (if any) before modifying shared fields."
-msgstr "Les champs partagés, indiqués par <span class=\"Alert\">*</span>, peuvent être utilisés par plusieurs modules CIOC (CIC ou Bénévolat). Soyez courtois et veuillez communiquer avec vos partenaires de base de données (s'il y a lieu) avant de modifier les champs partagés."
+msgid ""
+"Shared fields, denoted by a <span class=\"Alert\">*</span>, may be used "
+"across different CIOC modules (CIC or Volunteer). Please be courteous and"
+" contact your database partners (if any) before modifying shared fields."
+msgstr ""
+"Les champs partagés, indiqués par <span class=\"Alert\">*</span>, peuvent"
+" être utilisés par plusieurs modules CIOC (CIC ou Bénévolat). Soyez "
+"courtois et veuillez communiquer avec vos partenaires de base de données "
+"(s'il y a lieu) avant de modifier les champs partagés."
 
 #: ../python/cioc/web/admin/templates/fieldradio.mak:93
 msgid "On / True: "
@@ -2820,15 +2949,23 @@ msgstr " : Mesure du nombre de résultats de Google Analytics"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:34
 msgid "Edit general database options"
-msgstr "Utiliser ce formulaire pour modifier les options générales de la base de données"
+msgstr ""
+"Utiliser ce formulaire pour modifier les options générales de la base de "
+"données"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:42
 msgid "Training Mode"
 msgstr "Mode Formation"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:43
-msgid "When the database is in training mode, Emails are not sent out. An alert-coloured header will appear on every page. Note that this applies to all modules in the database."
-msgstr "Lorsque la base de données est en mode Formation, aucun courriel n'est envoyé. Un en-tête d'alerte en couleur s'affichera sur chaque page. Remarque : ceci est valable pour tous les modules de la  base de données."
+msgid ""
+"When the database is in training mode, Emails are not sent out. An alert-"
+"coloured header will appear on every page. Note that this applies to all "
+"modules in the database."
+msgstr ""
+"Lorsque la base de données est en mode Formation, aucun courriel n'est "
+"envoyé. Un en-tête d'alerte en couleur s'affichera sur chaque page. "
+"Remarque : ceci est valable pour tous les modules de la  base de données."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:48
 msgid "The database is in training mode."
@@ -2848,15 +2985,21 @@ msgstr "Modèle de conception en mode de gestion"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:87
 msgid "This template is used in the \"Admin\" (shared) section of the database."
-msgstr "Ce modèle est utilisé dans la section (partagée) \"Gestion\" de la base de données."
+msgstr ""
+"Ce modèle est utilisé dans la section (partagée) \"Gestion\" de la base "
+"de données."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:94
 msgid "Admin Print Template"
 msgstr "Modèle d'impression en mode de gestion"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:95
-msgid "This template is used for \"Print Mode\" in the \"Admin\" (shared) section of the database."
-msgstr "Ce modèle est utilisé pour le \"Mode Impression\" dans la section (partagée) \"Gestion\" de la base de données."
+msgid ""
+"This template is used for \"Print Mode\" in the \"Admin\" (shared) "
+"section of the database."
+msgstr ""
+"Ce modèle est utilisé pour le \"Mode Impression\" dans la section "
+"(partagée) \"Gestion\" de la base de données."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:105
 msgid "Community Information Database"
@@ -2873,28 +3016,46 @@ msgstr "Vue par défaut (%s)"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:115
 #, python-format
-msgid "This view is used for the %s when a user is not logged in (the \"public\" view)."
-msgstr "Cette vue est utilisée pour %s quand l'utilisateur n'est pas connecté (vue publique)."
+msgid ""
+"This view is used for the %s when a user is not logged in (the \"public\""
+" view)."
+msgstr ""
+"Cette vue est utilisée pour %s quand l'utilisateur n'est pas connecté "
+"(vue publique)."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:127
 msgid "Public Print Mode"
 msgstr "Mode Impression pour le public"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:128
-msgid "This only applies if a print template has been specified for the View in question. Only the details page is available to the public in print mode, and the javascript title option is disabled."
-msgstr "Ceci ne vaut que lorsque le modèle d'impression a été spécifié pour la vue en question. Seule la page de renseignements est accessible au grand public en mode Impression et l'option de titre Javascript est désactivée."
+msgid ""
+"This only applies if a print template has been specified for the View in "
+"question. Only the details page is available to the public in print mode,"
+" and the javascript title option is disabled."
+msgstr ""
+"Ceci ne vaut que lorsque le modèle d'impression a été spécifié pour la "
+"vue en question. Seule la page de renseignements est accessible au grand "
+"public en mode Impression et l'option de titre Javascript est désactivée."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:133
 msgid "Print version available to non-logged in users (the public)"
-msgstr "La version imprimable est accessible aux utilisateurs non-connectés (grand public)."
+msgstr ""
+"La version imprimable est accessible aux utilisateurs non-connectés "
+"(grand public)."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:137
 msgid "User Initials"
 msgstr "Initiales de l'utilisateur"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:138
-msgid "If selected, the user's initials are used when a user's identity is required for input to a field. Otherwise, the user's first and last name are used."
-msgstr "Si sélectionné, les initiales de l'utilisateur sont utilisées lorsque l'identité de ce dernier est requise pour remplir un champ. Autrement, le prénom et le nom de famille de l'utilisateur sont utilisés."
+msgid ""
+"If selected, the user's initials are used when a user's identity is "
+"required for input to a field. Otherwise, the user's first and last name "
+"are used."
+msgstr ""
+"Si sélectionné, les initiales de l'utilisateur sont utilisées lorsque "
+"l'identité de ce dernier est requise pour remplir un champ. Autrement, le"
+" prénom et le nom de famille de l'utilisateur sont utilisés."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:142
 msgid "Use user initials "
@@ -2905,8 +3066,12 @@ msgid "Login Attempts"
 msgstr "Tentatives de connexion"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:147
-msgid "The number of incorrect attempts to log in are allowed before the account is locked"
-msgstr "Le nombre de tentatives de connexion incorrectes autorisées avant le verrouillage du compte"
+msgid ""
+"The number of incorrect attempts to log in are allowed before the account"
+" is locked"
+msgstr ""
+"Le nombre de tentatives de connexion incorrectes autorisées avant le "
+"verrouillage du compte"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:151
 msgid "No Limit"
@@ -2918,16 +3083,28 @@ msgid "Base URL (%s)"
 msgstr "URL de la base (%s)"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:168
-msgid "The full web address to the root of the application. Do not include the trailing slash. (e.g. mysite.cioc.ca)"
-msgstr "L'adresse URL complète à la racine de l'application. Ne pas inclure la barre oblique de fin. (p. ex. : monsite.cioc.ca)"
+msgid ""
+"The full web address to the root of the application. Do not include the "
+"trailing slash. (e.g. mysite.cioc.ca)"
+msgstr ""
+"L'adresse URL complète à la racine de l'application. Ne pas inclure la "
+"barre oblique de fin. (p. ex. : monsite.cioc.ca)"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:184
 msgid "Days Since Last Email"
 msgstr "Nombre de jours depuis le dernier courriel"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:185
-msgid "When sending an update Email request for a single record, an alert will be printed if the last Email update request was less than this many days ago. Note: this applies to all modules of the database."
-msgstr "À l'envoi d'une demande de mise à jour par courriel pour un dossier unique, un message d'alerte s'affichera si la dernière demande de mise à jour par courriel a été effectuée plus récemment que le nombre de jours indiqué. Remarque : ceci est valable pour tous les modules de la  base de données."
+msgid ""
+"When sending an update Email request for a single record, an alert will "
+"be printed if the last Email update request was less than this many days "
+"ago. Note: this applies to all modules of the database."
+msgstr ""
+"À l'envoi d'une demande de mise à jour par courriel pour un dossier "
+"unique, un message d'alerte s'affichera si la dernière demande de mise à "
+"jour par courriel a été effectuée plus récemment que le nombre de jours "
+"indiqué. Remarque : ceci est valable pour tous les modules de la  base de"
+" données."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:205
 msgid "Volunteer Profile"
@@ -2939,8 +3116,14 @@ msgid "Default Email (%s)"
 msgstr "Courriel par défaut (%s)"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:211
-msgid "The Default Email address is used whenever an Email message is generated by the system. If a specific Agency Email is available, that will be used as a Reply To address."
-msgstr "L'adresse courriel par défaut est utilisée chaque fois qu'un message électronique est généré par le système. Si une adresse courriel d'agence spécifique est disponible, elle sera utilisée comme adresse de réponse."
+msgid ""
+"The Default Email address is used whenever an Email message is generated "
+"by the system. If a specific Agency Email is available, that will be used"
+" as a Reply To address."
+msgstr ""
+"L'adresse courriel par défaut est utilisée chaque fois qu'un message "
+"électronique est généré par le système. Si une adresse courriel d'agence "
+"spécifique est disponible, elle sera utilisée comme adresse de réponse."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:219
 #, python-format
@@ -2948,8 +3131,12 @@ msgid "Default Email Name (%s)"
 msgstr "Nom de courrier électronique par défaut (%s)"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:220
-msgid "The Name used as part of the From address whenever Default Email address is used."
-msgstr "Le nom utilisé dans l'adresse de l'expéditeur chaque fois que l'adresse courriel par défaut est utilisée."
+msgid ""
+"The Name used as part of the From address whenever Default Email address "
+"is used."
+msgstr ""
+"Le nom utilisé dans l'adresse de l'expéditeur chaque fois que l'adresse "
+"courriel par défaut est utilisée."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:229
 #, python-format
@@ -2957,8 +3144,12 @@ msgid "Import Notification Email (%s)"
 msgstr "Courriel pour la notification d'importation (%s)"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:230
-msgid "The email address to be used to send email notifications of issues encountered while running automatic imports"
-msgstr "L'adresse e-mail à utiliser pour envoyer des notifications par e-mail des problèmes rencontrés lors de l'exécution des importations automatiques"
+msgid ""
+"The email address to be used to send email notifications of issues "
+"encountered while running automatic imports"
+msgstr ""
+"L'adresse e-mail à utiliser pour envoyer des notifications par e-mail des"
+" problèmes rencontrés lors de l'exécution des importations automatiques"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:249
 #: ../python/cioc/web/admin/templates/views/edit.mak:717
@@ -3053,8 +3244,16 @@ msgid "New NUM Selection"
 msgstr "Sélection d'un nouveau numéro"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:329
-msgid "If checked, then new NUMs will be the lowest NUM available for the agency, even if there are higher NUMs already taken. If not checked, then a new NUM will be one more than the highest one already used for that agency."
-msgstr "Si sélectionné (par défaut), les nouveaux numéros seront les numéros non utilisés les plus bas pour l'agence, même si des numéros supérieurs sont déjà utilisés. Sinon, le nouveau numéro sera supérieur au numéro le plus grand déja utilisé par l'agence."
+msgid ""
+"If checked, then new NUMs will be the lowest NUM available for the "
+"agency, even if there are higher NUMs already taken. If not checked, then"
+" a new NUM will be one more than the highest one already used for that "
+"agency."
+msgstr ""
+"Si sélectionné (par défaut), les nouveaux numéros seront les numéros non "
+"utilisés les plus bas pour l'agence, même si des numéros supérieurs sont "
+"déjà utilisés. Sinon, le nouveau numéro sera supérieur au numéro le plus "
+"grand déja utilisé par l'agence."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:334
 msgid "Always pick lowest unused NUM"
@@ -3065,16 +3264,27 @@ msgid "Billing/Other Address Site Code"
 msgstr "Code de l'adresse de facturation / additionnelle du site"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:339
-msgid "Max length for the optional site code component of the Billing and Other Addresses fields. Use 0 to disable site code."
-msgstr "Longueur maximale de l'élément facultatif code de site des champs Adresses de facturation / additionnelles. Utiliser 0 pour désactiver le code de site."
+msgid ""
+"Max length for the optional site code component of the Billing and Other "
+"Addresses fields. Use 0 to disable site code."
+msgstr ""
+"Longueur maximale de l'élément facultatif code de site des champs "
+"Adresses de facturation / additionnelles. Utiliser 0 pour désactiver le "
+"code de site."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:349
 msgid "Offline Tools"
 msgstr "Outils hors-ligne"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:350
-msgid "When selected, the Offline Tools will be permitted to connect to this CIOC database and the Offline Tools options will be available in setup areas."
-msgstr "Si sélectionné, les outils hors-ligne seront autorisés à se connecter à cette base de données CIOC et les options Outils hors-ligne seront visibles dans les zones de configuration."
+msgid ""
+"When selected, the Offline Tools will be permitted to connect to this "
+"CIOC database and the Offline Tools options will be available in setup "
+"areas."
+msgstr ""
+"Si sélectionné, les outils hors-ligne seront autorisés à se connecter à "
+"cette base de données CIOC et les options Outils hors-ligne seront "
+"visibles dans les zones de configuration."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:353
 msgid "Enable Offline Tools Support"
@@ -3085,24 +3295,51 @@ msgid "Volunteer Centre Organization Name(s)"
 msgstr "Nom du centre de bénévoles"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:360
-msgid "Name of organization(s) to which a Volunteer Profile Account Holder agrees to allow the use of their private data as outlined in the Privacy Policy."
-msgstr "Nom de l'organisme auquel le détenteur d'un compte dans le profil Bénévolat autorise à utiliser ses renseignements personnels tel qu'indiqué dans la Politique de confidentialité."
+msgid ""
+"Name of organization(s) to which a Volunteer Profile Account Holder "
+"agrees to allow the use of their private data as outlined in the Privacy "
+"Policy."
+msgstr ""
+"Nom de l'organisme auquel le détenteur d'un compte dans le profil "
+"Bénévolat autorise à utiliser ses renseignements personnels tel "
+"qu'indiqué dans la Politique de confidentialité."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:380
 msgid "Volunteer Profile Privacy Policy"
 msgstr "Politique de confidentialité du Profil Bénévolat"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:381
-msgid "Privacy Policy under which Volunteer Profile Account holders agree to let you use their personal information."
-msgstr "Politique de confidentialité selon laquelle les détenteurs d'un compte dans le profil Bénévolat vous autorisent à utiliser leurs renseignements personnels."
+msgid ""
+"Privacy Policy under which Volunteer Profile Account holders agree to let"
+" you use their personal information."
+msgstr ""
+"Politique de confidentialité selon laquelle les détenteurs d'un compte "
+"dans le profil Bénévolat vous autorisent à utiliser leurs renseignements "
+"personnels."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:401
 msgid "Area of Interest"
 msgstr "Centre d'intérêt"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:402
-msgid "When selected, the software will omit General Areas of Interest on search and data entry pages, including for Volunteer Profile users. The setup areas for General Areas of Interest remain available so that they can be configured correctly in a multi-member database (This is because some members may have different settings). However, there is no requirement to complete the General Area setup if they are not being used by any member of the database."
-msgstr "Si sélectionné, le logiciel ignorera les <em>domaines d'intérêt général</em> sur les pages de recherche et de saisie de données, y compris pour les utilisateurs de profil de bénévole. Les zones de configuration des <em>domaines d'intérêt général</em> sont toujours disponibles afin que ceux-ci puissent être configurés correctement dans une base de données multimembre (car certains membres peuvent avoir différents paramètres). Cependant, il n'est pas obligatoire de renseigner les paramètres de domaine général s'il ne sont utilisés par aucun membre de la base de données."
+msgid ""
+"When selected, the software will omit General Areas of Interest on search"
+" and data entry pages, including for Volunteer Profile users. The setup "
+"areas for General Areas of Interest remain available so that they can be "
+"configured correctly in a multi-member database (This is because some "
+"members may have different settings). However, there is no requirement to"
+" complete the General Area setup if they are not being used by any member"
+" of the database."
+msgstr ""
+"Si sélectionné, le logiciel ignorera les <em>domaines d'intérêt "
+"général</em> sur les pages de recherche et de saisie de données, y "
+"compris pour les utilisateurs de profil de bénévole. Les zones de "
+"configuration des <em>domaines d'intérêt général</em> sont toujours "
+"disponibles afin que ceux-ci puissent être configurés correctement dans "
+"une base de données multimembre (car certains membres peuvent avoir "
+"différents paramètres). Cependant, il n'est pas obligatoire de renseigner"
+" les paramètres de domaine général s'il ne sont utilisés par aucun membre"
+" de la base de données."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:405
 msgid "Only use Specific Areas of Interest"
@@ -3114,7 +3351,9 @@ msgstr "Subvention pour la garde d'enfants"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:413
 msgid "Details of Specific Named Child Care Subsidy Program (e.g. $10/day care)"
-msgstr "Détails du programme de subvention spécifique pour la garde d'enfants (p. ex. 10 $/garderie)"
+msgstr ""
+"Détails du programme de subvention spécifique pour la garde d'enfants (p."
+" ex. 10 $/garderie)"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:431
 #: ../python/cioc/web/admin/templates/naics/edit.mak:95
@@ -3162,8 +3401,12 @@ msgid "Volunteer Surveys"
 msgstr "Enquêtes auprès des bénévoles"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:503
-msgid "Optional Surveys to present to those indicating their interest in a volunteer position."
-msgstr "Sondages facultatifs à présenter à ceux qui manifestent leur intérêt pour un poste de bénévole."
+msgid ""
+"Optional Surveys to present to those indicating their interest in a "
+"volunteer position."
+msgstr ""
+"Sondages facultatifs à présenter à ceux qui manifestent leur intérêt pour"
+" un poste de bénévole."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:515
 msgid "There are no surveys available."
@@ -3187,7 +3430,7 @@ msgid "Reviewed for CIOC Release:"
 msgstr "Révision pour la version de CIOC :"
 
 #: ../python/cioc/web/admin/templates/pagehelp.mak:30
-#: ../python/cioc/web/gbl/printlist.py:238
+#: ../python/cioc/web/gbl/printlist.py:248
 msgid "Close Window"
 msgstr "Fermer la fenêtre"
 
@@ -3249,8 +3492,22 @@ msgid "Application Surveys"
 msgstr "Enquêtes"
 
 #: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:44
-msgid "Important Note: Once a survey question has been completed, you may no longer modify the survey question or delete the survey, to preserve the integrity of reports. Please ensure that questions are complete and accurate before using the survey. You may still add/remove answer options, or change the help text of the question. To change the questions being asked, copy the survey and then switch the active survey in the General Setup options."
-msgstr "Remarque importante : une fois qu'une question d'enquête a été complétée, vous ne pouvez plus la modifier ni la supprimer, afin de préserver l'intégrité des rapports. Veuillez vous assurer que les questions sont complètes et exactes avant d'utiliser l'enquête. Vous pouvez toujours ajouter/supprimer des options de réponse ou modifier le texte d'aide de la question. Pour modifier les questions posées, copiez l'enquête, puis changez l'enquête active dans les options de configuration générale."
+msgid ""
+"Important Note: Once a survey question has been completed, you may no "
+"longer modify the survey question or delete the survey, to preserve the "
+"integrity of reports. Please ensure that questions are complete and "
+"accurate before using the survey. You may still add/remove answer "
+"options, or change the help text of the question. To change the questions"
+" being asked, copy the survey and then switch the active survey in the "
+"General Setup options."
+msgstr ""
+"Remarque importante : une fois qu'une question d'enquête a été complétée,"
+" vous ne pouvez plus la modifier ni la supprimer, afin de préserver "
+"l'intégrité des rapports. Veuillez vous assurer que les questions sont "
+"complètes et exactes avant d'utiliser l'enquête. Vous pouvez toujours "
+"ajouter/supprimer des options de réponse ou modifier le texte d'aide de "
+"la question. Pour modifier les questions posées, copiez l'enquête, puis "
+"changez l'enquête active dans les options de configuration générale."
 
 #: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:49
 #: ../python/cioc/web/admin/templates/applicationsurvey/index.mak:99
@@ -3328,7 +3585,9 @@ msgstr "Titre de l'enquête"
 
 #: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:104
 msgid "Public title displayed on application forms for survey section"
-msgstr "Titre public affiché sur les formulaires de demande pour la section d'enquête"
+msgstr ""
+"Titre public affiché sur les formulaires de demande pour la section "
+"d'enquête"
 
 #: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:111
 msgid "Survey Description"
@@ -3336,7 +3595,9 @@ msgstr "Description de l'enquête"
 
 #: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:111
 msgid "Public description of the survey purpose, privacy informnation, etc."
-msgstr "Description publique de l'objectif de l'enquête, informations sur la confidentialité, etc."
+msgstr ""
+"Description publique de l'objectif de l'enquête, informations sur la "
+"confidentialité, etc."
 
 #: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:127
 msgid "Text Question "
@@ -3479,8 +3740,15 @@ msgid "Print Version (New Window)"
 msgstr "Version imprimable (nouvelle fenêtre)"
 
 #: ../python/cioc/web/admin/templates/checklists/edit.mak:67
-msgid "Note that changing an existing value will alter that value in every record in the database that uses it. In some cases this will cause a lag in database responsiveness while the records are updated and re-indexed."
-msgstr "À noter que la modification d'une valeur existante entraînera sa modification dans chaque dossier de la base de données qui l'utilise. Dans certains cas, cela ralentira la base de données le temps que les dossiers soient mis à jour et réindexés."
+msgid ""
+"Note that changing an existing value will alter that value in every "
+"record in the database that uses it. In some cases this will cause a lag "
+"in database responsiveness while the records are updated and re-indexed."
+msgstr ""
+"À noter que la modification d'une valeur existante entraînera sa "
+"modification dans chaque dossier de la base de données qui l'utilise. "
+"Dans certains cas, cela ralentira la base de données le temps que les "
+"dossiers soient mis à jour et réindexés."
 
 #: ../python/cioc/web/admin/templates/checklists/edit.mak:71
 #, python-format
@@ -3724,17 +3992,27 @@ msgstr ""
 "communauté à titre de 'situé dans cette communauté'."
 
 #: ../python/cioc/web/admin/templates/community/edit.mak:78
-msgid "This Community <strong>is not</strong> being used by any Organization / Program records as an \"Located in Community\"."
-msgstr "Cette communauté <strong>n'est pas</strong> en usage par quelque dossier d'organisme que ce soit à titre de 'situé dans la communauté'."
+msgid ""
+"This Community <strong>is not</strong> being used by any Organization / "
+"Program records as an \"Located in Community\"."
+msgstr ""
+"Cette communauté <strong>n'est pas</strong> en usage par quelque dossier "
+"d'organisme que ce soit à titre de 'situé dans la communauté'."
 
 #: ../python/cioc/web/admin/templates/community/edit.mak:82
 #, python-format
 msgid "<strong>%d</strong> Bus Routes are using this Community as a Municipality."
-msgstr "<strong>%d</strong> lignes de bus utilisent cette communauté comme municipalité."
+msgstr ""
+"<strong>%d</strong> lignes de bus utilisent cette communauté comme "
+"municipalité."
 
 #: ../python/cioc/web/admin/templates/community/edit.mak:84
-msgid "This Community <strong>is not</strong> being used by any Bus Routes as a Municipality."
-msgstr "Cette communauté <strong>n'est utilisée par aucune</strong> ligne de bus comme municipalité."
+msgid ""
+"This Community <strong>is not</strong> being used by any Bus Routes as a "
+"Municipality."
+msgstr ""
+"Cette communauté <strong>n'est utilisée par aucune</strong> ligne de bus "
+"comme municipalité."
 
 #: ../python/cioc/web/admin/templates/community/edit.mak:88
 #, python-format
@@ -3744,21 +4022,35 @@ msgstr ""
 "municipalité."
 
 #: ../python/cioc/web/admin/templates/community/edit.mak:90
-msgid "This Community <strong>is not</strong> being used by any Wards as a Municipality."
-msgstr "Cette communauté <strong>n'est utilisée par aucun</strong> quartier comme municipalité."
+msgid ""
+"This Community <strong>is not</strong> being used by any Wards as a "
+"Municipality."
+msgstr ""
+"Cette communauté <strong>n'est utilisée par aucun</strong> quartier comme"
+" municipalité."
 
 #: ../python/cioc/web/admin/templates/community/edit.mak:94
 #, python-format
-msgid "<strong>%d</strong> Volunteer Opportunity record(s) are using this Community."
-msgstr "<strong>%d</strong> dossiers d'occasions de bénévolat utilisent cette communauté."
+msgid ""
+"<strong>%d</strong> Volunteer Opportunity record(s) are using this "
+"Community."
+msgstr ""
+"<strong>%d</strong> dossiers d'occasions de bénévolat utilisent cette "
+"communauté."
 
 #: ../python/cioc/web/admin/templates/community/edit.mak:96
-msgid "This Community <strong>is not</strong> being used by Volunteer opportunity records."
-msgstr "Cette communauté <strong>n'est pas</strong> utilisée dans un dossier d'occasion de bénévolat."
+msgid ""
+"This Community <strong>is not</strong> being used by Volunteer "
+"opportunity records."
+msgstr ""
+"Cette communauté <strong>n'est pas</strong> utilisée dans un dossier "
+"d'occasion de bénévolat."
 
 #: ../python/cioc/web/admin/templates/community/edit.mak:99
 msgid "This Community is part of the following Alternate Search Areas: "
-msgstr "Cette communauté fait partie des zones de recherche alternatives suivantes : "
+msgstr ""
+"Cette communauté fait partie des zones de recherche alternatives "
+"suivantes : "
 
 #: ../python/cioc/web/admin/templates/community/edit.mak:103
 msgid "This Community <strong>is not</strong> part of an Alternate Search Area."
@@ -3776,11 +4068,21 @@ msgstr ""
 
 #: ../python/cioc/web/admin/templates/community/edit.mak:108
 msgid "Because this Community is being used, you cannot currently delete it."
-msgstr "Puisque cette communauté est présentement en usage, vous ne pouvez la supprimer maintenant."
+msgstr ""
+"Puisque cette communauté est présentement en usage, vous ne pouvez la "
+"supprimer maintenant."
 
 #: ../python/cioc/web/admin/templates/community/edit.mak:134
-msgid "Fill in a value for Display if you want a different value from the Name for Search communities display and the Located In community display. This will not affect the display of the values for Areas Served."
-msgstr "Inscrire une valeur pour l'affichage si vous désirez une valeur différente de celle de l'affichage du 'nom désignant les communautés choisies pour la recherche' et celle de l'affichage de 'situé dans la communauté'. Ce changement ne modifiera pas les valeurs pour les secteurs desservis."
+msgid ""
+"Fill in a value for Display if you want a different value from the Name "
+"for Search communities display and the Located In community display. This"
+" will not affect the display of the values for Areas Served."
+msgstr ""
+"Inscrire une valeur pour l'affichage si vous désirez une valeur "
+"différente de celle de l'affichage du 'nom désignant les communautés "
+"choisies pour la recherche' et celle de l'affichage de 'situé dans la "
+"communauté'. Ce changement ne modifiera pas les valeurs pour les secteurs"
+" desservis."
 
 #: ../python/cioc/web/admin/templates/community/edit.mak:150
 msgid "Parent Community"
@@ -3902,7 +4204,7 @@ msgstr "Information communautaire"
 #: ../python/cioc/web/admin/templates/datafeedapikey/edit.mak:64
 #: ../python/cioc/web/admin/templates/fieldhelp/edit.mak:77
 #: ../python/cioc/web/admin/templates/pagetitle/edit.mak:48
-#: ../python/cioc/web/admin/templates/views/edit.mak:1537
+#: ../python/cioc/web/admin/templates/views/edit.mak:1551
 msgid "Submit Updates"
 msgstr "Soumettre"
 
@@ -3972,8 +4274,15 @@ msgid "Default Message"
 msgstr "Message par défaut"
 
 #: ../python/cioc/web/admin/templates/email/edit.mak:72
-msgid "The Default Message will be the one initially selected when creating a new email update request. Users will have the opportunity to choose a different message before sending."
-msgstr "Le message par défaut sera celui sélectionné initialement lors de la création d'une nouvelle demande de mise à jour par courriel. Les utilisateurs auront la possibilité de choisir une autre langue avant l'envoi."
+msgid ""
+"The Default Message will be the one initially selected when creating a "
+"new email update request. Users will have the opportunity to choose a "
+"different message before sending."
+msgstr ""
+"Le message par défaut sera celui sélectionné initialement lors de la "
+"création d'une nouvelle demande de mise à jour par courriel. Les "
+"utilisateurs auront la possibilité de choisir une autre langue avant "
+"l'envoi."
 
 #: ../python/cioc/web/admin/templates/email/edit.mak:75
 msgid "This message is currently the Default Message"
@@ -4264,20 +4573,36 @@ msgstr "Ajouter un centre d'intérêt spécifique"
 
 #: ../python/cioc/web/admin/templates/interests/edit.mak:43
 #, python-format
-msgid "This Specific Area of Interest is <strong>being used</strong> by %d record(s)."
-msgstr "Ce centre d'intérêt spécifique <strong>est utilisé</strong> par %d dossier(s)."
+msgid ""
+"This Specific Area of Interest is <strong>being used</strong> by %d "
+"record(s)."
+msgstr ""
+"Ce centre d'intérêt spécifique <strong>est utilisé</strong> par %d "
+"dossier(s)."
 
 #: ../python/cioc/web/admin/templates/interests/edit.mak:44
-msgid "Because this Specific Area of Interest is being used, you cannot currently delete it."
-msgstr "Ce centre d'intérêt spécifique est actuellement utilisé : vous ne pouvez pas le supprimer."
+msgid ""
+"Because this Specific Area of Interest is being used, you cannot "
+"currently delete it."
+msgstr ""
+"Ce centre d'intérêt spécifique est actuellement utilisé : vous ne pouvez "
+"pas le supprimer."
 
 #: ../python/cioc/web/admin/templates/interests/edit.mak:46
-msgid "This Specific Area of Interest is <strong>not</strong> being used by any records."
-msgstr "Ce centre d'intérêt spécifique <strong>n'est utilisé dans aucun</strong> dossier."
+msgid ""
+"This Specific Area of Interest is <strong>not</strong> being used by any "
+"records."
+msgstr ""
+"Ce centre d'intérêt spécifique <strong>n'est utilisé dans aucun</strong> "
+"dossier."
 
 #: ../python/cioc/web/admin/templates/interests/edit.mak:47
-msgid "Because this Specific Area of Interest is not being used, you can delete it using the button at the bottom of the form."
-msgstr "Ce centre d'intérêt spécifique n'est pas utilisé : il peut être supprimé en utilisant le bouton en bas du formulaire."
+msgid ""
+"Because this Specific Area of Interest is not being used, you can delete "
+"it using the button at the bottom of the form."
+msgstr ""
+"Ce centre d'intérêt spécifique n'est pas utilisé : il peut être supprimé "
+"en utilisant le bouton en bas du formulaire."
 
 #: ../python/cioc/web/admin/templates/interests/edit.mak:80
 #: ../python/cioc/web/admin/templates/interests/index.mak:58
@@ -4290,7 +4615,9 @@ msgstr "Secteurs d'intérêt spécifique"
 
 #: ../python/cioc/web/admin/templates/interests/index.mak:33
 msgid "Edit Values for checklist: Specific Areas of Interest"
-msgstr "Modifier les valeurs de la liste de contrôle : Centres d'intérêt spécifique"
+msgstr ""
+"Modifier les valeurs de la liste de contrôle : Centres d'intérêt "
+"spécifique"
 
 #: ../python/cioc/web/admin/templates/interests/index.mak:66
 msgid "Usage Local"
@@ -4325,19 +4652,29 @@ msgstr "Cette mise en page est <strong>utilisée</strong> par les vues suivantes
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:45
 msgid "Because this layout is being used, you cannot currently delete it."
-msgstr "Puisque cette mise en page est présentement en usage, vous ne pouvez la supprimer maintenant."
+msgstr ""
+"Puisque cette mise en page est présentement en usage, vous ne pouvez la "
+"supprimer maintenant."
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:48
 msgid "This layout is <strong>not</strong> being used by any templates."
 msgstr "Cette mise en page <strong>n'est pas</strong> utilisé dans d'autres vues."
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:50
-msgid "Because this layout is not being used, you can delete it using the button at the bottom of the form."
-msgstr "Cette mise en page n'étant pas utilisée, vous pouvez la supprimer en cliquant sur le bouton au bas du formulaire."
+msgid ""
+"Because this layout is not being used, you can delete it using the button"
+" at the bottom of the form."
+msgstr ""
+"Cette mise en page n'étant pas utilisée, vous pouvez la supprimer en "
+"cliquant sur le bouton au bas du formulaire."
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:54
-msgid "This layout is provided with the software. You can view and copy it, but you can't edit or delete it."
-msgstr "Cette mise en page est fournie avec le logiciel. Vous pouvez voir et copier, mais vous ne pouvez ni modifier, ni supprimer."
+msgid ""
+"This layout is provided with the software. You can view and copy it, but "
+"you can't edit or delete it."
+msgstr ""
+"Cette mise en page est fournie avec le logiciel. Vous pouvez voir et "
+"copier, mais vous ne pouvez ni modifier, ni supprimer."
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:64
 #: ../python/cioc/web/admin/templates/template/edit.mak:96
@@ -4355,9 +4692,11 @@ msgstr "Propriétaire du dossier"
 #: ../python/cioc/web/admin/templates/template/edit.mak:98
 #: ../python/cioc/web/admin/templates/template/edit.mak:602
 #: ../python/cioc/web/admin/templates/views/edit.mak:177
-#: ../python/cioc/web/admin/templates/views/edit.mak:1535
+#: ../python/cioc/web/admin/templates/views/edit.mak:1549
 msgid "Setup of this item is exclusively controlled by the Agency: "
-msgstr "La configuration de cet élément est exclusivement contrôlée par l'agence : "
+msgstr ""
+"La configuration de cet élément est exclusivement contrôlée par l'agence "
+": "
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:70
 msgid "HTML Standards Mode"
@@ -4450,8 +4789,15 @@ msgstr "Copier la mise en page du modèle existant :"
 
 #: ../python/cioc/web/admin/templates/listvalues/edit.mak:45
 #, python-format
-msgid "Note that %s in records are not confined to these values, and changes to these values will not alter existing records. This list only limits what is displayed as an option on update and feedback forms."
-msgstr "À noter que les %s dans les dossiers ne sont pas limités à ces valeurs ; ainsi, des modifications apportées à ces valeurs ne changeront pas les dossiers existants. Cette liste limite uniquement ce qui sera affiché comme option dans les formulaires de mise à jour et de rétroaction."
+msgid ""
+"Note that %s in records are not confined to these values, and changes to "
+"these values will not alter existing records. This list only limits what "
+"is displayed as an option on update and feedback forms."
+msgstr ""
+"À noter que les %s dans les dossiers ne sont pas limités à ces valeurs ; "
+"ainsi, des modifications apportées à ces valeurs ne changeront pas les "
+"dossiers existants. Cette liste limite uniquement ce qui sera affiché "
+"comme option dans les formulaires de mise à jour et de rétroaction."
 
 #: ../python/cioc/web/admin/templates/listvalues/edit.mak:130
 msgid "Item Name: "
@@ -4476,15 +4822,23 @@ msgstr "Ce système cartographie <strong>est utilisé</strong> par %d dossier(s)
 
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:45
 msgid "Because this Mapping System is being used, you cannot currently delete it."
-msgstr "Comme ce système cartographique est utilisé, vous ne pouvez pas le supprimer."
+msgstr ""
+"Comme ce système cartographique est utilisé, vous ne pouvez pas le "
+"supprimer."
 
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:47
 msgid "This Mapping System is <strong>not</strong> being used by any records."
-msgstr "Ce système cartographique <strong>n'est pas</strong> utilisé dans un dossier."
+msgstr ""
+"Ce système cartographique <strong>n'est pas</strong> utilisé dans un "
+"dossier."
 
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:48
-msgid "Because this Mapping System is not being used, you can delete it using the button at the bottom of the form."
-msgstr "Comme ce système cartographique n'est pas utilisé, il peut être supprimé en activant le bouton au bas du formulaire."
+msgid ""
+"Because this Mapping System is not being used, you can delete it using "
+"the button at the bottom of the form."
+msgstr ""
+"Comme ce système cartographique n'est pas utilisé, il peut être supprimé "
+"en activant le bouton au bas du formulaire."
 
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:57
 msgid "Name of this Mapping System (not displayed in records)"
@@ -4495,8 +4849,13 @@ msgid "Label"
 msgstr "Étiquette"
 
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:74
-msgid "Text used to display the link to the map within a record, e.g. View Google Map. Also used as the name of this Mapping System."
-msgstr "Texte utilisé pour afficher le lien vers la carte dans un dossier, par ex. <em>Voir la carte Google</em>. Également utilisé comme nom de ce système cartographique."
+msgid ""
+"Text used to display the link to the map within a record, e.g. View "
+"Google Map. Also used as the name of this Mapping System."
+msgstr ""
+"Texte utilisé pour afficher le lien vers la carte dans un dossier, par "
+"ex. <em>Voir la carte Google</em>. Également utilisé comme nom de ce "
+"système cartographique."
 
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:90
 #: ../python/cioc/web/admin/templates/template/edit.mak:641
@@ -4504,20 +4863,43 @@ msgid "Link"
 msgstr "Lien"
 
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:91
-msgid "You may use any of the following fields in your link: [NUM], [SITE_ADDRESS], [SITE_STREET_NUMBER], [SITE_STREET], [SITE_STREET_TYPE], [SITE_STREET_DIR], [SITE_CITY], [SITE_PROVINCE], [SITE_COUNTRY], [SITE_POSTAL_CODE], [LATITUDE], [LONGITUDE]. Example: http://maps.mysite.ca/map_script?record=[NUM]. Adequate address information must be supplied in order for a mapping link to appear, even when using an external Mapping System."
-msgstr "Vous pouvez utiliser l'un ou plusieurs des champs suivants dans votre lien : [NUM], [SITE_ADDRESS], [SITE_STREET_NUMBER], [SITE_STREET], [SITE_STREET_TYPE], [SITE_STREET_DIR], [SITE_CITY], [SITE_PROVINCE], [SITE_COUNTRY], [SITE_POSTAL_CODE], [LATITUDE], [LONGITUDE]. Exemple : http://maps.mysite.ca/map_script?record=[NUM]. Des coordonnées appropriées doivent être fournies afin de faire apparaître un lien cartographique, même en utilisant un système cartographique externe."
+msgid ""
+"You may use any of the following fields in your link: [NUM], "
+"[SITE_ADDRESS], [SITE_STREET_NUMBER], [SITE_STREET], [SITE_STREET_TYPE], "
+"[SITE_STREET_DIR], [SITE_CITY], [SITE_PROVINCE], [SITE_COUNTRY], "
+"[SITE_POSTAL_CODE], [LATITUDE], [LONGITUDE]. Example: "
+"http://maps.mysite.ca/map_script?record=[NUM]. Adequate address "
+"information must be supplied in order for a mapping link to appear, even "
+"when using an external Mapping System."
+msgstr ""
+"Vous pouvez utiliser l'un ou plusieurs des champs suivants dans votre "
+"lien : [NUM], [SITE_ADDRESS], [SITE_STREET_NUMBER], [SITE_STREET], "
+"[SITE_STREET_TYPE], [SITE_STREET_DIR], [SITE_CITY], [SITE_PROVINCE], "
+"[SITE_COUNTRY], [SITE_POSTAL_CODE], [LATITUDE], [LONGITUDE]. Exemple : "
+"http://maps.mysite.ca/map_script?record=[NUM]. Des coordonnées "
+"appropriées doivent être fournies afin de faire apparaître un lien "
+"cartographique, même en utilisant un système cartographique externe."
 
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:111
-msgid "Default value for the state / province that is sent to the Mapping System when there is no value in the record being mapped."
-msgstr "Valeur de l'état ou de la province par défaut qui est envoyée au système cartographique, lorsqu'il n'y a pas de valeur dans le dossier cartographié."
+msgid ""
+"Default value for the state / province that is sent to the Mapping System"
+" when there is no value in the record being mapped."
+msgstr ""
+"Valeur de l'état ou de la province par défaut qui est envoyée au système "
+"cartographique, lorsqu'il n'y a pas de valeur dans le dossier "
+"cartographié."
 
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:115
 msgid "Default Country"
 msgstr "Pays par défaut"
 
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:119
-msgid "Default value for the country that is sent to the Mapping System when there is no value in the record being mapped."
-msgstr "Valeur du pays par défaut qui est envoyée au système cartographique, lorsqu'il n'y a pas de valeur dans le dossier cartographié."
+msgid ""
+"Default value for the country that is sent to the Mapping System when "
+"there is no value in the record being mapped."
+msgstr ""
+"Valeur du pays par défaut qui est envoyée au système cartographique, "
+"lorsqu'il n'y a pas de valeur dans le dossier cartographié."
 
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:123
 #: ../python/cioc/web/cic/templates/record.mak:133
@@ -4554,8 +4936,12 @@ msgid "This NAICS Code <strong>is not</strong> being used by any records."
 msgstr "Ce code SCIAN <strong>n'utilisé dans aucun</strong> dossier."
 
 #: ../python/cioc/web/admin/templates/naics/edit.mak:51
-msgid "Because this NAICS Code is not being used, you can delete it using the button at the bottom of the form."
-msgstr "Ce code SCIAN n'est pas utilisé : il peut être supprimé en utilisant le bouton en bas du formulaire."
+msgid ""
+"Because this NAICS Code is not being used, you can delete it using the "
+"button at the bottom of the form."
+msgstr ""
+"Ce code SCIAN n'est pas utilisé : il peut être supprimé en utilisant le "
+"bouton en bas du formulaire."
 
 #: ../python/cioc/web/admin/templates/naics/edit.mak:53
 msgid "Because this NAICS Code is being used, you cannot currently delete it."
@@ -4598,7 +4984,9 @@ msgstr "Exclusions"
 
 #: ../python/cioc/web/admin/templates/naics/edit.mak:119
 msgid "Return to this form to add exclusions once the record has been added"
-msgstr "Revenir à ce formulaire pour ajouter des exclusions, une fois que le dossier a été ajouté"
+msgstr ""
+"Revenir à ce formulaire pour ajouter des exclusions, une fois que le "
+"dossier a été ajouté"
 
 #: ../python/cioc/web/admin/templates/naics/edit.mak:121
 msgid "The current list of exclusions is below."
@@ -4611,7 +4999,9 @@ msgstr "Modifier les exclusions pour ce code"
 #: ../python/cioc/web/admin/templates/naics/edit.mak:121
 #: ../python/cioc/web/admin/templates/naics/edit.mak:132
 msgid "(Make sure you submit your changes on this form first!)."
-msgstr "(assurez-vous que vous soumettez d'abord vos changements sur ce formulaire !)."
+msgstr ""
+"(assurez-vous que vous soumettez d'abord vos changements sur ce "
+"formulaire !)."
 
 #: ../python/cioc/web/admin/templates/naics/edit.mak:122
 msgid "Exclusion(s)"
@@ -4627,7 +5017,9 @@ msgstr "Exemples"
 
 #: ../python/cioc/web/admin/templates/naics/edit.mak:130
 msgid "Return to this form to add examples once the record has been added"
-msgstr "Revenir à ce formulaire pour ajouter des exemples, une fois que le dossier a été ajouté"
+msgstr ""
+"Revenir à ce formulaire pour ajouter des exemples, une fois que le "
+"dossier a été ajouté"
 
 #: ../python/cioc/web/admin/templates/naics/edit.mak:132
 msgid "The current list of examples is below."
@@ -4830,8 +5222,17 @@ msgid "Publish as Article"
 msgstr "Publier comme article"
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:105
-msgid "Articles may be used like regular pages. By turning on article features, the page will appear on the index page listing all articles, and on the search page widget for the selected View(s). Use of additional artcile fields is optional."
-msgstr "Les articles peuvent être utilisés comme des pages normales. En activant les fonctionnalités d'article, la page apparaîtra sur la page d'index répertoriant tous les articles et sur le widget de la page de recherche pour les vues sélectionnées. L'utilisation de champs d'article supplémentaires est facultative."
+msgid ""
+"Articles may be used like regular pages. By turning on article features, "
+"the page will appear on the index page listing all articles, and on the "
+"search page widget for the selected View(s). Use of additional artcile "
+"fields is optional."
+msgstr ""
+"Les articles peuvent être utilisés comme des pages normales. En activant "
+"les fonctionnalités d'article, la page apparaîtra sur la page d'index "
+"répertoriant tous les articles et sur le widget de la page de recherche "
+"pour les vues sélectionnées. L'utilisation de champs d'article "
+"supplémentaires est facultative."
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:108
 msgid "Include this page in the list of published articles"
@@ -4842,8 +5243,20 @@ msgid "Publish Date"
 msgstr "Date de publication"
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:113
-msgid "The Publish Date will appear on the article and may be used to change the order of recent articles; it does not need to be the same as the creation date, and may be changed. Publish dates in the future do not prevent access to the page if you have already added it to a View, but the article will not appear in the artcile list or widget until after the publish date."
-msgstr "La date de publication apparaîtra sur l'article et peut être utilisée pour modifier l'ordre des articles récents. Elle n'a pas besoin d'être identique à la date de création et peut être modifiée. Les dates de publication ultérieures n'empêchent pas l'accès à la page si vous l'avez déjà ajoutée à une vue, mais l'article n'apparaîtra pas dans la liste des articles ou dans le widget avant la date de publication."
+msgid ""
+"The Publish Date will appear on the article and may be used to change the"
+" order of recent articles; it does not need to be the same as the "
+"creation date, and may be changed. Publish dates in the future do not "
+"prevent access to the page if you have already added it to a View, but "
+"the article will not appear in the artcile list or widget until after the"
+" publish date."
+msgstr ""
+"La date de publication apparaîtra sur l'article et peut être utilisée "
+"pour modifier l'ordre des articles récents. Elle n'a pas besoin d'être "
+"identique à la date de création et peut être modifiée. Les dates de "
+"publication ultérieures n'empêchent pas l'accès à la page si vous l'avez "
+"déjà ajoutée à une vue, mais l'article n'apparaîtra pas dans la liste des"
+" articles ou dans le widget avant la date de publication."
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:120
 msgid "Author"
@@ -6544,6 +6957,7 @@ msgstr "Message"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:51
 #: ../python/cioc/web/admin/templates/views/edit.mak:816
+#: ../python/cioc/web/admin/templates/views/edit.mak:1431
 msgid "Maximum 8000 characters. HTML is allowed."
 msgstr "8000 caractères maximum. Le HTML est autorisé."
 
@@ -6589,14 +7003,14 @@ msgid "Template and Layout Options"
 msgstr "Options pour le modèle et la mise en page"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:99
-#: ../python/cioc/web/admin/templates/views/edit.mak:1481
+#: ../python/cioc/web/admin/templates/views/edit.mak:1495
 msgid "Classifications"
 msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:101
 #: ../python/cioc/web/admin/templates/views/edit.mak:732
 #: ../python/cioc/web/admin/templates/views/edit.mak:846
-#: ../python/cioc/web/admin/templates/views/edit.mak:1551
+#: ../python/cioc/web/admin/templates/views/edit.mak:1565
 msgid "Manage Fields"
 msgstr "Gérer les champs"
 
@@ -7296,17 +7710,17 @@ msgid "The full field management area is available at the bottom of this page."
 msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:736
-#: ../python/cioc/web/admin/templates/views/edit.mak:1557
+#: ../python/cioc/web/admin/templates/views/edit.mak:1571
 msgid "Update Fields (New Window)"
 msgstr "Champs de mise à jour (nouvelle fenêtre)"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:737
-#: ../python/cioc/web/admin/templates/views/edit.mak:1558
+#: ../python/cioc/web/admin/templates/views/edit.mak:1572
 msgid "Feedback Fields (New Window)"
 msgstr "Champs pour la rétroaction (nouvelle fenêtre)"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:739
-#: ../python/cioc/web/admin/templates/views/edit.mak:1560
+#: ../python/cioc/web/admin/templates/views/edit.mak:1574
 msgid "Mail Form Fields (New Window)"
 msgstr "Champs du Formulaire de courrier (Nouvelle fenêtre)"
 
@@ -7432,7 +7846,7 @@ msgid "Show Suggest Opportunity link"
 msgstr "Afficher le lien  \" Proposer une occasion de bénévolat\"."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:849
-#: ../python/cioc/web/admin/templates/views/edit.mak:1556
+#: ../python/cioc/web/admin/templates/views/edit.mak:1570
 msgid "Details Fields (New Window)"
 msgstr "Champs de renseignements (nouvelle fenêtre)"
 
@@ -7912,27 +8326,35 @@ msgstr ""
 msgid "Public Print Profiles denoted by *."
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1425
-#: ../python/cioc/web/admin/templates/views/edit.mak:1431
+#: ../python/cioc/web/admin/templates/views/edit.mak:1424
+msgid "The Custom Report Tool is available for the above Print Profile"
+msgstr ""
+
+#: ../python/cioc/web/admin/templates/views/edit.mak:1429
+msgid "Report Tool Introduction / Instructions"
+msgstr ""
+
+#: ../python/cioc/web/admin/templates/views/edit.mak:1439
+#: ../python/cioc/web/admin/templates/views/edit.mak:1445
 msgid "Tag Line"
 msgstr "Slogan"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1426
+#: ../python/cioc/web/admin/templates/views/edit.mak:1440
 msgid "A slogan or tag line that can be added to some Header Layouts."
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1442
-#: ../python/cioc/web/admin/templates/views/edit.mak:1448
+#: ../python/cioc/web/admin/templates/views/edit.mak:1456
+#: ../python/cioc/web/admin/templates/views/edit.mak:1462
 msgid "Spotlight Opportunity"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1443
+#: ../python/cioc/web/admin/templates/views/edit.mak:1457
 msgid ""
 "A valid record number will show the selected Opportunity. Any other value"
 " selects a random Opportunity."
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1458
+#: ../python/cioc/web/admin/templates/views/edit.mak:1472
 msgid ""
 "The text appearing at the bottom of each page of the view. Be thoughtful "
 "and keep it short - remember that this has to load with every page. If "
@@ -7944,13 +8366,13 @@ msgstr ""
 "désirez présenter beaucoup d'information, il est préférable de créer une "
 "page web et d'y établir un lien."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1460
+#: ../python/cioc/web/admin/templates/views/edit.mak:1474
 msgid "The text appearing above the menu items on the start page."
 msgstr ""
 "Le texte apparaissant au-dessus des rubriques du menu sur la page de "
 "démarrage."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1462
+#: ../python/cioc/web/admin/templates/views/edit.mak:1476
 msgid ""
 "The text appearing on the left side of the start page and highlighted as "
 "an alert (above the menu in the default layouts)."
@@ -7959,52 +8381,52 @@ msgstr ""
 "en valeur comme alerte (au-dessus du menu dans les mises en page par "
 "défaut)."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1464
+#: ../python/cioc/web/admin/templates/views/edit.mak:1478
 msgid "The panel containing the Keyword Search"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1466
+#: ../python/cioc/web/admin/templates/views/edit.mak:1480
 msgid "Additional multi-purpose panel available in some layouts"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1468
+#: ../python/cioc/web/admin/templates/views/edit.mak:1482
 msgid "Custom HTML to appear in the left area of the Basic Search page."
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1470
+#: ../python/cioc/web/admin/templates/views/edit.mak:1484
 msgid "Custom HTML to appear in the centre-bottom area of the Basic Search page."
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1472
+#: ../python/cioc/web/admin/templates/views/edit.mak:1486
 msgid "Custom HTML to appear in the right area of the Basic Search page."
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1486
+#: ../python/cioc/web/admin/templates/views/edit.mak:1500
 msgid "NAICS"
 msgstr "SCIAN"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1489
+#: ../python/cioc/web/admin/templates/views/edit.mak:1503
 msgid "NAICS menu items and searches are available in this View"
 msgstr ""
 "Les éléments du menu SCIAN et les recherches associées sont disponibles "
 "dans cette vue"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1494
+#: ../python/cioc/web/admin/templates/views/edit.mak:1508
 msgid "Taxonomy"
 msgstr "Taxonomie"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1498
+#: ../python/cioc/web/admin/templates/views/edit.mak:1512
 msgid "Taxonomy menu items and searches are available in this View"
 msgstr ""
 "Les éléments du menu et la recherche dans la Taxonomie sont disponibles "
 "dans cette vue."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1503
+#: ../python/cioc/web/admin/templates/views/edit.mak:1517
 #, python-format
 msgid "Show Definitions for Taxonomy Level %s and above."
 msgstr "Afficher les définitions pour le niveau %s  de la Taxonomie et au-dessus."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1504
+#: ../python/cioc/web/admin/templates/views/edit.mak:1518
 msgid ""
 "In a \"Browse by Service Category\" Search, show definitions for Taxonomy"
 " Terms at or above the Level selected. If 0 is selected, definitions will"
@@ -8014,23 +8436,23 @@ msgstr ""
 "définitions pour les termes taxonomiques de niveau égal ou supérieur. Si "
 "0 est sélectionné, aucune définition ne sera affichée pour les termes."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1510
+#: ../python/cioc/web/admin/templates/views/edit.mak:1524
 msgid "Thesaurus"
 msgstr "Thésaurus"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1514
+#: ../python/cioc/web/admin/templates/views/edit.mak:1528
 msgid "Thesaurus menu items and searches are available in this View"
 msgstr ""
 "Les éléments du menu du thésaurus et les recherches associées sont "
 "disponibles dans cette vue"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1518
+#: ../python/cioc/web/admin/templates/views/edit.mak:1532
 msgid "Local Subjects in Browse, Sidebar"
 msgstr ""
 "Sujets locaux dans l'exploration par sujet et dans le menu latéral des "
 "sujets"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1519
+#: ../python/cioc/web/admin/templates/views/edit.mak:1533
 msgid ""
 "If this option is checked, local subjects will be included in \"Browse by"
 " Subject\" and the Subject sidebar on the results page."
@@ -8039,13 +8461,13 @@ msgstr ""
 "l'exploration par sujet et dans le menu latéral des sujets sur la page de"
 " résultats."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1523
+#: ../python/cioc/web/admin/templates/views/edit.mak:1537
 msgid "Zero-Count Subjects In Browse, Sidebar"
 msgstr ""
 "Sujets sans dossier dans \" Parcourir par sujet \" et dans le menu "
 "latéral des sujets"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1524
+#: ../python/cioc/web/admin/templates/views/edit.mak:1538
 msgid ""
 "If this option is checked, subjects with a zero count (not being used by "
 "any records in the view) will still be included in \"Browse by Subject\" "
@@ -8055,7 +8477,7 @@ msgstr ""
 " dossier de la vue seront quand même compris dans \" Parcourir par sujet "
 "\" et dans le menu latéral des sujets sur la page des résultats."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1555
+#: ../python/cioc/web/admin/templates/views/edit.mak:1569
 msgid "Field Groups (New Window)"
 msgstr "Groupes de champs (nouvelle fenêtre)"
 
@@ -8202,7 +8624,7 @@ msgid "Import"
 msgstr "Importation"
 
 #: ../python/cioc/web/cic/bsearch.py:274
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:90
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:96
 #: ../python/cioc/web/vol/bsearch.py:263
 msgid "Deleted Records"
 msgstr "Dossiers supprimés"
@@ -8292,9 +8714,9 @@ msgstr "Recherche : Organismes ou programmes"
 msgid "Within %skm"
 msgstr "Dans %skm"
 
-#: ../python/cioc/web/cic/customreport.py:75
-#: ../python/cioc/web/cic/customreport.py:116
-#: ../python/cioc/web/cic/customreport.py:174
+#: ../python/cioc/web/cic/customreport.py:83
+#: ../python/cioc/web/cic/customreport.py:132
+#: ../python/cioc/web/cic/customreport.py:192
 msgid "Create a Custom Report"
 msgstr ""
 
@@ -8577,7 +8999,7 @@ msgid "Previous"
 msgstr "Précédent"
 
 #: ../python/cioc/web/cic/record.py:509
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:105
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:111
 msgid "Next"
 msgstr "Suivant"
 
@@ -9137,80 +9559,100 @@ msgstr "Inclure les dossiers non cartographiées"
 msgid "Sort by nearest"
 msgstr "Trier par ordre de proximité"
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:31
-#: ../python/cioc/web/cic/templates/customreport/index.mak:26
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:32
+#: ../python/cioc/web/cic/templates/customreport/format.mak:33
+#: ../python/cioc/web/cic/templates/customreport/index.mak:28
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:37
 msgid "Step 1: "
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:31
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:32
+#: ../python/cioc/web/cic/templates/customreport/format.mak:33
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:37
 msgid "Selected Communities"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:33
-#: ../python/cioc/web/cic/templates/customreport/format.mak:49
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:34
+#: ../python/cioc/web/cic/templates/customreport/format.mak:35
+#: ../python/cioc/web/cic/templates/customreport/format.mak:61
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:39
 msgid "None selected"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:47
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:48
+#: ../python/cioc/web/cic/templates/customreport/format.mak:38
+#: ../python/cioc/web/cic/templates/customreport/index.mak:45
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:42
+msgid "Located in the chosen communities: "
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:40
+#: ../python/cioc/web/cic/templates/customreport/index.mak:48
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:44
+msgid "Serving the chosen communities: "
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:59
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:58
 msgid "Step 2: "
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:47
+#: ../python/cioc/web/cic/templates/customreport/format.mak:59
 msgid "Selected Topics"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:69
+#: ../python/cioc/web/cic/templates/customreport/format.mak:82
 msgid "Step 3: "
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:69
+#: ../python/cioc/web/cic/templates/customreport/format.mak:82
 msgid "Report Settings"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:71
+#: ../python/cioc/web/cic/templates/customreport/format.mak:84
 msgid "Report Title: "
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:74
+#: ../python/cioc/web/cic/templates/customreport/format.mak:88
 msgid "Organize Records by: "
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:76
+#: ../python/cioc/web/cic/templates/customreport/format.mak:90
 msgid "Organization or Program Name"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:79
+#: ../python/cioc/web/cic/templates/customreport/format.mak:93
 msgid "Topic"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:82
+#: ../python/cioc/web/cic/templates/customreport/format.mak:101
 msgid "Report Format: "
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:84
+#: ../python/cioc/web/cic/templates/customreport/format.mak:103
 msgid "Printable list (webpage)"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:87
+#: ../python/cioc/web/cic/templates/customreport/format.mak:106
 msgid "PDF Document"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:91
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:99
+#: ../python/cioc/web/cic/templates/customreport/format.mak:109
+msgid "Record Visibility: "
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:111
+msgid "Include Non-Public Records"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:116
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:111
 msgid "Start Over"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:92
-#: ../python/cioc/web/cic/templates/customreport/index.mak:53
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:100
+#: ../python/cioc/web/cic/templates/customreport/format.mak:117
+#: ../python/cioc/web/cic/templates/customreport/index.mak:74
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:112
 msgid "Next Step: "
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/format.mak:92
+#: ../python/cioc/web/cic/templates/customreport/format.mak:117
 #: ../python/cioc/web/stats/templates/auto_datamgmt.mak:59
 #: ../python/cioc/web/stats/templates/auto_ips.mak:58
 #: ../python/cioc/web/stats/templates/auto_ipsbyro.mak:58
@@ -9220,29 +9662,29 @@ msgstr ""
 msgid "Generate Report"
 msgstr "Générer le rapport"
 
-#: ../python/cioc/web/cic/templates/customreport/index.mak:26
+#: ../python/cioc/web/cic/templates/customreport/index.mak:28
 msgid "Choose one or more Communities"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/index.mak:44
-#: ../python/cioc/web/cic/templates/customreport/index.mak:61
+#: ../python/cioc/web/cic/templates/customreport/index.mak:65
+#: ../python/cioc/web/cic/templates/customreport/index.mak:82
 #, python-format
 msgid "All of <span class=\"demi-bold\">%s</span>"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/index.mak:53
+#: ../python/cioc/web/cic/templates/customreport/index.mak:74
 msgid "Choose Topics"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:48
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:58
 msgid "Choose one or more Topics"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:50
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:60
 msgid "None available"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:100
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:112
 msgid "Choose Format"
 msgstr ""
 
@@ -10270,7 +10712,7 @@ msgstr "Insérer la description courante du dossier"
 
 #: ../python/cioc/web/cic/templates/updatepubs/edit.mak:107
 #: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:53
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:126
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:132
 msgid "General Headings"
 msgstr "En-têtes généraux"
 
@@ -10355,31 +10797,39 @@ msgstr "Page non trouvée"
 msgid "Index of Articles"
 msgstr "Index des articles"
 
-#: ../python/cioc/web/gbl/printlist.py:228
-#: ../python/cioc/web/gbl/printlist.py:282
-#: ../python/cioc/web/gbl/printlist.py:466
+#: ../python/cioc/web/gbl/printlist.py:238
+#: ../python/cioc/web/gbl/printlist.py:297
+#: ../python/cioc/web/gbl/printlist.py:495
 msgid "Print Record List"
 msgstr "Imprimer la liste des dossiers"
 
-#: ../python/cioc/web/gbl/printlist.py:255
+#: ../python/cioc/web/gbl/printlist.py:265
 #: ../python/cioc/web/jsonfeeds/vacancy.py:169
 msgid "Validation Error"
 msgstr "Erreur de validation"
 
-#: ../python/cioc/web/gbl/printlist.py:266
+#: ../python/cioc/web/gbl/printlist.py:276
 msgid "No Print Profile was chosen."
 msgstr "Aucun profil d'impression n'a été choisi."
 
-#: ../python/cioc/web/gbl/printlist.py:269
-#: ../python/cioc/web/gbl/printlist.py:343
+#: ../python/cioc/web/gbl/printlist.py:279
+#: ../python/cioc/web/gbl/printlist.py:358
 msgid "No records were chosen to print."
 msgstr "Aucun enregistrement n'a été choisi pour être imprimé."
 
-#: ../python/cioc/web/gbl/printlist.py:307
+#: ../python/cioc/web/gbl/printlist.py:294
+msgid "Could not find print profile."
+msgstr ""
+
+#: ../python/cioc/web/gbl/printlist.py:322
 msgid "No Print Profile was chosen"
 msgstr "Aucun profil d'impression n'a été choisi"
 
-#: ../python/cioc/web/gbl/printlist.py:472
+#: ../python/cioc/web/gbl/printlist.py:394
+msgid "Report to large. Please reduce the number of records in the report."
+msgstr ""
+
+#: ../python/cioc/web/gbl/printlist.py:501
 msgid "No records were chosen to prinnt"
 msgstr "Aucun enregistrement n'a été choisi pour l'impression"
 
@@ -10435,7 +10885,9 @@ msgstr "Aucun dossier disponible pour la vue sélectionnée"
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:83
 msgid "Some records are not available in the selected View and are listed below."
-msgstr "Certains enregistrements ne sont pas disponibles dans la vue sélectionnée et sont répertoriés ci-dessous."
+msgstr ""
+"Certains enregistrements ne sont pas disponibles dans la vue sélectionnée"
+" et sont répertoriés ci-dessous."
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:86
 msgid "Send Email"
@@ -10617,7 +11069,9 @@ msgstr "Trier par"
 
 #: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:65
 msgid "When sorted by heading, results will also be grouped by heading"
-msgstr "Lorsqu'ils sont triés par titre, les résultats seront également regroupés par titre"
+msgstr ""
+"Lorsqu'ils sont triés par titre, les résultats seront également regroupés"
+" par titre"
 
 #: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:67
 msgid "Heading"
@@ -10629,7 +11083,9 @@ msgstr "Index et Table des matières"
 
 #: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:73
 msgid "The field used in the table of contents is controlled by the sort order."
-msgstr "Le champ utilisé dans la table des matières est déterminé par l'ordre de tri."
+msgstr ""
+"Le champ utilisé dans la table des matières est déterminé par l'ordre de "
+"tri."
 
 #: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:74
 msgid "Include Table of Contents"
@@ -10645,60 +11101,70 @@ msgstr "Inclure l'index"
 msgid "Date Created"
 msgstr "Date de création"
 
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:90
+msgid "Non-Public Records"
+msgstr ""
+
 #: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:91
+msgid "Include non-public records"
+msgstr ""
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:97
 msgid "Include deleted records"
 msgstr "Inclure les dossiers supprimés"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:96
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:102
 msgid "Expired Records"
 msgstr "Enregistrements expirés"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:97
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:103
 msgid "Include expired records"
 msgstr "Inclure les dossiers expirés"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:101
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:107
 msgid "Ouput Format"
 msgstr "Format de sortie"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:102
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:108
 msgid "Output PDF"
 msgstr "Sortie en PDF"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:130
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:136
 msgid "Include Publication(s)"
 msgstr "Inclure la ou les publications"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:130
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:136
 msgid "Exclude Publication(s)"
 msgstr "Exclure la ou les publications"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:141
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:147
 msgid "Include Heading(s)"
 msgstr "Inclure le(s) en-têtes"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:141
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:147
 msgid "Exclude Heading(s)"
 msgstr "Exclure le(s) en-têtes"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:145
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:151
 #: ../python/cioc/web/templates/displayoptions.mak:117
 msgid "Hold CTRL to select/deselect multiple items"
-msgstr "Maintenir la touche CTRL enfoncée pour sélectionner ou désélectionner plusieurs éléments."
+msgstr ""
+"Maintenir la touche CTRL enfoncée pour sélectionner ou désélectionner "
+"plusieurs éléments."
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:152
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:158
 msgid "Has None"
 msgstr "N'en a aucun"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:155
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:161
 msgid "Has Any"
 msgstr "A-t-il un"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:159
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:165
 msgid "Has all from"
 msgstr "A tout de"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:162
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:168
 msgid "Has any from"
 msgstr "A-t-il de"
 
