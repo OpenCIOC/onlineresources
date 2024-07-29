@@ -23,7 +23,7 @@ from cioc.core.modelstate import convert_options
 %>
 
 <h1>${renderinfo.doc_title}</h1>
-<form action="${request.route_path('print_list_cic')}" method="post" class="form">
+<form action="${request.route_path('print_list_cic')}" method="post" class="form" id="entry-form">
 	<div class="NotVisible">
 		${request.passvars.cached_form_vals|n}
 		${renderer.hidden("ProfileID", request.viewdata.dom.DefaultPrintProfile)}
@@ -105,22 +105,25 @@ ${renderer.text('ReportTitle', maxlength=255, class_='form-control')}
 <div class="radio">
     ${renderer.radio("OutputPDF", value='on', label=_('PDF Document'), id="FormatType_PDF")}
 </div>
-%if request.user and (request.viewdata.dom.CanSeeNonPublic or request.viewdata.dom.CanSeeDeleted):
+%if request.user and request.viewdata.dom.CanSeeNonPublic:
 <h3>${_('Record Visibility: ')}</h3>
-%if request.viewdata.dom.CanSeeNonPublic:
 <div class="checkbox">
     ${renderer.checkbox("IncludeNonPublic", "on", label=_('Include Non-Public Records'))}
 </div>
 %endif
-%if request.viewdata.dom.CanSeeDeleted:
-<div class="checkbox">
-    ${renderer.checkbox("IncludeDeleted", "on", label=_('Include Deleted Records'))}
-</div>
-%endif
-%endif
 
     <div class="clear-line-above">
         <a href="${request.passvars.route_path('cic_customreport_index')}" class="btn btn-info"><< ${_('Start Over')}</a>
-        <input type="submit" class="btn btn-info" value="${_('Next Step: ') + _('Generate Report')} >>">
+        <input type="submit" id="submit-button" class="btn btn-info" value="${_('Next Step: ') + _('Generate Report')} >>">
     </div>
 </form>
+<%def name="bottomjs()">
+<script type="text/javascript">
+jQuery(function($) {
+    $('#entry-form').on('submit', function() {
+	$('#submit-button').prop('disabled', true);
+	return;
+    });
+});
+</script>
+</%def>
