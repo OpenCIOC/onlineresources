@@ -15,24 +15,21 @@
 # =========================================================================================
 
 
-# Logging
+# Python Libraries
 import logging
 from collections import defaultdict
-from re import L
-
-log = logging.getLogger(__name__)
-
-# Python Libraries
 
 # 3rd Party Libraries
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.view import view_config, view_defaults
 from markupsafe import Markup
-from formencode import validators, ForEach, Schema
+from formencode import ForEach, Schema
 
 # CIOC Libraries
 from cioc.core import i18n, validators as ciocvalidators
 from cioc.web.cic.viewbase import CicViewBase
+
+log = logging.getLogger(__name__)
 
 templateprefix = "cioc.web.cic:templates/customreport/"
 
@@ -43,9 +40,11 @@ class SearchValidators(Schema):
     allow_extra_fields = True
     filter_extra_fields = True
 
+    CMType = ciocvalidators.String(max=1, if_invalid=None)
     CMID = ForEach(ciocvalidators.IDValidator(if_invalid=None))
     GHID = ForEach(ciocvalidators.IDValidator(if_invalid=None))
     PBID = ForEach(ciocvalidators.IDValidator(if_invalid=None))
+    GHPBID = ciocvalidators.IDValidator(if_invalid=None)
 
 
 class NOT_FROM_DB:
@@ -56,6 +55,8 @@ class NOT_FROM_DB:
 class CustomReport(CicViewBase):
     def __init__(self, request, require_login=False):
         CicViewBase.__init__(self, request, require_login)
+        if not request.viewdata.cic.CustomReportTool:
+            raise HTTPNotFound()
 
     @view_config(
         route_name="cic_customreport_index", renderer=templateprefix + "index.mak"
@@ -65,16 +66,28 @@ class CustomReport(CicViewBase):
         cic_view = request.viewdata.cic
 
         with request.connmgr.get_connection() as conn:
-            report_communities = conn.execute(
-                "EXEC dbo.sp_CIC_View_Community_lh ?", cic_view.ViewType
-            ).fetchall()
+            cursor = conn.execute(
+                "EXEC dbo.sp_CIC_View_Community_l_Report ?", cic_view.ViewType
+            )
+
+        report_communities = cursor.fetchall()
 
         communities = defaultdict(list)
         for row in report_communities:
             communities[row.Parent_CM_ID].append(row)
+
+        cursor.nextset()
+
+        report_instructions = cursor.fetchone()
+
         title = _("Create a Custom Report", request)
         return self._create_response_namespace(
-            title, title, dict(report_communities=communities), no_index=True
+            title,
+            title,
+            dict(
+                report_communities=communities, report_instructions=report_instructions
+            ),
+            no_index=True,
         )
 
     @view_config(
@@ -92,7 +105,7 @@ class CustomReport(CicViewBase):
 
         if not model_state.validate():
             for key in model_state.form.errors:
-                del model_state.form.data[key]
+                model_state.form.data.pop(key, None)
 
         community_ids = [x for x in model_state.value("CMID", None) or [] if x]
         community_ids = ",".join(map(str, community_ids)) if community_ids else None
@@ -100,13 +113,16 @@ class CustomReport(CicViewBase):
         request = self.request
         cic_view = request.viewdata.cic
 
+        cmtype = model_state.value("CMType")
+
         with request.connmgr.get_connection() as conn:
             cursor = conn.execute(
-                "EXEC dbo.sp_CIC_View_QuickList_l_Report ?, ?",
+                "EXEC dbo.sp_CIC_View_QuickList_l_Report ?, ?, ?",
                 cic_view.ViewType,
                 community_ids,
+                cmtype,
             )
-            
+
             communities = cursor.fetchall()
 
             cursor.nextset()
@@ -117,7 +133,7 @@ class CustomReport(CicViewBase):
         return self._create_response_namespace(
             title,
             title,
-            dict(communities=communities, headings=headings),
+            dict(communities=communities, headings=headings, cmtype=cmtype),
             no_index=True,
         )
 
@@ -136,7 +152,7 @@ class CustomReport(CicViewBase):
 
         if not model_state.validate():
             for key in model_state.form.errors:
-                del model_state.form.data[key]
+                model_state.form.data(key, None)
 
         community_ids = [x for x in model_state.value("CMID", None) or [] if x]
         community_ids = ",".join(map(str, community_ids)) if community_ids else None
@@ -146,6 +162,8 @@ class CustomReport(CicViewBase):
 
         pub_ids = [x for x in model_state.value("PBID", None) or [] if x]
         pub_ids = ",".join(map(str, pub_ids)) if pub_ids else None
+
+        cmtype = model_state.value("CMType")
 
         log.debug(pub_ids)
 
@@ -175,6 +193,6 @@ class CustomReport(CicViewBase):
         return self._create_response_namespace(
             title,
             title,
-            dict(communities=communities, headings=headings, pubs=pubs),
+            dict(communities=communities, headings=headings, pubs=pubs, cmtype=cmtype),
             no_index=True,
         )

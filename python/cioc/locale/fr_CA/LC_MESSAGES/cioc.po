@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CiocWeb 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-04-30 20:15-0400\n"
+"POT-Creation-Date: 2024-07-28 21:06-0400\n"
 "PO-Revision-Date: 2016-09-12 23:26-0400\n"
 "Last-Translator: Chris Lambacher <chris@kclsoftware.com>\n"
 "Language: fr_CA\n"
@@ -16,7 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.10.3\n"
+"Generated-By: Babel 2.15.0\n"
 
 #: ../python/cioc/core/browselist.py:48
 msgid "Select Letter"
@@ -35,12 +35,12 @@ msgid "Global"
 msgstr "Total"
 
 #: ../python/cioc/core/constants.py:39
-#: ../python/cioc/web/admin/templates/generalsetup.mak:53
-#: ../python/cioc/web/admin/templates/generalsetup.mak:104
-#: ../python/cioc/web/admin/templates/generalsetup.mak:158
-#: ../python/cioc/web/admin/templates/generalsetup.mak:198
-#: ../python/cioc/web/admin/templates/generalsetup.mak:241
-#: ../python/cioc/web/admin/templates/generalsetup.mak:467
+#: ../python/cioc/web/admin/templates/generalsetup.mak:54
+#: ../python/cioc/web/admin/templates/generalsetup.mak:105
+#: ../python/cioc/web/admin/templates/generalsetup.mak:159
+#: ../python/cioc/web/admin/templates/generalsetup.mak:199
+#: ../python/cioc/web/admin/templates/generalsetup.mak:242
+#: ../python/cioc/web/admin/templates/generalsetup.mak:468
 msgid "CIC"
 msgstr "CIC"
 
@@ -49,12 +49,12 @@ msgstr "CIC"
 #: ../python/cioc/web/admin/templates/datafeedapikey/edit.mak:59
 #: ../python/cioc/web/admin/templates/datafeedapikey/index.mak:27
 #: ../python/cioc/web/admin/templates/email/edit.mak:81
-#: ../python/cioc/web/admin/templates/generalsetup.mak:57
-#: ../python/cioc/web/admin/templates/generalsetup.mak:107
-#: ../python/cioc/web/admin/templates/generalsetup.mak:161
-#: ../python/cioc/web/admin/templates/generalsetup.mak:201
-#: ../python/cioc/web/admin/templates/generalsetup.mak:244
-#: ../python/cioc/web/admin/templates/generalsetup.mak:471
+#: ../python/cioc/web/admin/templates/generalsetup.mak:58
+#: ../python/cioc/web/admin/templates/generalsetup.mak:108
+#: ../python/cioc/web/admin/templates/generalsetup.mak:162
+#: ../python/cioc/web/admin/templates/generalsetup.mak:202
+#: ../python/cioc/web/admin/templates/generalsetup.mak:245
+#: ../python/cioc/web/admin/templates/generalsetup.mak:472
 #: ../python/cioc/web/admin/templates/views/edit.mak:261
 #: ../python/cioc/web/cic/record.py:417
 msgid "Volunteer"
@@ -83,7 +83,7 @@ msgstr "Afficher les dossiers supprimés"
 msgid "Hide Deleted"
 msgstr "Cacher dossiers supprimés"
 
-#: ../python/cioc/core/email.py:228
+#: ../python/cioc/core/email.py:141
 msgid "This database has been configured to block all outgoing Email."
 msgstr ""
 "Cette base de données a été configurée pour bloquer tous les courriels "
@@ -158,7 +158,7 @@ msgstr "avant le"
 msgid "Establishments primarily engaged in:"
 msgstr "Établissements dont l'activité principale est :"
 
-#: ../python/cioc/core/pageinfo.py:94
+#: ../python/cioc/core/pageinfo.py:99
 msgid "Database Admin Area"
 msgstr "Domaine de la gestion de la base de données"
 
@@ -198,12 +198,12 @@ msgstr ""
 msgid "Locked Account in your CIOC database"
 msgstr "Compte verrouillé dans votre base de données CIOC"
 
-#: ../python/cioc/core/template.py:736 ../python/cioc/web/cic/bsearch.py:487
+#: ../python/cioc/core/template.py:768 ../python/cioc/web/cic/bsearch.py:487
 #: ../python/cioc/web/vol/bsearch.py:416
 msgid "Main Menu"
 msgstr "Menu principal"
 
-#: ../python/cioc/core/template.py:738 ../python/cioc/core/template.py:1063
+#: ../python/cioc/core/template.py:770 ../python/cioc/core/template.py:1095
 #: ../python/cioc/web/admin/templates/community/edit.mak:70
 #: ../python/cioc/web/admin/templates/community/edit.mak:76
 #: ../python/cioc/web/admin/templates/community/edit.mak:94
@@ -232,32 +232,32 @@ msgstr "Menu principal"
 msgid "Search"
 msgstr "Rechercher"
 
-#: ../python/cioc/core/template.py:752 ../python/cioc/core/template.py:879
+#: ../python/cioc/core/template.py:784 ../python/cioc/core/template.py:911
 #: ../python/cioc/web/admin/templates/views/edit.mak:834
 msgid "Suggest Opportunity"
 msgstr "Proposer une occasion"
 
-#: ../python/cioc/core/template.py:754 ../python/cioc/core/template.py:881
+#: ../python/cioc/core/template.py:786 ../python/cioc/core/template.py:913
 msgid "Suggest Record"
 msgstr "Proposer un dossier"
 
-#: ../python/cioc/core/template.py:775
+#: ../python/cioc/core/template.py:807
 #: ../python/cioc/web/admin/templates/views/edit.mak:1129
 msgid "Advanced Search"
 msgstr "Recherche avancée"
 
-#: ../python/cioc/core/template.py:783
+#: ../python/cioc/core/template.py:815
 msgid "Recent Searches"
 msgstr "Recherches récentes"
 
-#: ../python/cioc/core/template.py:810
+#: ../python/cioc/core/template.py:842
 #: ../python/cioc/web/admin/templates/domainmap.mak:35
 #: ../python/cioc/web/admin/templates/notice/index.mak:67
 #: ../python/cioc/web/cic/templates/publication/index.mak:164
 msgid "View"
 msgstr "Vue"
 
-#: ../python/cioc/core/template.py:811
+#: ../python/cioc/core/template.py:843
 #: ../python/cioc/web/cic/templates/csearch_form.mak:170
 #: ../python/cioc/web/cic/templates/reminders/edit.mak:40
 #: ../python/cioc/web/cic/templates/reminders/index.mak:51
@@ -266,38 +266,38 @@ msgstr "Vue"
 msgid ":"
 msgstr " :"
 
-#: ../python/cioc/core/template.py:819 ../python/cioc/core/template.py:841
+#: ../python/cioc/core/template.py:851 ../python/cioc/core/template.py:873
 #: ../python/cioc/web/vol/bsearch.py:248
 msgid "CIC Menu"
 msgstr "CIC - Menu"
 
-#: ../python/cioc/core/template.py:825 ../python/cioc/web/cic/bsearch.py:220
+#: ../python/cioc/core/template.py:857 ../python/cioc/web/cic/bsearch.py:220
 msgid "Volunteer Menu"
 msgstr "Bénévolat - Menu"
 
-#: ../python/cioc/core/template.py:834 ../python/cioc/web/cic/bsearch.py:303
+#: ../python/cioc/core/template.py:866 ../python/cioc/web/cic/bsearch.py:303
 #: ../python/cioc/web/cic/bsearch.py:309 ../python/cioc/web/vol/bsearch.py:310
 #: ../python/cioc/web/vol/bsearch.py:316
 msgid "Setup"
 msgstr "Installation"
 
-#: ../python/cioc/core/template.py:855
+#: ../python/cioc/core/template.py:887
 msgid "Feedback"
 msgstr "Rétroaction"
 
-#: ../python/cioc/core/template.py:864
+#: ../python/cioc/core/template.py:896
 msgid "New Opportunity"
 msgstr "Nouvelle opportunité"
 
-#: ../python/cioc/core/template.py:866
+#: ../python/cioc/core/template.py:898
 msgid "New Record"
 msgstr "Nouveau dossier"
 
-#: ../python/cioc/core/template.py:914
+#: ../python/cioc/core/template.py:946
 msgid "Some reminders are past due or require action."
 msgstr "Quelques rappels sont en retard ou exigent une action."
 
-#: ../python/cioc/core/template.py:925 ../python/cioc/web/cic/reminders.py:98
+#: ../python/cioc/core/template.py:957 ../python/cioc/web/cic/reminders.py:98
 #: ../python/cioc/web/cic/templates/record.mak:397
 #: ../python/cioc/web/cic/templates/reminders/edit.mak:37
 #: ../python/cioc/web/cic/templates/reminders/index.mak:34
@@ -305,46 +305,46 @@ msgstr "Quelques rappels sont en retard ou exigent une action."
 msgid "Reminders"
 msgstr "Rappels"
 
-#: ../python/cioc/core/template.py:939 ../python/cioc/web/cic/bsearch.py:320
+#: ../python/cioc/core/template.py:971 ../python/cioc/web/cic/bsearch.py:320
 #: ../python/cioc/web/vol/bsearch.py:327
 #: ../python/cioc/web/vol/templates/bsearch.mak:84
 msgid "Logout"
 msgstr "Fermer la session"
 
-#: ../python/cioc/core/template.py:969 ../python/cioc/core/template.py:1041
+#: ../python/cioc/core/template.py:1001 ../python/cioc/core/template.py:1073
 #: ../python/cioc/web/admin/pagehelp.py:117
 msgid "Page Help"
 msgstr "Aide à la page"
 
-#: ../python/cioc/core/template.py:986
+#: ../python/cioc/core/template.py:1018
 msgid "View List"
 msgstr "Liste du dossiers"
 
-#: ../python/cioc/core/template.py:1014 ../python/cioc/core/template.py:1141
-#: ../python/cioc/web/admin/templates/generalsetup.mak:487
+#: ../python/cioc/core/template.py:1046 ../python/cioc/core/template.py:1173
+#: ../python/cioc/web/admin/templates/generalsetup.mak:488
 #: ../python/cioc/web/admin/templates/template/edit.mak:204
 #: ../python/cioc/web/admin/templates/views/edit.mak:1167
 #: ../python/cioc/web/gbl/templates/shortcodes.mak:143
 msgid "Email"
 msgstr "Courriel"
 
-#: ../python/cioc/core/template.py:1023
+#: ../python/cioc/core/template.py:1055
 msgid "Home"
 msgstr "Accueil"
 
-#: ../python/cioc/core/template.py:1037
+#: ../python/cioc/core/template.py:1069
 msgid "Contact Us"
 msgstr "Contactez nous"
 
-#: ../python/cioc/core/template.py:1047
+#: ../python/cioc/core/template.py:1079
 msgid "Quick Links:"
 msgstr "Liens rapides :"
 
-#: ../python/cioc/core/template.py:1072
+#: ../python/cioc/core/template.py:1104
 msgid "Toggle Menu"
-msgstr ""
+msgstr "Activer/désactiver le menu"
 
-#: ../python/cioc/core/template.py:1128
+#: ../python/cioc/core/template.py:1160
 #: ../python/cioc/web/admin/templates/views/edit.mak:609
 msgid "Terms of Use"
 msgstr "Conditions d'utilisation"
@@ -378,11 +378,11 @@ msgstr "Modifier"
 
 #: ../python/cioc/core/vacancyscript.py:94
 msgid "Release Occupancy"
-msgstr ""
+msgstr "Libération de l'occupation"
 
 #: ../python/cioc/core/vacancyscript.py:95
 msgid "Assign Occupancy"
-msgstr ""
+msgstr "Attribuer une occupation"
 
 #: ../python/cioc/core/vacancyscript.py:96
 msgid "Finished Editing"
@@ -401,7 +401,7 @@ msgstr "Fermer"
 
 #: ../python/cioc/core/vacancyscript.py:99
 msgid "Vacancy History"
-msgstr ""
+msgstr "Historique des disponibilités"
 
 #: ../python/cioc/core/vacancyscript.py:100
 #: ../python/cioc/web/admin/templates/userapicreds/add.mak:65
@@ -413,115 +413,115 @@ msgstr "Chargement..."
 
 #: ../python/cioc/core/vacancyscript.py:101
 msgid "Unable to talk to server: "
-msgstr ""
+msgstr "Impossible de communiquer avec le serveur :"
 
-#: ../python/cioc/core/validators.py:73 ../python/cioc/core/validators.py:74
+#: ../python/cioc/core/validators.py:84 ../python/cioc/core/validators.py:85
 #, python-format
 msgid "%(value)s is not a valid ID"
 msgstr "%(value)s n'est pas un identifiant valide"
 
-#: ../python/cioc/core/validators.py:88
+#: ../python/cioc/core/validators.py:99
 #, python-format
 msgid "Enter a value not more than %(max)i characters long"
 msgstr "Saisir une valeur de %(max)i caractères maximum."
 
-#: ../python/cioc/core/validators.py:89
+#: ../python/cioc/core/validators.py:100
 #, python-format
 msgid "Enter a value %(min)i characters long or more"
 msgstr "Saisir une valeur de %(min)i caractères minimum."
 
-#: ../python/cioc/core/validators.py:90
+#: ../python/cioc/core/validators.py:101
 msgid "Invalid URL"
 msgstr "URL invalide"
 
-#: ../python/cioc/core/validators.py:124
-msgid "Invalid UUID"
-msgstr "UUID incorrecte"
-
 #: ../python/cioc/core/validators.py:135
+msgid "Invalid UUID"
+msgstr "UUID invalide"
+
+#: ../python/cioc/core/validators.py:146
 msgid "Invalid Code: Only upper case letters, numbers and dashes are allowed"
 msgstr ""
 "Code invalide : seuls les lettres majuscules, les chiffres et les tirets "
 "sont autorisés"
 
-#: ../python/cioc/core/validators.py:144
+#: ../python/cioc/core/validators.py:155
 msgid "Invalid Code: Only upper case letters are allowed"
-msgstr "Code invalide : seules les lettres majuscules sont autorisés"
+msgstr "Code invalide : seules les lettres majuscules sont autorisées"
 
-#: ../python/cioc/core/validators.py:208
+#: ../python/cioc/core/validators.py:219
 msgid "Please enter a decimal value"
 msgstr "S'il vous plaît entrer une valeur décimale"
 
-#: ../python/cioc/core/validators.py:223
+#: ../python/cioc/core/validators.py:234
 msgid "Invalid Agency Code"
 msgstr "Code d'agence invalide"
 
-#: ../python/cioc/core/validators.py:231
+#: ../python/cioc/core/validators.py:242
 msgid "Invalid Taxonomy Code"
 msgstr "Code taxonomique invalide"
 
-#: ../python/cioc/core/validators.py:237 ../python/cioc/core/validators.py:243
+#: ../python/cioc/core/validators.py:248 ../python/cioc/core/validators.py:254
 msgid "Invalid Record Number"
 msgstr "Numéro de dossier invalide"
 
-#: ../python/cioc/core/validators.py:269
+#: ../python/cioc/core/validators.py:280
 msgid "Not a valid email address"
-msgstr "l'adresse courriel n'est pas valide"
+msgstr "L'adresse courriel n'est pas valide"
 
-#: ../python/cioc/core/validators.py:281
+#: ../python/cioc/core/validators.py:292
 msgid "Not a valid email address list"
 msgstr "La liste d'adresse courriel est invalide"
 
-#: ../python/cioc/core/validators.py:289
+#: ../python/cioc/core/validators.py:300
 msgid "Invalid Slug: Only letters, numbers and dashes are allowed"
 msgstr ""
 "Slug non valide : seuls les lettres, les chiffres et les tirets sont "
 "autorisés"
 
-#: ../python/cioc/core/validators.py:307
+#: ../python/cioc/core/validators.py:318
 msgid "Not a valid colour"
 msgstr "La couleur n'est pas valide"
 
-#: ../python/cioc/core/validators.py:323
+#: ../python/cioc/core/validators.py:334
 msgid "Not a valid date"
 msgstr "Date invalide"
 
-#: ../python/cioc/core/validators.py:324
+#: ../python/cioc/core/validators.py:335
 msgid "Day is not valid for the given month"
 msgstr "Le jour n'est pas valide pour le mois donné"
 
-#: ../python/cioc/core/validators.py:325
+#: ../python/cioc/core/validators.py:336
 msgid "Hour is not valid"
 msgstr "L'heure n'est pas valide"
 
-#: ../python/cioc/core/validators.py:326
+#: ../python/cioc/core/validators.py:337
 msgid "Minute is not valid"
 msgstr "Les minutes ne sont pas valides"
 
-#: ../python/cioc/core/validators.py:327
+#: ../python/cioc/core/validators.py:338
 msgid "Second is not valid"
 msgstr "Les secondes ne sont pas valides"
 
-#: ../python/cioc/core/validators.py:328
+#: ../python/cioc/core/validators.py:339
 #, python-format
 msgid "Date must be on or after %(min)s"
 msgstr "La date doit être égale ou postérieure au %(min)s"
 
-#: ../python/cioc/core/validators.py:329
+#: ../python/cioc/core/validators.py:340
 #, python-format
 msgid "Date must be on or before %(min)s"
 msgstr "La date doit être égale ou antérieure au %(min)s"
 
-#: ../python/cioc/core/validators.py:679
+#: ../python/cioc/core/validators.py:690
 #, python-format
 msgid "You must give a value for %(field)s"
 msgstr "Vous devez assigner une valeur à %(field)s"
 
-#: ../python/cioc/core/validators.py:896
+#: ../python/cioc/core/validators.py:907
 msgid "Please enter a number"
 msgstr "Saisissez un nombre"
 
-#: ../python/cioc/core/validators.py:914
+#: ../python/cioc/core/validators.py:924
 #, python-format
 msgid "That is not a valid day (%(exception)s)"
 msgstr "Ce jour n'est pas valide (%(exception)s)"
@@ -549,8 +549,8 @@ msgid ""
 "content, and analyze our traffic. By clicking \"Accept All\", you consent"
 " to our use of cookies."
 msgstr ""
-"Nous utilisons des cookies pour améliorer votre expérience de navigation, "
-"diffuser du contenu personnalisé et analyser notre trafic. En cliquant "
+"Nous utilisons des cookies pour améliorer votre expérience de navigation,"
+" diffuser du contenu personnalisé et analyser notre trafic. En cliquant "
 "sur « Tout accepter », vous consentez à notre utilisation des cookies."
 
 #: ../python/cioc/core/templates/footer.mak:80
@@ -564,12 +564,12 @@ msgid ""
 msgstr ""
 "Les cookies nécessaires sont cruciaux pour les fonctions de base du site "
 "Web et celui-ci ne fonctionnera pas comme prévu sans eux. Les cookies "
-"expirent à la fin de votre session. Ces cookies ne stockent aucune "
-"donnée personnellement identifiable."
+"expirent à la fin de votre session. Ces cookies ne stockent aucune donnée"
+" personnellement identifiable."
 
 #: ../python/cioc/core/templates/footer.mak:88
 msgid "Optional Cookies"
-msgstr ""
+msgstr "Cookies optionnels"
 
 #: ../python/cioc/core/templates/footer.mak:91
 msgid ""
@@ -578,9 +578,9 @@ msgid ""
 "number of visitors, bounce rate, traffic source, etc."
 msgstr ""
 "Les cookies analytiques sont utilisés pour comprendre comment les "
-"visiteurs interagissent avec le site Web. Ces cookies aident à "
-"fournir des informations sur le nombre de visiteurs, le taux de "
-"rebond, la source de trafic, etc."
+"visiteurs interagissent avec le site Web. Ces cookies aident à fournir "
+"des informations sur le nombre de visiteurs, le taux de rebond, la source"
+" de trafic, etc."
 
 #: ../python/cioc/core/templates/footer.mak:97
 #: ../python/cioc/core/templates/footer.mak:114
@@ -602,15 +602,15 @@ msgstr "Nous respectons votre vie privée"
 msgid "Details"
 msgstr "Détails"
 
-#: ../python/cioc/core/templates/header.mak:156
+#: ../python/cioc/core/templates/header.mak:169
 msgid "Skip to main content"
 msgstr "Accédez au contenu principal"
 
-#: ../python/cioc/core/templates/header.mak:166
+#: ../python/cioc/core/templates/header.mak:179
 msgid "The database is in training mode"
 msgstr "La base de données est en mode Formation."
 
-#: ../python/cioc/web/__init__.py:148
+#: ../python/cioc/web/__init__.py:149
 #: ../python/cioc/web/admin/templates/template/edit.mak:531
 msgid "Error"
 msgstr "Erreur"
@@ -618,6 +618,188 @@ msgstr "Erreur"
 #: ../python/cioc/web/recentsearch.py:60
 msgid "Recent Search History"
 msgstr "Historique des recherches récentes"
+
+#: ../python/cioc/web/admin/applicationsurvey.py:123
+#: ../python/cioc/web/admin/applicationsurvey.py:239
+#: ../python/cioc/web/admin/applicationsurvey.py:296
+#: ../python/cioc/web/admin/applicationsurvey.py:338
+msgid "Manage Application Surveys"
+msgstr "Gérer les enquêtes"
+
+#: ../python/cioc/web/admin/applicationsurvey.py:209
+msgid "The Application Survey was successfully added."
+msgstr "L'enquête a été ajoutée avec succès."
+
+#: ../python/cioc/web/admin/applicationsurvey.py:211
+msgid "The Application Survey was successfully updated."
+msgstr "L'enquête a été mise à jour avec succès."
+
+#: ../python/cioc/web/admin/applicationsurvey.py:220
+#: ../python/cioc/web/admin/checklists.py:615
+#: ../python/cioc/web/admin/community.py:275
+#: ../python/cioc/web/admin/email.py:209
+#: ../python/cioc/web/admin/excelprofile.py:213
+#: ../python/cioc/web/admin/fielddisplay.py:203
+#: ../python/cioc/web/admin/fieldgroup.py:224
+#: ../python/cioc/web/admin/fieldhelp.py:138
+#: ../python/cioc/web/admin/fieldhide.py:156
+#: ../python/cioc/web/admin/fieldradio.py:201
+#: ../python/cioc/web/admin/general.py:274
+#: ../python/cioc/web/admin/interests.py:263
+#: ../python/cioc/web/admin/layout.py:220
+#: ../python/cioc/web/admin/listvalues.py:263
+#: ../python/cioc/web/admin/mappingsystem.py:187
+#: ../python/cioc/web/admin/naics.py:199
+#: ../python/cioc/web/admin/naics_example.py:165
+#: ../python/cioc/web/admin/naics_exclusion.py:185
+#: ../python/cioc/web/admin/pages.py:152
+#: ../python/cioc/web/admin/pagetitle.py:141
+#: ../python/cioc/web/admin/quicksearch.py:261
+#: ../python/cioc/web/admin/sharingprofile.py:477
+#: ../python/cioc/web/admin/sharingprofile.py:1677
+#: ../python/cioc/web/admin/socialmedia.py:181
+#: ../python/cioc/web/admin/template.py:448
+#: ../python/cioc/web/admin/thesaurus.py:283
+#: ../python/cioc/web/admin/thesaurus_source.py:183
+#: ../python/cioc/web/admin/views.py:609 ../python/cioc/web/admin/views.py:1433
+#: ../python/cioc/web/cic/generalheading.py:290
+#: ../python/cioc/web/cic/publication.py:427
+#: ../python/cioc/web/cic/updatepubs.py:160
+#: ../python/cioc/web/export/airs.py:244
+msgid "Unable to save: "
+msgstr "Impossible de sauvegarder : "
+
+#: ../python/cioc/web/admin/applicationsurvey.py:224
+msgid "Invalid Application Survey ID"
+msgstr "ID d'enquête non valide"
+
+#: ../python/cioc/web/admin/applicationsurvey.py:226
+#: ../python/cioc/web/admin/checklists.py:618
+#: ../python/cioc/web/admin/community.py:280
+#: ../python/cioc/web/admin/datafeedapikey.py:118
+#: ../python/cioc/web/admin/domainmap.py:121
+#: ../python/cioc/web/admin/email.py:217
+#: ../python/cioc/web/admin/excelprofile.py:219
+#: ../python/cioc/web/admin/fielddisplay.py:206
+#: ../python/cioc/web/admin/fieldgroup.py:227
+#: ../python/cioc/web/admin/fieldhelp.py:142
+#: ../python/cioc/web/admin/fieldhide.py:159
+#: ../python/cioc/web/admin/fieldradio.py:204
+#: ../python/cioc/web/admin/ganalytics.py:133
+#: ../python/cioc/web/admin/general.py:277
+#: ../python/cioc/web/admin/interests.py:267
+#: ../python/cioc/web/admin/layout.py:226
+#: ../python/cioc/web/admin/listvalues.py:266
+#: ../python/cioc/web/admin/mappingsystem.py:191
+#: ../python/cioc/web/admin/naics.py:203
+#: ../python/cioc/web/admin/naics_example.py:168
+#: ../python/cioc/web/admin/naics_exclusion.py:188
+#: ../python/cioc/web/admin/notices.py:182
+#: ../python/cioc/web/admin/notices.py:271
+#: ../python/cioc/web/admin/offlinetools.py:105
+#: ../python/cioc/web/admin/pages.py:161
+#: ../python/cioc/web/admin/pagetitle.py:150
+#: ../python/cioc/web/admin/quicksearch.py:264
+#: ../python/cioc/web/admin/sharingprofile.py:483
+#: ../python/cioc/web/admin/sharingprofile.py:1093
+#: ../python/cioc/web/admin/sharingprofile.py:1140
+#: ../python/cioc/web/admin/sharingprofile.py:1574
+#: ../python/cioc/web/admin/sharingprofile.py:1640
+#: ../python/cioc/web/admin/socialmedia.py:185
+#: ../python/cioc/web/admin/template.py:453
+#: ../python/cioc/web/admin/thesaurus.py:286
+#: ../python/cioc/web/admin/thesaurus_source.py:186
+#: ../python/cioc/web/admin/views.py:615 ../python/cioc/web/admin/views.py:1437
+#: ../python/cioc/web/cic/generalheading.py:293
+#: ../python/cioc/web/cic/generalheading_quicktaxonomy.py:168
+#: ../python/cioc/web/cic/publication.py:200
+#: ../python/cioc/web/cic/publication.py:430
+#: ../python/cioc/web/cic/reminders.py:359
+#: ../python/cioc/web/cic/taxonomy_activationrec.py:209
+#: ../python/cioc/web/cic/updatepubs.py:163
+#: ../python/cioc/web/gbl/emaillist.py:285
+#: ../python/cioc/web/gbl/printlist.py:487
+#: ../python/cioc/web/import_/community.py:119
+#: ../python/cioc/web/import_/upload.py:144
+#: ../python/cioc/web/stats/auto_datamgmt.py:73
+#: ../python/cioc/web/stats/auto_ips.py:67
+#: ../python/cioc/web/stats/auto_ipsbyro.py:68
+#: ../python/cioc/web/stats/auto_ipsbyview.py:68
+#: ../python/cioc/web/stats/auto_viewsbyro.py:68
+#: ../python/cioc/web/stats/auto_viewsbyview.py:68
+msgid "There were validation errors."
+msgstr "Des erreurs de validation sont survenues."
+
+#: ../python/cioc/web/admin/applicationsurvey.py:273
+#: ../python/cioc/web/admin/applicationsurvey.py:332
+#: ../python/cioc/web/admin/applicationsurvey.py:365
+#: ../python/cioc/web/admin/checklists.py:681
+#: ../python/cioc/web/admin/checklists.py:708
+#: ../python/cioc/web/admin/email.py:370 ../python/cioc/web/admin/email.py:412
+#: ../python/cioc/web/admin/excelprofile.py:300
+#: ../python/cioc/web/admin/excelprofile.py:407
+#: ../python/cioc/web/admin/excelprofile.py:442
+#: ../python/cioc/web/admin/fieldhelp.py:204
+#: ../python/cioc/web/admin/interests.py:326
+#: ../python/cioc/web/admin/interests.py:399
+#: ../python/cioc/web/admin/interests.py:432
+#: ../python/cioc/web/admin/layout.py:279
+#: ../python/cioc/web/admin/layout.py:402
+#: ../python/cioc/web/admin/layout.py:437
+#: ../python/cioc/web/admin/mappingsystem.py:238
+#: ../python/cioc/web/admin/mappingsystem.py:296
+#: ../python/cioc/web/admin/mappingsystem.py:329
+#: ../python/cioc/web/admin/naics.py:272 ../python/cioc/web/admin/naics.py:337
+#: ../python/cioc/web/admin/naics.py:365
+#: ../python/cioc/web/admin/notices.py:206
+#: ../python/cioc/web/admin/notices.py:268
+#: ../python/cioc/web/admin/pages.py:270 ../python/cioc/web/admin/pages.py:304
+#: ../python/cioc/web/admin/pagetitle.py:180
+#: ../python/cioc/web/admin/sharingprofile.py:143
+#: ../python/cioc/web/admin/sharingprofile.py:599
+#: ../python/cioc/web/admin/sharingprofile.py:797
+#: ../python/cioc/web/admin/sharingprofile.py:835
+#: ../python/cioc/web/admin/socialmedia.py:235
+#: ../python/cioc/web/admin/socialmedia.py:293
+#: ../python/cioc/web/admin/socialmedia.py:326
+#: ../python/cioc/web/admin/template.py:530
+#: ../python/cioc/web/admin/template.py:696
+#: ../python/cioc/web/admin/template.py:731
+#: ../python/cioc/web/admin/thesaurus.py:58
+#: ../python/cioc/web/admin/views.py:789 ../python/cioc/web/admin/views.py:1023
+#: ../python/cioc/web/admin/views.py:1071
+#: ../python/cioc/web/admin/views.py:1144
+#: ../python/cioc/web/admin/views.py:1212
+#: ../python/cioc/web/admin/views.py:1259
+#: ../python/cioc/web/admin/views.py:1313
+#: ../python/cioc/web/cic/reminders.py:175
+#: ../python/cioc/web/cic/reminders.py:234
+#: ../python/cioc/web/cic/reminders.py:293
+#: ../python/cioc/web/cic/reminders.py:485
+#: ../python/cioc/web/cic/reminders.py:562
+msgid "Invalid ID"
+msgstr "ID invalide"
+
+#: ../python/cioc/web/admin/applicationsurvey.py:292
+msgid "Application Survey not found."
+msgstr "Enquête introuvable."
+
+#: ../python/cioc/web/admin/applicationsurvey.py:389
+msgid "The Application Survey was successfully deleted."
+msgstr "L'enquête a été supprimée avec succès."
+
+#: ../python/cioc/web/admin/applicationsurvey.py:396
+#: ../python/cioc/web/admin/applicationsurvey.py:403
+msgid "Unable to delete Application Survey: "
+msgstr "Impossible de supprimer l'enquête :"
+
+#: ../python/cioc/web/admin/applicationsurvey.py:430
+msgid "Unable to generate Application Survey report: "
+msgstr "Impossible de générer le rapport d'enquête :"
+
+#: ../python/cioc/web/admin/applicationsurvey.py:489
+msgid "Application Surveys Report"
+msgstr "Rapport d'enquêtes"
 
 #: ../python/cioc/web/admin/checklist_model.py:32
 #: ../python/cioc/web/admin/templates/ganalytics.mak:32
@@ -693,7 +875,7 @@ msgstr ""
 #: ../python/cioc/web/admin/checklist_model.py:669
 #: ../python/cioc/web/admin/checklist_model.py:675
 msgid "Age Groups"
-msgstr "Classes d'âge"
+msgstr "Groupes d'âge"
 
 #: ../python/cioc/web/admin/checklist_model.py:676
 #, python-format
@@ -714,7 +896,7 @@ msgstr "Âge maximal"
 
 #: ../python/cioc/web/admin/checklist_model.py:725
 msgid "Activity Statuses"
-msgstr "Statuts des activités"
+msgstr "Statuts d'activité"
 
 #: ../python/cioc/web/admin/checklist_model.py:726
 msgid "Edit Activity Status"
@@ -751,9 +933,9 @@ msgid ""
 "General Areas of Interest are not being used by any member of the "
 "database.</p>"
 msgstr ""
-"<p class=\"Alert\">Il n'est pas obligatoire de renseigner ce paramètre si"
-" les domaines d'intérêt général ne sont utilisés par aucun membre de la "
-"base de données.</p>"
+"<p class=\"Alert\">Il n'est pas obligatoire de compléter cette "
+"configuration si les Domaines d'intérêt généraux ne sont utilisés par "
+"aucun membre de la base de données.</p>"
 
 #: ../python/cioc/web/admin/checklist_model.py:1412
 msgid "Note Type"
@@ -894,142 +1076,6 @@ msgstr "Local"
 #: ../python/cioc/web/admin/listvalues.py:257
 msgid "The record(s) were successfully updated."
 msgstr "Les dossiers ont été mis à jour avec succès."
-
-#: ../python/cioc/web/admin/checklists.py:615
-#: ../python/cioc/web/admin/community.py:275
-#: ../python/cioc/web/admin/email.py:209
-#: ../python/cioc/web/admin/excelprofile.py:213
-#: ../python/cioc/web/admin/fielddisplay.py:203
-#: ../python/cioc/web/admin/fieldgroup.py:224
-#: ../python/cioc/web/admin/fieldhelp.py:138
-#: ../python/cioc/web/admin/fieldhide.py:156
-#: ../python/cioc/web/admin/fieldradio.py:201
-#: ../python/cioc/web/admin/general.py:273
-#: ../python/cioc/web/admin/interests.py:263
-#: ../python/cioc/web/admin/layout.py:220
-#: ../python/cioc/web/admin/listvalues.py:263
-#: ../python/cioc/web/admin/mappingsystem.py:187
-#: ../python/cioc/web/admin/naics.py:199
-#: ../python/cioc/web/admin/naics_example.py:165
-#: ../python/cioc/web/admin/naics_exclusion.py:185
-#: ../python/cioc/web/admin/pages.py:152
-#: ../python/cioc/web/admin/pagetitle.py:141
-#: ../python/cioc/web/admin/quicksearch.py:261
-#: ../python/cioc/web/admin/sharingprofile.py:477
-#: ../python/cioc/web/admin/sharingprofile.py:1677
-#: ../python/cioc/web/admin/socialmedia.py:181
-#: ../python/cioc/web/admin/template.py:448
-#: ../python/cioc/web/admin/thesaurus.py:283
-#: ../python/cioc/web/admin/thesaurus_source.py:183
-#: ../python/cioc/web/admin/views.py:608 ../python/cioc/web/admin/views.py:1432
-#: ../python/cioc/web/cic/generalheading.py:290
-#: ../python/cioc/web/cic/publication.py:427
-#: ../python/cioc/web/cic/updatepubs.py:160
-#: ../python/cioc/web/export/airs.py:244
-msgid "Unable to save: "
-msgstr "Impossible de sauvegarder : "
-
-#: ../python/cioc/web/admin/checklists.py:618
-#: ../python/cioc/web/admin/community.py:280
-#: ../python/cioc/web/admin/datafeedapikey.py:118
-#: ../python/cioc/web/admin/domainmap.py:121
-#: ../python/cioc/web/admin/email.py:217
-#: ../python/cioc/web/admin/excelprofile.py:219
-#: ../python/cioc/web/admin/fielddisplay.py:206
-#: ../python/cioc/web/admin/fieldgroup.py:227
-#: ../python/cioc/web/admin/fieldhelp.py:142
-#: ../python/cioc/web/admin/fieldhide.py:159
-#: ../python/cioc/web/admin/fieldradio.py:204
-#: ../python/cioc/web/admin/ganalytics.py:133
-#: ../python/cioc/web/admin/general.py:276
-#: ../python/cioc/web/admin/interests.py:267
-#: ../python/cioc/web/admin/layout.py:226
-#: ../python/cioc/web/admin/listvalues.py:266
-#: ../python/cioc/web/admin/mappingsystem.py:191
-#: ../python/cioc/web/admin/naics.py:203
-#: ../python/cioc/web/admin/naics_example.py:168
-#: ../python/cioc/web/admin/naics_exclusion.py:188
-#: ../python/cioc/web/admin/notices.py:182
-#: ../python/cioc/web/admin/notices.py:271
-#: ../python/cioc/web/admin/offlinetools.py:105
-#: ../python/cioc/web/admin/pages.py:161
-#: ../python/cioc/web/admin/pagetitle.py:150
-#: ../python/cioc/web/admin/quicksearch.py:264
-#: ../python/cioc/web/admin/sharingprofile.py:483
-#: ../python/cioc/web/admin/sharingprofile.py:1093
-#: ../python/cioc/web/admin/sharingprofile.py:1140
-#: ../python/cioc/web/admin/sharingprofile.py:1574
-#: ../python/cioc/web/admin/sharingprofile.py:1640
-#: ../python/cioc/web/admin/socialmedia.py:185
-#: ../python/cioc/web/admin/template.py:453
-#: ../python/cioc/web/admin/thesaurus.py:286
-#: ../python/cioc/web/admin/thesaurus_source.py:186
-#: ../python/cioc/web/admin/views.py:614 ../python/cioc/web/admin/views.py:1436
-#: ../python/cioc/web/cic/generalheading.py:293
-#: ../python/cioc/web/cic/generalheading_quicktaxonomy.py:168
-#: ../python/cioc/web/cic/publication.py:200
-#: ../python/cioc/web/cic/publication.py:430
-#: ../python/cioc/web/cic/reminders.py:359
-#: ../python/cioc/web/cic/taxonomy_activationrec.py:209
-#: ../python/cioc/web/cic/updatepubs.py:163
-#: ../python/cioc/web/gbl/emaillist.py:287
-#: ../python/cioc/web/import_/community.py:119
-#: ../python/cioc/web/import_/upload.py:145
-#: ../python/cioc/web/stats/auto_datamgmt.py:73
-#: ../python/cioc/web/stats/auto_ips.py:67
-#: ../python/cioc/web/stats/auto_ipsbyro.py:68
-#: ../python/cioc/web/stats/auto_ipsbyview.py:68
-#: ../python/cioc/web/stats/auto_viewsbyro.py:68
-#: ../python/cioc/web/stats/auto_viewsbyview.py:68
-msgid "There were validation errors."
-msgstr "Des erreurs de validation sont survenues."
-
-#: ../python/cioc/web/admin/checklists.py:681
-#: ../python/cioc/web/admin/checklists.py:708
-#: ../python/cioc/web/admin/email.py:370 ../python/cioc/web/admin/email.py:412
-#: ../python/cioc/web/admin/excelprofile.py:300
-#: ../python/cioc/web/admin/excelprofile.py:407
-#: ../python/cioc/web/admin/excelprofile.py:442
-#: ../python/cioc/web/admin/fieldhelp.py:204
-#: ../python/cioc/web/admin/interests.py:326
-#: ../python/cioc/web/admin/interests.py:399
-#: ../python/cioc/web/admin/interests.py:432
-#: ../python/cioc/web/admin/layout.py:279
-#: ../python/cioc/web/admin/layout.py:402
-#: ../python/cioc/web/admin/layout.py:437
-#: ../python/cioc/web/admin/mappingsystem.py:238
-#: ../python/cioc/web/admin/mappingsystem.py:296
-#: ../python/cioc/web/admin/mappingsystem.py:329
-#: ../python/cioc/web/admin/naics.py:272 ../python/cioc/web/admin/naics.py:337
-#: ../python/cioc/web/admin/naics.py:365
-#: ../python/cioc/web/admin/notices.py:206
-#: ../python/cioc/web/admin/notices.py:268
-#: ../python/cioc/web/admin/pages.py:270 ../python/cioc/web/admin/pages.py:304
-#: ../python/cioc/web/admin/pagetitle.py:180
-#: ../python/cioc/web/admin/sharingprofile.py:143
-#: ../python/cioc/web/admin/sharingprofile.py:599
-#: ../python/cioc/web/admin/sharingprofile.py:797
-#: ../python/cioc/web/admin/sharingprofile.py:835
-#: ../python/cioc/web/admin/socialmedia.py:235
-#: ../python/cioc/web/admin/socialmedia.py:293
-#: ../python/cioc/web/admin/socialmedia.py:326
-#: ../python/cioc/web/admin/template.py:530
-#: ../python/cioc/web/admin/template.py:696
-#: ../python/cioc/web/admin/template.py:731
-#: ../python/cioc/web/admin/thesaurus.py:58
-#: ../python/cioc/web/admin/views.py:788 ../python/cioc/web/admin/views.py:1022
-#: ../python/cioc/web/admin/views.py:1070
-#: ../python/cioc/web/admin/views.py:1143
-#: ../python/cioc/web/admin/views.py:1211
-#: ../python/cioc/web/admin/views.py:1258
-#: ../python/cioc/web/admin/views.py:1312
-#: ../python/cioc/web/cic/reminders.py:175
-#: ../python/cioc/web/cic/reminders.py:234
-#: ../python/cioc/web/cic/reminders.py:293
-#: ../python/cioc/web/cic/reminders.py:485
-#: ../python/cioc/web/cic/reminders.py:562
-msgid "Invalid ID"
-msgstr "ID invalide"
 
 #: ../python/cioc/web/admin/checklists.py:685
 #: ../python/cioc/web/cic/publication.py:204
@@ -1336,7 +1382,7 @@ msgstr "Le profil a été supprimé avec succès."
 #: ../python/cioc/web/admin/excelprofile.py:470
 #: ../python/cioc/web/admin/excelprofile.py:477
 msgid "Unable to delete Excel Profile: "
-msgstr "Le profil Excel ne peut être supprimé :"
+msgstr "Le profil Excel ne peut être supprimé : "
 
 #: ../python/cioc/web/admin/fielddisplay.py:107
 #: ../python/cioc/web/admin/fielddisplay.py:226
@@ -1350,9 +1396,9 @@ msgstr "Les champs ont été mis à jour avec succès."
 
 #: ../python/cioc/web/admin/fieldgroup.py:102
 #: ../python/cioc/web/admin/quicksearch.py:140
-#: ../python/cioc/web/admin/views.py:862 ../python/cioc/web/admin/views.py:1333
-#: ../python/cioc/web/admin/views.py:1492
-#: ../python/cioc/web/admin/views.py:1527
+#: ../python/cioc/web/admin/views.py:863 ../python/cioc/web/admin/views.py:1334
+#: ../python/cioc/web/admin/views.py:1493
+#: ../python/cioc/web/admin/views.py:1528
 msgid "View Not Found"
 msgstr "La vue est introuvable"
 
@@ -1372,7 +1418,7 @@ msgstr "Modifier les Groupes de champs"
 #: ../python/cioc/web/admin/fieldgroup.py:284
 #: ../python/cioc/web/admin/quicksearch.py:334
 msgid "Invalid View Type: "
-msgstr "Type de vue invalide :"
+msgstr "Type de vue invalide : "
 
 #: ../python/cioc/web/admin/fieldhelp.py:131
 msgid "The Field Help was updated successfully."
@@ -1404,30 +1450,30 @@ msgstr "Les valeurs Oui / Non ont été mises à jour avec succès."
 
 #: ../python/cioc/web/admin/ganalytics.py:126
 msgid "The Google Analytics Configuration successfully updated."
-msgstr ""
+msgstr "La configuration de Google Analytics a été mise à jour avec succès."
 
 #: ../python/cioc/web/admin/ganalytics.py:140
 #: ../python/cioc/web/admin/ganalytics.py:155
 #: ../python/cioc/web/admin/sysinfo.py:48
 msgid "Manage Google Analytics Configuration"
-msgstr ""
+msgstr "Gérer la configuration de Google Analytics"
 
-#: ../python/cioc/web/admin/general.py:265
+#: ../python/cioc/web/admin/general.py:266
 msgid "The General Setup Options were successfully updated."
 msgstr "Les options générales de configuration ont été mises à jour avec succès."
 
-#: ../python/cioc/web/admin/general.py:340
-#: ../python/cioc/web/admin/general.py:440
+#: ../python/cioc/web/admin/general.py:347
+#: ../python/cioc/web/admin/general.py:453
 msgid "General Setup Options"
 msgstr "Options générales de configuration"
 
-#: ../python/cioc/web/admin/general.py:385
+#: ../python/cioc/web/admin/general.py:394
 msgid "Member Not Found"
 msgstr "Le membre est introuvable"
 
 #: ../python/cioc/web/admin/icarolunmatched.py:51
 msgid "iCarol Unmatched"
-msgstr ""
+msgstr "iCarol Non apparié"
 
 #: ../python/cioc/web/admin/interests.py:109
 #: ../python/cioc/web/admin/interests.py:289
@@ -1455,7 +1501,7 @@ msgstr "L'intérêt a été supprimé avec succès."
 #: ../python/cioc/web/admin/interests.py:459
 #: ../python/cioc/web/admin/interests.py:465
 msgid "Unable to delete Interest: "
-msgstr "L'Intérêt ne peut être supprimé :"
+msgstr "L'Intérêt ne peut être supprimé : "
 
 #: ../python/cioc/web/admin/layout.py:106
 #: ../python/cioc/web/admin/layout.py:244
@@ -1487,7 +1533,7 @@ msgstr "Le modèle de mise en page a été supprimé avec succès."
 #: ../python/cioc/web/admin/layout.py:470
 #: ../python/cioc/web/admin/layout.py:477
 msgid "Unable to delete Template Layout: "
-msgstr "La Mise en page de modèle ne peut être supprimée :"
+msgstr "La Mise en page de modèle ne peut être supprimée : "
 
 #: ../python/cioc/web/admin/listvalues.py:310
 msgid "Edit List / Drop-Down Values"
@@ -1507,6 +1553,8 @@ msgstr "types de rue"
 
 #: ../python/cioc/web/admin/listvalues.py:367
 #: ../python/cioc/web/admin/listvalues.py:445
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:85
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:43
 #: ../python/cioc/web/admin/templates/community/edit.mak:170
 #: ../python/cioc/web/admin/templates/naics/example.mak:39
 #: ../python/cioc/web/admin/templates/naics/exclusion.mak:149
@@ -1523,7 +1571,7 @@ msgstr "Afficher après le nom de la rue"
 
 #: ../python/cioc/web/admin/listvalues.py:378
 msgid "Street Type displays after the Street Name: "
-msgstr "Type de rue affiche après le nom de la rue:"
+msgstr "Le type de rue s'affiche après le nom de la rue :"
 
 #: ../python/cioc/web/admin/listvalues.py:392
 msgid "Postal Box Type"
@@ -1579,7 +1627,7 @@ msgstr "Le système cartographique a été supprimé avec succès."
 #: ../python/cioc/web/admin/mappingsystem.py:360
 #: ../python/cioc/web/admin/mappingsystem.py:367
 msgid "Unable to delete Mapping System: "
-msgstr "Le système cartographique ne peut être supprimé"
+msgstr "Le système cartographique ne peut être supprimé "
 
 #: ../python/cioc/web/admin/naics.py:44
 msgid "Only a Sector may have a blank Parent Code"
@@ -1610,7 +1658,7 @@ msgstr "Le code SCIAN est introuvable"
 
 #: ../python/cioc/web/admin/naics.py:232 ../python/cioc/web/admin/naics.py:307
 msgid "Edit NAICS Code: "
-msgstr "Modifier le code SCIAN :"
+msgstr "Modifier le code SCIAN : "
 
 #: ../python/cioc/web/admin/naics.py:234 ../python/cioc/web/admin/naics.py:309
 #: ../python/cioc/web/admin/pagehelp.py:96
@@ -1688,7 +1736,7 @@ msgstr "Demande de modification envoyée."
 #: ../python/cioc/web/admin/notices.py:277
 #: ../python/cioc/web/admin/templates/community/edit.mak:261
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:275
-#: ../python/cioc/web/admin/templates/views/edit.mak:1590
+#: ../python/cioc/web/admin/templates/views/edit.mak:1602
 #: ../python/cioc/web/cic/templates/record.mak:404
 #: ../python/cioc/web/cic/templates/reminders/edit.mak:42
 #: ../python/cioc/web/cic/templates/reminders/index.mak:53
@@ -1725,28 +1773,28 @@ msgstr "L'aide pour la page sélectionnée n'a pas été trouvée."
 #: ../python/cioc/web/admin/pages.py:66
 #, python-format
 msgid "Pages (%s)"
-msgstr ""
+msgstr "Pages (%s)"
 
 #: ../python/cioc/web/admin/pages.py:145
 msgid "The Page was successfully added."
-msgstr ""
+msgstr "La page a été ajoutée avec succès."
 
 #: ../python/cioc/web/admin/pages.py:147
 msgid "The Page was successfully updated."
-msgstr ""
+msgstr "La page a été mise à jour avec succès."
 
 #: ../python/cioc/web/admin/pages.py:157
 msgid "Invalid Page ID"
-msgstr ""
+msgstr "ID de page invalide"
 
 #: ../python/cioc/web/admin/pages.py:183 ../python/cioc/web/admin/pages.py:242
 msgid "Page Not Found"
-msgstr "Page non trouvée"
+msgstr "Page introuvable"
 
 #: ../python/cioc/web/admin/pages.py:185 ../python/cioc/web/admin/pages.py:248
 #, python-format
 msgid "Page (%s)"
-msgstr ""
+msgstr "Page (%s)"
 
 #: ../python/cioc/web/admin/pages.py:220
 #, python-format
@@ -1766,13 +1814,13 @@ msgstr "La page a été supprimée."
 msgid "Unable to delete Page: "
 msgstr "Impossible de supprimer la page : "
 
-#: ../python/cioc/web/admin/pages.py:353 ../python/cioc/web/admin/views.py:434
-#: ../python/cioc/web/admin/views.py:485 ../python/cioc/web/admin/views.py:769
-#: ../python/cioc/web/admin/views.py:1004
-#: ../python/cioc/web/admin/views.py:1052
-#: ../python/cioc/web/admin/views.py:1122
-#: ../python/cioc/web/admin/views.py:1190
-#: ../python/cioc/web/admin/views.py:1237
+#: ../python/cioc/web/admin/pages.py:353 ../python/cioc/web/admin/views.py:435
+#: ../python/cioc/web/admin/views.py:486 ../python/cioc/web/admin/views.py:770
+#: ../python/cioc/web/admin/views.py:1005
+#: ../python/cioc/web/admin/views.py:1053
+#: ../python/cioc/web/admin/views.py:1123
+#: ../python/cioc/web/admin/views.py:1191
+#: ../python/cioc/web/admin/views.py:1238
 msgid "Invalid Domain"
 msgstr "Le domaine n'est pas valide"
 
@@ -1962,6 +2010,8 @@ msgid ""
 "The Profile is available to be accepted, but email notifications could "
 "not be sent."
 msgstr ""
+"Le profil est prêt à être accepté, mais les notifications par courrier "
+"électronique n'ont pas pu être envoyées."
 
 #: ../python/cioc/web/admin/sharingprofile.py:983
 msgid "Unable to send Sharing Profile: "
@@ -1969,11 +2019,11 @@ msgstr "Le profil de partage ne peut être envoyé : "
 
 #: ../python/cioc/web/admin/sharingprofile.py:1072
 msgid "The Sharing Profile was successfully revoked."
-msgstr ""
+msgstr "Le profil de partage a été révoqué avec succès."
 
 #: ../python/cioc/web/admin/sharingprofile.py:1078
 msgid "Unable to revoke Sharing Profile: "
-msgstr ""
+msgstr "Impossible de révoquer le profil de partage :"
 
 #: ../python/cioc/web/admin/sharingprofile.py:1199
 #: ../python/cioc/web/admin/sharingprofile.py:1670
@@ -2001,12 +2051,17 @@ msgid ""
 " already in the Profile, and %d records are in another Profile with this "
 "Member."
 msgstr ""
+"Aucun des enregistrements sélectionnés ne peut être ajouté au profil. %d "
+"enregistrements étaient déjà dans le profil et %d enregistrements sont "
+"dans un autre profil avec ce membre."
 
 #: ../python/cioc/web/admin/sharingprofile.py:1411
 msgid ""
 "No records were removed. They may already have been removed, or be "
 "scheduled for removal in the next few days."
 msgstr ""
+"Aucun dossier n'a été supprimé. Ils ont peut-être déjà été supprimés ou "
+"leur suppression est prévue dans les prochains jours."
 
 #: ../python/cioc/web/admin/sharingprofile.py:1513
 #: ../python/cioc/web/admin/templates/views/edit.mak:28
@@ -2039,8 +2094,9 @@ msgstr ""
 #: ../python/cioc/web/admin/templates/views/edit.mak:1095
 #: ../python/cioc/web/admin/templates/views/edit.mak:1102
 #: ../python/cioc/web/admin/templates/views/edit.mak:1376
-#: ../python/cioc/web/admin/templates/views/edit.mak:1431
-#: ../python/cioc/web/admin/templates/views/edit.mak:1448
+#: ../python/cioc/web/admin/templates/views/edit.mak:1429
+#: ../python/cioc/web/admin/templates/views/edit.mak:1445
+#: ../python/cioc/web/admin/templates/views/edit.mak:1462
 #: ../python/cioc/web/cic/templates/record.mak:400
 #: ../python/cioc/web/cic/templates/topicsearch/searchform.mak:37
 #: ../python/cioc/web/templates/master.mak:90
@@ -2112,7 +2168,7 @@ msgstr "Le modèle a été supprimé avec succès."
 #: ../python/cioc/web/admin/template.py:763
 #: ../python/cioc/web/admin/template.py:769
 msgid "Unable to delete Template: "
-msgstr "Le modèle ne peut être supprimé"
+msgstr "Le modèle ne peut être supprimé : "
 
 #: ../python/cioc/web/admin/thesaurus.py:61
 #: ../python/cioc/web/admin/thesaurus.py:82
@@ -2150,7 +2206,7 @@ msgstr "Le sujet ne peut être supprimé :"
 
 #: ../python/cioc/web/admin/thesaurus.py:608
 msgid "Unable to delete Subject: "
-msgstr "Le sujet ne peut être supprimé :"
+msgstr "Le sujet ne peut être supprimé : "
 
 #: ../python/cioc/web/admin/thesaurus_source.py:98
 #: ../python/cioc/web/admin/thesaurus_source.py:203
@@ -2164,13 +2220,13 @@ msgstr "Les sources du Thésaurus ont été mises à jour avec succès."
 #: ../python/cioc/web/admin/userapicreds.py:63
 #, python-format
 msgid "Invalid User_ID: %s"
-msgstr ""
+msgstr "ID_utilisateur invalide : %s"
 
 #: ../python/cioc/web/admin/templates/userapicreds/add.mak:59
 #: ../python/cioc/web/admin/userapicreds.py:66
 #: ../python/cioc/web/admin/userapicreds.py:101
 msgid "User API Credentials"
-msgstr ""
+msgstr "Identifiants API utilisateur"
 
 #: ../python/cioc/web/admin/userapicreds.py:98
 msgid "User not found"
@@ -2180,12 +2236,12 @@ msgstr "Utilisateur non trouvé"
 #: ../python/cioc/web/admin/userapicreds.py:127
 #, python-format
 msgid "User API Credentials for %s"
-msgstr ""
+msgstr "Identifiants de l'API utilisateur pour %s"
 
 #: ../python/cioc/web/admin/userapicreds.py:190
 #: ../python/cioc/web/admin/userapicreds.py:222
 msgid "Credential ID:"
-msgstr ""
+msgstr "ID d'identification :"
 
 #: ../python/cioc/web/admin/userapicreds.py:195
 #: ../python/cioc/web/cic/generalheading.py:522
@@ -2195,11 +2251,11 @@ msgstr "Supprimer l'En-tête"
 
 #: ../python/cioc/web/admin/userapicreds.py:252
 msgid "The API credential was successfully deleted."
-msgstr ""
+msgstr "Les informations d'identification de l'API ont été supprimées avec succès."
 
 #: ../python/cioc/web/admin/userapicreds.py:263
 msgid "Unable to delete API credential: "
-msgstr ""
+msgstr "Impossible de supprimer les informations d'identification de l'API :"
 
 #: ../python/cioc/web/admin/templates/sharingprofile/records.mak:87
 #: ../python/cioc/web/admin/templates/views/edit.mak:904
@@ -2221,15 +2277,15 @@ msgstr "Titre pour le service"
 
 #: ../python/cioc/web/admin/vacancy.py:63
 msgid "Service Title At Change"
-msgstr ""
+msgstr "Titre du service au moment du changement"
 
 #: ../python/cioc/web/admin/vacancy.py:64
 msgid "Vacancy Unit Type ID"
-msgstr ""
+msgstr "ID du type d'unité vacante"
 
 #: ../python/cioc/web/admin/vacancy.py:65
 msgid "Vacancy Unit Type GUID"
-msgstr ""
+msgstr "GUID du type d'unité vacante"
 
 #: ../python/cioc/web/admin/vacancy.py:66
 msgid "Modified Date"
@@ -2241,86 +2297,86 @@ msgstr "Modifié par"
 
 #: ../python/cioc/web/admin/vacancy.py:68
 msgid "Vacancy Change"
-msgstr ""
+msgstr "Changement de poste"
 
 #: ../python/cioc/web/admin/vacancy.py:69
 msgid "Total Vacancy"
-msgstr ""
+msgstr "Total des postes vacants"
 
-#: ../python/cioc/web/admin/views.py:453 ../python/cioc/web/admin/views.py:730
-#: ../python/cioc/web/admin/views.py:962 ../python/cioc/web/admin/views.py:1028
-#: ../python/cioc/web/admin/views.py:1219
+#: ../python/cioc/web/admin/views.py:454 ../python/cioc/web/admin/views.py:731
+#: ../python/cioc/web/admin/views.py:963 ../python/cioc/web/admin/views.py:1029
+#: ../python/cioc/web/admin/views.py:1220
 #, python-format
 msgid "Manage Views (%s)"
 msgstr "Gestion des vues (%s)"
 
-#: ../python/cioc/web/admin/views.py:601
+#: ../python/cioc/web/admin/views.py:602
 msgid "The View has been successfully updated."
 msgstr "La vue a été mise à jour avec succès."
 
-#: ../python/cioc/web/admin/views.py:612
+#: ../python/cioc/web/admin/views.py:613
 msgid "Invalid View ID"
 msgstr "ID de Vue invalide"
 
-#: ../python/cioc/web/admin/views.py:1096
+#: ../python/cioc/web/admin/views.py:1097
 msgid "View Deleted"
 msgstr "La vue a été supprimée avec succès."
 
-#: ../python/cioc/web/admin/views.py:1100
-#: ../python/cioc/web/admin/views.py:1106
+#: ../python/cioc/web/admin/views.py:1101
+#: ../python/cioc/web/admin/views.py:1107
 msgid "Unable to delete View: "
 msgstr "La vue n'a pas été supprimée. : "
 
-#: ../python/cioc/web/admin/views.py:1146
-#: ../python/cioc/web/admin/views.py:1214
-#: ../python/cioc/web/admin/views.py:1261
-#: ../python/cioc/web/admin/views.py:1315
+#: ../python/cioc/web/admin/views.py:1147
+#: ../python/cioc/web/admin/views.py:1215
+#: ../python/cioc/web/admin/views.py:1262
+#: ../python/cioc/web/admin/views.py:1316
 #: ../python/cioc/web/jsonfeeds/cicfeed.py:89
 #: ../python/cioc/web/jsonfeeds/volfeed.py:70
 msgid "Invalid Request"
 msgstr "La requête est invalide"
 
-#: ../python/cioc/web/admin/views.py:1335
-#: ../python/cioc/web/admin/views.py:1443
-#: ../python/cioc/web/admin/views.py:1472
+#: ../python/cioc/web/admin/views.py:1336
+#: ../python/cioc/web/admin/views.py:1444
+#: ../python/cioc/web/admin/views.py:1473
 #, python-format
 msgid "Manage Topic Searches For %s"
 msgstr "Gérer les recherches par sujet pour %s"
 
-#: ../python/cioc/web/admin/views.py:1363
-#: ../python/cioc/web/admin/views.py:1486
-#: ../python/cioc/web/admin/views.py:1530
+#: ../python/cioc/web/admin/views.py:1364
+#: ../python/cioc/web/admin/views.py:1487
+#: ../python/cioc/web/admin/views.py:1531
 msgid "Topic Search Not Found"
 msgstr "La recherche par sujet est introuvable"
 
-#: ../python/cioc/web/admin/views.py:1418
+#: ../python/cioc/web/admin/views.py:1419
 msgid "The Topic Search was successfully updated."
 msgstr "La recherche par sujet a été mise à jour avec succès."
 
-#: ../python/cioc/web/admin/views.py:1420
+#: ../python/cioc/web/admin/views.py:1421
 msgid "The Topic Search was successfully added."
 msgstr "La recherche par sujet a été ajoutée avec succès."
 
-#: ../python/cioc/web/admin/views.py:1555
-#: ../python/cioc/web/admin/views.py:1585
+#: ../python/cioc/web/admin/views.py:1556
+#: ../python/cioc/web/admin/views.py:1586
 msgid "Invalid Topic Search"
 msgstr "Recherche par sujet invalide"
 
-#: ../python/cioc/web/admin/views.py:1558
-#: ../python/cioc/web/admin/views.py:1588
+#: ../python/cioc/web/admin/views.py:1559
+#: ../python/cioc/web/admin/views.py:1589
 msgid "Invalid View"
 msgstr "Vue invalide"
 
-#: ../python/cioc/web/admin/views.py:1560
+#: ../python/cioc/web/admin/views.py:1561
 msgid "Delete Topic Search"
 msgstr "Supprimer la recherche par sujet"
 
-#: ../python/cioc/web/admin/views.py:1611
+#: ../python/cioc/web/admin/views.py:1612
 msgid "Topic Search Deleted"
 msgstr "Recherche par sujet supprimée"
 
-#: ../python/cioc/web/admin/views.py:1618
-#: ../python/cioc/web/admin/views.py:1625
+#: ../python/cioc/web/admin/views.py:1619
+#: ../python/cioc/web/admin/views.py:1626
 msgid "Unable to delete Topic Search: "
 msgstr "Le recherche par sujet ne peut être supprimée : "
 
@@ -2328,6 +2384,7 @@ msgstr "Le recherche par sujet ne peut être supprimée : "
 msgid "Add New Community"
 msgstr "Ajouter une nouvelle communauté"
 
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:175
 #: ../python/cioc/web/admin/templates/cm_checklist.mak:35
 #: ../python/cioc/web/admin/templates/community/edit.mak:178
 #: ../python/cioc/web/admin/templates/community/edit.mak:191
@@ -2358,6 +2415,9 @@ msgstr "Ajouter une nouvelle communauté"
 msgid "Add"
 msgstr "Ajouter"
 
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:34
+#: ../python/cioc/web/admin/templates/applicationsurvey/index.mak:43
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:35
 #: ../python/cioc/web/admin/templates/checklists/edit.mak:51
 #: ../python/cioc/web/admin/templates/checklists/index.mak:52
 #: ../python/cioc/web/admin/templates/community/edit.mak:36
@@ -2377,7 +2437,7 @@ msgstr "Ajouter"
 #: ../python/cioc/web/admin/templates/fieldhide.mak:25
 #: ../python/cioc/web/admin/templates/fieldradio.mak:31
 #: ../python/cioc/web/admin/templates/ganalytics.mak:22
-#: ../python/cioc/web/admin/templates/generalsetup.mak:25
+#: ../python/cioc/web/admin/templates/generalsetup.mak:26
 #: ../python/cioc/web/admin/templates/interests/edit.mak:21
 #: ../python/cioc/web/admin/templates/interests/index.mak:35
 #: ../python/cioc/web/admin/templates/layout/edit.mak:25
@@ -2465,7 +2525,7 @@ msgstr "Google Maps (Bénévolat)"
 
 #: ../python/cioc/web/admin/templates/domainmap.mak:56
 msgid ": Default Language"
-msgstr " : Langage par défaut"
+msgstr ": Langue par défaut"
 
 #: ../python/cioc/web/admin/templates/domainmap.mak:62
 #: ../python/cioc/web/cic/templates/reminders/edit_form.mak:52
@@ -2483,7 +2543,7 @@ msgstr " : Vue de l'information communautaire"
 
 #: ../python/cioc/web/admin/templates/domainmap.mak:78
 msgid ": Volunteer View"
-msgstr ""
+msgstr ": Vue bénévole"
 
 #: ../python/cioc/web/admin/templates/domainmap.mak:86
 msgid " is a secondary name"
@@ -2511,6 +2571,7 @@ msgstr "Enterprise Channel :"
 msgid "Submit"
 msgstr "Soumettre"
 
+#: ../python/cioc/web/admin/templates/applicationsurvey/index.mak:70
 #: ../python/cioc/web/admin/templates/domainmap.mak:159
 #: ../python/cioc/web/admin/templates/ganalytics.mak:81
 #: ../python/cioc/web/cic/templates/taxonomy/activationrec.mak:153
@@ -2567,6 +2628,7 @@ msgstr ""
 "noms de champs que vous partagez avec eux. Chaque module possède des "
 "champs obligatoires et un ordre des champs spécifique."
 
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:42
 #: ../python/cioc/web/admin/templates/community/edit.mak:116
 #: ../python/cioc/web/admin/templates/email/edit.mak:51
 #: ../python/cioc/web/admin/templates/excelprofile/edit.mak:37
@@ -2574,7 +2636,7 @@ msgstr ""
 #: ../python/cioc/web/admin/templates/fielddisplay.mak:60
 #: ../python/cioc/web/admin/templates/fieldhide.mak:49
 #: ../python/cioc/web/admin/templates/fieldradio.mak:58
-#: ../python/cioc/web/admin/templates/generalsetup.mak:414
+#: ../python/cioc/web/admin/templates/generalsetup.mak:415
 #: ../python/cioc/web/admin/templates/interests/edit.mak:62
 #: ../python/cioc/web/admin/templates/listvalues/edit.mak:182
 #: ../python/cioc/web/admin/templates/listvalues/index.mak:115
@@ -2615,7 +2677,7 @@ msgstr "Affichage"
 #: ../python/cioc/web/admin/templates/checklists/edit.mak:333
 #: ../python/cioc/web/admin/templates/checklists/index.mak:320
 #: ../python/cioc/web/admin/templates/fielddisplay.mak:65
-#: ../python/cioc/web/admin/templates/fieldgroup.mak:44
+#: ../python/cioc/web/admin/templates/fieldgroup.mak:46
 #: ../python/cioc/web/admin/templates/quicksearch.mak:40
 #: ../python/cioc/web/cic/templates/publication/edit.mak:184
 msgid "Order"
@@ -2639,7 +2701,7 @@ msgstr " Afficher texte pour : "
 
 #: ../python/cioc/web/admin/templates/fielddisplay.mak:103
 msgid ": Display Order"
-msgstr " : L'ordre d'affichage"
+msgstr " : L'ordre d'affichage "
 
 #: ../python/cioc/web/admin/templates/fielddisplay.mak:110
 msgid ": Required"
@@ -2649,6 +2711,7 @@ msgstr " : Champs obligatoires"
 msgid ": HTML Editor"
 msgstr ": Éditeur HTML"
 
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:175
 #: ../python/cioc/web/admin/templates/checklists/sharedstate.mak:34
 #: ../python/cioc/web/admin/templates/community/edit.mak:191
 #: ../python/cioc/web/admin/templates/email/edit.mak:288
@@ -2657,7 +2720,7 @@ msgstr ": Éditeur HTML"
 #: ../python/cioc/web/admin/templates/fieldgroup.mak:61
 #: ../python/cioc/web/admin/templates/fieldhide.mak:85
 #: ../python/cioc/web/admin/templates/fieldradio.mak:122
-#: ../python/cioc/web/admin/templates/generalsetup.mak:502
+#: ../python/cioc/web/admin/templates/generalsetup.mak:526
 #: ../python/cioc/web/admin/templates/interests/edit.mak:94
 #: ../python/cioc/web/admin/templates/interests/index.mak:131
 #: ../python/cioc/web/admin/templates/layout/edit.mak:150
@@ -2684,6 +2747,7 @@ msgstr ": Éditeur HTML"
 msgid "Update"
 msgstr "Mettre à jour"
 
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:179
 #: ../python/cioc/web/admin/templates/checklists/edit.mak:107
 #: ../python/cioc/web/admin/templates/checklists/index.mak:103
 #: ../python/cioc/web/admin/templates/community/edit.mak:195
@@ -2694,7 +2758,7 @@ msgstr "Mettre à jour"
 #: ../python/cioc/web/admin/templates/fieldhelp/edit.mak:78
 #: ../python/cioc/web/admin/templates/fieldhide.mak:86
 #: ../python/cioc/web/admin/templates/fieldradio.mak:123
-#: ../python/cioc/web/admin/templates/generalsetup.mak:503
+#: ../python/cioc/web/admin/templates/generalsetup.mak:527
 #: ../python/cioc/web/admin/templates/interests/edit.mak:98
 #: ../python/cioc/web/admin/templates/interests/index.mak:145
 #: ../python/cioc/web/admin/templates/layout/edit.mak:155
@@ -2715,7 +2779,7 @@ msgstr "Mettre à jour"
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:239
 #: ../python/cioc/web/admin/templates/thesaurus/source.mak:61
 #: ../python/cioc/web/admin/templates/userapicreds/add.mak:50
-#: ../python/cioc/web/admin/templates/views/edit.mak:1542
+#: ../python/cioc/web/admin/templates/views/edit.mak:1556
 #: ../python/cioc/web/admin/templates/views/topicsearch.mak:162
 #: ../python/cioc/web/cic/templates/generalheading/edit.mak:223
 #: ../python/cioc/web/cic/templates/generalheading/edit.mak:256
@@ -2730,6 +2794,7 @@ msgstr ""
 "Attention : la suppression d'un groupe de champs éliminera tous les "
 "champs de ce groupe!"
 
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:177
 #: ../python/cioc/web/admin/templates/checklists/edit.mak:295
 #: ../python/cioc/web/admin/templates/community/edit.mak:171
 #: ../python/cioc/web/admin/templates/community/edit.mak:193
@@ -2756,7 +2821,7 @@ msgstr ""
 #: ../python/cioc/web/admin/templates/userapicreds/index.mak:45
 #: ../python/cioc/web/admin/templates/views/delete_lang.mak:30
 #: ../python/cioc/web/admin/templates/views/edit.mak:154
-#: ../python/cioc/web/admin/templates/views/edit.mak:1539
+#: ../python/cioc/web/admin/templates/views/edit.mak:1553
 #: ../python/cioc/web/admin/templates/views/topicsearch.mak:156
 #: ../python/cioc/web/admin/templates/views/topicsearch.mak:159
 #: ../python/cioc/web/cic/templates/generalheading/edit.mak:221
@@ -2767,7 +2832,7 @@ msgstr ""
 msgid "Delete"
 msgstr "Supprimer"
 
-#: ../python/cioc/web/admin/templates/fieldgroup.mak:44
+#: ../python/cioc/web/admin/templates/fieldgroup.mak:45
 msgid "Field Group"
 msgstr "Groupe de champs"
 
@@ -2792,7 +2857,7 @@ msgstr "Nouveau"
 msgid ": Delete"
 msgstr " : Effacer"
 
-#: ../python/cioc/web/admin/templates/fieldgroup.mak:124
+#: ../python/cioc/web/admin/templates/fieldgroup.mak:128
 msgid ": Order"
 msgstr " : Ordre"
 
@@ -2844,55 +2909,55 @@ msgstr "Désactivé : "
 
 #: ../python/cioc/web/admin/templates/ganalytics.mak:33
 msgid "Google Analytics Code"
-msgstr ""
+msgstr "Code de Google Analytics"
 
 #: ../python/cioc/web/admin/templates/ganalytics.mak:34
 msgid "Agency Dimension"
-msgstr ""
+msgstr "Dimension de l'agence"
 
 #: ../python/cioc/web/admin/templates/ganalytics.mak:35
 msgid "Language Dimension"
-msgstr ""
+msgstr "Dimension linguistique"
 
 #: ../python/cioc/web/admin/templates/ganalytics.mak:36
 msgid "View Dimension"
-msgstr ""
+msgstr "Dimension de la vue"
 
 #: ../python/cioc/web/admin/templates/ganalytics.mak:37
 msgid "Result Count Dimension"
-msgstr ""
+msgstr "Dimension Nombre de résultats"
 
 #: ../python/cioc/web/admin/templates/ganalytics.mak:57
 msgid ": Google Analytics Code"
-msgstr ""
+msgstr " : Code Google Analytics"
 
 #: ../python/cioc/web/admin/templates/ganalytics.mak:61
 msgid ": Google Analytics Agency Dimension"
-msgstr ""
+msgstr " : Dimension Agence Google Analytics"
 
 #: ../python/cioc/web/admin/templates/ganalytics.mak:65
 msgid ": Google Universal Analytics Language Dimension"
-msgstr ""
+msgstr " : Dimension linguistique de Google Universal Analytics"
 
 #: ../python/cioc/web/admin/templates/ganalytics.mak:69
 msgid ": Google Analytics View Dimension"
-msgstr ""
+msgstr " : Dimension d'affichage de Google Analytics"
 
 #: ../python/cioc/web/admin/templates/ganalytics.mak:73
 msgid ": Google Analytics Results Count Metric"
-msgstr ""
+msgstr " : Mesure du nombre de résultats de Google Analytics"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:33
+#: ../python/cioc/web/admin/templates/generalsetup.mak:34
 msgid "Edit general database options"
 msgstr ""
 "Utiliser ce formulaire pour modifier les options générales de la base de "
 "données"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:41
+#: ../python/cioc/web/admin/templates/generalsetup.mak:42
 msgid "Training Mode"
 msgstr "Mode Formation"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:42
+#: ../python/cioc/web/admin/templates/generalsetup.mak:43
 msgid ""
 "When the database is in training mode, Emails are not sent out. An alert-"
 "coloured header will appear on every page. Note that this applies to all "
@@ -2902,33 +2967,33 @@ msgstr ""
 "envoyé. Un en-tête d'alerte en couleur s'affichera sur chaque page. "
 "Remarque : ceci est valable pour tous les modules de la  base de données."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:47
+#: ../python/cioc/web/admin/templates/generalsetup.mak:48
 msgid "The database is in training mode."
 msgstr "La base de données est en mode Formation."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:61
+#: ../python/cioc/web/admin/templates/generalsetup.mak:62
 msgid "Database Name"
 msgstr "Nom de la base de données"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:65
+#: ../python/cioc/web/admin/templates/generalsetup.mak:66
 msgid "Name to use for the database in outgoing Emails"
 msgstr "Nom à utiliser pour la base de données dans les courriels sortants"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:85
+#: ../python/cioc/web/admin/templates/generalsetup.mak:86
 msgid "Admin Design Template"
 msgstr "Modèle de conception en mode de gestion"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:86
+#: ../python/cioc/web/admin/templates/generalsetup.mak:87
 msgid "This template is used in the \"Admin\" (shared) section of the database."
 msgstr ""
 "Ce modèle est utilisé dans la section (partagée) \"Gestion\" de la base "
 "de données."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:93
+#: ../python/cioc/web/admin/templates/generalsetup.mak:94
 msgid "Admin Print Template"
 msgstr "Modèle d'impression en mode de gestion"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:94
+#: ../python/cioc/web/admin/templates/generalsetup.mak:95
 msgid ""
 "This template is used for \"Print Mode\" in the \"Admin\" (shared) "
 "section of the database."
@@ -2936,20 +3001,20 @@ msgstr ""
 "Ce modèle est utilisé pour le \"Mode Impression\" dans la section "
 "(partagée) \"Gestion\" de la base de données."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:104
+#: ../python/cioc/web/admin/templates/generalsetup.mak:105
 msgid "Community Information Database"
 msgstr "la base de données d'information communautaire"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:107
+#: ../python/cioc/web/admin/templates/generalsetup.mak:108
 msgid "Volunteer Database"
 msgstr "Base de données Bénévolat"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:113
+#: ../python/cioc/web/admin/templates/generalsetup.mak:114
 #, python-format
 msgid "Default View (%s)"
 msgstr "Vue par défaut (%s)"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:114
+#: ../python/cioc/web/admin/templates/generalsetup.mak:115
 #, python-format
 msgid ""
 "This view is used for the %s when a user is not logged in (the \"public\""
@@ -2958,11 +3023,11 @@ msgstr ""
 "Cette vue est utilisée pour %s quand l'utilisateur n'est pas connecté "
 "(vue publique)."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:126
+#: ../python/cioc/web/admin/templates/generalsetup.mak:127
 msgid "Public Print Mode"
 msgstr "Mode Impression pour le public"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:127
+#: ../python/cioc/web/admin/templates/generalsetup.mak:128
 msgid ""
 "This only applies if a print template has been specified for the View in "
 "question. Only the details page is available to the public in print mode,"
@@ -2972,17 +3037,17 @@ msgstr ""
 "vue en question. Seule la page de renseignements est accessible au grand "
 "public en mode Impression et l'option de titre Javascript est désactivée."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:132
+#: ../python/cioc/web/admin/templates/generalsetup.mak:133
 msgid "Print version available to non-logged in users (the public)"
 msgstr ""
 "La version imprimable est accessible aux utilisateurs non-connectés "
 "(grand public)."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:136
+#: ../python/cioc/web/admin/templates/generalsetup.mak:137
 msgid "User Initials"
 msgstr "Initiales de l'utilisateur"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:137
+#: ../python/cioc/web/admin/templates/generalsetup.mak:138
 msgid ""
 "If selected, the user's initials are used when a user's identity is "
 "required for input to a field. Otherwise, the user's first and last name "
@@ -2992,15 +3057,15 @@ msgstr ""
 "l'identité de ce dernier est requise pour remplir un champ. Autrement, le"
 " prénom et le nom de famille de l'utilisateur sont utilisés."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:141
+#: ../python/cioc/web/admin/templates/generalsetup.mak:142
 msgid "Use user initials "
-msgstr "Utiliser les initiales de l'utilisateur"
-
-#: ../python/cioc/web/admin/templates/generalsetup.mak:145
-msgid "Login Attempts"
-msgstr "Tentatives de connexion :"
+msgstr "Utiliser les initiales de l'utilisateur "
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:146
+msgid "Login Attempts"
+msgstr "Tentatives de connexion"
+
+#: ../python/cioc/web/admin/templates/generalsetup.mak:147
 msgid ""
 "The number of incorrect attempts to log in are allowed before the account"
 " is locked"
@@ -3008,16 +3073,16 @@ msgstr ""
 "Le nombre de tentatives de connexion incorrectes autorisées avant le "
 "verrouillage du compte"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:150
+#: ../python/cioc/web/admin/templates/generalsetup.mak:151
 msgid "No Limit"
 msgstr "Illimité"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:166
+#: ../python/cioc/web/admin/templates/generalsetup.mak:167
 #, python-format
 msgid "Base URL (%s)"
 msgstr "URL de la base (%s)"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:167
+#: ../python/cioc/web/admin/templates/generalsetup.mak:168
 msgid ""
 "The full web address to the root of the application. Do not include the "
 "trailing slash. (e.g. mysite.cioc.ca)"
@@ -3025,11 +3090,11 @@ msgstr ""
 "L'adresse URL complète à la racine de l'application. Ne pas inclure la "
 "barre oblique de fin. (p. ex. : monsite.cioc.ca)"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:183
+#: ../python/cioc/web/admin/templates/generalsetup.mak:184
 msgid "Days Since Last Email"
 msgstr "Nombre de jours depuis le dernier courriel"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:184
+#: ../python/cioc/web/admin/templates/generalsetup.mak:185
 msgid ""
 "When sending an update Email request for a single record, an alert will "
 "be printed if the last Email update request was less than this many days "
@@ -3041,137 +3106,144 @@ msgstr ""
 "indiqué. Remarque : ceci est valable pour tous les modules de la  base de"
 " données."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:204
+#: ../python/cioc/web/admin/templates/generalsetup.mak:205
 msgid "Volunteer Profile"
 msgstr "Profil Bénévolat"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:209
+#: ../python/cioc/web/admin/templates/generalsetup.mak:210
 #, python-format
 msgid "Default Email (%s)"
 msgstr "Courriel par défaut (%s)"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:210
+#: ../python/cioc/web/admin/templates/generalsetup.mak:211
 msgid ""
 "The Default Email address is used whenever an Email message is generated "
 "by the system. If a specific Agency Email is available, that will be used"
 " as a Reply To address."
 msgstr ""
-
-#: ../python/cioc/web/admin/templates/generalsetup.mak:218
-#, python-format
-msgid "Default Email Name (%s)"
-msgstr ""
+"L'adresse courriel par défaut est utilisée chaque fois qu'un message "
+"électronique est généré par le système. Si une adresse courriel d'agence "
+"spécifique est disponible, elle sera utilisée comme adresse de réponse."
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:219
+#, python-format
+msgid "Default Email Name (%s)"
+msgstr "Nom de courrier électronique par défaut (%s)"
+
+#: ../python/cioc/web/admin/templates/generalsetup.mak:220
 msgid ""
 "The Name used as part of the From address whenever Default Email address "
 "is used."
 msgstr ""
+"Le nom utilisé dans l'adresse de l'expéditeur chaque fois que l'adresse "
+"courriel par défaut est utilisée."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:228
+#: ../python/cioc/web/admin/templates/generalsetup.mak:229
 #, python-format
 msgid "Import Notification Email (%s)"
 msgstr "Courriel pour la notification d'importation (%s)"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:229
+#: ../python/cioc/web/admin/templates/generalsetup.mak:230
 msgid ""
 "The email address to be used to send email notifications of issues "
 "encountered while running automatic imports"
 msgstr ""
+"L'adresse e-mail à utiliser pour envoyer des notifications par e-mail des"
+" problèmes rencontrés lors de l'exécution des importations automatiques"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:248
+#: ../python/cioc/web/admin/templates/generalsetup.mak:249
 #: ../python/cioc/web/admin/templates/views/edit.mak:717
 #: ../python/cioc/web/admin/templates/views/edit.mak:722
 msgid "Feedback Message"
 msgstr "Message de rétroaction"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:252
+#: ../python/cioc/web/admin/templates/generalsetup.mak:253
 msgid "Message printed after someone submits feedback on a record."
 msgstr "Message affiché après l'envoi d'une rétroaction sur un dossier."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:275
+#: ../python/cioc/web/admin/templates/generalsetup.mak:276
 msgid "Record Notes"
 msgstr "Notes sur les dossiers"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:280
+#: ../python/cioc/web/admin/templates/generalsetup.mak:281
 msgid "updated"
 msgstr "mis à jour"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:280
+#: ../python/cioc/web/admin/templates/generalsetup.mak:281
 msgid "deleted"
 msgstr "supprimé(s)"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:282
+#: ../python/cioc/web/admin/templates/generalsetup.mak:283
 #, python-format
 msgid "Record Notes (e.g. Internal Memo) can be %s by:"
 msgstr "Les notes sur les dossier (par ex. Note interne) peuvent être %s par :"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:284
+#: ../python/cioc/web/admin/templates/generalsetup.mak:285
 msgid "No one (not allowed)"
 msgstr "Personne (interdit)"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:285
+#: ../python/cioc/web/admin/templates/generalsetup.mak:286
 msgid "Anyone with update permissions"
 msgstr "Toute personne ayant les droits de mise à jour"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:286
+#: ../python/cioc/web/admin/templates/generalsetup.mak:287
 msgid "Super User only"
 msgstr "Un super-utilisateur uniquement"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:291
+#: ../python/cioc/web/admin/templates/generalsetup.mak:292
 msgid "Note Types are optional"
 msgstr "Les types de note sont facultatifs"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:298
+#: ../python/cioc/web/admin/templates/generalsetup.mak:299
 #: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:107
 msgid "Default Province"
 msgstr "Province par défaut"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:307
+#: ../python/cioc/web/admin/templates/generalsetup.mak:308
 msgid "Default Geocode Type"
 msgstr "Type de géocodage par défaut"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:310
+#: ../python/cioc/web/admin/templates/generalsetup.mak:311
 msgid "No value (do not map)"
 msgstr "Aucune valeur (pas la carte)"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:311
+#: ../python/cioc/web/admin/templates/generalsetup.mak:312
 msgid "Site address"
 msgstr "Adresse du site"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:312
+#: ../python/cioc/web/admin/templates/generalsetup.mak:313
 msgid "Intersection"
 msgstr "Intersection"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:313
+#: ../python/cioc/web/admin/templates/generalsetup.mak:314
 msgid "Manual placement"
 msgstr "Placement cartographique manuel"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:314
+#: ../python/cioc/web/admin/templates/generalsetup.mak:315
 msgid "Default method of geo-coding on new records"
 msgstr "Méthode de géocodage des nouveaux dossiers par défaut"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:318
+#: ../python/cioc/web/admin/templates/generalsetup.mak:319
 msgid "Prevent Duplicate Org Names"
 msgstr "Empêcher les doublons pour les noms d'organisme"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:321
+#: ../python/cioc/web/admin/templates/generalsetup.mak:322
 msgid "Allow duplicate organization / program names"
 msgstr "Autoriser les doublons pour les noms d'organisme"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:322
+#: ../python/cioc/web/admin/templates/generalsetup.mak:323
 msgid "Warn about duplicate organization / program names"
 msgstr "Alerter sur les doublons pour les noms d'organisme"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:323
+#: ../python/cioc/web/admin/templates/generalsetup.mak:324
 msgid "Don't Allow duplicate organization / program names"
-msgstr "Interdir les doubons pour les noms d'organisme"
+msgstr "Interdir les doublons pour les noms d'organisme"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:327
+#: ../python/cioc/web/admin/templates/generalsetup.mak:328
 msgid "New NUM Selection"
 msgstr "Sélection d'un nouveau numéro"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:328
+#: ../python/cioc/web/admin/templates/generalsetup.mak:329
 msgid ""
 "If checked, then new NUMs will be the lowest NUM available for the "
 "agency, even if there are higher NUMs already taken. If not checked, then"
@@ -3183,15 +3255,15 @@ msgstr ""
 "déjà utilisés. Sinon, le nouveau numéro sera supérieur au numéro le plus "
 "grand déja utilisé par l'agence."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:333
+#: ../python/cioc/web/admin/templates/generalsetup.mak:334
 msgid "Always pick lowest unused NUM"
 msgstr "Toujours utiliser le numéro le plus bas non utilisé"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:337
+#: ../python/cioc/web/admin/templates/generalsetup.mak:338
 msgid "Billing/Other Address Site Code"
 msgstr "Code de l'adresse de facturation / additionnelle du site"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:338
+#: ../python/cioc/web/admin/templates/generalsetup.mak:339
 msgid ""
 "Max length for the optional site code component of the Billing and Other "
 "Addresses fields. Use 0 to disable site code."
@@ -3200,11 +3272,11 @@ msgstr ""
 "Adresses de facturation / additionnelles. Utiliser 0 pour désactiver le "
 "code de site."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:348
+#: ../python/cioc/web/admin/templates/generalsetup.mak:349
 msgid "Offline Tools"
 msgstr "Outils hors-ligne"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:349
+#: ../python/cioc/web/admin/templates/generalsetup.mak:350
 msgid ""
 "When selected, the Offline Tools will be permitted to connect to this "
 "CIOC database and the Offline Tools options will be available in setup "
@@ -3214,15 +3286,15 @@ msgstr ""
 "cette base de données CIOC et les options Outils hors-ligne seront "
 "visibles dans les zones de configuration."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:352
+#: ../python/cioc/web/admin/templates/generalsetup.mak:353
 msgid "Enable Offline Tools Support"
 msgstr "Activer le soutien des outils hors-ligne"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:358
+#: ../python/cioc/web/admin/templates/generalsetup.mak:359
 msgid "Volunteer Centre Organization Name(s)"
 msgstr "Nom du centre de bénévoles"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:359
+#: ../python/cioc/web/admin/templates/generalsetup.mak:360
 msgid ""
 "Name of organization(s) to which a Volunteer Profile Account Holder "
 "agrees to allow the use of their private data as outlined in the Privacy "
@@ -3232,11 +3304,11 @@ msgstr ""
 "Bénévolat autorise à utiliser ses renseignements personnels tel "
 "qu'indiqué dans la Politique de confidentialité."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:379
+#: ../python/cioc/web/admin/templates/generalsetup.mak:380
 msgid "Volunteer Profile Privacy Policy"
 msgstr "Politique de confidentialité du Profil Bénévolat"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:380
+#: ../python/cioc/web/admin/templates/generalsetup.mak:381
 msgid ""
 "Privacy Policy under which Volunteer Profile Account holders agree to let"
 " you use their personal information."
@@ -3245,11 +3317,11 @@ msgstr ""
 "dans le profil Bénévolat vous autorisent à utiliser leurs renseignements "
 "personnels."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:400
+#: ../python/cioc/web/admin/templates/generalsetup.mak:401
 msgid "Area of Interest"
 msgstr "Centre d'intérêt"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:401
+#: ../python/cioc/web/admin/templates/generalsetup.mak:402
 msgid ""
 "When selected, the software will omit General Areas of Interest on search"
 " and data entry pages, including for Volunteer Profile users. The setup "
@@ -3269,19 +3341,21 @@ msgstr ""
 " les paramètres de domaine général s'il ne sont utilisés par aucun membre"
 " de la base de données."
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:404
+#: ../python/cioc/web/admin/templates/generalsetup.mak:405
 msgid "Only use Specific Areas of Interest"
 msgstr "Utiliser uniquement les domaines d'intérêt spécifique"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:411
-msgid "Child Care Subsidy"
-msgstr ""
-
 #: ../python/cioc/web/admin/templates/generalsetup.mak:412
+msgid "Child Care Subsidy"
+msgstr "Subvention pour la garde d'enfants"
+
+#: ../python/cioc/web/admin/templates/generalsetup.mak:413
 msgid "Details of Specific Named Child Care Subsidy Program (e.g. $10/day care)"
 msgstr ""
+"Détails du programme de subvention spécifique pour la garde d'enfants (p."
+" ex. 10 $/garderie)"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:430
+#: ../python/cioc/web/admin/templates/generalsetup.mak:431
 #: ../python/cioc/web/admin/templates/naics/edit.mak:95
 #: ../python/cioc/web/admin/templates/naics/exclusion.mak:143
 #: ../python/cioc/web/admin/templates/views/topicsearch.mak:61
@@ -3289,38 +3363,54 @@ msgstr ""
 msgid "Description"
 msgstr "Description"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:446
+#: ../python/cioc/web/admin/templates/generalsetup.mak:447
 msgid "Search Label"
-msgstr ""
+msgstr "Étiquette de recherche"
 
 #: ../python/cioc/web/admin/templates/email/edit.mak:265
-#: ../python/cioc/web/admin/templates/generalsetup.mak:475
+#: ../python/cioc/web/admin/templates/generalsetup.mak:476
 msgid "Contact"
 msgstr "Contact"
 
-#: ../python/cioc/web/admin/templates/generalsetup.mak:479
+#: ../python/cioc/web/admin/templates/generalsetup.mak:480
 msgid "Contact Options"
-msgstr ""
-
-#: ../python/cioc/web/admin/templates/generalsetup.mak:482
-msgid "Org"
-msgstr ""
+msgstr "Options de contact"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:483
-msgid "Phone 1"
-msgstr ""
+msgid "Org"
+msgstr "Org"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:484
-msgid "Phone 2"
-msgstr ""
+msgid "Phone 1"
+msgstr "Tél. 1"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:485
-msgid "Phone 3"
-msgstr ""
+msgid "Phone 2"
+msgstr "Tél. 2"
 
 #: ../python/cioc/web/admin/templates/generalsetup.mak:486
+msgid "Phone 3"
+msgstr "Tél. 3"
+
+#: ../python/cioc/web/admin/templates/generalsetup.mak:487
 msgid "Fax"
 msgstr ""
+
+#: ../python/cioc/web/admin/templates/generalsetup.mak:503
+msgid "Volunteer Surveys"
+msgstr "Enquêtes auprès des bénévoles"
+
+#: ../python/cioc/web/admin/templates/generalsetup.mak:503
+msgid ""
+"Optional Surveys to present to those indicating their interest in a "
+"volunteer position."
+msgstr ""
+"Sondages facultatifs à présenter à ceux qui manifestent leur intérêt pour"
+" un poste de bénévole."
+
+#: ../python/cioc/web/admin/templates/generalsetup.mak:515
+msgid "There are no surveys available."
+msgstr "Il n'y a pas d'enquête disponible."
 
 #: ../python/cioc/web/admin/templates/offlinetools.mak:65
 msgid "No Offline Machines found."
@@ -3340,6 +3430,7 @@ msgid "Reviewed for CIOC Release:"
 msgstr "Révision pour la version de CIOC :"
 
 #: ../python/cioc/web/admin/templates/pagehelp.mak:30
+#: ../python/cioc/web/gbl/printlist.py:248
 msgid "Close Window"
 msgstr "Fermer la fenêtre"
 
@@ -3361,7 +3452,7 @@ msgstr "Afficher dans l'onglet"
 
 #: ../python/cioc/web/admin/templates/quicksearch.mak:119
 msgid "Promote to Tab (tabbed search form only)"
-msgstr ""
+msgstr "Promouvoir vers l'onglet (formulaire de recherche par onglets uniquement)"
 
 #: ../python/cioc/web/admin/templates/shown_cultures.mak:31
 msgid "Also edit labels in:"
@@ -3373,7 +3464,7 @@ msgstr "Afficher également les étiquettes en :"
 
 #: ../python/cioc/web/admin/templates/shown_cultures.mak:41
 msgid "Edit Labels in "
-msgstr "Modifier les étiquettes en"
+msgstr "Modifier les étiquettes en "
 
 #: ../python/cioc/web/admin/templates/shown_cultures.mak:41
 msgid "Show Labels in "
@@ -3382,6 +3473,252 @@ msgstr "Afficher les étiquettes en "
 #: ../python/cioc/web/admin/templates/sysinfo.mak:23
 msgid "System Info ASP"
 msgstr ""
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:26
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:27
+#: ../python/cioc/web/cic/templates/record.mak:219
+#: ../python/cioc/web/cic/templates/record.mak:225
+msgid "N/A"
+msgstr "S/O"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:31
+#: ../python/cioc/web/admin/templates/sharingprofile/index.mak:67
+msgid "Copy"
+msgstr "Copier"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:34
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:35
+msgid "Application Surveys"
+msgstr "Enquêtes"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:44
+msgid ""
+"Important Note: Once a survey question has been completed, you may no "
+"longer modify the survey question or delete the survey, to preserve the "
+"integrity of reports. Please ensure that questions are complete and "
+"accurate before using the survey. You may still add/remove answer "
+"options, or change the help text of the question. To change the questions"
+" being asked, copy the survey and then switch the active survey in the "
+"General Setup options."
+msgstr ""
+"Remarque importante : une fois qu'une question d'enquête a été complétée,"
+" vous ne pouvez plus la modifier ni la supprimer, afin de préserver "
+"l'intégrité des rapports. Veuillez vous assurer que les questions sont "
+"complètes et exactes avant d'utiliser l'enquête. Vous pouvez toujours "
+"ajouter/supprimer des options de réponse ou modifier le texte d'aide de "
+"la question. Pour modifier les questions posées, copiez l'enquête, puis "
+"changez l'enquête active dans les options de configuration générale."
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:49
+#: ../python/cioc/web/admin/templates/applicationsurvey/index.mak:99
+msgid "Add Application Survey"
+msgstr "Ajouter une enquête"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:49
+#: ../python/cioc/web/admin/templates/applicationsurvey/index.mak:80
+msgid "Edit Application Survey"
+msgstr "Modifier l'enquête"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:56
+msgid "Surveys Stats"
+msgstr "Statistiques des sondages"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:59
+msgid "Completed "
+msgstr "Complété "
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:59
+msgid " times"
+msgstr " fois"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:60
+msgid "First completed on "
+msgstr "Terminé pour la première fois le "
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:61
+msgid "Last completed on "
+msgstr "Terminé pour la dernière fois le "
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:68
+#: ../python/cioc/web/admin/templates/community/edit.mak:60
+#: ../python/cioc/web/admin/templates/interests/edit.mak:40
+#: ../python/cioc/web/admin/templates/layout/edit.mak:40
+#: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:41
+#: ../python/cioc/web/admin/templates/naics/edit.mak:42
+#: ../python/cioc/web/admin/templates/notice/index.mak:45
+#: ../python/cioc/web/admin/templates/sharingprofile/additems.mak:39
+#: ../python/cioc/web/admin/templates/sharingprofile/index.mak:41
+#: ../python/cioc/web/admin/templates/sharingprofile/revoked.mak:33
+#: ../python/cioc/web/admin/templates/socialmedia/edit.mak:41
+#: ../python/cioc/web/admin/templates/template/edit.mak:50
+#: ../python/cioc/web/admin/templates/thesaurus/edit.mak:60
+#: ../python/cioc/web/admin/templates/views/edit.mak:114
+#: ../python/cioc/web/cic/templates/generalheading/edit.mak:56
+#: ../python/cioc/web/cic/templates/publication/edit.mak:49
+msgid "Status"
+msgstr "Statut"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:71
+msgid "Archive this survey"
+msgstr "Archiver cette enquête"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:73
+msgid "Survey was archived on: "
+msgstr "L'enquête a été archivée le : "
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:78
+msgid "This survey is currently in use on Volunteer forms."
+msgstr "Cette enquête est actuellement utilisée sur les formulaires de bénévolat."
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:85
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:97
+msgid "Internal name for administrators"
+msgstr "nom interne à usage administratif"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:97
+msgid "Survey Name"
+msgstr "Nom de l'enquête"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:104
+msgid "Survey Title"
+msgstr "Titre de l'enquête"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:104
+msgid "Public title displayed on application forms for survey section"
+msgstr ""
+"Titre public affiché sur les formulaires de demande pour la section "
+"d'enquête"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:111
+msgid "Survey Description"
+msgstr "Description de l'enquête"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:111
+msgid "Public description of the survey purpose, privacy informnation, etc."
+msgstr ""
+"Description publique de l'objectif de l'enquête, informations sur la "
+"confidentialité, etc."
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:127
+msgid "Text Question "
+msgstr "Question écrite"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:130
+msgid "Short Text-Answer Question"
+msgstr "Question à réponse courte"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:133
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:156
+msgid "Answered "
+msgstr "Répondue "
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:133
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:156
+msgid " time(s)"
+msgstr " fois"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:135
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:168
+msgid "Instructions / Details (optional)"
+msgstr "Instructions / Détails (facultatif)"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:150
+msgid "Drop-down Question "
+msgstr "Question déroulante"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:153
+msgid "Drop-down selection Question"
+msgstr "Question à choix déroulant"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/edit.mak:158
+msgid "Drop-down Options: "
+msgstr "Options déroulantes :"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/index.mak:51
+msgid "Application Survey Report"
+msgstr "Rapport d'enquête"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/index.mak:55
+msgid "Application Survey:"
+msgstr "Enquête :"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/index.mak:59
+msgid "On or after the date"
+msgstr "À partir de la date"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/index.mak:63
+msgid "Before the date"
+msgstr "Avant la date"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/index.mak:67
+msgid "Export as CSV"
+msgstr "Exporter au format CSV"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/index.mak:69
+msgid "Run Survey Report"
+msgstr "Exécuter le rapport d'enquête"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/index.mak:84
+msgid "View/Edit Application Survey"
+msgstr "Afficher/modifier l'enquête"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/index.mak:92
+msgid "Create New Application Survey"
+msgstr "Créer une nouvelle enquête"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/index.mak:96
+msgid "Copy Existing Application Survey:"
+msgstr "Copier l'enquête existante :"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:27
+msgid " to "
+msgstr " à "
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:29
+msgid "after "
+msgstr "après "
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:31
+msgid "until "
+msgstr "jusqu'à "
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:33
+msgid "all available dates"
+msgstr "toutes les dates disponibles"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:38
+msgid "Survey Counts"
+msgstr "Nombre d'enquêtes"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:44
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:68
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:90
+msgid "Total Entries"
+msgstr "Nombre total d'entrées"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:45
+msgid "First Entry"
+msgstr "Première entrée"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:46
+msgid "Last Entry"
+msgstr "Dernière entrée"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:63
+msgid "City Counts"
+msgstr "Nombre de villes"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:67
+msgid "City"
+msgstr "Ville"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:82
+msgid "Question Response Counts"
+msgstr "Nombre de réponses aux questions"
+
+#: ../python/cioc/web/admin/templates/applicationsurvey/report.mak:89
+msgid "Answer"
+msgstr "Réponse"
 
 #: ../python/cioc/web/admin/templates/checklists/edit.mak:46
 #: ../python/cioc/web/admin/templates/checklists/index.mak:46
@@ -3400,7 +3737,7 @@ msgstr "Revenir à la Gestion des valeurs"
 #: ../python/cioc/web/cic/templates/publication/edit.mak:222
 #: ../python/cioc/web/cic/templates/publication/index.mak:28
 msgid "Print Version (New Window)"
-msgstr ""
+msgstr "Version imprimable (nouvelle fenêtre)"
 
 #: ../python/cioc/web/admin/templates/checklists/edit.mak:67
 msgid ""
@@ -3570,6 +3907,7 @@ msgstr "Action"
 #: ../python/cioc/web/admin/templates/interests/index.mak:60
 #: ../python/cioc/web/admin/templates/listvalues/index.mak:125
 #: ../python/cioc/web/admin/templates/views/edit.mak:760
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:84
 #: ../python/cioc/web/stats/auto_datamgmt.py:91
 #: ../python/cioc/web/templates/master.mak:100
 msgid "Last Modified"
@@ -3605,24 +3943,6 @@ msgstr "Édition de la communauté"
 #: ../python/cioc/web/admin/templates/community/list.mak:36
 msgid "Add Community"
 msgstr "Ajout d'une communauté"
-
-#: ../python/cioc/web/admin/templates/community/edit.mak:60
-#: ../python/cioc/web/admin/templates/interests/edit.mak:40
-#: ../python/cioc/web/admin/templates/layout/edit.mak:40
-#: ../python/cioc/web/admin/templates/mappingsystem/edit.mak:41
-#: ../python/cioc/web/admin/templates/naics/edit.mak:42
-#: ../python/cioc/web/admin/templates/notice/index.mak:45
-#: ../python/cioc/web/admin/templates/sharingprofile/additems.mak:39
-#: ../python/cioc/web/admin/templates/sharingprofile/index.mak:41
-#: ../python/cioc/web/admin/templates/sharingprofile/revoked.mak:33
-#: ../python/cioc/web/admin/templates/socialmedia/edit.mak:41
-#: ../python/cioc/web/admin/templates/template/edit.mak:50
-#: ../python/cioc/web/admin/templates/thesaurus/edit.mak:60
-#: ../python/cioc/web/admin/templates/views/edit.mak:114
-#: ../python/cioc/web/cic/templates/generalheading/edit.mak:56
-#: ../python/cioc/web/cic/templates/publication/edit.mak:49
-msgid "Status"
-msgstr "Statut"
 
 #: ../python/cioc/web/admin/templates/community/edit.mak:64
 #, python-format
@@ -3862,7 +4182,7 @@ msgstr "Voulez-vous vraiment %s cette clé API ?"
 #: ../python/cioc/web/admin/templates/datafeedapikey/index.mak:24
 #: ../python/cioc/web/gbl/templates/shortcodes.mak:48
 msgid "Feed API Key"
-msgstr ""
+msgstr "Clé API du flux"
 
 #: ../python/cioc/web/admin/templates/datafeedapikey/edit.mak:44
 #: ../python/cioc/web/admin/templates/pages/edit.mak:42
@@ -3884,7 +4204,7 @@ msgstr "Information communautaire"
 #: ../python/cioc/web/admin/templates/datafeedapikey/edit.mak:64
 #: ../python/cioc/web/admin/templates/fieldhelp/edit.mak:77
 #: ../python/cioc/web/admin/templates/pagetitle/edit.mak:48
-#: ../python/cioc/web/admin/templates/views/edit.mak:1537
+#: ../python/cioc/web/admin/templates/views/edit.mak:1551
 msgid "Submit Updates"
 msgstr "Soumettre"
 
@@ -3911,11 +4231,11 @@ msgstr "Choisi"
 
 #: ../python/cioc/web/admin/templates/datafeedapikey/index.mak:37
 msgid ": Applies to Community Information"
-msgstr ""
+msgstr ": S'applique aux informations sur la communauté"
 
 #: ../python/cioc/web/admin/templates/datafeedapikey/index.mak:42
 msgid ": Applies to Volunteer"
-msgstr ""
+msgstr ": S'applique aux bénévoles"
 
 #: ../python/cioc/web/admin/templates/datafeedapikey/index.mak:47
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:221
@@ -4183,7 +4503,7 @@ msgstr "Maximum de 8 000 caractères."
 
 #: ../python/cioc/web/admin/templates/fieldhelp/edit.mak:55
 msgid ": Field Help (Global)"
-msgstr ""
+msgstr ": Aide de champ (globale)"
 
 #: ../python/cioc/web/admin/templates/fieldhelp/edit.mak:56
 #: ../python/cioc/web/admin/templates/fieldhelp/edit.mak:70
@@ -4213,24 +4533,24 @@ msgstr "Modifier ou ajouter un système cartographique"
 
 #: ../python/cioc/web/admin/templates/icarol/unmatched.mak:26
 msgid "No unmatched records from iCarol"
-msgstr ""
+msgstr "Aucun enregistrement sans correspondance trouvés dans iCarol"
 
 #: ../python/cioc/web/admin/templates/icarol/unmatched.mak:28
 #, python-format
 msgid "Found %d unmatched records from iCarol"
-msgstr ""
+msgstr "%d enregistrements non correspondants trouvés dans iCarol"
 
 #: ../python/cioc/web/admin/templates/icarol/unmatched.mak:65
 msgid "Record ID"
-msgstr ""
+msgstr "ID du dossier"
 
 #: ../python/cioc/web/admin/templates/icarol/unmatched.mak:66
 msgid "Org Name"
-msgstr ""
+msgstr "Nom de l'org."
 
 #: ../python/cioc/web/admin/templates/icarol/unmatched.mak:67
 msgid "Taxonomy Level"
-msgstr ""
+msgstr "Niveau de taxonomie"
 
 #: ../python/cioc/web/admin/templates/icarol/unmatched.mak:68
 #: ../python/cioc/web/admin/templates/views/topicsearch.mak:75
@@ -4328,25 +4648,25 @@ msgstr "Modifier une Mise en page de modèle"
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:43
 msgid "This layout is <strong>being used</strong> by the following templates:"
-msgstr "Cette publication est <strong>utilisée</strong> par les vues suivantes : "
+msgstr "Cette mise en page est <strong>utilisée</strong> par les vues suivantes :"
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:45
 msgid "Because this layout is being used, you cannot currently delete it."
 msgstr ""
-"Puisque cette communauté est présentement en usage, vous ne pouvez la "
+"Puisque cette mise en page est présentement en usage, vous ne pouvez la "
 "supprimer maintenant."
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:48
 msgid "This layout is <strong>not</strong> being used by any templates."
-msgstr "Cette publication <strong>n'est pas</strong> utilisé dans d'autres vues."
+msgstr "Cette mise en page <strong>n'est pas</strong> utilisé dans d'autres vues."
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:50
 msgid ""
 "Because this layout is not being used, you can delete it using the button"
 " at the bottom of the form."
 msgstr ""
-"Puisque cette communauté n'est pas présentement en usage, vous pouvez la "
-"supprimer en cliquant sur le bouton au bas du formulaire "
+"Cette mise en page n'étant pas utilisée, vous pouvez la supprimer en "
+"cliquant sur le bouton au bas du formulaire."
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:54
 msgid ""
@@ -4372,7 +4692,7 @@ msgstr "Propriétaire du dossier"
 #: ../python/cioc/web/admin/templates/template/edit.mak:98
 #: ../python/cioc/web/admin/templates/template/edit.mak:602
 #: ../python/cioc/web/admin/templates/views/edit.mak:177
-#: ../python/cioc/web/admin/templates/views/edit.mak:1535
+#: ../python/cioc/web/admin/templates/views/edit.mak:1549
 msgid "Setup of this item is exclusively controlled by the Agency: "
 msgstr ""
 "La configuration de cet élément est exclusivement contrôlée par l'agence "
@@ -4398,7 +4718,7 @@ msgstr "Bibliothèque Bootstrap"
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:85
 msgid "Include the full CIOC-adapted Bootstrap design libary"
-msgstr ""
+msgstr "Inclut la bibliothèque de conception Bootstrap complète adaptée au CIOC"
 
 #: ../python/cioc/web/admin/templates/layout/edit.mak:91
 msgid "Layout Name"
@@ -4465,7 +4785,7 @@ msgstr "Créer une nouvelle Mise en page de modèle"
 
 #: ../python/cioc/web/admin/templates/layout/index.mak:64
 msgid "Copy Existing Template Layout:"
-msgstr "Copier une Mise en page de modèle existante"
+msgstr "Copier la mise en page du modèle existant :"
 
 #: ../python/cioc/web/admin/templates/listvalues/edit.mak:45
 #, python-format
@@ -4642,6 +4962,7 @@ msgid "Classication"
 msgstr "Classification"
 
 #: ../python/cioc/web/admin/templates/naics/edit.mak:96
+#: ../python/cioc/web/gbl/templates/printlist/message.mak:40
 msgid "HTML is allowed."
 msgstr "HTML est permis."
 
@@ -4714,7 +5035,7 @@ msgstr "Exemple(s)"
 
 #: ../python/cioc/web/admin/templates/naics/edit.mak:134
 msgid "There are no examples"
-msgstr "Il n'y a pas d'exemple."
+msgstr "Il n'y a pas d'exemple"
 
 #: ../python/cioc/web/admin/templates/naics/example.mak:25
 #: ../python/cioc/web/admin/templates/naics/exclusion.mak:25
@@ -4842,7 +5163,7 @@ msgstr "Fermer la demande"
 
 #: ../python/cioc/web/admin/templates/notice/index.mak:120
 msgid "There are no admin notices at this time."
-msgstr "Il n'y a pas d'avis admin pour le moment"
+msgstr "Il n'y a pas d'avis admin pour le moment."
 
 #: ../python/cioc/web/admin/templates/notice/index.mak:126
 #, python-format
@@ -4875,7 +5196,7 @@ msgstr ""
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:63
 msgid "Generate from Page Title"
-msgstr ""
+msgstr "Créer à partir du titre de la page"
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:67
 #: ../python/cioc/web/admin/templates/views/edit.mak:28
@@ -4890,15 +5211,15 @@ msgstr "Contenu de la page"
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:95
 msgid "View Page"
-msgstr ""
+msgstr "Afficher la page"
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:101
 msgid "Publish as Article (Optional)"
-msgstr ""
+msgstr "Publier en tant qu'article (facultatif)"
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:104
 msgid "Publish as Article"
-msgstr ""
+msgstr "Publier comme article"
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:105
 msgid ""
@@ -4907,14 +5228,19 @@ msgid ""
 "search page widget for the selected View(s). Use of additional artcile "
 "fields is optional."
 msgstr ""
+"Les articles peuvent être utilisés comme des pages normales. En activant "
+"les fonctionnalités d'article, la page apparaîtra sur la page d'index "
+"répertoriant tous les articles et sur le widget de la page de recherche "
+"pour les vues sélectionnées. L'utilisation de champs d'article "
+"supplémentaires est facultative."
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:108
 msgid "Include this page in the list of published articles"
-msgstr ""
+msgstr "Inclure cette page dans la liste des articles publiés"
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:112
 msgid "Publish Date"
-msgstr ""
+msgstr "Date de publication"
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:113
 msgid ""
@@ -4925,10 +5251,16 @@ msgid ""
 "the article will not appear in the artcile list or widget until after the"
 " publish date."
 msgstr ""
+"La date de publication apparaîtra sur l'article et peut être utilisée "
+"pour modifier l'ordre des articles récents. Elle n'a pas besoin d'être "
+"identique à la date de création et peut être modifiée. Les dates de "
+"publication ultérieures n'empêchent pas l'accès à la page si vous l'avez "
+"déjà ajoutée à une vue, mais l'article n'apparaîtra pas dans la liste des"
+" articles ou dans le widget avant la date de publication."
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:120
 msgid "Author"
-msgstr ""
+msgstr "Auteur"
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:127
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:177
@@ -4937,7 +5269,7 @@ msgstr "Catégorie"
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:134
 msgid "Thumbnail Image URL"
-msgstr ""
+msgstr "URL de l'image miniature"
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:135
 msgid ""
@@ -5426,10 +5758,6 @@ msgstr "Dossiers inclus (total)"
 msgid "Records In (Deleted)"
 msgstr "Dossiers inclus (supprimé)"
 
-#: ../python/cioc/web/admin/templates/sharingprofile/index.mak:67
-msgid "Copy"
-msgstr "Copier"
-
 #: ../python/cioc/web/admin/templates/sharingprofile/index.mak:75
 msgid "There are no profiles."
 msgstr "Il n'y a pas de profil."
@@ -5455,6 +5783,7 @@ msgid "Available for the following records:"
 msgstr "Disponible pour les dossiers suivants :"
 
 #: ../python/cioc/web/admin/templates/sharingprofile/records.mak:94
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:82
 #: ../python/cioc/web/templates/displayoptions.mak:88
 #: ../python/cioc/web/templates/displayoptions.mak:172
 msgid "Position Title"
@@ -6628,6 +6957,7 @@ msgstr "Message"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:51
 #: ../python/cioc/web/admin/templates/views/edit.mak:816
+#: ../python/cioc/web/admin/templates/views/edit.mak:1431
 msgid "Maximum 8000 characters. HTML is allowed."
 msgstr "8000 caractères maximum. Le HTML est autorisé."
 
@@ -6673,14 +7003,14 @@ msgid "Template and Layout Options"
 msgstr "Options pour le modèle et la mise en page"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:99
-#: ../python/cioc/web/admin/templates/views/edit.mak:1481
+#: ../python/cioc/web/admin/templates/views/edit.mak:1495
 msgid "Classifications"
 msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:101
 #: ../python/cioc/web/admin/templates/views/edit.mak:732
 #: ../python/cioc/web/admin/templates/views/edit.mak:846
-#: ../python/cioc/web/admin/templates/views/edit.mak:1551
+#: ../python/cioc/web/admin/templates/views/edit.mak:1565
 msgid "Manage Fields"
 msgstr "Gérer les champs"
 
@@ -6889,6 +7219,7 @@ msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:322
 #: ../python/cioc/web/cic/bsearch.py:263 ../python/cioc/web/cic/bsearch.py:268
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:39
 msgid "Publications"
 msgstr "Publications"
 
@@ -7107,6 +7438,8 @@ msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:510
 #: ../python/cioc/web/admin/templates/views/edit.mak:511
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:66
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:81
 msgid "Organization / Program Name(s)"
 msgstr "Nom(s) d'organisme / programme"
 
@@ -7377,17 +7710,17 @@ msgid "The full field management area is available at the bottom of this page."
 msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:736
-#: ../python/cioc/web/admin/templates/views/edit.mak:1559
+#: ../python/cioc/web/admin/templates/views/edit.mak:1571
 msgid "Update Fields (New Window)"
 msgstr "Champs de mise à jour (nouvelle fenêtre)"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:737
-#: ../python/cioc/web/admin/templates/views/edit.mak:1560
+#: ../python/cioc/web/admin/templates/views/edit.mak:1572
 msgid "Feedback Fields (New Window)"
 msgstr "Champs pour la rétroaction (nouvelle fenêtre)"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:739
-#: ../python/cioc/web/admin/templates/views/edit.mak:1562
+#: ../python/cioc/web/admin/templates/views/edit.mak:1574
 msgid "Mail Form Fields (New Window)"
 msgstr "Champs du Formulaire de courrier (Nouvelle fenêtre)"
 
@@ -7513,7 +7846,7 @@ msgid "Show Suggest Opportunity link"
 msgstr "Afficher le lien  \" Proposer une occasion de bénévolat\"."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:849
-#: ../python/cioc/web/admin/templates/views/edit.mak:1558
+#: ../python/cioc/web/admin/templates/views/edit.mak:1570
 msgid "Details Fields (New Window)"
 msgstr "Champs de renseignements (nouvelle fenêtre)"
 
@@ -7993,27 +8326,35 @@ msgstr ""
 msgid "Public Print Profiles denoted by *."
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1425
-#: ../python/cioc/web/admin/templates/views/edit.mak:1431
+#: ../python/cioc/web/admin/templates/views/edit.mak:1424
+msgid "The Custom Report Tool is available for the above Print Profile"
+msgstr ""
+
+#: ../python/cioc/web/admin/templates/views/edit.mak:1429
+msgid "Report Tool Introduction / Instructions"
+msgstr ""
+
+#: ../python/cioc/web/admin/templates/views/edit.mak:1439
+#: ../python/cioc/web/admin/templates/views/edit.mak:1445
 msgid "Tag Line"
 msgstr "Slogan"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1426
+#: ../python/cioc/web/admin/templates/views/edit.mak:1440
 msgid "A slogan or tag line that can be added to some Header Layouts."
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1442
-#: ../python/cioc/web/admin/templates/views/edit.mak:1448
+#: ../python/cioc/web/admin/templates/views/edit.mak:1456
+#: ../python/cioc/web/admin/templates/views/edit.mak:1462
 msgid "Spotlight Opportunity"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1443
+#: ../python/cioc/web/admin/templates/views/edit.mak:1457
 msgid ""
 "A valid record number will show the selected Opportunity. Any other value"
 " selects a random Opportunity."
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1458
+#: ../python/cioc/web/admin/templates/views/edit.mak:1472
 msgid ""
 "The text appearing at the bottom of each page of the view. Be thoughtful "
 "and keep it short - remember that this has to load with every page. If "
@@ -8025,13 +8366,13 @@ msgstr ""
 "désirez présenter beaucoup d'information, il est préférable de créer une "
 "page web et d'y établir un lien."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1460
+#: ../python/cioc/web/admin/templates/views/edit.mak:1474
 msgid "The text appearing above the menu items on the start page."
 msgstr ""
 "Le texte apparaissant au-dessus des rubriques du menu sur la page de "
 "démarrage."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1462
+#: ../python/cioc/web/admin/templates/views/edit.mak:1476
 msgid ""
 "The text appearing on the left side of the start page and highlighted as "
 "an alert (above the menu in the default layouts)."
@@ -8040,52 +8381,52 @@ msgstr ""
 "en valeur comme alerte (au-dessus du menu dans les mises en page par "
 "défaut)."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1464
+#: ../python/cioc/web/admin/templates/views/edit.mak:1478
 msgid "The panel containing the Keyword Search"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1466
+#: ../python/cioc/web/admin/templates/views/edit.mak:1480
 msgid "Additional multi-purpose panel available in some layouts"
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1468
+#: ../python/cioc/web/admin/templates/views/edit.mak:1482
 msgid "Custom HTML to appear in the left area of the Basic Search page."
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1470
+#: ../python/cioc/web/admin/templates/views/edit.mak:1484
 msgid "Custom HTML to appear in the centre-bottom area of the Basic Search page."
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1472
+#: ../python/cioc/web/admin/templates/views/edit.mak:1486
 msgid "Custom HTML to appear in the right area of the Basic Search page."
 msgstr ""
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1486
+#: ../python/cioc/web/admin/templates/views/edit.mak:1500
 msgid "NAICS"
 msgstr "SCIAN"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1489
+#: ../python/cioc/web/admin/templates/views/edit.mak:1503
 msgid "NAICS menu items and searches are available in this View"
 msgstr ""
 "Les éléments du menu SCIAN et les recherches associées sont disponibles "
 "dans cette vue"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1494
+#: ../python/cioc/web/admin/templates/views/edit.mak:1508
 msgid "Taxonomy"
 msgstr "Taxonomie"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1498
+#: ../python/cioc/web/admin/templates/views/edit.mak:1512
 msgid "Taxonomy menu items and searches are available in this View"
 msgstr ""
 "Les éléments du menu et la recherche dans la Taxonomie sont disponibles "
 "dans cette vue."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1503
+#: ../python/cioc/web/admin/templates/views/edit.mak:1517
 #, python-format
 msgid "Show Definitions for Taxonomy Level %s and above."
 msgstr "Afficher les définitions pour le niveau %s  de la Taxonomie et au-dessus."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1504
+#: ../python/cioc/web/admin/templates/views/edit.mak:1518
 msgid ""
 "In a \"Browse by Service Category\" Search, show definitions for Taxonomy"
 " Terms at or above the Level selected. If 0 is selected, definitions will"
@@ -8095,23 +8436,23 @@ msgstr ""
 "définitions pour les termes taxonomiques de niveau égal ou supérieur. Si "
 "0 est sélectionné, aucune définition ne sera affichée pour les termes."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1510
+#: ../python/cioc/web/admin/templates/views/edit.mak:1524
 msgid "Thesaurus"
 msgstr "Thésaurus"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1514
+#: ../python/cioc/web/admin/templates/views/edit.mak:1528
 msgid "Thesaurus menu items and searches are available in this View"
 msgstr ""
 "Les éléments du menu du thésaurus et les recherches associées sont "
 "disponibles dans cette vue"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1518
+#: ../python/cioc/web/admin/templates/views/edit.mak:1532
 msgid "Local Subjects in Browse, Sidebar"
 msgstr ""
 "Sujets locaux dans l'exploration par sujet et dans le menu latéral des "
 "sujets"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1519
+#: ../python/cioc/web/admin/templates/views/edit.mak:1533
 msgid ""
 "If this option is checked, local subjects will be included in \"Browse by"
 " Subject\" and the Subject sidebar on the results page."
@@ -8120,13 +8461,13 @@ msgstr ""
 "l'exploration par sujet et dans le menu latéral des sujets sur la page de"
 " résultats."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1523
+#: ../python/cioc/web/admin/templates/views/edit.mak:1537
 msgid "Zero-Count Subjects In Browse, Sidebar"
 msgstr ""
 "Sujets sans dossier dans \" Parcourir par sujet \" et dans le menu "
 "latéral des sujets"
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1524
+#: ../python/cioc/web/admin/templates/views/edit.mak:1538
 msgid ""
 "If this option is checked, subjects with a zero count (not being used by "
 "any records in the view) will still be included in \"Browse by Subject\" "
@@ -8136,7 +8477,7 @@ msgstr ""
 " dossier de la vue seront quand même compris dans \" Parcourir par sujet "
 "\" et dans le menu latéral des sujets sur la page des résultats."
 
-#: ../python/cioc/web/admin/templates/views/edit.mak:1556
+#: ../python/cioc/web/admin/templates/views/edit.mak:1569
 msgid "Field Groups (New Window)"
 msgstr "Groupes de champs (nouvelle fenêtre)"
 
@@ -8282,7 +8623,9 @@ msgstr "Exportation"
 msgid "Import"
 msgstr "Importation"
 
-#: ../python/cioc/web/cic/bsearch.py:274 ../python/cioc/web/vol/bsearch.py:263
+#: ../python/cioc/web/cic/bsearch.py:274
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:96
+#: ../python/cioc/web/vol/bsearch.py:263
 msgid "Deleted Records"
 msgstr "Dossiers supprimés"
 
@@ -8370,6 +8713,12 @@ msgstr "Recherche : Organismes ou programmes"
 #, python-format
 msgid "Within %skm"
 msgstr "Dans %skm"
+
+#: ../python/cioc/web/cic/customreport.py:83
+#: ../python/cioc/web/cic/customreport.py:132
+#: ../python/cioc/web/cic/customreport.py:192
+msgid "Create a Custom Report"
+msgstr ""
 
 #: ../python/cioc/web/cic/download.py:162
 msgid "File not found"
@@ -8650,6 +8999,7 @@ msgid "Previous"
 msgstr "Précédent"
 
 #: ../python/cioc/web/cic/record.py:509
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:111
 msgid "Next"
 msgstr "Suivant"
 
@@ -9079,11 +9429,6 @@ msgstr "Date de création :"
 msgid "Date Deleted:"
 msgstr "Date de suppression :"
 
-#: ../python/cioc/web/cic/templates/record.mak:219
-#: ../python/cioc/web/cic/templates/record.mak:225
-msgid "N/A"
-msgstr "S/O"
-
 #: ../python/cioc/web/cic/templates/record.mak:224
 msgid "Last Email:"
 msgstr "Dernier courriel :"
@@ -9213,6 +9558,135 @@ msgstr "Inclure les dossiers non cartographiées"
 #: ../python/cioc/web/cic/templates/searchcommon.mak:173
 msgid "Sort by nearest"
 msgstr "Trier par ordre de proximité"
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:33
+#: ../python/cioc/web/cic/templates/customreport/index.mak:28
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:37
+msgid "Step 1: "
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:33
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:37
+msgid "Selected Communities"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:35
+#: ../python/cioc/web/cic/templates/customreport/format.mak:61
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:39
+msgid "None selected"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:38
+#: ../python/cioc/web/cic/templates/customreport/index.mak:45
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:42
+msgid "Located in the chosen communities: "
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:40
+#: ../python/cioc/web/cic/templates/customreport/index.mak:48
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:44
+msgid "Serving the chosen communities: "
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:59
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:58
+msgid "Step 2: "
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:59
+msgid "Selected Topics"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:82
+msgid "Step 3: "
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:82
+msgid "Report Settings"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:84
+msgid "Report Title: "
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:88
+msgid "Organize Records by: "
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:90
+msgid "Organization or Program Name"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:93
+msgid "Topic"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:101
+msgid "Report Format: "
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:103
+msgid "Printable list (webpage)"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:106
+msgid "PDF Document"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:109
+msgid "Record Visibility: "
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:111
+msgid "Include Non-Public Records"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:116
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:111
+msgid "Start Over"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:117
+#: ../python/cioc/web/cic/templates/customreport/index.mak:74
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:112
+msgid "Next Step: "
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/format.mak:117
+#: ../python/cioc/web/stats/templates/auto_datamgmt.mak:59
+#: ../python/cioc/web/stats/templates/auto_ips.mak:58
+#: ../python/cioc/web/stats/templates/auto_ipsbyro.mak:58
+#: ../python/cioc/web/stats/templates/auto_ipsbyview.mak:58
+#: ../python/cioc/web/stats/templates/auto_viewsbyro.mak:58
+#: ../python/cioc/web/stats/templates/auto_viewsbyview.mak:58
+msgid "Generate Report"
+msgstr "Générer le rapport"
+
+#: ../python/cioc/web/cic/templates/customreport/index.mak:28
+msgid "Choose one or more Communities"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/index.mak:65
+#: ../python/cioc/web/cic/templates/customreport/index.mak:82
+#, python-format
+msgid "All of <span class=\"demi-bold\">%s</span>"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/index.mak:74
+msgid "Choose Topics"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:58
+msgid "Choose one or more Topics"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:60
+msgid "None available"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:112
+msgid "Choose Format"
+msgstr ""
 
 #: ../python/cioc/web/cic/templates/generalheading/edit.mak:35
 #: ../python/cioc/web/cic/templates/generalheading/quicktaxonomy.mak:34
@@ -10237,6 +10711,8 @@ msgid "Insert Current Description From Record"
 msgstr "Insérer la description courante du dossier"
 
 #: ../python/cioc/web/cic/templates/updatepubs/edit.mak:107
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:53
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:132
 msgid "General Headings"
 msgstr "En-têtes généraux"
 
@@ -10291,40 +10767,76 @@ msgstr "Erreur : il n'existe pas de dossier avec l'identifiant : %s"
 
 #: ../python/cioc/web/gbl/emaillist.py:89
 msgid "URL/View not in expected format"
-msgstr ""
+msgstr "L'URL/la vue n'est pas au format attendu"
 
-#: ../python/cioc/web/gbl/emaillist.py:161
+#: ../python/cioc/web/gbl/emaillist.py:160
 msgid "No records available for the selected view"
-msgstr ""
+msgstr "Aucun enregistrement disponible pour la vue sélectionnée"
 
-#: ../python/cioc/web/gbl/emaillist.py:197
+#: ../python/cioc/web/gbl/emaillist.py:196
 msgid "There was an error sending your Email"
-msgstr ""
+msgstr "Une erreur s'est produite lors de l'envoi de votre courriel"
 
-#: ../python/cioc/web/gbl/emaillist.py:202
+#: ../python/cioc/web/gbl/emaillist.py:201
 msgid "Your Record List Email was Sent"
-msgstr ""
+msgstr "Votre courriel de liste d'enregistrements a été envoyé"
 
-#: ../python/cioc/web/gbl/emaillist.py:323
+#: ../python/cioc/web/gbl/emaillist.py:321
 msgid "Prepare Record List Email"
-msgstr ""
+msgstr "Préparer le courriel de la liste des enregistrements"
 
 #: ../python/cioc/web/gbl/icons.py:75
 msgid "Browse Icons"
-msgstr ""
+msgstr "Parcourir les icônes"
 
 #: ../python/cioc/web/gbl/pages.py:54
 msgid "Page not found"
-msgstr ""
+msgstr "Page non trouvée"
 
 #: ../python/cioc/web/gbl/pages.py:80
 msgid "Index of Articles"
+msgstr "Index des articles"
+
+#: ../python/cioc/web/gbl/printlist.py:238
+#: ../python/cioc/web/gbl/printlist.py:297
+#: ../python/cioc/web/gbl/printlist.py:495
+msgid "Print Record List"
+msgstr "Imprimer la liste des dossiers"
+
+#: ../python/cioc/web/gbl/printlist.py:265
+#: ../python/cioc/web/jsonfeeds/vacancy.py:169
+msgid "Validation Error"
+msgstr "Erreur de validation"
+
+#: ../python/cioc/web/gbl/printlist.py:276
+msgid "No Print Profile was chosen."
+msgstr "Aucun profil d'impression n'a été choisi."
+
+#: ../python/cioc/web/gbl/printlist.py:279
+#: ../python/cioc/web/gbl/printlist.py:358
+msgid "No records were chosen to print."
+msgstr "Aucun enregistrement n'a été choisi pour être imprimé."
+
+#: ../python/cioc/web/gbl/printlist.py:294
+msgid "Could not find print profile."
 msgstr ""
+
+#: ../python/cioc/web/gbl/printlist.py:322
+msgid "No Print Profile was chosen"
+msgstr "Aucun profil d'impression n'a été choisi"
+
+#: ../python/cioc/web/gbl/printlist.py:394
+msgid "Report to large. Please reduce the number of records in the report."
+msgstr ""
+
+#: ../python/cioc/web/gbl/printlist.py:501
+msgid "No records were chosen to prinnt"
+msgstr "Aucun enregistrement n'a été choisi pour l'impression"
 
 #: ../python/cioc/web/gbl/schedules.py:66
 #: ../python/cioc/web/gbl/templates/schedules.mak:21
 msgid "Upcoming Events"
-msgstr ""
+msgstr "Événements à venir"
 
 #: ../python/cioc/web/gbl/shortcodes.py:90
 #: ../python/cioc/web/gbl/templates/shortcodes.mak:43
@@ -10333,11 +10845,11 @@ msgstr ""
 
 #: ../python/cioc/web/gbl/templates/articles.mak:72
 msgid "There are no articles available."
-msgstr ""
+msgstr "Il n'y a aucun article disponible."
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:35
 msgid "Configure Email"
-msgstr ""
+msgstr "Configurer le courrier électronique"
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:37
 msgid "Reply-To:"
@@ -10353,7 +10865,7 @@ msgstr "Sujet :"
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:55
 msgid "Domain / View:"
-msgstr "Domaine / Vue"
+msgstr "Domaine / Vue :"
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:60
 msgid "Link Type:"
@@ -10361,19 +10873,21 @@ msgstr "Type de lien :"
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:62
 msgid "Web Page Link"
-msgstr ""
+msgstr "Lien vers la page Web"
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:63
 msgid "PDF Page Link (if available in selected View)"
-msgstr ""
+msgstr "Lien vers la page PDF (si disponible dans la vue sélectionnée)"
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:74
 msgid "No records available for the selected View"
-msgstr ""
+msgstr "Aucun dossier disponible pour la vue sélectionnée"
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:83
 msgid "Some records are not available in the selected View and are listed below."
 msgstr ""
+"Certains enregistrements ne sont pas disponibles dans la vue sélectionnée"
+" et sont répertoriés ci-dessous."
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:86
 msgid "Send Email"
@@ -10381,11 +10895,11 @@ msgstr "Envoyez le courriel"
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:88
 msgid "Preview with new settings"
-msgstr ""
+msgstr "Aperçu avec de nouveaux paramètres"
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:90
 msgid "Click here to select the record list"
-msgstr ""
+msgstr "Cliquez ici pour sélectionner la liste des dossiers"
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:90
 msgid ""
@@ -10526,27 +11040,155 @@ msgstr ""
 msgid "Generated Short Code"
 msgstr ""
 
+#: ../python/cioc/web/gbl/templates/printlist/message.mak:37
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:31
+msgid "Use this form to customize print options"
+msgstr "Utilisez ce formulaire pour personnaliser les paramètres d'impression"
+
+#: ../python/cioc/web/gbl/templates/printlist/message.mak:39
+msgid "Report Message"
+msgstr "Message à inclure dans le rapport"
+
+#: ../python/cioc/web/gbl/templates/printlist/message.mak:44
+msgid "Next (New Window)"
+msgstr "Suivant (Nouvelle fenêtre)"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:33
+msgid "Profile"
+msgstr "Profil"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:42
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:56
+msgid "Further limit your selection using:"
+msgstr "Limitez davantage votre sélection en utilisant :"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:63
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:80
+msgid "Sort By"
+msgstr "Trier par"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:65
+msgid "When sorted by heading, results will also be grouped by heading"
+msgstr ""
+"Lorsqu'ils sont triés par titre, les résultats seront également regroupés"
+" par titre"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:67
+msgid "Heading"
+msgstr "En-tête"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:71
+msgid "Index and Table of Contents"
+msgstr "Index et Table des matières"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:73
+msgid "The field used in the table of contents is controlled by the sort order."
+msgstr ""
+"Le champ utilisé dans la table des matières est déterminé par l'ordre de "
+"tri."
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:74
+msgid "Include Table of Contents"
+msgstr "Inclure la table des matières"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:75
+msgid "Include Index"
+msgstr "Inclure l'index"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:83
+#: ../python/cioc/web/stats/auto_datamgmt.py:90
+#: ../python/cioc/web/templates/master.mak:90
+msgid "Date Created"
+msgstr "Date de création"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:90
+msgid "Non-Public Records"
+msgstr ""
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:91
+msgid "Include non-public records"
+msgstr ""
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:97
+msgid "Include deleted records"
+msgstr "Inclure les dossiers supprimés"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:102
+msgid "Expired Records"
+msgstr "Enregistrements expirés"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:103
+msgid "Include expired records"
+msgstr "Inclure les dossiers expirés"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:107
+msgid "Ouput Format"
+msgstr "Format de sortie"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:108
+msgid "Output PDF"
+msgstr "Sortie en PDF"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:136
+msgid "Include Publication(s)"
+msgstr "Inclure la ou les publications"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:136
+msgid "Exclude Publication(s)"
+msgstr "Exclure la ou les publications"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:147
+msgid "Include Heading(s)"
+msgstr "Inclure le(s) en-têtes"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:147
+msgid "Exclude Heading(s)"
+msgstr "Exclure le(s) en-têtes"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:151
+#: ../python/cioc/web/templates/displayoptions.mak:117
+msgid "Hold CTRL to select/deselect multiple items"
+msgstr ""
+"Maintenir la touche CTRL enfoncée pour sélectionner ou désélectionner "
+"plusieurs éléments."
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:158
+msgid "Has None"
+msgstr "N'en a aucun"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:161
+msgid "Has Any"
+msgstr "A-t-il un"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:165
+msgid "Has all from"
+msgstr "A tout de"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:168
+msgid "Has any from"
+msgstr "A-t-il de"
+
 #: ../python/cioc/web/import_/community.py:79
 msgid "Upload External Community File"
-msgstr ""
+msgstr "Télécharger un fichier de communauté externe"
 
 #: ../python/cioc/web/import_/community.py:85
 msgid "Upload Community File"
 msgstr "Charger le fichier des communautés"
 
 #: ../python/cioc/web/import_/community.py:155
-#: ../python/cioc/web/import_/upload.py:255
+#: ../python/cioc/web/import_/upload.py:253
 #, python-format
 msgid "Line %d, Column %d: %s"
 msgstr "Ligne %d, Colonne %d : %s"
 
 #: ../python/cioc/web/import_/templates/index.mak:27
-#: ../python/cioc/web/import_/upload.py:122
-#: ../python/cioc/web/import_/upload.py:139
+#: ../python/cioc/web/import_/upload.py:121
+#: ../python/cioc/web/import_/upload.py:138
 msgid "Upload Import File"
 msgstr "Charger le fichier d'importation"
 
-#: ../python/cioc/web/import_/upload.py:247
+#: ../python/cioc/web/import_/upload.py:245
 #, python-format
 msgid "Warning: unexpected element %s at line %d"
 msgstr "Attention : élément %s inattendu à la ligne %d"
@@ -10653,10 +11295,6 @@ msgstr ""
 msgid "Unable to complete your change: %s"
 msgstr ""
 
-#: ../python/cioc/web/jsonfeeds/vacancy.py:169
-msgid "Validation Error"
-msgstr "Erreur de validation"
-
 #: ../python/cioc/web/jsonfeeds/vacancy.py:179
 #: ../python/cioc/web/jsonfeeds/vacancy.py:218
 msgid "Unable to load history information: Permission Denied"
@@ -10675,42 +11313,6 @@ msgstr ""
 msgid "No change history"
 msgstr ""
 
-#: ../python/cioc/web/offline/auth.py:75 ../python/cioc/web/offline/auth.py:102
-msgid "Offline Tools not enabled"
-msgstr "Outils hors-ligne désactivés"
-
-#: ../python/cioc/web/offline/auth.py:82 ../python/cioc/web/offline/auth.py:109
-#: ../python/cioc/web/offline/pull.py:104
-#: ../python/cioc/web/offline/pull.py:190
-#: ../python/cioc/web/offline/register.py:68
-msgid "invalid request"
-msgstr "La requête est invalide"
-
-#: ../python/cioc/web/offline/auth.py:118
-msgid "Can't find auth request record"
-msgstr "L'enregistrement de demande d'autorisation est introuvable."
-
-#: ../python/cioc/web/offline/auth.py:128
-msgid "Auth token expired"
-msgstr "Jeton d'authentification expiré"
-
-#: ../python/cioc/web/offline/auth.py:140
-#: ../python/cioc/web/offline/auth.py:158
-msgid "not authorized"
-msgstr "pas autorisé"
-
-#: ../python/cioc/web/offline/register.py:44
-msgid "Offline Tools not enabled for this database."
-msgstr "Outils hors-ligne désactivés pour cette base de données."
-
-#: ../python/cioc/web/offline/register.py:54
-msgid "Invalid Username or Password"
-msgstr "Nom d'utilisateur ou mot de passe invalide"
-
-#: ../python/cioc/web/offline/register.py:59
-msgid "User does not have offline tool permissions"
-msgstr "L'utilisateur n'a pas l'autorisation pour les outils hors-ligne"
-
 #: ../python/cioc/web/rpc/oppdetails.py:186
 #: ../python/cioc/web/rpc/orgdetails.py:218
 msgid "Record not in view"
@@ -10723,11 +11325,6 @@ msgstr "Dernière modification - Taxonomie"
 #: ../python/cioc/web/stats/auto_datamgmt.py:85
 msgid "Display Until"
 msgstr "Afficher jusqu'à"
-
-#: ../python/cioc/web/stats/auto_datamgmt.py:90
-#: ../python/cioc/web/templates/master.mak:90
-msgid "Date Created"
-msgstr "Date de création"
 
 #: ../python/cioc/web/stats/auto_datamgmt.py:95
 msgid "Last Full Update"
@@ -10828,15 +11425,6 @@ msgstr "Supprimer les statistiques anciennes"
 #: ../python/cioc/web/stats/templates/auto_viewsbyview.mak:42
 msgid "Custom Date Range"
 msgstr "Intervalle de dates personnalisé"
-
-#: ../python/cioc/web/stats/templates/auto_datamgmt.mak:59
-#: ../python/cioc/web/stats/templates/auto_ips.mak:58
-#: ../python/cioc/web/stats/templates/auto_ipsbyro.mak:58
-#: ../python/cioc/web/stats/templates/auto_ipsbyview.mak:58
-#: ../python/cioc/web/stats/templates/auto_viewsbyro.mak:58
-#: ../python/cioc/web/stats/templates/auto_viewsbyview.mak:58
-msgid "Generate Report"
-msgstr "Générer le rapport"
 
 #: ../python/cioc/web/stats/templates/auto_ips.mak:77
 #: ../python/cioc/web/stats/templates/auto_ipsbyro.mak:77
@@ -10957,12 +11545,6 @@ msgstr "Liste/Traceur de clients"
 #: ../python/cioc/web/templates/displayoptions.mak:117
 msgid "Custom Fields:"
 msgstr "Champs personnalisés :"
-
-#: ../python/cioc/web/templates/displayoptions.mak:117
-msgid "Hold CTRL to select/deselect multiple items"
-msgstr ""
-"Maintenir la touche CTRL enfoncée pour sélectionner ou dessélectionner "
-"plusieurs articles à la fois."
 
 #: ../python/cioc/web/templates/displayoptions.mak:120
 msgid "Clear Selections"
@@ -11408,3 +11990,28 @@ msgstr "Voir votre profil"
 
 #~ msgid "Is the care required on a future date?"
 #~ msgstr "La garde est-elle requise à une date future ?"
+
+#~ msgid "Offline Tools not enabled"
+#~ msgstr "Outils hors-ligne désactivés"
+
+#~ msgid "invalid request"
+#~ msgstr "La requête est invalide"
+
+#~ msgid "Can't find auth request record"
+#~ msgstr "L'enregistrement de demande d'autorisation est introuvable."
+
+#~ msgid "Auth token expired"
+#~ msgstr "Jeton d'authentification expiré"
+
+#~ msgid "not authorized"
+#~ msgstr "pas autorisé"
+
+#~ msgid "Offline Tools not enabled for this database."
+#~ msgstr "Outils hors-ligne désactivés pour cette base de données."
+
+#~ msgid "Invalid Username or Password"
+#~ msgstr "Nom d'utilisateur ou mot de passe invalide"
+
+#~ msgid "User does not have offline tool permissions"
+#~ msgstr "L'utilisateur n'a pas l'autorisation pour les outils hors-ligne"
+

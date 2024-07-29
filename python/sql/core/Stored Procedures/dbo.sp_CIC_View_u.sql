@@ -123,6 +123,7 @@ CREATE PROCEDURE [dbo].[sp_CIC_View_u]
 	@RefineField2 INT,
 	@RefineField3 INT,
 	@RefineField4 INT,
+	@CustomReportTool bit,
 	@Descriptions XML,
 	@Views XML,
 	@AdvSrchCheckLists XML,
@@ -208,7 +209,8 @@ DECLARE @DescTable table (
 	PDFBottomMargin varchar(20) NULL,
 	GoogleTranslateDisclaimer nvarchar(1000) NULL,
 	TagLine nvarchar(300) NULL,
-	NoResultsMsg nvarchar(2000) NULL
+	NoResultsMsg nvarchar(2000) NULL,
+	CustomReportInstructions nvarchar(MAX) NULL
 )
 
 DECLARE @ViewTable table (
@@ -283,7 +285,8 @@ INSERT INTO @DescTable (
 	PDFBottomMargin,
 	GoogleTranslateDisclaimer,
 	TagLine,
-	NoResultsMsg
+	NoResultsMsg,
+	CustomReportInstructions
 )
 SELECT
 	N.value('Culture[1]', 'varchar(5)') AS Culture,
@@ -342,7 +345,8 @@ SELECT
 	N.value('PDFBottomMargin[1]', 'varchar(20)') AS PDFBottomMargin,
 	N.value('GoogleTranslateDisclaimer[1]', 'nvarchar(1000)') AS GoogleTranslateDisclaimer,
 	N.value('TagLine[1]', 'nvarchar(300)') AS TagLine,
-	N.value('NoResultsMsg[1]', 'nvarchar(2000)') AS NoResultsMsg
+	N.value('NoResultsMsg[1]', 'nvarchar(2000)') AS NoResultsMsg,
+	N.value('CustomReportInstructions[1]', 'nvarchar(max)') AS CustomReportInstructions
 FROM @Descriptions.nodes('//DESC') as T(N)
 EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @ViewObjectName, @ErrMsg
 
@@ -609,7 +613,8 @@ IF @Error = 0 BEGIN
 		RefineField1			= @RefineField1,
 		RefineField2			= @RefineField2,
 		RefineField3			= @RefineField3,
-		RefineField4			= @RefineField4
+		RefineField4			= @RefineField4,
+		CustomReportTool		= ISNULL(@CustomReportTool, CustomReportTool)
 	WHERE ViewType = @ViewType	
 	EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @ViewObjectName, @ErrMsg
 
@@ -666,7 +671,8 @@ IF @Error = 0 BEGIN
 			PDFBottomMargin			= ISNULL(nt.PDFBottomMargin,vwd.PDFBottomMargin),
 			GoogleTranslateDisclaimer = nt.GoogleTranslateDisclaimer,
 			TagLine					= nt.TagLine,
-			NoResultsMsg			= nt.NoResultsMsg
+			NoResultsMsg			= nt.NoResultsMsg,
+			CustomReportInstructions	= nt.CustomReportInstructions
 		FROM dbo.CIC_View_Description vwd
 		INNER JOIN @DescTable nt
 			ON vwd.LangID=nt.LangID

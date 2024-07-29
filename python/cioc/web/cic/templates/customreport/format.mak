@@ -23,21 +23,33 @@ from cioc.core.modelstate import convert_options
 %>
 
 <h1>${renderinfo.doc_title}</h1>
-<form action="" method="post" class="form">
+<form action="${request.route_path('print_list_cic')}" method="post" class="form" id="entry-form">
 	<div class="NotVisible">
 		${request.passvars.cached_form_vals|n}
+		${renderer.hidden("ProfileID", request.viewdata.dom.DefaultPrintProfile)}
+		${renderer.hidden("Picked", "on")}
 	</div>
 
 <h2>${_('Step 1: ') + _('Selected Communities')}</h2>
 %if not communities:
 <p><em>${_('None selected')}</em></p>
 %else:
+    %if cmtype == 'L':
+<p class="demi-bold">${_('Located in the chosen communities: ')}</p>
+    %else:
+<p class="demi-bold">${_('Serving the chosen communities: ')}</p>
+    %endif
 <ul class="row">
     %for community in communities:
     <li class="col-xs-12 col-sm-6 col-md-4">${community.Community}</li>
     %endfor
 </ul>
 <div class="NotVisible">
+    %if cmtype == 'L':
+    <input type="hidden" name="CMType" value="L" />
+    %else:
+    <input type="hidden" name="CMType" value="S" />
+    %endif
     %for community in communities:
     <input type="hidden" name="CMID" value="${community.CM_ID}">
     %endfor
@@ -57,6 +69,7 @@ from cioc.core.modelstate import convert_options
     %endfor
 </ul>
 <div class="NotVisible">
+    ${renderer.hidden("GHPBID")}
     %for heading in headings:
     <input type="hidden" name="GHID" value="${heading.GH_ID}">
     %endfor
@@ -71,6 +84,7 @@ from cioc.core.modelstate import convert_options
 <h3>${_('Report Title: ')}</h3>
 ${renderer.text('ReportTitle', maxlength=255, class_='form-control')}
 
+%if headings and not pubs:
 <h3>${_('Organize Records by: ')}</h3>
 <div class="radio">
     ${renderer.radio("IndexType", value='N', label=_('Organization or Program Name'), id='IndexType_Name', checked=True)}
@@ -78,17 +92,38 @@ ${renderer.text('ReportTitle', maxlength=255, class_='form-control')}
 <div class="radio">
     ${renderer.radio("IndexType", value='T', label=_('Topic'), id='IndexType_Topic')}
 </div>
+%else:
+<div class="NotVisible">
+    ${renderer.hidden("IndexType", 'N')}
+</div>
+%endif
 
 <h3>${_('Report Format: ')}</h3>
 <div class="radio">
-    ${renderer.radio("FormatType", value='H', label=_('Printable list (webpage)'), id='FormatType_HTML', checked=True)}
+    ${renderer.radio("OutputPDF", value='', label=_('Printable list (webpage)'), id='FormatType_HTML', checked=True)}
 </div>
 <div class="radio">
-    ${renderer.radio("FormatType", value='P', label=_('PDF Document'), id="FormatType_PDF")}
+    ${renderer.radio("OutputPDF", value='on', label=_('PDF Document'), id="FormatType_PDF")}
 </div>
+%if request.user and request.viewdata.dom.CanSeeNonPublic:
+<h3>${_('Record Visibility: ')}</h3>
+<div class="checkbox">
+    ${renderer.checkbox("IncludeNonPublic", "on", label=_('Include Non-Public Records'))}
+</div>
+%endif
 
     <div class="clear-line-above">
-        <a href="${request.route_path('cic_customreport_index')}" class="btn btn-info"><< ${_('Start Over')}</a>
-        <input type="submit" class="btn btn-info" value="${_('Next Step: ') + _('Generate Report')} >>">
+        <a href="${request.passvars.route_path('cic_customreport_index')}" class="btn btn-info"><< ${_('Start Over')}</a>
+        <input type="submit" id="submit-button" class="btn btn-info" value="${_('Next Step: ') + _('Generate Report')} >>">
     </div>
 </form>
+<%def name="bottomjs()">
+<script type="text/javascript">
+jQuery(function($) {
+    $('#entry-form').on('submit', function() {
+	$('#submit-button').prop('disabled', true);
+	return;
+    });
+});
+</script>
+</%def>

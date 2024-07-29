@@ -234,7 +234,8 @@ IF @Error = 0 BEGIN
                 RefineField1,
                 RefineField2,
                 RefineField3,
-                RefineField4
+                RefineField4,
+				CustomReportTool
             )
             SELECT
                 GETDATE(),
@@ -335,7 +336,8 @@ IF @Error = 0 BEGIN
                 RefineField1,
                 RefineField2,
                 RefineField3,
-                RefineField4
+                RefineField4,
+				CustomReportTool
             FROM    dbo.CIC_View
             WHERE   ViewType = @DefaultView;
 
@@ -397,7 +399,8 @@ IF @Error = 0 BEGIN
                 QuickSearchGlyph,
                 PDFBottomMessage,
                 PDFBottomMargin,
-                GoogleTranslateDisclaimer
+                GoogleTranslateDisclaimer,
+				CustomReportInstructions
             )
             SELECT
                 @ViewType,
@@ -451,7 +454,8 @@ IF @Error = 0 BEGIN
                 QuickSearchGlyph,
                 PDFBottomMessage,
                 PDFBottomMargin,
-                GoogleTranslateDisclaimer
+                GoogleTranslateDisclaimer,
+				CustomReportInstructions
             FROM    dbo.CIC_View_Description
             WHERE   ViewType = @DefaultView;
         END;

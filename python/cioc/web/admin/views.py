@@ -177,6 +177,8 @@ class ViewBaseCICSchema(ViewBaseSchema):
     RefineField3 = ciocvalidators.IDValidator()
     RefineField4 = ciocvalidators.IDValidator()
 
+    CustomReportTool = ciocvalidators.Bool()
+
     # PDFDetails = validators.Bool()
 
 
@@ -279,7 +281,7 @@ class ViewDescriptionCICSchema(ViewDescriptionSchema):
     OrgLevel1Name = validators.UnicodeString(max=100)
     OrgLevel2Name = validators.UnicodeString(max=100)
     OrgLevel3Name = validators.UnicodeString(max=100)
-
+    CustomReportInstructions = ciocvalidators.UnicodeString()
 
 class ViewDescriptionVOLSchema(ViewDescriptionSchema):
     HighlightOpportunity = validators.String(max=10)
@@ -302,7 +304,6 @@ label_override_fields = {
     "OrgLevel3Name",
     "SearchPromptOverride",
 }
-
 
 class DisplayOptionSchema(Schema):
     if_key_missing = None

@@ -66,6 +66,7 @@ STDERR_VALUE = None
 if sys.executable.lower() != PYTHON_EXE.lower():
     STDERR_VALUE = subprocess.DEVNULL
 
+PDF_GEN_MAX_MEM_IN_GB = 1
 PDF_BASE_COMMAND = [
     PYTHON_EXE,
     "-m",
@@ -73,10 +74,11 @@ PDF_BASE_COMMAND = [
     "-e",
     "utf-8",
 ]
-if shutil.which("procgov64"):
+PROCGOV_EXE = shutil.which("procgov64")
+if PROCGOV_EXE:
     PDF_BASE_COMMAND = [
-        "procgov64",
-        "--maxmem=2G",
+        PROCGOV_EXE,
+        f"--maxmem={PDF_GEN_MAX_MEM_IN_GB}G",
         "--terminate-job-on-exit",
         "-r",
         "--",
@@ -92,6 +94,7 @@ class PrintListSchemaBase(validators.RootSchema):
     Msg = validators.String()
 
     IncludeDeleted = validators.Bool()
+    IncludeNonPublic = validators.Bool()
     OutputPDF = validators.Bool()
 
 
@@ -111,6 +114,13 @@ class CICPrintListSchema(PrintListSchemaBase):
     SortBy = validators.OneOf(["O", "H"], if_invalid=None)
     IncludeTOC = validators.Bool()
     IncludeIndex = validators.Bool()
+
+    CMType = validators.OneOf(["S", "L"], if_invalid=None)
+    CMID = validators.CSVForEach(validators.IDValidator, if_invalid=None)
+
+    # The IndexType option is from the customreport page. It provides an
+    # override to the SortBy, IncludeTOC, and IncludeIndex Options.
+    IndexType = validators.OneOf(["N", "T"], if_invalid=None)
 
     IDList = validators.CSVForEach(validators.NumValidator(), if_invalid=None)
 
@@ -279,6 +289,11 @@ class PrintListBase(viewbase.ViewBase):
                 )
                 profile = cursor.fetchone()
 
+            if not profile:
+                return self._render_error_page(
+                    _("Could not find print profile.", request)
+                )
+
             title = _("Print Record List")
             model_state.form.data.pop("Msg", None)
             model_state.form.data["Picked"] = True
@@ -372,7 +387,16 @@ class PrintListBase(viewbase.ViewBase):
             resp = request.response
             with tempfile.TemporaryFile(suffix=".html") as f:
                 f.writelines(result)
-                log.debug("Wrote %sGB to html file", f.tell() / 1024 / 1024)
+                file_size_in_gb = f.tell() / 1024 / 1024
+                log.debug("Wrote %sGB to html file", file_size_in_gb)
+                if file_size_in_gb > PDF_GEN_MAX_MEM_IN_GB:
+                    return self._render_error_page(
+                        _(
+                            "Report to large. Please reduce the number of records in the report.",
+                            request,
+                        ),
+                        show_close=False,
+                    )
                 f.seek(0)
                 outf = tempfile.TemporaryFile(suffix=".pdf")
                 cmd = PDF_BASE_COMMAND + [
@@ -422,6 +446,11 @@ class PrintListBase(viewbase.ViewBase):
             "AND shp.Active=1", "AND shp.Active=1 AND shp.CanUsePrint=1"
         )
         where_clause.append(f"({view_where})")
+        if request.viewdata.dom.CanSeeNonPublic and not model_state.value(
+            "IncludeNonPublic"
+        ):
+            tbl = "vod" if request.pageinfo.DbArea == const.DM_VOL else "btd"
+            where_clause.append(f"({tbl}.NON_PUBLIC = 0)")
 
     def get_extra_edit_info_sql(
         self, statements, arguments, recordsets, DbAreaS, namespace
@@ -514,8 +543,22 @@ class PrintRecordListCIC(PrintListBase):
         return ghpbid
 
     def get_where_clause(self, where_clause, arguments):
-        request = self.request
         model_state = self.request.model_state
+
+        # The IndexType option is from the customreport page. It provides an
+        # override to the SortBy, IncludeTOC, and IncludeIndex Options.
+        index_type = model_state.value("IndexType")
+        if index_type:
+            if index_type == "N":
+                # Sort by Name and include Name index
+                model_state.form.data["SortBy"] = "O"
+                model_state.form.data["IncludeTOC"] = False
+                model_state.form.data["IncludeIndex"] = True
+            else:
+                # Sort By Topic (Heading) and include Heading TOC and Name index
+                model_state.form.data["SortBy"] = "H"
+                model_state.form.data["IncludeTOC"] = True
+                model_state.form.data["IncludeIndex"] = True
 
         ghpbid = self.get_ghpbid()
 
@@ -624,6 +667,25 @@ class PrintRecordListCIC(PrintListBase):
             arguments.extend(sorted(idlist))
             where_clause.append("(bt.NUM IN (" + ",".join("?" * len(idlist)) + "))")
 
+        cmidlist = model_state.value("CMID")
+        if cmidlist:
+            cmidlist = set(cmidlist)
+            arguments.append(",".join(str(x) for x in cmidlist))
+            if model_state.value("CMType") == "L":
+                where_clause.append(
+                    "(bt.LOCATED_IN_CM IS NULL OR bt.LOCATED_IN_CM IN (SELECT CM_ID FROM dbo.fn_GBL_Community_Search_rst(?)))"
+                )
+            else:
+                where_clause.append(
+                    dedent("""\
+                    (EXISTS(
+                        SELECT * 
+                        FROM CIC_BT_CM cm 
+                        INNER JOIN dbo.fn_GBL_Community_Search_rst(?) cl
+                            ON cl.CM_ID=cm.CM_ID
+                        WHERE cm.NUM=bt.NUM))""")
+                )
+
         return super().get_where_clause(where_clause, arguments)
 
     def get_extra_edit_info_sql(
@@ -658,16 +720,16 @@ class PrintRecordListCIC(PrintListBase):
         model_state = self.request.model_state
         sortby = model_state.value("SortBy")
         ghpbid = self.get_ghpbid()
-        include_toc = model_state.value("IncludeTOC")
+        include_toc = model_state.value("IncludeTOC") and sortby == "H" and ghpbid
         include_index = model_state.value("IncludeIndex")
 
-        if sortby != "H" or not ghpbid or not (include_toc or include_index):
-            return {
-                "include_toc": False,
-                "include_index": False,
-                "heading_groups": None,
-                "org_names": None,
-            }
+        # if (sortby == "H" and not ghpbid) or not (include_toc or include_index):
+        #     return {
+        #         "include_toc": False,
+        #         "include_index": False,
+        #         "heading_groups": None,
+        #         "org_names": None,
+        #     }
 
         sql_parts = []
         arguments = []
@@ -743,14 +805,20 @@ class PrintRecordListCIC(PrintListBase):
                 )
             )
 
-        sql = "\n".join(x[-1] for x in sql_parts)
-        log.debug("heading list sql=%s", sql)
-        cursor = conn.execute(sql, *arguments)
-        namespace = {"include_toc": include_toc, "include_index": include_index}
-        for i, (name, process_fn, sql) in enumerate(sql_parts):
-            if i:
-                cursor.nextset()
-            namespace[name] = process_fn(cursor)
+        namespace = {
+            "include_toc": include_toc,
+            "include_index": include_index,
+            "heading_groups": None,
+            "org_names": None,
+        }
+        if sql_parts:
+            sql = "\n".join(x[-1] for x in sql_parts)
+            # log.debug("heading list sql=%s", sql)
+            cursor = conn.execute(sql, *arguments)
+            for i, (name, process_fn, sql) in enumerate(sql_parts):
+                if i:
+                    cursor.nextset()
+                namespace[name] = process_fn(cursor)
 
         return namespace
 
