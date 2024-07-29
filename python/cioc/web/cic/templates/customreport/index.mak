@@ -71,6 +71,7 @@ ${report_instructions.CustomReportInstructions|n}
     </div>
 
     <div class="clear-line-above">
+        <input type="reset" class="btn btn-info" value="${_('Reset Selections')}">
         <input type="submit" class="btn btn-info" value="${_('Next Step: ') + _('Choose Topics')} >>">
     </div>
 </form>
