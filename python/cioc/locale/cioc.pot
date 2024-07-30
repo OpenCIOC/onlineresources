@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CiocWeb 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-07-28 21:06-0400\n"
+"POT-Creation-Date: 2024-07-29 20:22-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -576,7 +576,7 @@ msgstr ""
 msgid "The database is in training mode"
 msgstr ""
 
-#: ../python/cioc/web/__init__.py:149
+#: ../python/cioc/web/__init__.py:170
 #: ../python/cioc/web/admin/templates/template/edit.mak:531
 msgid "Error"
 msgstr ""
@@ -5876,7 +5876,7 @@ msgid "Facebook"
 msgstr ""
 
 #: ../python/cioc/web/admin/templates/template/edit.mak:225
-msgid "Twitter"
+msgid "X (Twitter)"
 msgstr ""
 
 #: ../python/cioc/web/admin/templates/template/edit.mak:232
@@ -8020,8 +8020,8 @@ msgid "Within %skm"
 msgstr ""
 
 #: ../python/cioc/web/cic/customreport.py:83
-#: ../python/cioc/web/cic/customreport.py:132
-#: ../python/cioc/web/cic/customreport.py:192
+#: ../python/cioc/web/cic/customreport.py:133
+#: ../python/cioc/web/cic/customreport.py:193
 msgid "Create a Custom Report"
 msgstr ""
 
@@ -8920,13 +8920,13 @@ msgid "Include Non-Public Records"
 msgstr ""
 
 #: ../python/cioc/web/cic/templates/customreport/format.mak:116
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:111
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:112
 msgid "Start Over"
 msgstr ""
 
 #: ../python/cioc/web/cic/templates/customreport/format.mak:117
-#: ../python/cioc/web/cic/templates/customreport/index.mak:74
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:112
+#: ../python/cioc/web/cic/templates/customreport/index.mak:75
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:113
 msgid "Next Step: "
 msgstr ""
 
@@ -8945,12 +8945,16 @@ msgid "Choose one or more Communities"
 msgstr ""
 
 #: ../python/cioc/web/cic/templates/customreport/index.mak:65
-#: ../python/cioc/web/cic/templates/customreport/index.mak:82
+#: ../python/cioc/web/cic/templates/customreport/index.mak:83
 #, python-format
 msgid "All of <span class=\"demi-bold\">%s</span>"
 msgstr ""
 
 #: ../python/cioc/web/cic/templates/customreport/index.mak:74
+msgid "Reset Selections"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/index.mak:75
 msgid "Choose Topics"
 msgstr ""
 
@@ -8962,7 +8966,11 @@ msgstr ""
 msgid "None available"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:112
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:109
+msgid "Choosing one or more topics is required to proceed"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:113
 msgid "Choose Format"
 msgstr ""
 
@@ -10213,6 +10221,14 @@ msgstr ""
 
 #: ../python/cioc/web/gbl/templates/printlist/message.mak:44
 msgid "Next (New Window)"
+msgstr ""
+
+#: ../python/cioc/web/gbl/templates/printlist/printlist.mak:93
+msgid "Contents"
+msgstr ""
+
+#: ../python/cioc/web/gbl/templates/printlist/printlist.mak:264
+msgid "Index by Name"
 msgstr ""
 
 #: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:33

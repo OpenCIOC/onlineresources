@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CiocWeb 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-07-28 21:06-0400\n"
+"POT-Creation-Date: 2024-07-29 20:22-0400\n"
 "PO-Revision-Date: 2016-09-12 23:26-0400\n"
 "Last-Translator: Chris Lambacher <chris@kclsoftware.com>\n"
 "Language: fr_CA\n"
@@ -610,7 +610,7 @@ msgstr "Accédez au contenu principal"
 msgid "The database is in training mode"
 msgstr "La base de données est en mode Formation."
 
-#: ../python/cioc/web/__init__.py:149
+#: ../python/cioc/web/__init__.py:170
 #: ../python/cioc/web/admin/templates/template/edit.mak:531
 msgid "Error"
 msgstr "Erreur"
@@ -5272,8 +5272,12 @@ msgid "Thumbnail Image URL"
 msgstr "URL de l'image miniature"
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:135
-msgid "Link to an image to be used for the thumbnail in article widgets. Recommended size is 300x200 pixels."
-msgstr "Lien vers une image à utiliser pour la miniature dans les widgets d'article. La taille recommandée est de 300x200 pixels."
+msgid ""
+"Link to an image to be used for the thumbnail in article widgets. "
+"Recommended size is 300x200 pixels."
+msgstr ""
+"Lien vers une image à utiliser pour la miniature dans les widgets "
+"d'article. La taille recommandée est de 300x200 pixels."
 
 #: ../python/cioc/web/admin/templates/pages/edit.mak:142
 msgid "Article Preview"
@@ -5812,8 +5816,13 @@ msgstr ""
 
 #: ../python/cioc/web/admin/templates/sharingprofile/records.mak:150
 #: ../python/cioc/web/admin/templates/sharingprofile/records_remove.mak:71
-msgid "I understand that I cannot restore these records to the Sharing Profile myself, and will need to contact my partner if I wish to restore them."
-msgstr "Je comprends que je ne peux pas restaurer ces dossiers moi-même dans le profil de partage et que je devrai contacter mon partenaire si je souhaite les restaurer."
+msgid ""
+"I understand that I cannot restore these records to the Sharing Profile "
+"myself, and will need to contact my partner if I wish to restore them."
+msgstr ""
+"Je comprends que je ne peux pas restaurer ces dossiers moi-même dans le "
+"profil de partage et que je devrai contacter mon partenaire si je "
+"souhaite les restaurer."
 
 #: ../python/cioc/web/admin/templates/sharingprofile/records.mak:154
 #: ../python/cioc/web/admin/templates/sharingprofile/records_remove.mak:75
@@ -5892,8 +5901,14 @@ msgstr ""
 "disponibles à mon partenaire en vertu de cet accord de partage."
 
 #: ../python/cioc/web/admin/templates/sharingprofile/records_add.mak:69
-msgid "I understand that, once added, I will not have the ability to remove the records again immediately; I must wait until the revocation period defined by this agreement has passed."
-msgstr "Je comprends que, une fois ajoutés, je n'aurai pas la possibilité de retirer de nouveau ces dossiers immédiatement ; je doit attendre la fin de la période de révocation établie par cet accord."
+msgid ""
+"I understand that, once added, I will not have the ability to remove the "
+"records again immediately; I must wait until the revocation period "
+"defined by this agreement has passed."
+msgstr ""
+"Je comprends que, une fois ajoutés, je n'aurai pas la possibilité de "
+"retirer de nouveau ces dossiers immédiatement ; je doit attendre la fin "
+"de la période de révocation établie par cet accord."
 
 #: ../python/cioc/web/admin/templates/sharingprofile/records_add.mak:84
 msgid "Add Records to Sharing Profile"
@@ -6014,16 +6029,32 @@ msgstr ""
 " ci-dessous."
 
 #: ../python/cioc/web/admin/templates/sharingprofile/revoke.mak:60
-msgid "By revoking the agreement, I understand that all records under this agreement will become unavailable to my partner as of the date I select below."
-msgstr "En révoquant l'accord, je comprends que tous les dossiers couverts par cet accord deviendront indisponibles pour mon partenaire à compter de la date que je sélectionne ci-dessous."
+msgid ""
+"By revoking the agreement, I understand that all records under this "
+"agreement will become unavailable to my partner as of the date I select "
+"below."
+msgstr ""
+"En révoquant l'accord, je comprends que tous les dossiers couverts par "
+"cet accord deviendront indisponibles pour mon partenaire à compter de la "
+"date que je sélectionne ci-dessous."
 
 #: ../python/cioc/web/admin/templates/sharingprofile/revoke.mak:62
-msgid "I understand that revoking this agreement is permanent. I will not be able to recover or restore this agreement later."
-msgstr "Je comprends que la révocation de cet accord est permanente. Je n'aura pas la possibilité de récupérer ou restaurer cet accord plus tard."
+msgid ""
+"I understand that revoking this agreement is permanent. I will not be "
+"able to recover or restore this agreement later."
+msgstr ""
+"Je comprends que la révocation de cet accord est permanente. Je n'aura "
+"pas la possibilité de récupérer ou restaurer cet accord plus tard."
 
 #: ../python/cioc/web/admin/templates/sharingprofile/revoke.mak:63
-msgid "I understand that the records currently associated with this Sharing Profile will be removed from the agreement once it is revoked, and I will no longer have a list of the records available to me."
-msgstr "Je comprends que les dossiers actuellement associés à ce profil de partage sera retiré de l'accord une fois qu'il sera révoqué, et je n'aurai plus de liste des dossiers qui me sont disponibles."
+msgid ""
+"I understand that the records currently associated with this Sharing "
+"Profile will be removed from the agreement once it is revoked, and I will"
+" no longer have a list of the records available to me."
+msgstr ""
+"Je comprends que les dossiers actuellement associés à ce profil de "
+"partage sera retiré de l'accord une fois qu'il sera révoqué, et je "
+"n'aurai plus de liste des dossiers qui me sont disponibles."
 
 #: ../python/cioc/web/admin/templates/sharingprofile/revoke.mak:75
 msgid "End Sharing Agreement With Partner Member"
@@ -6042,16 +6073,32 @@ msgid "Delete Sharing Agreement"
 msgstr "Supprimer l'accord de partage"
 
 #: ../python/cioc/web/admin/templates/sharingprofile/send.mak:51
-msgid "I understand this Sharing agreement will not be active until it is accepted by my partner."
-msgstr "Je comprends que cet accord de partage ne sera actif qu'une fois qu'il sera accepté par mon partenaire."
+msgid ""
+"I understand this Sharing agreement will not be active until it is "
+"accepted by my partner."
+msgstr ""
+"Je comprends que cet accord de partage ne sera actif qu'une fois qu'il "
+"sera accepté par mon partenaire."
 
 #: ../python/cioc/web/admin/templates/sharingprofile/send.mak:52
-msgid "I understand that, once sent, the only changes that can be made to this Sharing Profile are adding new Views, adding new Fields, and adding and removing records."
-msgstr "Je comprends que, une fois envoyé, les seuls changements qui pourront être apportés à ce profil de partage seront l'ajout de nouvelles vues, l'ajout de nouveaux champs et l'ajout et la suppression de dossiers."
+msgid ""
+"I understand that, once sent, the only changes that can be made to this "
+"Sharing Profile are adding new Views, adding new Fields, and adding and "
+"removing records."
+msgstr ""
+"Je comprends que, une fois envoyé, les seuls changements qui pourront "
+"être apportés à ce profil de partage seront l'ajout de nouvelles vues, "
+"l'ajout de nouveaux champs et l'ajout et la suppression de dossiers."
 
 #: ../python/cioc/web/admin/templates/sharingprofile/send.mak:53
-msgid "I understand that, once accepted, I will not be able to revoke this agreement immediately; I will need to wait until the revocation period has passed."
-msgstr "Je comprends que, une fois accepté, je n'aura pas la possibilité de révoquer cet accord immédiatement ; je devrai attendre la fin de la période de révocation."
+msgid ""
+"I understand that, once accepted, I will not be able to revoke this "
+"agreement immediately; I will need to wait until the revocation period "
+"has passed."
+msgstr ""
+"Je comprends que, une fois accepté, je n'aura pas la possibilité de "
+"révoquer cet accord immédiatement ; je devrai attendre la fin de la "
+"période de révocation."
 
 #: ../python/cioc/web/admin/templates/sharingprofile/send.mak:64
 msgid "Send Sharing Agreement To Partner Member"
@@ -6125,7 +6172,9 @@ msgstr ""
 
 #: ../python/cioc/web/admin/templates/socialmedia/edit.mak:95
 msgid "URL of social media icon file. Icon must be 16px by 16px."
-msgstr "URL du fichier d'icône de réseau social. L'icône doit mesurer 16 px par 16 px."
+msgstr ""
+"URL du fichier d'icône de réseau social. L'icône doit mesurer 16 px par "
+"16 px."
 
 #: ../python/cioc/web/admin/templates/socialmedia/edit.mak:99
 msgid "24px Icon URL"
@@ -6133,7 +6182,9 @@ msgstr ""
 
 #: ../python/cioc/web/admin/templates/socialmedia/edit.mak:106
 msgid "URL of social media icon file. Icon must be 24px by 24px."
-msgstr "URL du fichier d'icône de réseau social. L'icône doit mesurer 24 px par 24 px."
+msgstr ""
+"URL du fichier d'icône de réseau social. L'icône doit mesurer 24 px par "
+"24 px."
 
 #: ../python/cioc/web/admin/templates/socialmedia/edit.mak:113
 msgid "Make this Social Media type available on data entry forms."
@@ -6506,8 +6557,12 @@ msgid "jQuery Widget Font Size"
 msgstr "Taille de police du widget jQuery"
 
 #: ../python/cioc/web/admin/templates/template/edit.mak:557
-msgid "Warning: the values below are deprecated and should not be used in new Template Layouts"
-msgstr "Avertissement : les valeurs ci-dessous sont obsolètes et ne doivent pas être utilisées dans les nouvelles présentations de modèles"
+msgid ""
+"Warning: the values below are deprecated and should not be used in new "
+"Template Layouts"
+msgstr ""
+"Avertissement : les valeurs ci-dessous sont obsolètes et ne doivent pas "
+"être utilisées dans les nouvelles présentations de modèles"
 
 #: ../python/cioc/web/admin/templates/template/edit.mak:560
 msgid "Title Background Colour [OLD]"
@@ -6855,8 +6910,12 @@ msgid "NOTE:"
 msgstr ""
 
 #: ../python/cioc/web/admin/templates/userapicreds/add.mak:74
-msgid "This is the only time you will be able to see the password. Make a note of it now."
-msgstr "Ce sera la seule fois où vous pourrez voir le mot de passe. Notez-le maintenant."
+msgid ""
+"This is the only time you will be able to see the password. Make a note "
+"of it now."
+msgstr ""
+"Ce sera la seule fois où vous pourrez voir le mot de passe. Notez-le "
+"maintenant."
 
 #: ../python/cioc/web/admin/templates/userapicreds/add.mak:76
 msgid "Cred ID"
@@ -7035,12 +7094,20 @@ msgid "Important"
 msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:204
-msgid "Use notes to explain who will use the View and for what purpose, to prevent future security issues or orphaned Views."
-msgstr "Utilisez des notes pour expliquer qui utilisera la vue et dans quel but, afin d'éviter de futurs problèmes de sécurité ou des vues orphelines."
+msgid ""
+"Use notes to explain who will use the View and for what purpose, to "
+"prevent future security issues or orphaned Views."
+msgstr ""
+"Utilisez des notes pour expliquer qui utilisera la vue et dans quel but, "
+"afin d'éviter de futurs problèmes de sécurité ou des vues orphelines."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:217
-msgid "The upper title apppearing above the page title in the header (when not using a custom header)."
-msgstr "Le titre supérieur apparaissant au-dessus du titre de la page dans l'en-tête (lorsque vous n'utilisez pas d'en-tête personnalisé)."
+msgid ""
+"The upper title apppearing above the page title in the header (when not "
+"using a custom header)."
+msgstr ""
+"Le titre supérieur apparaissant au-dessus du titre de la page dans l'en-"
+"tête (lorsque vous n'utilisez pas d'en-tête personnalisé)."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:231
 #: ../python/cioc/web/cic/templates/publication/index.mak:108
@@ -7049,8 +7116,17 @@ msgid "Other Views"
 msgstr "Autres vues"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:232
-msgid "In the default public View, determines which other Views are public. If the default View of a user, indicates the other Views that user may also access. Do not select any values if the View is neither the default public View nor the default View for a logged-in user."
-msgstr "Dans la vue publique par défaut, détermine les autres vues qui sont publiques. S'il s'agit de la vue par défaut d'un utilisateur, indique les autres vues auxquelles cet utilisateur peut également accéder. Ne sélectionnez aucune valeur si la vue n'est ni la vue publique par défaut ni la vue par défaut d'un utilisateur connecté."
+msgid ""
+"In the default public View, determines which other Views are public. If "
+"the default View of a user, indicates the other Views that user may also "
+"access. Do not select any values if the View is neither the default "
+"public View nor the default View for a logged-in user."
+msgstr ""
+"Dans la vue publique par défaut, détermine les autres vues qui sont "
+"publiques. S'il s'agit de la vue par défaut d'un utilisateur, indique les"
+" autres vues auxquelles cet utilisateur peut également accéder. Ne "
+"sélectionnez aucune valeur si la vue n'est ni la vue publique par défaut "
+"ni la vue par défaut d'un utilisateur connecté."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:236
 msgid ""
@@ -7131,7 +7207,9 @@ msgstr "Respecter les profils de confidentialité"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:301
 msgid "Private fields will be hidden for records using a Privacy Profile"
-msgstr "Les champs privés seront masqués pour les enregistrements utilisant un profil de confidentialité"
+msgstr ""
+"Les champs privés seront masqués pour les enregistrements utilisant un "
+"profil de confidentialité"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:305
 msgid "Only include records in the Publication:"
@@ -7175,11 +7253,17 @@ msgstr "Utiliser uniquement des noms de publications conviviaux (si disponibles)
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:334
 msgid "Limited View: Only allow viewing / management of this View's Publication"
-msgstr "Vue limitée : autoriser uniquement la visualisation/gestion de la publication de cette vue"
+msgstr ""
+"Vue limitée : autoriser uniquement la visualisation/gestion de la "
+"publication de cette vue"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:335
-msgid "Applies only to Views where the records available in the View are already limited to a specific Publication"
-msgstr "S'applique uniquement aux vues où les enregistrements disponibles dans la vue sont déjà limités à une publication spécifique"
+msgid ""
+"Applies only to Views where the records available in the View are already"
+" limited to a specific Publication"
+msgstr ""
+"S'applique uniquement aux vues où les enregistrements disponibles dans la"
+" vue sont déjà limités à une publication spécifique"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:339
 msgid ""
@@ -7239,7 +7323,9 @@ msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:400
 msgid "Show Google Translate Widget on Search and Details pages."
-msgstr "Afficher le widget Google Traduction sur les pages de recherche et de détails."
+msgstr ""
+"Afficher le widget Google Traduction sur les pages de recherche et de "
+"détails."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:405
 msgid "Disclaimer"
@@ -7501,8 +7587,12 @@ msgstr ""
 "données ' en bas du formulaire de rétroaction / suggestion."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:628
-msgid "'Data Use Authorization' includes authorization for phone / in-person inquiries."
-msgstr "« Autorisation d'utilisation des données » inclut l'autorisation pour les demandes de renseignements par téléphone ou en personne."
+msgid ""
+"'Data Use Authorization' includes authorization for phone / in-person "
+"inquiries."
+msgstr ""
+"« Autorisation d'utilisation des données » inclut l'autorisation pour les"
+" demandes de renseignements par téléphone ou en personne."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:634
 msgid "Other Languages"
@@ -7521,8 +7611,12 @@ msgid "Child Care Resource Fields"
 msgstr "Champs Ressource en garde d'enfants"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:648
-msgid "Select when to include selected Child Care Resources fields on record update forms:"
-msgstr "Sélectionnez quand inclure les champs de ressources de garde d'enfants sélectionnés dans les formulaires de mise à jour du dossier :"
+msgid ""
+"Select when to include selected Child Care Resources fields on record "
+"update forms:"
+msgstr ""
+"Sélectionnez quand inclure les champs de ressources de garde d'enfants "
+"sélectionnés dans les formulaires de mise à jour du dossier :"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:650
 msgid "Show a prompt for records not already designated as Child Care Resources"
@@ -7645,7 +7739,9 @@ msgstr "2000 caractères maximum. Le HTML est autorisé."
 #: ../python/cioc/web/admin/templates/views/edit.mak:733
 #: ../python/cioc/web/admin/templates/views/edit.mak:847
 msgid "The full field management area is available at the bottom of this page."
-msgstr "La zone complète de gestion des champs est disponible en bas de cette page."
+msgstr ""
+"La zone complète de gestion des champs est disponible en bas de cette "
+"page."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:736
 #: ../python/cioc/web/admin/templates/views/edit.mak:1571
@@ -7668,7 +7764,9 @@ msgstr "Champs de gestion des données"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:761
 msgid "Include the Last Modified Date in the Header of the Record Details page."
-msgstr "Inclure la date de dernière modification dans l'en-tête de la page Détails de l'enregistrement."
+msgstr ""
+"Inclure la date de dernière modification dans l'en-tête de la page "
+"Détails de l'enregistrement."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:765
 msgid "Show extra Data Management Fields"
@@ -7733,8 +7831,13 @@ msgid "Related Records Sidebar"
 msgstr "Barre latérale des dossiers associés"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:799
-msgid "Use the Related Records Sidebar on the Record Details page (available for Agency-Site-Service classified records only)."
-msgstr "Utilisez la barre latérale Enregistrements associés sur la page Détails de l'enregistrement (disponible uniquement pour les enregistrements classés Agence-Site-Service)."
+msgid ""
+"Use the Related Records Sidebar on the Record Details page (available for"
+" Agency-Site-Service classified records only)."
+msgstr ""
+"Utilisez la barre latérale Enregistrements associés sur la page Détails "
+"de l'enregistrement (disponible uniquement pour les enregistrements "
+"classés Agence-Site-Service)."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:805
 msgid "PDF Output"
@@ -7749,16 +7852,32 @@ msgid "Footer Message"
 msgstr "Message de bas de page"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:815
-msgid "The text appearing at the bottom of each page of a PDF rendered in the view (such as details page PDF). Be thoughtful and keep it short - remember that this will be at the bottom of every page of the PDF. If you have a lot of information you want to include here, consider creating a webpage with the information and linking to it instead."
-msgstr "Le texte qui apparaît au bas de chaque page d'un PDF affiché dans la vue (par exemple, la page de détails du PDF). Soyez réfléchi et restez bref - n'oubliez pas que ce texte apparaîtra au bas de chaque page du PDF. Si vous avez beaucoup d'informations à inclure ici, pensez à créer une page Web avec les informations et à créer un lien vers celle-ci à la place."
+msgid ""
+"The text appearing at the bottom of each page of a PDF rendered in the "
+"view (such as details page PDF). Be thoughtful and keep it short - "
+"remember that this will be at the bottom of every page of the PDF. If you"
+" have a lot of information you want to include here, consider creating a "
+"webpage with the information and linking to it instead."
+msgstr ""
+"Le texte qui apparaît au bas de chaque page d'un PDF affiché dans la vue "
+"(par exemple, la page de détails du PDF). Soyez réfléchi et restez bref -"
+" n'oubliez pas que ce texte apparaîtra au bas de chaque page du PDF. Si "
+"vous avez beaucoup d'informations à inclure ici, pensez à créer une page "
+"Web avec les informations et à créer un lien vers celle-ci à la place."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:824
 msgid "Footer Space"
 msgstr "Espace de bas de page"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:825
-msgid "Amount of space to allow for the PDF Footer Message (e.g. 2cm). Ensure that you have allocated the appropriate amount of space by testing the display after setting this value."
-msgstr "Quantité d'espace à allouer au message de pied de page du PDF (par exemple 2 cm). Assurez-vous d'avoir alloué la quantité d'espace appropriée en testant l'affichage après avoir défini cette valeur."
+msgid ""
+"Amount of space to allow for the PDF Footer Message (e.g. 2cm). Ensure "
+"that you have allocated the appropriate amount of space by testing the "
+"display after setting this value."
+msgstr ""
+"Quantité d'espace à allouer au message de pied de page du PDF (par "
+"exemple 2 cm). Assurez-vous d'avoir alloué la quantité d'espace "
+"appropriée en testant l'affichage après avoir défini cette valeur."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:835
 msgid ""
@@ -7931,12 +8050,25 @@ msgstr "Utiliser les en-têtes à partir de"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1021
 #: ../python/cioc/web/admin/templates/views/edit.mak:1022
-msgid "Choose a Publication to have the Quick List display that Publication's Headings."
-msgstr "Choisissez une publication pour que la liste rapide affiche les en-têtes de cette publication."
+msgid ""
+"Choose a Publication to have the Quick List display that Publication's "
+"Headings."
+msgstr ""
+"Choisissez une publication pour que la liste rapide affiche les en-têtes "
+"de cette publication."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1022
-msgid "By default, the Quick List displays the Publications for this View. If this is a Limited View, it will always use the Headings from this View's Publication. Non-public Headings will be hidden from the list if the View is set to hide non-public Publications."
-msgstr "Par défaut, la liste rapide affiche les publications de cette vue. S'il s'agit d'une vue limitée, elle utilisera toujours les en-têtes de la publication de cette vue. Les en-têtes non publics seront masqués dans la liste si la vue est configurée pour masquer les publications non publiques."
+msgid ""
+"By default, the Quick List displays the Publications for this View. If "
+"this is a Limited View, it will always use the Headings from this View's "
+"Publication. Non-public Headings will be hidden from the list if the View"
+" is set to hide non-public Publications."
+msgstr ""
+"Par défaut, la liste rapide affiche les publications de cette vue. S'il "
+"s'agit d'une vue limitée, elle utilisera toujours les en-têtes de la "
+"publication de cette vue. Les en-têtes non publics seront masqués dans la"
+" liste si la vue est configurée pour masquer les publications non "
+"publiques."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1029
 #: ../python/cioc/web/admin/templates/views/topicsearch.mak:105
@@ -8223,8 +8355,12 @@ msgid "No Results Message"
 msgstr "Message lorsqu'il n'y a aucun résultat"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1371
-msgid "A message printed to the user if no search results are returned or a record cannot be found."
-msgstr "Un message imprimé à l'utilisateur si aucun résultat de recherche n'est renvoyé ou si un enregistrement ne peut pas être trouvé."
+msgid ""
+"A message printed to the user if no search results are returned or a "
+"record cannot be found."
+msgstr ""
+"Un message imprimé à l'utilisateur si aucun résultat de recherche n'est "
+"renvoyé ou si un enregistrement ne peut pas être trouvé."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1396
 msgid "Template"
@@ -8248,7 +8384,9 @@ msgstr "Profils d'impression publics indiqués par *."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1424
 msgid "The Custom Report Tool is available for the above Print Profile"
-msgstr "L'outil de rapport personnalisé est disponible pour le profil d'impression ci-dessus"
+msgstr ""
+"L'outil de rapport personnalisé est disponible pour le profil "
+"d'impression ci-dessus"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1429
 msgid "Report Tool Introduction / Instructions"
@@ -8307,15 +8445,21 @@ msgstr "Le panneau contenant la recherche par mot-clé"
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1480
 msgid "Additional multi-purpose panel available in some layouts"
-msgstr "Panneau polyvalent supplémentaire disponible dans certaines configurations de mises en pages."
+msgstr ""
+"Panneau polyvalent supplémentaire disponible dans certaines "
+"configurations de mises en pages."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1482
 msgid "Custom HTML to appear in the left area of the Basic Search page."
-msgstr "HTML personnalisé à afficher dans la zone de gauche de la page de recherche de base."
+msgstr ""
+"HTML personnalisé à afficher dans la zone de gauche de la page de "
+"recherche de base."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1484
 msgid "Custom HTML to appear in the centre-bottom area of the Basic Search page."
-msgstr "HTML personnalisé à afficher dans la zone centrale inférieure de la page de recherche de base."
+msgstr ""
+"HTML personnalisé à afficher dans la zone centrale inférieure de la page "
+"de recherche de base."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1486
 msgid "Custom HTML to appear in the right area of the Basic Search page."
@@ -8338,7 +8482,8 @@ msgstr "Taxonomie"
 #: ../python/cioc/web/admin/templates/views/edit.mak:1512
 msgid "Taxonomy menu items and searches are available in this View"
 msgstr ""
-"Les éléments de menu et les recherches de taxonomie sont disponibles dans cette vue."
+"Les éléments de menu et les recherches de taxonomie sont disponibles dans"
+" cette vue."
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1517
 #, python-format
@@ -8634,8 +8779,8 @@ msgid "Within %skm"
 msgstr "Dans %skm"
 
 #: ../python/cioc/web/cic/customreport.py:83
-#: ../python/cioc/web/cic/customreport.py:132
-#: ../python/cioc/web/cic/customreport.py:192
+#: ../python/cioc/web/cic/customreport.py:133
+#: ../python/cioc/web/cic/customreport.py:193
 msgid "Create a Custom Report"
 msgstr "Créer un rapport personnalisé"
 
@@ -9561,13 +9706,13 @@ msgid "Include Non-Public Records"
 msgstr "Inclure les dossiers non publics"
 
 #: ../python/cioc/web/cic/templates/customreport/format.mak:116
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:111
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:112
 msgid "Start Over"
 msgstr "Recommencer"
 
 #: ../python/cioc/web/cic/templates/customreport/format.mak:117
-#: ../python/cioc/web/cic/templates/customreport/index.mak:74
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:112
+#: ../python/cioc/web/cic/templates/customreport/index.mak:75
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:113
 msgid "Next Step: "
 msgstr "Prochaine étape:"
 
@@ -9586,12 +9731,16 @@ msgid "Choose one or more Communities"
 msgstr "Choisissez une ou plusieurs communautés"
 
 #: ../python/cioc/web/cic/templates/customreport/index.mak:65
-#: ../python/cioc/web/cic/templates/customreport/index.mak:82
+#: ../python/cioc/web/cic/templates/customreport/index.mak:83
 #, python-format
 msgid "All of <span class=\"demi-bold\">%s</span>"
 msgstr "Tous les <span class=\"demi-bold\">%s</span>"
 
 #: ../python/cioc/web/cic/templates/customreport/index.mak:74
+msgid "Reset Selections"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/index.mak:75
 msgid "Choose Topics"
 msgstr "Choisissez des sujets"
 
@@ -9603,7 +9752,11 @@ msgstr "Choisissez un ou plusieurs sujets"
 msgid "None available"
 msgstr "Aucun disponible"
 
-#: ../python/cioc/web/cic/templates/customreport/topics.mak:112
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:109
+msgid "Choosing one or more topics is required to proceed"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/topics.mak:113
 msgid "Choose Format"
 msgstr "Choisir le format"
 
@@ -9829,12 +9982,20 @@ msgid "Term"
 msgstr "Terme"
 
 #: ../python/cioc/web/cic/templates/publication/clearrecords.mak:22
-msgid "Are you sure you want to permanently clear this publication code from these items?"
-msgstr "Êtes-vous sûr de vouloir effacer définitivement ce code de publication de ces éléments ?"
+msgid ""
+"Are you sure you want to permanently clear this publication code from "
+"these items?"
+msgstr ""
+"Êtes-vous sûr de vouloir effacer définitivement ce code de publication de"
+" ces éléments ?"
 
 #: ../python/cioc/web/cic/templates/publication/clearrecords.mak:24
-msgid "Use your back button to return to the form if you do not want to clear the records."
-msgstr "Utilisez votre bouton Retour pour revenir au formulaire si vous ne souhaitez pas effacer les enregistrements."
+msgid ""
+"Use your back button to return to the form if you do not want to clear "
+"the records."
+msgstr ""
+"Utilisez votre bouton Retour pour revenir au formulaire si vous ne "
+"souhaitez pas effacer les enregistrements."
 
 #: ../python/cioc/web/cic/templates/publication/clearrecords.mak:28
 #: ../python/cioc/web/cic/templates/publication/edit.mak:60
@@ -9922,7 +10083,9 @@ msgstr "Autoriser éditeurs locaux"
 
 #: ../python/cioc/web/cic/templates/publication/edit.mak:96
 msgid "Headings of this publication can be edited as if it were local publication"
-msgstr "Les titres de cette publication peuvent être édités comme s'il s'agissait d'une publication locale"
+msgstr ""
+"Les titres de cette publication peuvent être édités comme s'il s'agissait"
+" d'une publication locale"
 
 #: ../python/cioc/web/cic/templates/publication/edit.mak:104
 #, python-format
@@ -10244,8 +10407,17 @@ msgstr ""
 "pratiques et de l'usage actuel."
 
 #: ../python/cioc/web/cic/templates/taxonomy/activationrec.mak:30
-msgid "Note that some activation changes are mandatory and will be automatically made when you submit your changes. Other activation changes are optional, and you can uncheck the box next to the change if you do not wish to accept it."
-msgstr "Notez que certaines modifications d'activation sont obligatoires et seront automatiquement effectuées lorsque vous soumettrez vos modifications. D'autres modifications d'activation sont facultatives et vous pouvez décocher la case à côté de la modification si vous ne souhaitez pas l'accepter."
+msgid ""
+"Note that some activation changes are mandatory and will be automatically"
+" made when you submit your changes. Other activation changes are "
+"optional, and you can uncheck the box next to the change if you do not "
+"wish to accept it."
+msgstr ""
+"Notez que certaines modifications d'activation sont obligatoires et "
+"seront automatiquement effectuées lorsque vous soumettrez vos "
+"modifications. D'autres modifications d'activation sont facultatives et "
+"vous pouvez décocher la case à côté de la modification si vous ne "
+"souhaitez pas l'accepter."
 
 #: ../python/cioc/web/cic/templates/taxonomy/activationrec.mak:32
 msgid "Options"
@@ -10813,20 +10985,32 @@ msgid "Click here to select the record list"
 msgstr "Cliquez ici pour sélectionner la liste des dossiers"
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:90
-msgid "and press ctrl-c or cmd-c (on Mac) to copy and use in your own email client."
-msgstr "et appuyez sur ctrl-c ou cmd-c (sur Mac) pour copier et utiliser dans votre propre client de messagerie."
+msgid ""
+"and press ctrl-c or cmd-c (on Mac) to copy and use in your own email "
+"client."
+msgstr ""
+"et appuyez sur ctrl-c ou cmd-c (sur Mac) pour copier et utiliser dans "
+"votre propre client de messagerie."
 
 #: ../python/cioc/web/gbl/templates/emaillist.mak:97
-msgid "The following records are not available in the selected View and will not be included in the email."
-msgstr "Les enregistrements suivants ne sont pas disponibles dans la vue sélectionnée et ne seront pas inclus dans l'e-mail."
+msgid ""
+"The following records are not available in the selected View and will not"
+" be included in the email."
+msgstr ""
+"Les enregistrements suivants ne sont pas disponibles dans la vue "
+"sélectionnée et ne seront pas inclus dans l'e-mail."
 
 #: ../python/cioc/web/gbl/templates/iconlist.mak:21
 msgid "Browse Available Icons"
 msgstr "Parcourir les icônes disponibles"
 
 #: ../python/cioc/web/gbl/templates/pages.mak:31
-msgid "This page is not available in this language. Please choose a language from below:"
-msgstr "Cette page n'est pas accessible dans cette langue. Veuillez choisir une langue ci-dessous :"
+msgid ""
+"This page is not available in this language. Please choose a language "
+"from below:"
+msgstr ""
+"Cette page n'est pas accessible dans cette langue. Veuillez choisir une "
+"langue ci-dessous :"
 
 #: ../python/cioc/web/gbl/templates/schedules.mak:25
 msgid "No listings available"
@@ -10879,7 +11063,9 @@ msgstr "Description brève"
 
 #: ../python/cioc/web/gbl/templates/shortcodes.mak:131
 msgid "Site Address (or Community name, if no Site Address)"
-msgstr "Adresse du site (ou nom de la communauté, s'il n'y a pas d'adresse du site)"
+msgstr ""
+"Adresse du site (ou nom de la communauté, s'il n'y a pas d'adresse du "
+"site)"
 
 #: ../python/cioc/web/gbl/templates/shortcodes.mak:137
 msgid "Office Phone"
@@ -10957,6 +11143,14 @@ msgstr "Message à inclure dans le rapport"
 #: ../python/cioc/web/gbl/templates/printlist/message.mak:44
 msgid "Next (New Window)"
 msgstr "Suivant (Nouvelle fenêtre)"
+
+#: ../python/cioc/web/gbl/templates/printlist/printlist.mak:93
+msgid "Contents"
+msgstr ""
+
+#: ../python/cioc/web/gbl/templates/printlist/printlist.mak:264
+msgid "Index by Name"
+msgstr ""
 
 #: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:33
 msgid "Profile"
