@@ -222,7 +222,7 @@ ${self.makeMgmtInfo(template)}
 			</div>
 		</div>
 		<div class="row form-group">
-			${renderer.label("descriptions." + lang.FormCulture + ".Twitter",_('Twitter'), class_="control-label col-sm-3")}
+			${renderer.label("descriptions." + lang.FormCulture + ".Twitter",_('X (Twitter)'), class_="control-label col-sm-3")}
 			<div class="col-sm-9">
 				${renderer.errorlist("descriptions." + lang.FormCulture + ".Twitter")}
 				${renderer.text("descriptions." + lang.FormCulture + ".Twitter", maxlength=150, class_="form-control")}
