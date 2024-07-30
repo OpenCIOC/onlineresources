@@ -106,7 +106,7 @@ ${report_instructions.CustomReportInstructions|n}
         $(window).on("pageshow", function() {
                 $('#parent-list input:checkbox:checked').each(function() {
                         on_check_changed.call(this, 0);
-                        $('#panel-collapse-' + this.value).collapse('show');
+                        $(this).parents('.panel-collapse').collapse('show');
                     });
         });
         $('#parent-list').on('change', 'input', function() { on_check_changed.call(this, 'fast'); });

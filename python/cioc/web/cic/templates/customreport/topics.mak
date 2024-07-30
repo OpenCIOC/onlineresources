@@ -106,14 +106,16 @@ from cioc.core.modelstate import convert_options
     </ul>
     %endif
     </div>
+    <p>${_('Choosing one or more topics is required to proceed')}</p>
     %endif
     <div class="clear-line-above">
         <a href="${request.passvars.route_path('cic_customreport_index')}" class="btn btn-info"><< ${_('Start Over')}</a>
-        <input type="submit" disabled class="btn btn-info" id="submit-button" value="${_('Next Step: ') + _('Choose Format')} >>">
+        <input type="submit" ${"disabled" if headings else ""} class="btn btn-info" id="submit-button" value="${_('Next Step: ') + _('Choose Format')} >>">
     </div>
 </form>
 
 <%def name="bottomjs()">
+%if headings:
 <script type="text/javascript">
 jQuery(function($) {
     $(window).on("pageshow", function() {
@@ -125,4 +127,5 @@ jQuery(function($) {
     });
 });
 </script>
+%endif
 </%def>
