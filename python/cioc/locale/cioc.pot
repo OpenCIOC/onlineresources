@@ -8967,7 +8967,7 @@ msgid "None available"
 msgstr ""
 
 #: ../python/cioc/web/cic/templates/customreport/topics.mak:109
-msgid "Choosing one or more topics is required to proceed"
+msgid "Please choose one or more topics to proceed."
 msgstr ""
 
 #: ../python/cioc/web/cic/templates/customreport/topics.mak:113

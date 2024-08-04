@@ -106,7 +106,7 @@ from cioc.core.modelstate import convert_options
     </ul>
     %endif
     </div>
-    <p>${_('Choosing one or more topics is required to proceed')}</p>
+    <p class="AlertBubble clear-line-above" id="proceed-topic-alert">${_('Please choose one or more topics to proceed.')}</p>
     %endif
     <div class="clear-line-above">
         <a href="${request.passvars.route_path('cic_customreport_index')}" class="btn btn-info"><< ${_('Start Over')}</a>
@@ -120,10 +120,22 @@ from cioc.core.modelstate import convert_options
 jQuery(function($) {
     $(window).on("pageshow", function() {
         $('#submit-button').prop('disabled', !$('#topics-container input:checkbox:checked').size());
+        if ($('#topics-container input:checkbox:checked').size() == 0) {
+            $('#proceed-topic-alert').show();
+        } else {
+            $('#proceed-topic-alert').hide();
+        }
     });
+
     $('#submit-button').prop('disabled', !$('#topics-container input:checkbox:checked').size());
+
     $('#topics-container').on('change', 'input', function(){
         $('#submit-button').prop('disabled', !$('#topics-container input:checkbox:checked').size());
+        if ($('#topics-container input:checkbox:checked').size() == 0) {
+            $('#proceed-topic-alert').show();
+        } else {
+            $('#proceed-topic-alert').hide();
+        }
     });
 });
 </script>

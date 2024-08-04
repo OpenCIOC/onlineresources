@@ -9627,7 +9627,7 @@ msgstr "Trier par ordre de proximité"
 #: ../python/cioc/web/cic/templates/customreport/index.mak:28
 #: ../python/cioc/web/cic/templates/customreport/topics.mak:37
 msgid "Step 1: "
-msgstr "Étape 1:"
+msgstr "Étape 1 : "
 
 #: ../python/cioc/web/cic/templates/customreport/format.mak:33
 #: ../python/cioc/web/cic/templates/customreport/topics.mak:37
@@ -9714,7 +9714,7 @@ msgstr "Recommencer"
 #: ../python/cioc/web/cic/templates/customreport/index.mak:75
 #: ../python/cioc/web/cic/templates/customreport/topics.mak:113
 msgid "Next Step: "
-msgstr "Prochaine étape:"
+msgstr "Prochaine étape : "
 
 #: ../python/cioc/web/cic/templates/customreport/format.mak:117
 #: ../python/cioc/web/stats/templates/auto_datamgmt.mak:59
@@ -9738,7 +9738,7 @@ msgstr "Tous les <span class=\"demi-bold\">%s</span>"
 
 #: ../python/cioc/web/cic/templates/customreport/index.mak:74
 msgid "Reset Selections"
-msgstr ""
+msgstr "Réinitialiser les sélections"
 
 #: ../python/cioc/web/cic/templates/customreport/index.mak:75
 msgid "Choose Topics"
@@ -9753,8 +9753,8 @@ msgid "None available"
 msgstr "Aucun disponible"
 
 #: ../python/cioc/web/cic/templates/customreport/topics.mak:109
-msgid "Choosing one or more topics is required to proceed"
-msgstr ""
+msgid "Please choose one or more topics to proceed."
+msgstr "Veuillez sélectionner un ou plusieurs sujets pour continuer."
 
 #: ../python/cioc/web/cic/templates/customreport/topics.mak:113
 msgid "Choose Format"
@@ -11146,11 +11146,11 @@ msgstr "Suivant (Nouvelle fenêtre)"
 
 #: ../python/cioc/web/gbl/templates/printlist/printlist.mak:93
 msgid "Contents"
-msgstr ""
+msgstr "Table des matières"
 
 #: ../python/cioc/web/gbl/templates/printlist/printlist.mak:264
 msgid "Index by Name"
-msgstr ""
+msgstr "Index par nom"
 
 #: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:33
 msgid "Profile"
@@ -11202,11 +11202,11 @@ msgstr "Date de création"
 
 #: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:90
 msgid "Non-Public Records"
-msgstr ""
+msgstr "Dossiers non publics"
 
 #: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:91
 msgid "Include non-public records"
-msgstr ""
+msgstr "Inclure les dossiers non publics"
 
 #: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:97
 msgid "Include deleted records"
