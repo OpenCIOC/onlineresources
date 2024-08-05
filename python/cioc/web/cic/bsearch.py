@@ -233,7 +233,15 @@ class LayoutSearch:
             if cic_user and not cic_user.LimitedView and dboptions.UseCIC:
                 icon = '<span class="glyphicon glyphicon-print" aria-hidden="true"></span> '
                 search_menu_items.append(
-                    (makeLink("printlist.asp"), icon + _("Print Records"))
+                    (makeLink("printlist"), icon + _("Print Records"))
+                )
+                
+            if cic_user and viewdata.CustomReportTool:
+                icon = (
+                    '<span class="fa icon-book-open" aria-hidden="true"></span> '
+                )
+                search_menu_items.append(
+                    (makeLink("customreport"), icon + _("Custom Report Tool"))
                 )
 
             if dboptions.UseCIC and (

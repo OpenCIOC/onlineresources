@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CiocWeb 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-07-29 20:22-0400\n"
+"POT-Creation-Date: 2024-08-04 17:14-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -181,7 +181,7 @@ msgstr ""
 msgid "Locked Account in your CIOC database"
 msgstr ""
 
-#: ../python/cioc/core/template.py:768 ../python/cioc/web/cic/bsearch.py:487
+#: ../python/cioc/core/template.py:768 ../python/cioc/web/cic/bsearch.py:495
 #: ../python/cioc/web/vol/bsearch.py:416
 msgid "Main Menu"
 msgstr ""
@@ -195,7 +195,7 @@ msgstr ""
 #: ../python/cioc/web/admin/templates/naics/edit.mak:45
 #: ../python/cioc/web/admin/templates/socialmedia/edit.mak:44
 #: ../python/cioc/web/admin/templates/thesaurus/edit.mak:64
-#: ../python/cioc/web/cic/bsearch.py:545
+#: ../python/cioc/web/cic/bsearch.py:553
 #: ../python/cioc/web/cic/templates/bsearch.mak:213
 #: ../python/cioc/web/cic/templates/csearch_form.mak:46
 #: ../python/cioc/web/cic/templates/csearch_form.mak:247
@@ -258,8 +258,8 @@ msgstr ""
 msgid "Volunteer Menu"
 msgstr ""
 
-#: ../python/cioc/core/template.py:866 ../python/cioc/web/cic/bsearch.py:303
-#: ../python/cioc/web/cic/bsearch.py:309 ../python/cioc/web/vol/bsearch.py:310
+#: ../python/cioc/core/template.py:866 ../python/cioc/web/cic/bsearch.py:311
+#: ../python/cioc/web/cic/bsearch.py:317 ../python/cioc/web/vol/bsearch.py:310
 #: ../python/cioc/web/vol/bsearch.py:316
 msgid "Setup"
 msgstr ""
@@ -288,7 +288,7 @@ msgstr ""
 msgid "Reminders"
 msgstr ""
 
-#: ../python/cioc/core/template.py:971 ../python/cioc/web/cic/bsearch.py:320
+#: ../python/cioc/core/template.py:971 ../python/cioc/web/cic/bsearch.py:328
 #: ../python/cioc/web/vol/bsearch.py:327
 #: ../python/cioc/web/vol/templates/bsearch.mak:84
 msgid "Logout"
@@ -2135,7 +2135,7 @@ msgstr ""
 
 #: ../python/cioc/web/admin/templates/sharingprofile/records.mak:87
 #: ../python/cioc/web/admin/templates/views/edit.mak:904
-#: ../python/cioc/web/admin/vacancy.py:60 ../python/cioc/web/cic/bsearch.py:601
+#: ../python/cioc/web/admin/vacancy.py:60 ../python/cioc/web/cic/bsearch.py:609
 #: ../python/cioc/web/cic/templates/bsearch.mak:354
 #: ../python/cioc/web/cic/templates/reminders/edit_form.mak:67
 #: ../python/cioc/web/templates/displayoptions.mak:47
@@ -6692,7 +6692,7 @@ msgid "Hide Past Due value should not be set in Views used for updating records.
 msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:322
-#: ../python/cioc/web/cic/bsearch.py:263 ../python/cioc/web/cic/bsearch.py:268
+#: ../python/cioc/web/cic/bsearch.py:271 ../python/cioc/web/cic/bsearch.py:276
 #: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:39
 msgid "Publications"
 msgstr ""
@@ -7260,7 +7260,7 @@ msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:909
 #: ../python/cioc/web/admin/templates/views/edit.mak:1154
-#: ../python/cioc/web/cic/bsearch.py:607
+#: ../python/cioc/web/cic/bsearch.py:615
 #: ../python/cioc/web/cic/templates/bsearch.mak:291
 msgid "Organizations with Volunteer Opportunities"
 msgstr ""
@@ -7443,7 +7443,7 @@ msgid "Topic Searches (New Window)"
 msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1089
-#: ../python/cioc/web/cic/bsearch.py:543
+#: ../python/cioc/web/cic/bsearch.py:551
 msgid "Quick Search"
 msgstr ""
 
@@ -7504,7 +7504,7 @@ msgid "Include the following Checklist search types on the Advanced Search page:
 msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:1212
-#: ../python/cioc/web/cic/bsearch.py:509 ../python/cioc/web/cic/csearch.py:47
+#: ../python/cioc/web/cic/bsearch.py:517 ../python/cioc/web/cic/csearch.py:47
 msgid "Child Care Search"
 msgstr ""
 
@@ -7896,7 +7896,7 @@ msgstr ""
 msgid "View/Edit Topic Search"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:114 ../python/cioc/web/cic/bsearch.py:507
+#: ../python/cioc/web/cic/bsearch.py:114 ../python/cioc/web/cic/bsearch.py:515
 msgid "Browse by Subject"
 msgstr ""
 
@@ -7921,100 +7921,104 @@ msgid "Print Records"
 msgstr ""
 
 #: ../python/cioc/web/cic/bsearch.py:244
+msgid "Custom Report Tool"
+msgstr ""
+
+#: ../python/cioc/web/cic/bsearch.py:252
 msgid "Export"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:251
+#: ../python/cioc/web/cic/bsearch.py:259
 msgid "Import"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:274
+#: ../python/cioc/web/cic/bsearch.py:282
 #: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:96
 #: ../python/cioc/web/vol/bsearch.py:263
 msgid "Deleted Records"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:280 ../python/cioc/web/vol/bsearch.py:287
+#: ../python/cioc/web/cic/bsearch.py:288 ../python/cioc/web/vol/bsearch.py:287
 msgid "Statistics"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:290 ../python/cioc/web/vol/bsearch.py:297
+#: ../python/cioc/web/cic/bsearch.py:298 ../python/cioc/web/vol/bsearch.py:297
 msgid "Manage Users"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:298 ../python/cioc/web/vol/bsearch.py:305
+#: ../python/cioc/web/cic/bsearch.py:306 ../python/cioc/web/vol/bsearch.py:305
 msgid "Download"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:314 ../python/cioc/web/vol/bsearch.py:321
+#: ../python/cioc/web/cic/bsearch.py:322 ../python/cioc/web/vol/bsearch.py:321
 msgid "My Account"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:338 ../python/cioc/web/cic/bsearch.py:615
+#: ../python/cioc/web/cic/bsearch.py:346 ../python/cioc/web/cic/bsearch.py:623
 #: ../python/cioc/web/vol/bsearch.py:344 ../python/cioc/web/vol/bsearch.py:472
 msgid "Change View"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:343 ../python/cioc/web/vol/bsearch.py:349
+#: ../python/cioc/web/cic/bsearch.py:351 ../python/cioc/web/vol/bsearch.py:349
 msgid "Change View:"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:485
+#: ../python/cioc/web/cic/bsearch.py:493
 msgid "Toggle navigation"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:496
+#: ../python/cioc/web/cic/bsearch.py:504
 msgid "Browse for a Business / Organization using the "
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:499
+#: ../python/cioc/web/cic/bsearch.py:507
 msgid "North American Industry Classification System (NAICS)"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:502
+#: ../python/cioc/web/cic/bsearch.py:510
 msgid "Industry Search"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:503
+#: ../python/cioc/web/cic/bsearch.py:511
 msgid "Browse"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:511
+#: ../python/cioc/web/cic/bsearch.py:519
 msgid "Search for Child Care Resources"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:535
+#: ../python/cioc/web/cic/bsearch.py:543
 msgid "Search "
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:559
+#: ../python/cioc/web/cic/bsearch.py:567
 msgid "New Search"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:562 ../python/cioc/web/vol/bsearch.py:451
+#: ../python/cioc/web/cic/bsearch.py:570 ../python/cioc/web/vol/bsearch.py:451
 msgid "Explore"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:569
+#: ../python/cioc/web/cic/bsearch.py:577
 #: ../python/cioc/web/cic/templates/bsearch.mak:240
 msgid "Service Categories"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:599
+#: ../python/cioc/web/cic/bsearch.py:607
 msgid "Search all in this Category"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:605
+#: ../python/cioc/web/cic/bsearch.py:613
 #: ../python/cioc/web/cic/templates/record.mak:120
 #: ../python/cioc/web/gbl/templates/shortcodes.mak:85
 msgid "Volunteer Opportunities"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:768
+#: ../python/cioc/web/cic/bsearch.py:776
 msgid "Organization / Program Search"
 msgstr ""
 
-#: ../python/cioc/web/cic/bsearch.py:772
+#: ../python/cioc/web/cic/bsearch.py:780
 #, python-format
 msgid "Within %skm"
 msgstr ""
@@ -8855,13 +8859,13 @@ msgid "None selected"
 msgstr ""
 
 #: ../python/cioc/web/cic/templates/customreport/format.mak:38
-#: ../python/cioc/web/cic/templates/customreport/index.mak:45
+#: ../python/cioc/web/cic/templates/customreport/index.mak:44
 #: ../python/cioc/web/cic/templates/customreport/topics.mak:42
 msgid "Located in the chosen communities: "
 msgstr ""
 
 #: ../python/cioc/web/cic/templates/customreport/format.mak:40
-#: ../python/cioc/web/cic/templates/customreport/index.mak:48
+#: ../python/cioc/web/cic/templates/customreport/index.mak:47
 #: ../python/cioc/web/cic/templates/customreport/topics.mak:44
 msgid "Serving the chosen communities: "
 msgstr ""
@@ -8944,10 +8948,14 @@ msgstr ""
 msgid "Choose one or more Communities"
 msgstr ""
 
-#: ../python/cioc/web/cic/templates/customreport/index.mak:65
+#: ../python/cioc/web/cic/templates/customreport/index.mak:63
 #: ../python/cioc/web/cic/templates/customreport/index.mak:83
 #, python-format
 msgid "All of <span class=\"demi-bold\">%s</span>"
+msgstr ""
+
+#: ../python/cioc/web/cic/templates/customreport/index.mak:71
+msgid "Please choose one or more communities to proceed."
 msgstr ""
 
 #: ../python/cioc/web/cic/templates/customreport/index.mak:74

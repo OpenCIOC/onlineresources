@@ -90,7 +90,7 @@ ${profile.Header or "" |n}
 %endif
 
 %if include_toc:
-<h1>${_('Contents')}</h1>
+<h1 class="custom-report-toc-heading">${_('Contents')}</h1>
 <ol class="toc-list" role="list">
 %for (group_order, group_name, group_id), headings in heading_groups:
     %if group_id:
@@ -261,7 +261,7 @@ table_tag = Markup(f'<table class="{profile.TableClass}">' if profile.TableClass
 
 %if include_index:
 <div style="page-break-before: always"></div>
-<h1>${_('Index by Name')}</h1>
+<h1 class="custom-report-index-heading">${_('Index by Name')}</h1>
 <ol class="toc-list" role="list">
 %for name in org_names:
     <li>

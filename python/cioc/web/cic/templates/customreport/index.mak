@@ -40,14 +40,12 @@ ${report_instructions.CustomReportInstructions|n}
     <input type="hidden" name="CMType" value="L" />
         %endif
     %else:
-
     <div class="radio">
         ${renderer.radio("CMType", value='L', label=_('Located in the chosen communities: '), id='CMType_L', checked=not report_instructions.SrchCommunityDefault)}
     </div>
     <div class="radio">
         ${renderer.radio("CMType", value='S', label=_('Serving the chosen communities: '), id='CMType_S', checked=report_instructions.SrchCommunityDefault)}
     </div>
-
     %endif
 
     <div id="parent-list" class="panel-group" role="tablist" aria-multiselectable="true">
@@ -70,9 +68,11 @@ ${report_instructions.CustomReportInstructions|n}
         %endfor
     </div>
 
+    <p class="AlertBubble clear-line-above" id="proceed-community-alert">${_('Please choose one or more communities to proceed.')}</p>
+
     <div class="clear-line-above">
         <input type="reset" class="btn btn-info" value="${_('Reset Selections')}">
-        <input type="submit" class="btn btn-info" value="${_('Next Step: ') + _('Choose Topics')} >>">
+        <input type="submit" ${"disabled" if report_communities else ""}  class="btn btn-info" id="submit-button" value="${_('Next Step: ') + _('Choose Topics')} >>">
     </div>
 </form>
 
@@ -103,13 +103,31 @@ ${report_instructions.CustomReportInstructions|n}
             }
 
         };
+
         $(window).on("pageshow", function() {
-                $('#parent-list input:checkbox:checked').each(function() {
-                        on_check_changed.call(this, 0);
-                        $(this).parents('.panel-collapse').collapse('show');
-                    });
+            $('#parent-list input:checkbox:checked').each(function() {
+                    on_check_changed.call(this, 0);
+                    $(this).parents('.panel-collapse').collapse('show');
+            });
+            $('#submit-button').prop('disabled', !$('#parent-list input:checkbox:checked').size());
+			if ($('#parent-list input:checkbox:checked').size() == 0) {
+				$('#proceed-community-alert').show();
+			} else {
+				$('#proceed-community-alert').hide();
+			}
         });
-        $('#parent-list').on('change', 'input', function() { on_check_changed.call(this, 'fast'); });
+
+        $('#parent-list').on('change', 'input', function () {
+            on_check_changed.call(this, 'fast');
+			$('#submit-button').prop('disabled', !$('#parent-list input:checkbox:checked').size());
+			if ($('#parent-list input:checkbox:checked').size() == 0) {
+				$('#proceed-community-alert').show();
+			} else {
+				$('#proceed-community-alert').hide();
+			}
+        });
+
+		$('#submit-button').prop('disabled', !$('#parent-list input:checkbox:checked').size());
     });
 </script>
 </%def>
