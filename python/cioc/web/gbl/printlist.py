@@ -49,6 +49,7 @@ from cioc.core import listformat, viewbase, template, validators, constants as c
 from cioc.core.i18n import gettext as _
 from cioc.core.format import textToHTML
 from cioc.core.webobfiletool import FileIterator
+from cioc.core.security import sanitize_html_description
 
 default_template = "cioc.web.gbl:templates/printlist/index.mak"
 
@@ -364,6 +365,11 @@ class PrintListBase(viewbase.ViewBase):
             find_and_replace,
         )
         records_iterator = self.extra_records_processing(records_iterator)
+        message = None
+        if request.user:
+            message = model_state.value("Msg", profile.DefaultMsg)
+
+        report_title = model_state.value("ReportTitle", profile.PageTitle)
 
         namespace = self._create_response_namespace(
             _(profile.PageTitle, request),
@@ -372,7 +378,10 @@ class PrintListBase(viewbase.ViewBase):
                 "profile": profile,
                 "fields": fields,
                 "grouped_records": records_iterator,
-                "message": model_state.value("Msg"),
+                "message": Markup(sanitize_html_description(message))
+                if message
+                else None,
+                "report_title": report_title,
                 "_stream_result": True,
                 **extra_namespace,
             },

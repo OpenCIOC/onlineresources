@@ -40,7 +40,7 @@
 		<div class="panel-body no-padding">
 			<table class="BasicBorder cell-padding-4 full-width form-table inset-table responsive-table">
 				<tr>
-					<td class="field-label-cell">${renderer.label("Msg", _('Report Title'))}</td>
+					<td class="field-label-cell">${renderer.label("ReportTitle", _('Report Title'))}</td>
 				</tr>
 				<tr>
 					<td class="field-data-cell">
