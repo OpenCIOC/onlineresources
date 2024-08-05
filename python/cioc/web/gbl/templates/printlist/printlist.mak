@@ -27,7 +27,7 @@ from markupsafe import Markup
 
 <html>
     <head>
-	<title>${profile.PageTitle}</title>
+	<title>${report_title}</title>
 
 <style>
 @media print {
@@ -89,6 +89,9 @@ from markupsafe import Markup
     </head>
     <body bgcolor="#FFFFFF" text="#000000">
 ${profile.Header or "" |n}
+%if report_title:
+<h1 class="report-title-heading">${report_title}</h1>
+%endif
 %if message and not profile.MsgBeforeRecord:
 <p>${message}</p>
 %endif

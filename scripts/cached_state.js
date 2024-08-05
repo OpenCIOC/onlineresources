@@ -94,14 +94,17 @@ window['init_cached_state'] = function(formselector) {
 	onbeforerestorevalues_fns = [];
 
 	var save_cache_values = function() {
+		var cache_dom = document.getElementById('cache_form_values');
+		if (! cache_dom) {
+			return;
+		}
 		var values = get_form_values(formselector);
-		var cache= {form_values :values};
+		var cache = {form_values :values};
 
 		$.each(onbeforeunload_fns, function(index, item) {
 			item(cache);
 		});
 
-		var cache_dom = document.getElementById('cache_form_values');
 		cache_dom.value = JSON.stringify(cache);
 
 	};
