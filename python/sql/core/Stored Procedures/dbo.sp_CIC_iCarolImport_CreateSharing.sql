@@ -251,7 +251,7 @@ SELECT CAST((SELECT (
 			CASE WHEN a.ExcludeFromWebsite = 'Yes' THEN 'Yes' WHEN a.ExcludeFromWebsite = 'No' THEN 'No' ELSE NULL END AS [@V],
 			CASE WHEN f.ExcludeFromWebsite = 'Yes' THEN 'Oui' WHEN f.ExcludeFromWebsite = 'No' THEN 'Non' ELSE NULL END AS [@VF]
 			FOR XML PATH ('EXTRA'), TYPE),
-		(SELECT 'ICAROLMADEINACTIVEON' AS [@FLD], CASE WHEN a.AgencyStatus = 'Inactive' THEN REPLACE(a.MadeInactiveOn, ' ', 'T') ELSE NULL END AS [@V] FOR XML PATH('EXTRA_DATE'), TYPE),
+		(SELECT 'ICAROLMADEINACTIVEON' AS [@FLD], CASE WHEN a.AgencyStatus = 'Inactive' THEN cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(a.MadeInactiveOn) ELSE NULL END AS [@V] FOR XML PATH('EXTRA_DATE'), TYPE),
 		(SELECT 'ICAROLAGENCYSTATUS' AS [@FLD], CASE WHEN a.AgencyStatus = 'Active' THEN 'ACTIVE' WHEN a.AgencyStatus = 'Active, but do not refer' THEN 'DO_NOT_REFER' WHEN a.AgencyStatus = 'Inactive' THEN 'INACTIVE' ELSE a.AgencyStatus END AS [@CD] FOR XML PATH('EXTRA_DROPDOWN'), TYPE),  
 		(SELECT
 			 (SELECT STUFF((SELECT ' ; ' + NumberValue FROM (
@@ -320,17 +320,17 @@ SELECT CAST((SELECT (
 		(SELECT
 			(SELECT
 				a.InternalMemoGUID AS [@GID],
-				REPLACE(COALESCE(a.UpdatedOn, cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(GETDATE())), ' ', 'T') AS [@CREATED],
+				cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(COALESCE(a.UpdatedOn, GETDATE())) AS [@CREATED],
 				'E' AS [@LANG],
-				REPLACE(COALESCE(a.UpdatedOn, cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(GETDATE())), ' ', 'T') AS [@MOD],
+				cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(COALESCE(a.UpdatedOn, GETDATE())) AS [@MOD],
 				a.InternalNotes AS [@V]
 				WHERE a.InternalNotes IS NOT NULL
 			 FOR XML PATH('N'),TYPE ),
 			(SELECT
 				f.InternalMemoGUID AS [@GID],
-				REPLACE(COALESCE(f.UpdatedOn, cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(GETDATE())), ' ', 'T') AS [@CREATED],
+				cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(COALESCE(f.UpdatedOn, GETDATE())) AS [@CREATED],
 				'F' AS [@LANG],
-				REPLACE(COALESCE(f.UpdatedOn, cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(GETDATE())), ' ', 'T') AS [@MOD],
+				cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(COALESCE(f.UpdatedOn, GETDATE())) AS [@MOD],
 				f.InternalNotes AS [@V]
 				WHERE f.InternalNotes IS NOT NULL
 			 FOR XML PATH('N'),TYPE )
@@ -656,9 +656,9 @@ SELECT CAST((SELECT (
 				) AS i ORDER BY Preference FOR XML PATH(''),TYPE).value('.', 'nvarchar(max)'), 1, 3, '')	
 			 ) AS [@VF]
 		  FOR XML PATH('TOLL_FREE_PHONE'), TYPE),
-		(SELECT REPLACE(a.LastVerifiedOn, ' ', 'T') AS [@V], REPLACE(f.LastVerifiedOn, ' ', 'T') AS [@VF] FOR XML PATH('UPDATE_DATE'), TYPE),
-		(SELECT cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(DATEADD(year, 1, REPLACE(a.LastVerifiedOn, ' ', 'T'))) AS [@V],
-			cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(DATEADD(YEAR, 1, REPLACE(f.LastVerifiedOn, ' ', 'T'))) AS [@VF] FOR XML PATH('UPDATE_SCHEDULE'), TYPE),
+		(SELECT cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(a.LastVerifiedOn) AS [@V], cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(f.LastVerifiedOn) AS [@VF] FOR XML PATH('UPDATE_DATE'), TYPE),
+		(SELECT cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(DATEADD(year, 1, a.LastVerifiedOn)) AS [@V],
+			cioc_shared.dbo.fn_SHR_GBL_XML_DateFormat(DATEADD(YEAR, 1, f.LastVerifiedOn)) AS [@VF] FOR XML PATH('UPDATE_SCHEDULE'), TYPE),
 		(SELECT NULLIF(a.LastVerificationApprovedBy, 'Unspecified Unspecified') AS [@V], NULLIF(a.LastVerificationApprovedBy, 'Unspecified Unspecified') AS [@VF] FOR XML PATH('UPDATED_BY'), TYPE),
 		(SELECT REPLACE(REPLACE(a.WebsiteAddress, 'https://', ''), 'http://', '') AS [@V], REPLACE(REPLACE(a.WebsiteAddress, 'https://', ''), 'http://', '') AS [@VF] FOR XML PATH('WWW_ADDRESS'), TYPE)
 	
