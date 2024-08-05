@@ -367,7 +367,7 @@ class PrintListBase(viewbase.ViewBase):
         records_iterator = self.extra_records_processing(records_iterator)
         message = None
         if request.user:
-            message = model_state.value("Msg", profile.DefaultMsg)
+            message = model_state.value("Msg")
 
         report_title = model_state.value("ReportTitle", profile.PageTitle)
 
