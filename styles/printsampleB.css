@@ -14,26 +14,61 @@
 // limitations under the License.
 // ========================================================================================= */
 
-H1 {
-	padding-top: 8px;
-	padding-bottom: 4px;
+h1 {
+	margin-top: 1.2em;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 18px;
 	font-weight: bolder;
 	color: #333333;
-	border-top-style: double;
-	border-top-width: medium;
-	border-top-color: #990000;
-	border-bottom-style: none;
-	border-right-style: none;
-	border-left-style: none;
+	border-top: double medium #990000;
+	border-right: none;
+	border-bottom: double medium #990000;
+	border-left: none;
 }
 
-H2 {
+h1.printlist-heading-group-name, h1.custom-report-toc-heading, h1.custom-report-index-heading {
+	margin-top: 1.2em;
+	margin-bottom: 1em;
+	text-align: center;
+	padding: 0.3em;
+	font-family: Arial, Helvetica, sans-serif;
+	font-variant: small-caps;
+	font-size: 22px;
+	font-weight: bolder;
+	font-style: oblique;
+	color: #000000;
+	background-color: #ffeeee;
+	border-top: solid medium #990000;
+	border-bottom: solid medium #990000;
+	border-right: none;
+	border-left: none;
+}
+
+h2 {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 16px;
 	font-style: normal;
 	font-weight: bolder;
+}
+
+h2.printlist-heading-name {
+	margin-top: 1.2em;
+	margin-bottom: 1em;
+	text-align: center;
+	padding: 0.3em;
+	font-family: Arial, Helvetica, sans-serif;
+	font-variant: small-caps;
+	font-size: 18px;
+	font-weight: bolder;
+	font-style: oblique;
+	color: #000000;
+	background-color: #ffeeee;
+	border-top: solid medium #990000;
+	border-bottom: solid medium #990000;
+	border-right: none;
+	border-left: none;
 }
 
 H3,H4,H5 {

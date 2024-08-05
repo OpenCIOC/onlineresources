@@ -400,12 +400,17 @@
     <Content Include="python\cioc\web\gbl\emaillist.py" />
     <Content Include="python\cioc\web\gbl\go.py" />
     <Content Include="python\cioc\web\gbl\icons.py" />
+    <Content Include="python\cioc\web\gbl\printlist.py" />
     <Content Include="python\cioc\web\gbl\schedules.py" />
     <Content Include="python\cioc\web\gbl\pages.py" />
     <Content Include="python\cioc\web\gbl\shortcodes.py" />
     <Content Include="python\cioc\web\gbl\templates\emaillist.mak" />
     <Content Include="python\cioc\web\gbl\templates\iconlist.mak" />
     <Content Include="python\cioc\web\gbl\templates\articles.mak" />
+    <Content Include="python\cioc\web\gbl\templates\printlist\index.mak" />
+    <Content Include="python\cioc\web\gbl\templates\printlist\message.mak" />
+    <Content Include="python\cioc\web\gbl\templates\printlist\printlist.mak" />
+    <Content Include="python\cioc\web\gbl\templates\printlist\printoptions.mak" />
     <Content Include="python\cioc\web\gbl\templates\schedules.mak" />
     <Content Include="python\cioc\web\gbl\templates\pages.mak" />
     <Content Include="python\cioc\web\gbl\templates\shortcodes.mak" />
@@ -415,6 +420,7 @@
     <Content Include="python\cioc\web\jsonfeeds\agegroups.py" />
     <Content Include="python\cioc\web\jsonfeeds\quicklist.py" />
     <Content Include="python\cioc\web\jsonfeeds\taxcodes.py" />
+    <Content Include="python\cioc\web\jsonfeeds\updatelist.py" />
     <Content Include="python\cioc\web\jsonfeeds\volfeed.py" />
     <Content Include="python\cioc\web\jsonfeeds\vacancy.py" />
     <Content Include="python\cioc\web\rpc\browseoppbyorg.py" />
@@ -1280,10 +1286,6 @@
     <Content Include="python\cioc\web\import_\__init__.py" />
     <Content Include="python\cioc\web\jsonfeeds\users.py" />
     <Content Include="python\cioc\web\jsonfeeds\__init__.py" />
-    <Content Include="python\cioc\web\offline\auth.py" />
-    <Content Include="python\cioc\web\offline\pull.py" />
-    <Content Include="python\cioc\web\offline\register.py" />
-    <Content Include="python\cioc\web\offline\__init__.py" />
     <Content Include="python\cioc\web\recentsearch.py" />
     <Content Include="python\cioc\web\rpc\oppdetails.py" />
     <Content Include="python\cioc\web\rpc\orgdetails.py" />
@@ -2036,8 +2038,6 @@
     <Content Include="python\cioc\locale\cioc.pot" />
     <Content Include="python\cioc\locale\fr_CA\LC_MESSAGES\cioc.mo" />
     <Content Include="python\cioc\locale\fr_CA\LC_MESSAGES\cioc.po" />
-    <Content Include="python\cioc\locale\fr_CA\LC_MESSAGES\fr_to_translate\cioc.csv" />
-    <Content Include="python\cioc\locale\fr_CA\LC_MESSAGES\fr_to_translate\cioc.po" />
     <Content Include="python\development.ini" />
     <Content Include="python\MANIFEST.in" />
     <Content Include="python\production.ini" />
@@ -2150,6 +2150,8 @@
   <ItemGroup>
     <Folder Include="python\cioc\locale\fr_CA\fr_from_translate\" />
     <Folder Include="python\cioc\locale\fr_CA\fr_to_translate\" />
+    <Folder Include="python\cioc\locale\fr_CA\LC_MESSAGES\fr_to_translate\" />
+    <Folder Include="python\cioc\web\offline\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
