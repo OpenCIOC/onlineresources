@@ -188,13 +188,13 @@ def process_field_contents(records, fields, find_and_replace):
 
 
 class PrintListBase(viewbase.ViewBase):
-    def __init__(self, request):
-        super().__init__(request, True)
-
     def get_validator(self):
         raise NotImplementedError()
 
     def __call__(self):
+        if not self.request.user and not self.request.viewdata.dom.DefaultPrintProfile:
+            return self._security_failure()
+
         if self.request.method == "POST":
             return self.post()
 
