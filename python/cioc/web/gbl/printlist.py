@@ -639,7 +639,7 @@ class PrintRecordListCIC(PrintListBase):
                 + ")))"
             )
 
-        ghtype = model_state.value("GHType")
+        ghtype = model_state.value("GHType") or "F"
         ghid = model_state.value("GHID")
         if ghtype == "A":
             if ghpbid:
@@ -750,7 +750,7 @@ class PrintRecordListCIC(PrintListBase):
         sortby = model_state.value("SortBy")
         ghpbid = self.get_ghpbid()
         ghid = model_state.value("GHID")
-        ghtype = model_state.value("GHType")
+        ghtype = model_state.value("GHType") or "F"
         include_toc = model_state.value("IncludeTOC")
         heading_toc = include_toc and sortby == "H" and ghpbid and ghtype != "N"
         name_toc = include_toc and sortby != "H"
@@ -919,7 +919,7 @@ class PrintRecordListCIC(PrintListBase):
         sortby_sql = self.base_sort
         ghpbid = self.get_ghpbid()
         ghid = model_state.value("GHID")
-        ghtype = model_state.value("GHType")
+        ghtype = model_state.value("GHType") or "F"
         if sortby == "H" and ghpbid is not None and ghtype != "N":
             arguments.insert(0, ghpbid)
             sortby_sql = (
