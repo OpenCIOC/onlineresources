@@ -88,6 +88,7 @@ class PrintListSchemaBase(validators.RootSchema):
     Picked = validators.Bool()
     ProfileID = validators.IDValidator(if_invalid=None)
     Msg = validators.String()
+    ReportTitle = validators.String(max=255, if_invalid=None)
 
     IncludeDeleted = validators.Bool()
     IncludeNonPublic = validators.Bool()

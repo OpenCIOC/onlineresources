@@ -81,7 +81,7 @@ from cioc.core.modelstate import convert_options
 
 <h2>${_('Step 3: ') + _('Report Settings')}</h2>
 
-<h3>${_('Report Title: ')}</h3>
+<h3>${_('Report Title') + _(': ')}</h3>
 ${renderer.text('ReportTitle', maxlength=255, class_='form-control')}
 
 %if headings and not pubs:

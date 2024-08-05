@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CiocWeb 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-04 17:14-0400\n"
+"POT-Creation-Date: 2024-08-05 16:28-0400\n"
 "PO-Revision-Date: 2016-09-12 23:26-0400\n"
 "Last-Translator: Chris Lambacher <chris@kclsoftware.com>\n"
 "Language: fr_CA\n"
@@ -718,7 +718,7 @@ msgstr "ID d'enquête non valide"
 #: ../python/cioc/web/cic/taxonomy_activationrec.py:209
 #: ../python/cioc/web/cic/updatepubs.py:163
 #: ../python/cioc/web/gbl/emaillist.py:285
-#: ../python/cioc/web/gbl/printlist.py:487
+#: ../python/cioc/web/gbl/printlist.py:502
 #: ../python/cioc/web/import_/community.py:119
 #: ../python/cioc/web/import_/upload.py:144
 #: ../python/cioc/web/stats/auto_datamgmt.py:73
@@ -1735,8 +1735,8 @@ msgstr "Demande de modification envoyée."
 #: ../python/cioc/web/admin/notices.py:212
 #: ../python/cioc/web/admin/notices.py:277
 #: ../python/cioc/web/admin/templates/community/edit.mak:261
-#: ../python/cioc/web/admin/templates/thesaurus/edit.mak:275
-#: ../python/cioc/web/admin/templates/views/edit.mak:1602
+#: ../python/cioc/web/admin/templates/thesaurus/edit.mak:276
+#: ../python/cioc/web/admin/templates/views/edit.mak:1603
 #: ../python/cioc/web/cic/templates/record.mak:404
 #: ../python/cioc/web/cic/templates/reminders/edit.mak:42
 #: ../python/cioc/web/cic/templates/reminders/index.mak:53
@@ -2097,6 +2097,7 @@ msgstr ""
 #: ../python/cioc/web/admin/templates/views/edit.mak:1429
 #: ../python/cioc/web/admin/templates/views/edit.mak:1445
 #: ../python/cioc/web/admin/templates/views/edit.mak:1462
+#: ../python/cioc/web/cic/templates/customreport/format.mak:84
 #: ../python/cioc/web/cic/templates/record.mak:400
 #: ../python/cioc/web/cic/templates/topicsearch/searchform.mak:37
 #: ../python/cioc/web/templates/master.mak:90
@@ -3430,7 +3431,7 @@ msgid "Reviewed for CIOC Release:"
 msgstr "Révision pour la version de CIOC :"
 
 #: ../python/cioc/web/admin/templates/pagehelp.mak:30
-#: ../python/cioc/web/gbl/printlist.py:248
+#: ../python/cioc/web/gbl/printlist.py:244
 msgid "Close Window"
 msgstr "Fermer la fenêtre"
 
@@ -3907,7 +3908,7 @@ msgstr "Action"
 #: ../python/cioc/web/admin/templates/interests/index.mak:60
 #: ../python/cioc/web/admin/templates/listvalues/index.mak:125
 #: ../python/cioc/web/admin/templates/views/edit.mak:760
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:84
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:101
 #: ../python/cioc/web/stats/auto_datamgmt.py:91
 #: ../python/cioc/web/templates/master.mak:100
 msgid "Last Modified"
@@ -4962,7 +4963,6 @@ msgid "Classication"
 msgstr "Classification"
 
 #: ../python/cioc/web/admin/templates/naics/edit.mak:96
-#: ../python/cioc/web/gbl/templates/printlist/message.mak:40
 msgid "HTML is allowed."
 msgstr "HTML est permis."
 
@@ -5785,7 +5785,7 @@ msgid "Available for the following records:"
 msgstr "Disponible pour les dossiers suivants :"
 
 #: ../python/cioc/web/admin/templates/sharingprofile/records.mak:94
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:82
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:99
 #: ../python/cioc/web/templates/displayoptions.mak:88
 #: ../python/cioc/web/templates/displayoptions.mak:172
 msgid "Position Title"
@@ -7243,7 +7243,7 @@ msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:322
 #: ../python/cioc/web/cic/bsearch.py:271 ../python/cioc/web/cic/bsearch.py:276
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:39
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:45
 msgid "Publications"
 msgstr "Publications"
 
@@ -7468,8 +7468,8 @@ msgstr ""
 
 #: ../python/cioc/web/admin/templates/views/edit.mak:510
 #: ../python/cioc/web/admin/templates/views/edit.mak:511
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:66
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:81
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:74
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:98
 msgid "Organization / Program Name(s)"
 msgstr "Nom(s) d'organisme / programme"
 
@@ -8692,7 +8692,7 @@ msgid "Import"
 msgstr "Importation"
 
 #: ../python/cioc/web/cic/bsearch.py:282
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:96
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:113
 #: ../python/cioc/web/vol/bsearch.py:263
 msgid "Deleted Records"
 msgstr "Dossiers supprimés"
@@ -9067,7 +9067,6 @@ msgid "Previous"
 msgstr "Précédent"
 
 #: ../python/cioc/web/cic/record.py:509
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:111
 msgid "Next"
 msgstr "Suivant"
 
@@ -9674,7 +9673,8 @@ msgid "Report Settings"
 msgstr "Paramètre du rapport"
 
 #: ../python/cioc/web/cic/templates/customreport/format.mak:84
-msgid "Report Title: "
+#: ../python/cioc/web/gbl/templates/printlist/message.mak:43
+msgid "Report Title"
 msgstr "Titre du rapport"
 
 #: ../python/cioc/web/cic/templates/customreport/format.mak:88
@@ -10802,8 +10802,8 @@ msgid "Insert Current Description From Record"
 msgstr "Insérer la description courante du dossier"
 
 #: ../python/cioc/web/cic/templates/updatepubs/edit.mak:107
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:53
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:132
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:59
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:153
 msgid "General Headings"
 msgstr "En-têtes généraux"
 
@@ -10888,39 +10888,46 @@ msgstr "Page non trouvée"
 msgid "Index of Articles"
 msgstr "Index des articles"
 
-#: ../python/cioc/web/gbl/printlist.py:238
-#: ../python/cioc/web/gbl/printlist.py:297
-#: ../python/cioc/web/gbl/printlist.py:495
+#: ../python/cioc/web/gbl/printlist.py:234
+#: ../python/cioc/web/gbl/printlist.py:293
+#: ../python/cioc/web/gbl/printlist.py:510
 msgid "Print Record List"
 msgstr "Imprimer la liste des dossiers"
 
-#: ../python/cioc/web/gbl/printlist.py:265
+#: ../python/cioc/web/gbl/printlist.py:261
 #: ../python/cioc/web/jsonfeeds/vacancy.py:169
 msgid "Validation Error"
 msgstr "Erreur de validation"
 
-#: ../python/cioc/web/gbl/printlist.py:276
+#: ../python/cioc/web/gbl/printlist.py:272
 msgid "No Print Profile was chosen."
 msgstr "Aucun profil d'impression n'a été choisi."
 
-#: ../python/cioc/web/gbl/printlist.py:279
-#: ../python/cioc/web/gbl/printlist.py:358
+#: ../python/cioc/web/gbl/printlist.py:275
+#: ../python/cioc/web/gbl/printlist.py:354
 msgid "No records were chosen to print."
 msgstr "Aucun enregistrement n'a été choisi pour être imprimé."
 
-#: ../python/cioc/web/gbl/printlist.py:294
+#: ../python/cioc/web/gbl/printlist.py:290
 msgid "Could not find print profile."
 msgstr ""
 
-#: ../python/cioc/web/gbl/printlist.py:322
+#: ../python/cioc/web/gbl/printlist.py:318
 msgid "No Print Profile was chosen"
 msgstr "Aucun profil d'impression n'a été choisi"
 
-#: ../python/cioc/web/gbl/printlist.py:394
+#: ../python/cioc/web/gbl/printlist.py:390
+#: ../python/cioc/web/gbl/printlist.py:410
 msgid "Report to large. Please reduce the number of records in the report."
 msgstr ""
 
-#: ../python/cioc/web/gbl/printlist.py:501
+#: ../python/cioc/web/gbl/printlist.py:416
+msgid ""
+"Unable to generate report, please reduce the number of records and try "
+"again."
+msgstr ""
+
+#: ../python/cioc/web/gbl/printlist.py:516
 msgid "No records were chosen to prinnt"
 msgstr "Aucun enregistrement n'a été choisi pour l'impression"
 
@@ -11139,139 +11146,145 @@ msgstr "Activer les icônes FontAwesome"
 msgid "Generated Short Code"
 msgstr "Code court généré"
 
-#: ../python/cioc/web/gbl/templates/printlist/message.mak:37
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:31
+#: ../python/cioc/web/gbl/templates/printlist/message.mak:38
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:33
 msgid "Use this form to customize print options"
 msgstr "Utilisez ce formulaire pour personnaliser les paramètres d'impression"
 
-#: ../python/cioc/web/gbl/templates/printlist/message.mak:39
+#: ../python/cioc/web/gbl/templates/printlist/message.mak:51
 msgid "Report Message"
 msgstr "Message à inclure dans le rapport"
 
-#: ../python/cioc/web/gbl/templates/printlist/message.mak:44
-msgid "Next (New Window)"
-msgstr "Suivant (Nouvelle fenêtre)"
+#: ../python/cioc/web/gbl/templates/printlist/message.mak:61
+msgid " Next (New Window)"
+msgstr ""
 
-#: ../python/cioc/web/gbl/templates/printlist/printlist.mak:93
+#: ../python/cioc/web/gbl/templates/printlist/printlist.mak:97
 msgid "Contents"
 msgstr "Table des matières"
 
-#: ../python/cioc/web/gbl/templates/printlist/printlist.mak:264
+#: ../python/cioc/web/gbl/templates/printlist/printlist.mak:273
 msgid "Index by Name"
 msgstr "Index par nom"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:33
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:38
 msgid "Profile"
 msgstr "Profil"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:42
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:56
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:48
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:62
 msgid "Further limit your selection using:"
 msgstr "Limitez davantage votre sélection en utilisant :"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:63
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:80
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:69
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:96
 msgid "Sort By"
 msgstr "Trier par"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:65
-msgid "When sorted by heading, results will also be grouped by heading"
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:71
+msgid "Records sorted by Heading may appear under multiple Heading titles"
 msgstr ""
-"Lorsqu'ils sont triés par titre, les résultats seront également regroupés"
-" par titre"
+"Les dossiers triés par en-tête peuvent apparaître sous plusieurs titres d"
+"'en-tête"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:67
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:77
 msgid "Heading"
 msgstr "En-tête"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:71
-msgid "Index and Table of Contents"
-msgstr "Index et Table des matières"
-
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:73
-msgid "The field used in the table of contents is controlled by the sort order."
-msgstr ""
-"Le champ utilisé dans la table des matières est déterminé par l'ordre de "
-"tri."
-
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:74
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:81
 msgid "Include Table of Contents"
 msgstr "Inclure la table des matières"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:75
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:86
+msgid "Record Index"
+msgstr "Index des dossiers"
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:88
+msgid ""
+"An index by record name can be included at the end of the document "
+"<strong>only</strong> when records are sorted by name."
+msgstr ""
+"Un index par nom de dossier peut être inclus à la fin du document "
+"<strong>uniquement</strong> lorsque les dossiers sont triés par nom."
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:90
 msgid "Include Index"
 msgstr "Inclure l'index"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:83
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:100
 #: ../python/cioc/web/stats/auto_datamgmt.py:90
 #: ../python/cioc/web/templates/master.mak:90
 msgid "Date Created"
 msgstr "Date de création"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:90
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:107
 msgid "Non-Public Records"
 msgstr "Dossiers non publics"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:91
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:108
 msgid "Include non-public records"
 msgstr "Inclure les dossiers non publics"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:97
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:114
 msgid "Include deleted records"
 msgstr "Inclure les dossiers supprimés"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:102
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:119
 msgid "Expired Records"
 msgstr "Enregistrements expirés"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:103
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:120
 msgid "Include expired records"
 msgstr "Inclure les dossiers expirés"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:107
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:124
 msgid "Ouput Format"
 msgstr "Format de sortie"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:108
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:125
 msgid "Output PDF"
 msgstr "Sortie en PDF"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:136
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:130
+msgid " Next"
+msgstr ""
+
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:157
 msgid "Include Publication(s)"
 msgstr "Inclure la ou les publications"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:136
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:157
 msgid "Exclude Publication(s)"
 msgstr "Exclure la ou les publications"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:147
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:168
 msgid "Include Heading(s)"
 msgstr "Inclure le(s) en-têtes"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:147
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:168
 msgid "Exclude Heading(s)"
 msgstr "Exclure le(s) en-têtes"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:151
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:172
 #: ../python/cioc/web/templates/displayoptions.mak:117
 msgid "Hold CTRL to select/deselect multiple items"
 msgstr ""
 "Maintenir la touche CTRL enfoncée pour sélectionner ou désélectionner "
 "plusieurs éléments."
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:158
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:179
 msgid "Has None"
 msgstr "N'en a aucun"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:161
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:182
 msgid "Has Any"
 msgstr "A-t-il un"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:165
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:187
 msgid "Has all from"
 msgstr "A tout de"
 
-#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:168
+#: ../python/cioc/web/gbl/templates/printlist/printoptions.mak:192
 msgid "Has any from"
 msgstr "A-t-il de"
 
@@ -12073,4 +12086,7 @@ msgstr "Voir votre profil"
 
 #~ msgid "User does not have offline tool permissions"
 #~ msgstr "L'utilisateur n'a pas l'autorisation pour les outils hors-ligne"
+
+#~ msgid "Next (New Window)"
+#~ msgstr "Suivant (Nouvelle fenêtre)"
 
