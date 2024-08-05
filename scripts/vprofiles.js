@@ -892,7 +892,7 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
         };
     }
 }());
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -987,7 +987,7 @@ window['init_cached_state'] = function(formselector) {
 	onbeforeunload_fns = [];
 	onbeforerestorevalues_fns = [];
 
-	$(window).on('beforeunload', function() {
+	var save_cache_values = function() {
 		var values = get_form_values(formselector);
 		var cache= {form_values :values};
 
@@ -998,7 +998,14 @@ window['init_cached_state'] = function(formselector) {
 		var cache_dom = document.getElementById('cache_form_values');
 		cache_dom.value = JSON.stringify(cache);
 
-	});
+	};
+	document.addEventListener('visibilitychange', function() {
+		if (document.visibilityState == 'hidden') {
+			save_cache_values();
+		}
+	})
+	document.addEventListener('freeze', save_cache_values);
+	window.addEventListener('pagehide', save_cache_values);
 
 	var cache_register_onbeforeunload = function(fn) {
 		onbeforeunload_fns.push(fn);
@@ -1013,6 +1020,10 @@ window['init_cached_state'] = function(formselector) {
 	window['cache_register_onbeforerestorevalues'] = cache_register_onbeforerestorevalues;
 
 	var restore_cached_state = function() {
+		$(window).on('pageshow', function(evt) {
+		if(evt.originalEvent.persisted) {
+			return;
+		}
 		var cache_dom = document.getElementById('cache_form_values');
 		if (!cache_dom || !cache_dom.value) {
 			return;
@@ -1026,6 +1037,7 @@ window['init_cached_state'] = function(formselector) {
 
 		restore_form_values(formselector, cache.form_values);
 
+		});
 	};
 	window['restore_cached_state'] = restore_cached_state;
 };
@@ -2222,7 +2234,7 @@ window['init_cached_state'] = function(formselector) {
 		});
 	});
 })();
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -2317,7 +2329,7 @@ window['init_cached_state'] = function(formselector) {
 	onbeforeunload_fns = [];
 	onbeforerestorevalues_fns = [];
 
-	$(window).on('beforeunload', function() {
+	var save_cache_values = function() {
 		var values = get_form_values(formselector);
 		var cache= {form_values :values};
 
@@ -2328,7 +2340,14 @@ window['init_cached_state'] = function(formselector) {
 		var cache_dom = document.getElementById('cache_form_values');
 		cache_dom.value = JSON.stringify(cache);
 
-	});
+	};
+	document.addEventListener('visibilitychange', function() {
+		if (document.visibilityState == 'hidden') {
+			save_cache_values();
+		}
+	})
+	document.addEventListener('freeze', save_cache_values);
+	window.addEventListener('pagehide', save_cache_values);
 
 	var cache_register_onbeforeunload = function(fn) {
 		onbeforeunload_fns.push(fn);
@@ -2343,6 +2362,10 @@ window['init_cached_state'] = function(formselector) {
 	window['cache_register_onbeforerestorevalues'] = cache_register_onbeforerestorevalues;
 
 	var restore_cached_state = function() {
+		$(window).on('pageshow', function(evt) {
+		if(evt.originalEvent.persisted) {
+			return;
+		}
 		var cache_dom = document.getElementById('cache_form_values');
 		if (!cache_dom || !cache_dom.value) {
 			return;
@@ -2356,6 +2379,7 @@ window['init_cached_state'] = function(formselector) {
 
 		restore_form_values(formselector, cache.form_values);
 
+		});
 	};
 	window['restore_cached_state'] = restore_cached_state;
 };

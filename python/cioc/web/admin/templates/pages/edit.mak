@@ -156,6 +156,7 @@ ${request.passvars.cached_form_vals|n}
 </form>
 
 <%def name="bottomjs()">
+<% renderinfo.list_script_loaded = True %>
 ${request.assetmgr.JSVerScriptTag('scripts/admin.js')}
 <script type="text/javascript">
 $(document).ready(function(){

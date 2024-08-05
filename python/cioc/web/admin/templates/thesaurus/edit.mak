@@ -268,6 +268,7 @@ ${self.makeMgmtInfo(usage)}
 </form>
 <% renderinfo.list_script_loaded = True %>
 <%def name="bottomjs()">
+	<% renderinfo.list_script_loaded = True %>
 	${request.assetmgr.JSVerScriptTag('scripts/admin.js')}
 	<script type="text/javascript">
 	jQuery(function() {

@@ -1195,7 +1195,7 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 							<p>
 								${_('Include the following Checklist search types on the Advanced Search page:')}
 							</p>
-							
+
 							${renderer.errorlist("AdvSearchCheckLists")}
 							<div class="row">
 								%for field_id, label in chk_field_descs:
@@ -1303,7 +1303,7 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 									${renderer.radio("item.SrchCommunityDefault", value='L', label=_('Located in Community'))}
 									<br />${renderer.radio("item.SrchCommunityDefault", value='S', label=_('Serving Community'))}
 								</div>
-							</div>						
+							</div>
 							${renderer.errorlist("item.SrchCommunityDefaultOnly")}
 							${renderer.checkbox("item.SrchCommunityDefaultOnly", label=_('Always use the default option (hide other values)'))}
 						</td>
@@ -1594,6 +1594,7 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 </script>
 
 	%if domain.id == const.DM_CIC:
+	<% renderinfo.list_script_loaded = True %>
 	${request.assetmgr.JSVerScriptTag('scripts/admin.js')}
 	%endif
 <script type="text/javascript">

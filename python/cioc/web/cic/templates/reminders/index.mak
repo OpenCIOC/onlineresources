@@ -46,7 +46,7 @@ ${request.assetmgr.JSVerScriptTag('scripts/reminders.js')}
 <script type="text/javascript">
 	init_cached_state();
 initialize_reminders(${_('Reminders')|j}, ${request.passvars.makeLink('~/jsonfeeds/users')|j},
-	${request.passvars.makeLink('~/reminders')|j}, 
+	${request.passvars.makeLink('~/reminders')|j},
 	${request.passvars.route_path('reminder_action', action='dismiss', id='IDIDID')|j},
 	${_(':')|j},
 	${_('[read more]')|j}, ${_('[less]')|j}, ${_('Loading...')|j},

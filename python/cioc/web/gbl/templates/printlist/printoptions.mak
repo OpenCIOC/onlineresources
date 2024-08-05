@@ -116,6 +116,7 @@ ${renderer.hidden('IDList')}
 </%def>
 
 <%def name="bottomjs()">
+<% renderinfo.list_script_loaded = True %>
 ${request.assetmgr.JSVerScriptTag('scripts/advsrch.js')}
 <script type="text/javascript">
 jQuery(function($) {
