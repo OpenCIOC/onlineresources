@@ -40,7 +40,7 @@ Dim TXT_ADD_FIELD, _
 	TXT_INST_DEFAULT_MSG, _
 	TXT_INST_MSG_LOCATION, _
 	TXT_INST_PAGE_BREAK, _
-	TXT_INST_PAGE_TITLE, _
+	TXT_INST_REPORT_TITLE, _
 	TXT_INST_PUBLIC, _
 	TXT_INST_RECORD_SEPARATOR, _
 	TXT_INST_RUN_ORDER_NULL, _
@@ -54,7 +54,7 @@ Dim TXT_ADD_FIELD, _
 	TXT_MATCH_ALL, _
 	TXT_MSG_LOCATION, _
 	TXT_OPTIONS, _
-	TXT_PAGE_TITLE, _
+	TXT_REPORT_TITLE, _
 	TXT_PUBLIC, _
 	TXT_PREFIX, _
 	TXT_RECORD_SEPARATOR, _
@@ -91,9 +91,9 @@ Sub setTxtPrintProfile()
 			TXT_INST_DEFAULT_MSG = "Message to appear at the top of the report or before each record. This message can be customized at the time the report is run."
 			TXT_INST_MSG_LOCATION = "Repeat the message before each record"
 			TXT_INST_PAGE_BREAK = "Start each record on a new page when printing"
-			TXT_INST_PAGE_TITLE = "Title to appear in the title bar of the web browser."
 			TXT_INST_PUBLIC = "Available for use on public views"
 			TXT_INST_RECORD_SEPARATOR = "Optional Text/HTML to appear between records (e.g. new line, etc)"
+			TXT_INST_REPORT_TITLE = "The Default Report Title, which may be customized or removed when running the final report."
 			TXT_INST_RUN_ORDER_BETWEEN = "Run Order must be a number between 0 and "
 			TXT_INST_RUN_ORDER_NULL = "Run Order cannot be NULL"
 			TXT_INST_STYLE_SHEET = "Please use the full URL (e.g. https://www.example.com/style.css)."
@@ -105,11 +105,11 @@ Sub setTxtPrintProfile()
 			TXT_MATCH_ALL = "Match All Instances"
 			TXT_MSG_LOCATION = "Message Location"
 			TXT_OPTIONS = "Options"
-			TXT_PAGE_TITLE = "Page Title"
 			TXT_PUBLIC = "Public"
 			TXT_PREFIX = "Prefix"
 			TXT_RECORD_SEPARATOR = "Record Separator"
 			TXT_REPLACE_COMMAND = "Replace Command"
+			TXT_REPORT_TITLE = "Default Title"
 			TXT_RETURN_TO_PROFILES = "Return to Print Profiles"
 			TXT_STYLE_SHEET = "Stylesheet (CSS)"
 			TXT_SUFFIX = "Suffix"
@@ -139,9 +139,9 @@ Sub setTxtPrintProfile()
 			TXT_INST_DEFAULT_MSG = "Le message qui apparaîtra au début du rapport ou avant chaque dossier. Ce message peut être personnalisé lors de la production du rapport."
 			TXT_INST_MSG_LOCATION = "Répéter le message avant chaque dossier"
 			TXT_INST_PAGE_BREAK = "Présenter chaque dossier sur une nouvelle page, lors de l'impression"
-			TXT_INST_PAGE_TITLE = "Titre apparaissant dans la barre de titre du navigateur Web."
-			TXT_INST_PUBLIC = "TRANSLATE_FR -- Available for use on public views"
+			TXT_INST_PUBLIC = "Disponible pour utilisation dans les vues publiques"
 			TXT_INST_RECORD_SEPARATOR = "Texte/HTLM facultatif apparaissant entre les dossiers (par exemple, nouvelle ligne, etc.)"
+			TXT_INST_REPORT_TITLE = "Le titre du rapport par défaut, qui peut être personnalisé ou supprimé lors de l'exécution du rapport final."
 			TXT_INST_RUN_ORDER_BETWEEN = "L'ordre d'exécution doit être un chiffre entre 0 et "
 			TXT_INST_RUN_ORDER_NULL = "L'ordre d'exécution ne peut pas être nul."
 			TXT_INST_STYLE_SHEET = "Prière d'utiliser l'adresse URL complète (par exemple, https://www.example.com/style.css)."
@@ -153,11 +153,11 @@ Sub setTxtPrintProfile()
 			TXT_MATCH_ALL = "Appareiller toutes les instances"
 			TXT_MSG_LOCATION = "Endroit de message"
 			TXT_OPTIONS = "Options"
-			TXT_PAGE_TITLE = "Titre de page"
 			TXT_PUBLIC = "Public"
 			TXT_PREFIX = "Préfixe"
 			TXT_RECORD_SEPARATOR = "Séparateur de dossiers"
 			TXT_REPLACE_COMMAND = "Commander de remplacer"
+			TXT_REPORT_TITLE = "Titre par défaut"
 			TXT_RETURN_TO_PROFILES = "Retourner aux profils de l'impression"
 			TXT_STYLE_SHEET = "Feuille de style (CSS)"
 			TXT_SUFFIX = "Suffixe"

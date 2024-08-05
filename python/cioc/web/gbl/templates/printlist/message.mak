@@ -65,18 +65,26 @@
 <script type="text/javascript">
 	tinymce.init({
 		selector: '.WYSIWYG',
-		plugins: 'anchor autolink link advlist lists image charmap preview searchreplace paste visualblocks code fullscreen insertdatetime media table contextmenu help',
-		menubar: 'edit view format table help',
-		toolbar: 'undo redo styles bullist numlist link | bold italic underline forecolor removeformat | copy cut paste searchreplace',
-		convert_urls: false,
+        plugins: 'anchor autolink link lists advlist autolink autoresize contextmenu',
+        toolbar: 'undo redo styles bullist numlist link | bold italic | searchreplace',
+		menubar: false,
+		statusbar: false,
+        convert_urls: false,
+        cleanup: true,
 		schema: 'html5',
-		color_map: [
-			'#D3273E', 'Red',
-			'#DC582A', 'Orange',
-			'#007A78', 'Turquoise',
-			'#1D4289', 'Blue',
-			'#666666', 'Gray',
-		]
+		paste_data_images: false,
+		table_advtab: false,
+		table_cell_advtab: false,
+		table_row_advtab: false,
+		table_use_colgroups: false,
+		table_style_by_css: false,
+        style_formats: [
+            { title: 'Paragraph', format: 'p' },
+			{ title: 'Heading 1', format: 'h1' },
+            { title: 'Heading 2', format: 'h2' },
+            { title: 'Heading 3', format: 'h3' },
+            { title: 'Heading 4', format: 'h4' }
+        ]
 	});
 </script>
 

@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -187,29 +187,34 @@ Call makePageHeader(TXT_EDIT_PROFILE & " (" & strType & ")" & TXT_COLON & strPro
 
 <p style="font-weight:bold">[ <a href="<%=makeLinkB("setup.asp")%>"><%=TXT_RETURN_TO_SETUP%></a> | <a href="<%=makeLink("print_profile.asp","DM=" & intDomain,vbNullString)%>"><%=TXT_RETURN_TO_PROFILES%> (<%=strType%>)</a> ]</p>
 <form action="print_profile_edit2.asp" method="post">
-<%=g_strCacheFormVals%>
-<input type="hidden" name="DM" value="<%=intDomain%>">
-<input type="hidden" name="ProfileID" value="<%=intProfileID%>">
-<table class="BasicBorder cell-padding-4 max-width-lg">
-<tr>
-	<th colspan="2" class="RevTitleBox"><%=TXT_EDIT_PROFILE%></th>
-</tr>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_DATE_CREATED%></td>
-	<td><%=strCreatedDate%></td>
-</tr>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_CREATED_BY%></td>
-	<td><%=strCreatedBy%></td>
-</tr>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_LAST_MODIFIED%></td>
-	<td><%=strModifiedDate%></td>
-</tr>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_MODIFIED_BY%></td>
-	<td><%=strModifiedBy%></td>
-</tr>
+<div style="display:none">
+	<%=g_strCacheFormVals%>
+	<input type="hidden" name="DM" value="<%=intDomain%>">
+	<input type="hidden" name="ProfileID" value="<%=intProfileID%>">
+</div>
+
+<div class="panel panel-default max-width-lg">
+	<div class="panel-heading">
+		<h2><%=TXT_EDIT_PROFILE%></h2>
+	</div>
+	<div class="panel-body no-padding">
+		<table class="BasicBorder cell-padding-4 full-width form-table inset-table responsive-table">
+			<tr>
+				<td class="field-label-cell"><%=TXT_DATE_CREATED%></td>
+				<td class="field-data-cell"><%=strCreatedDate%></td>
+			</tr>
+			<tr>
+				<td class="field-label-cell"><%=TXT_CREATED_BY%></td>
+				<td class="field-data-cell"><%=strCreatedBy%></td>
+			</tr>
+			<tr>
+				<td class="field-label-cell"><%=TXT_LAST_MODIFIED%></td>
+				<td class="field-data-cell"><%=strModifiedDate%></td>
+			</tr>
+			<tr>
+				<td class="field-label-cell"><%=TXT_MODIFIED_BY%></td>
+				<td class="field-data-cell"><%=strModifiedBy%></td>
+			</tr>
 <%
 For Each strCulture In active_cultures()
 	strValue = vbNullString
@@ -221,34 +226,62 @@ For Each strCulture In active_cultures()
 		End If
 	End If
 %>
-<tr>
-	<td class="FieldLabelLeft"><label for="ProfileName_<%= strCulture %>"><%=TXT_NAME%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label></td>
-	<td><input type="text" name="ProfileName_<%= strCulture %>" id="ProfileName_<%= strCulture %>" value=<%=AttrQs(strValue)%> size="<%=TEXT_SIZE%>" maxlength="50">
-	<br><%=TXT_INST_PROFILE_NAME%></td>
-</tr>
+			<tr>
+				<td class="field-label-cell">
+					<label for="ProfileName_<%= strCulture %>"><%=TXT_NAME%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label>
+				</td>
+				<td class="field-data-cell">
+					<p class="SmallNote"><%=TXT_INST_PROFILE_NAME%></p>
+					<input type="text" name="ProfileName_<%= strCulture %>" id="ProfileName_<%= strCulture %>" value=<%=AttrQs(strValue)%> size="<%=TEXT_SIZE%>" maxlength="50" class="form-control">
+				</td>
+			</tr>
 <%
 Next
 %>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_PUBLIC%></td>
-	<td><label for="Public"><input type="checkbox" id="Public" name="Public"<%If bPublic Then%> checked<%End If%>> <%=TXT_INST_PUBLIC%></label>
-</tr>
-<tr>
-	<td class="FieldLabelLeft"><label for="StyleSheet"><%=TXT_STYLE_SHEET%></label></td>
-	<td><input type="text" name="StyleSheet" id="StyleSheet" value=<%=AttrQs(strStyleSheet)%> size="<%=TEXT_SIZE%>" maxlength="150">
-	<br><%=TXT_INST_STYLE_SHEET%></td>
-</tr>
-<tr>
-	<td class="FieldLabelLeft"><label for="TableClass"><%=TXT_TABLE_CLASS%></label></td>
-	<td><input type="text" name="TableClass" id="TableClass" value=<%=AttrQs(strTableClass)%> size="<%=TEXT_SIZE%>" maxlength="50">
-	<br><%=TXT_INST_TABLE_CLASS%></td>
-</tr>
-<tr>
-	<td class="FieldLabelLeft"><label for="Separator"><%=TXT_RECORD_SEPARATOR%></label></td>
-	<td><label for="PageBreak"><input type="checkbox" id="PageBreak" name="PageBreak"<%If bPageBreak Then%> checked<%End If%>> <%=TXT_INST_PAGE_BREAK%></label>
-	<br><input type="text" name="Separator" id="Separator" value=<%=AttrQs(strSeparator)%> size="<%=TEXT_SIZE%>" maxlength="255">
-	<br><%=TXT_INST_RECORD_SEPARATOR%></td>
-</tr>
+			<tr>
+				<td class="field-label-cell">
+					<%=TXT_PUBLIC%>
+				</td>
+				<td class="field-data-cell">
+					<div class="checkbox">
+						<label for="Public"><input type="checkbox" id="Public" name="Public"<%If bPublic Then%> checked<%End If%>> <%=TXT_INST_PUBLIC%></label>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="field-label-cell">
+					<label for="StyleSheet"><%=TXT_STYLE_SHEET%></label>
+				</td>
+				<td class="field-data-cell">
+					<p class="SmallNote"><%=TXT_INST_STYLE_SHEET%></p>
+					<input type="text" name="StyleSheet" id="StyleSheet" value=<%=AttrQs(strStyleSheet)%> size="<%=TEXT_SIZE%>" maxlength="150" class="form-control">
+				</td>
+			</tr>
+			<tr>
+				<td class="field-label-cell">
+					<label for="TableClass"><%=TXT_TABLE_CLASS%></label>
+				</td>
+				<td class="field-data-cell">
+					<p class="SmallNote"><%=TXT_INST_TABLE_CLASS%></p>
+					<input type="text" name="TableClass" id="TableClass" value=<%=AttrQs(strTableClass)%> size="<%=TEXT_SIZE%>" maxlength="50" class="form-control">
+				</td>
+			</tr>
+			<tr>
+				<td class="field-label-cell">
+					<label for="PageBreak"><%=TXT_RECORD_SEPARATOR%></label>
+				</td>
+				<td class="field-data-cell">
+					<p class="SmallNote"><%=TXT_INST_RECORD_SEPARATOR%></p>
+					<input type="text" name="Separator" id="Separator" value=<%=AttrQs(strSeparator)%> size="<%=TEXT_SIZE%>" maxlength="255" class="form-control">
+					
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="PageBreak" name="PageBreak"<%If bPageBreak Then%> checked<%End If%>>
+							<%=TXT_INST_PAGE_BREAK%>
+						</label>
+					</div>
+				</td>
+			</tr>
 <%
 For Each strCulture In active_cultures()
 	strValue = vbNullString
@@ -260,11 +293,13 @@ For Each strCulture In active_cultures()
 		End If
 	End If
 %>
-<tr>
-	<td class="FieldLabelLeft"><label for="PageTitle_<%= strCulture %>"><%=TXT_PAGE_TITLE%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label></td>
-	<td><input type="text" name="PageTitle_<%= strCulture %>" id="PageTitle_<%= strCulture %>" value=<%=AttrQs(strValue)%> size="<%=TEXT_SIZE%>" maxlength="100">
-	<br><%=TXT_INST_PAGE_TITLE%></td>
-</tr>
+			<tr>
+				<td class="field-label-cell"><label for="PageTitle_<%= strCulture %>"><%=TXT_REPORT_TITLE%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label></td>
+				<td class="field-data-cell">
+					<p class="SmallNote"><%=TXT_INST_REPORT_TITLE%></p>
+					<input type="text" name="PageTitle_<%= strCulture %>" id="PageTitle_<%= strCulture %>" value=<%=AttrQs(strValue)%> maxlength="100" class="form-control">
+				</td>
+			</tr>
 <%
 Next
 
@@ -285,11 +320,16 @@ For Each strCulture In active_cultures()
 		strValue = Server.HTMLEncode(strValue)
 	End If
 %>
-<tr>
-	<td class="FieldLabelLeft"><label for="Header_<%= strCulture %>"><%=TXT_HEADER%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label></td>
-	<td><span class="SmallNote"><%=TXT_INST_MAX_8000%>&nbsp;<%=TXT_HTML_ALLOWED%></span>
-	<br><textarea name="Header_<%= strCulture %>" id="Header_<%= strCulture %>" wrap="soft" rows="<%=getTextAreaRows(intLen,5)%>" class="form-control"><%=strValue%></textarea></td>
-</tr>
+			<tr>
+				<td class="field-label-cell">
+					<label for="Header_<%= strCulture %>"><%=TXT_HEADER%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label>
+				</td>
+				<td class="field-data-cell">
+					<textarea name="Header_<%= strCulture %>" id="Header_<%= strCulture %>" wrap="soft" class="form-control WYSIWYG">
+						<%=strValue%>
+					</textarea>
+				</td>
+			</tr>
 <%
 Next
 
@@ -311,11 +351,16 @@ For Each strCulture In active_cultures()
 		strValue = Server.HTMLEncode(strValue)
 	End If
 %>
-<tr>
-	<td class="FieldLabelLeft"><label for="Footer_<%= strCulture %>"><%=TXT_FOOTER%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label></td>
-	<td><span class="SmallNote"><%=TXT_INST_MAX_8000%>&nbsp;<%=TXT_HTML_ALLOWED%></span>
-	<br><textarea name="Footer_<%= strCulture %>" id="Footer_<%= strCulture %>" wrap="soft" rows="<%=getTextAreaRows(intLen,5)%>" cols="<%=TEXTAREA_COLS%>"><%=strValue%></textarea></td>
-</tr>
+			<tr>
+				<td class="field-label-cell">
+					<label for="Footer_<%= strCulture %>"><%=TXT_FOOTER%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label>
+				</td>
+				<td class="field-data-cell">
+					<textarea name="Footer_<%= strCulture %>" id="Footer_<%= strCulture %>" wrap="soft" class="form-control WYSIWYG">
+						<%=strValue%>
+					</textarea>
+				</td>
+			</tr>
 <%
 Next
 
@@ -336,32 +381,79 @@ For Each strCulture In active_cultures()
 		strValue = Server.HTMLEncode(strValue)
 	End If
 %>
-<tr>
-	<td class="FieldLabelLeft"><label for="DefaultMsg_<%= strCulture %>"><%=TXT_DEFAULT_MSG%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label></td>
-	<td><span class="SmallNote"><%=TXT_INST_MAX_8000%>&nbsp;<%=TXT_HTML_ALLOWED%></span>
-	<br><textarea name="DefaultMsg_<%= strCulture %>" id="DefaultMsg_<%= strCulture %>" wrap="soft" rows="<%=getTextAreaRows(intLen,5)%>" cols="<%=TEXTAREA_COLS%>"><%=strValue%></textarea></td>
-</tr>
+			<tr>
+				<td class="field-label-cell">
+					<label for="DefaultMsg_<%= strCulture %>"><%=TXT_DEFAULT_MSG%> (<%= Application("Culture_" & strCulture & "_LanguageName") %>)</label>
+				</td>
+				<td class="field-data-cell">
+					<textarea name="DefaultMsg_<%=strCulture%>" id="DefaultMsg_<%=strCulture%>" class="form-control WYSIWYG">
+						<%=strValue%>
+					</textarea>
+				</td>
+			</tr>
 <%
 Next
 %>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_MSG_LOCATION%></td>
-	<td><label for="MsgBeforeRecord"><input type="checkbox" id="MsgBeforeRecord" name="MsgBeforeRecord"<%If bMsgBeforeRecord Then%> checked<%End If%>> <%=TXT_INST_MSG_LOCATION%></label></td>
-</tr>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_IN_VIEWS%></td>
-	<td><strong><%=TXT_INST_IN_VIEWS%></strong>
-	<%=strInViews%></td>
-</tr>
-<tr>
-	<td class="FieldLabelLeft"><%=TXT_FIELDS%></td>
-	<td><a href="<%=makeLink("print_profile_edit_fields.asp","ProfileID=" & intProfileID & "&DM=" & intDomain,vbNullString)%>"><%=TXT_MANAGE_FIELDS%>&nbsp;(<%=Nz(intFieldCount,0)%>)</a></td>
-</tr>
-<tr>
-	<td colspan="2"><input type="submit" name="Submit" value="<%=TXT_SUBMIT_UPDATES%>"> <input type="submit" name="Submit" value="<%=TXT_DELETE%>"> <input type="reset" value="<%=TXT_RESET_FORM%>"></td>
-</tr>
-</table>
+			<tr>
+				<td class="field-label-cell">
+					<%=TXT_MSG_LOCATION%>
+				</td>
+				<td class="field-data-cell">
+					<div class="checkbox">
+						<label for="MsgBeforeRecord">
+							<input type="checkbox" id="MsgBeforeRecord" name="MsgBeforeRecord"<%If bMsgBeforeRecord Then%> checked<%End If%>>
+							<%=TXT_INST_MSG_LOCATION%>
+						</label>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="field-label-cell">
+					<%=TXT_IN_VIEWS%>
+				</td>
+				<td class="field-data-cell">
+					<strong><%=TXT_INST_IN_VIEWS%></strong>
+					<%=strInViews%>
+				</td>
+			</tr>
+			<tr>
+				<td class="field-label-cell">
+					<%=TXT_FIELDS%>
+				</td>
+				<td class="field-data-cell">
+					<a href="<%=makeLink("print_profile_edit_fields.asp","ProfileID=" & intProfileID & "&DM=" & intDomain,vbNullString)%>"><%=TXT_MANAGE_FIELDS%>&nbsp;(<%=Nz(intFieldCount,0)%>)</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<input type="submit" name="Submit" value="<%=TXT_SUBMIT_UPDATES%>" class="btn btn-default">
+<input type="submit" name="Submit" value="<%=TXT_DELETE%>" class="btn btn-default">
+<input type="reset" value="<%=TXT_RESET_FORM%>" class="btn btn-default">
+
 </form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.1.0/tinymce.min.js" integrity="sha512-dr3qAVHfaeyZQPiuN6yce1YuH7YGjtUXRFpYK8OfQgky36SUfTfN3+SFGoq5hv4hRXoXxAspdHw4ITsSG+Ud/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript">
+	tinymce.init({
+		selector: '.WYSIWYG',
+		plugins: 'anchor autolink link advlist lists image charmap preview searchreplace paste visualblocks code fullscreen insertdatetime media table contextmenu help',
+		menubar: 'edit view insert format table help',
+		toolbar: 'undo redo styles bullist numlist link | bold italic underline forecolor removeformat | copy cut paste searchreplace code',
+		extended_valid_elements: 'span[*],i[*],script[*]',
+		convert_urls: false,
+		schema: 'html5',
+		color_map: [
+			'#D3273E', 'Red',
+			'#DC582A', 'Orange',
+			'#007A78', 'Turquoise',
+			'#1D4289', 'Blue',
+			'#666666', 'Gray',
+		]
+	});
+</script>
+
 
 <%
 Call makePageFooter(False)
