@@ -28,19 +28,18 @@ from markupsafe import Markup
 <html>
     <head>
 	<title>${profile.PageTitle}</title>
-%if profile.StyleSheet:
-<link rel="STYLESHEET" type="text/css" href="${profile.StyleSheet}">
-%endif
 
 <style>
-@page{
-  @bottom-right {
-    content: counter(page);
-  }
-}
+@media print {
+    @page{
+      @bottom-right {
+	content: counter(page);
+      }
+    }
 
-ol.toc-list li a::after {
-    content: ' ' leader(dotted) target-counter(attr(href), page);
+    ol.toc-list li a::after {
+	content: ' ' leader(dotted) target-counter(attr(href), page);
+    }
 }
 
 .toc-list, .toc-list ol {
@@ -82,6 +81,11 @@ ol.toc-list li a::after {
 }
 
 </style>
+
+%if profile.StyleSheet:
+<link rel="STYLESHEET" type="text/css" href="${profile.StyleSheet}">
+%endif
+
     </head>
     <body bgcolor="#FFFFFF" text="#000000">
 ${profile.Header or "" |n}
@@ -89,8 +93,9 @@ ${profile.Header or "" |n}
 <p>${message}</p>
 %endif
 
-%if include_toc:
+%if name_toc or heading_toc:
 <h1 class="custom-report-toc-heading">${_('Contents')}</h1>
+%if heading_toc:
 <ol class="toc-list" role="list">
 %for (group_order, group_name, group_id), headings in heading_groups:
     %if group_id:
@@ -107,6 +112,10 @@ ${profile.Header or "" |n}
     %endif
 %endfor
 </ol>
+%endif
+%if name_toc:
+${build_name_table()}
+%endif
 <div style="page-break-before: always"></div>
 %endif
 
@@ -259,17 +268,10 @@ table_tag = Markup(f'<table class="{profile.TableClass}">' if profile.TableClass
 
 %endfor
 
-%if include_index:
+%if name_index:
 <div style="page-break-before: always"></div>
 <h1 class="custom-report-index-heading">${_('Index by Name')}</h1>
-<ol class="toc-list" role="list">
-%for name in org_names:
-    <li>
-	<a href="#printlist-record-${name.XNUM}"><span class="title">${name.ORG_NAME_FULL}</span></a>
-    </li>
-%endfor
-</ol>
-
+${build_name_table()}
 %endif
 
 ${profile.Footer or "" |n}
@@ -277,3 +279,13 @@ ${profile.Footer or "" |n}
 
     </body>
 </html>
+
+<%def name="build_name_table()">
+<ol class="toc-list" role="list">
+%for name in org_names:
+    <li>
+	<a href="#printlist-record-${name.XNUM}"><span class="title">${name.ORG_NAME_FULL}</span></a>
+    </li>
+%endfor
+</ol>
+</%def>

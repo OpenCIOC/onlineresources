@@ -62,10 +62,6 @@ if sys.prefix != sys.base_prefix:
 else:
     PYTHON_EXE = os.path.join(sys.prefix, "python.exe")
 
-STDERR_VALUE = None
-if sys.executable.lower() != PYTHON_EXE.lower():
-    STDERR_VALUE = subprocess.DEVNULL
-
 PDF_GEN_MAX_MEM_IN_GB = 1
 PDF_BASE_COMMAND = [
     PYTHON_EXE,
@@ -387,9 +383,9 @@ class PrintListBase(viewbase.ViewBase):
             resp = request.response
             with tempfile.TemporaryFile(suffix=".html") as f:
                 f.writelines(result)
-                file_size_in_gb = f.tell() / 1024 / 1024
+                file_size_in_gb = round(f.tell() / 1024 / 1024, 2)
                 log.debug("Wrote %sGB to html file", file_size_in_gb)
-                if file_size_in_gb > PDF_GEN_MAX_MEM_IN_GB:
+                if file_size_in_gb >= PDF_GEN_MAX_MEM_IN_GB:
                     return self._render_error_page(
                         _(
                             "Report to large. Please reduce the number of records in the report.",
@@ -406,8 +402,26 @@ class PrintListBase(viewbase.ViewBase):
                     "-",
                     "-",
                 ]
-                result = subprocess.run(cmd, stdin=f, stdout=outf, stderr=STDERR_VALUE)
-                result.check_returncode()
+                result = subprocess.run(
+                    cmd, stdin=f, stdout=outf, stderr=subprocess.PIPE
+                )
+                if result.returncode:
+                    if b"MemoryError" in result.stderr:
+                        errmsg = _(
+                            "Report to large. Please reduce the number of records in the report.",
+                            request,
+                        )
+                    else:
+                        log.error("Printlist PDF Generation Error: %r", result.stderr)
+                        errmsg = _(
+                            "Unable to generate report, please reduce the number of records and try again.",
+                            request,
+                        )
+                    return self._render_error_page(
+                        errmsg,
+                        show_close=False,
+                    )
+
                 outf.seek(0, 2)
                 length = outf.tell()
                 outf.seek(0)
@@ -421,8 +435,9 @@ class PrintListBase(viewbase.ViewBase):
 
     def get_extra_namespace(self, conn, where_sql, where_arguments):
         return {
-            "include_toc": False,
-            "include_index": False,
+            "name_toc": False,
+            "heading_toc": False,
+            "name_index": False,
             "heading_groups": None,
             "org_names": None,
         }
@@ -561,6 +576,10 @@ class PrintRecordListCIC(PrintListBase):
                 model_state.form.data["IncludeIndex"] = True
 
         ghpbid = self.get_ghpbid()
+        ghtype = model_state.value("GHType")
+        if (not ghpbid or ghtype == "N") and model_state.value("SortBy") == "H":
+            # sort by Heading is meaningless without ghpbid or if GHType is N (Has None)
+            model_state.form.data["SortBy"] = "O"
 
         pbtype = model_state.value("PBType")
 
@@ -720,28 +739,21 @@ class PrintRecordListCIC(PrintListBase):
         model_state = self.request.model_state
         sortby = model_state.value("SortBy")
         ghpbid = self.get_ghpbid()
-        include_toc = model_state.value("IncludeTOC") and sortby == "H" and ghpbid
-        include_index = model_state.value("IncludeIndex")
-
-        # if (sortby == "H" and not ghpbid) or not (include_toc or include_index):
-        #     return {
-        #         "include_toc": False,
-        #         "include_index": False,
-        #         "heading_groups": None,
-        #         "org_names": None,
-        #     }
+        ghid = model_state.value("GHID")
+        ghtype = model_state.value("GHType")
+        include_toc = model_state.value("IncludeTOC")
+        heading_toc = include_toc and sortby == "H" and ghpbid and ghtype != "N"
+        name_toc = include_toc and sortby != "H"
+        name_index = (
+            model_state.value("IncludeIndex")
+            and sortby == "H"
+            and ghpbid
+            and ghtype != "N"
+        )
 
         sql_parts = []
         arguments = []
-        if include_toc:
-            arguments.extend(
-                [
-                    ghpbid,
-                    self.request.dboptions.MemberID,
-                    ghpbid,
-                    *where_arguments,
-                ]
-            )
+        if heading_toc:
 
             def header_process(cursor):
                 groupgetter = attrgetter("GroupDisplayOrder", "Group", "GroupID")
@@ -752,6 +764,21 @@ class PrintRecordListCIC(PrintListBase):
                     groups.append((group_key, list(headings)))
                 return groups
 
+            args = [
+                ghpbid,
+                self.request.dboptions.MemberID,
+                ghpbid,
+            ]
+
+            group_limit = ""
+            if ghid and (ghtype == "AF" or ghtype == "F"):
+                ghid = set(ghid)
+                ghplaceholders = ",".join("?" * len(ghid))
+                args.extend(ghid)
+                group_limit = f" AND gh.GH_ID IN ({ghplaceholders}) "
+
+            arguments.extend(args)
+            arguments.extend(where_arguments)
             sql_parts.append(
                 (
                     "heading_groups",
@@ -772,7 +799,7 @@ class PrintRecordListCIC(PrintListBase):
                             WHERE ghg.PB_ID=?) ghgn
                     ON gh.HeadingGroup=ghgn.GroupID
             WHERE (pb.MemberID=? OR pb.MemberID IS NULL)
-                AND pb.PB_ID=?
+                AND pb.PB_ID=? {group_limit}
                 AND (Used=1 OR Used IS NULL)
                 AND (gh.NonPublic=0)
                 AND EXISTS(SELECT *
@@ -787,7 +814,7 @@ class PrintRecordListCIC(PrintListBase):
                 )
             )
 
-        if include_index:
+        if name_index or name_toc:
             arguments.extend(where_arguments)
 
             def name_process(cursor):
@@ -806,14 +833,15 @@ class PrintRecordListCIC(PrintListBase):
             )
 
         namespace = {
-            "include_toc": include_toc,
-            "include_index": include_index,
+            "heading_toc": heading_toc,
+            "name_toc": name_toc,
+            "name_index": name_index,
             "heading_groups": None,
             "org_names": None,
         }
         if sql_parts:
             sql = "\n".join(x[-1] for x in sql_parts)
-            # log.debug("heading list sql=%s", sql)
+            log.debug("extra sql=%s, arguments=%s", sql, arguments)
             cursor = conn.execute(sql, *arguments)
             for i, (name, process_fn, sql) in enumerate(sql_parts):
                 if i:
@@ -875,17 +903,28 @@ class PrintRecordListCIC(PrintListBase):
                 )""")
 
     def build_sql(self, field_sql, where_sql, arguments):
-        sortby = self.request.model_state.value("SortBy")
+        model_state = self.request.model_state
+        sortby = model_state.value("SortBy")
         extra_from = ""
         sortby_sql = self.base_sort
         ghpbid = self.get_ghpbid()
-        if sortby == "H" and ghpbid is not None:
+        ghid = model_state.value("GHID")
+        ghtype = model_state.value("GHType")
+        if sortby == "H" and ghpbid is not None and ghtype != "N":
             arguments.insert(0, ghpbid)
             sortby_sql = (
                 "ISNULL(ghx.GeneralHeadingGroupDisplayOrder,0), ISNULL(ghx.GroupName, ghx.GeneralHeading), ghx.GeneralHeadingDisplayOrder, ghx.GeneralHeading,"
                 + sortby_sql
             )
             field_sql += ",ghx.GroupName AS GeneralHeadingGroupName, ghx.GroupID AS GeneralHeadingGroupID, ghx.GeneralHeadingGroupDisplayOrder, ghx.GeneralHeading AS GeneralHeadingName, ghx.GH_ID AS GeneralHeadingID, ghx.GeneralHeadingDisplayOrder"
+
+            group_limit = ""
+            if ghid and (ghtype == "AF" or ghtype == "F"):
+                ghid = set(ghid)
+                ghplaceholders = ",".join("?" * len(ghid))
+                arguments[1:1] = ghid
+                group_limit = f" AND gh.GH_ID IN ({ghplaceholders}) "
+
             extra_from = dedent(f"""\
             LEFT JOIN (
                 SELECT pb.NUM, gh.GH_ID, CASE WHEN TaxonomyName=1 THEN dbo.fn_CIC_GHIDToTaxTerms(gh.GH_ID, @@LANGID) ELSE ghn.Name END AS GeneralHeading,
@@ -901,7 +940,7 @@ class PrintRecordListCIC(PrintListBase):
                     ON gh.HeadingGroup=ghg.GroupID
                 LEFT JOIN CIC_GeneralHeading_Group_Name ghgn
                     ON ghg.GroupID=ghgn.GroupID AND ghgn.LangID=@@LANGID
-                WHERE pb.PB_ID=?
+                WHERE pb.PB_ID=? {group_limit}
                 AND NonPublic=0
                 AND CASE WHEN TaxonomyName=1 THEN dbo.fn_CIC_GHIDToTaxTerms(gh.GH_ID, @@LANGID) ELSE ghn.Name END IS NOT NULL
             ) ghx
