@@ -29,6 +29,12 @@ from markupsafe import Markup
     <head>
 	<title>${report_title}</title>
 
+%if profile.IncludeCiocBasicStyleSheet:
+<%
+basic_style_sheet_url = request.pageinfo.PathToStart + 'styles/d/' + str(request.template_values['VersionDate']) + '/ciocprintlist_' + str(request.template_values['Template_ID']) + ('_debug' if request.params.get('Debug') else '') + '.css'
+%>
+	<link rel="stylesheet" type="text/css" href="${basic_style_sheet_url}" id="basic_style">
+%endif
 <style>
 @media print {
     @page{

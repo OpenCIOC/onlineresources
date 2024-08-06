@@ -63,7 +63,8 @@ SELECT	pp.StyleSheet,
 		pp.Separator,
 		pp.PageBreak,
 		pp.TableClass,
-		pp.MsgBeforeRecord
+		pp.MsgBeforeRecord,
+		pp.IncludeCiocBasicStyleSheet
 	FROM GBL_PrintProfile pp
 	LEFT JOIN GBL_PrintProfile_Description ppd
 		ON pp.ProfileID=ppd.ProfileID AND ppd.LangID=@@LANGID

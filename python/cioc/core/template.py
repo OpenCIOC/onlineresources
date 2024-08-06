@@ -312,9 +312,7 @@ def render_css(request):
 
     # need to split css into 2 files because otherwise we are too big for IE9 and under
     if request.matchdict["which"] == "basic":
-        # bootstrap = 'bootstrap' if template_values['UseFullCIOCBootstrap_Cache'] else 'bootstraplight'
-        bootstrap = "bootstrap"
-        base_template += '@import "%s";\n' % bootstrap
+        base_template += '@import "bootstrap";\n'
 
         jqui_css = inline_css_file(
             os.path.join(_template_dir, "jqueryui", "jquery.ui.all.css")
@@ -322,6 +320,8 @@ def render_css(request):
         css = apply_css_values(jqui_css, css_values)
 
         css = base_template + css
+    elif request.matchdict["which"] == "printlist":
+        css = base_template + '@import "ciocprintlist";\n'
 
     else:
         # theme
