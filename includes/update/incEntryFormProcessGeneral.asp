@@ -325,7 +325,7 @@ Sub sendNotifyEmails(strID, intFBID, strRecName)
 					TXT_RECORD_WAS_REVIEWED & _
 					vbCrLf & strDetailLink
 			While Not .EOF
-				If Not Nl(.Fields("SOURCE_EMAIL") Then
+				If Not Nl(.Fields("SOURCE_EMAIL")) Then
 					Call sendEmail(False, strSender, .Fields("SOURCE_EMAIL"), strSubject, strMsgText)
 				End If
 				.MoveNext
