@@ -145,7 +145,8 @@ class CiocRequest(CiocRequestMixin, Request):
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
 
-        # self.passvars
+        # passvars must be called once to set the culture on request.language otherwise it might not be called early enough
+        self.passvars
 
     def current_route_url(self, *elements, **kw):
         if "_query" not in kw:
