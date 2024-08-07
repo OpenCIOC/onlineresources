@@ -88,14 +88,19 @@ TD,P,BODY {
 
 .StdLabel {
 	font-weight: bold;
-	padding: 0.4em 1.5em 0.4em 0;
+}
+
+td.StdLabel {
 	width: 10em;
+	vertical-align: top;
+	padding: 0.4em 1.5em 0.4em 0;
 	white-space: nowrap;
 }
 
-.StdContent {
+td.StdContent {
 	padding: 0.4em 0 0.4em 0;
-	width: 100%
+	width: 100%;
+	vertical-align: top;
 }
 
 .RecordTable {
