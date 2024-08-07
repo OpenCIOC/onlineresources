@@ -93,7 +93,8 @@ basic_style_sheet_url = request.pageinfo.PathToStart + 'styles/d/' + str(request
 %endif
 
     </head>
-    <body bgcolor="#FFFFFF" text="#000000">
+    <body bgcolor="#FFFFFF" text="#000000" style="background-color: #FFFFFF; color: #000000;">
+		<div class="container" style="padding-top: 18px; padding-bottom: 18px; background-color: #FFFFFF;">
 ${profile.Header or "" |n}
 %if report_title:
 <h1 class="report-title-heading">${report_title}</h1>
@@ -285,7 +286,7 @@ ${build_name_table()}
 
 ${profile.Footer or "" |n}
 
-
+		</div>
     </body>
 </html>
 
