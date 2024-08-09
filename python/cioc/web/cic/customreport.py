@@ -153,7 +153,7 @@ class CustomReport(CicViewBase):
 
         if not model_state.validate():
             for key in model_state.form.errors:
-                model_state.form.data(key, None)
+                model_state.form.data.pop(key, None)
 
         community_ids = [x for x in model_state.value("CMID", None) or [] if x]
         community_ids = ",".join(map(str, community_ids)) if community_ids else None
