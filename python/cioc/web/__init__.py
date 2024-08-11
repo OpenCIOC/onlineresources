@@ -45,6 +45,7 @@ def invalid_path_tween_factory(handler, registry):
         # https://github.com/hypothesis/h/issues/4915
         try:
             request.path
+            request.GET
         except UnicodeDecodeError:
             return HTTPBadRequest()
 

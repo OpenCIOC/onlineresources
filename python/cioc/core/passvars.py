@@ -47,7 +47,10 @@ class PassVars:
         self.UseViewCIC = None
         self.UseViewVOL = None
 
-        self.initialize()
+        try:
+            self.initialize()
+        except UnicodeDecodeError:
+            pass
 
     def initialize(self):
         request = self.request
@@ -62,7 +65,7 @@ class PassVars:
                 except KeyError:
                     pass
         except UnicodeDecodeError:
-            raise httpexceptions.HTTPBadRequest()
+            pass
 
         if ln and syslanguage.is_active_culture(ln):
             self.RequestLn = ln
