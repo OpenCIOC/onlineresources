@@ -81,6 +81,8 @@ if PROCGOV_EXE:
         "--",
     ] + PDF_BASE_COMMAND
 
+PUBLIC_MUST_SET_KEYS = ("CMID", "GHID", "PBID", "IDList")
+
 
 class PrintListSchemaBase(validators.RootSchema):
     ignore_key_missing = True
@@ -269,6 +271,11 @@ class PrintListBase(viewbase.ViewBase):
             profile_id = request.viewdata.dom.DefaultPrintProfile
             if profile_id is None:
                 return self._security_failure()
+            data = model_state.form.data
+            if not any(data.get(x) for x in PUBLIC_MUST_SET_KEYS):
+                return self._render_error_page(
+                    _("No records were chosen to print.", request)
+                )
 
         if profile_id is None:
             return self._render_error_page(_("No Print Profile was chosen.", request))
