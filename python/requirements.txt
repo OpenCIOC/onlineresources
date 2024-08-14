@@ -163,7 +163,7 @@ webhelpers2==2.1
     # via
     #   -r requirements.in
     #   pyramid-simpleform
-webob==1.8.7
+webob==1.8.8
     # via pyramid
 zope-deprecation==5.0
     # via pyramid
