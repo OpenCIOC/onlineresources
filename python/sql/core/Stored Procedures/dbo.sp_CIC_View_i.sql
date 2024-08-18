@@ -235,7 +235,9 @@ IF @Error = 0 BEGIN
                 RefineField2,
                 RefineField3,
                 RefineField4,
-				CustomReportTool
+				RegionSelector,
+				CustomReportTool,
+				CommSrchDropDownExpand
             )
             SELECT
                 GETDATE(),
@@ -337,7 +339,9 @@ IF @Error = 0 BEGIN
                 RefineField2,
                 RefineField3,
                 RefineField4,
-				CustomReportTool
+				RegionSelector,
+				CustomReportTool,
+				CommSrchDropDownExpand
             FROM    dbo.CIC_View
             WHERE   ViewType = @DefaultView;
 

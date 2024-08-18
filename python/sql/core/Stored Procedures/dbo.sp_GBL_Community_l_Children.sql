@@ -10,18 +10,16 @@ WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.1
-	Checked by: KL
-	Checked on: 12-Jan-2012
-	Action: NO ACTION REQUIRED
-*/
-
-SELECT cm.CM_ID, ISNULL(cmn.Display,cmn.Name) AS Community
-	FROM GBL_Community cm
-	INNER JOIN GBL_Community_Name cmn
-		ON cm.CM_ID=cmn.CM_ID
-			AND cmn.LangID=(SELECT TOP 1 LangID FROM GBL_Community_Name WHERE CM_ID=cmn.CM_ID ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
+SELECT cm.CM_ID,
+	ISNULL(cmn.Display,cmn.Name) AS Community,
+	CASE WHEN EXISTS(SELECT * FROM dbo.GBL_Community_ParentList cpl WHERE cpl.Parent_CM_ID=cm.CM_ID)
+		THEN cioc_shared.dbo.fn_SHR_STP_ObjectName('Community')
+		ELSE NULL
+		END AS ChildCommunityType
+	FROM dbo.GBL_Community cm
+INNER JOIN dbo.GBL_Community_Name cmn
+	ON cm.CM_ID=cmn.CM_ID
+		AND cmn.LangID=(SELECT TOP 1 LangID FROM dbo.GBL_Community_Name WHERE CM_ID=cmn.CM_ID ORDER BY CASE WHEN LangID=@@LANGID THEN 0 ELSE 1 END, LangID)
 WHERE cm.ParentCommunity = @CM_ID
 ORDER BY cmn.Name
 

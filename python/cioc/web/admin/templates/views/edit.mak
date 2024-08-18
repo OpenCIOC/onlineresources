@@ -1285,6 +1285,8 @@ missing_cultures = [x for x in active_cultures if x not in view_cultures]
 							%if domain.id == const.DM_CIC:
 							<br>${renderer.errorlist("item.CommSrchDropDown")}
 							${renderer.checkbox("item.CommSrchDropDown", label=_('Display Communities as drop-down list'))}
+							<br>${renderer.errorlist("item.CommSrchDropDownExpand")}
+							${renderer.checkbox("item.CommSrchDropDownExpand", label=_('Community drop-down list expands to lower levels'))}
 							<br>${renderer.errorlist("item.OtherCommunity")}
 							${renderer.checkbox("item.OtherCommunity", label=_('"Other Community" search box is available'))}
 							%endif

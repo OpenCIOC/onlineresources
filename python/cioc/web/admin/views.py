@@ -171,6 +171,7 @@ class ViewBaseCICSchema(ViewBaseSchema):
     ShowRecordDetailsSidebar = validators.Bool()
 
     CommSrchDropDown = validators.Bool()
+    CommSrchDropDownExpand = validators.Bool()
 
     RefineField1 = ciocvalidators.IDValidator()
     RefineField2 = ciocvalidators.IDValidator()

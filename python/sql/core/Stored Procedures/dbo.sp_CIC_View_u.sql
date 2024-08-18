@@ -37,6 +37,7 @@ CREATE PROCEDURE [dbo].[sp_CIC_View_u]
 	@AssignSuggestionsTo varchar(3),
 	@AllowPDF bit,
 	@CommSrchDropDown bit,
+	@CommSrchDropDownExpand bit,
 	@OtherCommunity bit,
 	@RespectPrivacyProfile bit,
 	@PB_ID INT,
@@ -550,6 +551,7 @@ IF @Error = 0 BEGIN
 
 		-- CIC-only fields
 		CommSrchDropDown		= ISNULL(@CommSrchDropDown,0),
+		CommSrchDropDownExpand	= ISNULL(@CommSrchDropDownExpand,0),
 		OtherCommunity			= ISNULL(@OtherCommunity,OtherCommunity),
 		RespectPrivacyProfile	= ISNULL(@RespectPrivacyProfile,RespectPrivacyProfile),
 		PB_ID					= @PB_ID,

@@ -105,7 +105,8 @@ CREATE TABLE [dbo].[CIC_View]
 [SrchCommunityDefaultOnly] [bit] NOT NULL CONSTRAINT [DF_CIC_View_SrchCommunityDefaultOnly] DEFAULT ((0)),
 [AcceptCookiePrompt] [bit] NOT NULL CONSTRAINT [DF_CIC_View_AcceptCookiePrompt] DEFAULT ((0)),
 [RegionSelector] [bit] NOT NULL CONSTRAINT [DF_CIC_View_RegionSelector] DEFAULT ((0)),
-[CustomReportTool] [bit] NOT NULL CONSTRAINT [DF_CIC_View_CustomReportTool] DEFAULT ((0))
+[CustomReportTool] [bit] NOT NULL CONSTRAINT [DF_CIC_View_CustomReportTool] DEFAULT ((0)),
+[CommSrchDropDownExpand] [bit] NOT NULL CONSTRAINT [DF_CIC_View_CommSrchDropDownExpand] DEFAULT ((0))
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_View] WITH NOCHECK ADD CONSTRAINT [CK_CIC_View_TaxDefnLevel] CHECK (([TaxDefnLevel]>=(0) AND [TaxDefnLevel]<=(5)))
