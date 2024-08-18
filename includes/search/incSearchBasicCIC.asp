@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -66,15 +66,26 @@ strCCRStat = Request("CCRStat")
 
 Dim	strCMType, _
 	strCMID, _
+	intCMChild, _
+	strCMChild, _
 	strOtherCommunity, _
 	intOtherCommunityID
 
 strCMType = Request("CMType")
 If Nl(strCMType) Or Not IsNumeric(strCMType) Then
 	strCMID = Request("CMID")
+
 	If Not IsIDList(strCMID) Then
 		strCMID = vbNullString
 	End If
+
+	For intCMChild = 3 to 1 Step -1
+		strCMChild = Trim(Request("CMID" & intCMChild))
+		If IsIDList(strCMChild) Then
+			strCMID = strCMChild
+			Exit For
+		End If
+	Next
 
 	strOtherCommunity = Left(Trim(Request("OComm")),200)
 	intOtherCommunityID = Trim(Request("OCommID"))
