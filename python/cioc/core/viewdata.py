@@ -68,7 +68,8 @@ non_bool_view_values = {
     "PDFBottomMargin",
     "GoogleTranslateDisclaimer",
     "TagLine",
-    "DefaultPrintProfile"
+    "DefaultPrintProfile",
+    "CommSrchDropDownExpand",
 }
 
 
@@ -161,8 +162,9 @@ class ViewData:
                 passvars.setDefaultCultureVars(culture.Culture)
                 self.structured_site_name = culture.StructuredSiteName or request.host
                 if culture.StructuredSiteName:
-                    self.structured_site_name_alt = culture.StructuredSiteNameAlternate or request.host
-                     
+                    self.structured_site_name_alt = (
+                        culture.StructuredSiteNameAlternate or request.host
+                    )
 
             cursor.nextset()
 

@@ -85,3 +85,19 @@ from cioc.core.modelstate import convert_options
 		<input type="Submit" value="${_('Search')}" class="btn btn-default">
 	</div>
 </form>
+
+<%def name="bottomjs()">
+<form class="NotVisible" name="stateForm" id="stateForm">
+<textarea id="cache_form_values"></textarea>
+</form>
+<% renderinfo.list_script_loaded = True %>
+${request.assetmgr.JSVerScriptTag('scripts/bsearch.js')}
+${inlinebottomjs()}
+<script type="text/javascript">
+jQuery(function() {
+	init_cached_state();
+	init_bsearch_community_dropdown_expand("${_('Select ')}","${ request.passvars.makeLink(request.pageinfo.PathToStart + "jsonfeeds/community_generator.asp")}")
+	restore_cached_state();
+});
+</script>
+</%def>

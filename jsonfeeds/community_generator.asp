@@ -94,17 +94,22 @@ With rsCommFinder
 
 	Dim fldCommunity, _
 		fldDisplay, _
-		fldParent
+		fldParent, _
+		fldChildCommunityType
+
 
 	If Nl(strSearch) Then
 		Set fldCommunity = .Fields("Community")
 		Set fldDisplay = .Fields("Community")
 		fldParent = Null
+		Set fldChildCommunityType = .Fields("ChildCommunityType")
 	Else
 		Set fldCommunity = .Fields("Community")
 		Set fldDisplay = .Fields("Display")
 		Set fldParent = .Fields("ParentCommunityName")
+		fldChildCommunityType = Null
 	End If
+
 
 	Response.Write("[")
 	While Not .EOF
@@ -113,6 +118,7 @@ With rsCommFinder
 				",""label"":" & JSONQs(fldDisplay & _
 					StringIf(Not Nl(fldParent), _
 						" (" & TXT_IN & " " & fldParent & ")"), True) & _
+				StringIf(Not Nl(fldChildCommunityType), ",""child_community_type"":" & JSONQs(fldChildCommunityType, True)) & _
 				"}")
 		strJSONCon = ","
 		.MoveNext

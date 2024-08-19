@@ -59,6 +59,7 @@ subitem_prefix = Markup('&nbsp;&nbsp;&nbsp;&nbsp;')
 
 		init_community_autocomplete($, 'OComm', "${ request.passvars.makeLink(request.pageinfo.PathToStart + "jsonfeeds/community_generator.asp")}", 3, "#OCommID");
 		init_community_autocomplete($, 'OComm_2', "${ request.passvars.makeLink(request.pageinfo.PathToStart + "jsonfeeds/community_generator.asp")}", 3, "#OCommID_2");
+		init_bsearch_community_dropdown_expand("${_('Select ')}","${ request.passvars.makeLink(request.pageinfo.PathToStart + "jsonfeeds/community_generator.asp")}")
 
 		%if maps.hasGoogleMapsAPI(request):
 		if (!window.pageconstants) {

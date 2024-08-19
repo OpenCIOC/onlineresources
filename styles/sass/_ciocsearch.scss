@@ -34,7 +34,9 @@ td.checkbox-list-item label {
 }
 
 .community-search-type {
-	label, label.radio-inline {
+
+	label,
+	label.radio-inline {
 		font-weight: bold;
 	}
 }
@@ -62,8 +64,8 @@ td.checkbox-list-item label {
 
 .dlist-results {
 	max-width: $container-lg;
-    margin-top: 0;
-    margin-bottom: 18px;
+	margin-top: 0;
+	margin-bottom: 18px;
 }
 
 .vol-results-position-title {
@@ -82,8 +84,8 @@ td.checkbox-list-item label {
 
 	.fa {
 		width: 1em;
-		margin-right:0.25em;
-		text-align:center;
+		margin-right: 0.25em;
+		text-align: center;
 	}
 }
 
@@ -157,8 +159,11 @@ td.ListUI {
 	background-color: transparent;
 	border: 1px solid transparent;
 
-	&:hover, &:focus {
-		.glyphicon, .fa {
+	&:hover,
+	&:focus {
+
+		.glyphicon,
+		.fa {
 			color: $iconColorHover;
 		}
 
@@ -166,7 +171,9 @@ td.ListUI {
 		background-color: $bgColorHover;
 		color: $fcHover;
 
-	    a, a:link, a:visited {
+		a,
+		a:link,
+		a:visited {
 			color: $fcHover;
 			background-color: $bgColorHover;
 		}
@@ -181,11 +188,12 @@ td.ListUI {
 }
 
 @media (max-width: $screen-md) {
+
 	.basic-search-form-table,
-	.basic-search-form-table > tbody,
-	.basic-search-form-table > thead,
-	.basic-search-form-table > tbody > tr,
-	.basic-search-form-table > thead > tr,
+	.basic-search-form-table>tbody,
+	.basic-search-form-table>thead,
+	.basic-search-form-table>tbody>tr,
+	.basic-search-form-table>thead>tr,
 	.basic-search-row,
 	.search-community-row,
 	.search-community,
@@ -194,7 +202,9 @@ td.ListUI {
 		display: block;
 		width: 100%;
 	}
-	.search-community-row, search-heading-row {
+
+	.search-community-row,
+	search-heading-row {
 		margin-left: 1.5em;
 		width: 94%;
 	}
@@ -206,24 +216,28 @@ td.ListUI {
 
 @media (min-width: 456px) {
 	.community-dropdown-search-parent {
-		position: relative;
 		width: 100%;
-		height: 2em;
+		min-height: 2em;
 
 		.community-dropdown-search {
-			position: absolute;
+			float: left;
 		}
+
 		.community-dropdown-search-left {
-			left: 0;
 			width: 10em;
 			margin-bottom: 0;
 		}
+
 		.community-dropdown-search-right {
-			left: 10.5em;
-			right: 0;
+			width: calc(100% - 10em);
+			padding-left: 0.5em;
+			padding-bottom: 0.5em;
+		}
+
+		.community-dropdown-expand {
+			padding-bottom: 0.5em;
 		}
 
 
 	}
 }
-

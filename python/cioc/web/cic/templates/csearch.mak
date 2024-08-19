@@ -33,6 +33,7 @@ ${inlinebottomjs()}
 jQuery(function() {
 	init_cached_state();
 	init_pre_fill_search_parameters();
+	init_bsearch_community_dropdown_expand("${_('Select ')}","${ request.passvars.makeLink(request.pageinfo.PathToStart + "jsonfeeds/community_generator.asp")}")
 	restore_cached_state();
 });
 </script>

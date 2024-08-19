@@ -52,12 +52,14 @@ from cioc.core.utils import grouper
 	%endif
 		<div id="located-serving-community-wrap${idsuffix}">
 			%if communities:
+			<div class="community-dropdown-expand" data-enable-comm-expand="${1 if request.viewdata.cic.CommSrchDropDownExpand else 0}" data-select-count="0">
 			<select name="CMID" id="CMID${idsuffix}" class="form-control input-expand">
-				<option>${_('Select a Community')}</option>
+				<option value="">${_('Select a Community')}</option>
 				%for community in communities:
-				<option value="${community[0]}">${community[1]}</option>
+				<option value="${community[0]}" data-child-community-type="${community[2]}">${community[1]}</option>
 				%endfor
 			</select>
+			</div>
 			%elif show_other_box:
 			<input id="OComm${idsuffix}" name="OComm" type="text" placeholder="${_('Enter a community name')}" maxlength="200" class="form-control">
 			<input type="hidden" name="OCommID" id="OCommID${idsuffix}">

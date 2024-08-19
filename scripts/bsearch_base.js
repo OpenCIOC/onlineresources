@@ -1,4 +1,4 @@
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,7 +46,7 @@
 			$('.fix-group-single, .fix-group-multi').each(function() {
 				quicklist[this.id] = this.name;
 			});
-			
+
 			cache['QuickList'] = quicklist;
 		});
 		cache_register_onbeforerestorevalues(function(cache) {
@@ -83,19 +83,13 @@
 			urlParams[d(e[1])] = d(e[2]);
 		}
 		return urlParams;
-	},/* ajax_load_scripts = function(data) {
-        var dom = $(data);
-
-        dom.filter('script').each(function(){
-            $.globalEval(this.text || this.textContent || this.innerHTML || '');
-        });
-	},*/ init_bsearch_tabs = function(defaultParams, default_tab) {
+	}, init_bsearch_tabs = function(defaultParams, default_tab) {
 		var tabs = $('.make-me-tabbed');
 		var hash = window.location.hash;
 		hash = /^#search-tab-(\d+)/.exec(hash);
 		if (hash) {
 			default_tab = parseInt(hash[1], 10);
-			
+
 		}
 
 		if (tabs.length) {
@@ -115,7 +109,7 @@
 						href = href + '?' + jQuery.param(params);
 					}
 					elem.href = href;
-					
+
 				});
 			tabs.tabs({
 				active: default_tab,
@@ -124,7 +118,7 @@
 					event.preventDefault();
 					return;
 				}
- 
+
 				ui.jqXHR.success(function() {
 					ui.tab.data( "loaded", true );
 				});
@@ -160,6 +154,45 @@
 			self.toggleClass('placeholder', !self.val());
 		};
 		$('.check-placeholder').on('change', change).each(change);
+	};
+	window['init_bsearch_community_dropdown_expand'] = function(txt_select_a, comm_generator_url) {
+		// There could be more than one community drop down but they will all have the same enabled value
+		var enabled = $('.community-dropdown-expand').data('enableCommExpand') == 1;
+		if (enabled) {
+			$(document).on('change', '.community-dropdown-expand select', function() {
+				var name = this.name;
+				if (name.slice(-1) === "3") {
+					// CMID3 is the last one inserted, no more are allowed
+					return;
+				}
+				var self = $(this), expand=self.parent(), wrap=expand.parent(), value = self.val(),
+					child_comm_type = self.find('option[value=' + value + ']').data('childCommunityType'),
+					select_count = parseInt(expand.data('selectCount') || "0", 10);
+
+				// remove drop downs that are lower than this one
+				wrap.find('.community-dropdown-expand').map(function() {
+					return parseInt($(this).data('selectCount') || "0", 10) > select_count ? this : null
+				}).remove();
+
+				if (!child_comm_type) {
+					return;
+				}
+				if (value == self.find('option:first').prop('value')) {
+					return;
+				}
+
+				$.getJSON(comm_generator_url, {CMID: value}, function(data) {
+					var new_expand = expand.clone(), select = new_expand.find('select');
+					new_expand.data('selectCount', select_count + 1);
+					select.prop('name', 'CMID' + (select_count + 1)).prop('id', null).empty().append($('<option>').text(txt_select_a + " " + child_comm_type).prop('value', '').data('childCommunityType', null));
+					$.each(data, function(idx, el) {
+						$("<option>").text(el.label).prop('value', el.chkid).data('childCommunityType', el.child_community_type).appendTo(select);
+					});
+					new_expand.appendTo(wrap);
+				});
+
+			});
+		}
 	};
 
 	window['init_located_near_autocomplete'] = function($) {
@@ -215,7 +248,7 @@
 				var form = autocomplete_input.parents('form').submit(function(evt) {
 					if (autocomplete_input.data('last-location') == autocomplete_input.val() || !$.trim(autocomplete_input.val())) {
 						return;
-					} 
+					}
 					if (!google) {
 						return;
 					}
@@ -236,7 +269,7 @@
 					}));
 				});
 				initialize_maps(pageconstants.culture, pageconstants.maps_key_arg, function() {
-					var autocomplete = new google.maps.places.Autocomplete(autocomplete_input[0]);	
+					var autocomplete = new google.maps.places.Autocomplete(autocomplete_input[0]);
 					autocomplete.addListener('place_changed', function() {
 						var place = autocomplete.getPlace();
 						if (!place.geometry) {
@@ -251,7 +284,7 @@
 					});
 				}, true);
 			})
-			
+
 		}
 		selectors.each(change);
 	};

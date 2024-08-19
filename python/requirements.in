@@ -15,7 +15,7 @@
 # =========================================================================================
 
 pyodbc
-pyramid<2.0.0
+pyramid
 Babel
 Mako
 pyramid_mako
@@ -24,7 +24,7 @@ PasteDeploy
 PasteScript
 WebHelpers2
 isodate
-https://github.com/LexMachinaInc/util/archive/d82029336b2be595e74eefc9d07d9786c1b05e2b.zip#egg=marrow-util==1.2.4
+https://github.com/LexMachinaInc/util/archive/d82029336b2be595e74eefc9d07d9786c1b05e2b.zip#egg=marrow-util
 marrow-mailer
 FormEncode
 pyramid-simpleform==0.7.dev0
