@@ -92,7 +92,6 @@ from cioc.core.modelstate import convert_options
 </form>
 <% renderinfo.list_script_loaded = True %>
 ${request.assetmgr.JSVerScriptTag('scripts/bsearch.js')}
-${inlinebottomjs()}
 <script type="text/javascript">
 jQuery(function() {
 	init_cached_state();
