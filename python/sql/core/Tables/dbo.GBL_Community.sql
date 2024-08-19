@@ -11,7 +11,8 @@ CREATE TABLE [dbo].[GBL_Community]
 [ProvinceState] [int] NULL,
 [AlternativeArea] [bit] NOT NULL CONSTRAINT [DF_GBL_Community_AlternativeArea] DEFAULT ((0)),
 [Source] [nvarchar] (200) COLLATE Latin1_General_100_CI_AI NULL,
-[Authorized] [bit] NOT NULL CONSTRAINT [DF_GBL_Community_Authorized] DEFAULT ((0))
+[Authorized] [bit] NOT NULL CONSTRAINT [DF_GBL_Community_Authorized] DEFAULT ((0)),
+[PrimaryAreaType] [varchar] (30) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
 GO
 SET QUOTED_IDENTIFIER ON
@@ -91,20 +92,27 @@ END
 
 SET NOCOUNT OFF
 GO
-ALTER TABLE [dbo].[GBL_Community] ADD CONSTRAINT [PK_GBL_Community] PRIMARY KEY CLUSTERED  ([CM_ID]) ON [PRIMARY]
+ALTER TABLE [dbo].[GBL_Community] ADD CONSTRAINT [PK_GBL_Community] PRIMARY KEY CLUSTERED ([CM_ID]) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[GBL_Community] ADD CONSTRAINT [IX_GBL_Community] UNIQUE NONCLUSTERED  ([CM_GUID]) ON [PRIMARY]
+ALTER TABLE [dbo].[GBL_Community] ADD CONSTRAINT [IX_GBL_Community] UNIQUE NONCLUSTERED ([CM_GUID]) ON [PRIMARY]
 GO
 CREATE NONCLUSTERED INDEX [IX_GBL_Community_CMID] ON [dbo].[GBL_Community] ([CM_ID]) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[GBL_Community] ADD CONSTRAINT [FK_GBL_Community_GBL_Community] FOREIGN KEY ([ParentCommunity]) REFERENCES [dbo].[GBL_Community] ([CM_ID])
 GO
+ALTER TABLE [dbo].[GBL_Community] ADD CONSTRAINT [FK_GBL_Community_GBL_Community_Type] FOREIGN KEY ([PrimaryAreaType]) REFERENCES [dbo].[GBL_Community_Type] ([Code]) ON DELETE SET NULL ON UPDATE CASCADE
+GO
 ALTER TABLE [dbo].[GBL_Community] ADD CONSTRAINT [FK_GBL_Community_GBL_ProvinceState] FOREIGN KEY ([ProvinceState]) REFERENCES [dbo].[GBL_ProvinceState] ([ProvID]) ON DELETE SET NULL ON UPDATE CASCADE
 GO
 GRANT SELECT ON  [dbo].[GBL_Community] TO [cioc_cic_search_role]
-GRANT SELECT ON  [dbo].[GBL_Community] TO [cioc_login_role]
-GRANT INSERT ON  [dbo].[GBL_Community] TO [cioc_login_role]
+GO
 GRANT DELETE ON  [dbo].[GBL_Community] TO [cioc_login_role]
+GO
+GRANT INSERT ON  [dbo].[GBL_Community] TO [cioc_login_role]
+GO
+GRANT SELECT ON  [dbo].[GBL_Community] TO [cioc_login_role]
+GO
 GRANT UPDATE ON  [dbo].[GBL_Community] TO [cioc_login_role]
+GO
 GRANT SELECT ON  [dbo].[GBL_Community] TO [cioc_vol_search_role]
 GO

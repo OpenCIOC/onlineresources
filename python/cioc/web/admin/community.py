@@ -46,7 +46,7 @@ log = logging.getLogger(__name__)
 
 EditValues = collections.namedtuple(
     "EditValues",
-    "CM_ID community descriptions alt_names alt_areas prov_state alt_area_name_map shown_cultures",
+    "CM_ID community descriptions alt_names alt_areas prov_state area_type alt_area_name_map shown_cultures",
 )
 
 
@@ -54,7 +54,7 @@ def xml_to_dict_list(text):
     if not text:
         return []
 
-    root = ET.fromstring("<root>" + text.encode("utf8") + "</root>")
+    root = ET.fromstring(b"<root>" + text.encode("utf8") + b"</root>")
 
     return [el.attrib for el in root]
 
@@ -65,6 +65,7 @@ class CommunityBaseSchema(Schema):
     ParentCommunity = ciocvalidators.IDValidator()
     ParentCommunityName = ciocvalidators.UnicodeString()
     ProvinceState = ciocvalidators.IDValidator()
+    PrimaryAreaType = ciocvalidators.CodeValidator()
 
 
 class CommunityDescriptionSchema(Schema):
@@ -125,13 +126,19 @@ class Community(viewbase.AdminViewBase):
             self._security_failure()
 
         with request.connmgr.get_connection("admin") as conn:
-            cursor = conn.execute("EXEC sp_GBL_Community_l")
+            cursor = conn.execute("EXEC sp_GBL_Community_l_Admin")
+            
             communities = cursor.fetchall()
+
+            cursor.nextset()
+
+            altcommunities = cursor.fetchall()
+
             cursor.close()
 
         title = _("Manage Communities", request)
         return self._create_response_namespace(
-            title, title, dict(communities=communities), no_index=True
+            title, title, dict(communities=communities, altcommunities=altcommunities), no_index=True
         )
 
     @view_config(
@@ -177,6 +184,7 @@ class Community(viewbase.AdminViewBase):
                 is_alt_area,
                 cm_data.get("ParentCommunity"),
                 cm_data.get("ProvinceState"),
+                cm_data.get("PrimaryAreaType")
             ]
 
             root = ET.Element("DESCS")
@@ -300,6 +308,7 @@ class Community(viewbase.AdminViewBase):
                 CM_ID=CM_ID,
                 is_alt_area=is_alt_area,
                 prov_state=edit_values.prov_state,
+                area_type=edit_values.area_type,
                 alt_area_name_map=edit_values.alt_area_name_map,
                 shown_cultures=shown_cultures,
                 record_cultures=record_cultures,
@@ -342,6 +351,7 @@ class Community(viewbase.AdminViewBase):
                 is_add=is_add,
                 is_alt_area=is_alt_area,
                 prov_state=edit_values.prov_state,
+                area_type=edit_values.area_type,
                 alt_area_name_map=edit_values.alt_area_name_map,
                 shown_cultures=edit_values.shown_cultures,
                 record_cultures=syslanguage.active_record_cultures(),
@@ -357,6 +367,7 @@ class Community(viewbase.AdminViewBase):
         alt_names = []
         alt_areas = []
         prov_state = []
+        area_type = []
         alt_area_name_map = {}
 
         with request.connmgr.get_connection("admin") as conn:
@@ -389,6 +400,16 @@ class Community(viewbase.AdminViewBase):
                     ).fetchall(),
                 )
             )
+
+            area_type = list(
+                map(
+                    tuple,
+                    conn.execute(
+                        "EXEC sp_GBL_Community_Type_l_Admin"
+                    ).fetchall(),
+                )
+            )
+            
             if alt_area_get_names:
                 alt_area_name_map = {
                     str(x[0]): x[1]
@@ -413,6 +434,7 @@ class Community(viewbase.AdminViewBase):
             alt_names,
             alt_areas,
             prov_state,
+            area_type,
             alt_area_name_map,
             shown_cultures,
         )

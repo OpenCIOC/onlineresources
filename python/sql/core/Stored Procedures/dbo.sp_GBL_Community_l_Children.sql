@@ -12,8 +12,17 @@ SET NOCOUNT ON
 
 SELECT cm.CM_ID,
 	ISNULL(cmn.Display,cmn.Name) AS Community,
-	CASE WHEN EXISTS(SELECT * FROM dbo.GBL_Community_ParentList cpl WHERE cpl.Parent_CM_ID=cm.CM_ID)
-		THEN cioc_shared.dbo.fn_SHR_STP_ObjectName('Community')
+	CASE WHEN EXISTS(SELECT * FROM dbo.GBL_Community WHERE ParentCommunity=cm.CM_ID)
+		THEN (SELECT TOP 1
+				ISNULL(ctn.Article,'') + ' ' + ISNULL(ctn.Simplified, ctn.Name)
+			FROM dbo.GBL_Community_Type ct
+			LEFT JOIN dbo.GBL_Community_Type_Name ctn
+				ON ctn.Code = ct.Code AND ctn.LangID=@@LANGID
+			LEFT JOIN dbo.GBL_Community cmp
+				ON ct.Code=cmp.PrimaryAreaType AND cmp.ParentCommunity=cm.CM_ID
+			WHERE cmp.CM_ID IS NOT NULL OR ct.Code='COMMUNITY'
+			GROUP BY ISNULL(ctn.Article,'') + ' ' + ISNULL(ctn.Simplified, ctn.Name)
+			ORDER BY COUNT(cmp.CM_ID) DESC)
 		ELSE NULL
 		END AS ChildCommunityType
 	FROM dbo.GBL_Community cm

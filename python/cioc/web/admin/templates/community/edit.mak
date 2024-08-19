@@ -34,7 +34,7 @@ from markupsafe import Markup
 </style>
 
 <p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> | <a href="${request.passvars.route_path('admin_community_index')}">${_('Return to Communities')}</a> ]</p>
-<form method="post" action="${request.current_route_path()}">
+<form method="post" action="${request.current_route_path()}" class="form">
 <div class="NotVisible">
 ${request.passvars.cached_form_vals|n}
 %if not is_add:
@@ -122,7 +122,7 @@ ${self.makeMgmtInfo(community)}
 		<td class="FieldLabelLeftClr">${renderer.label("descriptions." +lang.FormCulture + ".Name", lang.LanguageName)}</td>
 		<td>
 			${renderer.errorlist("descriptions." +lang.FormCulture + ".Name")}
-			${renderer.text("descriptions." +lang.FormCulture + ".Name", maxlength=200)}
+			${renderer.text("descriptions." +lang.FormCulture + ".Name", maxlength=200, class_='form-control')}
 		</td>
 	</tr>
 %endfor
@@ -139,7 +139,7 @@ ${self.makeMgmtInfo(community)}
 		<td class="FieldLabelLeftClr">${renderer.label("descriptions." +lang.FormCulture + ".Display", lang.LanguageName)}</td>
 		<td>
 			${renderer.errorlist("descriptions." +lang.FormCulture + ".Display")}
-			${renderer.text("descriptions." +lang.FormCulture + ".Display", maxlength=200)}
+			${renderer.text("descriptions." +lang.FormCulture + ".Display", maxlength=200, class_='form-control')}
 		</td>
 	</tr>
 %endfor
@@ -151,20 +151,27 @@ ${self.makeMgmtInfo(community)}
 	<td>
 		${renderer.errorlist('community.ParentCommunity')}
 		${renderer.hidden('community.ParentCommunity', id='community_ParentCommunity')}
-		${renderer.text('community.ParentCommunityName', id='community_ParentCommunityWeb')}
+		${renderer.text('community.ParentCommunityName', id='community_ParentCommunityWeb', class_='form-control')}
 	</td>
 </tr>
 <tr>
 	<td class="FieldLabelLeft NoWrap">${renderer.label('community.ProvinceState', _('Province, State and/or Country'))}</td>
 	<td>
 		${renderer.errorlist('community.ProvinceState')}
-		${renderer.select('community.ProvinceState', [('','')] + prov_state)}
+		${renderer.select('community.ProvinceState', [('','')] + prov_state, class_='form-control')}
+	</td>
+</tr>
+<tr>
+	<td class="FieldLabelLeft NoWrap">${renderer.label('community.PrimaryAreaType', _('Primary Area Type'))}</td>
+	<td>
+		${renderer.errorlist('community.PrimaryAreaType')}
+		${renderer.select('community.PrimaryAreaType', [('','')] + area_type, class_='form-control')}
 	</td>
 </tr>
 <tr>
 	<td class="FieldLabelLeft NoWrap">${_('Alternate Name(s)')}</td>
 	<td>
-		<table class="form-table${' hidden' if not renderer.form.data.get('alt_names') else ''}" id="alt-name-target">
+		<table class="BasicBorder cell-padding-4 full-width form-table${' hidden' if not renderer.form.data.get('alt_names') else ''}" id="alt-name-target">
 			<tr>
 				<th class="ui-widget-header">${_('Alt Name')}</th>
 				<th class="ui-widget-header">${_('Language')}</th>
@@ -175,7 +182,7 @@ ${self.makeMgmtInfo(community)}
 			${make_alt_name(prefix)}
 		%endfor
 		</table>
-		<input type="button" id="add-alternate-name" value="${_('Add')}">
+		<input type="button" id="add-alternate-name" value="${_('Add')}"  class="btn btn-info">
 	</td>
 </tr>
 %if is_alt_area:
@@ -186,16 +193,14 @@ ${self.makeMgmtInfo(community)}
 	</td>
 </tr>
 %endif
-<tr>
-	<td colspan="2">
-		<input type="submit" name="Submit" value="${_('Add') if is_add else _('Update')}"> 
-		%if not is_add and can_delete:
-			<input type="submit" name="Delete" value="${_('Delete')}"> 
-		%endif
-		<input type="reset" value="${_('Reset Form')}">
-	</td>
-</tr>
 </table>
+<div class="clear-line-above">
+	<input type="submit" name="Submit" value="${_('Add') if is_add else _('Update')}" class="btn btn-default">
+	%if not is_add and can_delete:
+	<input type="submit" name="Delete" value="${_('Delete')}" class="btn btn-default">
+	%endif
+	<input type="reset" value="${_('Reset Form')}" class="btn btn-default">
+</div>
 </form>
 
 <%def name="make_alt_name(prefix, default_new=False)">
@@ -205,12 +210,12 @@ is_new = renderer.value(prefix + 'New', default_new)
 <tr ${sc.shown_cultures_attrs(renderer.value(prefix + 'Culture')) if not is_new else ''}>
 	<td class="ui-widget-content">
 		${renderer.errorlist(prefix + 'AltName')}
-		${renderer.text(prefix + 'AltName')}
+		${renderer.text(prefix + 'AltName', class_='form-control')}
 	</td>
 	<td class="ui-widget-content">
 		${renderer.errorlist(prefix + 'Culture')}
 		%if is_new:
-			${renderer.select(prefix + 'Culture', self.languages)}
+			${renderer.select(prefix + 'Culture', self.languages, class_='form-control')}
 		%else:
 			${culture_map[renderer.value(prefix + 'Culture', 'en-CA').replace('_', '-')].LanguageName}
 			${renderer.hidden(prefix + 'Culture')}

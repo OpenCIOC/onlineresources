@@ -9,6 +9,7 @@ CREATE PROCEDURE [dbo].[sp_GBL_Community_u]
 	@AlternativeArea bit,
 	@ParentCommunity [int],
 	@ProvinceState [int],
+	@PrimaryAreaType varchar(20),
 	@Descriptions [xml],
 	@AltNames [xml],
 	@AltSearchAreas [xml],
@@ -65,6 +66,8 @@ DECLARE @ShownCulturesTable TABLE (
 DECLARE @UsedNames nvarchar(max),
 		@BadCultures nvarchar(max),
 		@BadAltNameCultures nvarchar(max)
+
+SELECT @PrimaryAreaType=Code FROM dbo.GBL_Community_Type WHERE Code=@PrimaryAreaType
 
 INSERT INTO @DescTable (
 	Culture,
@@ -148,13 +151,14 @@ END
 
 IF @Error = 0 BEGIN
 	IF @CM_ID IS NULL BEGIN
-		INSERT INTO GBL_Community (
+		INSERT INTO dbo.GBL_Community (
 			CREATED_DATE,
 			CREATED_BY,
 			MODIFIED_DATE,
 			MODIFIED_BY,
 			ParentCommunity,
 			ProvinceState,
+			PrimaryAreaType,
 			AlternativeArea
 		) VALUES (
 			GETDATE(),
@@ -162,6 +166,7 @@ IF @Error = 0 BEGIN
 			GETDATE(),
 			@MODIFIED_BY,
 			@ParentCommunity,
+			@PrimaryAreaType,
 			@ProvinceState,
 			@AlternativeArea
 		)
@@ -171,7 +176,8 @@ IF @Error = 0 BEGIN
 		SET	MODIFIED_DATE	= GETDATE(),
 			MODIFIED_BY		= @MODIFIED_BY,
 			ParentCommunity	= @ParentCommunity,
-			ProvinceState	= @ProvinceState
+			ProvinceState	= @ProvinceState,
+			PrimaryAreaType = @PrimaryAreaType
 		WHERE CM_ID = @CM_ID	
 	END
 	EXEC @Error = cioc_shared.dbo.sp_STP_UnknownErrorCheck @@ERROR, @CommunityObjectName, @ErrMsg
