@@ -131,6 +131,7 @@ def get_config_item(
 def email_log(
     args: ArgsType,
     outputstream: io.StringIO,
+    subject: str,
     is_error: bool,
     config_base: str,
     *,
@@ -154,7 +155,7 @@ def email_log(
             fakerequest(args.config),
             author,
             _to,
-            "Import from iCarol%s" % (" -- ERRORS!" if is_error else ""),
+            subject % (" -- ERRORS!" if is_error else ""),
             outputstream.getvalue().replace("\r", "").replace("\n", "\r\n"),
         )
     except Exception as e:

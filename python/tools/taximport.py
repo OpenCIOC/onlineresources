@@ -248,7 +248,6 @@ def init_threadpool_thread():
 
 @dataclass
 class TaxonomyArgsTypeBase(ArgsType):
-    modified_since: datetime.datetime = datetime.datetime(1999, 1, 1)
     skip_import: bool = False
     capture_changes: bool = False
     use_capture: bool = False
@@ -263,44 +262,9 @@ class TaxonomyArgsType(TaxonomyArgsTypeBase):
     session: requests.Session = field(default_factory=requests.Session)
     s3_client: S3Client = field(default_factory=botos3_factory)
     host: str = ""
-    default_api_key: str = ""
     s3_bulk_import_bucket: str = ""
     s3_bulk_import_prefix: str = ""
     languages: t.List[LangSetting] = field(default_factory=list)
-
-
-# def get_terms_list(args, parent_code=None):
-#     api_key = args.key_en
-#     url = f"https://{args.host}/api/v1/terms"
-#     if parent_code:
-#         url = url + "?" + urllib.parse.urlencode({"parent": parent_code})
-
-#     while url:
-#         print(f"starting {parent_code=}, {url=}")
-#         response = args.session.get(url, headers={"Authorization": f"Bearer {api_key}"})
-#         response.raise_for_status()
-#         data = response.json()
-#         meta = data.get("meta")
-
-#         next = None
-#         if meta:
-#             page = meta.get("page")
-#             if page:
-#                 next = page.get("next")
-
-#         terms = data.get("data")
-#         if terms is None:
-#             print(parent_code, data)
-#             raise Exception("No data returned from terms API")
-
-#         for term in terms:
-#             yield term
-#             if term.get("has_children"):
-#                 yield from get_terms_list(args, term["code"])
-
-#         num_terms = len(terms)
-#         print(f"Completed {parent_code=}, {url=}, {next=}, {num_terms=}")
-#         url = next
 
 
 def fix_datetime(obj, datetime_fields):
@@ -659,12 +623,7 @@ def prepare_session(args: TaxonomyArgsTypeBase) -> TaxonomyArgsType:
     return TaxonomyArgsType(
         **{
             "session": session,
-            "host": get_config_item(args, "tax_import_api_host"),
-            "default_api_key": get_config_item(
-                args,
-                "tax_import_api_key_en",
-                get_config_item(args, "tax_import_api_key_fr", ""),
-            ),
+            "host": get_config_item(args, "tax_import_api_host", "211hsis.org"),
             "s3_bulk_import_bucket": get_config_item(args, "s3_bulk_import_bucket"),
             "s3_bulk_import_prefix": get_config_item(args, "s3_bulk_import_prefix"),
             "s3_client": boto3.client("s3"),
@@ -689,9 +648,6 @@ def parse_args(argv) -> TaxonomyArgsTypeBase:
         "--config-prefix", dest="config_prefix", action="store", default=""
     )
     parser.add_argument(
-        "--modified-since", dest="modified_since", action="store", default=None
-    )
-    parser.add_argument(
         "--skip-import", dest="skip_import", action="store_true", default=False
     )
     parser.add_argument(
@@ -705,11 +661,6 @@ def parse_args(argv) -> TaxonomyArgsTypeBase:
     if args.config_prefix and not args.config_prefix.endswith("."):
         args.config_prefix += "."
 
-    if args.modified_since and args.modified_since != "any":
-        try:
-            args.modified_since = isodate.parse_datetime(args.modified_since)
-        except:
-            parser.error("invalid date format must be like 2018-10-10T15:45:00")
     return TaxonomyArgsTypeBase(**vars(args))
 
 
@@ -820,8 +771,6 @@ def update_db_state(context, cultures):
 
 
 def run_update_taxonomy(args: TaxonomyArgsType, context):
-    # langs = get_config_item(args, "tax_import_languages", "en-CA").split(",")
-
     with get_bulk_connection(_lang_settings[0].sql_language) as conn:
         if args.capture_changes or not args.use_capture:
             updated, cultures = fetch_updated_terms_from_211hsis(args, conn)
@@ -872,7 +821,13 @@ def main(argv):
         retval = 1
 
     if args.email:
-        email_log(args, fakestdout, sys.stderr.is_dirty(), "tax_import")
+        email_log(
+            args,
+            fakestdout,
+            f"Tax import for {const._app_name}%s",
+            sys.stderr.is_dirty(),
+            "tax_import",
+        )
 
     return retval
 

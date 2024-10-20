@@ -799,6 +799,7 @@ def generate_and_upload_import(context):
                     email_log(
                         context.args,
                         stdout,
+                        "Import from iCarol%s",
                         stderr.is_dirty(),
                         "o211_import",
                         to=member.ImportNotificationEmailCIC,
