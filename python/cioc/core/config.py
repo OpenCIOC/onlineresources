@@ -51,22 +51,14 @@ class ConfigManager:
             self.load()
 
 
-_config: ConfigManager = None
+_config: t.Optional[ConfigManager] = None
 
 
-def get_config(
-    config_file: str, app_name: str, include_changed: bool = False
-) -> t.Union[dict, tuple[dict, bool]]:
+def get_config(config_file: str, app_name: str) -> dict:
     global _config
     if not _config:
         _config = ConfigManager(config_file, app_name)
-        changed = True
     else:
-        before = _config._changed
         _config.maybe_reload(config_file)
-        changed = _config._changed != before
-
-    if include_changed:
-        return _config.config_dict.copy(), changed
 
     return _config.config_dict.copy()

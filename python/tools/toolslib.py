@@ -2,9 +2,10 @@ import io
 import os
 import sys
 import typing as t
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from pyramid.decorator import reify
+import pyodbc
 
 try:
     import cioc  # NOQA
@@ -12,8 +13,18 @@ except ImportError:
     sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from cioc.core import constants as const, request, config, email
+from cioc.core.connection import ConnectionError
+
+import typing as t
+
+if t.TYPE_CHECKING:
+    from functools import cached_property as reify
 
 const.update_cache_values()
+
+dts_file_template = os.path.join(
+    os.environ.get("CIOC_UDL_BASE", r"d:\UDLS"), "%s", "cron_job_runner.UDL"
+)
 
 
 @dataclass
@@ -22,7 +33,7 @@ class ArgsType:
     config_prefix: str = ""
     test: bool = False
     email: bool = False
-    config: t.Optional[dict] = None
+    config: dict = field(default_factory=dict)
 
 
 class ContextBase:
@@ -37,7 +48,7 @@ class ContextBase:
 class Context(request.CiocRequestMixin, ContextBase):
     @reify
     def config(self) -> dict:
-        return config.get_config(self.args.configfile, const._app_name)
+        return config.get_config(self.args.configfile, const._app_name or "")
 
 
 class fakerequest:
@@ -68,7 +79,7 @@ class FileWriteDetector:
     def is_dirty(self) -> bool:
         return self.__dirty
 
-    def write(self, string: str) -> None:
+    def write(self, string: str) -> t.Optional[int]:
         self.__dirty = True
         return self.__obj.write(string)
 
@@ -94,9 +105,21 @@ DEFAULT = OptionalValue = DefaultClass()
 del DefaultClass
 
 
+@t.overload
+def get_config_item(args: ArgsType, key: str, default: str) -> str: ...
+
+
+@t.overload
+def get_config_item(args: ArgsType, key: str, default: None) -> t.Optional[str]: ...
+
+
+@t.overload
+def get_config_item(args: ArgsType, key: str) -> str: ...
+
+
 def get_config_item(
     args: ArgsType, key: str, default: OptionalValue[str, None] = DEFAULT
-) -> t.Optional[str]:
+):
     config_prefix = args.config_prefix
     config = args.config
     if default is DEFAULT:
@@ -117,19 +140,20 @@ def email_log(
         author = get_config_item(
             args, f"{config_base}_notify_from", const.CIOC_ADMIN_EMAIL
         )
-        to = [
+        _to = [
             x.strip()
             for x in (
                 to
                 or get_config_item(
                     args, f"{config_base}_notify_emails", const.CIOC_ADMIN_EMAIL
                 )
+                or ""
             ).split(",")
         ]
         email.send_email(
             fakerequest(args.config),
             author,
-            to,
+            _to,
             "Import from iCarol%s" % (" -- ERRORS!" if is_error else ""),
             outputstream.getvalue().replace("\r", "").replace("\n", "\r\n"),
         )
@@ -138,3 +162,37 @@ def email_log(
             f"unable to send email log: {outputstream.getvalue()},{str(e)}",
             e,
         )
+
+
+def get_bulk_connection(language) -> pyodbc.Connection:
+    dts = dts_file_template % const._app_name
+    with open(dts, "rb") as dts_file:
+        # the [1:] is there to drop the bom from the start of the file
+        connstr = dts_file.read().decode("utf_16").replace("\r", "").split("\n")
+
+    line = ""
+    for line in connstr:
+        if line and line.startswith((";", "[")):
+            continue
+
+        break
+
+    assert line
+
+    settings = dict(x.split("=") for x in line.split(";"))
+    settings = [
+        ("Driver", "{ODBC Driver 17 for SQL Server}"),
+        ("Server", settings["Data Source"]),
+        ("Database", settings["Initial Catalog"]),
+        ("UID", settings["User ID"]),
+        ("PWD", settings["Password"]),
+    ]
+    connstr = ";".join("=".join(x) for x in settings)
+
+    try:
+        conn = pyodbc.connect(connstr, autocommit=True, unicode_results=True)
+        conn.execute("SET LANGUAGE '" + language + "'")
+    except pyodbc.Error as e:
+        raise ConnectionError(e)
+
+    return conn

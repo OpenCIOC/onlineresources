@@ -27,9 +27,9 @@ from io import StringIO, TextIOWrapper
 import os
 import sys
 import tempfile
+import typing as t
 import traceback
 import urllib.parse
-import pyodbc
 from collections import OrderedDict
 from datetime import datetime
 from threading import Thread
@@ -38,15 +38,6 @@ from operator import itemgetter
 import boto3
 import isodate
 import requests
-
-# import pyarrow as pa
-# import pyarrow.parquet as pq
-
-import typing as t
-
-if t.TYPE_CHECKING:
-    from boto3_type_annotations.s3 import Client
-
 
 try:
     import cioc  # NOQA
@@ -58,14 +49,17 @@ from tools.toolslib import (
     FileWriteDetector,
     get_config_item,
     email_log,
+    get_bulk_connection,
 )
 
 
 from cioc.core import constants as const
 from cioc.core import syslanguage
 from cioc.core.utf8csv import UTF8CSVWriter, SQLServerBulkDialect
-from cioc.core.connection import ConnectionError
 from cioc.web.import_.upload import process_import
+
+if t.TYPE_CHECKING:
+    from boto3_type_annotations.s3 import Client
 
 
 CREATE_NO_WINDOW = 0x08000000
@@ -306,10 +300,6 @@ AllRecordsFieldOrder = [
     "UpdatedOn",
 ]
 
-dts_file_template = os.path.join(
-    os.environ.get("CIOC_UDL_BASE", r"d:\UDLS"), "%s", "cron_job_runner.UDL"
-)
-
 
 class ICarolFetchContext(Context):
     s3_client: Client
@@ -317,38 +307,6 @@ class ICarolFetchContext(Context):
     def __init__(self, args, s3_client):
         super().__init__(args)
         self.s3_client = s3_client
-
-
-def get_bulk_connection(language):
-    dts = dts_file_template % const._app_name
-    with open(dts, "rb") as dts_file:
-
-        # the [1:] is there to drop the bom from the start of the file
-        connstr = dts_file.read().decode("utf_16").replace("\r", "").split("\n")
-
-    for line in connstr:
-        if line and line.startswith((";", "[")):
-            continue
-
-        break
-
-    settings = dict(x.split("=") for x in line.split(";"))
-    settings = [
-        ("Driver", "{ODBC Driver 17 for SQL Server}"),
-        ("Server", settings["Data Source"]),
-        ("Database", settings["Initial Catalog"]),
-        ("UID", settings["User ID"]),
-        ("PWD", settings["Password"]),
-    ]
-    connstr = ";".join("=".join(x) for x in settings)
-
-    try:
-        conn = pyodbc.connect(connstr, autocommit=True, unicode_results=True)
-        conn.execute("SET LANGUAGE '" + language + "'")
-    except pyodbc.Error as e:
-        raise ConnectionError(e)
-
-    return conn
 
 
 def prepare_session(args):
@@ -604,7 +562,6 @@ def push_to_database(context, lang, queue):
     """
     next_modified = context.args.next_modified_since
     with get_bulk_connection(language=lang.sql_language) as conn:
-
         while True:
             batch = queue.get()
             if batch is None:
@@ -848,7 +805,6 @@ def generate_and_upload_import(context):
                     )
 
             finally:
-
                 if stderr.is_dirty():
                     print(stdout.getvalue(), file=sys.stderr)
                 else:

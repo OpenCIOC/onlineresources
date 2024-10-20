@@ -19,12 +19,6 @@
 import logging
 from datetime import datetime
 
-# 3rd party libs
-from pyramid.decorator import reify
-
-# this app
-from . import constants as const
-
 log = logging.getLogger(__name__)
 
 
@@ -47,7 +41,7 @@ class DbOptionsDescription:
 
 class DbOptions:
     def __init__(self, domain_info, request, force_load):
-        self.dbopts = None
+        # self.dbopts = None
         self.domain_info = domain_info
         self.member_id = domain_info["MemberID"]
         self._last_modified = None
@@ -167,7 +161,7 @@ def fetch_domain_map(request, reset_db):
 
     try:
         val = cache.get_or_create("domain_map", get_domain_map_values)
-    except Exception as e:
+    except Exception:
         if not reset_db:
             return fetch_domain_map(request, reset_db=True)
         raise

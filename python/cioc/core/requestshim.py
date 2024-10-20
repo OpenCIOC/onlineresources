@@ -25,6 +25,11 @@ from cioc.core import syslanguage
 from cioc.core.request import CiocRequestMixin
 from cioc.core.modelstate import ModelState
 
+import typing as t
+
+if t.TYPE_CHECKING:
+    from functools import cached_property as reify
+
 
 class FakeRegistry:
     pass

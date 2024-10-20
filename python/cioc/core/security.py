@@ -38,6 +38,11 @@ from cioc.core.i18n import gettext, format_datetime
 from cioc.core.email import send_email, format_message
 import base64
 
+import typing as t
+
+if t.TYPE_CHECKING:
+    from functools import cached_property as reify
+
 
 def Crypt(salt, password, repeat):
     pbkdf2 = PBKDF2(
@@ -468,7 +473,6 @@ def is_basic_security_failure(request, require_login):
     if (pageinfo.Domain == const.DM_CIC and not request.dboptions.UseCIC) or (
         pageinfo.Domain == const.DM_VOL and not request.dboptions.UseVOL
     ):
-
         return True
 
     if (
@@ -477,7 +481,6 @@ def is_basic_security_failure(request, require_login):
         and not user
         and pageinfo.ThisPage.lower() != "/"
     ):
-
         return True
 
     return False

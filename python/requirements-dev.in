@@ -3,4 +3,4 @@
 flake8
 black
 pyramid_debugtoolbar
-boto3_type_annotations
+boto3-stubs[s3]

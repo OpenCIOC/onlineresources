@@ -24,6 +24,11 @@ import cioc.core.constants as const
 from cioc.core.basetypes import IsIDType
 from cioc.core.security import get_remote_ip
 
+import typing as t
+
+if t.TYPE_CHECKING:
+    from functools import cached_property as reify
+
 log = logging.getLogger(__name__)
 
 

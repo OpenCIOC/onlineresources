@@ -43,6 +43,8 @@ from cioc.core import (
 
 if t.TYPE_CHECKING:
     from .pageinfo import PageInfo
+    from functools import cached_property as reify
+
 
 log = logging.getLogger(__name__)
 
@@ -53,7 +55,7 @@ class CiocRequestMixin:
 
     @reify
     def app_name(self) -> str:
-        return const._app_name
+        return const._app_name or ""
 
     @reify
     def MemberID(self) -> int:

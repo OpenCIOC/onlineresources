@@ -131,7 +131,7 @@ SELECT
 	CONVERT(varchar,GETDATE(),126) AS "OriginTimestamp",
 	'CIOC' AS "SoftwareVendor",
 	'3.6.2' AS "SoftwareVersion",
-	(SELECT CONVERT(varchar,ReleaseDate,126) FROM tax_updater.dbo.MetaData WHERE Language='eng') AS "TaxonomyVersion",
+	(SELECT CONVERT(varchar,ReleaseDate,126) FROM dbo.TAX_U_MetaData WHERE Language='en') AS "TaxonomyVersion",
 	'3.0' AS "SchemaVersion"
 
 SELECT (

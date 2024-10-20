@@ -10,32 +10,25 @@ BEGIN
 
 SET NOCOUNT ON
 
-/*
-	Checked for Release: 3.5
-	Checked by: KL
-	Checked on: 15-Oct-2012
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE @SRC_ID int
-SET @SRC_ID = (SELECT TOP 1 TAX_SRC_ID FROM TAX_Source_Name WHERE SourceName='INFO LINE')
+SET @SRC_ID = (SELECT TOP 1 TAX_SRC_ID FROM TAX_Source_Name WHERE SourceName IN ('211HSIS','INFO LINE'))
 
 /* Delete invalid Unused Terms */
 DELETE ut
-	FROM TAX_Unused ut
+	FROM dbo.TAX_Unused ut
 WHERE Authorized=1
 	AND Term IS NOT NULL
 	AND NOT EXISTS(
-		SELECT * FROM tax_updater.dbo.UPDATER_Unused
+		SELECT * FROM dbo.TAX_U_Unused
 		WHERE Code=ut.Code
 			AND (
-				(Term=ut.Term COLLATE Latin1_General_100_CI_AI AND ut.LangID=0)
-				OR (TermEq=ut.Term COLLATE Latin1_General_100_CI_AI AND ut.LangID=2)
+				(Term_en=ut.Term COLLATE Latin1_General_100_CS_AS AND ut.LangID=0)
+				OR (Term_fr=ut.Term COLLATE Latin1_General_100_CS_AS AND ut.LangID=2)
 			)
 	)
 
 /* Insert new Unused Terms */
-INSERT INTO TAX_Unused (
+INSERT INTO dbo.TAX_Unused (
 	CREATED_BY,
 	MODIFIED_BY,
 	Code,
@@ -54,22 +47,22 @@ INSERT INTO TAX_Unused (
 	1,
 	@SRC_ID
 FROM (
-	SELECT Code, 0 AS LangID, Term FROM tax_updater.dbo.UPDATER_Unused WHERE Term IS NOT NULL
-	UNION SELECT Code, 2 AS LangID, TermEq AS Term FROM tax_updater.dbo.UPDATER_Unused WHERE TermEq IS NOT NULL
+	SELECT Code, 0 AS LangID, Term_en AS Term FROM dbo.TAX_U_Unused WHERE Term_en IS NOT NULL
+	UNION SELECT Code, 2 AS LangID, Term_fr AS Term FROM dbo.TAX_U_Unused WHERE Term_fr IS NOT NULL
 ) uut
-WHERE NOT EXISTS(SELECT * FROM TAX_Unused ut WHERE Code=ut.Code AND Term=uut.Term COLLATE Latin1_General_100_CI_AI AND LangID=uut.LangID)
+WHERE NOT EXISTS(SELECT * FROM dbo.TAX_Unused ut WHERE Code=ut.Code AND Term=uut.Term COLLATE Latin1_General_100_CI_AI AND LangID=uut.LangID)
 
 /* Update Authorization status of Unused Terms */
 UPDATE ut
 	SET Authorized		= 1,
 		MODIFIED_DATE	= GETDATE(),
 		MODIFIED_BY		= '(Import)'
-FROM TAX_Unused ut
+FROM dbo.TAX_Unused ut
 WHERE Authorized=0
-AND EXISTS(SELECT * FROM tax_updater.dbo.UPDATER_Unused uut
+AND EXISTS(SELECT * FROM dbo.TAX_U_Unused uut
 	WHERE Code=ut.Code
-	AND (Term=ut.Term COLLATE Latin1_General_100_CI_AI AND ut.LangID=0)
-	AND (TermEq=ut.Term COLLATE Latin1_General_100_CI_AI AND ut.LangID=2)
+	AND (uut.Term_en=ut.Term COLLATE Latin1_General_100_CS_AS AND ut.LangID=0)
+	AND (uut.Term_fr=ut.Term COLLATE Latin1_General_100_CS_AS AND ut.LangID=2)
 )
 
 SET NOCOUNT OFF

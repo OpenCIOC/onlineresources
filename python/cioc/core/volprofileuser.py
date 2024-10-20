@@ -17,6 +17,11 @@
 
 from pyramid.decorator import reify
 
+import typing as t
+
+if t.TYPE_CHECKING:
+    from functools import cached_property as reify
+
 
 class VolProfileUser:
     def __init__(self, request):
