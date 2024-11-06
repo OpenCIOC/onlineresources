@@ -20,7 +20,7 @@
 '				The SQL to select the source and criteria of records to be displayed is a parameter of
 '				the setOptions function of this class.
 '				In order to preserve link structure from web-enabled fields in the display,
-'				This file should never be used / included in a file that will display its results 
+'				This file should never be used / included in a file that will display its results
 '				with a directory other than the usual base directory for the module being used.
 '
 %>
@@ -169,7 +169,7 @@ End Function
 Private Function getFields(bWeb)
 	Dim strFieldList
 	strFieldList = "bt.NUM,bt.RECORD_OWNER"
-	
+
 	If opt_fld_bAlertCIC Then
 		strFieldList = strFieldList & "," & vbCrLf & _
 			"btd.NON_PUBLIC," & vbCrLf & _
@@ -184,7 +184,7 @@ Private Function getFields(bWeb)
 			"THEN 1 ELSE 0 END AS bit) AS HAS_FEEDBACK," & vbCrLf & _
 			"CAST(CASE WHEN bt.MemberID=" & g_intMemberID & " THEN 0 ELSE 1 END AS bit) AS IS_SHARED," & vbCrLf & _
 			"CASE WHEN EXISTS(SELECT * FROM CIC_BT_PB pbr INNER JOIN CIC_Feedback_Publication pf ON pbr.BT_PB_ID=pf.BT_PB_ID WHERE pbr.NUM=bt.NUM) " & _
-				"THEN 1 ELSE 0 END AS HAS_PUB_FEEDBACK" 
+				"THEN 1 ELSE 0 END AS HAS_PUB_FEEDBACK"
 
 		If g_bUseVOL And g_bVolunteerLink Then
 			strFieldList = strFieldList & "," & vbCrLf & "CASE WHEN EXISTS(SELECT * FROM VOL_Opportunity vo" & vbCrLF & _
@@ -248,7 +248,7 @@ End Function
 
 Private Sub getCustomFields(bWeb)
 	Dim cmdCustField, rsCustField
-	
+
 	If IsArray(opt_fld_aCustCIC) Or bCustResultsFields Then
 		Dim strFldList, strFldListCon
 
@@ -341,7 +341,7 @@ End Sub
 
 Private Sub getFacetFields()
 	Dim cmdCustField, rsCustField
-	
+
 	If Not g_bPrintMode Then
 			Set cmdCustField = Server.CreateObject("ADODB.Command")
 			With cmdCustField
@@ -379,7 +379,7 @@ End Sub
 
 Private Function getOrderBy()
 	Dim strOrderByDefault, strOrgLevel1Sort, strDesc, strResult
-	
+
 	If reEquals(ps_strThisPage,"browsebyorg.asp",True,False,True,False) Then
 		Dim strChosenLetter
 		strChosenLetter = Trim(Request("Let"))
@@ -389,7 +389,7 @@ Private Function getOrderBy()
 			strOrgLevel1Sort = "ISNULL(btd.SORT_AS,btd.ORG_LEVEL_1)"
 		Else
 			strOrgLevel1Sort = "CASE WHEN btd.SORT_AS_USELETTER IS NULL AND NOT LEFT(btd.SORT_AS,1)=LEFT(btd.ORG_LEVEL_1,1) AND btd.ORG_LEVEL_1 LIKE '" & strChosenLetter + "%' THEN btd.ORG_LEVEL_1 ELSE ISNULL(btd.SORT_AS,btd.ORG_LEVEL_1) END"
-		End If	
+		End If
 	Else
 		strOrgLevel1Sort = "ISNULL(btd.SORT_AS,btd.ORG_LEVEL_1)"
 	End If
@@ -413,19 +413,19 @@ Private Function getOrderBy()
 
 	strResult = vbNullString
 
-	
+
 	Select Case opt_intOrderByCIC
 		Case OB_NUM
 			strResult = "bt.NUM" & strDesc
 		Case OB_UPDATE
 			strResult = "CAST(btd.UPDATE_SCHEDULE AS smalldatetime)" & strDesc & "," & Replace(strOrderByDefault, "[DESC]", vbNullString)
-		Case OB_CUSTOM 
+		Case OB_CUSTOM
 			If Not Nl(strCustOrderSelect) Then
 				strResult = strCustOrderSelect & strDesc & "," & Replace(strOrderByDefault, "[DESC]", vbNullString)
 			Else
 				strResult = Replace(strOrderByDefault, "[DESC]", strDesc)
 			End If
-		Case OB_RELEVANCY 
+		Case OB_RELEVANCY
 			Select Case intCanRank
 				Case CAN_RANK_SIMPLE
 					strResult = "kt.RANK" & StringIf(Not opt_bOrderByDescCIC," DESC") & "," & Replace(strOrderByDefault, "[DESC]", vbNullString)
@@ -446,7 +446,7 @@ Private Function getOrderBy()
 		strResult = "CASE WHEN bt.GEOCODE_TYPE = 0 THEN 40076 ELSE cioc_shared.dbo.fn_SHR_GEO_CalculateDistance(bt.LONGITUDE, bt.LATITUDE, @NearLongitude, @NearLatitude) END" & strDesc & ", " & Replace(strOrderByDefault, "[DESC]", vbNullString)
 	End If
 
-	getOrderBy = strResult 
+	getOrderBy = strResult
 End Function
 
 Public Sub makeTable()
@@ -473,19 +473,19 @@ End If
 strSelectFields = getFields(opt_bWebCIC)
 strOrderBy = " ORDER BY " & getOrderBy()
 
-strSQL = "DECLARE @MemberID int; SET @MemberID=" & g_intMemberID & vbCrLf
+strSQL = "DECLARE @MemberID int; SET @MemberID=" & g_intMemberID & vbCrLf & strParamSQL & vbCrLf
 
 If Not Nl(intResultsPageSize) Then
 	strSQL = strSQL & _
 		"DECLARE @PageStart int; SET @PageStart=" & (intResultsPageSize * intResultsCurrentPage) & vbCrLf & _
-		strParamSQL & "SELECT bt.NUM FROM " & strFromSQL & vbCrLf & _
+		"SELECT bt.NUM FROM " & strFromSQL & vbCrLf & _
 		StringIf(Not Nl(strWhereSQL),"WHERE (" & strWhereSQL & ")") & vbCrLf & _
 		strOrderBy & vbCrLf & _
 		"IF @@ROWCOUNT >= @PageStart BEGIN"
 End If
 
 strSQL = strSQL & vbCrLf & _
-	strParamSQL & "SELECT " & strSelectFields & vbCrLf & "FROM " & strFromSQL & vbCrLf & _
+	"SELECT " & strSelectFields & vbCrLf & "FROM " & strFromSQL & vbCrLf & _
 	StringIf(Not Nl(strWhereSQL),"WHERE (" & strWhereSQL & ")") & vbCrLf & _
 	strOrderBy & vbCrLf
 
@@ -582,7 +582,7 @@ Dim aIDList, _
 With rsOrgList
 	ReDim aIDList(.RecordCount-1)
 	i = 0
-	
+
 	Set fldNUM = .Fields("NUM")
 
 	While Not .EOF
@@ -698,7 +698,7 @@ Else
 			End If
 %>
 	</div>
-<%	
+<%
 		End If 'Not My List
 %>
 	<div id="results-menu">
@@ -749,7 +749,7 @@ Else
 		</span>
 <%
 		End If 'User is CIC
-	
+
 		If g_bPrintVersionResultsCIC And (user_bLoggedIn Or g_bPrintModePublic) And Not Nl(g_intPrintDesignCIC) Then
 			If reEquals(ps_strThisPage,".?results.asp",True,False,True,False) Then
 %>
@@ -774,7 +774,7 @@ Else
 <%
 			End If
 		End If 'Print Version
-				
+
 		If bEnableListViewMode Then
 			Dim strRecordListIDs, intDefaultPrintProfile
 			strRecordListIDs = getSessionValue(ps_strDbArea & "RecordList")
@@ -824,7 +824,7 @@ Else
 						<option value="EL"><%=TXT_SLCT_EMAIL_RECORD_LIST%></option>
 						<optgroup label="<%=TXT_SLCT_STATS_AND_REPORTING%>">
 							<option value="P"><%=TXT_SLCT_PRINT%></option>
-<%	
+<%
 		If hasGoogleMapsAPI() Then %>
 							<option value="PM"><%=TXT_SLCT_PRINT_MAP%></option>
 <%
@@ -845,7 +845,7 @@ Else
 				If user_bCanRequestUpdateCIC And Not g_bNoEmail Then
 %>
 							<option value="U"><%=TXT_SLCT_EMAIL_UPDATE%></option>
-<%	
+<%
 				End If
 %>
 							<option value="NP"><%=TXT_SLCT_PUBLIC_NONPUBLIC%></option>
@@ -859,7 +859,7 @@ Else
 %>
 							<option value="AO"><%=TXT_SLCT_AGENCY%></option>
 <%
-				End If 
+				End If
 %>
 							<option value="RO"><%=TXT_SLCT_CHANGE_OWNER%></option>
 							<option value="DST"><%=TXT_SLCT_DISTRIBUTION%></option>
@@ -879,7 +879,7 @@ Else
 				If user_bSuperUserCIC Then
 %>
 							<option value="F"><%=TXT_SLCT_FIND_REPLACE%></option>
-<%	
+<%
 				End If
 				If hasGoogleMapsAPI() Then
 %>
@@ -1061,7 +1061,7 @@ Else
 	If IsArray(aFacetFields) Then
 %>
 	<div id="search-facet-selectors" style="display:none">
-<% 
+<%
 		Dim cmdFacetLists, rsFacetLists, aFacetLists
 		Set cmdFacetLists = Server.CreateObject("ADODB.Command")
 		With cmdFacetLists
@@ -1225,7 +1225,7 @@ Else
 		fldLatitude, _
 		fldLongitude, _
 		fldMapPinID
-	
+
 
 	With rsOrgList
 		If .RecordCount > 10000 Then
@@ -1254,8 +1254,8 @@ Else
 		Dim strRecordListUI
 		strRecordListUI = vbNullString
 
-		If Not g_bPrintMode And (opt_bListAddRecordCIC Or bEnableListViewMode) Then 
-			strRecordListUI = myListResultsAddRecord("[IDID]", bEnableListViewMode, "<td class=""ListUI"">", "</td>") 
+		If Not g_bPrintMode And (opt_bListAddRecordCIC Or bEnableListViewMode) Then
+			strRecordListUI = myListResultsAddRecord("[IDID]", bEnableListViewMode, "<td class=""ListUI"">", "</td>")
 		End If
 
 		Dim bCheckVolOps, bCheckFeedback
@@ -1308,7 +1308,7 @@ Else
 					strEmailLink = "&nbsp;"
 				End If
 			End If
-	
+
 			dUpdateSchedule = Null
 			If opt_fld_bUpdateScheduleCIC Or opt_bUpdateCIC Then
 				If Not Nl(.Fields("UPDATE_SCHEDULE")) Then
@@ -1362,7 +1362,7 @@ Else
 			If IsArray(aFacetFields) Then
 %>
 				data-facets="{
-<%			
+<%
 				strFacetCon = vbNullString
 				For Each indOrgFldData In aFacetFields
 					If Not Nl(indOrgFldData.fSelect) Then %><%= strFacetCon %>&quot;<%= indOrgFldData.fFieldID %>&quot;:[<%= Server.HTMLEncode(Ns(.Fields("FacetField" & indOrgFldData.fFieldID))) %>]<%
@@ -1438,7 +1438,7 @@ Else
 	End If
 
 	If Not g_bPrintMode And Not opt_bDispTableCIC Then
-%>	
+%>
 	</div>
 <%
 	End If
@@ -1496,11 +1496,11 @@ If .EOF Then
 %>
 { "error": null, "recordset": [] }
 <%
-Else	
+Else
 Dim bGotField
 bGotField = False
 %>
-{ "error" : null, 
+{ "error" : null,
   "fields": {
 <%If opt_fld_bNUM Or Not opt_fld_bOrgCIC Then%>"NUM": <%=JSONQs(TXT_RECORD_NUM, True)%><%
 	bGotField=True
@@ -1538,7 +1538,7 @@ Dim fldNUM, _
 	fldLocatedIn, _
 	fldLatitude, _
 	fldLongitude
-	
+
 Set fldNUM = .Fields("NUM")
 
 If opt_fld_bOrgCIC Or (g_bMapSearchResults And Not g_bPrintMode) Then
@@ -1559,7 +1559,7 @@ strAccessURL = Request.ServerVariables("HTTP_HOST")
 
 Dim strDetailLinkTemplate, strRPCDetailLinkTemplate
 strDetailLinkTemplate = "https://" & strAccessURL & makeDetailsLink("[NUMNUM]",vbNullString,"UseCICVw")
-strRPCDetailLinkTemplate = "https://" & strAccessURL & "/" & _ 
+strRPCDetailLinkTemplate = "https://" & strAccessURL & "/" & _
 								makeLink("rpc/record/[NUMNUM]",vbNullString,vbNullString)
 
 Dim bCheckVolOps
@@ -1569,7 +1569,7 @@ While Not .EOF
 	If opt_fld_bOrgCIC Then
 		strOrgName = fldOrgName.Value
 	End If
-	
+
 	strDetailLink = Replace(strDetailLinkTemplate, "[NUMNUM]", fldNUM.Value)
 	strRPCDetailLink = Replace(strRPCDetailLinkTemplate, "[NUMNUM]", fldNUM.Value)
 
@@ -1646,7 +1646,7 @@ Wend
 ] }
 <%
 End If 'Not .EOF
-	
+
 .Close
 
 End With
@@ -1660,7 +1660,7 @@ Public Sub makeXML(bUseLimitedConnection)
 Dim	strSQL, _
 	strOrgName, _
 	dUpdateSchedule, _
-	strDetailLink, _ 
+	strDetailLink, _
 	strRPCDetailLink, _
 	strAlertColumn, _
 	i
@@ -1693,7 +1693,7 @@ If .EOF Then
 %>
 <root><error/><recordset/></root>
 <%
-Else	
+Else
 %>
 <root>
 <error/>
@@ -1713,7 +1713,7 @@ Dim fldNUM, _
 	fldLocatedIn, _
 	fldLatitude, _
 	fldLongitude
-	
+
 Set fldNUM = .Fields("NUM")
 
 If opt_fld_bOrgCIC Or (g_bMapSearchResults And Not g_bPrintMode) Then
@@ -1744,7 +1744,7 @@ While Not .EOF
 	If opt_fld_bOrgCIC Then
 		strOrgName = fldOrgName.Value
 	End If
-	
+
 	strDetailLink = Replace(strDetailLinkTemplate, "[NUMNUM]", fldNUM.Value)
 	strRPCDetailLink = Replace(strRPCDetailLinkTemplate, "[NUMNUM]", fldNUM.Value)
 
@@ -1817,7 +1817,7 @@ Wend
 </recordset></root>
 <%
 End If 'Not .EOF
-	
+
 .Close
 
 End With
