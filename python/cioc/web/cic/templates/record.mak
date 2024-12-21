@@ -134,7 +134,7 @@ cicuser = user.cic
 			</a>
 			%endif
 
-			%if cicview.AllowPDF:
+			%if cicview.AllowPDF and request.user:
 			<a role="button" class="btn btn-info hidden-xs hidden-sm" href="${makeDetailsLink(num + '/pdf', 'UseCICVwTmp=' + request.params.get('UseCICVwTmp', ''))}" target="_BLANK">
 				<span class="fa fa-file-pdf-o" aria-hidden="true"></span>
 				${_('PDF Version')}${'' if request.user else ' (' + _('New Window') + ')'}
