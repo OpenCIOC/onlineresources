@@ -89,7 +89,6 @@ def link_service_name_level(request, record, level):
         and not (org_data == loc_data and record.LINK_LOCATION_NAME)
         and should_link_levels(request)
     ):
-
         crit = [("ORGNUM", record.ORG_NUM or record.NUM), ("SL%d" % level, org_data)]
 
         return link_template % (
@@ -134,7 +133,6 @@ _lang_template = Markup('<a class="btn btn-info" href="%(link)s">%(name)s</a></s
 
 
 def link_other_langs(request, lang_xml, num, cur_culture, number):
-
     makeDetailsLink = request.passvars.makeDetailsLink
     langs = []
     for language in lang_xml:
@@ -545,7 +543,7 @@ class CicDetails(CicViewBase):
 
         num = request.matchdict.get("num")
 
-        is_pdf = request.matched_route.name == "cic_pdf_details"
+        is_pdf = request.matched_route.name == "cic_pdf_details" and request.user
 
         _ = gettext
 
@@ -887,7 +885,7 @@ SET NOCOUNT OFF
 
         search_list, number = get_search_list_and_number(request, record)
         num = record.NUM
-        orgnum = record.ORG_NUM if record.ORG_NUM else record.NUM 
+        orgnum = record.ORG_NUM if record.ORG_NUM else record.NUM
         num_link = "NUM=" + num
         orgnum_link = "ORGNUM=" + orgnum
         number_link = "" if number is None else ("&Number=%d" % number)
