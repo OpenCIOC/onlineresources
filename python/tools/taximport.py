@@ -454,17 +454,18 @@ def merge_term_languages(
             if k != "updated_at" and k in term_field_mapping
         )
         modified = term.get("MODIFIED_DATE")
-        term["MODIFIED_DATE"] = (
-            part["updated_at"]
-            if modified is None
-            else max(part["updated_at"], modified)
-        )
+        if part.get("updated_at"):
+            term["MODIFIED_DATE"] = (
+                part["updated_at"]
+                if modified is None
+                else max(part["updated_at"], modified)
+            )
 
         use_references.extend(
             _use_ref_template | {"Code": part["code"], f"Term{lang.field_suffix}": x}
-            for x in (part["use_references"] or [])
+            for x in (part.get("use_references") or [])
         )
-        for concept in part["concepts"]:
+        for concept in part.get("concepts") or []:
             fn = f"ConceptName{lang.field_suffix}"
             concepts[concept["code"]][fn] = concept["name"]
 
@@ -533,8 +534,19 @@ def get_terms_with_threadpool(
             print(
                 f"Processing terms: {total=}, {completed=}, remaining={total-completed}"
             )
-        data: dict = f.result()
         lang, code = waiting[f]
+        try:
+            data: dict = f.result()
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 404 and lang.culture == "fr-CA":
+                # missing translation
+                print(
+                    f"Translation missing for code {code}. Proceeding without translation"
+                )
+                data = {"code": code}
+            else:
+                # unknown error re-raise
+                raise
         pending_terms[code][lang.culture] = data
         if len(pending_terms[code]) == language_count:
             result = merge_term_languages(
