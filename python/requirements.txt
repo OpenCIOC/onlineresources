@@ -26,7 +26,7 @@ cffi==1.17.1
     #   weasyprint
 charset-normalizer==3.4.0
     # via requests
-cryptography==44.0.0
+cryptography==44.0.1
     # via -r requirements.in
 cssselect2==0.7.0
     # via weasyprint
