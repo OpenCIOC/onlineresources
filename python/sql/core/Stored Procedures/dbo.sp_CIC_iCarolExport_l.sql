@@ -65,7 +65,7 @@ SELECT TOP (100)
 			WHEN ols.Code = 'TOPIC' THEN 'Program'
 		END AS "@type",
 		'Active'AS "@status",
-		cbtd.CMP_AreasServed AS "@coverageNote",
+		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.CMP_AreasServed ELSE NULL END AS "@coverageNote",
 		CASE 
 			WHEN ols.Code = 'AGENCY' THEN ISNULL(ISNULL(
 				CASE WHEN btd.ORG_DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.ORG_DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.ORG_DESCRIPTION,@nLine10,@nLine10 + '<br />') END,
@@ -74,19 +74,19 @@ SELECT TOP (100)
 			WHEN ols.Code = 'SITE' THEN ISNULL(btd.LOCATION_DESCRIPTION,cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Agency Location',btd.LangID))
 			WHEN ols.Code in ('SERVICE', 'TOPIC') THEN CASE WHEN btd.DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.DESCRIPTION,@nLine10,@nLine10 + '<br />') END 
 		END AS "@description",
-		dbo.fn_CIC_NUMToServiceLevel(bt.NUM,btd.LangID) AS "@legalStatus",
-		cbtd.CMP_Languages AS "@languagesOfferedText",
+		CASE WHEN ols.CODE = 'AGENCY' THEN dbo.fn_CIC_NUMToServiceLevel(bt.NUM,btd.LangID) ELSE NULL END AS "@legalStatus",
+		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.CMP_Languages ELSE NULL END AS "@languagesOfferedText",
 		btd.NON_PUBLIC AS "@isConfidential",
-		cbtd.CMP_Fees AS "@fees",
-		cbtd.DOCUMENTS_REQUIRED AS "@requiredDocumentation",
-		cbtd.APPLICATION AS "@applicationProcess",
-		dbo.fn_CIC_DisplayAccreditation(cbt.ACCREDITED,btd.LangID) AS "@licenseAccreditation",
-		btd.ESTABLISHED AS "@yearIncorporated",
-		STUFF(
+		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.CMP_Fees ELSE NULL END AS "@fees",
+		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.DOCUMENTS_REQUIRED ELSE NULL END AS "@requiredDocumentation",
+		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.APPLICATION ELSE NULL END AS "@applicationProcess",
+		CASE WHEN ols.CODE = 'AGENCY' THEN dbo.fn_CIC_DisplayAccreditation(cbt.ACCREDITED,btd.LangID) ELSE NULL END AS "@licenseAccreditation",
+		CASE WHEN ols.CODE = 'AGENCY' THEN btd.ESTABLISHED ELSE NULL END AS "@yearIncorporated",
+		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN STUFF(
 			COALESCE('<br />' + cioc_shared.dbo.fn_SHR_CIC_FullEligibility(MIN_AGE, MAX_AGE, cbtd.ELIGIBILITY_NOTES),'') +
 			COALESCE('<br />Residency Requirements: ' + cbtd.BOUNDARIES,''),
 			1, 6, ''
-		) AS "@eligibility",
+		) ELSE NULL END AS "@eligibility",
 		btd.UPDATED_BY AS "@lastVerificationApprovedBy",
 		btd.SOURCE_EMAIL AS "@lastVerifiedByEmail",
 		btd.SOURCE_NAME AS "@lastVerifiedByName",
@@ -215,7 +215,7 @@ SELECT TOP (100)
 				bt.MAIL_POSTAL_CODE AS "@zipPostalCode",
 				ISNULL(btd.MAIL_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
 			FOR XML PATH('contact'), TYPE)
-		WHERE btd.CMP_MailAddress IS NOT NULL
+		WHERE btd.CMP_MailAddress IS NOT NULL AND ols.Code NOT IN ('SERVICE', 'TOPIC')
 		FOR XML PATH('item'),TYPE),
 
 			(SELECT 
@@ -289,6 +289,7 @@ SELECT TOP (100)
 					NULL AS [Description]
 				WHERE btd.TOLL_FREE_PHONE IS NOT NULL
 			) phone
+			WHERE ols.CODE != 'SITE'
 			FOR XML PATH('item'), TYPE),
 
 
@@ -335,7 +336,7 @@ SELECT TOP (100)
 		FROM dbo.GBL_Contact c
 		WHERE c.GblNUM=bt.NUM AND c.LangID=btd.LangID
 			AND c.CMP_Name IS NOT NULL
-			AND ((ols.Code = 'AGENCY' AND c.GblContactType IN ('EXEC_1','EXEC_2')) OR (ols.Code <> 'AGENCY' AND c.GblContactType IN ('CONTACT_1', 'CONTACT_2')))
+			AND ((ols.Code = 'AGENCY' AND c.GblContactType IN ('EXEC_1','EXEC_2')) OR (ols.Code IN ('SERVICE', 'TOPIC') AND c.GblContactType IN ('CONTACT_1', 'CONTACT_2')))
 		ORDER BY c.GblContactType DESC
 		FOR XML PATH('item'), TYPE),
 			(SELECT 0 AS "@isConfidential",
@@ -385,7 +386,7 @@ SELECT TOP (100)
 				ON cm.CM_ID=cpr.CM_ID
 			INNER JOIN dbo.GBL_Community_External_Map_All map
 				ON cm.CM_ID=map.CM_ID AND map.SystemCode = 'ICAROLSTD' --'ONTARIO211'
-			WHERE cbtd.CMP_AreasServed IS NOT NULL AND cpr.NUM=bt.NUM
+			WHERE cbtd.CMP_AreasServed IS NOT NULL AND cpr.NUM=bt.NUM AND ols.Code IN ('SERVICE', 'TOPIC')
 			FOR XML PATH(''), TYPE
 		) AS coverage,
 
@@ -393,7 +394,7 @@ SELECT TOP (100)
 					CASE WHEN cbtd.HOURS IS NULL THEN CASE WHEN cbtd.DATES IS NULL THEN cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Meetings',cbtd.LangID) + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',cbtd.LangID) + cbtd.MEETINGS ELSE + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Dates',cbtd.LangID) +  + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',cbtd.LangID) + cbtd.DATES + ISNULL(@nLine + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Meetings',cbtd.LangID) + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',cbtd.LangID) + cbtd.MEETINGS,'') END
 					ELSE cbtd.HOURS + ISNULL(@nLine + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Dates',cbtd.LangID) + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',cbtd.LangID) + cbtd.DATES,'') + ISNULL(@nLine + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Meetings',cbtd.LangID) + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',cbtd.LangID) + cbtd.MEETINGS,'')
 					END AS "@note"
-			WHERE cbtd.HOURS IS NOT NULL OR cbtd.DATES IS NOT NULL
+			WHERE (cbtd.HOURS IS NOT NULL OR cbtd.DATES IS NOT NULL) AND ols.Code != 'SITE'
 			FOR XML PATH('hours'), TYPE
 		),
 		(SELECT
@@ -417,6 +418,7 @@ SELECT TOP (100)
 				, 1, 3, ''
 			) AS "@Bus",
 			dbo.fn_GBL_NUMToAccessibility(btd.NUM,btd.ACCESSIBILITY_NOTES,btd.LangID) AS "@Disabled"
+			WHERE ols.Code IN ('AGENCY', 'SITE')
 		FOR XML PATH('accessibility'), TYPE),
 		(SELECT 
 			(SELECT
@@ -425,6 +427,7 @@ SELECT TOP (100)
 					CAST(CAST(cbt.MIN_AGE AS float) AS nvarchar) AS "item"
 				FOR XML PATH('selectedValues'), TYPE)
 			WHERE cbt.MIN_AGE IS NOT NULL AND btd.LangID=0 -- Checklist custom values only in english
+				AND ols.Code IN ('SERVICE', 'TOPIC')
 			FOR XML PATH('item'), TYPE),
 			(SELECT
 				'Maximum Age' AS "@label",
@@ -432,6 +435,7 @@ SELECT TOP (100)
 					CAST(CAST(cbt.MAX_AGE AS float) AS nvarchar) AS "item"
 				FOR XML PATH('selectedValues'), TYPE)
 			WHERE cbt.MAX_AGE IS NOT NULL AND btd.LangID=0 -- Checklist custom values only in english
+				AND ols.Code IN ('SERVICE', 'TOPIC')
 			FOR XML PATH('item'), TYPE),
 			(SELECT
 				'Record Owner (controlled)' AS "@label",
@@ -443,20 +447,34 @@ SELECT TOP (100)
 			(SELECT
 				'Public Comments' AS "@label",
 				cbtd.PUBLIC_COMMENTS AS "@valueText"
-				WHERE cbtd.PUBLIC_COMMENTS IS NOT NULL
+				WHERE cbtd.PUBLIC_COMMENTS IS NOT NULL AND ols.Code IN ('SERVICE', 'TOPIC')
 			FOR XML PATH('item'), TYPE),
 			(SELECT
 				'Legal Name' AS "@label",
 				btd.LEGAL_ORG AS "@valueText"
-				WHERE btd.LEGAL_ORG IS NOT NULL
+				WHERE btd.LEGAL_ORG IS NOT NULL AND ols.Code = 'AGENCY'
 			FOR XML PATH('item'), TYPE),
 			(SELECT
-				sm.DefaultName AS "@label",
+				'Neighbourhood' AS "@label",
+				(SELECT  
+					ddn.Name AS "item"
+					FROM dbo.CIC_BT_EXD exd
+					INNER JOIN dbo.CIC_ExtraDropDown dd
+						ON exd.EXD_ID=dd.EXD_ID
+					INNER JOIN dbo.CIC_ExtraDropDown_Name ddn
+						ON exd.EXD_ID=dd.EXD_ID AND ddn.LangID=0  -- Checklist custom values only in english
+					WHERE exd.FieldName_Cache = 'EXTRA_DROPDOWN_NEIGHBOURHOOD' AND exd.NUM=bt.NUM 
+				FOR XML PATH('selectedValues'), TYPE)
+			WHERE EXISTS(SELECT * FROM dbo.CIC_BT_EXD exd WHERE exd.FieldName_Cache='EXTRA_DROPDOWN_NEIGHBOURHOOD' AND exd.NUM=bt.NUM) AND btd.LangID=0 -- Checklist custom values only in english
+				AND ols.Code IN ('SERVICE', 'TOPIC')
+			FOR XML PATH('item'), TYPE),		
+			(SELECT
+				CASE WHEN sm.DefaultName = 'X (Twitter)' THEN 'Twitter' ELSE sm.DefaultName END AS "@label",
 				pr.Protocol + pr.URL AS "@valueText"
 			FROM dbo.GBL_BT_SM pr 
 				INNER JOIN dbo.GBL_SocialMedia sm 
 					ON sm.SM_ID = pr.SM_ID
-			WHERE pr.NUM=bt.NUM AND pr.LangID=btd.LangID AND sm.DefaultName IN ('Twitter', 'Instagram', 'YouTube', 'LinkedIn', 'Facebook')
+			WHERE pr.NUM=bt.NUM AND pr.LangID=btd.LangID AND sm.DefaultName IN ('X (Twitter)', 'Instagram', 'YouTube', 'LinkedIn', 'Facebook') AND ols.Code != 'SITE'
 			FOR XML PATH('item'), TYPE)
 		FOR XML PATH('customFields'), TYPE)
  	   
