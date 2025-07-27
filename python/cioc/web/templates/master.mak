@@ -47,7 +47,7 @@ ${self.body()}
 %endif
 
 <%def name="requiredFieldMarker()">
-<span class="Alert glyphicon glyphicon-star" title="${_('Required')}" aria-hidden="true"></span>
+<span class="Alert glyphicon glyphicon-star" title="${_('Required')}"></span>
 </%def>
 
 <%def name="helpBubble(label_text,help_text)">

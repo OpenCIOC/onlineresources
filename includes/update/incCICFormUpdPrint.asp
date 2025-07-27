@@ -1142,18 +1142,12 @@ End Function
 
 Function makeEligibilityContents(rst,bUseContent)
 	Dim strReturn
-	Dim decMinAge, decMaxAge, strNotes, intNotesLen
+	Dim decMinAge, decMaxAge, strNotes
 	
 	If bUseContent Then
 		decMinAge = rst.Fields("MIN_AGE")
 		decMaxAge = rst.Fields("MAX_AGE")
 		strNotes = rst.Fields("ELIGIBILITY_NOTES")
-	End If
-	If Nl(strNotes) Then
-		intNotesLen = 0
-	Else
-		intNotesLen = Len(strNotes)
-		strNotes = Server.HTMLEncode(strNotes)
 	End If
 	
 	strReturn = _
@@ -1181,15 +1175,12 @@ Function makeEligibilityContents(rst,bUseContent)
 		"</div>"
 
 	strReturn = strReturn & _
-			"<div class=""FieldLabelLeftClr""><label for=""ELIGIBILITY_NOTES"">" & TXT_OTHER_NOTES & "</label></div>" & _
-			"<textarea name=""ELIGIBILITY_NOTES"" id=""ELIGIBILITY_NOTES""" & _
-			" cols=""" & TEXTAREA_COLS & """" & _
-			" rows=""" & getTextAreaRows(intNotesLen,TEXTAREA_ROWS_SHORT) & """" & _
-			" class=""form-control""" & _
-			">" & strNotes & "</textarea>"
-	If bFeedback Then
-		strReturn = strReturn & getFeedback("ELIGIBILITY_NOTES",True,False)
-	End If
+			makeMemoFieldVal("ELIGIBILITY_NOTES", _
+					strNotes, _
+					TEXTAREA_ROWS_LONG, _
+					rsFields.Fields("CanUseFeedback"), _
+					rsFields.Fields("WYSIWYG") _
+					)
 	makeEligibilityContents = strReturn
 End Function
 

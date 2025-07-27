@@ -185,7 +185,7 @@ table.responsive-table {
 table.responsive-table-multicol {
 	width: 100%;
 
-	.field-header-secondary {
+	.field-header-secondary, .field-header-secondary-inline {
 		display: none;
 	}
 
@@ -204,6 +204,10 @@ table.responsive-table-multicol {
 
 		.field-header-secondary {
 			display: block;
+		}
+
+		.field-header-secondary-inline {
+			display: inline-block;
 		}
 
 		&.BasicBorder.form-table .field-data-cell {

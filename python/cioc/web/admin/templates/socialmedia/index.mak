@@ -20,7 +20,7 @@
 <%inherit file="cioc.web:templates/master.mak" />
 
 <%def name="makeSocialMediaList(name)">
-<select name="${name}" id="${name}">
+<select name="${name}" id="${name}" class="form-control">
 	<option value="">${_('>> CREATE NEW <<')}</option>
 	%for socialmedia in descs:
 		<option value="${socialmedia.SM_ID}">${socialmedia.SocialMediaName}</option>
@@ -28,16 +28,11 @@
 </select>
 </%def>
 <p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> ]</p>
-<form action="${request.route_path('admin_socialmedia', action='edit')}" method="get">
+<form action="${request.route_path('admin_socialmedia', action='edit')}" method="get" class="form-inline">
+<div style="display: none;">
 ${request.passvars.cached_form_vals|n}
-<table class="BasicBorder cell-padding-3">
-<tr>
-	<th class="RevTitleBox"><label for="SM_ID">${_('Edit Social Media Type')}</label></th>
-</tr>
-<tr>
-<td>
+</div>
+<label for="SM_ID"><h2>${_('Edit Social Media Type')}</label></h2>
 ${makeSocialMediaList('SM_ID')}
-<input type="submit" value="${_('View/Edit Social Media Type')}"></td>
-</tr>
-</table>
+<input type="submit" class="btn btn-default" value="${_('View/Edit Social Media Type')}">
 </form>
