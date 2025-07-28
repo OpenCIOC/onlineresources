@@ -5,7 +5,7 @@ import sys
 import traceback
 import typing as t
 from io import StringIO
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from simple_icarol_api import ICarolClient, model
 from lxml import etree
@@ -48,15 +48,18 @@ class RecordInfo:
 
 @dataclass
 class MyArgsType(ArgsType):
-    client: t.Optional[ICarolClient] = None
-    dbinfo: t.Optional[list[dict]] = None
-    dbid: t.Optional[int] = None
-    fields: t.Optional[model.ResourceDefinition] = None
-    idmap: t.Optional[dict[tuple[str, str], t.Optional[int]]] = None
-    id_generator: t.Optional[t.Iterator[int]] = None
+    client: ICarolClient = ICarolClient("localhost", "")
+    dbinfo: list[model.DatabaseInfo] = field(default_factory=list)
+    dbid: int = -1
+    fields: model.ResourceDefinition = model.ResourceDefinition()
+    idmap: dict[tuple[str, str], t.Optional[int]] = field(default_factory=dict)
+    id_generator: t.Optional[t.Iterator[int]] = field(
+        default_factory=lambda: iter(range(12_000_000, 15_000_000))
+    )
+    skip_unknown_value_fields: t.Iterable[str] = field(default_factory=list)
 
 
-def prepare_client(args) -> None:
+def prepare_client(args: MyArgsType) -> None:
     host = get_config_item(args, "icarol_export_api_host", "apitest.icarol.com")
     token = get_config_item(args, "icarol_export_api_token", "")
     if not token:
@@ -71,6 +74,14 @@ def prepare_client(args) -> None:
     args.fields = args.client.get_custom_fields(args.dbid)
     if args.test:
         print(args.fields)
+
+    args.skip_unknown_value_fields = [
+        x
+        for x in get_config_item(
+            args, "icarol_export_api_skip_unknown_value_fields", ""
+        ).split(",")
+        if x
+    ]
     args.idmap = {}
 
 
@@ -99,21 +110,38 @@ def parse_sub_xml(
 
 
 def fix_custom_fields(args: MyArgsType, records: list[dict], num: str):
+    assert args.fields  # appease type system
     for record in records:
         for custom in record.get("customFields", []):
             field = args.fields.label_to_field[custom["label"]]
             custom["id"] = field.id
-            selected_values = custom.get("selectedValues")
+            skip_if_unknown = False
+            if custom["label"] in (args.skip_unknown_value_fields or []):
+                skip_if_unknown = True
+            selected_values: list[str] = custom.get("selectedValues")
             if not selected_values:
                 continue
+            if skip_if_unknown:
+                keep: list[str] = []
+                skip: list[str] = []
+                for x in selected_values:
+                    if x in field.label_to_id:
+                        keep.append(x)
+                    else:
+                        skip.append(x)
 
+                selected_values = keep
+                if skip:
+                    print(
+                        f"Warning: skipping unknown values for custom field {custom['label']}: {', '.join(skip)}"
+                    )
             try:
                 custom["selectedValues"] = {
                     str(field.label_to_id[x]): x for x in selected_values
                 }
             except KeyError as e:
                 raise Exception(
-                    f"Unable to map value '{e.args[0]}' to a custom field selection for {custom['label']} on {record['type']} {num}."
+                    f"Unable to map value '{e.args[0]}' to a custom field selection for {custom['label']} on {record['type']} {num}. Possible Values are: {field.label_to_id.keys()}"
                 )
 
 
@@ -405,9 +433,6 @@ def parse_args(argv: list[str]) -> MyArgsType:
     if args.config_prefix and not args.config_prefix.endswith("."):
         args.config_prefix += "."
 
-    if args.test:
-        args.id_generator = iter(range(12_000_000, 15_000_000))
-
     return args
 
 
@@ -445,7 +470,9 @@ def main(argv):
         retval = 1
 
     if args.email:
-        email_log(args, capture_io, sys.stderr.is_dirty(), "icarol_export")
+        email_log(
+            args, capture_io, "ICarol API Sync", sys.stderr.is_dirty(), "icarol_export"
+        )
 
     return retval
 
