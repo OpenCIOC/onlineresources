@@ -57,6 +57,7 @@ class MyArgsType(ArgsType):
         default_factory=lambda: iter(range(12_000_000, 15_000_000))
     )
     skip_unknown_value_fields: t.Iterable[str] = field(default_factory=list)
+    unknown_fields_value_options_shown: set[str] = field(default_factory=set)
 
 
 def prepare_client(args: MyArgsType) -> None:
@@ -133,15 +134,20 @@ def fix_custom_fields(args: MyArgsType, records: list[dict], num: str):
                 selected_values = keep
                 if skip:
                     print(
-                        f"Warning: skipping unknown values for custom field {custom['label']}: {', '.join(skip)}"
+                        f"Warning: skipping unknown values for custom field '{custom['label']}' on {record['type']} {num}: {', '.join(skip)}"
                     )
+                    if custom["label"] not in args.unknown_fields_value_options_shown:
+                        args.unknown_fields_value_options_shown.add(custom["label"])
+                        print(
+                            f"Possible values for custom field '{custom['label']}' are: {field.label_to_id.keys()}"
+                        )
             try:
                 custom["selectedValues"] = {
                     str(field.label_to_id[x]): x for x in selected_values
                 }
             except KeyError as e:
                 raise Exception(
-                    f"Unable to map value '{e.args[0]}' to a custom field selection for {custom['label']} on {record['type']} {num}. Possible Values are: {field.label_to_id.keys()}"
+                    f"Unable to map value '{e.args[0]}' to a custom field selection for {custom['label']} on {record['type']} {num}. Possible values are: {field.label_to_id.keys()}"
                 )
 
 
