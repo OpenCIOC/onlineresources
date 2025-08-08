@@ -312,7 +312,7 @@ SELECT TOP (100)
 				c.ORG AS "@companyName",
 	
 
-			(SELECT c.TITLE AS item FOR XML PATH('titles'), TYPE),
+			(SELECT c.TITLE AS item WHERE c.TITLE IS NOT NULL FOR XML PATH('titles'), TYPE),
 		
 
 			(SELECT
@@ -457,12 +457,13 @@ SELECT TOP (100)
 			(SELECT
 				'Neighbourhood' AS "@label",
 				(SELECT  
-					ddn.Name AS "item"
+					'TNB' + RIGHT('000' + sp.RightItem, 3) + ' ' + sp.LeftItem AS "item"
 					FROM dbo.CIC_BT_EXD exd
 					INNER JOIN dbo.CIC_ExtraDropDown dd
 						ON exd.EXD_ID=dd.EXD_ID
 					INNER JOIN dbo.CIC_ExtraDropDown_Name ddn
-						ON exd.EXD_ID=dd.EXD_ID AND ddn.LangID=0  -- Checklist custom values only in english
+						ON ddn.EXD_ID=dd.EXD_ID AND ddn.LangID=0  -- Checklist custom values only in english
+				    CROSS APPLY dbo.fn_GBL_ParseVarCharIDPairList(ddn.Name, ';', ', ') AS sp
 					WHERE exd.FieldName_Cache = 'EXTRA_DROPDOWN_NEIGHBOURHOOD' AND exd.NUM=bt.NUM 
 				FOR XML PATH('selectedValues'), TYPE)
 			WHERE EXISTS(SELECT * FROM dbo.CIC_BT_EXD exd WHERE exd.FieldName_Cache='EXTRA_DROPDOWN_NEIGHBOURHOOD' AND exd.NUM=bt.NUM) AND btd.LangID=0 -- Checklist custom values only in english
