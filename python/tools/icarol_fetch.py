@@ -32,11 +32,13 @@ import traceback
 import urllib.parse
 from collections import OrderedDict
 from datetime import datetime
+from dataclasses import dataclass, field
 from threading import Thread
 from operator import itemgetter
 
 import boto3
 import isodate
+import pyodbc
 import requests
 
 try:
@@ -45,6 +47,7 @@ except ImportError:
     sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from tools.toolslib import (
+    ArgsType,
     Context,
     FileWriteDetector,
     get_config_item,
@@ -55,11 +58,11 @@ from tools.toolslib import (
 
 from cioc.core import constants as const
 from cioc.core import syslanguage
-from cioc.core.utf8csv import UTF8CSVWriter, SQLServerBulkDialect
+from cioc.core.utf8csv import UTF8CSVWriter
 from cioc.web.import_.upload import process_import
 
 if t.TYPE_CHECKING:
-    from boto3_type_annotations.s3 import Client
+    from mypy_boto3_s3.client import S3Client as Client
 
 
 CREATE_NO_WINDOW = 0x08000000
@@ -301,15 +304,24 @@ AllRecordsFieldOrder = [
 ]
 
 
-class ICarolFetchContext(Context):
-    s3_client: Client
+@dataclass
+class MyArgsType(ArgsType):
+    fetch_mechanism: str = ""
+    modified_since: str = "any"
+    next_modified_since: datetime = field(default_factory=datetime.now)
+    skip_fetch: bool = False
+    skip_import: bool = False
+    only_lang: list[str] = field(default_factory=list)
+    host: str = ""
+    key: str = ""
+    session: requests.Session = field(default_factory=requests.Session)
+    extra_criteria: dict[str, str] = field(default_factory=dict)
+    s3_client: Client = field(default_factory=lambda: boto3.client("s3"))
+    s3_bulk_import_prefix: str = ""
+    s3_bulk_import_bucket: str = ""
 
-    def __init__(self, args, s3_client):
-        super().__init__(args)
-        self.s3_client = s3_client
 
-
-def prepare_session(args):
+def prepare_session(args: MyArgsType):
     session = requests.Session()
     session.headers.update({"Accept": "application/json"})
     args.session = session
@@ -317,7 +329,7 @@ def prepare_session(args):
     args.key = get_config_item(args, "o211_import_api_key", "")
 
 
-def parse_args(argv):
+def parse_args(argv) -> MyArgsType:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--config", dest="configfile", action="store", default=const._config_file
@@ -332,10 +344,10 @@ def parse_args(argv):
         "--config-prefix", dest="config_prefix", action="store", default=""
     )
     parser.add_argument(
-        "--modified-since", dest="modified_since", action="store", default=None
+        "--modified-since", dest="modified_since", action="store", default="any"
     )
     parser.add_argument(
-        "--fetch-mechanism", dest="fetch_mechanism", action="store", default=None
+        "--fetch-mechanism", dest="fetch_mechanism", action="store", default=""
     )
     parser.add_argument("--only-lang", dest="only_lang", action="append", default=[])
     parser.add_argument(
@@ -351,11 +363,19 @@ def parse_args(argv):
 
     if args.modified_since and args.modified_since != "any":
         try:
-            args.modified_since = isodate.parse_datetime(args.modified_since)
+            args.modified_since = format_modified_date(
+                isodate.parse_datetime(args.modified_since)
+            )
         except:
             parser.error("invalid date format must be like 2018-10-10T15:45:00")
+    else:
+        args.modified_since = "any"
 
-    return args
+    myargs = MyArgsType(**vars(parser.parse_args(argv)))
+    myargs.s3_bulk_import_bucket = get_config_item(myargs, "s3_bulk_import_bucket")
+    myargs.s3_bulk_import_prefix = get_config_item(myargs, "s3_bulk_import_prefix")
+
+    return myargs
 
 
 def pager(iterable, page_size=10):
@@ -373,7 +393,9 @@ def pager(iterable, page_size=10):
         yield page
 
 
-def get_record_list(args, modifiedSince=None, lang="en"):
+def get_record_list(
+    args: MyArgsType, modifiedSince: t.Optional[str] = None, lang: str = "en"
+) -> list:
     url = "https://" + args.host + "/api/records/"
     params = {"key": args.key, "service": "0", "lang": lang}
 
@@ -397,7 +419,9 @@ def get_record_list(args, modifiedSince=None, lang="en"):
     return data
 
 
-def get_records(args, id, lang="en"):
+def get_records(
+    args: MyArgsType, id: t.Union[list[int], int], lang: str = "en"
+) -> list:
     url = "https://" + args.host + "/api/record/"
     if not isinstance(id, list):
         id = [id]
@@ -422,12 +446,14 @@ def get_records(args, id, lang="en"):
     return result
 
 
-def fetch_record_batches(args, record_ids, lang):
+def fetch_record_batches(
+    args: MyArgsType, record_ids: t.Iterable[int], lang: LangSetting
+):
     for page in pager(record_ids, 500):
         yield from get_records(args, page, lang.language_name)
 
 
-def _to_unicode(value):
+def _to_unicode(value) -> str:
     if value is None:
         return ""
 
@@ -435,7 +461,11 @@ def _to_unicode(value):
     return invalid_xml_chars.sub("", value).strip()
 
 
-def to_csv(records, target_file, headings):
+def to_csv(
+    records: t.Iterable[dict[str, t.Any]],
+    target_file: t.TextIO,
+    headings: t.Iterable[str],
+):
     fn = itemgetter(*headings)
 
     writer = UTF8CSVWriter(target_file)  # , dialect=SQLServerBulkDialect)
@@ -444,10 +474,10 @@ def to_csv(records, target_file, headings):
 
 
 class CsvFileWriter:
-    def __init__(self, context, headings):
-        self.s3_bulk_import_bucket = context.s3_bulk_import_bucket
-        self.s3_bulk_import_prefix = context.s3_bulk_import_prefix
-        self.s3_client = context.s3_client
+    def __init__(self, args: MyArgsType, headings):
+        self.s3_bulk_import_bucket = args.s3_bulk_import_bucket
+        self.s3_bulk_import_prefix = args.s3_bulk_import_prefix
+        self.s3_client = args.s3_client
         self.fd = None
         self.file_name = None
         self.headings = headings
@@ -468,14 +498,16 @@ class CsvFileWriter:
             except Exception:
                 pass
 
-    def serialize_records(self, records):
+    def serialize_records(self, records: t.Iterable[dict]):
         if not self.fd:
             raise Exception("File not opened yet")
 
+        assert self.wrapped_fd
         to_csv(records, self.wrapped_fd, self.headings)
 
     def close(self):
         if self.fd:
+            assert self.wrapped_fd
             self.wrapped_fd.flush()
             self.fd.seek(0)
             self.s3_client.upload_fileobj(
@@ -490,6 +522,7 @@ class CsvFileWriter:
 
     @property
     def source_file(self):
+        assert self.file_name
         return self.s3_bulk_import_prefix + self.file_name
 
 
@@ -544,23 +577,30 @@ class CsvFileWriter:
 #         return self.s3_bulk_import_prefix + self.file_name
 
 
-def push_bulk(context, conn, sql, headings, batch, *args):
-    with CsvFileWriter(context, headings) as writer:
+def push_bulk(
+    args: MyArgsType,
+    conn: pyodbc.Connection,
+    sql: str,
+    headings: t.Iterable[str],
+    batch: t.Iterable[dict[str, t.Any]],
+    *sqlargs,
+):
+    with CsvFileWriter(args, headings) as writer:
         writer.serialize_records(batch)
         writer.close()
         cursor = conn.execute(
             sql,
-            *(args + ("/" + context.s3_bulk_import_bucket + "/" + writer.source_file,)),
+            *(sqlargs + ("/" + args.s3_bulk_import_bucket + "/" + writer.source_file,)),
         )
 
     return cursor
 
 
-def push_to_database(context, lang, queue):
+def push_to_database(args: MyArgsType, lang: LangSetting, queue: Queue):
     sql = """
     EXEC sp_CIC_iCarolImport_Incremental ?, ?
     """
-    next_modified = context.args.next_modified_since
+    next_modified = args.next_modified_since
     with get_bulk_connection(language=lang.sql_language) as conn:
         while True:
             batch = queue.get()
@@ -569,28 +609,30 @@ def push_to_database(context, lang, queue):
                 return
 
             try:
-                push_bulk(context, conn, sql, FieldOrder, batch, next_modified)
+                push_bulk(args, conn, sql, FieldOrder, batch, next_modified)
             except Exception:
                 traceback.print_exc()
             queue.task_done()
 
 
-def push_all_records(conext, lang, all_records):
+def push_all_records(
+    args: MyArgsType, lang: LangSetting, all_records: t.Iterable[dict[str, t.Any]]
+):
     sql = """
     EXEC sp_CIC_iCarolImport_AllRecords ?
     """
     with get_bulk_connection(language=lang.sql_language) as conn:
-        cursor = push_bulk(conext, conn, sql, AllRecordsFieldOrder, all_records)
+        cursor = push_bulk(args, conn, sql, AllRecordsFieldOrder, all_records)
         stats = cursor.fetchall()
         cursor.nextset()
         results = cursor.fetchall()
         return stats, results
 
 
-def fetch_from_o211(context, lang):
-    all_records = get_record_list(context.args, "any", lang.language_name)
-    stats, records = push_all_records(context, lang, all_records)
-    if context.args.test:
+def fetch_from_o211(args: MyArgsType, lang: LangSetting):
+    all_records = get_record_list(args, "any", lang.language_name)
+    stats, records = push_all_records(args, lang, all_records)
+    if args.test:
         records.sort(key=lambda x: x["UpdatedOn"])
         records = records[-60:]
         pprint.pprint(records)
@@ -614,15 +656,13 @@ def fetch_from_o211(context, lang):
         print(f"{row.num_records} records were {action}")
 
     queue = Queue(maxsize=2)
-    thread = Thread(target=push_to_database, args=(context, lang, queue))
+    thread = Thread(target=push_to_database, args=(args, lang, queue))
     thread.daemon = True
     thread.start()
 
     pulled_record_count = 0
     for batch in pager(
-        fetch_record_batches(
-            context.args, (x.ResourceAgencyNum for x in records), lang
-        ),
+        fetch_record_batches(args, (x.ResourceAgencyNum for x in records), lang),
         5000,
     ):
         pulled_record_count += len(batch)
@@ -637,53 +677,49 @@ def fetch_from_o211(context, lang):
     )
 
 
-def check_db_state(context):
-    context.args.extra_criteria = None
-    if not context.args.fetch_mechanism:
+def check_db_state(context: Context, args: MyArgsType):
+    args.extra_criteria = {}
+    if not args.fetch_mechanism:
         return
 
     sql = "SELECT * FROM CIC_iCarolImportMeta WHERE Mechanism=?"
     with context.connmgr.get_connection("admin") as conn:
-        meta_data = conn.execute(sql, context.args.fetch_mechanism).fetchone()
+        meta_data = conn.execute(sql, args.fetch_mechanism).fetchone()
 
     if not meta_data:
         # XXX Should we do something to indicate to an operator that something is missing?
         return
 
     if meta_data.ExtraCriteria:
-        context.args.extra_criteria = json.loads(meta_data.ExtraCriteria)
+        args.extra_criteria = json.loads(meta_data.ExtraCriteria)
 
-    if not context.args.modified_since:
-        context.args.modified_since = meta_data.LastFetched
+    if args.modified_since == "any":
+        args.modified_since = format_modified_date(meta_data.LastFetched)
 
     # XXX Should this be observed value instead of this
-    context.args.next_modified_since = datetime.now()
+    args.next_modified_since = datetime.now()
 
 
-def format_modified_date(context):
-    if context.args.modified_since is None:
-        context.args.modified_since = "any"
+def format_modified_date(modified_since: t.Optional[datetime]):
+    if modified_since is None:
+        return "any"
 
-    if context.args.modified_since == "any":
-        return
-
-    context.args.modified_since = context.args.modified_since.strftime(_time_format)
+    return modified_since.strftime(_time_format)
 
 
-def update_db_state(context):
-    if not context.args.fetch_mechanism:
+def update_db_state(context: Context, args: MyArgsType):
+    if not args.fetch_mechanism:
         return
 
     sql = "EXEC dbo.sp_CIC_iCarolImportMeta_u ?, ?"
     with context.connmgr.get_connection("admin") as conn:
-        conn.execute(
-            sql, context.args.fetch_mechanism, context.args.next_modified_since
-        )
+        conn.execute(sql, args.fetch_mechanism, args.next_modified_since)
 
 
 def _generate_and_upload_import(
-    context,
-    member_name,
+    context: Context,
+    args: MyArgsType,
+    member_name: str,
     member,
     stdout,
     stderr,
@@ -715,7 +751,7 @@ def _generate_and_upload_import(
             "icarol_import_%s%s.xml"
             % (
                 extra_filename,
-                context.args.next_modified_since.isoformat(),
+                args.next_modified_since.isoformat(),
             ),
             fd,
             member.MemberID,
@@ -725,7 +761,7 @@ def _generate_and_upload_import(
             "iCarol Import%s %s"
             % (
                 extra_message,
-                context.args.next_modified_since.isoformat(),
+                args.next_modified_since.isoformat(),
             ),
             context.connmgr,
             lambda x: x,
@@ -751,7 +787,7 @@ def _generate_and_upload_import(
     return total_inserted
 
 
-def generate_and_upload_import(context):
+def generate_and_upload_import(context: Context, args: MyArgsType):
     sql = "EXEC sp_CIC_iCarolImport_Rollup"
     total_import_count = 0
     with context.connmgr.get_connection("admin") as conn:
@@ -771,11 +807,12 @@ def generate_and_upload_import(context):
                     "EXEC sp_CIC_iCarolImport_CreateSharing ?", member.MemberID
                 )
                 total_inserted_base = _generate_and_upload_import(
-                    context, member_name, member, stdout, stderr, cursor
+                    context, args, member_name, member, stdout, stderr, cursor
                 )
                 cursor.nextset()
                 (total_inserted_missed_deletes) = _generate_and_upload_import(
                     context,
+                    args,
                     member_name,
                     member,
                     stdout,
@@ -817,7 +854,7 @@ def generate_and_upload_import(context):
 def main(argv):
     args = parse_args(argv)
 
-    context = ICarolFetchContext(args, boto3.client("s3"))
+    context = Context(args)
     retval = 0
     try:
         args.config = context.config
@@ -826,6 +863,7 @@ def main(argv):
         sys.stderr.write(traceback.format_exc())
         return 2
 
+    stringiostdout = StringIO()
     if args.email:
         if not get_config_item(args, "o211_import_notify_emails", None):
             sys.stderr.write(
@@ -833,17 +871,14 @@ def main(argv):
             )
             return 3
         else:
-            sys.stdout = StringIO()
+            sys.stdout = stringiostdout
             sys.stderr = sys.stdout
 
     sys.stderr = FileWriteDetector(sys.stderr)
 
     try:
         prepare_session(args)
-        check_db_state(context)
-        format_modified_date(context)
-        context.s3_bulk_import_bucket = get_config_item(args, "s3_bulk_import_bucket")
-        context.s3_bulk_import_prefix = get_config_item(args, "s3_bulk_import_prefix")
+        check_db_state(context, args)
 
         langs = get_config_item(args, "o211_import_languages", "en-CA").split(",")
         for culture in langs:
@@ -854,15 +889,15 @@ def main(argv):
             lang = _lang_settings.get(culture.strip(), _lang_settings["en-CA"])
 
             if not args.skip_fetch:
-                fetch_from_o211(context, lang)
+                fetch_from_o211(args, lang)
                 print("\n")
 
         if not args.skip_import:
-            generate_and_upload_import(context)
+            generate_and_upload_import(context, args)
 
         if not args.skip_fetch:
             # we only want to update the High Water Mark when we actually fetch data.
-            update_db_state(context)
+            update_db_state(context, args)
     except Exception:
         traceback.print_exc()
 
@@ -870,7 +905,13 @@ def main(argv):
         retval = 1
 
     if args.email:
-        email_log(args, sys.stdout, sys.stderr.is_dirty(), "o211_import")
+        email_log(
+            args,
+            stringiostdout,
+            "Import from iCarol%s",
+            sys.stderr.is_dirty(),
+            "o211_import",
+        )
 
     return retval
 
