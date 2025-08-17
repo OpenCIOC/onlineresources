@@ -46,6 +46,14 @@ try:
 except ImportError:
     sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
+from cioc.core import constants as const
+
+const.update_cache_values()
+
+from cioc.core import syslanguage
+from cioc.core.utf8csv import UTF8CSVWriter
+from cioc.web.import_.upload import process_import
+
 from tools.toolslib import (
     ArgsType,
     Context,
@@ -55,11 +63,6 @@ from tools.toolslib import (
     get_bulk_connection,
 )
 
-
-from cioc.core import constants as const
-from cioc.core import syslanguage
-from cioc.core.utf8csv import UTF8CSVWriter
-from cioc.web.import_.upload import process_import
 
 if t.TYPE_CHECKING:
     from mypy_boto3_s3.client import S3Client as Client
@@ -71,7 +74,6 @@ creationflags = 0
 
 invalid_xml_chars = re.compile("[\x00-\x08\x0c\x0e-\x19]")
 
-const.update_cache_values()
 _time_format = "%Y-%m-%d %H:%M:%S"
 LangSetting = namedtuple(
     "LangSetting", "culture file_suffix language_name sql_language"
@@ -371,7 +373,7 @@ def parse_args(argv) -> MyArgsType:
     else:
         args.modified_since = "any"
 
-    myargs = MyArgsType(**vars(parser.parse_args(argv)))
+    myargs = MyArgsType(**vars(args))
     myargs.s3_bulk_import_bucket = get_config_item(myargs, "s3_bulk_import_bucket")
     myargs.s3_bulk_import_prefix = get_config_item(myargs, "s3_bulk_import_prefix")
 

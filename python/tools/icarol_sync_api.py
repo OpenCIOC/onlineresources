@@ -15,13 +15,6 @@ try:
 except ImportError:
     sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-from tools.toolslib import (
-    ArgsType,
-    Context,
-    FileWriteDetector,
-    get_config_item,
-    email_log,
-)
 
 from cioc.core import constants as const
 
@@ -30,6 +23,14 @@ if t.TYPE_CHECKING:
 
 
 const.update_cache_values()
+
+from tools.toolslib import (
+    ArgsType,
+    Context,
+    FileWriteDetector,
+    get_config_item,
+    email_log,
+)
 
 
 @dataclass
