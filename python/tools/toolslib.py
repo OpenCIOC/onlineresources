@@ -123,9 +123,11 @@ def get_config_item(
     config_prefix = args.config_prefix
     config = args.config
     if default is DEFAULT:
-        return config.get(config_prefix + key, config[key])
+        retval = config.get(config_prefix + key, config.get(key, DEFAULT))
+        if retval is DEFAULT:
+            raise KeyError(key)
 
-    return args.config.get(config_prefix + key, config.get(key, default))
+    return config.get(config_prefix + key, config.get(key, default))
 
 
 def email_log(
