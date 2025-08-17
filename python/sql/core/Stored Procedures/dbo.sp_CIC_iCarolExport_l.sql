@@ -467,7 +467,7 @@ SELECT TOP (100)
 					WHERE exd.FieldName_Cache = 'EXTRA_DROPDOWN_NEIGHBOURHOOD' AND exd.NUM=bt.NUM 
 				FOR XML PATH('selectedValues'), TYPE)
 			WHERE EXISTS(SELECT * FROM dbo.CIC_BT_EXD exd WHERE exd.FieldName_Cache='EXTRA_DROPDOWN_NEIGHBOURHOOD' AND exd.NUM=bt.NUM) AND btd.LangID=0 -- Checklist custom values only in english
-				AND ols.Code IN ('SERVICE', 'TOPIC')
+				AND ols.Code = 'SITE'
 			FOR XML PATH('item'), TYPE),		
 			(SELECT
 				CASE WHEN sm.DefaultName = 'X (Twitter)' THEN 'Twitter' ELSE sm.DefaultName END AS "@label",
