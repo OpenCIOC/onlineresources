@@ -373,11 +373,7 @@ def parse_args(argv) -> MyArgsType:
     else:
         args.modified_since = "any"
 
-    myargs = MyArgsType(**vars(args))
-    myargs.s3_bulk_import_bucket = get_config_item(myargs, "s3_bulk_import_bucket")
-    myargs.s3_bulk_import_prefix = get_config_item(myargs, "s3_bulk_import_prefix")
-
-    return myargs
+    return MyArgsType(**vars(args))
 
 
 def pager(iterable, page_size=10):
@@ -864,6 +860,9 @@ def main(argv):
         sys.stderr.write("ERROR: Could not process config file:\n")
         sys.stderr.write(traceback.format_exc())
         return 2
+
+    args.s3_bulk_import_bucket = get_config_item(args, "s3_bulk_import_bucket")
+    args.s3_bulk_import_prefix = get_config_item(args, "s3_bulk_import_prefix")
 
     stringiostdout = StringIO()
     if args.email:
