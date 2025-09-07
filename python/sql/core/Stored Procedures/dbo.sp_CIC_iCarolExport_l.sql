@@ -18,6 +18,21 @@ DECLARE @nLine char(2),
 SET @nLine = CHAR(13) + CHAR(10)
 SET @nLine10 = CHAR(10)
 
+DECLARE @ADD_TO_BT_LOCATION_SERVICE table ( NUM varchar(8) PRIMARY KEY )
+INSERT INTO @ADD_TO_BT_LOCATION_SERVICE
+		(NUM)
+SELECT bt.NUM
+FROM dbo.GBL_BaseTable bt
+WHERE ORG_NUM='ZZZ00001'
+	AND EXISTS(SELECT * FROM dbo.GBL_BT_OLS pr INNER JOIN dbo.GBL_OrgLocationService ols ON pr.OLS_ID=ols.OLS_ID AND ols.Code='TOPIC' WHERE pr.NUM=bt.NUM)
+	AND NOT EXISTS(SELECT * FROM dbo.GBL_BT_LOCATION_SERVICE WHERE SERVICE_NUM=bt.NUM)
+
+UPDATE dbo.GBL_BaseTable SET DISPLAY_LOCATION_NAME=0 WHERE DISPLAY_LOCATION_NAME=1 AND EXISTS(SELECT * FROM @ADD_TO_BT_LOCATION_SERVICE WHERE NUM=GBL_BaseTable.NUM)
+
+INSERT INTO dbo.GBL_BT_LOCATION_SERVICE (LOCATION_NUM, SERVICE_NUM)
+SELECT 'ZZZ00002', bt.NUM
+FROM @ADD_TO_BT_LOCATION_SERVICE bt
+
 DECLARE @SiteCityTable table (
 	SITE_CITY nvarchar(100) PRIMARY KEY NOT NULL,
 	EXPORT_CITY nvarchar(100)
@@ -105,13 +120,46 @@ SELECT TOP (100)
 			COALESCE(', ' + btd.ORG_LEVEL_5,''),
 			1, 2, ''
 		)
-		WHEN ols.Code = 'SITE' THEN btd.LOCATION_NAME
+		WHEN ols.Code = 'SITE' THEN 
+			(SELECT 
+				ISNULL(btd.LOCATION_NAME,
+				ISNULL(STUFF(
+						COALESCE(', ' + CASE WHEN btd.ORG_LEVEL_1=abtd.ORG_LEVEL_1 THEN NULL ELSE btd.ORG_LEVEL_1 END,'')
+						+ COALESCE(', ' + CASE WHEN btd.ORG_LEVEL_1=abtd.ORG_LEVEL_1 AND btd.ORG_LEVEL_2=abtd.ORG_LEVEL_2 THEN NULL ELSE btd.ORG_LEVEL_2 END,'')
+						+ COALESCE(', ' + CASE WHEN btd.ORG_LEVEL_1=abtd.ORG_LEVEL_1 AND btd.ORG_LEVEL_2=abtd.ORG_LEVEL_2 AND btd.ORG_LEVEL_3=abtd.ORG_LEVEL_3 THEN NULL ELSE btd.ORG_LEVEL_3 END,'')
+						+ COALESCE(', ' + CASE WHEN btd.ORG_LEVEL_1=abtd.ORG_LEVEL_1 AND btd.ORG_LEVEL_2=abtd.ORG_LEVEL_2 AND btd.ORG_LEVEL_3=abtd.ORG_LEVEL_3 AND btd.ORG_LEVEL_4=abtd.ORG_LEVEL_4 THEN NULL ELSE btd.ORG_LEVEL_4 END,'')
+						+ COALESCE(', ' + btd.ORG_LEVEL_5,''),
+						1, 2, ''
+					),
+					ISNULL(btd.ORG_LEVEL_1,'') + ISNULL(', ' + btd.ORG_LEVEL_2,'') + ISNULL(', ' + btd.ORG_LEVEL_3,'') + ISNULL(', ' + btd.ORG_LEVEL_4,'') + ISNULL(', ' + btd.ORG_LEVEL_5,'')
+				)
+				)
+			FROM (VALUES (ISNULL(bt.ORG_NUM, bt.NUM), btd.LangID)) AS sbt(ORG_NUM, LangID)
+			LEFT JOIN GBL_BaseTable_Description abtd
+				ON abtd.NUM = sbt.ORG_NUM AND abtd.LangID = sbt.LangID
+			)
 		WHEN ols.Code in ('SERVICE', 'TOPIC') THEN 
-					STUFF(
-			COALESCE(', ' + btd.SERVICE_NAME_LEVEL_1,'') +
-			COALESCE(', ' + btd.SERVICE_NAME_LEVEL_2,''),
-			1, 2, ''
-		)
+			(SELECT
+				ISNULL(STUFF(
+					COALESCE(', ' + btd.SERVICE_NAME_LEVEL_1,'') +
+					COALESCE(', ' + btd.SERVICE_NAME_LEVEL_2,''),
+					1, 2, ''
+					),
+					ISNULL(STUFF(
+							COALESCE(', ' + CASE WHEN btd.ORG_LEVEL_1=abtd.ORG_LEVEL_1 THEN NULL ELSE btd.ORG_LEVEL_1 END,'')
+							+ COALESCE(', ' + CASE WHEN btd.ORG_LEVEL_1=abtd.ORG_LEVEL_1 AND btd.ORG_LEVEL_2=abtd.ORG_LEVEL_2 THEN NULL ELSE btd.ORG_LEVEL_2 END,'')
+							+ COALESCE(', ' + CASE WHEN btd.ORG_LEVEL_1=abtd.ORG_LEVEL_1 AND btd.ORG_LEVEL_2=abtd.ORG_LEVEL_2 AND btd.ORG_LEVEL_3=abtd.ORG_LEVEL_3 THEN NULL ELSE btd.ORG_LEVEL_3 END,'')
+							+ COALESCE(', ' + CASE WHEN btd.ORG_LEVEL_1=abtd.ORG_LEVEL_1 AND btd.ORG_LEVEL_2=abtd.ORG_LEVEL_2 AND btd.ORG_LEVEL_3=abtd.ORG_LEVEL_3 AND btd.ORG_LEVEL_4=abtd.ORG_LEVEL_4 THEN NULL ELSE btd.ORG_LEVEL_4 END,'')
+							+ COALESCE(', ' + btd.ORG_LEVEL_5,''),
+							1, 2, ''
+						),
+						ISNULL(btd.ORG_LEVEL_1,'') + ISNULL(', ' + btd.ORG_LEVEL_2,'') + ISNULL(', ' + btd.ORG_LEVEL_3,'') + ISNULL(', ' + btd.ORG_LEVEL_4,'') + ISNULL(', ' + btd.ORG_LEVEL_5,'')
+					)
+				)
+			FROM (VALUES (ISNULL(bt.ORG_NUM, bt.NUM), btd.LangID)) AS sbt(ORG_NUM, LangID)
+			LEFT JOIN GBL_BaseTable_Description abtd
+				ON abtd.NUM = sbt.ORG_NUM AND abtd.LangID = sbt.LangID
+			)
 		END AS "@value",
 		'Primary' AS "@purpose"
 		FOR XML PATH('item'), TYPE),
