@@ -100,9 +100,11 @@ def parse_sub_xml(
             list[t.Union[dict[str, t.Any], str]],
             [parse_sub_xml(sub) for sub in element],
         )
+    if element['_empty_list'] == '1':
+        return []
 
     if element.text and not element.keys() and not len(element):
-        return element.text
+        return element.text.strip()
 
     base = dict(element.attrib)
     for sub in element:
