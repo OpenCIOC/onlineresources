@@ -95,14 +95,14 @@ def get_changes_to_send(conn: "Connection") -> list["Row"]:
 def parse_sub_xml(
     element: etree._Element,
 ) -> t.Union[list[t.Union[dict[str, t.Any], str]], dict[str, t.Any], str]:
+    if element.get("_empty_list", "") == "1":
+        return []
+
     if len(element) and element[0].tag == "item":
         return t.cast(
             list[t.Union[dict[str, t.Any], str]],
             [parse_sub_xml(sub) for sub in element],
         )
-    if element.get("_empty_list", "") == "1":
-        return []
-
     if element.text and not element.keys() and not len(element):
         return element.text.strip()
 
