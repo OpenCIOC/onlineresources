@@ -86,14 +86,15 @@ SELECT TOP (100)
 				CASE WHEN btd.ORG_DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.ORG_DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.ORG_DESCRIPTION,@nLine10,@nLine10 + '<br />') END,
 				CASE WHEN btd.DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.DESCRIPTION,@nLine10,@nLine10 + '<br />') END),
 				'Agency')
-			WHEN ols.Code = 'SITE' THEN ISNULL(btd.LOCATION_DESCRIPTION,cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Agency Location',btd.LangID))
+			WHEN ols.Code = 'SITE' THEN ISNULL(btd.LOCATION_DESCRIPTION,cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Agency Location',btd.LangID)) + CASE WHEN cbtd.INTERSECTION IS NOT NULL THEN '<br />' + cbtd.INTERSECTION ELSE '' END 
 			WHEN ols.Code in ('SERVICE', 'TOPIC') THEN CASE WHEN btd.DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.DESCRIPTION,@nLine10,@nLine10 + '<br />') END 
 		END AS "@description",
-		CASE WHEN ols.CODE = 'AGENCY' THEN dbo.fn_CIC_NUMToServiceLevel(bt.NUM,btd.LangID) ELSE NULL END AS "@legalStatus",
-		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.CMP_Languages ELSE NULL END AS "@languagesOfferedText",
+		CASE WHEN ols.CODE = 'AGENCY' THEN dbo.fn_CIC_NUMToServiceLevel(bt.NUM,btd.LangID) ELSE '' END AS "@legalStatus",
+		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.CMP_Languages ELSE '' END AS "@languagesOfferedText",
 		btd.NON_PUBLIC AS "@isConfidential",
 		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.CMP_Fees ELSE NULL END AS "@fees",
 		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.DOCUMENTS_REQUIRED ELSE NULL END AS "@requiredDocumentation",
+		'' as "@sourceOfFunds",
 		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.APPLICATION ELSE NULL END AS "@applicationProcess",
 		CASE WHEN ols.CODE = 'AGENCY' THEN dbo.fn_CIC_DisplayAccreditation(cbt.ACCREDITED,btd.LangID) ELSE NULL END AS "@licenseAccreditation",
 		CASE WHEN ols.CODE = 'AGENCY' THEN btd.ESTABLISHED ELSE NULL END AS "@yearIncorporated",
@@ -169,7 +170,10 @@ SELECT TOP (100)
 			WHERE btd.CMP_AltOrg IS NOT NULL
 			FOR XML PATH ('item'), TYPE)
 	   FOR XML PATH('names'), TYPE),
-
+	   (SELECT
+		   item
+		   FROM (VALUES (bt.NUM), (bt.EXTERNAL_ID)) AS i(item)
+	   FOR XML PATH(''), TYPE) AS searchHints,
 
 		(SELECT
 				REPLACE(tax.LinkedCode, ' ~ ', ' * ') AS item
@@ -219,6 +223,7 @@ SELECT TOP (100)
 				(SELECT
 				'physicalLocation' AS "@type",
 				'Physical' AS "@purpose",
+				'' AS "@physicalLocationDescription",
 				CASE WHEN bt.GEOCODE_TYPE = 0 THEN NULL ELSE CAST(bt.LATITUDE AS VARCHAR(30)) END AS "@latitude",
 				CASE WHEN bt.GEOCODE_TYPE = 0 THEN NULL ELSE CAST(bt.LONGITUDE AS VARCHAR(30)) END AS "@longitude",
 				CASE WHEN bt.GEOCODE_TYPE = 1 THEN 'AddressGeocode' WHEN bt.GEOCODE_TYPE = 2 THEN 'GeneralArea' WHEN bt.GEOCODE_TYPE = 3 THEN 'Precise' WHEN bt.GEOCODE_TYPE = 0 THEN NULL ELSE 'Unknown' END AS "@precision",
@@ -242,7 +247,7 @@ SELECT TOP (100)
 				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
 				ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
 			FOR XML PATH('contact'), TYPE)
-			WHERE (btd.CMP_SiteAddress IS NOT NULL OR bt.LOCATED_IN_CM IS NOT NULL AND ols.Code NOT IN ('SERVICE', 'TOPIC'))
+			WHERE (btd.CMP_SiteAddress IS NOT NULL OR bt.LOCATED_IN_CM IS NOT NULL) AND ols.Code NOT IN ('SERVICE', 'TOPIC')
 		FOR XML PATH('item'),TYPE),
 		(SELECT
 				CASE WHEN EXISTS(SELECT *
@@ -265,6 +270,36 @@ SELECT TOP (100)
 			FOR XML PATH('contact'), TYPE)
 		WHERE btd.CMP_MailAddress IS NOT NULL AND ols.Code NOT IN ('SERVICE', 'TOPIC')
 		FOR XML PATH('item'),TYPE),
+			(SELECT
+				CASE WHEN EXISTS(SELECT *
+					FROM dbo.GBL_PrivacyProfile_Fld pvf
+					INNER JOIN dbo.GBL_FieldOption fo
+						ON pvf.FieldID=fo.FieldID AND fo.FieldName='SITE_ADDRESS'
+					WHERE pvf.ProfileID=bt.PRIVACY_PROFILE)
+					THEN 1 ELSE 0 END AS "@isConfidential",
+				(SELECT
+				'postalAddress' AS "@type",
+				'Mailing' AS "@purpose",
+				btd.SITE_BUILDING AS "@careOf",
+				dbo.fn_GBL_FullAddress(NULL,NULL,btd.SITE_LINE_1,btd.SITE_LINE_2,btd.SITE_BUILDING,btd.SITE_STREET_NUMBER,btd.SITE_STREET,btd.SITE_STREET_TYPE,btd.SITE_STREET_TYPE_AFTER,btd.SITE_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,btd.LangID,0) AS "@line1",
+				btd.SITE_SUFFIX AS "@line2",
+				COALESCE(
+					(SELECT EXPORT_CITY FROM @SiteCityTable WHERE SITE_CITY=btd.SITE_CITY),
+					btd.SITE_CITY,
+					(SELECT excm.AreaName
+						FROM dbo.GBL_Community_External_Map cmap
+						INNER JOIN dbo.GBL_Community_External_Community excm
+							ON excm.EXT_ID = cmap.MapOneEXTID AND excm.SystemCode='ICAROLSTD' --'ONTARIO211'
+						WHERE cmap.CM_ID=bt.LOCATED_IN_CM),
+					btd.MAIL_CITY,
+					cioc_shared.dbo.fn_SHR_STP_ObjectName('Unknown')
+					) AS "@city",
+				ISNULL(btd.SITE_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) AS "@stateProvince",
+				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
+				ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
+			FOR XML PATH('contact'), TYPE)
+			WHERE (btd.CMP_MailAddress IS NULL AND btd.CMP_SiteAddress IS NOT NULL) AND ols.Code = 'SITE'
+		FOR XML PATH('item'),TYPE),
 
 			(SELECT 
 				phone."Confidential" AS "@isConfidential", 
@@ -274,7 +309,7 @@ SELECT TOP (100)
 					phone."Description" AS "@description",
 					phone."Label" AS "@label",
 					phone.Purpose AS "@purpose",
-					phone.PhoneNumber AS "@number",
+					CASE WHEN phone.PhoneNumber IS NULL OR ols.Code = 'SITE' THEN '' ELSE phone.PhoneNumber END AS "@number",
 					phone.TTY AS "@isTTY",
 					phone.Fax AS "@isFax",
 					phone."TollFree" AS "@isTollFree"	
@@ -289,7 +324,7 @@ SELECT TOP (100)
 					'Phone1' AS Purpose,
 					CASE WHEN btd.LangID=0 THEN 'Office' ELSE 'Bureau' END AS [Label],
 					NULL AS [Description]
-				WHERE btd.OFFICE_PHONE IS NOT NULL
+				-- WHERE btd.OFFICE_PHONE IS NOT NULL
 			UNION SELECT 0 AS "TollFree",
 					0 AS "Confidential",
 					0 AS TTY,
@@ -298,7 +333,7 @@ SELECT TOP (100)
 					'After-Hours' AS Purpose, 
 					CASE WHEN btd.LangID=0 THEN 'After Hours' ELSE 'après fermeture' END AS [Label],
 					NULL AS [Description]
-				WHERE cbtd.AFTER_HRS_PHONE IS NOT NULL
+				-- WHERE cbtd.AFTER_HRS_PHONE IS NOT NULL
 			UNION SELECT 0 AS "TollFree",
 					0 AS "Confidential",
 					0 AS TTY,
@@ -307,7 +342,7 @@ SELECT TOP (100)
 					'Phone2' AS Purpose,
 					CASE WHEN btd.LangID=0 THEN 'Crisis' ELSE 'Crise' END AS [Label], 
 					NULL AS [Description]
-				WHERE cbtd.CRISIS_PHONE IS NOT NULL
+				-- WHERE cbtd.CRISIS_PHONE IS NOT NULL
 			UNION SELECT 0 AS "TollFree",
 					0 AS "Confidential",
 					0 AS TTY,
@@ -316,7 +351,7 @@ SELECT TOP (100)
 					'Fax' AS Purpose,
 					'Fax' AS [Label],
 					NULL AS [Description]
-				WHERE btd.FAX IS NOT NULL
+				-- WHERE btd.FAX IS NOT NULL
 			UNION SELECT 0 AS "TollFree",
 					0 AS "Confidential",
 					1 AS TTY,
@@ -325,7 +360,7 @@ SELECT TOP (100)
 					'TTY' AS Purpose,
 					'TTY' AS [Label],
 					NULL AS [Description]
-				WHERE cbtd.TDD_PHONE IS NOT NULL
+				-- WHERE cbtd.TDD_PHONE IS NOT NULL
 			UNION SELECT
 					1 AS "TollFree",
 					0 AS "Confidential",
@@ -335,11 +370,22 @@ SELECT TOP (100)
 					'Toll-Free' AS Purpose,
 					CASE WHEN btd.LangID=0 THEN 'Toll-Free' ELSE 'sans frais' END AS [Label],
 					NULL AS [Description]
-				WHERE btd.TOLL_FREE_PHONE IS NOT NULL
+				-- WHERE btd.TOLL_FREE_PHONE IS NOT NULL
+			UNION SELECT 
+					0 AS "TollFree",
+					0 AS "Confidential",
+					0 AS TTY,
+					0 AS Fax,
+					NULL AS PhoneNumber,
+					'Main' AS Purpose,
+					NULL AS [Label],
+					NULL AS [Description]
+				-- WHERE btd.FAX IS NOT NULL
 			) phone
-			WHERE ols.CODE != 'SITE'
+
 			FOR XML PATH('item'), TYPE),
 
+		-- Agency and Service Contact
 
 		(SELECT
 				CASE WHEN EXISTS(SELECT *
@@ -360,7 +406,7 @@ SELECT TOP (100)
 				c.ORG AS "@companyName",
 	
 
-			(SELECT c.TITLE AS item WHERE c.TITLE IS NOT NULL FOR XML PATH('titles'), TYPE),
+			(SELECT c.TITLE AS item WHERE c.TITLE IS NOT NULL FOR XML PATH(''), TYPE) AS titles,
 		
 
 			(SELECT
@@ -387,20 +433,51 @@ SELECT TOP (100)
 			AND ((ols.Code = 'AGENCY' AND c.GblContactType IN ('EXEC_1','EXEC_2')) OR (ols.Code IN ('SERVICE', 'TOPIC') AND c.GblContactType IN ('CONTACT_1', 'CONTACT_2')))
 		ORDER BY c.GblContactType DESC
 		FOR XML PATH('item'), TYPE),
+
+		-- Empty Site Contact
+		(SELECT
+			0 AS "@isConfidential",		
+			(SELECT
+				'person' AS "@type",
+					CASE WHEN c.GblContactType = 'EXEC_1' THEN 'Senior Worker'
+					ELSE 'Main Contact' END AS "@label",
+				'' AS "@companyName",
+
+			(SELECT '' AS item FOR XML PATH('titles'), TYPE),
+		
+
+			(SELECT
+				'' AS "@displayName"
+			FOR XML PATH('name'), TYPE),
+
+			(SELECT 
+		
+
+				(SELECT 'emailAddress' as "@type", '' AS "@address" FOR XML PATH('item'), TYPE),
+
+				(SELECT 
+					'phoneNumber' AS "@type",
+                    '' "@number"
+				FOR XML PATH('item'), TYPE)
+			FOR XML PATH('contactMethods'), TYPE)
+			FOR XML PATH('contact'), TYPE)		
+		FROM (VALUES ('EXEC_1'), ('EXEC_2')) AS c(GblContactType)
+		WHERE ols.Code='SITE'		
+
+		FOR XML PATH('item'), TYPE),
+
 			(SELECT 0 AS "@isConfidential",
 				(SELECT
 					'website' AS "@type",
-					ISNULL(btd.WWW_ADDRESS_PROTOCOL, 'http://') + btd.WWW_ADDRESS AS "@url" 
+					CASE WHEN btd.WWW_ADDRESS IS NOT NULL AND ols.Code != 'SITE' THEN ISNULL(btd.WWW_ADDRESS_PROTOCOL, 'http://') + btd.WWW_ADDRESS ELSE '' END AS "@url" 
 				FOR XML PATH('contact'), TYPE)
-			WHERE btd.WWW_ADDRESS IS NOT NULL
 			FOR XML PATH('item'), TYPE),
 			(SELECT 0 AS "@isConfidential",
 				(SELECT
 					'emailAddress' AS "@type",
 					'Main' AS "@label",
-					btd.E_MAIL AS "@address" 
+					CASE WHEN btd.E_MAIL IS NOT NULL AND ols.Code != 'SITE' THEN btd.E_MAIL ELSE '' END AS "@address" 
 				FOR XML PATH('contact'), TYPE)
-			WHERE btd.E_MAIL IS NOT NULL
 			FOR XML PATH('item'), TYPE)
 
 	FOR XML PATH('contactDetails'), TYPE),
@@ -438,11 +515,11 @@ SELECT TOP (100)
 			FOR XML PATH(''), TYPE
 		) AS coverage,
 
-		(SELECT 
+		(SELECT  CASE WHEN (cbtd.HOURS IS NOT NULL OR cbtd.DATES IS NOT NULL) AND ols.Code != 'SITE' THEN
 					CASE WHEN cbtd.HOURS IS NULL THEN CASE WHEN cbtd.DATES IS NULL THEN cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Meetings',cbtd.LangID) + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',cbtd.LangID) + cbtd.MEETINGS ELSE + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Dates',cbtd.LangID) +  + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',cbtd.LangID) + cbtd.DATES + ISNULL(@nLine + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Meetings',cbtd.LangID) + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',cbtd.LangID) + cbtd.MEETINGS,'') END
 					ELSE cbtd.HOURS + ISNULL(@nLine + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Dates',cbtd.LangID) + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',cbtd.LangID) + cbtd.DATES,'') + ISNULL(@nLine + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Meetings',cbtd.LangID) + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',cbtd.LangID) + cbtd.MEETINGS,'')
-					END AS "@note"
-			WHERE (cbtd.HOURS IS NOT NULL OR cbtd.DATES IS NOT NULL) AND ols.Code != 'SITE'
+					END 
+				ELSE '' END AS "@note"
 			FOR XML PATH('hours'), TYPE
 		),
 		(SELECT
@@ -494,8 +571,7 @@ SELECT TOP (100)
 			FOR XML PATH('item'), TYPE),
 			(SELECT
 				'Public Comments' AS "@label",
-				cbtd.PUBLIC_COMMENTS AS "@valueText"
-				WHERE cbtd.PUBLIC_COMMENTS IS NOT NULL AND ols.Code IN ('SERVICE', 'TOPIC')
+				CASE WHEN cbtd.PUBLIC_COMMENTS IS NOT NULL AND ols.Code IN ('SERVICE', 'TOPIC') THEN cbtd.PUBLIC_COMMENTS ELSE '' END AS "@valueText"
 			FOR XML PATH('item'), TYPE),
 			(SELECT
 				'Legal Name' AS "@label",

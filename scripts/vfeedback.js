@@ -1046,7 +1046,7 @@ window['init_cached_state'] = function(formselector) {
 };
 
 })();
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -1096,7 +1096,7 @@ window['init_cached_state'] = function(formselector) {
 				var self = $(this), culture = self.data('culture'),
 					format = dateformat[culture] || $.datepicker.regional[culture].dateFormat,
 					args = {};
-				
+
 				if (self.hasClass('NoYear')) {
 					format = format.replace(/[\- .\/]*yy[\/]?/, '');
 					args = {
@@ -1114,7 +1114,7 @@ window['init_cached_state'] = function(formselector) {
 						args)).prop('autocomplete', 'off');
 		},
 		load_culture = function(culture) {
-			$.getScript("//ajax.googleapis.com/ajax/libs/jqueryui/" + $.ui.version + "/i18n/jquery.ui.datepicker-" + culture + '.min.js',
+			$.getScript("https://ajax.googleapis.com/ajax/libs/jqueryui/" + $.ui.version + "/i18n/jquery.ui.datepicker-" + culture + '.min.js',
 				function() {
 					loaded[culture] = true;
 					$.each(loading[culture], function() {
@@ -1124,9 +1124,9 @@ window['init_cached_state'] = function(formselector) {
 				});
 		};
 
-	
+
 	$.datepicker.regional['en-CA'] = $.extend({},$.datepicker.regional['']);
-	
+
 
 
 	$.fn.extend({
@@ -1138,7 +1138,7 @@ window['init_cached_state'] = function(formselector) {
 					load_datepicker.call(this);
 					return;
 				}
-				
+
 				var arr = loading[culture];
 				if (!arr) {
 					arr = loading[culture] = [];

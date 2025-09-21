@@ -155,7 +155,7 @@ fi
 # install node.js tools like google-closure-compiler
 npm install
 
-env_python="$USERPROFILE/Envs/ciocenv4py3/Scripts/python.exe"
-[[ -e $env_python ]] || "/c/Program Files/Python39/scripts/mkvirtualenv.bat" -a . --system-site-packages ciocenv4py3
+env_python="$USERPROFILE/Envs/ciocenv4py312/Scripts/python.exe"
+[[ -e $env_python ]] || "/c/Program Files/Python312/scripts/mkvirtualenv.bat" -a .. --system-site-packages ciocenv4py312 -p "/c/Program Files/Python312/python.exe"
 $env_python -m pip install -U pip
 $env_python -m pip install -r requirements-dev.txt

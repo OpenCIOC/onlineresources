@@ -1,4 +1,4 @@
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -181,7 +181,7 @@
 		geocode_entry(row);
 	};
 	var load_maps = function(culture, key_arg) {
-		$.getScript('//maps.googleapis.com/maps/api/js?v=3&' + key_arg + '&sensor=false&callback=maps_loaded&language=' + culture);
+		$.getScript('https://maps.googleapis.com/maps/api/js?v=3&' + key_arg + '&sensor=false&callback=maps_loaded&language=' + culture);
 	};
 	window['initialize'] = function(options) {
 		map_pin_target = options.map_pin_target;

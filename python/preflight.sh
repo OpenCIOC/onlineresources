@@ -88,41 +88,34 @@ if ! wmic product get name | grep "Microsoft Application Request Routing 3.0" > 
 	rm $TEMP/requestRouter_amd64.msi
 fi
 
-echo "Checking for Microsoft ODBC Driver 17 for SQL Server"
-if ! wmic product get name | grep "Microsoft ODBC Driver 17 for SQL Server" > /dev/null ; then
-	echo "Downloading Microsoft ODBC Driver 17 for SQL Server"
-	curl -o $TEMP/msobdcsql.msi "https://go.microsoft.com/fwlink/?linkid=2186919"
-	echo "Installing Microsoft ODBC Driver 17 for SQL Server"
-	MSYS_NO_PATHCONV=1 msiexec /passive /i $TEMP\\msodbcsql.msi AgreeToLicense=yes
-	rm $TEMP/msodbcsql.msi
-fi
+( echo "Checking for Microsoft ODBC Driver 17 for SQL Server" && winget list -e --id Microsoft.msodbcsql.17 -s winget > /dev/null) || ( echo "Installing Microsoft ODBC Driver 17 for SQL Server" && MSYS_NO_PATHCONV=1 winget install -e --id Microsoft.msodbcsql.17 -s winget --custom "AgreeToLicense=yes" )
+# if ! wmic product get name | grep "Microsoft ODBC Driver 17 for SQL Server" > /dev/null ; then
+# 	echo "Downloading Microsoft ODBC Driver 17 for SQL Server"
+# 	curl -o $TEMP/msobdcsql.msi "https://go.microsoft.com/fwlink/?linkid=2186919"
+# 	echo "Installing Microsoft ODBC Driver 17 for SQL Server"
+# 	MSYS_NO_PATHCONV=1 msiexec /passive /i $TEMP\\msodbcsql.msi AgreeToLicense=yes
+# 	rm $TEMP/msodbcsql.msi
+# fi
 
-echo "Checking for Python 3.9.12"
-if ! wmic product get name | grep "Python 3.9.12 Core Interpreter (64-bit)" > /dev/null ; then
-	echo "Downloading Python 3.9.12"
-	curl -o $TEMP/python39-amd64.exe "https://www.python.org/ftp/python/3.9.12/python-3.9.12-amd64.exe"
-	echo "Installing Python 3.9.12"
-	MSYS_NO_PATHCONV=1 $TEMP\\python39-amd64.exe /quiet InstallAllUsers=1 AssociateFiles=0 CompileAll=1
-	rm $TEMP/python39-amd64.exe
-fi
+( echo "Checking for Python 3.12" && winget list -e --id Python.Python.3.12 -s winget > /dev/null) || ( echo "Installing Python 3.12" && MSYS_NO_PATHCONV=1 winget install -e --id Python.Python.3.12 -s winget --override "/quiet InstallAllUsers=1 AssociateFiles=0 CompileAll=1" )
 
-export PATH="/c/Program Files/Python39/:/c/Program Files/Python39/scripts:$PATH"
-"/c/Program Files/Python39/python" -m pip install -U pip virtualenv virtualenvwrapper-win
-if [[ ! -e "/c/Program Files/Python39/Lib/site-packages/pywin32-303.dist-info" ]]; then
-	"/c/Program Files/Python39/python" -m pip install pywin32==303
-	"/c/Program Files/Python39/python" "/c/Program Files/Python39/Scripts/pywin32_postinstall.py" -install -quiet
+export PATH="/c/Program Files/Python312/:/c/Program Files/Python312/scripts:$PATH"
+"/c/Program Files/Python312/python" -m pip install -U pip virtualenv virtualenvwrapper-win
+if [[ ! -e "/c/Program Files/Python312/Lib/site-packages/pywin32-310.dist-info" ]]; then
+	"/c/Program Files/Python312/python" -m pip install pywin32==310
+	"/c/Program Files/Python312/python" "/c/Program Files/Python312/Scripts/pywin32_postinstall.py" -install -quiet
 fi
 
 for gencache in "'{2A75196C-D9EB-4129-B803-931327F72D5C}', 0, 2, 8" "'{00000600-0000-0010-8000-00AA006D2EA4}', 0, 6, 0" "'{B691E011-1797-432E-907A-4D8C69339129}', 0, 6, 1" "'{D97A6DA0-A85C-11CF-83AE-00A0C90C2BD8}', 0, 3, 0" "'{D97A6DA0-9C1C-11D0-9C3C-00A0C922E764}', 0, 3, 0"; do
-	"/c/Program Files/Python39/python" -c "from win32com.client import gencache; gencache.EnsureModule($gencache)"
+	"/c/Program Files/Python312/python" -c "from win32com.client import gencache; gencache.EnsureModule($gencache)"
 done
 
 mkdir -p "$USERPROFILE/Envs"
 for identity in "IIS_IUSRS" "IUSR"  ; do
-	MSYS_NO_PATHCONV=1 $SYSTEMROOT/system32/icacls.exe "c:\\Program Files\\Python39/Lib/site-packages/win32com/gen_py" /grant "$identity:(OI)(CI)F"
+	MSYS_NO_PATHCONV=1 $SYSTEMROOT/system32/icacls.exe "c:\\Program Files\\Python312/Lib/site-packages/win32com/gen_py" /grant "$identity:(OI)(CI)F"
 	MSYS_NO_PATHCONV=1 $SYSTEMROOT/system32/icacls.exe "$USERPROFILE/Envs" /grant "$identity:(OI)(CI)RX" /T
 done
-MSYS_NO_PATHCONV=1 $SYSTEMROOT/system32/icacls.exe "c:\\Program Files\\Python39/Lib/site-packages/win32com/gen_py" /grant "$USERNAME:(OI)(CI)F"
+MSYS_NO_PATHCONV=1 $SYSTEMROOT/system32/icacls.exe "c:\\Program Files\\Python312/Lib/site-packages/win32com/gen_py" /grant "$USERNAME:(OI)(CI)F"
 
 appcmd="$SYSTEMROOT/system32/inetsrv/appcmd.exe"
 

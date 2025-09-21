@@ -133,21 +133,18 @@ class AssetManager:
         else:
             bootstrap = ""
 
-        html = (
-            markupsafe.Markup(
-                """
-                <script src="//ajax.googleapis.com/ajax/libs/jquery/%(jquery_version)s/jquery.min.js"></script>
-                <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-                <script src="//ajax.googleapis.com/ajax/libs/jqueryui/%(jquery_ui_version)s/jquery-ui.min.js"></script>
+        html = markupsafe.Markup(
+            """
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/%(jquery_version)s/jquery.min.js"></script>
+                <script src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+                <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/%(jquery_ui_version)s/jquery-ui.min.js"></script>
                 <script type="text/javascript">$.widget.bridge("uibutton", jQuery.ui.button);$.widget.bridge("uitooltip", jQuery.ui.tooltip);</script>
                 %(bootstrap)s
             """
-            )
-            % {
-                "root": self.request.pageinfo.PathToStart,
-                "jquery_version": const.JQUERY_VERSION,
-                "jquery_ui_version": const.JQUERY_UI_VERSION,
-                "bootstrap": bootstrap,
-            }
-        )
+        ) % {
+            "root": self.request.pageinfo.PathToStart,
+            "jquery_version": const.JQUERY_VERSION,
+            "jquery_ui_version": const.JQUERY_UI_VERSION,
+            "bootstrap": bootstrap,
+        }
         return html

@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -26,7 +26,7 @@ bInlineMode = Not Nl(Trim(Request("InlineMode")))
 
 Call getDisplayOptionsCIC(g_intViewTypeCIC, Not user_bCIC)
 If opt_bTableSortCIC And Not g_bPrintMode Then
-	Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css""/>")
+	Call addToHeader("<link rel=""stylesheet"" type=""text/css"" href=""https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css""/>")
 End If
 
 If Not bInlineMode Then
@@ -43,7 +43,7 @@ strFrom = "GBL_BaseTable bt " & vbCrLf & _
 	"LEFT JOIN CIC_BaseTable_Description cbtd ON cbt.NUM=cbtd.NUM AND cbtd.LangID=@@LANGID" & vbCrLf & _
 	"LEFT JOIN CCR_BaseTable ccbt ON bt.NUM=ccbt.NUM" & vbCrLf & _
 	"LEFT JOIN CCR_BaseTable_Description ccbtd ON ccbt.NUM=ccbtd.NUM AND ccbtd.LangID=" & g_objCurrentLang.LangID
-			
+
 strWhere = vbNullString
 strCon = vbNullString
 %>

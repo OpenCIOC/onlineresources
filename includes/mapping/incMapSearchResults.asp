@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -44,7 +44,7 @@ Sub makeMappingSearchFooter()
 %>
 <%= makeJQueryScriptTags() %>
 <% If opt_bTableSortCIC Then %>
-<script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <% End If %>
 <%= JSVerScriptTag("scripts/results.js") %>
 <%= JSVerScriptTag("scripts/cultures/globalize.culture." & g_objCurrentLang.Culture & ".js") %>
@@ -122,11 +122,11 @@ jQuery(function() {
 
 	<%
 			Call openMappingCategoryListRst()
-			With rsListMappingCategory		
+			With rsListMappingCategory
 				While Not .EOF
 	%>
 			}, <%=.Fields("MapCatID")%>: {
-				category: <%=JsQs(.Fields("CategoryName"))%>, 
+				category: <%=JsQs(.Fields("CategoryName"))%>,
 				image: <%=JsQs("images/mapping/" & .Fields("MapImage"))%>,
 				image_small: <%=JsQs("images/mapping/" & .Fields("MapImageSm"))%>,
 				image_small_dot: <%=JsQs("images/mapping/" & .Fields("MapImageSmDot"))%>,

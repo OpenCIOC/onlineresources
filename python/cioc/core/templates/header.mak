@@ -73,7 +73,7 @@ template_stylesheet=${template_style_sheet_url}
 	%endif
 
 	<link rel="search" href="${request.pageinfo.PathToStart}" title="Search Start">
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 
 	<link rel="stylesheet" type="text/css" href="${basic_style_sheet_url}" id="basic_style">
 	<link rel="stylesheet" type="text/css" href="${template_style_sheet_url}" id="template_style">

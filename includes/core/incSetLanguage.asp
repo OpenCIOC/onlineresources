@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -82,7 +82,7 @@ if not Application.Value('CulturesUpdated') or Application.Value('CulturesUpdate
 				Application.SetValue("Culture_" + value, True)
 			else:
 				Application.SetValue("Culture_" + desc.Culture + "_" + key, value)
-	
+
 
 _last_culture = None
 _reload_callback = None
