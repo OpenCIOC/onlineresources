@@ -19,6 +19,11 @@
 '
 %>
 <!--#include file="../search/incSearchQString.asp" -->
+<script language="python" runat="server">
+from uuid import uuid4
+def get_checkid():
+	return str(uuid4())
+</script>
 <%
 Public Sub printSearchInfo()
 %>
@@ -132,9 +137,9 @@ Else
 			<%If user_intCanViewStatsDOM > STATS_NONE Then%>
 <p><%=TXT_PREPARE_STATS_REPORT%></p>
 <%
-			
 
-				
+
+
 				Call printStatsForm(strIDList)
 				%>
 	<form class="NotVisible" name="stateForm" id="stateForm">
@@ -150,7 +155,7 @@ Else
 	</script>
 
 				<%
-				g_bListScriptLoaded = True 
+				g_bListScriptLoaded = True
 			Else
 				Call handleError(TXT_NO_PERMISSIONS, vbNullString, vbNullString)
 			End If
@@ -235,10 +240,10 @@ Else
 
 			If ps_intDbArea = DM_VOL Then
 				Call getDisplayOptionsVOL(g_intViewTypeVOL, Not user_bVOL)
-	
-				Dim objOpTable	
+
+				Dim objOpTable
 				Set objOpTable = New OpRecordTable
-	
+
 				strFrom = "VOL_Opportunity vo" & vbCrLf & _
 					"INNER JOIN VOL_Opportunity_Description vod ON vo.VNUM=vod.VNUM AND vod.LangID=@@LANGID" & vbCrLf & _
 					"INNER JOIN GBL_BaseTable bt ON vo.NUM=bt.NUM" & vbCrLf & _
@@ -270,18 +275,18 @@ Else
 						decNearLongitude = vbNullString
 					End If
 				End If
-				
+
 				If Not Nl(decNearLatitude) and Not Nl(decNearLongitude) And bNearSort Then
 					strParamSQL = "DECLARE @NearLatitude [decimal](11,7)," & vbCrLf & _
 								"@NearLongitude [decimal](11,7)" & vbCrLf & _
 								"SET @NearLatitude = ?" & vbCrLf & _
-								"SET @NearLongitude = ?" & vbCrLf 
+								"SET @NearLongitude = ?" & vbCrLf
 					With cmdOrgList
-						.Parameters.Append .CreateParameter("@NearLatitude", adDecimal, adParamInput)	
+						.Parameters.Append .CreateParameter("@NearLatitude", adDecimal, adParamInput)
 						.Parameters("@NearLatitude").Precision = 11
 						.Parameters("@NearLatitude").NumericScale = 7
 						.Parameters("@NearLatitude").Value = decNearLatitude
-						.Parameters.Append .CreateParameter("@NearLongitude", adDecimal, adParamInput)	
+						.Parameters.Append .CreateParameter("@NearLongitude", adDecimal, adParamInput)
 						.Parameters("@NearLongitude").Precision = 11
 						.Parameters("@NearLongitude").NumericScale = 7
 						.Parameters("@NearLongitude").Value = decNearLongitude
@@ -291,7 +296,7 @@ Else
 
 				Dim objOrgTable
 				Set objOrgTable = New OrgRecordTable
-	
+
 				strFrom = "GBL_BaseTable bt " & vbCrLf & _
 					"INNER JOIN GBL_BaseTable_Description btd ON bt.NUM=btd.NUM AND btd.LangID=@@LANGID" & vbCrLf & _
 					"LEFT JOIN CIC_BaseTable cbt ON bt.NUM=cbt.NUM" & vbCrLf & _
@@ -398,7 +403,7 @@ Call closeAgencyListRst()
 '################################
 ' PRINT MAP
 '################################
-		Case "PM"		
+		Case "PM"
 			Const OT_LETTER_PORTRAIT = 0
 			Const OT_LETTER_LANDSCAPE = 1
 			Const OT_LEGAL_PORTRAIT = 2
@@ -469,7 +474,7 @@ Call closeSharingProfileListRst()
 	Dim intOrgLevelCount, strSuggestion, strName, strSuggestNum, bIsAgency
 	Dim cmdPotentialOrg, rsPotentialOrg
 	Set cmdPotentialOrg = Server.CreateObject("ADODB.Command")
-		
+
 	With cmdPotentialOrg
 		.ActiveConnection = getCurrentAdminCnn()
 		.CommandText = "dbo.sp_GBL_NUMsToPotentialOrg_l"
@@ -532,7 +537,7 @@ Call closeSharingProfileListRst()
 	Case "AR"
 		Dim strIDName, strID
 		strIDName = IIf(ps_intDomain = DM_VOL, "VNUM", "NUM")
-		
+
 %>
 
 <h2><%=TXT_CREATE_NEW_REMINDER%></h2>
@@ -548,11 +553,38 @@ Call closeSharingProfileListRst()
 </form>
 <%
 
+
+'################################
+' Check web links
+'################################
+	Case "CW"
+
+		strIDName = IIf(ps_intDomain = DM_VOL, "VNUM", "NUM")
+
+%>
+
+<h2><%=TXT_CHECK_WEB_LINKS%></h2>
+<form action="<%= ps_strPathToStart %>checklinks" method="post">
+<div class="NotVisible">
+<%= g_strCacheFormVals %>
+<input type="hidden" name="_force_method" value="GET">
+<input type="hidden" name="checkid" value="<%= get_checkid() %>">
+<% For Each strID in Split(CStr(strIDList), ",") %>
+<input type="hidden" name="<%=strIDName%>" value="<%=strID%>">
+<% Next %>
+</div>
+<input type="submit" value="<%=TXT_NEXT_STEP%>">
+</form>
+<%
+
+
+
+
 '################################
 ' ADD OR REMOVE CODES
 '################################
 		Case Else
-			Select Case ps_intDbArea	
+			Select Case ps_intDbArea
 				Case DM_CIC
 %>
 <!--#include file="incCICAddRemove.asp" -->

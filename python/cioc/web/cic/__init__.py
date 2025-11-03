@@ -97,6 +97,12 @@ def includeme(config):
         "cic_customreport_format", urlprefix + "customreport/format", factory=factory
     )
 
+    # /checklinks/*
+    config.add_route("cic_checklinks_index", urlprefix + "checklinks", factory=factory)
+    config.add_route(
+        "cic_checklinks", urlprefix + "checklinks/{action}", factory=factory
+    )
+
     # /reminders/*
     config.add_route(
         "reminder_add",

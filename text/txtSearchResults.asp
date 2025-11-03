@@ -76,6 +76,7 @@ Dim TXT_ACTION_ON_SELECTED, _
 	TXT_SLCT_STATS_AND_REPORTING, _
 	TXT_SLCT_SUBJECT, _
 	TXT_SLCT_TAXONOMY, _
+	TXT_SLCT_WEB_LINKS, _
 	TXT_SHOW_SUBJECTS, _
 	TXT_SHOWING_RECORDS, _
 	TXT_TO_BOTTOM, _
@@ -154,6 +155,7 @@ Sub setTxtSearchResults
 			TXT_SLCT_STATS_AND_REPORTING = "Statistiques et rapports"
 			TXT_SLCT_SUBJECT = "Ajouter / Supprimer un mot-clé du sujet"
 			TXT_SLCT_TAXONOMY = "Ajouter / Supprimer un terme de la Taxonomie"
+			TXT_SLCT_WEB_LINKS = "TRANSLATE_FR -- Check Web Links"
 			TXT_SHOW_SUBJECTS = "Afficher la barre latérale des sujets"
 			TXT_SHOWING_RECORDS = "Affichage de "
 			TXT_TO_BOTTOM = "Vers le bas"
@@ -231,6 +233,7 @@ Sub setTxtSearchResults
 			TXT_SLCT_STATS_AND_REPORTING = "Stats and Reporting"
 			TXT_SLCT_SUBJECT = "Add/Remove Subject Term"
 			TXT_SLCT_TAXONOMY = "Add/Remove Taxonomy Term"
+			TXT_SLCT_WEB_LINKS = "Check Web Links"
 			TXT_SHOW_SUBJECTS = "Show Subjects Sidebar"
 			TXT_SHOWING_RECORDS = "Showing "
 			TXT_TO_BOTTOM = "To Bottom"

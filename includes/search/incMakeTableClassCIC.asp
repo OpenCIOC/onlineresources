@@ -879,6 +879,7 @@ Else
 				If user_bSuperUserCIC Then
 %>
 							<option value="F"><%=TXT_SLCT_FIND_REPLACE%></option>
+							<option value="CW"><%=TXT_SLCT_WEB_LINKS%></option>
 <%
 				End If
 				If hasGoogleMapsAPI() Then
