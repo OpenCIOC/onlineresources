@@ -58,7 +58,7 @@ ${report_instructions.CustomReportInstructions|n}
                     </a>
                 </h4>
             </div>
-            <div id="panel-collapse-${community.CM_ID}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="panel-heading-${community.CM_ID}">
+            <div id="panel-collapse-${community.CM_ID}" class="panel-collapse collapse ${"show" if one_lvl_0 else ""}" role="tabpanel" aria-labelledby="panel-heading-${community.CM_ID}">
                 <div class="panel-body">
                     ${renderer.ms_checkbox('CMID', community.CM_ID, label=Markup(_('All of <span class="demi-bold">%s</span>')) % (community.Community,), label_class='control_label')}
                     ${community_list(community.CM_ID, report_communities, False)}

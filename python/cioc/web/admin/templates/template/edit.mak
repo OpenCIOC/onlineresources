@@ -341,6 +341,12 @@ ${self.makeMgmtInfo(template)}
 	${renderer.proto_url("template.JavaScriptBottomUrl", class_="form-control")}</td>
 </tr>
 <tr>
+	<td class="field-label-cell">${renderer.label("template.ExtraJavascript", _('Extra Javascript'))}</td>
+	<td class="field-data-cell"><span class="SmallNote">${_('Include appropriate opening and closing <script> tags')}</span>
+	${renderer.errorlist("template.ExtraJavascript")}
+	${renderer.textarea("template.ExtraJavascript", class_="form-control")}</td>
+</tr>
+<tr>
 	<td class="field-label-cell">${renderer.label("template.BodyTagExtras", _('Body Tag Extras'))}</td>
 	<td class="field-data-cell">${renderer.errorlist("template.BodyTagExtras")}
 	${renderer.text("template.BodyTagExtras", maxlength=150, class_="form-control")}</td>

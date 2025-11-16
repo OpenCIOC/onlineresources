@@ -3,99 +3,101 @@ GO
 SET ANSI_NULLS ON
 GO
 
+
 CREATE PROCEDURE [dbo].[sp_GBL_Template_u]
-    @Template_ID [int] OUTPUT,
-    @MODIFIED_BY [varchar](50),
-    @MemberID int,
-    @AgencyCode [char](3),
-    @UseCIC [bit],
-    @UseVOL [bit],
-    @Owner [char](3),
-    @BannerRepeat bit,
-    @BannerHeight tinyint,
-    @StyleSheetUrl varchar(255),
-    @ExtraCSS nvarchar(MAX),
-    @JavaScriptTopUrl varchar(255),
-    @JavaScriptBottomUrl varchar(255),
-    @ShortCutIcon varchar(255),
-    @AppleTouchIcon varchar(255),
-    @BodyTagExtras varchar(255),
-    @Background varchar(255),
-    @BackgroundColour varchar(7),
-    @bgColorLogo varchar(7),
-    @FontFamily varchar(100),
-    @FontColour varchar(7),
-    @HeaderLayout int,
-    @FooterLayout int,
-    @SearchLayoutCIC int,
-    @SearchLayoutVOL int,
-    @HeaderSearchLink bit,
-    @HeaderSearchIcon bit,
-    @HeaderSuggestLink bit,
-    @HeaderSuggestIcon bit,
-    @ContainerFluid bit,
-    @ContainerContrast bit,
-    @SmallTitle bit,
-    @fcLabel varchar(7),
-    @FieldLabelColour varchar(7),
-    @LinkColour varchar(7),
-    @ALinkColour varchar(7),
-    @VLinkColour varchar(7),
-    @fcTitle varchar(7),
-    @bgColorTitle varchar(7),
-    @borderColorTitle varchar(7),
-    @iconColorTitle varchar(7),
-    @fcContent varchar(7),
-    @bgColorContent varchar(7),
-    @borderColorContent varchar(7),
-    @iconColorContent varchar(7),
-    @fcHeader varchar(7),
-    @bgColorHeader varchar(7),
-    @borderColorHeader varchar(7),
-    @iconColorHeader varchar(7),
-    @fcFooter varchar(7),
-    @bgColorFooter varchar(7),
-    @borderColorFooter varchar(7),
-    @iconColorFooter varchar(7),
-    @fcMenu varchar(7),
-    @bgColorMenu varchar(7),
-    @borderColorMenu varchar(7),
-    @iconColorMenu varchar(7),
-    @fcDefault varchar(7),
-    @bgColorDefault varchar(7),
-    @borderColorDefault varchar(7),
-    @iconColorDefault varchar(7),
-    @fcHover varchar(7),
-    @bgColorHover varchar(7),
-    @borderColorHover varchar(7),
-    @iconColorHover varchar(7),
-    @fcActive varchar(7),
-    @bgColorActive varchar(7),
-    @borderColorActive varchar(7),
-    @iconColorActive varchar(7),
-    @fcHighlight varchar(7),
-    @bgColorHighlight varchar(7),
-    @borderColorHighlight varchar(7),
-    @iconColorHighlight varchar(7),
-    @AlertColour varchar(7),
-    @fcError varchar(7),
-    @bgColorError varchar(7),
-    @borderColorError varchar(7),
-    @iconColorError varchar(7),
-    @fcInfo varchar(7),
-    @bgColorInfo varchar(7),
-    @borderColorInfo varchar(7),
-    @iconColorInfo varchar(7),
-    @cornerRadius varchar(10),
-    @fsDefault varchar(10),
-    @PreviewTemplate bit,
-    @MenuFontColour varchar(7),
-    @MenuBgColour varchar(7),
-    @TitleFontColour varchar(7),
-    @TitleBgColour varchar(7),
-    @Descriptions [xml],
-    @MenuItems [xml],
-    @ErrMsg [nvarchar](500) OUTPUT
+    @Template_ID [INT] OUTPUT,
+    @MODIFIED_BY [VARCHAR](50),
+    @MemberID INT,
+    @AgencyCode [CHAR](3),
+    @UseCIC [BIT],
+    @UseVOL [BIT],
+    @Owner [CHAR](3),
+    @BannerRepeat BIT,
+    @BannerHeight TINYINT,
+    @StyleSheetUrl VARCHAR(255),
+    @ExtraCSS NVARCHAR(MAX),
+    @JavaScriptTopUrl VARCHAR(255),
+    @JavaScriptBottomUrl VARCHAR(255),
+    @ShortCutIcon VARCHAR(255),
+    @AppleTouchIcon VARCHAR(255),
+    @BodyTagExtras VARCHAR(255),
+    @Background VARCHAR(255),
+    @BackgroundColour VARCHAR(7),
+    @bgColorLogo VARCHAR(7),
+    @FontFamily VARCHAR(100),
+    @FontColour VARCHAR(7),
+    @HeaderLayout INT,
+    @FooterLayout INT,
+    @SearchLayoutCIC INT,
+    @SearchLayoutVOL INT,
+    @HeaderSearchLink BIT,
+    @HeaderSearchIcon BIT,
+    @HeaderSuggestLink BIT,
+    @HeaderSuggestIcon BIT,
+    @ContainerFluid BIT,
+    @ContainerContrast BIT,
+    @SmallTitle BIT,
+    @fcLabel VARCHAR(7),
+    @FieldLabelColour VARCHAR(7),
+    @LinkColour VARCHAR(7),
+    @ALinkColour VARCHAR(7),
+    @VLinkColour VARCHAR(7),
+    @fcTitle VARCHAR(7),
+    @bgColorTitle VARCHAR(7),
+    @borderColorTitle VARCHAR(7),
+    @iconColorTitle VARCHAR(7),
+    @fcContent VARCHAR(7),
+    @bgColorContent VARCHAR(7),
+    @borderColorContent VARCHAR(7),
+    @iconColorContent VARCHAR(7),
+    @fcHeader VARCHAR(7),
+    @bgColorHeader VARCHAR(7),
+    @borderColorHeader VARCHAR(7),
+    @iconColorHeader VARCHAR(7),
+    @fcFooter VARCHAR(7),
+    @bgColorFooter VARCHAR(7),
+    @borderColorFooter VARCHAR(7),
+    @iconColorFooter VARCHAR(7),
+    @fcMenu VARCHAR(7),
+    @bgColorMenu VARCHAR(7),
+    @borderColorMenu VARCHAR(7),
+    @iconColorMenu VARCHAR(7),
+    @fcDefault VARCHAR(7),
+    @bgColorDefault VARCHAR(7),
+    @borderColorDefault VARCHAR(7),
+    @iconColorDefault VARCHAR(7),
+    @fcHover VARCHAR(7),
+    @bgColorHover VARCHAR(7),
+    @borderColorHover VARCHAR(7),
+    @iconColorHover VARCHAR(7),
+    @fcActive VARCHAR(7),
+    @bgColorActive VARCHAR(7),
+    @borderColorActive VARCHAR(7),
+    @iconColorActive VARCHAR(7),
+    @fcHighlight VARCHAR(7),
+    @bgColorHighlight VARCHAR(7),
+    @borderColorHighlight VARCHAR(7),
+    @iconColorHighlight VARCHAR(7),
+    @AlertColour VARCHAR(7),
+    @fcError VARCHAR(7),
+    @bgColorError VARCHAR(7),
+    @borderColorError VARCHAR(7),
+    @iconColorError VARCHAR(7),
+    @fcInfo VARCHAR(7),
+    @bgColorInfo VARCHAR(7),
+    @borderColorInfo VARCHAR(7),
+    @iconColorInfo VARCHAR(7),
+    @cornerRadius VARCHAR(10),
+    @fsDefault VARCHAR(10),
+    @PreviewTemplate BIT,
+	@ExtraJavascript NVARCHAR(MAX),
+    @MenuFontColour VARCHAR(7),
+    @MenuBgColour VARCHAR(7),
+    @TitleFontColour VARCHAR(7),
+    @TitleBgColour VARCHAR(7),
+    @Descriptions [XML],
+    @MenuItems [XML],
+    @ErrMsg [NVARCHAR](500) OUTPUT
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON;
@@ -113,7 +115,7 @@ DECLARE
 
 SET @MemberObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('CIOC Membership');
 SET @DesignTemplateObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Design Template');
-SET @DesignTemplateObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Template Layout');
+SET @LayoutObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Template Layout');
 SET @AgencyObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Agency');
 SET @NameObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Name');
 SET @LanguageObjectName = cioc_shared.dbo.fn_SHR_STP_ObjectName('Language');
@@ -294,7 +296,7 @@ FROM    @DescTable nt
 WHERE   EXISTS (
     SELECT  *
     FROM    dbo.GBL_Template t
-        INNER JOIN GBL_Template_Description td
+        INNER JOIN dbo.GBL_Template_Description td
             ON t.Template_ID = td.Template_ID
     WHERE   Name = nt.Name AND  LangID = nt.LangID AND  t.Template_ID <> @Template_ID AND   (t.MemberID IS NULL OR  t.MemberID = @MemberID)
 );
@@ -313,59 +315,44 @@ IF @MemberID IS NULL BEGIN
     SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL);
 -- Member ID exists ?
 END;
-ELSE IF NOT EXISTS (SELECT  * FROM  STP_Member WHERE MemberID = @MemberID) BEGIN
+ELSE IF NOT EXISTS (SELECT * FROM dbo.STP_Member WHERE MemberID = @MemberID) BEGIN
     SET @Error = 3; -- No Such Record
-    SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS varchar), @MemberObjectName);
+    SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@MemberID AS VARCHAR), @MemberObjectName);
 -- Template exists ?
 END;
-ELSE IF @Template_ID IS NOT NULL AND NOT EXISTS (SELECT * FROM  GBL_Template WHERE  Template_ID = @Template_ID) BEGIN
+ELSE IF @Template_ID IS NOT NULL AND NOT EXISTS (SELECT * FROM dbo.GBL_Template WHERE  Template_ID = @Template_ID) BEGIN
     SET @Error = 3; -- No Such Record
-    SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@Template_ID AS varchar), @DesignTemplateObjectName);
+    SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, CAST(@Template_ID AS VARCHAR), @DesignTemplateObjectName);
 -- Not a System Template ?
 END;
-ELSE IF EXISTS (
-    SELECT  *
-    FROM    GBL_Template
-    WHERE   Template_ID = @Template_ID AND  SystemTemplate = 1
-) BEGIN
+ELSE IF EXISTS (SELECT * FROM dbo.GBL_Template WHERE Template_ID = @Template_ID AND  SystemTemplate = 1) BEGIN
     SET @Error = 8; -- Security Failure
     SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, cioc_shared.dbo.fn_SHR_STP_ObjectName('System Template'), NULL);
 -- Template belongs to Member ?
 END;
-ELSE IF @Template_ID IS NOT NULL AND NOT EXISTS (
-         SELECT *
-         FROM   GBL_Template
-         WHERE  Template_ID = @Template_ID AND  MemberID = @MemberID
-     ) BEGIN
+ELSE IF @Template_ID IS NOT NULL AND NOT EXISTS (SELECT * FROM dbo.GBL_Template WHERE  Template_ID = @Template_ID AND  MemberID = @MemberID) BEGIN
     SET @Error = 8; -- Security Failure
     SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @MemberObjectName, NULL);
 -- Agency exists ?
 END;
-ELSE IF @Owner IS NOT NULL AND  NOT EXISTS (SELECT  * FROM  GBL_Agency WHERE AgencyCode = @Owner) BEGIN
+ELSE IF @Owner IS NOT NULL AND  NOT EXISTS (SELECT * FROM dbo.GBL_Agency WHERE AgencyCode = @Owner) BEGIN
     SET @Error = 3; -- No Such Record
     SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @Owner, @AgencyObjectName);
 -- Ownership OK ?
 END;
-ELSE IF @AgencyCode IS NOT NULL AND @Template_ID IS NOT NULL AND NOT EXISTS (
-         SELECT *
-         FROM   GBL_Template
-         WHERE  Template_ID = @Template_ID AND  (Owner IS NULL OR   Owner = @AgencyCode)
+ELSE IF @AgencyCode IS NOT NULL AND @Template_ID IS NOT NULL AND NOT EXISTS (SELECT * FROM dbo.GBL_Template WHERE Template_ID = @Template_ID AND (Owner IS NULL OR Owner = @AgencyCode)
      ) BEGIN
     SET @Error = 8; -- Security Failure
     SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @DesignTemplateObjectName, NULL);
 -- At least one language used ?
 END;
-ELSE IF NOT EXISTS (SELECT  * FROM  @DescTable) BEGIN
+ELSE IF NOT EXISTS (SELECT * FROM @DescTable) BEGIN
     SET @Error = 10; -- Required field
     SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @LanguageObjectName, @DesignTemplateObjectName);
 -- Duplicate language data given ?
 END;
 ELSE IF (
-    SELECT  TOP 1   COUNT(*)
-    FROM    @DescTable
-    GROUP BY LangID
-    ORDER BY COUNT(*) DESC
-) > 1 BEGIN
+    SELECT TOP 1 COUNT(*) FROM @DescTable GROUP BY LangID ORDER BY COUNT(*) DESC) > 1 BEGIN
     SET @Error = 1; -- Unknown Error
     SET @ErrMsg = cioc_shared.dbo.fn_SHR_STP_FormatError(@Error, @LanguageObjectName, NULL);
 -- Name provided ?
@@ -392,7 +379,7 @@ END;
 
 IF @Error = 0 BEGIN
     IF @Template_ID IS NULL BEGIN
-        INSERT INTO GBL_Template (
+        INSERT INTO dbo.GBL_Template (
             CREATED_DATE,
             CREATED_BY,
             MODIFIED_DATE,
@@ -481,7 +468,8 @@ IF @Error = 0 BEGIN
             cornerRadius,
             fsDefault,
             TemplateCSSVersionDate,
-            PreviewTemplate
+            PreviewTemplate,
+			ExtraJavascript
         )
         VALUES (
             GETDATE(),
@@ -576,7 +564,8 @@ IF @Error = 0 BEGIN
             @cornerRadius,
             @fsDefault,
             GETDATE(),
-            @PreviewTemplate
+            @PreviewTemplate,
+			@ExtraJavascript
         );
         SELECT  @Template_ID = SCOPE_IDENTITY();
     END;
@@ -668,7 +657,8 @@ IF @Error = 0 BEGIN
             TitleFontColour = @TitleFontColour,
             TitleBgColour = @TitleBgColour,
             TemplateCSSVersionDate = GETDATE(),
-            PreviewTemplate = @PreviewTemplate
+            PreviewTemplate = @PreviewTemplate,
+			ExtraJavascript = @ExtraJavascript
         WHERE   Template_ID = @Template_ID;
     END;
 

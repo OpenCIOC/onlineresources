@@ -76,6 +76,8 @@ class CustomReport(CicViewBase):
         for row in report_communities:
             communities[row.Parent_CM_ID].append(row)
 
+        one_lvl_0 = len([row for row in report_communities if row.Lvl==0]) == 1
+
         cursor.nextset()
 
         report_instructions = cursor.fetchone()
@@ -85,7 +87,7 @@ class CustomReport(CicViewBase):
             title,
             title,
             dict(
-                report_communities=communities, report_instructions=report_instructions
+                report_communities=communities, report_instructions=report_instructions, one_lvl_0=one_lvl_0
             ),
             no_index=True,
         )

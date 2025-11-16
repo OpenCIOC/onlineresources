@@ -120,6 +120,7 @@ class TemplateBaseSchema(Schema):
     FontFamily = validators.String(max=100)
 
     ExtraCSS = ciocvalidators.UnicodeString()
+    ExtraJavascript = ciocvalidators.UnicodeString()
     HeaderLayout = ciocvalidators.IDValidator(not_empty=True)
     FooterLayout = ciocvalidators.IDValidator(not_empty=True)
     SearchLayoutCIC = ciocvalidators.IDValidator()
