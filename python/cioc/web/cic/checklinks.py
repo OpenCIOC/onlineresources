@@ -1,5 +1,6 @@
 import json
 import logging
+import typing as t
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 from uuid import uuid4
@@ -13,6 +14,9 @@ from cioc.core import validators, constants as const
 
 from cioc.core.i18n import gettext as _
 from cioc.web.cic.viewbase import CicViewBase
+
+if t.TYPE_CHECKING:
+    from cioc.core.modelstate import ModelState
 
 log = logging.getLogger(__name__)
 
@@ -130,8 +134,8 @@ def check_links(redispool, records, key_prefix):
 
 def schedule_check_links(request, key_prefix, records):
     with Redis.from_pool(request.redispool) as redis:
-        redis.set(f"{key_prefix}done", "false", ex=5)
-        redis.set(f"{key_prefix}records", json.dumps(records), 5)
+        redis.set(f"{key_prefix}done", "false", ex=30)
+        redis.set(f"{key_prefix}records", json.dumps(records), 30)
         redis.delete(f"{key_prefix}results")
     threadpool.submit(check_links, request.redispool, records, key_prefix)
 
@@ -157,7 +161,9 @@ def check_results(request, key_prefix):
             all_results.extend(results)
             if len(results) < 100:
                 break
-    log.debug("key_prefix=%s done=%s all_results=%s", key_prefix, done, all_results)
+    log.debug(
+        "key_prefix=%s done=%s len_results=%s", key_prefix, done, len(all_results)
+    )
     return done, all_results
 
 
@@ -168,6 +174,12 @@ class CheckLinksListSchema(validators.RootSchema):
         validators.NumValidator(), convert_to_list=True, not_empty=True
     )
     checkid = validators.UnicodeString(not_empty=True)
+
+
+class UpdateLinkSchema(validators.RootSchema):
+    if_key_missing = None
+    NUM = validators.NumValidator(not_empty=True)
+    url = validators.URLWithProto()
 
 
 @view_defaults(route_name="cic_checklinks")
@@ -213,14 +225,21 @@ class Publication(CicViewBase):
         if session_checkid and checkid == session_checkid:
             # cache and fetch all the addresses?
             with Redis.from_pool(request.redispool) as redis:
-                worker_has_been_launched = (
-                    redis.get(f"{key_prefix}{checkid}:done") is not None
-                )
-                records = redis.get("f{key_prefix}{checkid}:records")
+                is_done = redis.get(f"{key_prefix}{checkid}:done")
+                worker_has_been_launched = is_done is not None
+                records = redis.get(f"{key_prefix}{checkid}:records")
 
-            if worker_has_been_launched:
+            records = json.loads(records) if records else []
+            log.debug(
+                "resume check, is_done=%r, worker_has_been_launched=%s, num_records=%s",
+                is_done,
+                worker_has_been_launched,
+                len(records),
+            )
+            if worker_has_been_launched and records:
                 return self._render_page(records)
 
+        request.session["checklinks-checkid"] = checkid
         with request.connmgr.get_connection("admin") as conn:
             sql = "EXEC dbo.sp_GBL_NUMsToWWW_Address_l ?, ?, ?"
             cursor = conn.execute(
@@ -257,3 +276,53 @@ class Publication(CicViewBase):
             "done": done is None or done == b"true",
             "results": list(map(json.loads, results)),
         }
+
+    @view_config(renderer="json", match_param="action=update")
+    def update_url(self):
+        request = self.request
+
+        model_state: ModelState = request.model_state
+        model_state.schema = UpdateLinkSchema()
+
+        if not model_state.validate():
+            # not valid, something went wrong
+            return {
+                "status": "error",
+                "error": _("Could not update address:", request),
+                "errorlist": model_state.renderer.errorlist(),
+            }
+
+        url = model_state.value("url")
+        if url:
+            protocol, mid, address = url.partition("//")
+            protocol += mid
+            if not address:
+                protocol = None
+                address = None
+            if protocol == "http://":
+                protocol = None
+        else:
+            protocol = address = None
+
+        with request.connmgr.get_connection("admin") as conn:
+            sql = """
+                DECLARE @ErrMsg nvarchar(max), @RV int
+                EXEC @RV = dbo.sp_GBL_BaseTable_u_WWW_ADDRESS ?, ?, ?, ?, ?, @ErrMsg
+                SELECT @RV as [Return], @ErrMsg AS [ErrMsg]
+            """
+
+            result = conn.execute(
+                sql,
+                request.dboptions.MemberID,
+                model_state.value("NUM"),
+                request.user.Mod,
+                protocol,
+                address,
+            ).fetchone()
+            if result.Return:
+                return {
+                    "status": "error",
+                    "error": result.ErrMsg,
+                }
+
+        return {"status": "success"}
