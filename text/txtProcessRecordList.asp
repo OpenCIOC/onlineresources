@@ -18,6 +18,7 @@
 
 <%
 Dim TXT_BULK_EMAIL_REQUEST, _
+	TXT_CHECK_WEB_LINKS, _
 	TXT_CREATE_NEW_REMINDER, _
 	TXT_EMAIL_RECORD_LIST, _
 	TXT_GENERATE_REPORT, _
@@ -40,6 +41,7 @@ Sub setTxtProcessRecordList()
 	Select Case g_objCurrentLang.Culture
 		Case CULTURE_ENGLISH_CANADIAN
 			TXT_BULK_EMAIL_REQUEST = "Bulk Email Update Request"
+			TXT_CHECK_WEB_LINKS = "Check Web Links"
 			TXT_CREATE_NEW_REMINDER = "Create New Reminder"
 			TXT_EMAIL_RECORD_LIST = "Email Record List"
 			TXT_GENERATE_REPORT = "Generate Report"
@@ -59,6 +61,7 @@ Sub setTxtProcessRecordList()
 			TXT_SET_PUBLIC = "Set Records Public"
 		Case CULTURE_FRENCH_CANADIAN
 			TXT_BULK_EMAIL_REQUEST = "Demande de mise à jour par courriel en nombre"
+			TXT_CHECK_WEB_LINKS = "TRANSLATE_FR -- Check Web Links"
 			TXT_CREATE_NEW_REMINDER = "Créer un nouveau Rappel"
 			TXT_EMAIL_RECORD_LIST = "Envoyer la liste des dossiers par courriel"
 			TXT_GENERATE_REPORT = "Générer le rapport"
