@@ -38,7 +38,7 @@ log = logging.getLogger(__name__)
 class InRequest(viewbase.CicViewBase):
     @view_config(route_name="ct_push", renderer="json")
     def inrequest(self):
-        CT = "{https://clienttracker.cioc.ca/schema/}"
+        CT = "{http://clienttracker.cioc.ca/schema/}"
 
         request = self.request
         if not has_been_launched(request):
@@ -92,7 +92,7 @@ class InRequest(viewbase.CicViewBase):
 
         if remove:
             root = ET.Element(
-                "pushResourceRemove", xmlns="https://clienttracker.cioc.ca/schema/"
+                "pushResourceRemove", xmlns="http://clienttracker.cioc.ca/schema/"
             )
             ET.SubElement(root, "login").text = str(login)
             ET.SubElement(root, "key").text = str(key)
@@ -143,7 +143,7 @@ class InRequest(viewbase.CicViewBase):
                 org_name = f"{record.POSITION_TITLE} ({org_name})"
 
             root = ET.Element(
-                "pushResource", xmlns="https://clienttracker.cioc.ca/schema/"
+                "pushResource", xmlns="http://clienttracker.cioc.ca/schema/"
             )
             ET.SubElement(root, "login").text = str(login)
             ET.SubElement(root, "key").text = str(key)

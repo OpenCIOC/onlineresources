@@ -121,7 +121,7 @@ Function myListGenerateCriteria()
 		aSessionVars = get_ct_session_vars()
 
 		strXML = "<?xml version=""1.0"" encoding=""iso-8859-1""?>" & vbCrLf & _
-		"<isInRequest xmlns=""https://clienttracker.cioc.ca/schema/"">" & vbCrLf & _
+		"<isInRequest xmlns=""http://clienttracker.cioc.ca/schema/"">" & vbCrLf & _
 		"	<login>" & XMLEncode(aSessionVars(0)) & "</login>" & vbCrLf & _
 		"	<key>" & XMLEncode(aSessionVars(1)) & "</key>" & vbCrLf & _
 		"	<ctid>" & XMLEncode(aSessionVars(2)) & "</ctid>" & vbCrLf & _
@@ -138,7 +138,7 @@ Function myListGenerateCriteria()
 
 			Set objXML = Server.CreateObject("MSXML2.DOMDocument.6.0")
 			objXML.async = false
-			objXML.setProperty "SelectionNamespaces", "xmlns:ct='https://clienttracker.cioc.ca/schema/'"
+			objXML.setProperty "SelectionNamespaces", "xmlns:ct='http://clienttracker.cioc.ca/schema/'"
 			objXML.setProperty "SelectionLanguage", "XPath"
 
 			If objXML.loadXML(objCtHttp.responseText) Then

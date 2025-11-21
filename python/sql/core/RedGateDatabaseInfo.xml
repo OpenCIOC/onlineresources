@@ -65,14 +65,14 @@
   </WriteToFileOptions>
   <DataFileSet>
     <Count>9</Count>
-    <DataFile>dbo.GBL_Admin_Area_Data.sql</DataFile>
-    <DataFile>dbo.GBL_Admin_Area_Name_Data.sql</DataFile>
-    <DataFile>dbo.GBL_ExternalAPI_Data.sql</DataFile>
     <DataFile>dbo.GBL_ExternalAPI_Description_Data.sql</DataFile>
     <DataFile>dbo.GBL_OrgLocationService_Data.sql</DataFile>
     <DataFile>dbo.GBL_OrgLocationService_Name_Data.sql</DataFile>
     <DataFile>dbo.GBL_StreetDir_Data.sql</DataFile>
+    <DataFile>dbo.GBL_Admin_Area_Data.sql</DataFile>
     <DataFile>dbo.GBL_StreetDir_Name_Data.sql</DataFile>
     <DataFile>dbo.STP_Icon_Data.sql</DataFile>
+    <DataFile>dbo.GBL_Admin_Area_Name_Data.sql</DataFile>
+    <DataFile>dbo.GBL_ExternalAPI_Data.sql</DataFile>
   </DataFileSet>
 </DatabaseInformation>
