@@ -178,11 +178,11 @@ End Sub
 Sub extractWebProtocol(ByRef strFldVal, ByRef strFldProtocol)
 	strFldProtocol = vbNullString
 	If Not Nl(strFldVal) Then
-		strFldProtocol = "http://"
+		strFldProtocol = "https://"
 		If LCase(Left(strFldVal, 7)) = "http://" Then
+			strFldProtocol = "http://"
 			strFldVal = Mid(strFldVal, 8)
 		ElseIf LCase(Left(strFldVal, 8)) = "https://" Then
-			strFldProtocol = "https://"
 			strFldVal = Mid(strFldVal, 9)
 		End If
 	End If

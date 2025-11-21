@@ -20,7 +20,7 @@
 <%! from markupsafe import Markup, escape %>
 <%inherit file="cioc.web:templates/master.mak" />
 <p style="font-weight:bold">[ <a href="${request.passvars.makeLinkAdmin('setup.asp')}">${_('Return to Setup')}</a> | <a href="${request.passvars.route_path('admin_community_index')}">${_('Return to Communities')}</a> ]</p>
-<p class="Info">${escape(_('Use this form to upload a %sCommunities Repository%s data file. Note that the update will run immediately upon loading the file.')) % (Markup('<a href="http://community-repository.cioc.ca/" target="_blank">'), Markup('</a>'))}</p>
+<p class="Info">${escape(_('Use this form to upload a %sCommunities Repository%s data file. Note that the update will run immediately upon loading the file.')) % (Markup('<a href="https://community-repository.cioc.ca/" target="_blank">'), Markup('</a>'))}</p>
 <form method="post" action="${request.current_route_path()}" enctype="multipart/form-data">
 <div class="NotVisible">
 ${request.passvars.cached_form_vals|n}

@@ -117,7 +117,7 @@ ${self.makeMgmtInfo(layout)}
 <tr>
 	<td class="FieldLabelLeft">${renderer.label("descriptions." +lang.FormCulture + ".LayoutHTMLURL", _('HTML URL') + " (" + lang.LanguageName + ")")}</td>
 	<td>${renderer.errorlist("descriptions." +lang.FormCulture + ".LayoutHTMLURL")}
-	http://${renderer.text("descriptions." +lang.FormCulture + ".LayoutHTMLURL")} <button class="fetch-url">${_('Fetch')}</button></td>
+	https://${renderer.text("descriptions." +lang.FormCulture + ".LayoutHTMLURL")} <button class="fetch-url">${_('Fetch')}</button></td>
 </tr>
 %endif
 <tr>
@@ -130,7 +130,7 @@ ${self.makeMgmtInfo(layout)}
 <tr>
 	<td class="FieldLabelLeft">${renderer.label("layout.LayoutCSSURL", _('CSS URL'))}</td>
 	<td>${renderer.errorlist('layout.LayoutCSSURL')}
-	http://${renderer.text('layout.LayoutCSSURL')} <button class="fetch-url">${_('Fetch')}</button></td>
+	https://${renderer.text('layout.LayoutCSSURL')} <button class="fetch-url">${_('Fetch')}</button></td>
 </tr>
 %endif
 <tr>

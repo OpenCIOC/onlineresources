@@ -698,7 +698,7 @@ Sub makeSocialMediaValue(strName, strValue)
 				strUrl = xmlChildNode.getAttribute("URL")
 				strProto = xmlChildNode.getAttribute("Proto")
 				If Nl(strProto) Then
-					strProto = "http://"
+					strProto = "https://"
 				End If
 				If Nl(strUrl) Then
 					strUrl = TXT_CONTENT_DELETED

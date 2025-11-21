@@ -1,4 +1,3 @@
-
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -12,13 +11,6 @@ CREATE FUNCTION [dbo].[fn_GBL_NUMToSocialMedia_Web_Compact](
 RETURNS nvarchar(max) WITH EXECUTE AS CALLER
 AS 
 BEGIN
-
-/*
-	Checked for Release: 3.8
-	Checked by: KL
-	Checked on: 16-Sep-2016
-	Action: NO ACTION REQUIRED
-*/
 
 DECLARE	@conStr	nvarchar(8),
 		@returnStr	nvarchar(max)

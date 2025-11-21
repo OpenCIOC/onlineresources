@@ -75,7 +75,7 @@ def prepSocialMediaFeedback(rsFb):
 			for el in xml.findall('./SM'):
 				sm_id = el.get('SM_ID')
 				url = el.get('URL', None)
-				proto = el.get('Proto', None) or 'http://'
+				proto = el.get('Proto', None) or 'https://'
 
 				sm_feedback_values[sm_id].append({'sm_id': sm_id, 'proto': proto, 'url': url, 'feedback': i,
 						'language_name': row.get('LanguageName')})
@@ -1098,7 +1098,7 @@ Function makeWebFieldVal(strFieldName,strFieldContents,intMaxLength,bCheckForFee
 		intMaxLength = intMaxLength + 8
 		strReturn = strReturn & " maxlength=""" & intMaxLength & """"
 	End If
-	strReturn = strReturn & " value=" & AttrQs(Replace(Ns(strProtocol), "http://", vbNullString) & strFieldContents) & ">"
+	strReturn = strReturn & " value=" & AttrQs(Ns(strProtocol) & strFieldContents) & ">"
 	If bFeedback And bCheckForFeedback Then
 		strReturn = strReturn & getFeedback(strFieldName,True,False)
 	End If
@@ -1979,7 +1979,7 @@ Function makeSocialMediaFieldVal(rst,bUseContent)
 			strIcon = xmlChildNode.getAttribute("Icon24")
 			strReturn = strReturn & "<div class=""form-group"">" & vbCrLf & _
 				"<label class=""control-label col-sm-3 col-lg-2"">" & _
-					StringIf(Not Nl(strGeneralURL),"<a href=""http://" & strGeneralURL & """>") & _
+					StringIf(Not Nl(strGeneralURL),"<a href=""https://" & strGeneralURL & """>") & _
 					strName & _
 					StringIf(Not Nl(strGeneralURL),"</a> ") & _
 					StringIf(Not Nl(strIcon)," <img src=" & AttrQs(strIcon) & " alt=" & AttrQs(strName) & " aria-hidden=""true"" height=""24"" width=""24"">") & _
@@ -1988,7 +1988,7 @@ Function makeSocialMediaFieldVal(rst,bUseContent)
 					"<input id=" & AttrQs("SOCIAL_MEDIA_" & xmlChildNode.getAttribute("ID")) & _
 					" name=" & AttrQs("SOCIAL_MEDIA_" & xmlChildNode.getAttribute("ID")) & _
 					" class=""protourl unique form-control""" & _
-					" value=" & AttrQs(Replace(Ns(xmlChildNode.getAttribute("Proto")), "http://", vbNullString) & xmlChildNode.getAttribute("URL")) & _
+					" value=" & AttrQs(Ns(xmlChildNode.getAttribute("Proto")) & xmlChildNode.getAttribute("URL")) & _
 					" size=" & AttrQs(TEXT_SIZE-25) & _
 					" unique=" & AttrQs("SOCIAL_MEDIA") & _
 					" maxlength=""255""" & _

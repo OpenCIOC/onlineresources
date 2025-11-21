@@ -11,13 +11,6 @@ RETURNS nvarchar(max) WITH EXECUTE AS CALLER
 AS 
 BEGIN
 
-/*
-	Checked for Release: 3.5
-	Checked by: KL
-	Checked on: 02-Nov-2012
-	Action: NO ACTION REQUIRED
-*/
-
 DECLARE	@conStr	nvarchar(4),
 		@returnStr	nvarchar(max)
 
@@ -25,7 +18,7 @@ SET @conStr = CHAR(13) + CHAR(10)
 
 SELECT @returnStr =  COALESCE(@returnStr + @conStr,'')
 		+ Name + cioc_shared.dbo.fn_SHR_STP_ObjectName(': ')
-		+ CASE WHEN Protocol='http://' THEN '' ELSE Protocol END + URL
+		+ Protocol + URL
 	FROM dbo.fn_GBL_NUMToSocialMedia_rst(@NUM)
 
 IF @returnStr = '' SET @returnStr = NULL

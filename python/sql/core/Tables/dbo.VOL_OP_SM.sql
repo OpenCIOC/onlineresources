@@ -4,7 +4,7 @@ CREATE TABLE [dbo].[VOL_OP_SM]
 [VNUM] [varchar] (10) COLLATE Latin1_General_100_CI_AI NOT NULL,
 [LangID] [smallint] NOT NULL,
 [SM_ID] [int] NOT NULL,
-[Protocol] [varchar] (10) COLLATE Latin1_General_100_CI_AI NOT NULL CONSTRAINT [DF_VOL_OP_SM_Protocol] DEFAULT ('http://'),
+[Protocol] [varchar] (10) COLLATE Latin1_General_100_CI_AI NOT NULL CONSTRAINT [DF_VOL_OP_SM_Protocol] DEFAULT ('https://'),
 [URL] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NOT NULL
 ) ON [PRIMARY]
 GO

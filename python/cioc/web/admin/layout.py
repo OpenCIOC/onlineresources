@@ -499,7 +499,7 @@ class TemplateLayout(viewbase.AdminViewBase):
             }
 
         try:
-            response = urllib.request.urlopen("http://" + model_state.form.data["url"])
+            response = urllib.request.urlopen("https://" + model_state.form.data["url"])
 
             headers = response.info()
             contenttype = headers["Content-Type"].split(";")

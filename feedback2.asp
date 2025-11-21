@@ -379,7 +379,7 @@ Function getCombinedLink(strField)
 	Dim strVal
 	strVal = vbNullString
 	If Not bSuggest Then
-		strVal = Nz(rsOrg(strField & "_PROTOCOL"), "http://") & rsOrg(strField)
+		strVal = Nz(rsOrg(strField & "_PROTOCOL"), "https://") & rsOrg(strField)
 	End If
 	getCombinedLink = strVal
 End Function

@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%><%Option Explicit%><?xml version="1.0" encoding="UTF-8"?>
+﻿<%@LANGUAGE="VBSCRIPT"%><%Option Explicit%><?xml version="1.0" encoding="UTF-8"?>
 
 <%
 ' =========================================================================================
@@ -59,13 +59,13 @@ Call run_response_callbacks()
 <%
 If Not ctClientCanMakeRequest() Then
 %>
-<response xmlns="http://clienttracker.cioc.ca/schema/">
+<response xmlns="https://clienttracker.cioc.ca/schema/">
 	<error><%=TXT_CT_ACCESS_DENIED%></error>
 </response>
 <%
 Else
 %>
-<response xmlns="http://clienttracker.cioc.ca/schema/">
+<response xmlns="https://clienttracker.cioc.ca/schema/">
 	<resourceType>
 		<name><%=XMLEncode(g_strDatabaseNameCIC)%></name>
 		<launchURL><%=XMLEncode(IIf(g_bSSL, "https://", "http://") & Request.ServerVariables("HTTP_HOST") & Left(Request.ServerVariables("PATH_INFO"),Len(Request.ServerVariables("PATH_INFO"))-Len(ps_strThisPage)) & makeLink("ctlaunch.asp","ctid=[CTID]&login=[LOGIN]&key=[KEY]",vbNullString))%></launchURL>

@@ -27,16 +27,16 @@
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">
 				Your current release of the schema is always available at:
-				http://your_cioc_database_address/import/cioc_schema.xsd
+				https://your_cioc_database_address/import/cioc_schema.xsd
 
 				In addition, an up-to-date copy can be found at:
-				http://test.cioc.ca/import/cioc_schema.xsd
+				https://test.cioc.ca/import/cioc_schema.xsd
 				The Test Site copy is the location where pre-release versions of the schema will be
 				posted for review prior to general software upgrades.
 
 				This Schema defines the format for standard imports into CIOC software (www.cioc.ca).
 				Versions of this schema are not guaranteed to be backwards-compatible. Changes to
-				the schema will be announced on the CIOC Community site (http://community.cioc.ca/)
+				the schema will be announced on the CIOC Community site (https://community.cioc.ca/)
 				and to the CIOC Sharing Format Email distribution list.
 
 				The XSD is structured presenting first a list of common data types in use within the
@@ -121,7 +121,7 @@
 				WAITD -> Wait List Date
 
 				Questions about the CIOC sharing format should be directed to the CIOC Community
-				site at http://community.cioc.ca/
+				site at https://community.cioc.ca/
 			</xsd:documentation>
 		</xsd:annotation>
 

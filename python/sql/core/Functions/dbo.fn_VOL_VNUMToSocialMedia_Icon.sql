@@ -13,20 +13,13 @@ RETURNS nvarchar(max) WITH EXECUTE AS CALLER
 AS 
 BEGIN
 
-/*
-	Checked for Release: 3.6
-	Checked by: CL
-	Checked on: 27-Sep-2014
-	Action: TESTING REQUIRED
-*/
-
 DECLARE	@conStr	nvarchar(4),
 		@returnStr	nvarchar(max)
 
 SET @conStr = ' '
 
 SELECT @returnStr =  COALESCE(@returnStr + @conStr,'')
-		+ '<a href="' + Protocol + URL + '">'
+		+ '<a href="' + ISNULL(Protocol,'https://') + URL + '">'
 		+ '<img src="' + IconURL24 + '"'
 		+ ' alt="' + REPLACE(Name,'"','""') + '"'
 		+ ' title="' + REPLACE(Name,'"','""') + '"'

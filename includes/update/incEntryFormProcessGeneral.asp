@@ -669,26 +669,26 @@ Sub getSocialMediaField()
 		strIDName = "NUM"
 	End If
 
-	If bUpdateHistory Then
-		strSQL = "DECLARE @SocialXml xml; DECLARE @SocialTable TABLE (SM_ID int not null, URL nvarchar(255), Protocol varchar(10))" & vbCrLf & _
-				"SET @SocialXml = " & QsNl(strXML) & vbCrLf & _
-				"INSERT INTO @SocialTable (SM_ID, URL, Protocol) " & vbCrLf & _
-				"SELECT N.value('@SM_ID', 'int') AS SM_ID, N.value('@URL', 'nvarchar(255)') AS URL, N.value('@Proto', 'varchar(10)') AS Protocol" & vbCrLf & _
-				"FROM @SocialXml.nodes('//SM') AS T(N)" & vbCrLf & _
-				"MERGE INTO " & strTblPrefix & "_SM sm" & vbCrLf & _
-				"USING (SELECT nt.* FROM @SocialTable nt WHERE EXISTS(SELECT * FROM GBL_SocialMedia WHERE SM_ID=nt.SM_ID)) nt" & vbCrLf & _
-				"	ON sm." & strIDName & "=@" & strIDName & " AND sm.LangID=@@LANGID AND sm.SM_ID=nt.SM_ID" & vbCrLf & _
-				"WHEN MATCHED AND (sm.URL <> nt.URL COLLATE Latin1_General_100_CS_AS OR ISNULL(sm.Protocol, '') <> ISNULL(nt.Protocol, '') COLLATE Latin1_General_100_CI_AI) THEN" & vbCrLf & _
-				"	UPDATE SET URL=nt.URL, Protocol=nt.Protocol" & vbCrLf & _
-				"WHEN NOT MATCHED BY TARGET THEN" & vbCrLf & _
-				"	INSERT (" & strIDName & ", LangID, SM_ID, URL, Protocol)" & vbCrLf & _
-				"		VALUES (@" & strIDName & ", @@LANGID, nt.SM_ID, nt.URL, nt.Protocol)" & vbCrLf & _
-				"WHEN NOT MATCHED BY SOURCE AND sm." & strIDName & "=@" & strIDName & " AND sm.LangID=@@LANGID THEN" & vbCrLf & _
-				"	DELETE" & vbCrLf & _
-				" ; "
+	strSQL = "DECLARE @SocialXml xml; DECLARE @SocialTable TABLE (SM_ID int not null, URL nvarchar(255), Protocol varchar(10))" & vbCrLf & _
+			"SET @SocialXml = " & QsNl(strXML) & vbCrLf & _
+			"INSERT INTO @SocialTable (SM_ID, URL, Protocol) " & vbCrLf & _
+			"SELECT N.value('@SM_ID', 'int') AS SM_ID, N.value('@URL', 'nvarchar(255)') AS URL, N.value('@Proto', 'varchar(10)') AS Protocol" & vbCrLf & _
+			"FROM @SocialXml.nodes('//SM') AS T(N)" & vbCrLf & _
+			"MERGE INTO " & strTblPrefix & "_SM sm" & vbCrLf & _
+			"USING (SELECT nt.* FROM @SocialTable nt WHERE EXISTS(SELECT * FROM GBL_SocialMedia WHERE SM_ID=nt.SM_ID)) nt" & vbCrLf & _
+			"	ON sm." & strIDName & "=@" & strIDName & " AND sm.LangID=@@LANGID AND sm.SM_ID=nt.SM_ID" & vbCrLf & _
+			"WHEN MATCHED AND (sm.URL <> nt.URL COLLATE Latin1_General_100_CS_AS OR ISNULL(sm.Protocol, '') <> ISNULL(nt.Protocol, '') COLLATE Latin1_General_100_CI_AI) THEN" & vbCrLf & _
+			"	UPDATE SET URL=nt.URL, Protocol=nt.Protocol" & vbCrLf & _
+			"WHEN NOT MATCHED BY TARGET THEN" & vbCrLf & _
+			"	INSERT (" & strIDName & ", LangID, SM_ID, URL, Protocol)" & vbCrLf & _
+			"		VALUES (@" & strIDName & ", @@LANGID, nt.SM_ID, nt.URL, nt.Protocol)" & vbCrLf & _
+			"WHEN NOT MATCHED BY SOURCE AND sm." & strIDName & "=@" & strIDName & " AND sm.LangID=@@LANGID THEN" & vbCrLf & _
+			"	DELETE" & vbCrLf & _
+			" ; "
 
 		strExtraSQL = strExtraSQL & vbCrLf & strSQL
 
+	If bUpdateHistory Then
 		Call addChangeField(fldName.Value, g_objCurrentLang.LangID)
 	End If
 End Sub

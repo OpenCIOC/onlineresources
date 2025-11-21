@@ -11,13 +11,6 @@ RETURNS nvarchar(max) WITH EXECUTE AS CALLER
 AS 
 BEGIN
 
-/*
-	Checked for Release: 3.6
-	Checked by: CL
-	Checked on: 27-Sep-2014
-	Action: TESTING REQUIRED
-*/
-
 DECLARE	@conStr	nvarchar(8),
 		@returnStr	nvarchar(max)
 
@@ -27,7 +20,7 @@ SELECT @returnStr =  COALESCE(@returnStr + @conStr,'')
 		+ '<img src="' + IconURL16 + '"'
 		+ ' alt="' + REPLACE(Name,'"','""') + '"'
 		+ ' width="16px" height="16px">&nbsp;'
-		+ '<a href="' + Protocol + URL + '">' + Name + '</a>'
+		+ '<a href="' + ISNULL(Protocol,'https://') + URL + '">' + Name + '</a>'
 	FROM dbo.fn_VOL_VNUMToSocialMedia_rst(@VNUM)
 
 IF @returnStr = '' SET @returnStr = NULL

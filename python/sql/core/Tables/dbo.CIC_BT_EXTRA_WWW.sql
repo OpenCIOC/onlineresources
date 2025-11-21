@@ -5,7 +5,7 @@ CREATE TABLE [dbo].[CIC_BT_EXTRA_WWW]
 [NUM] [varchar] (8) COLLATE Latin1_General_100_CI_AI NOT NULL,
 [LangID] [smallint] NOT NULL,
 [Value] [nvarchar] (255) COLLATE Latin1_General_100_CI_AI NOT NULL,
-[Protocol] [varchar] (8) COLLATE Latin1_General_100_CI_AI NOT NULL CONSTRAINT [DF_CIC_BT_EXTRA_WWW_Protocol] DEFAULT ('http://')
+[Protocol] [varchar] (8) COLLATE Latin1_General_100_CI_AI NOT NULL CONSTRAINT [DF_CIC_BT_EXTRA_WWW_Protocol] DEFAULT ('https://')
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[CIC_BT_EXTRA_WWW] ADD CONSTRAINT [PK_CIC_BT_EXTRA_WWW] PRIMARY KEY CLUSTERED ([BT_EXT_ID]) ON [PRIMARY]

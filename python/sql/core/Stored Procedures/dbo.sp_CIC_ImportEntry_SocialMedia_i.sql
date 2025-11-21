@@ -43,7 +43,7 @@ INSERT INTO @SocialMediaTable (
 SELECT
 	CASE WHEN N.value('@LANG', 'char(1)') = 'F' THEN 2 WHEN N.value('@LANG', 'char(1)') = 'E' THEN 0 ELSE -1 END AS LangID,
 	N.value('@NM', 'nvarchar(100)') AS Name,
-	ISNULL(N.value('@PROTOCOL', 'varchar(10)'),'http://') AS Protocol,
+	ISNULL(N.value('@PROTOCOL', 'varchar(10)'),'https://') AS Protocol,
 	N.value('@URL', 'nvarchar(255)') AS URL
 FROM @SocialMediaXML.nodes('//SOCIAL_MEDIA/TYPE') as T(N)
 

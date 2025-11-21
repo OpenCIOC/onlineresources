@@ -401,7 +401,7 @@ Sub getExtraFieldSQL(strFldName,strNewValue,strExtraFieldType, strNewProtocol)
 			If bHasProtocol And Not Nl(strOldValue) Then
 				strProtocol = rsOrg.Fields(strFldName & "_PROTOCOL")
 				If Nl(strProtocol) Then
-					strProtocol = "http://"
+					strProtocol = "https://"
 				End If
 				strOldValue = strProtocol & strOldValue
 			End If

@@ -34,7 +34,7 @@ log = logging.getLogger(__name__)
 class InRequest(viewbase.CicViewBase):
     @view_config(route_name="ct_inrequest", renderer="json")
     def inrequest(self):
-        CT = "{http://clienttracker.cioc.ca/schema/}"
+        CT = "{https://clienttracker.cioc.ca/schema/}"
         request = self.request
         if not has_been_launched(request):
             return {
@@ -57,7 +57,7 @@ class InRequest(viewbase.CicViewBase):
 
         ctid, login, key = vals
 
-        root = ET.Element("isInRequest", xmlns="http://clienttracker.cioc.ca/schema/")
+        root = ET.Element("isInRequest", xmlns="https://clienttracker.cioc.ca/schema/")
         ET.SubElement(root, "login").text = str(login)
         ET.SubElement(root, "key").text = str(key)
         ET.SubElement(root, "ctid").text = str(ctid)

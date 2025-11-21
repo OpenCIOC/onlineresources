@@ -178,7 +178,7 @@ class URLWithProto(validators.URL):
         value = value.strip()
         if self.add_http:
             if not self.scheme_re.search(value):
-                value = "http://" + value
+                value = "https://" + value
         if self.allow_idna:
             value = self._encode_idna(value)
         match = self.scheme_re.search(value)

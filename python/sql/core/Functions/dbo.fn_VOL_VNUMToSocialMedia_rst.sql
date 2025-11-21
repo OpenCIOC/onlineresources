@@ -20,12 +20,12 @@ BEGIN
 
 INSERT INTO @SocialMedia
 SELECT	ISNULL(smn.Name,sm.DefaultName) AS Name, pr.Protocol, pr.URL, sm.IconURL16, sm.IconURL24
-	FROM VOL_OP_SM pr
-	INNER JOIN GBL_SocialMedia sm
+	FROM dbo.VOL_OP_SM pr
+	INNER JOIN dbo.GBL_SocialMedia sm
 		ON pr.SM_ID=sm.SM_ID
-	LEFT JOIN GBL_SocialMedia_Name smn
+	LEFT JOIN dbo.GBL_SocialMedia_Name smn
 		ON sm.SM_ID=smn.SM_ID AND smn.LangID=@@LANGID
-WHERE VNUM=@VNUM AND pr.LangID=@@LANGID
+WHERE pr.VNUM=@VNUM AND pr.LangID=@@LANGID
 ORDER BY ISNULL(smn.Name,sm.DefaultName)
 
 RETURN
