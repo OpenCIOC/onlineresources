@@ -26,7 +26,7 @@ def render_printlist_form():
 	set_bottom_js_fn(bottomjs)
 
 </script>
-<% If True Then %>
+<% If False Then %>
 <form action="printlist.asp" method="post" id="EntryForm">
 <%=g_strCacheFormVals%>
 <input type="hidden" name="Picked" value="on">
