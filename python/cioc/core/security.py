@@ -230,6 +230,8 @@ class User:
         self.SuperUser = self.cic.SuperUser or self.vol.SuperUser
         self.WebDeveloper = self.cic.WebDeveloper or self.vol.WebDeveloper
         self.CanManageUsers = self.cic.CanManageUsers or self.vol.CanManageUsers
+        request.add_response_callback(add_user_header_for_logging)
+
         if user_info:
             self.Mod = (
                 self.Initials
@@ -432,6 +434,10 @@ def is_banned(request):
         )
 
     return banned or ("DigExt; DTS Agent" in request.headers.get("User-Agency", ""))
+
+
+def add_user_header_for_logging(request, response):
+    response.headers["X-LIU"] = request.user.UserName or ""
 
 
 # list of pages that are always available to non-logged in users regardless of

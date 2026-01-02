@@ -162,11 +162,25 @@ class HeaderShim:
             return default
 
 
+class ResponseHeaderShim:
+    def __init__(self, response):
+        self._response = response
+        self._headers = {}
+
+    def __getitem__(self, key):
+        return self._headers[key.casefold()]
+
+    def __setitem__(self, key, value):
+        self._headers[key.casefold()] = value
+        self._response.AddHeader(key, value)
+
+
 class ResponseShim:
     def __init__(self, request, response):
         self._response = response
         self._request = request
         self.vary = None
+        self.headers = ResponseHeaderShim(response)
 
     def __getattr__(self, name):
         return getattr(self._response, name)
