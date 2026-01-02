@@ -24,7 +24,7 @@ from pyramid.settings import asbool
 
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from pyramid.exceptions import URLDecodeError
-from pyramid.view import view_config
+from pyramid.view import view_config, notfound_view_config
 
 from cioc.core import constants as const
 import cioc.core.viewbase
@@ -121,10 +121,10 @@ def main(global_config, **settings):
         factory="cioc.web.recentsearch.RecentSearchRootFactory",
     )
 
-    config.add_view(
-        "pyramid.view.append_slash_notfound_view",
-        context="pyramid.httpexceptions.HTTPNotFound",
-    )
+    # config.add_view(
+    #     "pyramid.view.append_slash_notfound_view",
+    #     context="pyramid.httpexceptions.HTTPNotFound",
+    # )
 
     config.include("cioc.web.admin")
     config.include("cioc.web.cic")
@@ -160,6 +160,16 @@ def connection_error(request):
     return {}
 
 
+@notfound_view_config(append_slash=True, renderer="cioc.web:templates/error.mak")
+class NotFoundView(cioc.core.viewbase.ViewBase):
+    def __call__(self):
+        self.request.response.status = "404 Not Found"
+        msg = _("Not Found", self.request)
+        return self._create_response_namespace(
+            msg, msg, dict(ErrMsg=msg), no_index=True, show_message=True
+        )
+
+
 @view_config(
     context=cioc.core.viewbase.ErrorPage, renderer="cioc.web:templates/error.mak"
 )
@@ -170,6 +180,8 @@ class ErrorPageView(cioc.core.viewbase.ViewBase):
         if not title:
             title = _("Error", self.request)
 
+        if context.status:
+            self.request.response.status = context.status
         return self._create_response_namespace(
             title, title, dict(ErrMsg=context.ErrMsg), no_index=True, show_message=True
         )

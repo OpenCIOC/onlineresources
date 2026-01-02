@@ -225,10 +225,10 @@ Else
 
 	If Not Nl(strNewPW) Then
 		strSalt = MakeSalt()
-		intHashRepeat = 10000
+		intHashRepeat = 500000
 		strHash = Crypt(strSalt, strNewPW, intHashRepeat)
 	End If
-	
+
 	Dim objReturn, objErrMsg, objProfileID, objFromEmail
 	Dim cmdProfileInfo, rsProfileInfo
 	Set cmdProfileInfo = Server.CreateObject("ADODB.Command")
@@ -334,7 +334,7 @@ ElseIf bEmailNew Or bNew Then
 		IIf(bNew, TXT_FINISH_CREATING_ACCOUNT, TXT_CONFIRM_EMAIL_ADDRESS) & vbCrLf & _
 		"https://" & strAccessURL & makeLink("/volunteer/profile/confirm.asp", "PID=" & Server.URLEncode(strProfileID) & "&CT=" & Server.URLEncode(strConfirmationToken) & strExtraArgs,vbNullString) & vbCrLf & vbCrLf & _
 		TXT_LINK_EXPIRE_NOTICE
-				
+
 	bEmailFailed = sendEmail(False, strFromEmail, strEmail, TXT_EMAIL_SUBJECT, strEmailBody)
 
 	Call handleMessage(IIf(bNew, TXT_SUCCESS_CREATE, TXT_SUCCESS_UPDATE), vbNullString, vbNullString, False)

@@ -42,7 +42,11 @@ Call setPageInfo(False, DM_GLOBAL, DM_GLOBAL, vbNullString, vbNullString, vbNull
 <!--#include file="text/txtMenu.asp" -->
 <% 'End Base includes %>
 <%
-Call securityFailure()
+Response.Status = "404 Not Found"
+Call makePageHeader(TXT_NOT_FOUND, TXT_NOT_FOUND, True, False, True, True)
+Call handleError(TXT_NOT_FOUND, _
+		vbNullString, _
+		vbNullString)
 %>
 
 <%

@@ -86,9 +86,9 @@ If Not Nl(strErrorList) Then
 Else
 	Dim strHash, intHashRepeat, strSalt, strFromEmail
 	strSalt = MakeSalt()
-	intHashRepeat = 10000
+	intHashRepeat = 500000
 	strHash = Crypt(strSalt, strNewPW, intHashRepeat)
-	
+
 	Dim objReturn, objErrMsg, objFromEmail
 	Dim cmdProfileInfo, rsProfileInfo
 	Set cmdProfileInfo = Server.CreateObject("ADODB.Command")
