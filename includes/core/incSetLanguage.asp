@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -47,7 +47,6 @@ if Application.Value("InitPython"):
 	initialize_python(str(Request.ServerVariables('APPL_PHYSICAL_PATH')))
 	Application.SetValue("InitPython", False)
 
-
 #import cioc.core.reloader as reloader
 #reloader.check_reloader()
 #reloader.start_profiler()
@@ -82,7 +81,7 @@ if not Application.Value('CulturesUpdated') or Application.Value('CulturesUpdate
 				Application.SetValue("Culture_" + value, True)
 			else:
 				Application.SetValue("Culture_" + desc.Culture + "_" + key, value)
-	
+
 
 _last_culture = None
 _reload_callback = None

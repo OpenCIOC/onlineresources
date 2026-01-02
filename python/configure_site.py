@@ -3,9 +3,7 @@ import argparse
 import shutil
 import subprocess
 
-site_root = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..")
-)
+site_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 
 def parse_args():
@@ -107,16 +105,14 @@ def main():
             "set",
             "config",
             args.site_name,
-            " -section:system.webServer/security/requestFiltering",
+            "-section:system.webServer/security/requestFiltering",
             "/requestLimits.maxQueryString:8192",
             "/requestLimits.maxUrl:8192",
             "/commit:apphost",
         ]
     )
 
-    for (
-        header
-    ) in "HTTP_CIOC_FRIENDLY_RECORD_URL HTTP_CIOC_FRIENDLY_RECORD_URL_ROOT HTTP_X_FORWARDED_PROTO HTTP_CIOC_USING_SSL HTTP_CIOC_SSL_POSSIBLE RESPONSE_LOCATION HTTP_CIOC_SSL_HSTS".split():
+    for header in "HTTP_CIOC_FRIENDLY_RECORD_URL HTTP_CIOC_FRIENDLY_RECORD_URL_ROOT HTTP_X_FORWARDED_PROTO HTTP_CIOC_USING_SSL HTTP_CIOC_SSL_POSSIBLE RESPONSE_LOCATION HTTP_CIOC_SSL_HSTS".split():
         subprocess.call(
             [
                 appcmd_exe,

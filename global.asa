@@ -1,4 +1,4 @@
-<script language="VBScript" runat="Server">
+﻿<script language="VBScript" runat="Server">
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -16,22 +16,8 @@
 ' =========================================================================================
 </script>
 
-<script language="python" runat="server">
-def flag_python_init():
-	Application.SetValue("InitPython", True)
-</script>
-
 <script language="VBScript" runat="Server">
 Sub Application_OnStart()
-	Call flag_python_init()
-	
+	Application("InitPython") = True
 End Sub
-'Sub Session_OnStart
-	'1 hour. Override in incSecurity if logged in
-'	Session.Timeout=60
-'End Sub
-
-'Sub Session_OnEnd()
-'	Session.Contents.RemoveAll()
-'End sub
 </script>
