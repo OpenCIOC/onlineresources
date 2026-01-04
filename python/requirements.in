@@ -47,3 +47,4 @@ pyramid-exclog
 boto3
 weasyprint
 git+ssh://git@github.com/klambacher/simple-icarol-api.git
+setuptools<81
