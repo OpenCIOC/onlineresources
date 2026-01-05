@@ -1,4 +1,4 @@
-﻿<%@LANGUAGE="VBSCRIPT"%>
+<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -41,8 +41,13 @@ Call setPageInfo(False, DM_GLOBAL, DM_GLOBAL, vbNullString, vbNullString, vbNull
 <!--#include file="includes/core/incFooter.asp" -->
 <!--#include file="text/txtMenu.asp" -->
 <% 'End Base includes %>
+<!--#include file="text/txtSecurityFailure.asp" -->
 <%
-Call securityFailure()
+Call makePageHeader(TXT_SECURITY_FAILURE, TXT_SECURITY_FAILURE, True, False, True, True)
+
+Call handleError(TXT_NO_PERMISSIONS, _
+	vbNullString, _
+	vbNullString)
 %>
 
 <%

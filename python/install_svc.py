@@ -1,4 +1,4 @@
-# =========================================================================================
+﻿# =========================================================================================
 #  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,14 +37,9 @@ virtualenv = os.path.abspath(
     )
 )
 
-args = {
-    "virtualenv": virtualenv,
-    "app_name": app_name,
-    "http_port": sys.argv[1],
-    "executable": sys.executable,
-}
+args = dict(virtualenv=virtualenv, app_name=app_name, http_port=sys.argv[1])
 cmd = (
-    r'%(executable)s wsgisvc.py -n PyCioc%(app_name)s -d "CIOC %(app_name)s" -v %(virtualenv)s -c production.ini -p %(http_port)s install'
+    r'%(virtualenv)s\Scripts\python.exe wsgisvc.py -n PyCioc%(app_name)s -d "CIOC %(app_name)s" -v %(virtualenv)s -c production.ini -p %(http_port)s install'
     % args
 )
 print(cmd)

@@ -1,4 +1,4 @@
-﻿<%@LANGUAGE="VBSCRIPT"%>
+<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -110,7 +110,7 @@ If bCanUpdateAccount Then
 	strOldPW = Request("OldPW")
 	strNewPW = Request("NewPW")
 	strCNewPW = Request("CNewPW")
-
+	
 	Dim intDefaultStartModule
 	intDefaultStartModule = Null
 	If Not Nl(Trim(strNewPW)) Then
@@ -126,7 +126,7 @@ If bCanUpdateAccount Then
 			.Parameters.Append .CreateParameter("@IPAddress", adVarChar, adParamInput, 20, getRemoteIP())
 		End With
 		Set rsLoginCheck = cmdLoginCheck.Execute
-
+	
 		If Not rsLoginCheck.EOF Then
 			Call BannedUserCallback(getRemoteIP())
 		End If
@@ -138,7 +138,7 @@ If bCanUpdateAccount Then
 		bLockedAccount = False
 		bFailedLogin = True
 		With rsLoginCheck
-
+				
 			If Not .EOF Then
 				strHash = Crypt(Trim(rsLoginCheck("PasswordHashSalt")), strOldPW, rsLoginCheck("PasswordHashRepeat"))
 				strSingleLoginKey = .Fields("SingleLoginKey")
@@ -167,7 +167,7 @@ If bCanUpdateAccount Then
 									TXT_REPEATED_ATTEMPTS_BLOCKS_IP
 								Call sendEmail(True, strFrom, strTo, TXT_LOCKED_ACCOUNT, strEmailMessage)
 							End If
-						End If
+						End If 
 					End If
 				End If
 			End If
@@ -226,7 +226,7 @@ If bCanUpdateAccount Then
 		intDefaultStartModule = rsLoginCheck("StartModule")
 
 		strSalt = MakeSalt()
-		intHashRepeat = 500000
+		intHashRepeat = 10000
 		strHash = Crypt(strSalt, strNewPW, intHashRepeat)
 	End If
 
@@ -236,7 +236,7 @@ If bCanUpdateAccount Then
 	If Not g_bMultiLingualActive Then
 		intStartLanguage = g_objCurrentLang.LangID
 	End If
-
+	
 	Dim objReturn, objErrMsg
 
 	Dim cmdUpdateAccount, rsUpdateAccount
@@ -264,9 +264,9 @@ If bCanUpdateAccount Then
 		.CommandTimeout = 0
 	End With
 
-	Set rsUpdateAccount = cmdUpdateAccount.Execute
+	Set rsUpdateAccount = cmdUpdateAccount.Execute	
 	Set rsUpdateAccount = rsUpdateAccount.NextRecordset
-
+	
 	Select Case objReturn.Value
 		Case 0
 			If Nl(objErrMsg.Value) Then
@@ -295,7 +295,7 @@ Else
 		strInitials = StringIf(strInitials <> user_strInitials,strInitials)
 		strEmail = StringIf(strEmail <> user_strEmail,strEmail)
 	End If
-
+	
 	bChangePassword = Request("ChangePassword")="on"
 	strNotes = Trim(Request("Notes"))
 	strUpdateAccountEmail = Nz(Request("UpdateAccountEmail"),IIf(user_bCIC Or Not user_bVOL,Nz(g_strDefaultEmailCIC,g_strDefaultEmailVOL),Nz(g_strDefaultEmailVOL,g_strDefaultEmailCIC)))
@@ -303,11 +303,11 @@ Else
 	If Not IsCulture(strUpdateAccountCulture) Then
 		strUpdateAccountCulture = g_objCurrentLang.Culture
 	End If
-
+	
 	Dim strRestoreCulture
 	strRestoreCulture = g_objCurrentLang.Culture
 	Call setSessionLanguage(strUpdateAccountCulture)
-
+	
 	Dim strMessage
 	strMessage = TXT_USER_REQUEST_1 & user_strLogin & TXT_USER_REQUEST_2 & vbCrLf & vbCrLf
 
@@ -325,14 +325,14 @@ Else
 			strMessage = strMessage & TXT_EMAIL & TXT_COLON & strEmail & vbCrLf
 		End If
 	End If
-
+	
 	If bChangePassword Then
 		strMessage = strMessage & TXT_CHANGE_PASSWORD & TXT_COLON & TXT_SEND_NEW_PASSWORD & vbCrLf
 	End If
 	If Not Nl(strNotes) Then
 		strMessage = strMessage & TXT_NOTES & TXT_COLON & strNotes & vbCrLf
 	End If
-
+	
 	strMessage = strMessage & vbCrLf & _
 		" * * * * * * " & vbCrLf & vbCrLf & _
 		TXT_THIS_USERS_ACCOUNT_INFO & vbCrLf & vbCrLf & _
@@ -341,11 +341,11 @@ Else
 		TXT_INITIALS & TXT_COLON & Nz(user_strInitials,TXT_UNKNOWN) & vbCrLf & _
 		TXT_EMAIL & TXT_COLON & Nz(user_strEmail,TXT_UNKNOWN) & vbCrLf & vbCrLf & _
 		TXT_LOGIN_TO_DATABASE & "https://" & IIf(user_bCIC Or Not user_bVOL,g_strBaseURLCIC,g_strBaseURLVOL) & "/login.asp"
-
+	
 	Call setSessionLanguage(strRestoreCulture)
-
+	
 	Call makePageHeader(TXT_EDIT_ACCOUNT & user_strLogin, TXT_EDIT_ACCOUNT & user_strLogin, True, False, True, True)
-
+	
 	If Not Nl(strUpdateAccountEmail) Then
 		If (bPasswordOnlyForm Or (Nl(strFirstName) And Nl(strLastName) And Nl(strInitials) And Nl(strEmail) And Nl(strNotes))) And Not bChangePassword Then
 %>

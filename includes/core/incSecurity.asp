@@ -1,4 +1,4 @@
-﻿<%
+<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -229,27 +229,7 @@ def has_api_permission(dom, permission):
 ' Begin Sub securityFailure
 '***************************************
 Sub securityFailure()
-	Response.Clear
-
-	If user_bLoggedIn Then
-		Response.Status = "403 Forbidden"
-		Call makePageHeader(TXT_SECURITY_FAILURE, TXT_SECURITY_FAILURE, True, False, True, True)
-		Call handleError(TXT_NO_PERMISSIONS, _
-			vbNullString, _
-			vbNullString)
-	Else
-		Response.Status = "404 Not Found"
-		Call makePageHeader(TXT_NOT_FOUND, TXT_NOT_FOUND, True, False, True, True)
-		Call handleError(TXT_NOT_FOUND, _
-			vbNullString, _
-			vbNullString)
-	End If
-
-	Call makePageFooter(True)
-	%>
-<!--#include file="incClose.asp" -->
-	<%
-	Response.End
+	Call goToPageB(ps_strRootPath & "security_failure.asp")
 End Sub
 '***************************************
 ' End Sub securityFailure

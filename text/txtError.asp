@@ -26,12 +26,10 @@ Dim TXT_ERROR, _
 	TXT_INVALID_OPID, _
 	TXT_NO_ACTION, _
 	TXT_NO_NAME_PROVIDED, _
-	TXT_NO_PERMISSIONS, _
 	TXT_NO_RECORD_CHOSEN, _
 	TXT_NO_RECORD_EXISTS_ID, _
 	TXT_NO_RECORD_EXISTS_RSN, _
 	TXT_NO_RECORD_EXISTS_VNUM, _
-	TXT_SECURITY_FAILURE, _
 	TXT_SERVICE_UNAVAILABLE_TITLE, _
 	TXT_SERVICE_UNAVAILABLE_BODY, _
 	TXT_SRCH_ERROR, _
@@ -53,12 +51,10 @@ Sub setTxtError()
 			TXT_INVALID_OPID = TXT_ERROR & "L'identifiant d'occasion de bénévolat suivant est invalide" & TXT_COLON
 			TXT_NO_ACTION = TXT_ERROR & "Impossible d'établir le type d'action"
 			TXT_NO_NAME_PROVIDED = "Aucun nom fourni"
-			TXT_NO_PERMISSIONS = "Vous n'avez pas l'autorisation pour visualiser la page que vous avez demandée."
 			TXT_NO_RECORD_CHOSEN = TXT_ERROR & "Aucun dossier n'a été sélectionné"
 			TXT_NO_RECORD_EXISTS_ID = TXT_ERROR & "Il n'existe pas de dossier avec l'identifiant" & TXT_COLON
 			TXT_NO_RECORD_EXISTS_RSN = TXT_ERROR & "Il n'existe pas de dossier avec le numéro RSN" & TXT_COLON
 			TXT_NO_RECORD_EXISTS_VNUM = TXT_ERROR & "Il n'existe pas de dossier avec l'identifiant d'occasion de bénévolat" & TXT_COLON
-			TXT_SECURITY_FAILURE = "Défaillance au niveau de la sécurité"
 			TXT_SERVICE_UNAVAILABLE_TITLE = "Le système est temporairement indisponible"
 			TXT_SERVICE_UNAVAILABLE_BODY = "La base de données est temporairement indisponible. Veuillez réessayer plus tard."
 			TXT_SRCH_ERROR = "Une erreur s'est produite pendant la recherche" & TXT_COLON
@@ -77,12 +73,10 @@ Sub setTxtError()
 			TXT_INVALID_OPID = TXT_ERROR & "The following is an invalid Opportunity ID" & TXT_COLON
 			TXT_NO_ACTION = TXT_ERROR & "Unable to determine the type of action"
 			TXT_NO_NAME_PROVIDED = "No Name Provided"
-			TXT_NO_PERMISSIONS = "You do not have permission to view the page you requested"
 			TXT_NO_RECORD_CHOSEN = TXT_ERROR & "No record was chosen"
 			TXT_NO_RECORD_EXISTS_ID = TXT_ERROR & "No record exists with the ID" & TXT_COLON
 			TXT_NO_RECORD_EXISTS_RSN = TXT_ERROR & "No record exists with the RSN" & TXT_COLON
 			TXT_NO_RECORD_EXISTS_VNUM = TXT_ERROR & "No record exists with the Opportunity ID" & TXT_COLON
-			TXT_SECURITY_FAILURE = "Security Failure"
 			TXT_SERVICE_UNAVAILABLE_TITLE = "System temporarily unavailable"
 			TXT_SERVICE_UNAVAILABLE_BODY = "The database is temporarily unavailable. Please check back later."
 			TXT_SRCH_ERROR = "An Error occurred during the search" & TXT_COLON
