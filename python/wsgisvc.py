@@ -33,7 +33,6 @@ class ServiceSettings:
     _wssection_ = "winservice"
 
     def __init__(self, cfg_file_name, override=None):
-
         if override is None:
             override = {}
 
@@ -193,7 +192,6 @@ class PasteWinService(win32serviceutil.ServiceFramework):
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.stop_event)
         self.ReportServiceStatus(win32service.SERVICE_STOPPED)
-        sys.exit()
 
 
 def getOverrideFromRegistry(svc_name):
@@ -239,7 +237,6 @@ def usage():
 
 
 def handle_command_line(argv):
-
     options_pattern = "c:v:n:d:p:"
     optlist, args = getopt.getopt(sys.argv[1:], options_pattern)
 

@@ -95,7 +95,7 @@ def send_email(
     if not isinstance(to, (list, tuple, set)):
         to = [x.strip() for x in to.split(",")]
 
-    to = [str(x) for x in to if x]
+    to = [formataddr(parseaddr(str(x), strict=False)) for x in to if x]
     dboptions = request.dboptions
     TrainingMode = dboptions.TrainingMode
     NoEmail = dboptions.NoEmail
@@ -108,8 +108,8 @@ def send_email(
         from_name = dboptions.DefaultEmailNameCIC or dboptions.DefaultEmailNameVOL or ""
 
     if from_email:
-        reply = author
-        author = parseaddr(author)
+        reply = formataddr(parseaddr(author, strict=False))
+        author = parseaddr(author, strict=False)
         author = formataddr((author[0] or from_name, from_email))
     else:
         reply = None
