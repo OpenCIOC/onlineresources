@@ -91,7 +91,7 @@ class CiocRequestMixin:
         return val
 
     @reify
-    def viewdata(self) -> viewdata.ViewData:
+    def viewdata(self):
         val = viewdata.ViewData(self)
         val.UpdateCulture()
         return val

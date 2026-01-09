@@ -1,4 +1,4 @@
-﻿<%@LANGUAGE="VBSCRIPT"%>
+<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -163,7 +163,7 @@ End If
 
 If Not Nl(Trim(strNewPW)) Then
 	strSalt = MakeSalt()
-	intHashRepeat = 500000
+	intHashRepeat = 10000
 	strHash = Crypt(strSalt, strNewPW, intHashRepeat)
 End If
 

@@ -21,7 +21,6 @@ from pyramid.httpexceptions import HTTPFound
 
 from cioc.core import pageinfo, template, asset, modelstate, security
 from cioc.core.rootfactories import BasicRootFactory
-from cioc.core.i18n import gettext as _
 
 import logging
 
@@ -109,8 +108,7 @@ class ViewBase:
         return render(template_name, args, self.request)
 
     def _security_failure(self):
-        # self._go_to_page("~/security_failure.asp")
-        security_failure(self.request)
+        self._go_to_page("~/security_failure.asp")
 
     def _go_to_page(self, url, httpvals=None, exclude_keys=None):
         redirect(self.request, url=url, httpvals=httpvals, exclude_keys=exclude_keys)
@@ -118,11 +116,9 @@ class ViewBase:
     def _go_to_route(self, route_name, exclude_keys=None, **kw):
         redirect(self.request, route_name=route_name, exclude_keys=exclude_keys, **kw)
 
-    def _error_page(self, ErrMsg, title=None, status=None):
+    def _error_page(self, ErrMsg, title=None):
         pageinfo = self.request.pageinfo
-        error_page(
-            self.request, ErrMsg, pageinfo.Domain, pageinfo.DbArea, title, status
-        )
+        error_page(self.request, ErrMsg, pageinfo.Domain, pageinfo.DbArea, title)
 
     @staticmethod
     def dict_from_row(row):
@@ -161,23 +157,7 @@ class ViewBase:
 
 
 def security_failure(request):
-    if request.user:
-        error_page(
-            request,
-            _(
-                "You do not have permission to view the page you requested",
-                request,
-            ),
-            _("Security Failure", request),
-            "403 Forbidden",
-        )
-    else:
-        error_page(
-            request,
-            _("Not Found", request),
-            _("Not Found", request),
-            "404 Not Found",
-        )
+    go_to_page(request, "~/security_failure.asp")
 
 
 def go_to_page(request, url, httpvals=None, exclude_keys=None):
@@ -189,16 +169,15 @@ def go_to_route(request, route_name, exclude_keys=None, **kw):
 
 
 class ErrorPage(Exception, BasicRootFactory):
-    def __init__(self, request, ErrMsg, domain, db_area, title=None, status=None):
+    def __init__(self, request, ErrMsg, domain, db_area, title=None):
         self.ErrMsg = ErrMsg
         self.title = title
-        self.status = status
 
         BasicRootFactory.__init__(self, request, domain, db_area)
 
 
-def error_page(request, ErrMsg, domain, db_area, title=None, status=None):
-    raise ErrorPage(request, ErrMsg, domain, db_area, title, status)
+def error_page(request, ErrMsg, domain, db_area, title=None):
+    raise ErrorPage(request, ErrMsg, domain, db_area, title)
 
 
 def redirect(
