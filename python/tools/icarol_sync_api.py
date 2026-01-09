@@ -49,10 +49,10 @@ class RecordInfo:
 
 @dataclass
 class MyArgsType(ArgsType):
-    client: ICarolClient = ICarolClient("localhost", "")
+    client: ICarolClient = field(default_factory=lambda: ICarolClient("localhost", ""))
     dbinfo: list[model.DatabaseInfo] = field(default_factory=list)
     dbid: int = -1
-    fields: model.ResourceDefinition = model.ResourceDefinition()
+    fields: model.ResourceDefinition = field(default_factory=model.ResourceDefinition)
     idmap: dict[tuple[str, str], t.Optional[int]] = field(default_factory=dict)
     id_generator: t.Optional[t.Iterator[int]] = field(
         default_factory=lambda: iter(range(12_000_000, 15_000_000))
