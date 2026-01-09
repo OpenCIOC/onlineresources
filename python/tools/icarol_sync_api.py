@@ -480,7 +480,7 @@ def main(argv):
 
     if args.email:
         email_log(
-            args, capture_io, "ICarol API Sync", sys.stderr.is_dirty(), "icarol_export"
+            args, capture_io, "ICarol API Sync%s", sys.stderr.is_dirty(), "icarol_export"
         )
 
     return retval
