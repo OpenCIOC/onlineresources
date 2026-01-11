@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -52,9 +52,14 @@ Dim intCMID, strSearch, bSearchParams, strHTTPVals
 intCMID = Request("CMID")
 If Nl(intCMID) Then
 	intCMID = Null
+ElseIf Not IsIDType(intCMID) Then
+	intCMID = Null
 End If
 
 strSearch = Trim(Request("CommSrch"))
+If Len(strSearch) > 100 Then
+	strSearch = Null
+End If
 bSearchParams = Not Nl(Trim(Request("SearchParameterKey")))
 
 strHTTPVals = g_strCacheHTTPVals
@@ -105,7 +110,7 @@ Else
 <%
 		.Close
 	End With
-	
+
 	Set rsCommFinder = Nothing
 	Set cmdCommFinder = Nothing
 End If

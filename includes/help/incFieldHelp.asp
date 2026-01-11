@@ -1,4 +1,4 @@
-<%
+﻿<%
 ' =========================================================================================
 '  Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 '
@@ -23,6 +23,9 @@ Call makePageHeader(TXT_FIELD_HELP, TXT_FIELD_HELP, False, True, True, False)
 <%
 Dim	strFieldName
 strFieldName = Trim(Request("field"))
+If Len(strFieldName) > 100 Then
+	strFieldName = Null
+End If
 If Not Nl(strFieldName) Then
 
 	Dim	strFieldHelp, strFieldDisplay
@@ -44,7 +47,7 @@ If Not Nl(strFieldName) Then
 	Set rsFieldHelp = cmdFieldHelp.Execute
 
 	With rsFieldHelp
-		If Not .EOF Then	
+		If Not .EOF Then
 			strFieldDisplay = .Fields("FieldDisplay")
 			strFieldHelp = .Fields("HelpText")
 		Else

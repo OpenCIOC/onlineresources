@@ -85,6 +85,10 @@ If Not (getSessionValue("session_test") = "ok") Then
 ElseIf Nl(strLoginName) Then
 	Call handleError(TXT_LOGIN_FAILED & TXT_COLON & TXT_USER_NAME_REQUIRED,_
 			"login.asp", vbNullString)
+ElseIf Len(strLoginName) > 60 Then
+	Call handleError(TXT_LOGIN_FAILED & TXT_COLON & _
+			Replace(TXT_INVALID_USERNAME_PASSWORD, "[USER]", Request.Form("LoginName")), _
+			"login.asp", vbNullString)
 ElseIf Nl(strLoginPwd) Then
 	Call handleError(TXT_LOGIN_FAILED & TXT_COLON & TXT_PASSWORD_REQUIRED,_
 			"login.asp", vbNullString)
