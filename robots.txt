@@ -79,10 +79,19 @@ Disallow: /
 User-agent: OAI-SearchBot
 Disallow: /
 
-User-agent: ChatGPT-User
+User-agent: GPTBot
 Disallow: /
 
-User-agent: GPTBot
+User-agent: ByteSpider
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: Omgili
+Disallow: /
+
+User-agent: Webzio-Extended
 Disallow: /
 
 User-agent: *
