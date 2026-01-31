@@ -79,19 +79,31 @@ SELECT TOP (100)
 			WHEN ols.Code = 'SERVICE' THEN 'Program'
 			WHEN ols.Code = 'TOPIC' THEN 'Program'
 		END AS "@type",
-		'Active'AS "@status",
+		CASE WHEN btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE() THEN 'Active' ELSE 'Inactive' END AS "@status",
+		CASE WHEN btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE() THEN CAST(0 AS BIT) ELSE CAST(1 AS BIT) END AS "@excludeFromDirectory",
+		CASE WHEN btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE() THEN btd.NON_PUBLIC ELSE CAST(1 AS BIT) END AS "@isConfidential",
 		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.CMP_AreasServed ELSE NULL END AS "@coverageNote",
-		CASE 
-			WHEN ols.Code = 'AGENCY' THEN ISNULL(ISNULL(
-				CASE WHEN btd.ORG_DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.ORG_DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.ORG_DESCRIPTION,@nLine10,@nLine10 + '<br />') END,
-				CASE WHEN btd.DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.DESCRIPTION,@nLine10,@nLine10 + '<br />') END),
-				'Agency')
-			WHEN ols.Code = 'SITE' THEN ISNULL(btd.LOCATION_DESCRIPTION,cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Agency Location',btd.LangID)) + CASE WHEN cbtd.INTERSECTION IS NOT NULL THEN '<br />' + cbtd.INTERSECTION ELSE '' END 
-			WHEN ols.Code in ('SERVICE', 'TOPIC') THEN CASE WHEN btd.DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.DESCRIPTION,@nLine10,@nLine10 + '<br />') END 
+		-- Description Field:
+		CASE WHEN btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE() THEN '' ELSE 
+				CASE WHEN btd.LangID=0 
+					THEN '<span style="color:#FF0000"><strong>This is a deleted resource and is only kept for archive purposes.</strong> </span><br />' 
+					ELSE '<span style="color:#FF0000"><strong>Cette ressource est supprimée et n''est conservée qu''à des fins d''archivage.</strong> </span><br />'
+				END
+			END + 
+			CASE WHEN cbtd.PUBLIC_COMMENTS IS NOT NULL AND ols.Code IN ('SERVICE', 'TOPIC') THEN cbtd.PUBLIC_COMMENTS + '<br/ >' ELSE '' END +
+			CASE 
+				WHEN ols.Code = 'AGENCY' THEN ISNULL(
+					CASE WHEN btd.ORG_DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.ORG_DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.ORG_DESCRIPTION,@nLine10,@nLine10 + '<br />') END,
+					'')
+				WHEN ols.Code = 'SITE' THEN ISNULL(btd.LOCATION_DESCRIPTION,'') + CASE WHEN cbtd.INTERSECTION IS NOT NULL THEN (
+						(CASE WHEN btd.LOCATION_DESCRIPTION IS NOT NULL THEN '<br />' ELSE '' END ) + 
+						(CASE WHEN btd.LangID=0 THEN 'Cross Street: ' ELSE 'Rue transversale : ' END) + cbtd.INTERSECTION 
+					) ELSE '' END 
+				WHEN ols.Code in ('SERVICE', 'TOPIC') THEN CASE WHEN btd.DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.DESCRIPTION,@nLine10,@nLine10 + '<br />') END 
 		END AS "@description",
 		CASE WHEN ols.CODE = 'AGENCY' THEN dbo.fn_CIC_NUMToServiceLevel(bt.NUM,btd.LangID) ELSE '' END AS "@legalStatus",
 		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.CMP_Languages ELSE '' END AS "@languagesOfferedText",
-		btd.NON_PUBLIC AS "@isConfidential",
+
 		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.CMP_Fees ELSE NULL END AS "@fees",
 		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.DOCUMENTS_REQUIRED ELSE NULL END AS "@requiredDocumentation",
 		'' as "@sourceOfFunds",
@@ -178,7 +190,7 @@ SELECT TOP (100)
 		(SELECT
 				REPLACE(tax.LinkedCode, ' ~ ', ' * ') AS item
 			FROM fn_CIC_NUMToTaxCodes_rst(bt.NUM) AS tax
-			WHERE ols.Code IN ('SERVICE', 'TOPIC')
+			WHERE ols.Code IN ('SERVICE', 'TOPIC') AND (btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE())
 		FOR XML PATH(''), TYPE) AS taxonomy,
 
 
@@ -298,7 +310,7 @@ SELECT TOP (100)
 				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
 				ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
 			FOR XML PATH('contact'), TYPE)
-			WHERE (btd.CMP_MailAddress IS NULL AND btd.CMP_SiteAddress IS NOT NULL) AND ols.Code = 'SITE'
+			WHERE (btd.CMP_MailAddress IS NULL AND btd.CMP_SiteAddress IS NOT NULL) AND ols.Code IN ('AGENCY', 'SITE')
 		FOR XML PATH('item'),TYPE),
 
 			(SELECT 
@@ -307,7 +319,7 @@ SELECT TOP (100)
 				SELECT 
 					'phoneNumber' AS "@type",
 					phone."Description" AS "@description",
-					phone."Label" AS "@label",
+					CASE WHEN phone.PhoneNumber IS NOT NULL THEN phone."Label" ELSE '' END AS "@label",
 					phone.Purpose AS "@purpose",
 					CASE WHEN phone.PhoneNumber IS NULL OR ols.Code = 'SITE' THEN '' ELSE phone.PhoneNumber END AS "@number",
 					phone.TTY AS "@isTTY",
@@ -316,15 +328,33 @@ SELECT TOP (100)
 				FOR XML PATH('contact'), TYPE
 				)
 			FROM (
-			SELECT 0 AS "TollFree",
-					0 AS "Confidential",
-					0 AS TTY,
-					0 AS Fax,
-					btd.OFFICE_PHONE AS PhoneNumber,
-					'Phone1' AS Purpose,
-					CASE WHEN btd.LangID=0 THEN 'Office' ELSE 'Bureau' END AS [Label],
-					NULL AS [Description]
-				-- WHERE btd.OFFICE_PHONE IS NOT NULL
+			SELECT p."TollFree", p."Confidential", p.TTY, p.Fax, 
+				CASE WHEN btd.OFFICE_PHONE IS NULL AND cbtd.CRISIS_PHONE IS NULL AND cbtd.AFTER_HRS_PHONE IS NULL AND btd.FAX IS NULL AND  cbtd.TDD_PHONE IS NULL AND btd.TOLL_FREE_PHONE IS NULL AND p.Purpose='Phone1' 
+					THEN  CASE WHEN btd.LangID=0 THEN 'No public telephone number' ELSE 'Pas de numéro de téléphone public' END  ELSE p.PhoneNumber END AS PhoneNumber,
+				p.Purpose, p.Label, p.Description
+			FROM (
+			   SELECT cte.TollFree, cte.Confidential, cte.TTY, cte.Fax, cte.PhoneNumber, 'Phone' + CAST((ROW_NUMBER() OVER (ORDER BY CASE WHEN cte.PhoneNumber IS NULL THEN 0 ELSE 1 END, cte.Preference))  AS VARCHAR) AS Purpose, cte.Label, cte.Description
+			   FROM
+				(SELECT 0 AS "TollFree",
+						0 AS "Confidential",
+						0 AS TTY,
+						0 AS Fax,
+						btd.OFFICE_PHONE AS PhoneNumber,
+						1 AS Preference,
+						CASE WHEN btd.LangID=0 THEN 'Office' ELSE 'Bureau' END AS [Label],
+						NULL AS [Description]
+					-- WHERE btd.OFFICE_PHONE IS NOT NULL
+				UNION SELECT 0 AS "TollFree",
+						0 AS "Confidential",
+						0 AS TTY,
+						0 AS Fax,
+						cbtd.CRISIS_PHONE AS PhoneNumber,
+						2 AS Preference,
+						CASE WHEN btd.LangID=0 THEN 'Crisis' ELSE 'Crise' END AS [Label], 
+						NULL AS [Description]
+					-- WHERE cbtd.CRISIS_PHONE IS NOT NULL
+				)cte
+			)p
 			UNION SELECT 0 AS "TollFree",
 					0 AS "Confidential",
 					0 AS TTY,
@@ -334,15 +364,7 @@ SELECT TOP (100)
 					CASE WHEN btd.LangID=0 THEN 'After Hours' ELSE 'après fermeture' END AS [Label],
 					NULL AS [Description]
 				-- WHERE cbtd.AFTER_HRS_PHONE IS NOT NULL
-			UNION SELECT 0 AS "TollFree",
-					0 AS "Confidential",
-					0 AS TTY,
-					0 AS Fax,
-					cbtd.CRISIS_PHONE AS PhoneNumber,
-					'Phone2' AS Purpose,
-					CASE WHEN btd.LangID=0 THEN 'Crisis' ELSE 'Crise' END AS [Label], 
-					NULL AS [Description]
-				-- WHERE cbtd.CRISIS_PHONE IS NOT NULL
+
 			UNION SELECT 0 AS "TollFree",
 					0 AS "Confidential",
 					0 AS TTY,
@@ -406,7 +428,7 @@ SELECT TOP (100)
 				c.ORG AS "@companyName",
 	
 
-			(SELECT c.TITLE AS item WHERE c.TITLE IS NOT NULL FOR XML PATH(''), TYPE) AS titles,
+			(SELECT c.TITLE AS item WHERE c.TITLE IS NOT NULL FOR XML PATH('titles'), TYPE),
 		
 
 			(SELECT
@@ -443,7 +465,7 @@ SELECT TOP (100)
 					ELSE 'Main Contact' END AS "@label",
 				'' AS "@companyName",
 
-			(SELECT '' AS item FOR XML PATH('titles'), TYPE),
+			(SELECT 1 AS "@_empty_list" FOR XML PATH('titles'), TYPE),
 		
 
 			(SELECT
@@ -525,7 +547,14 @@ SELECT TOP (100)
 		(SELECT
 			-- TODO: Import and AIRS export don't agree, which is right? This is AIRS Export
 			cbtd.COMMENTS AS "@Internal",
-			cbtd.CMP_InternalMemo AS "@Editors"
+			ISNULL(cbtd.CMP_InternalMemo, '') + CASE WHEN ols.Code IN ('SERVICE', 'TOPIC') THEN
+					STUFF( ( SELECT '<br/ >' + btet.Value
+					FROM  dbo.CIC_BT_EXTRA_TEXT btet
+					WHERE btet.NUM=bt.NUM AND btet.LangID=btd.LangID AND btet.FieldName IN ('EXTRA_CCACNOTES', 'EXTRA_TAXONOMYNOTES')
+					ORDER BY btet.FieldName
+					FOR XML PATH(''), TYPE).value('.', 'nvarchar(max)'),
+					1, 6, CASE WHEN cbtd.CMP_InternalMemo IS NULL THEN '' ELSE '<br/ >' END)
+				ELSE '' END AS "@Editors"
 		FOR XML PATH('notes'), TYPE),
 		(SELECT
 
@@ -562,6 +591,9 @@ SELECT TOP (100)
 			WHERE cbt.MAX_AGE IS NOT NULL AND btd.LangID=0 -- Checklist custom values only in english
 				AND ols.Code IN ('SERVICE', 'TOPIC')
 			FOR XML PATH('item'), TYPE),
+			(SELECT 'Deleted Record' AS "@label",
+				CASE WHEN btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE() THEN '' ELSE 'Yes' END AS "@item"
+				FOR XML PATH('item'), TYPE),
 			(SELECT
 				'Record Owner (controlled)' AS "@label",
 				(SELECT
@@ -570,8 +602,9 @@ SELECT TOP (100)
 				WHERE bt.RECORD_OWNER IS NOT NULL AND btd.LangID=0
 			FOR XML PATH('item'), TYPE),
 			(SELECT
+			    -- This is now prefix on the description field
 				'Public Comments' AS "@label",
-				CASE WHEN cbtd.PUBLIC_COMMENTS IS NOT NULL AND ols.Code IN ('SERVICE', 'TOPIC') THEN cbtd.PUBLIC_COMMENTS ELSE '' END AS "@valueText"
+				''  AS "@valueText"
 			FOR XML PATH('item'), TYPE),
 			(SELECT
 				'Legal Name' AS "@label",

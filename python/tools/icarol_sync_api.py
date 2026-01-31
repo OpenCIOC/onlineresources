@@ -6,6 +6,7 @@ import traceback
 import typing as t
 from io import StringIO
 from dataclasses import dataclass, field
+from datetime import datetime
 
 from simple_icarol_api import ICarolClient, model
 from lxml import etree
@@ -240,7 +241,8 @@ def update_program_at_sites(
     external_ids: list[str],
     related_sites: list[ProgramAtSiteInfo],
     num: str,
-):
+) -> bool:
+    record_had_error = True
     program_at_site_ids = {
         site_num: id for site_num, id in (x.split("/") for x in external_ids)
     }
@@ -252,6 +254,7 @@ def update_program_at_sites(
                 prog_at_site.site_id or args.idmap[(prog_at_site.site_num, "Site")]
             )
         except KeyError:
+            record_had_error = True
             # TODO should this one just skip this program_at_site. We've already synced a program
             # so this would leak a program?
             print(
@@ -271,14 +274,17 @@ def update_program_at_sites(
                 program_at_site_id,
             )
         except Exception as e:
+            record_had_error = True
             if prog_at_site.program_at_site_id is model.unset_value:
                 prog_at_site.program_at_site_id = None
 
             traceback.print_exc(file=sys.stderr)
+            exception_content = getattr(e, "content", None)
             print(
                 f"Failed to create/update ProgramAtSite {prog_at_site.site_num}/{prog_at_site.program_at_site_id} for Program {num} due to an error.",
                 "This may have leaked a ProgramAtSite record.",
                 e,
+                exception_content,
                 file=sys.stderr,
             )
 
@@ -293,15 +299,20 @@ def update_program_at_sites(
         if not args.test:
             try:
                 args.client.delete_resource(prog_at_site_id)
-            except Exception:
+            except Exception as e:
+                record_had_error = True
+                exception_content = getattr(e, "content", None)
                 print(
                     f"Failed to delete ProgramAtSite {site_num}/{prog_at_site_id} for Program {num} due to an error.",
                     "This may have leaked a ProgramAtSite record.",
                     traceback.format_exc(chain=False),
+                    exception_content,
                     file=sys.stderr,
                 )
         else:
             print(f"would delete program at site {prog_at_site_id} for {site_num}")
+
+    return record_had_error
 
 
 def sync_record(
@@ -310,7 +321,8 @@ def sync_record(
     external_id: t.Optional[str],
     olscode: str,
     datachange: str,
-) -> t.Optional[str]:
+) -> tuple[t.Optional[str], bool]:
+    record_had_error = False
     try:
         record_languages = parse_change_to_model(args, datachange, record_num)
     except Exception:
@@ -319,7 +331,7 @@ def sync_record(
             traceback.format_exc(chain=False),
             file=sys.stderr,
         )
-        return external_id
+        return external_id, True
 
     record_id, *external_ids = (external_id or "").split(";")
     if record_id:
@@ -346,11 +358,14 @@ def sync_record(
                 print(isnew, record.to_dict())
 
         except Exception as e:
+            record_had_error = True
             traceback.print_exc(file=sys.stderr)
+            exception_content = getattr(e, "content", None)
             print(
                 f"Failed to create/update {record.type} {record_num}/{record_id} due to an error.",
                 "This may have leaked record.",
                 e,
+                exception_content,
                 record.to_dict(),
                 file=sys.stderr,
             )
@@ -361,17 +376,20 @@ def sync_record(
         related_sites = record_languages[0].related_sites
         if olscode in ("SERVICE", "TOPIC"):
             agency_id = record.related[0].id
+            program_at_site_had_error = False
             try:
-                update_program_at_sites(
+                program_at_site_had_error = update_program_at_sites(
                     args, record_id, agency_id, external_ids, related_sites, record_num
                 )
             except Exception as e:
+                record_had_error = True
                 traceback.print_exc(file=sys.stderr)
                 print(
                     "Error encountered while attempting to update program_at_site. May have leaked ids.",
                     e,
                     file=sys.stderr,
                 )
+            record_had_error = record_had_error or program_at_site_had_error
 
         new_external_id = ";".join(
             [str(record_id)]
@@ -381,7 +399,9 @@ def sync_record(
                 if x.program_at_site_id
             ]
         )
-        return new_external_id
+        return new_external_id, record_had_error
+
+    return None, record_had_error
 
 
 def mark_change_completed(
@@ -390,32 +410,46 @@ def mark_change_completed(
     record_num: str,
     external_id: t.Optional[str],
     olscode: str,
+    export_date: datetime | None,
 ) -> None:
     if args.test:
         print(f"mark complete {record_num}, {external_id}, {olscode}")
     else:
         conn.execute(
-            "EXEC sp_CIC_iCarolExport_u ?, ?, ?", record_num, olscode, external_id
+            "EXEC sp_CIC_iCarolExport_u ?, ?, ?, ?",
+            record_num,
+            olscode,
+            external_id,
+            export_date,
         )
 
 
-def sync_iteration(args: MyArgsType, conn: "Connection") -> int:
+def sync_iteration(args: MyArgsType, conn: "Connection", export_date: datetime) -> int:
     changes = get_changes_to_send(conn)
+    record_had_error = False
     for change in changes:
-        new_external_id = sync_record(
+        new_external_id, record_had_error = sync_record(
             args, change.NUM, change.EXTERNAL_ID, change.OLSCode, change.datachange
         )
-        mark_change_completed(args, conn, change.NUM, new_external_id, change.OLSCode)
+        mark_change_completed(
+            args,
+            conn,
+            change.NUM,
+            new_external_id,
+            change.OLSCode,
+            None if record_had_error else export_date,
+        )
 
     return len(changes)
 
 
 def sync(args: MyArgsType, context: Context) -> None:
+    export_date = datetime.now()
     with context.connmgr.get_connection("admin") as conn:
         total_changes = 0
         change_count = -1
         while change_count:
-            change_count = sync_iteration(args, conn)
+            change_count = sync_iteration(args, conn, export_date)
             total_changes += change_count
             if args.test:
                 change_count = 0
@@ -473,14 +507,18 @@ def main(argv):
         prepare_client(args)
         sync(args, context)
     except Exception:
-        traceback.print_exc()
+        traceback.print_exc(file=sys.stderr)
 
     if sys.stderr.is_dirty():
         retval = 1
 
     if args.email:
         email_log(
-            args, capture_io, "ICarol API Sync%s", sys.stderr.is_dirty(), "icarol_export"
+            args,
+            capture_io,
+            "ICarol API Sync%s",
+            sys.stderr.is_dirty(),
+            "icarol_export",
         )
 
     return retval
