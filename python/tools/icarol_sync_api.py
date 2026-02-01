@@ -278,13 +278,11 @@ def update_program_at_sites(
             if prog_at_site.program_at_site_id is model.unset_value:
                 prog_at_site.program_at_site_id = None
 
-            traceback.print_exc(file=sys.stderr)
-            exception_content = getattr(e, "content", None)
+            # traceback.print_exc(file=sys.stderr)
             print(
                 f"Failed to create/update ProgramAtSite {prog_at_site.site_num}/{prog_at_site.program_at_site_id} for Program {num} due to an error.",
                 "This may have leaked a ProgramAtSite record.",
                 e,
-                exception_content,
                 file=sys.stderr,
             )
 
@@ -301,12 +299,10 @@ def update_program_at_sites(
                 args.client.delete_resource(prog_at_site_id)
             except Exception as e:
                 record_had_error = True
-                exception_content = getattr(e, "content", None)
                 print(
                     f"Failed to delete ProgramAtSite {site_num}/{prog_at_site_id} for Program {num} due to an error.",
                     "This may have leaked a ProgramAtSite record.",
                     traceback.format_exc(chain=False),
-                    exception_content,
                     file=sys.stderr,
                 )
         else:
@@ -359,13 +355,11 @@ def sync_record(
 
         except Exception as e:
             record_had_error = True
-            traceback.print_exc(file=sys.stderr)
-            exception_content = getattr(e, "content", None)
+            # traceback.print_exc(file=sys.stderr)
             print(
                 f"Failed to create/update {record.type} {record_num}/{record_id} due to an error.",
                 "This may have leaked record.",
                 e,
-                exception_content,
                 record.to_dict(),
                 file=sys.stderr,
             )
@@ -383,9 +377,9 @@ def sync_record(
                 )
             except Exception as e:
                 record_had_error = True
-                traceback.print_exc(file=sys.stderr)
+                # traceback.print_exc(file=sys.stderr)
                 print(
-                    "Error encountered while attempting to update program_at_site. May have leaked ids.",
+                    f"Error encountered while attempting to sync program_at_site information for {record_num}/{record_id}. This may have leaked ids.",
                     e,
                     file=sys.stderr,
                 )
