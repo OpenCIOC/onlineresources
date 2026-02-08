@@ -379,6 +379,8 @@ def sync_record(
     else:
         record_id = None
 
+    external_ids = [x.strip() for x in external_ids if x.strip()]
+
     for record_lang in record_languages:
         isnew = record_id is None
         record = record_lang.record
@@ -421,10 +423,12 @@ def sync_record(
                 )
             except Exception as e:
                 record_had_error = True
-                # traceback.print_exc(file=sys.stderr)
+                traceback.print_exc(file=sys.stderr)
                 print(
                     f"Error encountered while attempting to sync program_at_site information for {record_num}/{record_id}. This may have leaked ids.",
                     e,
+                    external_ids,
+                    related_sites,
                     file=sys.stderr,
                 )
             record_had_error = record_had_error or program_at_site_had_error

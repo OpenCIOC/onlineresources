@@ -33,6 +33,13 @@ INSERT INTO dbo.GBL_BT_LOCATION_SERVICE (LOCATION_NUM, SERVICE_NUM)
 SELECT 'ZZZ00002', bt.NUM
 FROM @ADD_TO_BT_LOCATION_SERVICE bt
 
+DECLARE @SiteCityExclude table (
+	SITE_CITY nvarchar(100) PRIMARY KEY NOT NULL
+)
+
+INSERT INTO @SiteCityExclude
+VALUES ('ON'), ('Halton (Région)'), ('Halton Region'), ('Halton North'), ('Halton South')
+
 DECLARE @SiteCityTable table (
 	SITE_CITY nvarchar(100) PRIMARY KEY NOT NULL,
 	EXPORT_CITY nvarchar(100)
@@ -244,7 +251,7 @@ SELECT TOP (100)
 				--btd.SITE_BUILDING AS "@careOf",
 				dbo.fn_GBL_FullAddress(NULL,NULL,btd.SITE_LINE_1,btd.SITE_LINE_2,btd.SITE_BUILDING,btd.SITE_STREET_NUMBER,btd.SITE_STREET,btd.SITE_STREET_TYPE,btd.SITE_STREET_TYPE_AFTER,btd.SITE_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,btd.LangID,0) AS "@line1",
 				btd.SITE_SUFFIX AS "@line2",
-				COALESCE(
+				CASE WHEN EXISTS(SELECT * FROM @SiteCityExclude e WHERE btd.SITE_CITY=e.SITE_CITY) THEN NULL ELSE COALESCE(
 					(SELECT EXPORT_CITY FROM @SiteCityTable WHERE SITE_CITY=btd.SITE_CITY),
 					btd.SITE_CITY,
 					(SELECT excm.AreaName
@@ -253,7 +260,7 @@ SELECT TOP (100)
 							ON excm.EXT_ID = cmap.MapOneEXTID AND excm.SystemCode='ONTARIO211'
 						WHERE cmap.CM_ID=bt.LOCATED_IN_CM),
 					btd.MAIL_CITY
-					) AS "@city",
+					) END AS "@city",
 				ISNULL(btd.SITE_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) AS "@stateProvince",
 				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
 				ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
@@ -294,7 +301,7 @@ SELECT TOP (100)
 				btd.SITE_BUILDING AS "@careOf",
 				dbo.fn_GBL_FullAddress(NULL,NULL,btd.SITE_LINE_1,btd.SITE_LINE_2,btd.SITE_BUILDING,btd.SITE_STREET_NUMBER,btd.SITE_STREET,btd.SITE_STREET_TYPE,btd.SITE_STREET_TYPE_AFTER,btd.SITE_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,btd.LangID,0) AS "@line1",
 				btd.SITE_SUFFIX AS "@line2",
-				COALESCE(
+				CASE WHEN EXISTS(SELECT * FROM @SiteCityExclude e WHERE btd.SITE_CITY=e.SITE_CITY) THEN NULL ELSE COALESCE(
 					(SELECT EXPORT_CITY FROM @SiteCityTable WHERE SITE_CITY=btd.SITE_CITY),
 					btd.SITE_CITY,
 					(SELECT excm.AreaName
@@ -303,7 +310,7 @@ SELECT TOP (100)
 							ON excm.EXT_ID = cmap.MapOneEXTID AND excm.SystemCode='ONTARIO211'
 						WHERE cmap.CM_ID=bt.LOCATED_IN_CM),
 					btd.MAIL_CITY
-					) AS "@city",
+					) END AS "@city",
 				ISNULL(btd.SITE_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) AS "@stateProvince",
 				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
 				ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
