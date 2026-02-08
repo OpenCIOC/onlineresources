@@ -7,6 +7,7 @@ import typing as t
 from io import StringIO
 from dataclasses import dataclass, field
 from datetime import datetime
+from decimal import Decimal
 
 from simple_icarol_api import ICarolClient, model
 from lxml import etree
@@ -33,7 +34,6 @@ from tools.toolslib import (
     email_log,
 )
 
-
 @dataclass
 class ProgramAtSiteInfo:
     site_num: str
@@ -47,6 +47,29 @@ class RecordInfo:
     record: model.ResourceDetails
     related_sites: list[ProgramAtSiteInfo]
 
+def make_min_age_matcher(field: model.CustomFieldDefinition) -> t.Callable[[list[str]], list[str]]:
+    decimal_values = {Decimal(x.label): x.label for x in field.possibleValues}
+
+    def min_age_matcher(values: list[str]):
+        
+        return [
+            min((y[1] for y in decimal_values.items() if y[0] >= Decimal(x)), default=x)
+            for x in values
+        ]
+
+    return min_age_matcher
+
+def make_max_age_matcher(field: model.CustomFieldDefinition) -> t.Callable[[list[str]], list[str]]:
+    decimal_values = {Decimal(x.label): x.label for x in field.possibleValues}
+
+    def max_age_matcher(values: list[str]):
+        
+        return [
+            min((y[1] for y in decimal_values.items() if y[0] >= Decimal(x)), default=x)
+            for x in values
+        ]
+
+    return max_age_matcher
 
 @dataclass
 class MyArgsType(ArgsType):
@@ -54,6 +77,7 @@ class MyArgsType(ArgsType):
     dbinfo: list[model.DatabaseInfo] = field(default_factory=list)
     dbid: int = -1
     fields: model.ResourceDefinition = field(default_factory=model.ResourceDefinition)
+    fields_matchers: dict[str, t.Callable[[list[str]], list[str]]] = field(default_factory=dict)
     idmap: dict[tuple[str, str], t.Optional[int]] = field(default_factory=dict)
     id_generator: t.Optional[t.Iterator[int]] = field(
         default_factory=lambda: iter(range(12_000_000, 15_000_000))
@@ -74,9 +98,15 @@ def prepare_client(args: MyArgsType) -> None:
     args.dbinfo = args.client.database_info()
     args.dbid = args.dbinfo[0].id
 
-    args.fields = args.client.get_custom_fields(args.dbid)
+    fields = args.fields = args.client.get_custom_fields(args.dbid)
     if args.test:
         print(args.fields)
+
+    args.fields_matchers = {
+        # TODO: should this be defensive about the existence of the field?
+        'Minimum Age': make_min_age_matcher(fields.label_to_field['Minimum Age']),
+        'Maximum Age': make_max_age_matcher(fields.label_to_field['Maximum Age'])
+    }
 
     args.skip_unknown_value_fields = [
         x
@@ -114,6 +144,12 @@ def parse_sub_xml(
     return t.cast(dict[str, t.Any], base)
 
 
+def fix_minimum_age(field: model.CustomFieldDefinition, selected_values: list[str]):
+    return []
+
+def fix_maximum_age(field: model.CustomFieldDefinition, selected_values: list[str])
+    return []
+
 def fix_custom_fields(args: MyArgsType, records: list[dict], num: str):
     assert args.fields  # appease type system
     for record in records:
@@ -126,6 +162,10 @@ def fix_custom_fields(args: MyArgsType, records: list[dict], num: str):
             selected_values: list[str] = custom.get("selectedValues")
             if not selected_values:
                 continue
+
+            if (custom_matcher := args.fields_matchers.get(custom['label'])) is not None:
+                selected_values = custom_matcher(selected_values)
+
             if skip_if_unknown:
                 keep: list[str] = []
                 skip: list[str] = []

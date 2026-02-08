@@ -49,7 +49,7 @@ UPDATE @SiteCityTable
 			ELSE AreaName
 		END
 		FROM dbo.GBL_Community_External_Community excm
-		WHERE excm.SystemCode= 'ICAROLSTD' -- 'ONTARIO211'
+		WHERE excm.SystemCode= 'ONTARIO211'
 			AND (
 				excm.AreaName=SITE_CITY
 				OR EXISTS(SELECT *
@@ -250,10 +250,9 @@ SELECT TOP (100)
 					(SELECT excm.AreaName
 						FROM dbo.GBL_Community_External_Map cmap
 						INNER JOIN dbo.GBL_Community_External_Community excm
-							ON excm.EXT_ID = cmap.MapOneEXTID AND excm.SystemCode='ICAROLSTD' --'ONTARIO211'
+							ON excm.EXT_ID = cmap.MapOneEXTID AND excm.SystemCode='ONTARIO211'
 						WHERE cmap.CM_ID=bt.LOCATED_IN_CM),
-					btd.MAIL_CITY,
-					cioc_shared.dbo.fn_SHR_STP_ObjectName('Unknown')
+					btd.MAIL_CITY
 					) AS "@city",
 				ISNULL(btd.SITE_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) AS "@stateProvince",
 				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
@@ -275,7 +274,7 @@ SELECT TOP (100)
 				REPLACE(dbo.fn_GBL_FullAddress(NULL,NULL,NULL,NULL,btd.MAIL_BUILDING,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,btd.MAIL_CARE_OF,NULL,NULL,NULL,NULL,btd.LangID,0),@nLine,', ') AS "@careOf",
 				REPLACE(dbo.fn_GBL_FullAddress(NULL,NULL,btd.MAIL_LINE_1,btd.MAIL_LINE_2,NULL,btd.MAIL_STREET_NUMBER,btd.MAIL_STREET,btd.MAIL_STREET_TYPE,btd.MAIL_STREET_TYPE_AFTER,btd.MAIL_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,btd.MAIL_BOX_TYPE,btd.MAIL_PO_BOX,NULL,NULL,btd.LangID,0),@nLine,', ') AS "@line1",
 				btd.MAIL_SUFFIX AS "@line2",
-				COALESCE(btd.MAIL_CITY,btd.SITE_CITY,cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Unknown',btd.LangID)) AS "@city",
+				COALESCE(btd.MAIL_CITY,btd.SITE_CITY) AS "@city",
 				ISNULL(btd.MAIL_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) AS "@stateProvince",
 				bt.MAIL_POSTAL_CODE AS "@zipPostalCode",
 				ISNULL(btd.MAIL_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
@@ -301,10 +300,9 @@ SELECT TOP (100)
 					(SELECT excm.AreaName
 						FROM dbo.GBL_Community_External_Map cmap
 						INNER JOIN dbo.GBL_Community_External_Community excm
-							ON excm.EXT_ID = cmap.MapOneEXTID AND excm.SystemCode='ICAROLSTD' --'ONTARIO211'
+							ON excm.EXT_ID = cmap.MapOneEXTID AND excm.SystemCode='ONTARIO211'
 						WHERE cmap.CM_ID=bt.LOCATED_IN_CM),
-					btd.MAIL_CITY,
-					cioc_shared.dbo.fn_SHR_STP_ObjectName('Unknown')
+					btd.MAIL_CITY
 					) AS "@city",
 				ISNULL(btd.SITE_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) AS "@stateProvince",
 				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
@@ -321,7 +319,7 @@ SELECT TOP (100)
 					phone."Description" AS "@description",
 					CASE WHEN phone.PhoneNumber IS NOT NULL THEN phone."Label" ELSE '' END AS "@label",
 					phone.Purpose AS "@purpose",
-					CASE WHEN phone.PhoneNumber IS NULL OR ols.Code = 'SITE' THEN '' ELSE phone.PhoneNumber END AS "@number",
+					CASE WHEN phone.PhoneNumber IS NULL OR ols.Code = 'SITE' THEN NULL ELSE phone.PhoneNumber END AS "@number",
 					phone.TTY AS "@isTTY",
 					phone.Fax AS "@isFax",
 					phone."TollFree" AS "@isTollFree"	
@@ -532,7 +530,7 @@ SELECT TOP (100)
 			INNER JOIN dbo.GBL_Community cm
 				ON cm.CM_ID=cpr.CM_ID
 			INNER JOIN dbo.GBL_Community_External_Map_All map
-				ON cm.CM_ID=map.CM_ID AND map.SystemCode = 'ICAROLSTD' --'ONTARIO211'
+				ON cm.CM_ID=map.CM_ID AND map.SystemCode = 'ONTARIO211'
 			WHERE cbtd.CMP_AreasServed IS NOT NULL AND cpr.NUM=bt.NUM AND ols.Code IN ('SERVICE', 'TOPIC')
 			FOR XML PATH(''), TYPE
 		) AS coverage,
