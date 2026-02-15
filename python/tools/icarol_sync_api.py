@@ -286,7 +286,7 @@ def update_program_at_sites(
     related_sites: list[ProgramAtSiteInfo],
     num: str,
 ) -> bool:
-    record_had_error = True
+    record_had_error = False
     program_at_site_ids = {
         site_num: id for site_num, id in (x.split("/") for x in external_ids)
     }
