@@ -7,7 +7,7 @@ GO
 CREATE PROCEDURE [dbo].[sp_CIC_iCarolExport_u]
 	@NUM VARCHAR(8),
 	@Code varchar(20),
-	@ExternalID varchar(50),
+	@ExternalID varchar(max),
 	@ExportDate smalldatetime
 WITH EXECUTE AS CALLER
 AS
