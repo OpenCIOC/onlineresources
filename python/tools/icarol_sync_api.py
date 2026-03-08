@@ -518,10 +518,14 @@ def send_area_change_email(args: MyArgsType, area_changes: "list[Row]"):
             print(template_area_change(change, langs), file=stdout)
 
         if to_email:
+            subject = "Export to iCarol Areas Served Change%s"
+            print(
+                f"Sending Areas Served Email to '{to_email}' with subject '{subject % ''}'"
+            )
             email_log(
                 args,
                 stdout,
-                "Export to iCarol Areas Served Change%s",
+                subject,
                 False,
                 "icarol_export",
                 to=to_email,
