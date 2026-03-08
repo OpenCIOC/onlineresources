@@ -97,11 +97,13 @@ DELETE c
 FROM @CoverageAreaChanges c
 WHERE EXISTS(SELECT * FROM @CoverageAreaChanges c2 WHERE c2.HST_ID<>c.HST_ID AND c2.NUM=c.NUM AND c2.LangID=c.LangID AND c2.MODIFIED_DATE>c.MODIFIED_DATE)
 
-SELECT h.NUM, h.LangID, cioc_shared.dbo.fn_SHR_GBL_DateString(h.MODIFIED_DATE) AS MODIFIED_DATE, h.MODIFIED_BY, ISNULL(h.FieldDisplay,'[NULL / MISSING]') AS AREAS_SERVED, dbo.fn_GBL_DisplayFullOrgName(h.NUM, h.LangID) AS ORG_NAME_FULL
+SELECT h.NUM, h.LangID, cioc_shared.dbo.fn_SHR_GBL_DateString(h.MODIFIED_DATE) AS MODIFIED_DATE, h.MODIFIED_BY, ISNULL(h.FieldDisplay,'[NULL / MISSING]') AS AREAS_SERVED, dbo.fn_GBL_DisplayFullOrgName(h.NUM, h.LangID) AS ORG_NAME_FULL, cioc_shared.dbo.fn_SHR_GBL_DateString(@SinceDate) AS SINCE_DATE
 	FROM dbo.GBL_BaseTable_History h
 	INNER JOIN @CoverageAreaChanges cac ON h.HST_ID=cac.HST_ID
 ORDER BY h.MODIFIED_DATE
 
 SET NOCOUNT OFF
 
+GO
+GRANT EXECUTE ON  [dbo].[sp_CIC_iCarolExport_Prep] TO [cioc_login_role]
 GO

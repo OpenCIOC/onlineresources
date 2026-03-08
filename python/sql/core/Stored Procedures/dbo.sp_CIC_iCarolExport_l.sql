@@ -261,6 +261,7 @@ SELECT TOP (100)
 						WHERE cmap.CM_ID=bt.LOCATED_IN_CM),
 					btd.MAIL_CITY
 					) END AS "@city",
+				CASE WHEN btd.SITE_CITY IN ('Halton (Région)', 'Halton Region', 'Halton North', 'Halton South') THEN 'Halton' ELSE NULL END AS "@county",
 				ISNULL(btd.SITE_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) AS "@stateProvince",
 				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
 				ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
@@ -311,6 +312,7 @@ SELECT TOP (100)
 						WHERE cmap.CM_ID=bt.LOCATED_IN_CM),
 					btd.MAIL_CITY
 					) END AS "@city",
+				--CASE WHEN btd.SITE_CITY IN ('Halton (Région)', 'Halton Region', 'Halton North', 'Halton South') THEN 'Halton' ELSE NULL END AS "@county",
 				ISNULL(btd.SITE_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) AS "@stateProvince",
 				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
 				ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
@@ -508,9 +510,14 @@ SELECT TOP (100)
 			FOR XML PATH('item'), TYPE)
 
 	FOR XML PATH('contactDetails'), TYPE),
-	(SELECT 
+	/*(SELECT 
 				(SELECT
-					CAST(N'<item type="postalAddress" purpose="CoverageArea" ' +  excm.attributename + N'="' + (SELECT excm.AreaName AS [text()] FOR XML PATH('')) + N'" />' AS XML) AS [node()]
+					CAST(N'<item type="postalAddress" purpose="CoverageArea" ' +  excm.attributename + N'="' + (SELECT excm.AreaName AS [text()] FOR XML PATH('')) + N'"' +
+						CASE WHEN excm.attributename != 'stateProvince' AND ps.ProvID IS NOT NULL THEN
+							N' stateProvince="' + (SELECT ps.NameOrCode AS [text()] FOR XML PATH('')) + N'"' ELSE '' END +
+						CASE WHEN excm.attributename NOT IN ('stateProvince', 'country') AND ps.ProvID IS NOT NULL THEN 
+							N' country="' + (SELECT ps.Country AS [text()] FOR XML PATH('')) + N'"' ELSE '' END 
+						+ '/>' AS XML) AS [node()]
 
 				FROM (SELECT DISTINCT excm.AreaName, cmat.[Order], t.attributeName
 					FROM dbo.GBL_Community_External_Community excm
@@ -536,11 +543,13 @@ SELECT TOP (100)
 			FROM dbo.CIC_BT_CM cpr
 			INNER JOIN dbo.GBL_Community cm
 				ON cm.CM_ID=cpr.CM_ID
+			INNER JOIN dbo.GBL_ProvinceState ps
+				ON cm.ProvinceState=ps.ProvID
 			INNER JOIN dbo.GBL_Community_External_Map_All map
 				ON cm.CM_ID=map.CM_ID AND map.SystemCode = 'ONTARIO211'
 			WHERE cbtd.CMP_AreasServed IS NOT NULL AND cpr.NUM=bt.NUM AND ols.Code IN ('SERVICE', 'TOPIC')
 			FOR XML PATH(''), TYPE
-		) AS coverage,
+		) AS coverage,*/
 
 		(SELECT  CASE WHEN (cbtd.HOURS IS NOT NULL OR cbtd.DATES IS NOT NULL) AND ols.Code != 'SITE' THEN
 					CASE WHEN cbtd.HOURS IS NULL THEN CASE WHEN cbtd.DATES IS NULL THEN cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Meetings',cbtd.LangID) + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',cbtd.LangID) + cbtd.MEETINGS ELSE + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Dates',cbtd.LangID) +  + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',cbtd.LangID) + cbtd.DATES + ISNULL(@nLine + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang('Meetings',cbtd.LangID) + cioc_shared.dbo.fn_SHR_STP_ObjectName_Lang(': ',cbtd.LangID) + cbtd.MEETINGS,'') END

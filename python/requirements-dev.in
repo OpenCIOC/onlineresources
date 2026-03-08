@@ -4,3 +4,4 @@ flake8
 black
 pyramid_debugtoolbar
 boto3-stubs[s3]
+lxml-stubs

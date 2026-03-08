@@ -19,6 +19,7 @@ except ImportError:
 
 
 from cioc.core import constants as const
+from cioc.core import syslanguage
 
 if t.TYPE_CHECKING:
     from pyodbc import Connection, Row
@@ -485,9 +486,54 @@ def sync_iteration(args: MyArgsType, conn: "Connection", export_date: datetime) 
     return len(changes)
 
 
+def prep_for_export(conn: "Connection") -> "list[Row]":
+    return conn.execute("EXEC sp_CIC_iCarolExport_Prep").fetchall()
+
+
+def template_area_change(change: "Row", langs: dict[int, str]) -> str:
+    return f"""
+*******************
+
+{change.NUM} - {langs.get(change.LangID, 'Unknown')}
+{change.ORG_NAME_FULL}
+Modified: {change.MODIFIED_DATE} ({change.MODIFIED_BY})
+
+{change.AREAS_SERVED}"""
+
+
+def send_area_change_email(args: MyArgsType, area_changes: "list[Row]"):
+    if not area_changes:
+        return
+    to_email = get_config_item(args, "icarol_export_areas_served_email", None)
+    langs = {x.LangID: x.LanguageName for x in syslanguage._culture_list}
+    stdout = StringIO()
+    try:
+        print(
+            f"Areas Served updates since:",
+            {area_changes[0].SINCE_DATE},
+            file=stdout,
+        )
+
+        for change in area_changes:
+            print(template_area_change(change, langs), file=stdout)
+
+        if to_email:
+            email_log(
+                args,
+                stdout,
+                "Export to iCarol Areas Served Change%s",
+                False,
+                "icarol_export",
+                to=to_email,
+            )
+    finally:
+        print(stdout.getvalue())
+
+
 def sync(args: MyArgsType, context: Context) -> None:
     export_date = datetime.now()
     with context.connmgr.get_connection("admin") as conn:
+        area_changes = prep_for_export(conn)
         total_changes = 0
         change_count = -1
         while change_count:
@@ -497,6 +543,8 @@ def sync(args: MyArgsType, context: Context) -> None:
                 change_count = 0
 
         print(f"sent {total_changes} records")
+
+        send_area_change_email(args, area_changes)
 
 
 def parse_args(argv: list[str]) -> MyArgsType:
