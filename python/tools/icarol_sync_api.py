@@ -509,8 +509,8 @@ def send_area_change_email(args: MyArgsType, area_changes: "list[Row]"):
     stdout = StringIO()
     try:
         print(
-            f"Areas Served updates since:",
-            {area_changes[0].SINCE_DATE},
+            "Areas Served updates since:",
+            area_changes[0].SINCE_DATE,
             file=stdout,
         )
 
