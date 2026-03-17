@@ -5,6 +5,7 @@ import sys
 import traceback
 import typing as t
 from io import StringIO
+from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime
 from decimal import Decimal
@@ -93,6 +94,7 @@ class MyArgsType(ArgsType):
     )
     skip_unknown_value_fields: t.Iterable[str] = field(default_factory=list)
     unknown_fields_value_options_shown: set[str] = field(default_factory=set)
+    failed_records: StringIO = field(default_factory=StringIO)
 
 
 def prepare_client(args: MyArgsType) -> None:
@@ -134,7 +136,7 @@ def get_changes_to_send(conn: "Connection") -> list["Row"]:
 
 def parse_sub_xml(
     element: etree._Element,
-) -> t.Union[list[t.Union[dict[str, t.Any], str]], dict[str, t.Any], str]:
+) -> t.Union[list[t.Union[dict[str, t.Any], str]], dict[str, t.Any], str, None]:
     if element.get("_empty_list", "") == "1":
         return []
 
@@ -144,7 +146,10 @@ def parse_sub_xml(
             [parse_sub_xml(sub) for sub in element],
         )
     if element.text and not element.keys() and not len(element):
-        return element.text.strip()
+        val = element.text.strip()
+        if val == "__null_sentinel__":
+            return None
+        return val
 
     base = dict(element.attrib)
     for sub in element:
@@ -188,15 +193,23 @@ def fix_custom_fields(args: MyArgsType, records: list[dict], num: str):
                     if custom["label"] not in args.unknown_fields_value_options_shown:
                         args.unknown_fields_value_options_shown.add(custom["label"])
                         print(
-                            f"Possible values for custom field '{custom['label']}' are: {field.label_to_id.keys()}"
+                            f"Possible values for custom field '{custom['label']}' are: {field.label_to_id.keys()}",
+                            file=args.failed_records,
                         )
             try:
                 custom["selectedValues"] = {
                     str(field.label_to_id[x]): x for x in selected_values
                 }
             except KeyError as e:
+                if custom["label"] not in args.unknown_fields_value_options_shown:
+                    args.unknown_fields_value_options_shown.add(custom["label"])
+                    print(
+                        f"Possible values for custom field '{custom['label']}' are: {field.label_to_id.keys()}",
+                        file=args.failed_records,
+                    )
+
                 raise Exception(
-                    f"Unable to map value '{e.args[0]}' to a custom field selection for {custom['label']} on {record['type']} {num}. Possible values are: {field.label_to_id.keys()}"
+                    f"Unable to map value '{e.args[0]}' to a custom field selection for {custom['label']} on {record['type']} {num}."
                 )
 
 
@@ -245,6 +258,7 @@ def parse_change_to_model(
 
 def make_program_at_site(
     args: MyArgsType,
+    num: str,
     name: str,
     agency_id: int,
     site_id: int,
@@ -254,7 +268,8 @@ def make_program_at_site(
     program_at_site = model.ResourceDetails(
         databaseID=args.dbid,
         id=program_at_site_id,
-        names=[model.ResourceName(value=name, purpose="Primary")],
+        uniquePriorID=num,
+        # names=[model.ResourceName(value=name, purpose="Primary")],
         type="ProgramAtSite",
         status="Active",
         related=[
@@ -288,10 +303,13 @@ def update_program_at_sites(
     num: str,
 ) -> bool:
     record_had_error = False
-    program_at_site_ids = {
-        site_num: id for site_num, id in (x.split("/") for x in external_ids)
-    }
+    program_at_site_ids = defaultdict(list)
+    for site_num, prog_at_site_id in (x.split("/") for x in external_ids):
+        program_at_site_ids[site_num].append(id)
 
+    # there was an issue where we created too many ProgramAtSite entries for a pair of program to site.
+    # extra links allows for cleanup of unexpected duplicated links
+    extra_links = []
     linked_site_nums = set()
     for prog_at_site in related_sites:
         try:
@@ -306,17 +324,23 @@ def update_program_at_sites(
                 f"Can't build relationship to Site {prog_at_site.site_num} for Program {num} because there is no known ICarol ID",
                 file=sys.stderr,
             )
+            continue
+
         program_at_site_id = program_at_site_ids.get(
-            prog_at_site.site_num, model.unset_value
+            prog_at_site.site_num, [model.unset_value]
         )
+        if len(program_at_site_id) > 1:
+            program_at_site_id.sort(key=lambda x: int(x, 10))
+
         try:
             prog_at_site.program_at_site_id = make_program_at_site(
                 args,
+                num,
                 prog_at_site.program_at_site_name,
                 agency_id,
                 site_id,
                 record_id,
-                program_at_site_id,
+                program_at_site_id[0],
             )
         except Exception as e:
             record_had_error = True
@@ -332,12 +356,14 @@ def update_program_at_sites(
             )
 
         linked_site_nums.add(prog_at_site.site_num)
+        extra_links.extend((prog_at_site.site_num, id) for id in program_at_site_id[1:])
 
     deleted_site_links = [
         (site_num, id)
-        for site_num, id in program_at_site_ids.items()
+        for site_num, id_list in program_at_site_ids.items()
+        for id in id_list
         if site_num not in linked_site_nums
-    ]
+    ] + extra_links
     for site_num, prog_at_site_id in deleted_site_links:
         if not args.test:
             try:
@@ -347,7 +373,7 @@ def update_program_at_sites(
                 print(
                     f"Failed to delete ProgramAtSite {site_num}/{prog_at_site_id} for Program {num} due to an error.",
                     "This may have leaked a ProgramAtSite record.",
-                    traceback.format_exc(chain=False),
+                    e,
                     file=sys.stderr,
                 )
         else:
@@ -369,7 +395,7 @@ def sync_record(
     except Exception:
         print(
             f"Failed to create/update {olscode} {record_num}/{external_id} due to an error.",
-            traceback.format_exc(chain=False),
+            # traceback.format_exc(chain=False),
             file=sys.stderr,
         )
         return external_id, True
@@ -402,14 +428,9 @@ def sync_record(
 
         except Exception as e:
             record_had_error = True
-            # traceback.print_exc(file=sys.stderr)
-            print(
-                f"Failed to create/update {record.type} {record_num}/{record_id} due to an error.",
-                "This may have leaked record.",
-                e,
-                record.to_dict(),
-                file=sys.stderr,
-            )
+            msg = f"Failed to {'create' if isnew else 'update'} {record.type} {record_num}/{record_id}/{record.cultureCode} due to an error."
+            print(msg, e, file=sys.stderr)
+            print(msg, e, record.to_dict(), file=args.failed_records)
 
     if record_id:
         args.idmap[(record_num, record.type)] = record_id
@@ -426,7 +447,8 @@ def sync_record(
                 record_had_error = True
                 traceback.print_exc(file=sys.stderr)
                 print(
-                    f"Error encountered while attempting to sync program_at_site information for {record_num}/{record_id}. This may have leaked ids.",
+                    f"Error encountered while attempting to sync program_at_site information for {record_num}/{record_id}.",
+                    "This may have leaked ids.",
                     e,
                     external_ids,
                     related_sites,

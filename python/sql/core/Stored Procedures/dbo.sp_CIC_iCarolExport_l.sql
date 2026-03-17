@@ -261,7 +261,8 @@ SELECT TOP (100)
 						WHERE cmap.CM_ID=bt.LOCATED_IN_CM),
 					btd.MAIL_CITY
 					) END AS "@city",
-				CASE WHEN btd.SITE_CITY IN ('Halton (Région)', 'Halton Region', 'Halton North', 'Halton South') THEN 'Halton' ELSE NULL END AS "@county",
+				--CASE WHEN btd.SITE_CITY IN ('Halton (Région)', 'Halton Region', 'Halton North', 'Halton South') THEN 'Halton' ELSE NULL END AS "@county",
+				'' AS "@county",
 				ISNULL(btd.SITE_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) AS "@stateProvince",
 				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
 				ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
@@ -289,7 +290,7 @@ SELECT TOP (100)
 			FOR XML PATH('contact'), TYPE)
 		WHERE btd.CMP_MailAddress IS NOT NULL AND ols.Code NOT IN ('SERVICE', 'TOPIC')
 		FOR XML PATH('item'),TYPE),
-			(SELECT
+		/*	(SELECT
 				CASE WHEN EXISTS(SELECT *
 					FROM dbo.GBL_PrivacyProfile_Fld pvf
 					INNER JOIN dbo.GBL_FieldOption fo
@@ -313,12 +314,13 @@ SELECT TOP (100)
 					btd.MAIL_CITY
 					) END AS "@city",
 				--CASE WHEN btd.SITE_CITY IN ('Halton (Région)', 'Halton Region', 'Halton North', 'Halton South') THEN 'Halton' ELSE NULL END AS "@county",
+				'' AS "@county",
 				ISNULL(btd.SITE_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) AS "@stateProvince",
 				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
 				ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
 			FOR XML PATH('contact'), TYPE)
 			WHERE (btd.CMP_MailAddress IS NULL AND btd.CMP_SiteAddress IS NOT NULL) AND ols.Code IN ('AGENCY', 'SITE')
-		FOR XML PATH('item'),TYPE),
+		FOR XML PATH('item'),TYPE),*/
 
 			(SELECT 
 				phone."Confidential" AS "@isConfidential", 
@@ -328,7 +330,7 @@ SELECT TOP (100)
 					phone."Description" AS "@description",
 					CASE WHEN phone.PhoneNumber IS NOT NULL THEN phone."Label" ELSE '' END AS "@label",
 					phone.Purpose AS "@purpose",
-					CASE WHEN phone.PhoneNumber IS NULL OR ols.Code = 'SITE' THEN NULL ELSE phone.PhoneNumber END AS "@number",
+					CASE WHEN phone.PhoneNumber IS NULL OR ols.Code = 'SITE' THEN '__null_sentinel__' ELSE phone.PhoneNumber END AS "@number",
 					phone.TTY AS "@isTTY",
 					phone.Fax AS "@isFax",
 					phone."TollFree" AS "@isTollFree"	
