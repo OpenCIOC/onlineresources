@@ -305,7 +305,7 @@ def update_program_at_sites(
     record_had_error = False
     program_at_site_ids = defaultdict(list)
     for site_num, prog_at_site_id in (x.split("/") for x in external_ids):
-        program_at_site_ids[site_num].append(id)
+        program_at_site_ids[site_num].append(prog_at_site_id)
 
     # there was an issue where we created too many ProgramAtSite entries for a pair of program to site.
     # extra links allows for cleanup of unexpected duplicated links
