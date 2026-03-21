@@ -151,7 +151,9 @@ def parse_sub_xml(
             return None
         return val
 
-    base = {k: None if v == "__null_sentinel__" else v for k, v in element.attrib}
+    base = {
+        k: None if v == "__null_sentinel__" else v for k, v in element.attrib.items()
+    }
     for sub in element:
         base[sub.tag] = t.cast(str, parse_sub_xml(sub))
 
@@ -392,10 +394,11 @@ def sync_record(
     record_had_error = False
     try:
         record_languages = parse_change_to_model(args, datachange, record_num)
-    except Exception:
+    except Exception as e:
         print(
             f"Failed to create/update {olscode} {record_num}/{external_id} due to an error.",
             # traceback.format_exc(chain=False),
+            e,
             file=sys.stderr,
         )
         return external_id, True
