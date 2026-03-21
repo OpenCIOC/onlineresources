@@ -151,7 +151,7 @@ def parse_sub_xml(
             return None
         return val
 
-    base = dict(element.attrib)
+    base = {k: None if v == "__null_sentinel__" else v for k, v in element.attrib}
     for sub in element:
         base[sub.tag] = t.cast(str, parse_sub_xml(sub))
 
@@ -269,7 +269,7 @@ def make_program_at_site(
         databaseID=args.dbid,
         id=program_at_site_id,
         uniquePriorID=num,
-        # names=[model.ResourceName(value=name, purpose="Primary")],
+        names=[],
         type="ProgramAtSite",
         status="Active",
         related=[
@@ -628,6 +628,10 @@ def main(argv):
     if sys.stderr.is_dirty():
         retval = 1
 
+    failed_records_data = args.failed_records.getvalue()
+    if failed_records_data:
+        print("\n\nExtra detail for warnings and errors above", file=sys.stdout)
+        sys.stdout.write(failed_records_data)
     if args.email:
         email_log(
             args,

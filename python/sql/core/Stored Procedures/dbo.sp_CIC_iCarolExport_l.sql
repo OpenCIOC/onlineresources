@@ -52,16 +52,16 @@ UPDATE @SiteCityTable
 	SET EXPORT_CITY =
 		(SELECT TOP 1
 		CASE WHEN excm.AIRSExportType='Community'
-			THEN (SELECT AreaName FROM dbo.GBL_Community_External_Community excm2 WHERE excm2.EXT_ID=excm.Parent_ID)
+			THEN (SELECT AreaName FROM CommunityRepo_2012_11.dbo.External_Community excm2 WHERE excm2.EXT_ID=excm.Parent_ID)
 			ELSE AreaName
 		END
-		FROM dbo.GBL_Community_External_Community excm
+		FROM CommunityRepo_2012_11.dbo.External_Community excm
 		WHERE excm.SystemCode= 'ONTARIO211'
 			AND (
 				excm.AreaName=SITE_CITY
 				OR EXISTS(SELECT *
-					FROM dbo.GBL_Community_External_Map map
-					INNER JOIN dbo.GBL_Community_Name cmn ON cmn.CM_ID=map.CM_ID
+					FROM CommunityRepo_2012_11.dbo.Community_External_Map map
+					INNER JOIN CommunityRepo_2012_11.dbo.Community_Name cmn ON cmn.CM_ID=map.CM_ID
 						AND cmn.Name=SITE_CITY AND cmn.ProvinceStateCache=9
 					WHERE excm.EXT_ID=map.MapOneEXTID
 				)
@@ -242,7 +242,7 @@ SELECT TOP (100)
 				(SELECT
 				'physicalLocation' AS "@type",
 				'Physical' AS "@purpose",
-				'' AS "@physicalLocationDescription",
+				'__null_sentinel__' AS "@physicalLocationDescription",
 				CASE WHEN bt.GEOCODE_TYPE = 0 THEN NULL ELSE CAST(bt.LATITUDE AS VARCHAR(30)) END AS "@latitude",
 				CASE WHEN bt.GEOCODE_TYPE = 0 THEN NULL ELSE CAST(bt.LONGITUDE AS VARCHAR(30)) END AS "@longitude",
 				CASE WHEN bt.GEOCODE_TYPE = 1 THEN 'AddressGeocode' WHEN bt.GEOCODE_TYPE = 2 THEN 'GeneralArea' WHEN bt.GEOCODE_TYPE = 3 THEN 'Precise' WHEN bt.GEOCODE_TYPE = 0 THEN NULL ELSE 'Unknown' END AS "@precision",
@@ -251,7 +251,7 @@ SELECT TOP (100)
 				--btd.SITE_BUILDING AS "@careOf",
 				dbo.fn_GBL_FullAddress(NULL,NULL,btd.SITE_LINE_1,btd.SITE_LINE_2,btd.SITE_BUILDING,btd.SITE_STREET_NUMBER,btd.SITE_STREET,btd.SITE_STREET_TYPE,btd.SITE_STREET_TYPE_AFTER,btd.SITE_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,btd.LangID,0) AS "@line1",
 				btd.SITE_SUFFIX AS "@line2",
-				CASE WHEN EXISTS(SELECT * FROM @SiteCityExclude e WHERE btd.SITE_CITY=e.SITE_CITY) THEN NULL ELSE COALESCE(
+				CASE WHEN EXISTS(SELECT * FROM @SiteCityExclude e WHERE btd.SITE_CITY=e.SITE_CITY) THEN '__null_sentinel__' ELSE COALESCE(
 					(SELECT EXPORT_CITY FROM @SiteCityTable WHERE SITE_CITY=btd.SITE_CITY),
 					btd.SITE_CITY,
 					(SELECT excm.AreaName
@@ -261,8 +261,7 @@ SELECT TOP (100)
 						WHERE cmap.CM_ID=bt.LOCATED_IN_CM),
 					btd.MAIL_CITY
 					) END AS "@city",
-				--CASE WHEN btd.SITE_CITY IN ('Halton (Région)', 'Halton Region', 'Halton North', 'Halton South') THEN 'Halton' ELSE NULL END AS "@county",
-				'' AS "@county",
+				CASE WHEN btd.SITE_CITY IN ('Halton (Région)', 'Halton Region', 'Halton North', 'Halton South') THEN 'Halton' ELSE NULL END AS "@county",
 				ISNULL(btd.SITE_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) AS "@stateProvince",
 				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
 				ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
@@ -328,7 +327,7 @@ SELECT TOP (100)
 				SELECT 
 					'phoneNumber' AS "@type",
 					phone."Description" AS "@description",
-					CASE WHEN phone.PhoneNumber IS NOT NULL THEN phone."Label" ELSE '' END AS "@label",
+					CASE WHEN phone.PhoneNumber IS NOT NULL THEN phone."Label" ELSE '__null_sentinel__' END AS "@label",
 					phone.Purpose AS "@purpose",
 					CASE WHEN phone.PhoneNumber IS NULL OR ols.Code = 'SITE' THEN '__null_sentinel__' ELSE phone.PhoneNumber END AS "@number",
 					phone.TTY AS "@isTTY",
@@ -472,23 +471,23 @@ SELECT TOP (100)
 				'person' AS "@type",
 					CASE WHEN c.GblContactType = 'EXEC_1' THEN 'Senior Worker'
 					ELSE 'Main Contact' END AS "@label",
-				'' AS "@companyName",
+				'__null_sentinel__' AS "@companyName",
 
 			(SELECT 1 AS "@_empty_list" FOR XML PATH('titles'), TYPE),
 		
 
 			(SELECT
-				'' AS "@displayName"
+				'__null_sentinel__' AS "@displayName"
 			FOR XML PATH('name'), TYPE),
 
 			(SELECT 
 		
 
-				(SELECT 'emailAddress' as "@type", '' AS "@address" FOR XML PATH('item'), TYPE),
+				(SELECT 'emailAddress' as "@type", '__null_sentinel__' AS "@address" FOR XML PATH('item'), TYPE),
 
 				(SELECT 
 					'phoneNumber' AS "@type",
-                    '' "@number"
+                    '__null_sentinel__' "@number"
 				FOR XML PATH('item'), TYPE)
 			FOR XML PATH('contactMethods'), TYPE)
 			FOR XML PATH('contact'), TYPE)		
@@ -500,18 +499,19 @@ SELECT TOP (100)
 			(SELECT 0 AS "@isConfidential",
 				(SELECT
 					'website' AS "@type",
-					CASE WHEN btd.WWW_ADDRESS IS NOT NULL AND ols.Code != 'SITE' THEN ISNULL(btd.WWW_ADDRESS_PROTOCOL, 'http://') + btd.WWW_ADDRESS ELSE '' END AS "@url" 
+					CASE WHEN btd.WWW_ADDRESS IS NOT NULL AND ols.Code != 'SITE' THEN ISNULL(btd.WWW_ADDRESS_PROTOCOL, 'http://') + btd.WWW_ADDRESS ELSE '__null_sentinel__' END AS "@url" 
 				FOR XML PATH('contact'), TYPE)
 			FOR XML PATH('item'), TYPE),
 			(SELECT 0 AS "@isConfidential",
 				(SELECT
 					'emailAddress' AS "@type",
 					'Main' AS "@label",
-					CASE WHEN btd.E_MAIL IS NOT NULL AND ols.Code != 'SITE' THEN btd.E_MAIL ELSE '' END AS "@address" 
+					CASE WHEN btd.E_MAIL IS NOT NULL AND ols.Code != 'SITE' THEN btd.E_MAIL ELSE '__null_sentinel__' END AS "@address" 
 				FOR XML PATH('contact'), TYPE)
 			FOR XML PATH('item'), TYPE)
 
 	FOR XML PATH('contactDetails'), TYPE),
+	-- Coverage being handled externally
 	/*(SELECT 
 				(SELECT
 					CAST(N'<item type="postalAddress" purpose="CoverageArea" ' +  excm.attributename + N'="' + (SELECT excm.AreaName AS [text()] FOR XML PATH('')) + N'"' +
