@@ -33,6 +33,25 @@ INSERT INTO dbo.GBL_BT_LOCATION_SERVICE (LOCATION_NUM, SERVICE_NUM)
 SELECT 'ZZZ00002', bt.NUM
 FROM @ADD_TO_BT_LOCATION_SERVICE bt
 
+DECLARE @ExternalParentList TABLE(EXT_ID int, Parent_ID int)
+
+;WITH Parents (EXT_ID,Parent_ID)
+AS (
+	-- Anchor Definition - first parent
+	SELECT EXT_ID, Parent_ID
+	FROM CommunityRepo_2012_11.dbo.External_Community excm
+	WHERE excm.Parent_ID IS NOT NULL AND SystemCode='ONTARIO211'
+	UNION ALL
+	SELECT excm.EXT_ID, p.Parent_ID
+	FROM CommunityRepo_2012_11.dbo.External_Community excm
+	INNER JOIN Parents p
+		ON p.EXT_ID=excm.Parent_ID
+	WHERE SystemCode='ONTARIO211'
+)
+INSERT INTO @ExternalParentList
+SELECT * from Parents
+
+/*
 DECLARE @SiteCityExclude table (
 	SITE_CITY nvarchar(100) PRIMARY KEY NOT NULL
 )
@@ -71,6 +90,7 @@ UPDATE @SiteCityTable
 			CASE WHEN excm.AIRSExportType='City' THEN 0 ELSE 1 END,
 			CASE WHEN excm.AIRSExportType='Community' THEN 0 ELSE 1 END
 		)
+*/
 
 SELECT TOP (100)
 	bt.NUM, ols.Code OLSCode, btols.EXTERNAL_ID, btols.BT_OLS_ID,
@@ -101,12 +121,13 @@ SELECT TOP (100)
 			CASE 
 				WHEN ols.Code = 'AGENCY' THEN ISNULL(
 					CASE WHEN btd.ORG_DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.ORG_DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.ORG_DESCRIPTION,@nLine10,@nLine10 + '<br />') END,
-					'')
+					'') + CASE WHEN LEN(btd.ESTABLISHED) > 50 THEN '<b>Established:</b> ' + btd.ESTABLISHED ELSE '' END
 				WHEN ols.Code = 'SITE' THEN ISNULL(btd.LOCATION_DESCRIPTION,'') + CASE WHEN cbtd.INTERSECTION IS NOT NULL THEN (
 						(CASE WHEN btd.LOCATION_DESCRIPTION IS NOT NULL THEN '<br />' ELSE '' END ) + 
 						(CASE WHEN btd.LangID=0 THEN 'Cross Street: ' ELSE 'Rue transversale : ' END) + cbtd.INTERSECTION 
 					) ELSE '' END 
 				WHEN ols.Code in ('SERVICE', 'TOPIC') THEN CASE WHEN btd.DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.DESCRIPTION,@nLine10,@nLine10 + '<br />') END 
+				
 		END AS "@description",
 		CASE WHEN ols.CODE = 'AGENCY' THEN dbo.fn_CIC_NUMToServiceLevel(bt.NUM,btd.LangID) ELSE '' END AS "@legalStatus",
 		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.CMP_Languages ELSE '' END AS "@languagesOfferedText",
@@ -116,7 +137,7 @@ SELECT TOP (100)
 		'' as "@sourceOfFunds",
 		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.APPLICATION ELSE NULL END AS "@applicationProcess",
 		CASE WHEN ols.CODE = 'AGENCY' THEN dbo.fn_CIC_DisplayAccreditation(cbt.ACCREDITED,btd.LangID) ELSE NULL END AS "@licenseAccreditation",
-		CASE WHEN ols.CODE = 'AGENCY' THEN btd.ESTABLISHED ELSE NULL END AS "@yearIncorporated",
+		CASE WHEN ols.CODE = 'AGENCY' THEN CASE WHEN LEN(btd.ESTABLISHED) > 50 THEN 'See Description' ELSE ISNULL(btd.ESTABLISHED, '__null_sentinel__') END ELSE '__null_sentinel__' END AS "@yearIncorporated",
 		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN STUFF(
 			COALESCE('<br />' + cioc_shared.dbo.fn_SHR_CIC_FullEligibility(MIN_AGE, MAX_AGE, cbtd.ELIGIBILITY_NOTES),'') +
 			COALESCE('<br />Residency Requirements: ' + cbtd.BOUNDARIES,''),
@@ -251,22 +272,69 @@ SELECT TOP (100)
 				--btd.SITE_BUILDING AS "@careOf",
 				dbo.fn_GBL_FullAddress(NULL,NULL,btd.SITE_LINE_1,btd.SITE_LINE_2,btd.SITE_BUILDING,btd.SITE_STREET_NUMBER,btd.SITE_STREET,btd.SITE_STREET_TYPE,btd.SITE_STREET_TYPE_AFTER,btd.SITE_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,btd.LangID,0) AS "@line1",
 				btd.SITE_SUFFIX AS "@line2",
-				CASE WHEN EXISTS(SELECT * FROM @SiteCityExclude e WHERE btd.SITE_CITY=e.SITE_CITY) THEN '__null_sentinel__' ELSE COALESCE(
-					(SELECT EXPORT_CITY FROM @SiteCityTable WHERE SITE_CITY=btd.SITE_CITY),
-					btd.SITE_CITY,
-					(SELECT excm.AreaName
-						FROM dbo.GBL_Community_External_Map cmap
-						INNER JOIN dbo.GBL_Community_External_Community excm
-							ON excm.EXT_ID = cmap.MapOneEXTID AND excm.SystemCode='ONTARIO211'
-						WHERE cmap.CM_ID=bt.LOCATED_IN_CM),
-					btd.MAIL_CITY
-					) END AS "@city",
-				CASE WHEN btd.SITE_CITY IN ('Halton (Région)', 'Halton Region', 'Halton North', 'Halton South') THEN 'Halton' ELSE NULL END AS "@county",
+				ISNULL(CASE WHEN btd.SITE_CITY IS NOT NULL AND cmtree.City IS NULL AND cmtree.County IS NULL THEN btd.SITE_CITY ELSE cmtree.City END, '__null_sentinel__') as "@city",
+				ISNULL(cmtree.County, '__null_sentinel__') as "@county",
 				ISNULL(btd.SITE_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) AS "@stateProvince",
 				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
 				ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
+				FROM (VALUES(btd.SITE_CITY)) AS btdcity(SITE_CITY)
+				CROSS JOIN
+				(
+					SELECT TOP 1 CASE WHEN excm.AIRSExportType = 'City' THEN excm.AreaName WHEN excm.AIRSExportType='Community' THEN (SELECT TOP 1 ec2.AreaName
+						FROM @ExternalParentList epl
+						INNER JOIN CommunityRepo_2012_11.dbo.External_Community ec2
+							ON epl.Parent_ID=ec2.EXT_ID
+						WHERE epl.EXT_ID=excm.EXT_ID AND ec2.AIRSExportType = 'City'
+						ORDER BY ec2.Depth DESC
+						) END AS City, -- will be null if it picked county
+						CASE WHEN excm.AIRSExportType = 'County' THEN excm.AreaName ELSE 
+						(SELECT TOP 1 ec2.AreaName
+							FROM @ExternalParentList epl
+							INNER JOIN CommunityRepo_2012_11.dbo.External_Community ec2
+								ON epl.Parent_ID=ec2.EXT_ID
+							WHERE epl.EXT_ID=excm.EXT_ID AND ec2.AIRSExportType = 'County'
+							ORDER BY ec2.Depth DESC)
+						END AS County
+					FROM CommunityRepo_2012_11.dbo.External_Community excm
+					WHERE excm.SystemCode= 'ONTARIO211'
+						AND (
+							excm.AreaName=SITE_CITY
+							OR EXISTS(SELECT *
+								FROM CommunityRepo_2012_11.dbo.Community_External_Map map
+								INNER JOIN CommunityRepo_2012_11.dbo.Community_Name cmn ON cmn.CM_ID=map.CM_ID
+									AND cmn.Name=SITE_CITY AND cmn.ProvinceStateCache=9
+								WHERE excm.EXT_ID=map.MapOneEXTID
+							) OR EXISTS(
+								SELECT * 
+								FROM CommunityRepo_2012_11.dbo.Community_External_Map map
+								INNER JOIN CommunityRepo_2012_11.dbo.Community cm
+									on cm.CM_ID=map.CM_ID AND cm.ProvinceState=9
+								INNER JOIN CommunityRepo_2012_11.dbo.Community_AltName cmn
+									ON cmn.CM_ID=cm.CM_ID AND cmn.AltName=SITE_CITY
+								WHERE excm.EXT_ID=map.MapOneEXTID
+							)
+						)
+					ORDER BY
+						CASE WHEN excm.AreaName=SITE_CITY THEN 0 ELSE 1 END,
+						CASE WHEN EXISTS(SELECT *
+								FROM CommunityRepo_2012_11.dbo.Community_External_Map map
+								INNER JOIN CommunityRepo_2012_11.dbo.Community_Name cmn ON cmn.CM_ID=map.CM_ID
+									AND cmn.Name=SITE_CITY AND cmn.ProvinceStateCache=9
+								WHERE excm.EXT_ID=map.MapOneEXTID
+							) OR EXISTS(SELECT * 
+								FROM CommunityRepo_2012_11.dbo.Community_External_Map map
+								INNER JOIN CommunityRepo_2012_11.dbo.Community cm
+									on cm.CM_ID=map.CM_ID AND cm.ProvinceState=9
+								INNER JOIN CommunityRepo_2012_11.dbo.Community_AltName cmn
+									ON cmn.CM_ID=cm.CM_ID AND cmn.AltName=SITE_CITY
+								WHERE excm.EXT_ID=map.MapOneEXTID
+							) THEN 0 ELSE 1 END,
+						CASE WHEN excm.AIRSExportType='City' THEN 0 ELSE 1 END,
+						CASE WHEN excm.AIRSExportType='County' THEN 0 ELSE 1 END,
+						CASE WHEN excm.AIRSExportType='Community' THEN 0 ELSE 1 END
+				) cmtree
 			FOR XML PATH('contact'), TYPE)
-			WHERE (btd.CMP_SiteAddress IS NOT NULL OR bt.LOCATED_IN_CM IS NOT NULL) AND ols.Code NOT IN ('SERVICE', 'TOPIC')
+			WHERE (btd.CMP_SiteAddress IS NOT NULL/* OR bt.LOCATED_IN_CM IS NOT NULL*/) AND ols.Code NOT IN ('SERVICE', 'TOPIC')
 		FOR XML PATH('item'),TYPE),
 		(SELECT
 				CASE WHEN EXISTS(SELECT *
@@ -326,10 +394,10 @@ SELECT TOP (100)
 				(
 				SELECT 
 					'phoneNumber' AS "@type",
-					phone."Description" AS "@description",
+					CASE WHEN LEN(phone.PhoneNumber) > 50 AND ols.Code <> 'SITE' THEN phone.PhoneNumber ELSE '__null_sentinel__' END AS "@description",
 					CASE WHEN phone.PhoneNumber IS NOT NULL THEN phone."Label" ELSE '__null_sentinel__' END AS "@label",
 					phone.Purpose AS "@purpose",
-					CASE WHEN phone.PhoneNumber IS NULL OR ols.Code = 'SITE' THEN '__null_sentinel__' ELSE phone.PhoneNumber END AS "@number",
+					CASE WHEN phone.PhoneNumber IS NULL OR ols.Code = 'SITE' THEN '__null_sentinel__' WHEN LEN(phone.PhoneNumber) > 50 THEN ' ' ELSE phone.PhoneNumber END AS "@number",
 					phone.TTY AS "@isTTY",
 					phone.Fax AS "@isFax",
 					phone."TollFree" AS "@isTollFree"	
@@ -339,9 +407,9 @@ SELECT TOP (100)
 			SELECT p."TollFree", p."Confidential", p.TTY, p.Fax, 
 				CASE WHEN btd.OFFICE_PHONE IS NULL AND cbtd.CRISIS_PHONE IS NULL AND cbtd.AFTER_HRS_PHONE IS NULL AND btd.FAX IS NULL AND  cbtd.TDD_PHONE IS NULL AND btd.TOLL_FREE_PHONE IS NULL AND p.Purpose='Phone1' 
 					THEN  CASE WHEN btd.LangID=0 THEN 'No public telephone number' ELSE 'Pas de numéro de téléphone public' END  ELSE p.PhoneNumber END AS PhoneNumber,
-				p.Purpose, p.Label, p.Description
+				p.Purpose, p.Label
 			FROM (
-			   SELECT cte.TollFree, cte.Confidential, cte.TTY, cte.Fax, cte.PhoneNumber, 'Phone' + CAST((ROW_NUMBER() OVER (ORDER BY CASE WHEN cte.PhoneNumber IS NULL THEN 0 ELSE 1 END, cte.Preference))  AS VARCHAR) AS Purpose, cte.Label, cte.Description
+			   SELECT cte.TollFree, cte.Confidential, cte.TTY, cte.Fax, cte.PhoneNumber, 'Phone' + CAST((ROW_NUMBER() OVER (ORDER BY CASE WHEN cte.PhoneNumber IS NULL THEN 0 ELSE 1 END, cte.Preference))  AS VARCHAR) AS Purpose, cte.Label
 			   FROM
 				(SELECT 0 AS "TollFree",
 						0 AS "Confidential",
@@ -349,8 +417,7 @@ SELECT TOP (100)
 						0 AS Fax,
 						btd.OFFICE_PHONE AS PhoneNumber,
 						1 AS Preference,
-						CASE WHEN btd.LangID=0 THEN 'Office' ELSE 'Bureau' END AS [Label],
-						NULL AS [Description]
+						CASE WHEN btd.LangID=0 THEN 'Office' ELSE 'Bureau' END AS [Label]
 					-- WHERE btd.OFFICE_PHONE IS NOT NULL
 				UNION SELECT 0 AS "TollFree",
 						0 AS "Confidential",
@@ -358,8 +425,7 @@ SELECT TOP (100)
 						0 AS Fax,
 						cbtd.CRISIS_PHONE AS PhoneNumber,
 						2 AS Preference,
-						CASE WHEN btd.LangID=0 THEN 'Crisis' ELSE 'Crise' END AS [Label], 
-						NULL AS [Description]
+						CASE WHEN btd.LangID=0 THEN 'Crisis' ELSE 'Crise' END AS [Label]
 					-- WHERE cbtd.CRISIS_PHONE IS NOT NULL
 				)cte
 			)p
@@ -369,8 +435,7 @@ SELECT TOP (100)
 					0 AS Fax,
 					cbtd.AFTER_HRS_PHONE AS PhoneNumber,
 					'After-Hours' AS Purpose, 
-					CASE WHEN btd.LangID=0 THEN 'After Hours' ELSE 'après fermeture' END AS [Label],
-					NULL AS [Description]
+					CASE WHEN btd.LangID=0 THEN 'After Hours' ELSE 'après fermeture' END AS [Label]
 				-- WHERE cbtd.AFTER_HRS_PHONE IS NOT NULL
 
 			UNION SELECT 0 AS "TollFree",
@@ -379,8 +444,7 @@ SELECT TOP (100)
 					1 AS Fax,
 					btd.FAX AS PhoneNumber,
 					'Fax' AS Purpose,
-					'Fax' AS [Label],
-					NULL AS [Description]
+					'Fax' AS [Label]
 				-- WHERE btd.FAX IS NOT NULL
 			UNION SELECT 0 AS "TollFree",
 					0 AS "Confidential",
@@ -388,8 +452,7 @@ SELECT TOP (100)
 					0 AS Fax,
 					cbtd.TDD_PHONE AS PhoneNumber,
 					'TTY' AS Purpose,
-					'TTY' AS [Label],
-					NULL AS [Description]
+					'TTY' AS [Label]
 				-- WHERE cbtd.TDD_PHONE IS NOT NULL
 			UNION SELECT
 					1 AS "TollFree",
@@ -398,8 +461,7 @@ SELECT TOP (100)
 					0 AS Fax,
 					btd.TOLL_FREE_PHONE AS PhoneNumber,
 					'Toll-Free' AS Purpose,
-					CASE WHEN btd.LangID=0 THEN 'Toll-Free' ELSE 'sans frais' END AS [Label],
-					NULL AS [Description]
+					CASE WHEN btd.LangID=0 THEN 'Toll-Free' ELSE 'sans frais' END AS [Label]
 				-- WHERE btd.TOLL_FREE_PHONE IS NOT NULL
 			UNION SELECT 
 					0 AS "TollFree",
@@ -408,8 +470,7 @@ SELECT TOP (100)
 					0 AS Fax,
 					NULL AS PhoneNumber,
 					'Main' AS Purpose,
-					NULL AS [Label],
-					NULL AS [Description]
+					NULL AS [Label]
 				-- WHERE btd.FAX IS NOT NULL
 			) phone
 
