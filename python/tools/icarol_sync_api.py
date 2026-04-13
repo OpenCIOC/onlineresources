@@ -401,6 +401,12 @@ def sync_record(
             e,
             file=sys.stderr,
         )
+        print(
+            f"Failed to create/update {olscode} {record_num}/{external_id} due to an error.",
+            e,
+            datachange,
+            file=args.failed_records,
+        )
         return external_id, True
 
     record_id, *external_ids = (external_id or "").split(";")
