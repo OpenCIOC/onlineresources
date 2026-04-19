@@ -440,6 +440,7 @@ def sync_record(
             msg = f"Failed to {'create' if isnew else 'update'} {record.type} {record_num}/{record_id}/{record.cultureCode} due to an error."
             print(msg, e, file=sys.stderr)
             print(msg, e, record.to_dict(), file=args.failed_records)
+            return None, record_had_error
 
     if record_id:
         args.idmap[(record_num, record.type)] = record_id
