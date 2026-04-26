@@ -121,7 +121,7 @@ SELECT TOP (100)
 			CASE 
 				WHEN ols.Code = 'AGENCY' THEN ISNULL(
 					CASE WHEN btd.ORG_DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.ORG_DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.ORG_DESCRIPTION,@nLine10,@nLine10 + '<br />') END,
-					'') + CASE WHEN LEN(btd.ESTABLISHED) > 50 THEN '<b>Established:</b> ' + btd.ESTABLISHED ELSE '' END
+					'')
 				WHEN ols.Code = 'SITE' THEN ISNULL(btd.LOCATION_DESCRIPTION,'') + CASE WHEN cbtd.INTERSECTION IS NOT NULL THEN (
 						(CASE WHEN btd.LOCATION_DESCRIPTION IS NOT NULL THEN '<br />' ELSE '' END ) + 
 						(CASE WHEN btd.LangID=0 THEN 'Cross Street: ' ELSE 'Rue transversale : ' END) + cbtd.INTERSECTION 
@@ -137,7 +137,7 @@ SELECT TOP (100)
 		'' as "@sourceOfFunds",
 		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN cbtd.APPLICATION ELSE NULL END AS "@applicationProcess",
 		CASE WHEN ols.CODE = 'AGENCY' THEN dbo.fn_CIC_DisplayAccreditation(cbt.ACCREDITED,btd.LangID) ELSE NULL END AS "@licenseAccreditation",
-		CASE WHEN ols.CODE = 'AGENCY' THEN CASE WHEN LEN(btd.ESTABLISHED) > 50 THEN 'See Description' ELSE ISNULL(btd.ESTABLISHED, '__null_sentinel__') END ELSE '__null_sentinel__' END AS "@yearIncorporated",
+		CASE WHEN ols.CODE = 'AGENCY' THEN ISNULL(btd.ESTABLISHED, '__null_sentinel__') ELSE '__null_sentinel__' END AS "@yearIncorporated",
 		CASE WHEN ols.CODE  IN ('SERVICE',  'TOPIC') THEN STUFF(
 			COALESCE('<br />' + cioc_shared.dbo.fn_SHR_CIC_FullEligibility(MIN_AGE, MAX_AGE, cbtd.ELIGIBILITY_NOTES),'') +
 			COALESCE('<br />Residency Requirements: ' + cbtd.BOUNDARIES,''),
@@ -218,7 +218,7 @@ SELECT TOP (100)
 		(SELECT
 				REPLACE(tax.LinkedCode, ' ~ ', ' * ') AS item
 			FROM fn_CIC_NUMToTaxCodes_rst(bt.NUM) AS tax
-			WHERE ols.Code IN ('SERVICE', 'TOPIC') AND (btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE())
+			WHERE ols.Code IN ('SERVICE', 'TOPIC')-- AND (btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE())
 		FOR XML PATH(''), TYPE) AS taxonomy,
 
 
@@ -278,7 +278,7 @@ SELECT TOP (100)
 				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
 				ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
 				FROM (VALUES(btd.SITE_CITY)) AS btdcity(SITE_CITY)
-				CROSS JOIN
+				OUTER APPLY
 				(
 					SELECT TOP 1 CASE WHEN excm.AIRSExportType = 'City' THEN excm.AreaName WHEN excm.AIRSExportType='Community' THEN (SELECT TOP 1 ec2.AreaName
 						FROM @ExternalParentList epl
@@ -334,6 +334,7 @@ SELECT TOP (100)
 						CASE WHEN excm.AIRSExportType='Community' THEN 0 ELSE 1 END
 				) cmtree
 			FOR XML PATH('contact'), TYPE)
+			-- TODO: Do we need to bring back LOCATED_IN_CM Lookup?
 			WHERE (btd.CMP_SiteAddress IS NOT NULL/* OR bt.LOCATED_IN_CM IS NOT NULL*/) AND ols.Code NOT IN ('SERVICE', 'TOPIC')
 		FOR XML PATH('item'),TYPE),
 		(SELECT
@@ -394,10 +395,10 @@ SELECT TOP (100)
 				(
 				SELECT 
 					'phoneNumber' AS "@type",
-					CASE WHEN LEN(phone.PhoneNumber) > 50 AND ols.Code <> 'SITE' THEN phone.PhoneNumber ELSE '__null_sentinel__' END AS "@description",
+					'__null_sentinel__' AS "@description",
 					CASE WHEN phone.PhoneNumber IS NOT NULL THEN phone."Label" ELSE '__null_sentinel__' END AS "@label",
 					phone.Purpose AS "@purpose",
-					CASE WHEN phone.PhoneNumber IS NULL OR ols.Code = 'SITE' THEN '__null_sentinel__' WHEN LEN(phone.PhoneNumber) > 50 THEN ' ' ELSE phone.PhoneNumber END AS "@number",
+					CASE WHEN phone.PhoneNumber IS NULL OR ols.Code = 'SITE' THEN '' ELSE phone.PhoneNumber END AS "@number",
 					phone.TTY AS "@isTTY",
 					phone.Fax AS "@isFax",
 					phone."TollFree" AS "@isTollFree"	

@@ -239,8 +239,7 @@ def parse_related_records(
         else:
             related_sites.append(ProgramAtSiteInfo(related_num, external_id, name))
 
-    if agency_related:
-        record["related"] = agency_related
+    record["related"] = agency_related
 
     return RecordInfo(
         model.ResourceDetails(databaseID=args.dbid, **record), related_sites
@@ -443,38 +442,58 @@ def sync_record(
             return None, record_had_error
 
     if record_id:
-        args.idmap[(record_num, record.type)] = record_id
+        try:
+            args.idmap[(record_num, record.type)] = record_id
 
-        related_sites = record_languages[0].related_sites
-        if olscode in ("SERVICE", "TOPIC"):
-            agency_id = record.related[0].id
-            program_at_site_had_error = False
-            try:
-                program_at_site_had_error = update_program_at_sites(
-                    args, record_id, agency_id, external_ids, related_sites, record_num
-                )
-            except Exception as e:
-                record_had_error = True
-                traceback.print_exc(file=sys.stderr)
-                print(
-                    f"Error encountered while attempting to sync program_at_site information for {record_num}/{record_id}.",
-                    "This may have leaked ids.",
-                    e,
-                    external_ids,
-                    related_sites,
-                    file=sys.stderr,
-                )
-            record_had_error = record_had_error or program_at_site_had_error
+            related_sites = record_languages[0].related_sites
+            record = record_languages[0].record
+            if olscode in ("SERVICE", "TOPIC"):
+                agency_id = record.related[0].id
+                program_at_site_had_error = False
+                try:
+                    program_at_site_had_error = update_program_at_sites(
+                        args,
+                        record_id,
+                        agency_id,
+                        external_ids,
+                        related_sites,
+                        record_num,
+                    )
+                except Exception as e:
+                    record_had_error = True
+                    traceback.print_exc(file=sys.stderr)
+                    print(
+                        f"Error encountered while attempting to sync program_at_site information for {record_num}/{record_id}.",
+                        "This may have leaked ids.",
+                        e,
+                        external_ids,
+                        related_sites,
+                        file=sys.stderr,
+                    )
+                record_had_error = record_had_error or program_at_site_had_error
 
-        new_external_id = ";".join(
-            [str(record_id)]
-            + [
-                f"{x.site_num}/{x.program_at_site_id}"
-                for x in sorted(related_sites, key=operator.attrgetter("site_num"))
-                if x.program_at_site_id
-            ]
-        )
-        return new_external_id, record_had_error
+            new_external_id = ";".join(
+                [str(record_id)]
+                + [
+                    f"{x.site_num}/{x.program_at_site_id}"
+                    for x in sorted(related_sites, key=operator.attrgetter("site_num"))
+                    if x.program_at_site_id
+                ]
+            )
+            return new_external_id, record_had_error
+        except Exception as e:
+            record_had_error = True
+            traceback.print_exc(file=sys.stderr)
+            msg = f"rror encountered while attempting to sync program_at_site information for {record_num}/{record_id}. This may have leaked ids."
+            print(
+                msg,
+                e,
+                external_ids,
+                record_languages[0].related_sites,
+                file=sys.stderr,
+            )
+            print(msg, e, record_languages[0].record, file=args.failed_records)
+            return None, record_had_error
 
     return None, record_had_error
 
