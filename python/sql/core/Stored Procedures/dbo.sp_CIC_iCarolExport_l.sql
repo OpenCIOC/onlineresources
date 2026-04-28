@@ -419,7 +419,7 @@ SELECT TOP (100)
 						btd.OFFICE_PHONE AS PhoneNumber,
 						1 AS Preference,
 						CASE WHEN btd.LangID=0 THEN 'Office' ELSE 'Bureau' END AS [Label]
-					-- WHERE btd.OFFICE_PHONE IS NOT NULL
+					WHERE btols.EXTERNAL_ID IS NOT NULL OR btd.OFFICE_PHONE IS NOT NULL
 				UNION SELECT 0 AS "TollFree",
 						0 AS "Confidential",
 						0 AS TTY,
@@ -427,7 +427,7 @@ SELECT TOP (100)
 						cbtd.CRISIS_PHONE AS PhoneNumber,
 						2 AS Preference,
 						CASE WHEN btd.LangID=0 THEN 'Crisis' ELSE 'Crise' END AS [Label]
-					-- WHERE cbtd.CRISIS_PHONE IS NOT NULL
+					WHERE btols.EXTERNAL_ID IS NOT NULL OR cbtd.CRISIS_PHONE IS NOT NULL
 				)cte
 			)p
 			UNION SELECT 0 AS "TollFree",
@@ -437,7 +437,7 @@ SELECT TOP (100)
 					cbtd.AFTER_HRS_PHONE AS PhoneNumber,
 					'After-Hours' AS Purpose, 
 					CASE WHEN btd.LangID=0 THEN 'After Hours' ELSE 'après fermeture' END AS [Label]
-				-- WHERE cbtd.AFTER_HRS_PHONE IS NOT NULL
+				WHERE btols.EXTERNAL_ID IS NOT NULL OR cbtd.AFTER_HRS_PHONE IS NOT NULL
 
 			UNION SELECT 0 AS "TollFree",
 					0 AS "Confidential",
@@ -446,7 +446,7 @@ SELECT TOP (100)
 					btd.FAX AS PhoneNumber,
 					'Fax' AS Purpose,
 					'Fax' AS [Label]
-				-- WHERE btd.FAX IS NOT NULL
+				WHERE btols.EXTERNAL_ID IS NOT NULL OR btd.FAX IS NOT NULL
 			UNION SELECT 0 AS "TollFree",
 					0 AS "Confidential",
 					1 AS TTY,
@@ -454,7 +454,7 @@ SELECT TOP (100)
 					cbtd.TDD_PHONE AS PhoneNumber,
 					'TTY' AS Purpose,
 					'TTY' AS [Label]
-				-- WHERE cbtd.TDD_PHONE IS NOT NULL
+				WHERE btols.EXTERNAL_ID IS NOT NULL OR cbtd.TDD_PHONE IS NOT NULL
 			UNION SELECT
 					1 AS "TollFree",
 					0 AS "Confidential",
@@ -463,7 +463,7 @@ SELECT TOP (100)
 					btd.TOLL_FREE_PHONE AS PhoneNumber,
 					'Toll-Free' AS Purpose,
 					CASE WHEN btd.LangID=0 THEN 'Toll-Free' ELSE 'sans frais' END AS [Label]
-				-- WHERE btd.TOLL_FREE_PHONE IS NOT NULL
+				WHERE btols.EXTERNAL_ID IS NOT NULL OR btd.TOLL_FREE_PHONE IS NOT NULL
 			UNION SELECT 
 					0 AS "TollFree",
 					0 AS "Confidential",
@@ -472,7 +472,7 @@ SELECT TOP (100)
 					NULL AS PhoneNumber,
 					'Main' AS Purpose,
 					NULL AS [Label]
-				-- WHERE btd.FAX IS NOT NULL
+				WHERE btols.EXTERNAL_ID IS NOT NULL OR btd.FAX IS NOT NULL
 			) phone
 
 			FOR XML PATH('item'), TYPE),

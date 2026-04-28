@@ -443,10 +443,10 @@ def sync_record(
 
     if record_id:
         try:
+            record = record_languages[0].record
             args.idmap[(record_num, record.type)] = record_id
 
             related_sites = record_languages[0].related_sites
-            record = record_languages[0].record
             if olscode in ("SERVICE", "TOPIC"):
                 agency_id = record.related[0].id
                 program_at_site_had_error = False
@@ -461,15 +461,24 @@ def sync_record(
                     )
                 except Exception as e:
                     record_had_error = True
-                    traceback.print_exc(file=sys.stderr)
+                    msg = (
+                        f"Error encountered while attempting to sync program_at_site information for {record_num}/{record_id}. This may have leaked ids.",
+                    )
                     print(
-                        f"Error encountered while attempting to sync program_at_site information for {record_num}/{record_id}.",
-                        "This may have leaked ids.",
+                        msg,
                         e,
-                        external_ids,
-                        related_sites,
                         file=sys.stderr,
                     )
+                    tb = traceback.format_exc()
+                    print(
+                        msg,
+                        tb,
+                        external_ids,
+                        related_sites,
+                        record.to_dict(),
+                        file=args.failed_records,
+                    )
+
                 record_had_error = record_had_error or program_at_site_had_error
 
             new_external_id = ";".join(
@@ -483,16 +492,21 @@ def sync_record(
             return new_external_id, record_had_error
         except Exception as e:
             record_had_error = True
-            traceback.print_exc(file=sys.stderr)
-            msg = f"rror encountered while attempting to sync program_at_site information for {record_num}/{record_id}. This may have leaked ids."
+            tb = traceback.format_exc()
+            msg = f"Error encountered while attempting to sync program_at_site information for {record_num}/{record_id}. This may have leaked ids."
             print(
                 msg,
                 e,
-                external_ids,
-                record_languages[0].related_sites,
                 file=sys.stderr,
             )
-            print(msg, e, record_languages[0].record, file=args.failed_records)
+            print(
+                msg,
+                tb,
+                external_ids,
+                record_languages[0].related_sites,
+                record_languages[0].record.to_dict(),
+                file=args.failed_records,
+            )
             return None, record_had_error
 
     return None, record_had_error
