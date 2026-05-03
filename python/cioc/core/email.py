@@ -48,11 +48,15 @@ _mailer = None
 _last_change = None
 
 
-def stop_mailer(mailer):
+def stop_mailer(mailer, wait=False):
     """stopping mailer can take a long time. Don't block request thread"""
 
     def do_stop():
         mailer.stop()
+
+    if wait:
+        do_stop()
+        return
 
     t = Thread(target=do_stop)
     t.start()
@@ -158,3 +162,11 @@ def send_email(
 
 def format_message(message):
     return "\n\n".join(textwrap.fill(x, width=80) for x in message.split("\n\n"))
+
+
+def wait_for_messages_and_stop():
+    global _mailer
+    mailer = _mailer
+    _mailer = None
+    if mailer:
+        stop_mailer(mailer, True)

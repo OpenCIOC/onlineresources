@@ -130,6 +130,10 @@ def get_config_item(
     return config.get(config_prefix + key, config.get(key, default))
 
 
+def drain_pending_email():
+    email.wait_for_messages_and_stop()
+
+
 def email_log(
     args: ArgsType,
     outputstream: io.StringIO,

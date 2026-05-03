@@ -34,6 +34,7 @@ from tools.toolslib import (
     FileWriteDetector,
     get_config_item,
     email_log,
+    drain_pending_email,
 )
 
 
@@ -684,6 +685,7 @@ def main(argv):
             sys.stderr.is_dirty(),
             "icarol_export",
         )
+        drain_pending_email()
 
     return retval
 

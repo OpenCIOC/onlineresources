@@ -736,7 +736,7 @@ SELECT TOP (100)
 	FROM dbo.GBL_BaseTable_Description btd
 	LEFT JOIN CIC_BaseTable_Description cbtd
 	ON bt.NUM=cbtd.NUM AND cbtd.LangID=btd.LangID
-	WHERE bt.NUM=btd.NUM AND btd.LangID IN (0, 2) AND (btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE())
+	WHERE bt.NUM=btd.NUM AND btd.LangID IN (0, 2)
 	ORDER BY btd.LangID
 	FOR XML PATH('item'), ROOT('root'), TYPE
 ) AS datachange
