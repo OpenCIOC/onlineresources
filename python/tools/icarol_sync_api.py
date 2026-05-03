@@ -273,6 +273,7 @@ def make_program_at_site(
         names=[],
         type="ProgramAtSite",
         status="Active",
+        isLinkOnly=True,
         related=[
             model.RelatedRecordInfo(id=agency_id),
             model.RelatedRecordInfo(id=site_id),

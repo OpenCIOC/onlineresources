@@ -428,8 +428,8 @@ SELECT TOP (100)
 						2 AS Preference,
 						CASE WHEN btd.LangID=0 THEN 'Crisis' ELSE 'Crise' END AS [Label]
 					WHERE btols.EXTERNAL_ID IS NOT NULL OR cbtd.CRISIS_PHONE IS NOT NULL
-				)cte
-			)p
+				)cte 
+			) p WHERE p.PhoneNumber IS NOT NULL OR btols.EXTERNAL_ID IS NOT NULL
 			UNION SELECT 0 AS "TollFree",
 					0 AS "Confidential",
 					0 AS TTY,
@@ -472,7 +472,16 @@ SELECT TOP (100)
 					NULL AS PhoneNumber,
 					'Main' AS Purpose,
 					NULL AS [Label]
-				WHERE btols.EXTERNAL_ID IS NOT NULL OR btd.FAX IS NOT NULL
+				WHERE btols.EXTERNAL_ID IS NOT NULL
+			UNION SELECT 
+					0 AS "TollFree",
+					0 AS "Confidential",
+					0 AS TTY,
+					0 AS Fax,
+					NULL AS PhoneNumber,
+					'Hotline' AS Purpose,
+					NULL AS [Label]
+				WHERE btols.EXTERNAL_ID IS NOT NULL
 			) phone
 
 			FOR XML PATH('item'), TYPE),
@@ -554,7 +563,7 @@ SELECT TOP (100)
 			FOR XML PATH('contactMethods'), TYPE)
 			FOR XML PATH('contact'), TYPE)		
 		FROM (VALUES ('EXEC_1'), ('EXEC_2')) AS c(GblContactType)
-		WHERE ols.Code='SITE'		
+		WHERE ols.Code='SITE' AND btols.EXTERNAL_ID IS NOT NULL	
 
 		FOR XML PATH('item'), TYPE),
 
@@ -563,6 +572,7 @@ SELECT TOP (100)
 					'website' AS "@type",
 					CASE WHEN btd.WWW_ADDRESS IS NOT NULL AND ols.Code != 'SITE' THEN ISNULL(btd.WWW_ADDRESS_PROTOCOL, 'http://') + btd.WWW_ADDRESS ELSE '__null_sentinel__' END AS "@url" 
 				FOR XML PATH('contact'), TYPE)
+				WHERE btols.EXTERNAL_ID IS NOT NULL OR (btd.WWW_ADDRESS IS NOT NULL AND ols.Code != 'SITE')
 			FOR XML PATH('item'), TYPE),
 			(SELECT 0 AS "@isConfidential",
 				(SELECT
@@ -570,6 +580,7 @@ SELECT TOP (100)
 					'Main' AS "@label",
 					CASE WHEN btd.E_MAIL IS NOT NULL AND ols.Code != 'SITE' THEN btd.E_MAIL ELSE '__null_sentinel__' END AS "@address" 
 				FOR XML PATH('contact'), TYPE)
+				WHERE btols.EXTERNAL_ID IS NOT NULL OR (btd.E_MAIL IS NOT NULL AND ols.Code != 'SITE')
 			FOR XML PATH('item'), TYPE)
 
 	FOR XML PATH('contactDetails'), TYPE),
