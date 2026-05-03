@@ -163,7 +163,7 @@ requests==2.33.1
     #   simple-icarol-api
 s3transfer==0.17.0
     # via boto3
-simple-icarol-api @ git+ssh://git@github.com/klambacher/simple-icarol-api.git
+simple-icarol-api @ git+ssh://git@github.com/klambacher/simple-icarol-api.git@v0.2.0
     # via -r requirements.in
 six==1.17.0
     # via
