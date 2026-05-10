@@ -674,7 +674,7 @@ def main(argv):
         retval = 1
 
     failed_records_data = args.failed_records.getvalue()
-    if failed_records_data:
+    if failed_records_data and not args.email:
         print("\n\nExtra detail for warnings and errors above", file=sys.stdout)
         sys.stdout.write(failed_records_data)
     if args.email:
@@ -685,6 +685,14 @@ def main(argv):
             sys.stderr.is_dirty(),
             "icarol_export",
         )
+        if failed_records_data:
+            email_log(
+                args,
+                args.failed_records,
+                "ICarol API Sync Extra Detail%s",
+                True,
+                "icarol_export",
+            )
         drain_pending_email()
 
     return retval

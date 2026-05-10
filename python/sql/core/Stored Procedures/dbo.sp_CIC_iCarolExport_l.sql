@@ -473,15 +473,16 @@ SELECT TOP (100)
 					'Main' AS Purpose,
 					NULL AS [Label]
 				WHERE btols.EXTERNAL_ID IS NOT NULL
-			UNION SELECT 
-					0 AS "TollFree",
-					0 AS "Confidential",
-					0 AS TTY,
-					0 AS Fax,
-					NULL AS PhoneNumber,
-					'Hotline' AS Purpose,
-					NULL AS [Label]
-				WHERE btols.EXTERNAL_ID IS NOT NULL
+			-- ('Not Supported', 'This method currently does not support updating phone numbers with purpose Hotline.', 'NotAcceptable')
+			-- UNION SELECT 
+			--		0 AS "TollFree",
+			--		0 AS "Confidential",
+			--		0 AS TTY,
+			--		0 AS Fax,
+			--		NULL AS PhoneNumber,
+			--		'Hotline' AS Purpose,
+			--		NULL AS [Label]
+			--	WHERE btols.EXTERNAL_ID IS NOT NULL
 			) phone
 
 			FOR XML PATH('item'), TYPE),
