@@ -615,7 +615,7 @@ def sync(args: MyArgsType, context: Context) -> None:
 
         print(f"sent {total_changes} records")
 
-        send_area_change_email(args, area_changes)
+        # send_area_change_email(args, area_changes)
 
 
 def parse_args(argv: list[str]) -> MyArgsType:

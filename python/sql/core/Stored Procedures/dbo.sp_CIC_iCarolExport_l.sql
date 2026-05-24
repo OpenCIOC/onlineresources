@@ -696,6 +696,17 @@ SELECT TOP (100)
 				'Public Comments' AS "@label",
 				''  AS "@valueText"
 			FOR XML PATH('item'), TYPE),
+			(SELECT 
+				'Pub Codes' AS "@label",
+				STUFF(
+					(SELECT ' ; ' + pb.PubCode 
+					FROM dbo.CIC_BT_PB pbr
+					INNER JOIN dbo.CIC_Publication pb ON pb.PB_ID = pbr.PB_ID
+					WHERE pbr.NUM = bt.NUM
+					ORDER BY pb.PubCode
+					FOR XML PATH(''), TYPE).value('.', 'nvarchar(max)')
+				, 1,3, '') AS "@valueText"
+			FOR XML PATH('item'), TYPE),
 			(SELECT
 				'Legal Name' AS "@label",
 				btd.LEGAL_ORG AS "@valueText"
