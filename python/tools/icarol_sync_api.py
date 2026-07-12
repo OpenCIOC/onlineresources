@@ -262,11 +262,22 @@ def make_program_at_site(
     args: MyArgsType,
     num: str,
     name: str,
-    agency_id: int,
+    agency_id: int | None,
     site_id: int,
     program_id: int,
     program_at_site_id: model.APIOptional[int] = model.unset_value,
 ) -> int:
+    related = []
+    if agency_id:
+        related.append(model.RelatedRecordInfo(id=agency_id))
+
+    related.extend(
+        [
+            model.RelatedRecordInfo(id=site_id),
+            model.RelatedRecordInfo(id=program_id),
+        ]
+    )
+
     program_at_site = model.ResourceDetails(
         databaseID=args.dbid,
         id=program_at_site_id,
@@ -275,11 +286,7 @@ def make_program_at_site(
         type="ProgramAtSite",
         status="Active",
         isLinkOnly=True,
-        related=[
-            model.RelatedRecordInfo(id=agency_id),
-            model.RelatedRecordInfo(id=site_id),
-            model.RelatedRecordInfo(id=program_id),
-        ],
+        related=related,
     )
     if program_at_site_id is not model.unset_value and program_at_site_id is not None:
         if not args.test:
@@ -300,7 +307,7 @@ def make_program_at_site(
 def update_program_at_sites(
     args: MyArgsType,
     record_id: int,
-    agency_id: int,
+    agency_id: int|None,
     external_ids: list[str],
     related_sites: list[ProgramAtSiteInfo],
     num: str,
@@ -450,7 +457,10 @@ def sync_record(
 
             related_sites = record_languages[0].related_sites
             if olscode in ("SERVICE", "TOPIC"):
-                agency_id = record.related[0].id
+                try:
+                    agency_id = record.related[0].id
+                except IndexError:
+                    agency_id = None
                 program_at_site_had_error = False
                 try:
                     program_at_site_had_error = update_program_at_sites(
