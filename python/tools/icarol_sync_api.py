@@ -307,7 +307,7 @@ def make_program_at_site(
 def update_program_at_sites(
     args: MyArgsType,
     record_id: int,
-    agency_id: int|None,
+    agency_id: int | None,
     external_ids: list[str],
     related_sites: list[ProgramAtSiteInfo],
     num: str,
@@ -405,12 +405,12 @@ def sync_record(
     except Exception as e:
         print(
             f"Failed to create/update {olscode} {record_num}/{external_id} due to an error.",
-            # traceback.format_exc(chain=False),
             e,
             file=sys.stderr,
         )
         print(
-            f"Failed to create/update {olscode} {record_num}/{external_id} due to an error.",
+            f"Failed to create/update {olscode} {record_num}/{external_id} due to a change parse error.",
+            # traceback.format_exc(chain=False),
             e,
             datachange,
             file=args.failed_records,

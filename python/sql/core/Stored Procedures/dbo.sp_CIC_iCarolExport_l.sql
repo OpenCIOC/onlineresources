@@ -272,11 +272,12 @@ SELECT TOP (100)
 				--btd.SITE_BUILDING AS "@careOf",
 				dbo.fn_GBL_FullAddress(NULL,NULL,btd.SITE_LINE_1,btd.SITE_LINE_2,btd.SITE_BUILDING,btd.SITE_STREET_NUMBER,btd.SITE_STREET,btd.SITE_STREET_TYPE,btd.SITE_STREET_TYPE_AFTER,btd.SITE_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,btd.LangID,0) AS "@line1",
 				btd.SITE_SUFFIX AS "@line2",
-				ISNULL(CASE WHEN btd.SITE_CITY IS NOT NULL AND cmtree.City IS NULL AND cmtree.County IS NULL THEN btd.SITE_CITY ELSE cmtree.City END, '__null_sentinel__') as "@city",
-				ISNULL(cmtree.County, '__null_sentinel__') as "@county",
-				ISNULL(btd.SITE_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) AS "@stateProvince",
-				bt.SITE_POSTAL_CODE AS "@zipPostalCode",
-				ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
+				CASE WHEN btols.SKIP_EXPORT_SITE_CITY=0 THEN ISNULL(cmtree.City, CASE WHEN btd.SITE_PROVINCE IS NULL OR btd.SITE_PROVINCE IN ('ON', 'Ontario') THEN '__null_sentinel__' ELSE ISNULL(btd.SITE_CITY, '__null_sentinel__') END) END as "@city",
+				CASE WHEN btols.SKIP_EXPORT_SITE_CITY=0 THEN ISNULL(cmtree.County, '__null_sentinel__') END as "@county",
+				CASE WHEN btols.SKIP_EXPORT_SITE_CITY=0 THEN ISNULL(cmtree.Community, '__null_sentinel__') END as "@community",
+				CASE WHEN btols.SKIP_EXPORT_SITE_CITY=0 THEN ISNULL(btd.SITE_PROVINCE,CASE WHEN cmtree.County IS NOT NULL THEN (SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID) ELSE '__null_sentinel__' END) END AS "@stateProvince",
+				CASE WHEN btols.SKIP_EXPORT_SITE_POSTAL_CODE=0 THEN  ISNULL(bt.SITE_POSTAL_CODE, '__null_sentinel__') END AS "@zipPostalCode",
+				CASE WHEN btols.SKIP_EXPORT_SITE_CITY=0 THEN ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) END AS "@country"
 				FROM (VALUES(btd.SITE_CITY)) AS btdcity(SITE_CITY)
 				OUTER APPLY
 				(
@@ -294,7 +295,8 @@ SELECT TOP (100)
 								ON epl.Parent_ID=ec2.EXT_ID
 							WHERE epl.EXT_ID=excm.EXT_ID AND ec2.AIRSExportType = 'County'
 							ORDER BY ec2.Depth DESC)
-						END AS County
+						END AS County,
+						CASE WHEN excm.AIRSExportType = 'Community' THEN excm.AreaName END AS Community
 					FROM CommunityRepo_2012_11.dbo.External_Community excm
 					WHERE excm.SystemCode= 'ONTARIO211'
 						AND (
@@ -335,7 +337,7 @@ SELECT TOP (100)
 				) cmtree
 			FOR XML PATH('contact'), TYPE)
 			-- TODO: Do we need to bring back LOCATED_IN_CM Lookup?
-			WHERE (btd.CMP_SiteAddress IS NOT NULL/* OR bt.LOCATED_IN_CM IS NOT NULL*/) AND ols.Code NOT IN ('SERVICE', 'TOPIC')
+			WHERE (btd.CMP_SiteAddress IS NOT NULL/* OR bt.LOCATED_IN_CM IS NOT NULL*/) AND ols.Code NOT IN ('SERVICE', 'TOPIC') AND btd.LangID = 0
 		FOR XML PATH('item'),TYPE),
 		(SELECT
 				CASE WHEN EXISTS(SELECT *
@@ -351,12 +353,72 @@ SELECT TOP (100)
 				REPLACE(dbo.fn_GBL_FullAddress(NULL,NULL,NULL,NULL,btd.MAIL_BUILDING,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,btd.MAIL_CARE_OF,NULL,NULL,NULL,NULL,btd.LangID,0),@nLine,', ') AS "@careOf",
 				REPLACE(dbo.fn_GBL_FullAddress(NULL,NULL,btd.MAIL_LINE_1,btd.MAIL_LINE_2,NULL,btd.MAIL_STREET_NUMBER,btd.MAIL_STREET,btd.MAIL_STREET_TYPE,btd.MAIL_STREET_TYPE_AFTER,btd.MAIL_STREET_DIR,NULL,NULL,NULL,NULL,NULL,NULL,btd.MAIL_BOX_TYPE,btd.MAIL_PO_BOX,NULL,NULL,btd.LangID,0),@nLine,', ') AS "@line1",
 				btd.MAIL_SUFFIX AS "@line2",
-				COALESCE(btd.MAIL_CITY,btd.SITE_CITY) AS "@city",
-				ISNULL(btd.MAIL_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) AS "@stateProvince",
-				bt.MAIL_POSTAL_CODE AS "@zipPostalCode",
-				ISNULL(btd.MAIL_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) AS "@country"
+				CASE WHEN btols.SKIP_EXPORT_MAIL_CITY=0 THEN ISNULL(cmtree.City, CASE WHEN btd.MAIL_PROVINCE IS NULL OR btd.MAIL_PROVINCE IN ('ON', 'Ontario') THEN '__null_sentinel__' ELSE ISNULL(btd.MAIL_CITY, '__null_sentinel__') END) END as "@city",
+				CASE WHEN btols.SKIP_EXPORT_MAIL_CITY=0 THEN ISNULL(cmtree.County, '__null_sentinel__') END as "@county",
+				CASE WHEN btols.SKIP_EXPORT_MAIL_CITY=0 THEN ISNULL(cmtree.Community, '__null_sentinel__') END as "@community",
+				CASE WHEN btols.SKIP_EXPORT_MAIL_CITY=0 THEN ISNULL(btd.MAIL_PROVINCE,(SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID)) END AS "@stateProvince",
+				CASE WHEN btols.SKIP_EXPORT_MAIL_POSTAL_CODE=0 THEN ISNULL(bt.MAIL_POSTAL_CODE, '__null_sentinel__') END AS "@zipPostalCode",
+				CASE WHEN btols.SKIP_EXPORT_MAIL_CITY=0 THEN ISNULL(btd.MAIL_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) END AS "@country"
+				FROM (VALUES(btd.MAIL_CITY)) AS btdcity(MAIL_CITY)
+				OUTER APPLY
+				(
+					SELECT TOP 1 CASE WHEN excm.AIRSExportType = 'City' THEN excm.AreaName WHEN excm.AIRSExportType='Community' THEN (SELECT TOP 1 ec2.AreaName
+						FROM @ExternalParentList epl
+						INNER JOIN CommunityRepo_2012_11.dbo.External_Community ec2
+							ON epl.Parent_ID=ec2.EXT_ID
+						WHERE epl.EXT_ID=excm.EXT_ID AND ec2.AIRSExportType = 'City'
+						ORDER BY ec2.Depth DESC
+						) END AS City, -- will be null if it picked county
+						CASE WHEN excm.AIRSExportType = 'County' THEN excm.AreaName ELSE 
+						(SELECT TOP 1 ec2.AreaName
+							FROM @ExternalParentList epl
+							INNER JOIN CommunityRepo_2012_11.dbo.External_Community ec2
+								ON epl.Parent_ID=ec2.EXT_ID
+							WHERE epl.EXT_ID=excm.EXT_ID AND ec2.AIRSExportType = 'County'
+							ORDER BY ec2.Depth DESC)
+						END AS County,
+						CASE WHEN excm.AIRSExportType = 'Community' THEN excm.AreaName END AS Community
+					FROM CommunityRepo_2012_11.dbo.External_Community excm
+					WHERE excm.SystemCode= 'ONTARIO211'
+						AND (
+							excm.AreaName=MAIL_CITY
+							OR EXISTS(SELECT *
+								FROM CommunityRepo_2012_11.dbo.Community_External_Map map
+								INNER JOIN CommunityRepo_2012_11.dbo.Community_Name cmn ON cmn.CM_ID=map.CM_ID
+									AND cmn.Name=MAIL_CITY AND cmn.ProvinceStateCache=9
+								WHERE excm.EXT_ID=map.MapOneEXTID
+							) OR EXISTS(
+								SELECT * 
+								FROM CommunityRepo_2012_11.dbo.Community_External_Map map
+								INNER JOIN CommunityRepo_2012_11.dbo.Community cm
+									on cm.CM_ID=map.CM_ID AND cm.ProvinceState=9
+								INNER JOIN CommunityRepo_2012_11.dbo.Community_AltName cmn
+									ON cmn.CM_ID=cm.CM_ID AND cmn.AltName=MAIL_CITY
+								WHERE excm.EXT_ID=map.MapOneEXTID
+							)
+						)
+					ORDER BY
+						CASE WHEN excm.AreaName=MAIL_CITY THEN 0 ELSE 1 END,
+						CASE WHEN EXISTS(SELECT *
+								FROM CommunityRepo_2012_11.dbo.Community_External_Map map
+								INNER JOIN CommunityRepo_2012_11.dbo.Community_Name cmn ON cmn.CM_ID=map.CM_ID
+									AND cmn.Name=MAIL_CITY AND cmn.ProvinceStateCache=9
+								WHERE excm.EXT_ID=map.MapOneEXTID
+							) OR EXISTS(SELECT * 
+								FROM CommunityRepo_2012_11.dbo.Community_External_Map map
+								INNER JOIN CommunityRepo_2012_11.dbo.Community cm
+									on cm.CM_ID=map.CM_ID AND cm.ProvinceState=9
+								INNER JOIN CommunityRepo_2012_11.dbo.Community_AltName cmn
+									ON cmn.CM_ID=cm.CM_ID AND cmn.AltName=MAIL_CITY
+								WHERE excm.EXT_ID=map.MapOneEXTID
+							) THEN 0 ELSE 1 END,
+						CASE WHEN excm.AIRSExportType='City' THEN 0 ELSE 1 END,
+						CASE WHEN excm.AIRSExportType='County' THEN 0 ELSE 1 END,
+						CASE WHEN excm.AIRSExportType='Community' THEN 0 ELSE 1 END
+				) cmtree
+
 			FOR XML PATH('contact'), TYPE)
-		WHERE btd.CMP_MailAddress IS NOT NULL AND ols.Code NOT IN ('SERVICE', 'TOPIC')
+		WHERE btd.CMP_MailAddress IS NOT NULL AND ols.Code NOT IN ('SERVICE', 'TOPIC') AND btd.LangID = 0
 		FOR XML PATH('item'),TYPE),
 		/*	(SELECT
 				CASE WHEN EXISTS(SELECT *
@@ -748,7 +810,9 @@ SELECT TOP (100)
 	FROM dbo.GBL_BaseTable_Description btd
 	LEFT JOIN CIC_BaseTable_Description cbtd
 	ON bt.NUM=cbtd.NUM AND cbtd.LangID=btd.LangID
-	WHERE bt.NUM=btd.NUM AND btd.LangID IN (0, 2)
+	WHERE bt.NUM=btd.NUM AND btd.LangID IN (0, 2) AND 
+		-- Exclude non-active language where there is another active language (this is probably French)
+		((btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE()) OR NOT EXISTS(SELECT * FROM dbo.GBL_BaseTable_Description ibtd WHERE bt.NUM=ibtd.NUM AND ibtd.LangID IN (0,2) AND ibtd.LangID <> btd.LangID AND (ibtd.DELETION_DATE IS NULL OR ibtd.DELETION_DATE > GETDATE())))
 	ORDER BY btd.LangID
 	FOR XML PATH('item'), ROOT('root'), TYPE
 ) AS datachange
