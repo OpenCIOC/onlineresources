@@ -136,7 +136,7 @@ def get_changes_to_send(conn: "Connection") -> list["Row"]:
 
 
 def get_deletes_to_send(conn: "Connection") -> list["Row"]:
-    sql = "EXEC sp_CIC_iCarolExport_Delete_l"
+    sql = "EXEC sp_CIC_iCarolExport_Deleted_l"
     return conn.execute(sql).fetchall()
 
 
