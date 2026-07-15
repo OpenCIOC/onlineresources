@@ -118,7 +118,7 @@ SELECT
     FROM dbo.GBL_BaseTable bt
     INNER JOIN dbo.GBL_BT_OLS btols ON btols.NUM = bt.NUM AND btols.EXTERNAL_ID IS NOT NULL
     INNER JOIN dbo.GBL_OrgLocationService ols ON ols.OLS_ID = btols.OLS_ID
-    LEFT JOIN dbo.CIC_iCarolImport ii ON 
+    INNER JOIN dbo.CIC_iCarolImport ii ON 
         ii.LangID=0 AND (
             (ols.Code IN ('Agency', 'Site') AND ii.ResourceAgencyNum = btols.EXTERNAL_ID) 
             OR (ols.Code IN ('Service', 'Topic') AND btols.EXTERNAL_ID LIKE ii.ResourceAgencyNum + ';%')
