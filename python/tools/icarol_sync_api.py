@@ -135,6 +135,11 @@ def get_changes_to_send(conn: "Connection") -> list["Row"]:
     return conn.execute(sql).fetchall()
 
 
+def get_deletes_to_send(conn: "Connection") -> list["Row"]:
+    sql = "EXEC sp_CIC_iCarolExport_Delete_l"
+    return conn.execute(sql).fetchall()
+
+
 def parse_sub_xml(
     element: etree._Element,
 ) -> t.Union[list[t.Union[dict[str, t.Any], str]], dict[str, t.Any], str, None]:
@@ -398,6 +403,7 @@ def sync_record(
     external_id: t.Optional[str],
     olscode: str,
     datachange: str,
+    skip_program_at_site: bool = False,
 ) -> tuple[t.Optional[str], bool]:
     record_had_error = False
     try:
@@ -456,7 +462,7 @@ def sync_record(
             args.idmap[(record_num, record.type)] = record_id
 
             related_sites = record_languages[0].related_sites
-            if olscode in ("SERVICE", "TOPIC"):
+            if olscode in ("SERVICE", "TOPIC") and not skip_program_at_site:
                 try:
                     agency_id = record.related[0].id
                 except IndexError:
@@ -563,6 +569,21 @@ def sync_iteration(args: MyArgsType, conn: "Connection", export_date: datetime) 
     return len(changes)
 
 
+def sync_deletes(args: MyArgsType, conn: "Connection") -> int:
+    changes = get_deletes_to_send(conn)
+    for change in changes:
+        sync_record(
+            args,
+            change.NUM,
+            change.EXTERNAL_ID,
+            change.OLSCode,
+            change.datachange,
+            True,
+        )
+
+    return len(changes)
+
+
 def prep_for_export(conn: "Connection") -> "list[Row]":
     return conn.execute("EXEC sp_CIC_iCarolExport_Prep").fetchall()
 
@@ -624,6 +645,10 @@ def sync(args: MyArgsType, context: Context) -> None:
                 change_count = 0
 
         print(f"sent {total_changes} records")
+
+        print("Syncing soft deletes")
+        delete_count = sync_deletes(args, conn)
+        print(f"soft deleted {delete_count}")
 
         # send_area_change_email(args, area_changes)
 
