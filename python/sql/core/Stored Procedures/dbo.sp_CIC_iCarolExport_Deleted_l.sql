@@ -34,8 +34,9 @@ END
 
 
 SELECT  
-    bt.NUM, (SELECT TOP 1 btd.DELETION_DATE FROM GBL_BaseTable_Description btd WHERE bt.NUM=btd.NUM AND btd.LangID=0) AS DELETION_DATE, CASE WHEN EXISTS(SELECT * FROM dbo.CIC_BT_DST dst WHERE dst.DST_ID=@DST_ID AND dst.NUM=bt.NUM) THEN 0 ELSE 1 END AS NOT_TAGGED,
-        ols.Code,btols.EXTERNAL_ID,ii.ResourceAgencyNum, ii.TaxonomyLevelName,
+    bt.NUM, ols.Code OLSCode, btols.EXTERNAL_ID, btols.BT_OLS_ID, 
+      (SELECT TOP 1 btd.DELETION_DATE FROM GBL_BaseTable_Description btd WHERE bt.NUM=btd.NUM AND btd.LangID=0) AS DELETION_DATE, CASE WHEN EXISTS(SELECT * FROM dbo.CIC_BT_DST dst WHERE dst.DST_ID=@DST_ID AND dst.NUM=bt.NUM) THEN 0 ELSE 1 END AS NOT_TAGGED,
+      ii.ResourceAgencyNum, ii.TaxonomyLevelName,
     (SELECT 
 
        bt.NUM AS "@uniquePriorID",

@@ -8,7 +8,10 @@ CREATE PROCEDURE [dbo].[sp_CIC_iCarolExport_u]
 	@NUM VARCHAR(8),
 	@Code varchar(20),
 	@ExternalID varchar(max),
-	@ExportDate smalldatetime
+	@ExportDate smalldatetime,
+	@PostalCodeError bit,
+	@CityError bit,
+	@OtherError bit
 WITH EXECUTE AS CALLER
 AS
 SET NOCOUNT ON
@@ -16,7 +19,7 @@ SET NOCOUNT ON
 DECLARE	@Error		INT
 SET @Error = 0
 
-UPDATE btols SET btols.EXTERNAL_ID=ISNULL(@ExternalID, btols.EXTERNAL_ID), btols.QUEUE_FOR_EXPORT=0, btols.EXPORT_DATE=ISNULL(@ExportDate, btols.EXPORT_DATE)
+UPDATE btols SET btols.EXTERNAL_ID=ISNULL(@ExternalID, btols.EXTERNAL_ID), btols.QUEUE_FOR_EXPORT=0, btols.EXPORT_DATE=ISNULL(@ExportDate, btols.EXPORT_DATE), POSTAL_CODE_ERROR=@PostalCodeError, CITY_ERROR=@CityError, OTHER_ERROR=@OtherError
 FROM dbo.GBL_BT_OLS btols INNER JOIN dbo.GBL_OrgLocationService ols ON ols.OLS_ID = btols.OLS_ID
 WHERE btols.NUM=@NUM AND ols.Code=@Code
 

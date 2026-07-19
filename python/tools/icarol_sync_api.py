@@ -404,7 +404,7 @@ def sync_record(
     olscode: str,
     datachange: str,
     skip_program_at_site: bool = False,
-) -> tuple[t.Optional[str], bool]:
+) -> tuple[t.Optional[str], bool] | tuple[t.Optional[str], bool, bool, bool]:
     record_had_error = False
     try:
         record_languages = parse_change_to_model(args, datachange, record_num)
@@ -454,6 +454,13 @@ def sync_record(
             msg = f"Failed to {'create' if isnew else 'update'} {record.type} {record_num}/{record_id}/{record.cultureCode} due to an error."
             print(msg, e, file=sys.stderr)
             print(msg, e, record.to_dict(), file=args.failed_records)
+            if e.args:
+                errcode = str(e.args[0])
+                if errcode == 'Postcode Error':
+                    return None, record_had_error, True, False
+                if errcode == 'City Error':
+                    return None, record_had_error, False, True
+
             return None, record_had_error
 
     if record_id:
@@ -537,16 +544,22 @@ def mark_change_completed(
     external_id: t.Optional[str],
     olscode: str,
     export_date: datetime | None,
+    postal_code_error: bool,
+    city_error: bool,
+    other_error bool
 ) -> None:
     if args.test:
-        print(f"mark complete {record_num}, {external_id}, {olscode}")
+        print(f"mark complete {record_num}, {external_id}, {olscode}, {postal_code_error}, {city_error}, {other_error}")
     else:
         conn.execute(
-            "EXEC sp_CIC_iCarolExport_u ?, ?, ?, ?",
+            "EXEC sp_CIC_iCarolExport_u ?, ?, ?, ?, ?, ?, ?",
             record_num,
             olscode,
             external_id,
             export_date,
+            postal_code_error,
+            city_error,
+            other_error
         )
 
 
@@ -554,9 +567,13 @@ def sync_iteration(args: MyArgsType, conn: "Connection", export_date: datetime) 
     changes = get_changes_to_send(conn)
     record_had_error = False
     for change in changes:
-        new_external_id, record_had_error = sync_record(
+        new_external_id, record_had_error, *error_flags = sync_record(
             args, change.NUM, change.EXTERNAL_ID, change.OLSCode, change.datachange
         )
+        postal_code_error = city_error = False
+        if error_flags:
+            postal_code_error, city_error = error_flags
+
         mark_change_completed(
             args,
             conn,
@@ -564,6 +581,9 @@ def sync_iteration(args: MyArgsType, conn: "Connection", export_date: datetime) 
             new_external_id,
             change.OLSCode,
             None if record_had_error else export_date,
+            postal_code_error,
+            city_error,
+            record_had_error and not (postal_code_error or city_error)
         )
 
     return len(changes)
