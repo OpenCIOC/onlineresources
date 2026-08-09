@@ -456,9 +456,9 @@ def sync_record(
             print(msg, e, record.to_dict(), file=args.failed_records)
             if e.args:
                 errcode = str(e.args[0])
-                if errcode == 'Postcode Error':
+                if errcode == "Postcode Error":
                     return None, record_had_error, True, False
-                if errcode == 'City Error':
+                if errcode == "City Error":
                     return None, record_had_error, False, True
 
             return None, record_had_error
@@ -546,10 +546,12 @@ def mark_change_completed(
     export_date: datetime | None,
     postal_code_error: bool,
     city_error: bool,
-    other_error bool
+    other_error: bool,
 ) -> None:
     if args.test:
-        print(f"mark complete {record_num}, {external_id}, {olscode}, {postal_code_error}, {city_error}, {other_error}")
+        print(
+            f"mark complete {record_num}, {external_id}, {olscode}, {postal_code_error}, {city_error}, {other_error}"
+        )
     else:
         conn.execute(
             "EXEC sp_CIC_iCarolExport_u ?, ?, ?, ?, ?, ?, ?",
@@ -559,7 +561,7 @@ def mark_change_completed(
             export_date,
             postal_code_error,
             city_error,
-            other_error
+            other_error,
         )
 
 
@@ -583,7 +585,7 @@ def sync_iteration(args: MyArgsType, conn: "Connection", export_date: datetime) 
             None if record_had_error else export_date,
             postal_code_error,
             city_error,
-            record_had_error and not (postal_code_error or city_error)
+            record_had_error and not (postal_code_error or city_error),
         )
 
     return len(changes)
