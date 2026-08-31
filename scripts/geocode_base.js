@@ -181,7 +181,7 @@
 		geocode_entry(row);
 	};
 	var load_maps = function(culture, key_arg) {
-		$.getScript('https://maps.googleapis.com/maps/api/js?v=3&' + key_arg + '&sensor=false&callback=maps_loaded&language=' + culture);
+		$.getScript('https://maps.googleapis.com/maps/api/js?v=3&' + key_arg + '&sensor=false&callback=maps_loaded&region=CA&language=' + culture);
 	};
 	window['initialize'] = function(options) {
 		map_pin_target = options.map_pin_target;
