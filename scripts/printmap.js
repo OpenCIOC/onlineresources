@@ -4396,7 +4396,7 @@ Globalize.culture = function( cultureSelector ) {
 };
 
 }( this ));
-// =========================================================================================
+﻿// =========================================================================================
 // Copyright 2016 Community Information Online Consortium (CIOC) and KCL Software Solutions Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -4439,7 +4439,7 @@ var update_cluster_labels = function(clusters)
 		});
 		cluster.getIcon().useStyle({ text: which_cluster + 1, index: map_pins[markers.length > 1 ? 0 : mapped_pin[num]].order_index + 1 });
 	});
-	
+
 }
 var mapped_pin = {};
 window['start_map'] = function() {
@@ -4459,7 +4459,7 @@ window['start_map'] = function() {
 	}
 	mgr = new MarkerClusterer(map, [], {gridSize: 21, maxZoom:99, minimumClusterSize:1, styles: cluster_styles});
 	google.maps.event.addListener(mgr, "clusteringend", function() { update_cluster_labels(mgr.getClusters()) });
-	
+
 
 	var bounds = new google.maps.LatLngBounds();
 	var legend_items = {};
@@ -4482,7 +4482,7 @@ window['start_map'] = function() {
 		mapped_pin[num] = parseInt(pin, 10);
 
 		bounds.extend(point);
-		
+
 	});
 	mgr.addMarkers(markers);
 
@@ -4498,10 +4498,10 @@ window['start_map'] = function() {
 window['init'] = function(options) {
 	map_pins = options.map_pins;
 	map_pins_order = calc_map_pins_order(map_pins);
-	$.getScript('//maps.googleapis.com/maps/api/js?v=3&' + options.key_arg + '&sensor=false&callback=start_map&language=' + options.culture);
-	
+	$.getScript('//maps.googleapis.com/maps/api/js?v=3&' + options.key_arg + '&sensor=false&callback=start_map&region=CA&language=' + options.culture);
+
 	var pageTitle= prompt('Please enter a Title for the map', '');
-	if ((pageTitle!='') && (pageTitle!=null)) { 
+	if ((pageTitle!='') && (pageTitle!=null)) {
 		$('#PrintMapPageTitle').text(pageTitle).show();
 	}
 }

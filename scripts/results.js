@@ -7808,7 +7808,7 @@ var do_map_my_results = function() {
 	_search_page_content.find('#map_my_results_ui').hide();
 
 	if (map === null) {
-		$.getScript('//maps.googleapis.com/maps/api/js?v=3&' + key_arg + '&sensor=false&callback=maps_loaded&language=' + culture);
+		$.getScript('//maps.googleapis.com/maps/api/js?v=3&' + key_arg + '&sensor=false&callback=maps_loaded&region=CA&language=' + culture);
 
 		return false;
 
