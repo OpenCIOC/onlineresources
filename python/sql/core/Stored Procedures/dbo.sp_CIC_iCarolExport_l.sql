@@ -458,21 +458,21 @@ SELECT TOP (100)
 				SELECT 
 					'phoneNumber' AS "@type",
 					'__null_sentinel__' AS "@description",
-					CASE WHEN phone.PhoneNumber IS NOT NULL THEN phone."Label" ELSE '__null_sentinel__' END AS "@label",
+					CASE WHEN phone.HasLabel=0 THEN NULL WHEN phone.PhoneNumber IS NOT NULL AND ols.Code <> 'SITE' THEN phone."Label" ELSE '__null_sentinel__' END AS "@label",
 					phone.Purpose AS "@purpose",
-					CASE WHEN phone.PhoneNumber IS NULL OR ols.Code = 'SITE' THEN '' ELSE phone.PhoneNumber END AS "@number",
+					CASE WHEN phone.PhoneNumber IS NULL OR ols.Code = 'SITE' THEN '__null_sentinel__' ELSE phone.PhoneNumber END AS "@number",
 					phone.TTY AS "@isTTY",
 					phone.Fax AS "@isFax",
 					phone."TollFree" AS "@isTollFree"	
 				FOR XML PATH('contact'), TYPE
 				)
 			FROM (
-			SELECT p."TollFree", p."Confidential", p.TTY, p.Fax, 
+		/* SELECT p."TollFree", p."Confidential", p.TTY, p.Fax, 
 				CASE WHEN btd.OFFICE_PHONE IS NULL AND cbtd.CRISIS_PHONE IS NULL AND cbtd.AFTER_HRS_PHONE IS NULL AND btd.FAX IS NULL AND  cbtd.TDD_PHONE IS NULL AND btd.TOLL_FREE_PHONE IS NULL AND p.Purpose='Phone1' 
 					THEN  CASE WHEN btd.LangID=0 THEN 'No public telephone number' ELSE 'Pas de numéro de téléphone public' END  ELSE p.PhoneNumber END AS PhoneNumber,
-				p.Purpose, p.Label
+				p.Purpose, p.Label, 1 AS HasLabel
 			FROM (
-			   SELECT cte.TollFree, cte.Confidential, cte.TTY, cte.Fax, cte.PhoneNumber, 'Phone' + CAST((ROW_NUMBER() OVER (ORDER BY CASE WHEN cte.PhoneNumber IS NULL THEN 0 ELSE 1 END, cte.Preference))  AS VARCHAR) AS Purpose, cte.Label
+		   SELECT cte.TollFree, cte.Confidential, cte.TTY, cte.Fax, cte.PhoneNumber, 'Phone' + CAST((ROW_NUMBER() OVER (ORDER BY CASE WHEN cte.PhoneNumber IS NULL THEN 0 ELSE 1 END, cte.Preference))  AS VARCHAR) AS Purpose, cte.Label
 			   FROM
 				(SELECT 0 AS "TollFree",
 						0 AS "Confidential",
@@ -491,8 +491,26 @@ SELECT TOP (100)
 						CASE WHEN btd.LangID=0 THEN 'Crisis' ELSE 'Crise' END AS [Label]
 					WHERE btols.EXTERNAL_ID IS NOT NULL OR cbtd.CRISIS_PHONE IS NOT NULL
 				)cte 
-			) p WHERE p.PhoneNumber IS NOT NULL OR btols.EXTERNAL_ID IS NOT NULL
+			) p WHERE p.PhoneNumber IS NOT NULL OR btols.EXTERNAL_ID IS NOT NULL */
+			SELECT 0 AS "TollFree",
+					0 AS "Confidential",
+					0 AS TTY,
+					0 AS Fax,
+					ISNULL(btd.OFFICE_PHONE, 'No public telephone number') AS PhoneNumber,
+					'Phone1' AS Purpose, 
+					CASE WHEN btd.LangID=0 THEN 'Office' ELSE 'Bureau' END  AS [Label], 1 AS HasLabel
+				-- WHERE btols.EXTERNAL_ID IS NOT NULL OR cbtd.AFTER_HRS_PHONE IS NOT NULL
 			UNION SELECT 0 AS "TollFree",
+					0 AS "Confidential",
+					0 AS TTY,
+					0 AS Fax,
+					cbtd.CRISIS_PHONE AS PhoneNumber,
+					'Phone2' AS Purpose, 
+					CASE WHEN btd.LangID=0 THEN 'Crisis' ELSE 'Crise' END AS [Label], 1 AS HasLabel
+					WHERE btols.EXTERNAL_ID IS NOT NULL OR cbtd.CRISIS_PHONE IS NOT NULL
+			UNION SELECT *, 0 AS HasLabel FROM 
+			(
+			SELECT 0 AS "TollFree",
 					0 AS "Confidential",
 					0 AS TTY,
 					0 AS Fax,
@@ -536,17 +554,18 @@ SELECT TOP (100)
 					NULL AS [Label]
 				WHERE btols.EXTERNAL_ID IS NOT NULL
 			-- ('Not Supported', 'This method currently does not support updating phone numbers with purpose Hotline.', 'NotAcceptable')
-			-- UNION SELECT 
+			--UNION SELECT 
 			--		0 AS "TollFree",
 			--		0 AS "Confidential",
 			--		0 AS TTY,
 			--		0 AS Fax,
 			--		NULL AS PhoneNumber,
 			--		'Hotline' AS Purpose,
-			--		NULL AS [Label]
+			--		'Hotline' AS [Label]
 			--	WHERE btols.EXTERNAL_ID IS NOT NULL
+			) standard_phone
 			) phone
-
+			WHERE btols.EXTERNAL_ID IS NOT NULL OR ols.Code <> 'SITE'
 			FOR XML PATH('item'), TYPE),
 
 		-- Agency and Service Contact
@@ -555,26 +574,25 @@ SELECT TOP (100)
 				CASE WHEN EXISTS(SELECT *
 					FROM dbo.GBL_PrivacyProfile_Fld pvf
 					INNER JOIN dbo.GBL_FieldOption fo
-						ON pvf.FieldID=fo.FieldID AND fo.FieldName=c.GblContactType
+						ON pvf.FieldID=fo.FieldID AND fo.FieldName=fld.FldName
 					WHERE pvf.ProfileID=bt.PRIVACY_PROFILE)
 					THEN 1 ELSE 0 END AS "@isConfidential",		
 			(SELECT
 				'person' AS "@type",
 				CASE WHEN ols.Code = 'AGENCY' THEN
-					CASE WHEN c.GblContactType = 'EXEC_1' THEN 'Senior Worker'
-					ELSE 'Main Contact' END 
+					 'Senior Worker'
 				ELSE
-					CASE WHEN c.GblContactType = 'CONTACT_1' THEN 'Main Contact'
+					CASE WHEN fld.FldName = 'CONTACT_1' THEN 'Main Contact'
 					ELSE 'Senior Worker' END
 				END	AS "@label",
-				c.ORG AS "@companyName",
+				ISNULL(c.ORG, '__null_sentinel__') AS "@companyName",
 	
 
 			(SELECT c.TITLE AS item WHERE c.TITLE IS NOT NULL FOR XML PATH('titles'), TYPE),
 		
 
 			(SELECT
-				c.CMP_Name AS "@displayName"
+				ISNULL(c.CMP_Name, '__null_sentinel__') AS "@displayName"
 			WHERE c.CMP_Name IS NOT NULL
 			FOR XML PATH('name'), TYPE),
 
@@ -586,18 +604,52 @@ SELECT TOP (100)
 
 			(SELECT 
 					'phoneNumber' AS "@type",
-                    c.CMP_PhoneFull "@number"
-				WHERE c.CMP_PhoneFull IS NOT NULL
+                    ISNULL(c.CMP_PhoneFull, '__null_sentinel__') "@number"
+				FOR XML PATH('item'), TYPE)
+				FOR XML PATH('contactMethods'), TYPE)
+			FOR XML PATH('contact'), TYPE)		
+		FROM (VALUES ('EXEC_1'), ('CONTACT_1'), ('CONTACT_2')) AS fld(FldName)
+		LEFT JOIN dbo.GBL_Contact c
+			ON c.GblNUM=bt.NUM AND c.LangID=btd.LangID AND fld.FldName=c.GblContactType
+		WHERE ((ols.Code = 'AGENCY' AND fld.FldName = 'EXEC_1') OR (ols.Code IN ('SERVICE', 'TOPIC') AND fld.FldName <> 'EXEC_1'))
+		ORDER BY fld.FldName DESC
+		FOR XML PATH('item'), TYPE),
+		-- Agency main contact is source
+		(SELECT
+				CASE WHEN EXISTS(SELECT *
+					FROM dbo.GBL_PrivacyProfile_Fld pvf
+					INNER JOIN dbo.GBL_FieldOption fo
+						ON pvf.FieldID=fo.FieldID AND fo.FieldName='SOURCE'
+					WHERE pvf.ProfileID=bt.PRIVACY_PROFILE)
+					THEN 1 ELSE 0 END AS "@isConfidential",		
+			(SELECT
+				'person' AS "@type",
+				'Main Contact' AS "@label",
+				'__null_sentinel__' AS "@companyName",
+	
+
+			(SELECT ISNULL(btd.SOURCE_TITLE, '__null_sentinel__') FOR XML PATH('titles'), TYPE),
+		
+
+			(SELECT
+				ISNULL(btd.SOURCE_NAME, '__null_sentinel__') AS "@displayName"
+			FOR XML PATH('name'), TYPE),
+
+			(SELECT 
+		
+
+				(SELECT 'emailAddress' as "@type", LTRIM(ItemID) AS "@address" FROM dbo.fn_GBL_ParseVarCharIDList(btd.SOURCE_EMAIL,',') FOR XML PATH('item'), TYPE),
+
+
+			(SELECT 
+					'phoneNumber' AS "@type",
+                    ISNULL(btd.SOURCE_PHONE, '__null_sentinel__')  "@number"
 				FOR XML PATH('item'), TYPE)
 				FOR XML PATH('contactMethods'), TYPE)
 			FOR XML PATH('contact'), TYPE)		
 		FROM dbo.GBL_Contact c
-		WHERE c.GblNUM=bt.NUM AND c.LangID=btd.LangID
-			AND c.CMP_Name IS NOT NULL
-			AND ((ols.Code = 'AGENCY' AND c.GblContactType IN ('EXEC_1','EXEC_2')) OR (ols.Code IN ('SERVICE', 'TOPIC') AND c.GblContactType IN ('CONTACT_1', 'CONTACT_2')))
-		ORDER BY c.GblContactType DESC
+		WHERE ols.Code = 'AGENCY'
 		FOR XML PATH('item'), TYPE),
-
 		-- Empty Site Contact
 		(SELECT
 			0 AS "@isConfidential",		
