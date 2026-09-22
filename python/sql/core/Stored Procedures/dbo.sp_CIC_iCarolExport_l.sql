@@ -608,9 +608,9 @@ SELECT TOP (100)
 				FOR XML PATH('item'), TYPE)
 				FOR XML PATH('contactMethods'), TYPE)
 			FOR XML PATH('contact'), TYPE)		
-		FROM (VALUES ('EXEC_1'), ('CONTACT_1'), ('CONTACT_2')) AS fld(FldName)
+		FROM (VALUES ('EXEC_1', bt.NUM, btd.LangID), ('CONTACT_1', bt.NUM, btd.LangID), ('CONTACT_2', bt.NUM, btd.LangID)) AS fld(FldName, NUM, LangID)
 		LEFT JOIN dbo.GBL_Contact c
-			ON c.GblNUM=bt.NUM AND c.LangID=btd.LangID AND fld.FldName=c.GblContactType
+			ON c.GblNUM=fld.NUM AND c.LangID=fld.LangID AND fld.FldName=c.GblContactType
 		WHERE ((ols.Code = 'AGENCY' AND fld.FldName = 'EXEC_1') OR (ols.Code IN ('SERVICE', 'TOPIC') AND fld.FldName <> 'EXEC_1'))
 		ORDER BY fld.FldName DESC
 		FOR XML PATH('item'), TYPE),
@@ -628,7 +628,7 @@ SELECT TOP (100)
 				'__null_sentinel__' AS "@companyName",
 	
 
-			(SELECT ISNULL(btd.SOURCE_TITLE, '__null_sentinel__') FOR XML PATH('titles'), TYPE),
+			(SELECT btd.SOURCE_TITLE AS item WHERE btd.SOURCE_TITLE IS NOT NULL FOR XML PATH('titles'), TYPE),
 		
 
 			(SELECT
@@ -647,7 +647,6 @@ SELECT TOP (100)
 				FOR XML PATH('item'), TYPE)
 				FOR XML PATH('contactMethods'), TYPE)
 			FOR XML PATH('contact'), TYPE)		
-		FROM dbo.GBL_Contact c
 		WHERE ols.Code = 'AGENCY'
 		FOR XML PATH('item'), TYPE),
 		-- Empty Site Contact
