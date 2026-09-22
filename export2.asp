@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT"%>
+﻿<%@LANGUAGE="VBSCRIPT"%>
 <%Option Explicit%>
 
 <%
@@ -45,6 +45,7 @@ Call setPageInfo(False, DM_CIC, DM_CIC, vbNullString, vbNullString, vbNullString
 <!--#include file="text/txtExport.asp" -->
 <!--#include file="includes/core/incFormat.asp" -->
 <script language="python" runat="server">
+import tempfile, os
 from lxml import etree
 def convert_line1_line_2(xmlstr):
 	root = etree.fromstring(xmlstr)
@@ -71,6 +72,11 @@ def convert_line1_line_2(xmlstr):
 
 	return etree.tostring(root, encoding='unicode')
 
+def makeUniqueName(suffix, prefix, dir):
+	fd, fullname = tempfile.mkstemp(str(suffix), str(prefix), str(dir))
+	os.close(fd)
+	return os.path.basename(fullname)
+
 </script>
 <%
 
@@ -91,22 +97,22 @@ Dim intLastProfileID, strFieldName, bAPIRequest
 
 bAPIRequest = Not Nl(Request("API"))
 If Not user_bLoggedIn Then
-	If Not bAPIRequest Then 
+	If Not bAPIRequest Then
 		Call securityFailure()
 	Else
 		Call HTTPBasicUnauth("CIOC RPC")
 	End If
-			
+
 End If
 
 Function stripParagraphs(strVal)
 	Dim strReturn
-	
+
 	strReturn = reReplace(strVal,"(^<p([^>]*)>)|(</p>)|(^<(u|o)l([^>]*)>)|(</(u|o)l>)|(</li>)",vbNullString,True,False,True,False)
 	strReturn = reReplace(strReturn,"(<p([^>]*)>)","<br><br>",True,False,True,False)
 	strReturn = reReplace(strReturn,"(<(u|o)l([^>]*)>)","<br>",True,False,True,False)
 	strReturn = reReplace(strReturn,"(<li([^>]*)>)","<br>*",True,False,True,False)
-	
+
 	stripParagraphs = strReturn
 End Function
 
@@ -119,7 +125,7 @@ End Function
 
 Sub openPrivacyProfiles()
 	Dim strPrivacyProfileSQL, strExportCritTmp, strCon
-	
+
 	strExportCritTmp = strExportCrit
 
 	If bExportCritViewClause And Not Nl(g_intPBID) Then
@@ -155,7 +161,7 @@ Sub openPrivacyProfiles()
 		.CommandTimeout = 0
 		Set rsPrivacyProfile = .Execute
 	End With
-	
+
 	Set dicPrivacyProfileNames = Server.CreateObject("Scripting.Dictionary")
 	Set dicPrivacyProfileFields = Server.CreateObject("Scripting.Dictionary")
 
@@ -174,7 +180,7 @@ Sub openPrivacyProfiles()
 				intLastProfileID = .Fields("ProfileID").Value
 
 				Set dicNameTemp = Server.CreateObject("Scripting.Dictionary")
-				For Each strFieldName in Array("ProfileName", "ProfileNameEq") 
+				For Each strFieldName in Array("ProfileName", "ProfileNameEq")
 					dicNameTemp(strFieldName) = .Fields(strFieldName).Value
 				Next
 				Set dicPrivacyProfileNames(intLastProfileID) = dicNameTemp
@@ -190,7 +196,7 @@ Sub openPrivacyProfiles()
 						intLastProfileID = .Fields("ProfileID").Value
 
 						Set dicNameTemp = Server.CreateObject("Scripting.Dictionary")
-						For Each strFieldName in Array("ProfileName", "ProfileNameEq") 
+						For Each strFieldName in Array("ProfileName", "ProfileNameEq")
 							dicNameTemp(strFieldName) = .Fields(strFieldName).Value
 						Next
 						Set dicPrivacyProfileNames(intLastProfileID) = dicNameTemp
@@ -206,7 +212,7 @@ Sub openPrivacyProfiles()
 					If bIncludePrivacyProfiles Then
 						strmOutput.WriteText "<FLD V=" & XMLQs(strFieldName) & "/>", adWriteChar
 					End If
-					
+
 					.MoveNext
 				Wend
 				Set dicPrivacyProfileFields(intLastProfileID) = dicFieldTemp
@@ -237,8 +243,8 @@ Sub getExportProfileData(bSharingFormat)
 		bError = True
 		Call handleError(TXT_INVALID_ID & Server.HTMLEncode(intProfileID), vbNullString, vbNullString)
 	End If
-	
-	If Not bError And Not Nl(intProfileID) Then		
+
+	If Not bError And Not Nl(intProfileID) Then
 		bProfilePub = False
 		bProfileDist = False
 
@@ -285,9 +291,9 @@ Sub getExportProfileData(bSharingFormat)
 				strAccessURLTemplate = g_strBaseURLCIC
 				strAccessURLProtocol = "https://"
 			End If
-				
+
 		End With
-		
+
 		Set rsProfile = Nothing
 		Set cmdProfile = Nothing
 	End If
@@ -301,8 +307,8 @@ Sub getExcelProfileData()
 		bError = True
 		Call handleError(TXT_NO_PROFILE, vbNullString, vbNullString)
 	End If
-	
-	If Not bError And Not Nl(intProfileID) Then		
+
+	If Not bError And Not Nl(intProfileID) Then
 		bProfilePub = False
 		bProfileDist = False
 
@@ -321,12 +327,12 @@ Sub getExcelProfileData()
 			.CursorLocation = adUseClient
 			.CursorType = adOpenStatic
 			.Open cmdProfile
-			
+
 			bColumnHeaders = .Fields("ColumnHeaders")
 			strSelectFields = .Fields("FieldList")
 			strSortFields = .Fields("SortList")
 		End With
-		
+
 		Set rsExcelProfile = rsExcelProfile.NextRecordset
 		Set cmdProfile = Nothing
 	End If
@@ -334,16 +340,16 @@ End Sub
 
 Sub buildXMLExportV2FieldList()
 	strSelectFields = "RSN," & strSelectFields
-	
+
 	strSelectFields = reReplace(strSelectFields, "(^|,)((EXEC)|(CONTACT)|(VOLCONTACT)|(EXTRA_CONTACT))(_([A1-2]))?", _
 		"$1$2_NAME$7,$2_TITLE$7,$2_ORG$7,$2_PHONE$7,$2_FAX$7,$2_EMAIL$7", _
 		False,False,True,False)
-		
+
 	strSelectFields = Replace(strSelectFields, "MAIL_ADDRESS", _
 		"MAIL_ADDRESS,MAIL_CARE_OF,MAIL_LINE_1,MAIL_LINE_2," & _
 		"MAIL_BOX_TYPE,MAIL_PO_BOX,MAIL_BUILDING,MAIL_STREET_NUMBER,MAIL_STREET,MAIL_STREET_TYPE,MAIL_STREET_TYPE_AFTER,MAIL_STREET_DIR,MAIL_SUFFIX," & _
 		"MAIL_CITY,MAIL_PROVINCE,MAIL_COUNTRY,MAIL_POSTAL_CODE")
-		
+
 	strSelectFields = Replace(strSelectFields, "SITE_ADDRESS", _
 		"SITE_ADDRESS,SITE_LINE_1,SITE_LINE_2," & _
 		"SITE_BUILDING,SITE_STREET_NUMBER,SITE_STREET,SITE_STREET_TYPE,SITE_STREET_TYPE_AFTER,SITE_STREET_DIR,SITE_SUFFIX," & _
@@ -355,17 +361,17 @@ Sub buildXMLExportV2FieldList()
 	strSelectFields = reReplace(strSelectFields, "(^|,)SOURCE($|,)", _
 		"$1SOURCE_NAME,SOURCE_TITLE,SOURCE_ORG,SOURCE_PHONE,SOURCE_FAX,SOURCE_EMAIL,SOURCE_POSTAL_CODE,SOURCE_PROVINCE,SOURCE_CITY,SOURCE_ADDRESS,SOURCE_BUILDING,SOURCE_DB,IMPORT_DATE$2", _
 		False,False,False,False)
-		
+
 	strSelectFields = Replace(strSelectFields, "SUBJECTS", _
 		"SUBJECTS,LOCAL_SUBJECTS")
-		
+
 	strSelectFields = Replace(strSelectFields,"TAXONOMY", _
 		"TAXONOMY,TAX_MODIFIED_BY,TAX_MODIFIED_DATE")
 
 	strSelectFields = reReplace(strSelectFields,"(^|,)VACANCY_INFO",vbNullString,False,False,False,False)
 End Sub
 
-Function getFileName()
+Function getFileName(strLocalPath)
 	Dim dNow
 	Dim strFileExtension
 	Dim strFileName
@@ -387,14 +393,13 @@ Function getFileName()
 	IIf(Len(Day(dNow))<2, "0",vbNullString) & Day(dNow) & _
 	IIf(Len(Hour(dNow))<2, "0",vbNullString) & Hour(dNow) & _
 	IIf(Len(Minute(dNow))<2, "0",vbNullString) & Minute(dNow) & _
-	IIf(Len(Second(dNow))<2, "0",vbNullString) & Second(dNow) & _
-	strFileExtension
-	getFileName = Replace(user_strLogin, " ", "_") & "_" & strFileName
+	IIf(Len(Second(dNow))<2, "0",vbNullString) & Second(dNow)
+	getFileName = makeUniqueName(strFileExtension, Replace(user_strLogin, " ", "_") & "_" & strFileName, strLocalPath)
 End Function
 
 Dim intProfileID, _
 	bError
-	
+
 bError = False
 
 'SHARE_FORMAT vars
@@ -415,7 +420,7 @@ Dim	bProfilePub, _
 	aAccessURL, _
 	strAccessURL, _
 	intViewType
-	
+
 'EXCEL_FORMAT vars
 Dim bColumnHeaders, _
 	bHTML
@@ -562,7 +567,7 @@ If Not bError Then
 	If Not Nl(strSortFields) Then
 		strExportSQL = strExportSQL & " ORDER BY " & strSortFields
 	End If
-	
+
 	'Response.Write("<pre>" & strExportSQL & "</pre>")
 	'Response.Flush()
 
@@ -592,9 +597,9 @@ If Not bError Then
 		Call handleError(TXT_NO_RECORDS_TO_EXPORT, vbNullString, vbNullString)
 	Else
 		Dim strmOutput, strOutputVal
-		
-		strDownloadFileName = getFileName()
+
 		strLocalPath = reReplace(Request.ServerVariables("PATH_TRANSLATED"),"export2.asp",vbNullString,True,False,False,True) & "download\"
+		strDownloadFileName = getFileName(strLocalPath)
 		Select Case intExportType
 			Case SHARE_EXPORT
 				Set strmOutput = Server.CreateObject("ADODB.Stream")
@@ -741,7 +746,7 @@ If Not bError Then
 								strmOutput.WriteText "/>"
 							End If
 						End If
-							
+
 						For Each fld in .Fields
 							If Not reEquals(fld.Name,"(NUM)|(RECORD_OWNER)|(HAS_ENGLISH)|(HAS_FRENCH)|(XPRIVACY)",True,False,True,False) Then
 								If bIncludePrivacyProfiles Or Nl(intPrivacyProfile) Or Not dicProfileFields.Exists(fld.Name) Then
@@ -766,7 +771,7 @@ If Not bError Then
 								End If
 							End With
 						End If
-						
+
 						If bProfileDist Then
 							With cmdDistribution
 								.Parameters("@NUM") = rsExport.Fields("NUM")
@@ -783,14 +788,14 @@ If Not bError Then
 						.MoveNext
 					Wend
 				End With
-							
+
 				strmOutput.WriteText "</ROOT>", adWriteChar
 				strmOutput.SaveToFile strLocalPath & strDownloadFileName
 
 				If Not bAPIRequest Then
 					Response.Write("<br>" & TXT_EXPORT_FINISHED_AT & Time())
 				End If
-				
+
 				strmOutput.Close
 				Set strmOutput = Nothing
 			Case EXCEL_EXPORT
@@ -822,7 +827,7 @@ If Not bError Then
 						"<body>" & vbCrLf & _
 						"<table border=""1"">", adWriteLine
 				End If
-				
+
 				Call openPrivacyProfiles()
 
 				Dim strFieldVal, _
@@ -849,7 +854,7 @@ If Not bError Then
 							strmOutput.WriteText vbLf, adWriteChar
 						End If
 					End If
-					
+
 					While Not .EOF
 						bFirstField = True
 						intPrivacyProfile = .Fields("XPRIVACY").Value
@@ -858,11 +863,11 @@ If Not bError Then
 						Else
 							Set dicProfileFields = dicPrivacyProfileFields(intPrivacyProfile)
 						End If
-						
+
 						If bHTML Then
 							strmOutput.WriteText "<tr valign=""top"">", adWriteLine
 						End If
-						
+
 						If rsExcelProfile.RecordCount > 0 Then
 							rsExcelProfile.MoveFirst
 						End If
@@ -897,22 +902,22 @@ If Not bError Then
 						.MoveNext
 					Wend
 				End With
-				
+
 				If bHTML Then
 					strmOutput.WriteText "</table>" & vbCrLf & _
 						"</body>" & vbCrLf & _
 						"</html>", adWriteChar
 				End If
-				
-				strmOutput.SaveToFile strLocalPath & strDownloadFileName
+
+				strmOutput.SaveToFile strLocalPath & strDownloadFileName, adSaveCreateOverWrite
 
 				If Not bAPIRequest Then
 					Response.Write("<br>" & TXT_EXPORT_FINISHED_AT & Time())
 				End If
-				
+
 				strmOutput.Close
 				Set strmOutput = Nothing
-				
+
 				Set rsExcelProfile = Nothing
 			Case XML_EXPORT_V2
 				rsExport.Save strLocalPath & strDownloadFileName, adPersistXML
@@ -958,15 +963,15 @@ If Not bAPIRequest Then
 %>
 {
 	"zipped": <%= JSONQs(IIf(g_bSSL, "https://", "http://") & strAccessURL & makeLink("~/downloads/" & Server.URLEncode(strDownloadFileName) & ".zip", "api=on", vbNullString), True) %>,
-	"unzipped": <%= JSONQs(IIf(g_bSSL, "https://", "http://") & strAccessURL & makeLink("~/downloads/" & Server.URLEncode(strDownloadFileName), "api=on", vbNullString), True) %> 
+	"unzipped": <%= JSONQs(IIf(g_bSSL, "https://", "http://") & strAccessURL & makeLink("~/downloads/" & Server.URLEncode(strDownloadFileName), "api=on", vbNullString), True) %>
 }
 <%
 	End If
 	End If
 
-	Set rsExport = Nothing	
+	Set rsExport = Nothing
 	Set cmdExport = Nothing
-	
+
 End If
 %>
 <%
