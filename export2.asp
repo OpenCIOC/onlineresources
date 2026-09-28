@@ -790,7 +790,7 @@ If Not bError Then
 				End With
 
 				strmOutput.WriteText "</ROOT>", adWriteChar
-				strmOutput.SaveToFile strLocalPath & strDownloadFileName
+				strmOutput.SaveToFile strLocalPath & strDownloadFileName, adSaveCreateOverWrite
 
 				If Not bAPIRequest Then
 					Response.Write("<br>" & TXT_EXPORT_FINISHED_AT & Time())
@@ -920,7 +920,15 @@ If Not bError Then
 
 				Set rsExcelProfile = Nothing
 			Case XML_EXPORT_V2
-				rsExport.Save strLocalPath & strDownloadFileName, adPersistXML
+				Dim fso, filePath
+				filePath = strLocalPath & strDownloadFileName
+				Set fso = CreateObject("Scripting.FileSystemObject")
+
+				' Check if file exists and delete it to force an overwrite
+				If fso.FileExists(filePath) Then
+					fso.DeleteFile filePath, True ' True forces deletion of read-only files
+				End If
+				rsExport.Save filePath, adPersistXML
 		End Select
 		If Not bAPIRequest Then
 %>
