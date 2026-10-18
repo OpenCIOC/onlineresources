@@ -35,8 +35,7 @@ CREATE TABLE [dbo].[GBL_Users]
 [LastSuccessfulLoginIP] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
 [LoginAttempts] [tinyint] NULL,
 [LastLoginAttempt] [datetime] NULL,
-[LastLoginAttemptIP] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL,
-[TOTPSecret] [varchar] (200) COLLATE Latin1_General_100_CI_AI NULL
+[LastLoginAttemptIP] [varchar] (20) COLLATE Latin1_General_100_CI_AI NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[GBL_Users] WITH NOCHECK ADD CONSTRAINT [CK_GBL_Users] CHECK (([StartModule]>(0) AND [StartModule]<=(2)))
