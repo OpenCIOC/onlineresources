@@ -34,7 +34,7 @@ END
 
 
 SELECT  
-    bt.NUM, ols.Code OLSCode, btols.EXTERNAL_ID, btols.BT_OLS_ID, 
+    bt.NUM, ols.Code OLSCode, btols.EXTERNAL_ID + CASE WHEN ols.Code IN ('SERVICE', 'TOPIC') THEN ';' + (SELECT STRING_AGG(x.SITE_NUM + '/' + x.EXTERNAL_ID, ';')  WITHIN GROUP (ORDER BY x.SITE_NUM ASC) FROM dbo.GBL_BT_OLS_prog_at_site x WHERE x.BT_OLS_ID=btols.BT_OLS_ID) ELSE '' END, btols.BT_OLS_ID, 
       (SELECT TOP 1 btd.DELETION_DATE FROM GBL_BaseTable_Description btd WHERE bt.NUM=btd.NUM AND btd.LangID=0) AS DELETION_DATE, CASE WHEN EXISTS(SELECT * FROM dbo.CIC_BT_DST dst WHERE dst.DST_ID=@DST_ID AND dst.NUM=bt.NUM) THEN 0 ELSE 1 END AS NOT_TAGGED,
       ii.ResourceAgencyNum, ii.TaxonomyLevelName,
     (SELECT 
@@ -47,16 +47,15 @@ SELECT
             WHEN ols.Code = 'SERVICE' THEN 'Program'
             WHEN ols.Code = 'TOPIC' THEN 'Program'
         END AS "@type",
-        CASE WHEN btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE() THEN 'Active' ELSE 'Inactive' END AS "@status",
-        CASE WHEN btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE() THEN CAST(0 AS BIT) ELSE CAST(1 AS BIT) END AS "@excludeFromDirectory",
-        CASE WHEN btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE() THEN btd.NON_PUBLIC ELSE CAST(1 AS BIT) END AS "@isConfidential",
+        'Inactive' AS "@status",
+        CAST(1 AS BIT) AS "@excludeFromDirectory",
+        CAST(1 AS BIT) AS "@isConfidential",
         -- Description Field:
-        CASE WHEN btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE() THEN '' ELSE 
-                CASE WHEN btd.LangID=0 
-                    THEN '<span style="color:#FF0000"><strong>This is a deleted resource and is only kept for archive purposes.</strong> </span><br />' 
-                    ELSE '<span style="color:#FF0000"><strong>Cette ressource est supprimée et n''est conservée qu''à des fins d''archivage.</strong> </span><br />'
-                END
-            END + 
+        
+            CASE WHEN btd.LangID=0 
+                THEN '<span style="color:#FF0000"><strong>This is a deleted resource and is only kept for archive purposes.</strong> </span><br />' 
+                ELSE '<span style="color:#FF0000"><strong>Cette ressource est supprimée et n''est conservée qu''à des fins d''archivage.</strong> </span><br />'
+            END +
             CASE WHEN cbtd.PUBLIC_COMMENTS IS NOT NULL AND ols.Code IN ('SERVICE', 'TOPIC') THEN cbtd.PUBLIC_COMMENTS + '<br/ >' ELSE '' END +
             CASE 
                 WHEN ols.Code = 'AGENCY' THEN ISNULL(
@@ -69,6 +68,7 @@ SELECT
                 WHEN ols.Code IN ('SERVICE', 'TOPIC') THEN CASE WHEN btd.DESCRIPTION LIKE '%<br>%' OR btd.DESCRIPTION LIKE '%<p>%' THEN REPLACE(btd.DESCRIPTION,'<br>','<br />') ELSE REPLACE(btd.DESCRIPTION,@nLine10,@nLine10 + '<br />') END 
                 
         END AS "@description",
+        /* -- No need for related records during delete? Except to remove them? 
         (SELECT 
             (SELECT
                 rbtols.EXTERNAL_ID AS "@id",
@@ -98,12 +98,12 @@ SELECT
             FOR XML PATH ('item'), TYPE
             )
          FOR XML PATH('related'), TYPE),
-
+         */
         (SELECT 
 
             (SELECT 'Deleted Record' AS "@label",
-                CASE WHEN btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE() THEN '' ELSE 'Yes' END AS "@item"
-                FOR XML PATH('item'), TYPE)
+                'Yes' AS "@item"
+            FOR XML PATH('item'), TYPE)
         FOR XML PATH('customFields'), TYPE)
         
 
@@ -120,17 +120,15 @@ SELECT
     INNER JOIN dbo.GBL_BT_OLS btols ON btols.NUM = bt.NUM AND btols.EXTERNAL_ID IS NOT NULL
     INNER JOIN dbo.GBL_OrgLocationService ols ON ols.OLS_ID = btols.OLS_ID
     INNER JOIN dbo.CIC_iCarolImport ii ON 
-        ii.LangID=0 AND (
-            (ols.Code IN ('Agency', 'Site') AND ii.ResourceAgencyNum = btols.EXTERNAL_ID) 
-            OR (ols.Code IN ('Service', 'Topic') AND btols.EXTERNAL_ID LIKE ii.ResourceAgencyNum + ';%')
-         )
+        ii.LangID=0 AND ii.ResourceAgencyNum = btols.EXTERNAL_ID
+      
 WHERE bt.MemberID IN (800,1700,5000)
     AND bt.SOURCE_FROM_ICAROL=0
     AND (
         EXISTS(SELECT * FROM GBL_BaseTable_Description btd WHERE btd.LangID=0 AND btd.NUM=bt.NUM AND btd.DELETION_DATE IS NOT NULL)
         OR NOT EXISTS(SELECT * FROM dbo.CIC_BT_DST dst WHERE dst.DST_ID=@DST_ID AND dst.NUM=bt.NUM)
     )
-    AND ii.[Custom_Deleted Record] IS DISTINCT FROM 'Yes'
+    AND ii.AgencyStatus <> 'Inactive' -- ii.[Custom_Deleted Record] IS DISTINCT FROM 'Yes'
 ORDER BY bt.NUM, ols.OLS_ID
 
 RETURN @Error

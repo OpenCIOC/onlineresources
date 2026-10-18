@@ -41,6 +41,7 @@ from tools.toolslib import (
 @dataclass
 class ProgramAtSiteInfo:
     site_num: str
+    record_details: dict
     site_id: t.Optional[int] = None
     program_at_site_name: t.Optional[str] = None
     program_at_site_id: t.Optional[int] = None
@@ -230,6 +231,7 @@ def parse_related_records(
         related_num = related.pop("uniquePriorID")
         external_id = related.get("id")
         name = related.pop("name", None)
+        # custom_fields = related.pop("customFields", None)
         if external_id is None:
             try:
                 external_id = related["id"] = args.idmap[(related_num, related["type"])]
@@ -243,7 +245,10 @@ def parse_related_records(
         if related["type"] == "Agency":
             agency_related.append(related)
         else:
-            related_sites.append(ProgramAtSiteInfo(related_num, external_id, name))
+            related["type"] = "ProgramAtSite"
+            related_sites.append(
+                ProgramAtSiteInfo(related_num, related, external_id, name)
+            )
 
     record["related"] = agency_related
 
@@ -270,6 +275,7 @@ def make_program_at_site(
     agency_id: int | None,
     site_id: int,
     program_id: int,
+    record_details: dict,
     program_at_site_id: model.APIOptional[int] = model.unset_value,
 ) -> int:
     related = []
@@ -288,10 +294,9 @@ def make_program_at_site(
         id=program_at_site_id,
         uniquePriorID=num,
         names=[],
-        type="ProgramAtSite",
-        status="Active",
         isLinkOnly=True,
         related=related,
+        **record_details,
     )
     if program_at_site_id is not model.unset_value and program_at_site_id is not None:
         if not args.test:
@@ -355,6 +360,7 @@ def update_program_at_sites(
                 agency_id,
                 site_id,
                 record_id,
+                prog_at_site.record_details,
                 program_at_site_id[0],
             )
         except Exception as e:

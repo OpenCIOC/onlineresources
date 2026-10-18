@@ -93,7 +93,7 @@ UPDATE @SiteCityTable
 */
 
 SELECT TOP (100)
-	bt.NUM, ols.Code OLSCode, btols.EXTERNAL_ID, btols.BT_OLS_ID,
+	bt.NUM, ols.Code OLSCode, btols.EXTERNAL_ID + CASE WHEN ols.Code IN ('SERVICE', 'TOPIC') THEN ';' + (SELECT STRING_AGG(x.SITE_NUM + '/' + x.EXTERNAL_ID, ';')  WITHIN GROUP (ORDER BY x.SITE_NUM ASC) FROM dbo.GBL_BT_OLS_prog_at_site x WHERE x.BT_OLS_ID=btols.BT_OLS_ID) ELSE '' END, btols.BT_OLS_ID,
 	(SELECT 
 	   -- Deletions need to happen in reverse order to undo links. They should be handled separately
 	   -- TODO - Deletions will be soft delete via status inactive & exclude from public resource directory(website) & exclude from print directory
@@ -244,7 +244,23 @@ SELECT TOP (100)
 				COALESCE(', ' + btd.SERVICE_NAME_LEVEL_1,'') +
 				COALESCE(', ' + btd.SERVICE_NAME_LEVEL_2,''),
 				1, 2, ' - '
-			) AS "@name"
+			) AS "@name",
+			CASE WHEN btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE() OR 
+				EXISTS(SELECT * FROM dbo.GBL_BaseTable_Description rbtd WHERE rbtd.NUM=btd.NUM AND rbtd.LangID=btd.LangID AND ( rbtd.DELETION_DATE IS NULL OR rbtd.DELETION_DATE > GETDATE())) THEN 'Active' ELSE 'Inactive' END AS "@status",
+			CASE WHEN btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE()  OR 
+				EXISTS(SELECT * FROM dbo.GBL_BaseTable_Description rbtd WHERE rbtd.NUM=btd.NUM AND rbtd.LangID=btd.LangID AND ( rbtd.DELETION_DATE IS NULL OR rbtd.DELETION_DATE > GETDATE())) THEN CAST(0 AS BIT) ELSE CAST(1 AS BIT) END AS "@excludeFromDirectory",
+			CASE WHEN btd.DELETION_DATE IS NULL OR btd.DELETION_DATE > GETDATE()  OR 
+				EXISTS(SELECT * FROM dbo.GBL_BaseTable_Description rbtd WHERE rbtd.NUM=btd.NUM AND rbtd.LangID=btd.LangID AND ( rbtd.DELETION_DATE IS NULL OR rbtd.DELETION_DATE > GETDATE())) THEN btd.NON_PUBLIC ELSE CAST(1 AS BIT) END AS "@isConfidential",
+			(SELECT
+				(SELECT
+					'Record Owner (controlled)' AS "@label",
+					(SELECT
+					bt.RECORD_OWNER AS "item"
+					FOR XML PATH('selectedValues'), TYPE)
+					WHERE bt.RECORD_OWNER IS NOT NULL AND btd.LangID=0
+				FOR XML PATH('item'), TYPE)
+			FOR XML PATH('customFields'), TYPE)
+			-- Info for program at site deletion goes here here
 			FROM dbo.GBL_BT_OLS rbtols
 				INNER JOIN dbo.GBL_OrgLocationService rols
 					ON rbtols.OLS_ID=rols.OLS_ID
@@ -275,7 +291,7 @@ SELECT TOP (100)
 				CASE WHEN btols.SKIP_EXPORT_SITE_CITY=0 THEN ISNULL(cmtree.City, CASE WHEN btd.SITE_PROVINCE IS NULL OR btd.SITE_PROVINCE IN ('ON', 'Ontario') THEN '__null_sentinel__' ELSE ISNULL(btd.SITE_CITY, '__null_sentinel__') END) END as "@city",
 				CASE WHEN btols.SKIP_EXPORT_SITE_CITY=0 THEN ISNULL(cmtree.County, '__null_sentinel__') END as "@county",
 				CASE WHEN btols.SKIP_EXPORT_SITE_CITY=0 THEN ISNULL(cmtree.Community, '__null_sentinel__') END as "@community",
-				CASE WHEN btols.SKIP_EXPORT_SITE_CITY=0 THEN ISNULL(btd.SITE_PROVINCE,CASE WHEN cmtree.County IS NOT NULL THEN (SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID) ELSE '__null_sentinel__' END) END AS "@stateProvince",
+				CASE WHEN btols.SKIP_EXPORT_SITE_CITY=0 THEN ISNULL(CAST(btd.SITE_PROVINCE AS NVARCHAR(50)),CASE WHEN cmtree.County IS NOT NULL THEN (SELECT mem.DefaultProvince FROM STP_Member mem WHERE MemberID=bt.MemberID) ELSE '__null_sentinel__' END) END AS "@stateProvince",
 				CASE WHEN btols.SKIP_EXPORT_SITE_POSTAL_CODE=0 THEN  ISNULL(bt.SITE_POSTAL_CODE, '__null_sentinel__') END AS "@zipPostalCode",
 				CASE WHEN btols.SKIP_EXPORT_SITE_CITY=0 THEN ISNULL(btd.SITE_COUNTRY,ISNULL((SELECT mem.DefaultCountry FROM STP_Member mem WHERE MemberID=bt.MemberID),'Canada')) END AS "@country"
 				FROM (VALUES(btd.SITE_CITY)) AS btdcity(SITE_CITY)
@@ -616,12 +632,7 @@ SELECT TOP (100)
 		FOR XML PATH('item'), TYPE),
 		-- Agency main contact is source
 		(SELECT
-				CASE WHEN EXISTS(SELECT *
-					FROM dbo.GBL_PrivacyProfile_Fld pvf
-					INNER JOIN dbo.GBL_FieldOption fo
-						ON pvf.FieldID=fo.FieldID AND fo.FieldName='SOURCE'
-					WHERE pvf.ProfileID=bt.PRIVACY_PROFILE)
-					THEN 1 ELSE 0 END AS "@isConfidential",		
+			1 AS "@isConfidential",		
 			(SELECT
 				'person' AS "@type",
 				'Main Contact' AS "@label",
