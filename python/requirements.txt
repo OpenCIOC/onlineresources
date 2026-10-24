@@ -114,7 +114,7 @@ pyramid-simpleform==0.7.dev0
     # via -r requirements.in
 python-dateutil==2.9.0.post0
     # via botocore
-redis==8.1.0
+redis==8.0.0
     # via
     #   -r requirements.in
     #   pyramid-session-redis
