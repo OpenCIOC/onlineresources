@@ -28,7 +28,7 @@ https://github.com/LexMachinaInc/util/archive/d82029336b2be595e74eefc9d07d9786c1
 marrow-mailer
 FormEncode
 pyramid-simpleform==0.7.dev0
-redis<=8
+redis<8
 requests
 pyramid-session-redis
 dogpile.cache
