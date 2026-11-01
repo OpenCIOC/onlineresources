@@ -289,6 +289,8 @@ def make_program_at_site(
         ]
     )
 
+    # record_details will contain id, but we want to set it to program_at_site_id instead
+    record_details.pop("id")
     program_at_site = model.ResourceDetails(
         databaseID=args.dbid,
         id=program_at_site_id,

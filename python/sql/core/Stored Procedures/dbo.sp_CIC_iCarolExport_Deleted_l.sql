@@ -34,7 +34,7 @@ END
 
 
 SELECT  
-    bt.NUM, ols.Code OLSCode, btols.EXTERNAL_ID + CASE WHEN ols.Code IN ('SERVICE', 'TOPIC') THEN ';' + (SELECT STRING_AGG(x.SITE_NUM + '/' + x.EXTERNAL_ID, ';')  WITHIN GROUP (ORDER BY x.SITE_NUM ASC) FROM dbo.GBL_BT_OLS_prog_at_site x WHERE x.BT_OLS_ID=btols.BT_OLS_ID) ELSE '' END, btols.BT_OLS_ID, 
+    bt.NUM, ols.Code OLSCode, btols.EXTERNAL_ID + CASE WHEN ols.Code IN ('SERVICE', 'TOPIC') THEN ';' + (SELECT STRING_AGG(x.SITE_NUM + '/' + x.EXTERNAL_ID, ';')  WITHIN GROUP (ORDER BY x.SITE_NUM ASC) FROM dbo.GBL_BT_OLS_prog_at_site x WHERE x.BT_OLS_ID=btols.BT_OLS_ID) ELSE '' END AS EXTERNAL_ID, btols.BT_OLS_ID, 
       (SELECT TOP 1 btd.DELETION_DATE FROM GBL_BaseTable_Description btd WHERE bt.NUM=btd.NUM AND btd.LangID=0) AS DELETION_DATE, CASE WHEN EXISTS(SELECT * FROM dbo.CIC_BT_DST dst WHERE dst.DST_ID=@DST_ID AND dst.NUM=bt.NUM) THEN 0 ELSE 1 END AS NOT_TAGGED,
       ii.ResourceAgencyNum, ii.TaxonomyLevelName,
     (SELECT 
