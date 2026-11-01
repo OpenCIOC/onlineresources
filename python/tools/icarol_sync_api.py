@@ -231,7 +231,6 @@ def parse_related_records(
         related_num = related.pop("uniquePriorID")
         external_id = related.get("id")
         name = related.pop("name", None)
-        # custom_fields = related.pop("customFields", None)
         if external_id is None:
             try:
                 external_id = related["id"] = args.idmap[(related_num, related["type"])]
@@ -245,10 +244,23 @@ def parse_related_records(
         if related["type"] == "Agency":
             agency_related.append(related)
         else:
-            related["type"] = "ProgramAtSite"
-            fix_custom_fields(args, [related], num)
+            details = {
+                k: v
+                for k, v in related.items()
+                if k
+                not in [
+                    "databaseID",
+                    "id",
+                    "uniquePriorID",
+                    "names",
+                    "isLinkOnly",
+                    "related",
+                ]
+            }
+            details["type"] = "ProgramAtSite"
+            fix_custom_fields(args, [details], num)
             related_sites.append(
-                ProgramAtSiteInfo(related_num, related, external_id, name)
+                ProgramAtSiteInfo(related_num, details, external_id, name)
             )
 
     record["related"] = agency_related
@@ -291,7 +303,7 @@ def make_program_at_site(
     )
 
     # record_details will contain id, but we want to set it to program_at_site_id instead
-    record_details.pop("id")
+    # if adding items directly here make sure to update exclusion in parse_related_records
     program_at_site = model.ResourceDetails(
         databaseID=args.dbid,
         id=program_at_site_id,
@@ -343,6 +355,7 @@ def update_program_at_sites(
             record_had_error = True
             # TODO should this one just skip this program_at_site. We've already synced a program
             # so this would leak a program?
+            # This won't be reached because it's alredy checked during initial parse
             print(
                 f"Can't build relationship to Site {prog_at_site.site_num} for Program {num} because there is no known ICarol ID",
                 file=sys.stderr,
@@ -562,16 +575,39 @@ def mark_change_completed(
             f"mark complete {record_num}, {external_id}, {olscode}, {postal_code_error}, {city_error}, {other_error}"
         )
     else:
-        conn.execute(
-            "EXEC sp_CIC_iCarolExport_u ?, ?, ?, ?, ?, ?, ?",
-            record_num,
-            olscode,
-            external_id,
-            export_date,
-            postal_code_error,
-            city_error,
-            other_error,
-        )
+        try:
+            conn.execute(
+                "EXEC sp_CIC_iCarolExport_u ?, ?, ?, ?, ?, ?, ?",
+                record_num,
+                olscode,
+                external_id,
+                export_date,
+                postal_code_error,
+                city_error,
+                other_error,
+            )
+        except Exception as e:
+            msg = f"Error encountered while attempting to call sp_CIC_iCarolExport_u for {olscode} {record_num} with {external_id}. This may have leaked ids."
+            print(
+                msg,
+                e,
+                file=sys.stderr,
+            )
+            print(
+                msg,
+                e,
+                [
+                    record_num,
+                    olscode,
+                    external_id,
+                    export_date,
+                    postal_code_error,
+                    city_error,
+                    other_error,
+                ],
+                file=args.failed_records,
+            )
+            raise
 
 
 def sync_iteration(args: MyArgsType, conn: "Connection", export_date: datetime) -> int:
