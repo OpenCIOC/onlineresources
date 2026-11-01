@@ -93,7 +93,7 @@ UPDATE @SiteCityTable
 */
 
 SELECT TOP (100)
-	bt.NUM, ols.Code OLSCode, btols.EXTERNAL_ID + CASE WHEN ols.Code IN ('SERVICE', 'TOPIC') THEN ';' + (SELECT STRING_AGG(x.SITE_NUM + '/' + x.EXTERNAL_ID, ';')  WITHIN GROUP (ORDER BY x.SITE_NUM ASC) FROM dbo.GBL_BT_OLS_prog_at_site x WHERE x.BT_OLS_ID=btols.BT_OLS_ID) ELSE '' END AS EXTERNAL_ID, btols.BT_OLS_ID,
+	bt.NUM, ols.Code OLSCode, btols.EXTERNAL_ID + CASE WHEN ols.Code IN ('SERVICE', 'TOPIC') THEN ';' + ISNULL((SELECT STRING_AGG(x.SITE_NUM + '/' + x.EXTERNAL_ID, ';')  WITHIN GROUP (ORDER BY x.SITE_NUM ASC) FROM dbo.GBL_BT_OLS_prog_at_site x WHERE x.BT_OLS_ID=btols.BT_OLS_ID), '') ELSE '' END AS EXTERNAL_ID, btols.BT_OLS_ID,
 	(SELECT 
 	   -- Deletions need to happen in reverse order to undo links. They should be handled separately
 	   -- TODO - Deletions will be soft delete via status inactive & exclude from public resource directory(website) & exclude from print directory

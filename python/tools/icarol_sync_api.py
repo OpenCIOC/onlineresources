@@ -246,6 +246,7 @@ def parse_related_records(
             agency_related.append(related)
         else:
             related["type"] = "ProgramAtSite"
+            fix_custom_fields(args, [related], num)
             related_sites.append(
                 ProgramAtSiteInfo(related_num, related, external_id, name)
             )
