@@ -131,6 +131,54 @@ WHERE bt.MemberID IN (800,1700,5000)
     AND ii.AgencyStatus <> 'Inactive' -- ii.[Custom_Deleted Record] IS DISTINCT FROM 'Yes'
 ORDER BY bt.NUM, ols.OLS_ID
 
+SELECT ic.ResourceAgencyNum, ic.UniqueIDPriorSystem, ic.TaxonomyLevelName, ic.UpdatedOn,/* CASE WHEN ols.OLS_ID IS NOT NULL THEN 1 ELSE 0 END AS IN_CIOC, CASE WHEN dst.BT_DST_ID IS NOT NULL THEN 1 ELSE 0 END AS CODED,*/
+CASE
+	WHEN ic.TaxonomyLevelName='Agency' THEN 2
+	WHEN ic.TaxonomyLevelName='ProgramAtSite' THEN 0
+	ELSE 1 END AS DELETE_ORDER
+FROM dbo.CIC_iCarolImportAllRecords ic
+INNER JOIN dbo.CIC_iCarolImport ii ON ic.ResourceAgencyNum=ii.ResourceAgencyNum AND ic.LangID=ii.LangID AND ic.LangID=0
+LEFT JOIN GBL_BaseTable bt on bt.NUM=ic.UniqueIDPriorSystem
+LEFT JOIN dbo.GBL_BT_OLS ols ON bt.NUM=ols.NUM
+    AND (
+		ic.TaxonomyLevelName IN ('Program') AND ols.OLS_ID IN (3,4)
+        OR (ic.TaxonomyLevelName='Site' AND ols.OLS_ID=2)
+        OR (ic.TaxonomyLevelName='Agency' AND ols.OLS_ID=1)
+    )
+    AND ols.QUEUE_FOR_EXPORT<>1
+LEFT JOIN CIC_BT_DST dst on dst.NUM=bt.NUM AND dst.DST_ID=@DST_ID
+WHERE 
+ic.RecordOwner IN ('LON','BTN','OAK','MIL','MHH','TCH','SWL','ACT','CEN','CCD','CEH','YCC','TCC','ONT')
+AND (
+	dst.BT_DST_ID IS NULL
+	OR NOT EXISTS(SELECT * FROM dbo.GBL_BT_OLS ols WHERE ols.EXTERNAL_ID=ic.ResourceAgencyNum OR LEFT(ols.EXTERNAL_ID,8)=ic.ResourceAgencyNum)
+)
+AND ic.UniqueIDPriorSystem IS NOT NULL
+AND ic.iCarolManaged IS DISTINCT FROM 'Yes'
+AND ic.TaxonomyLevelName IN ('Program','Site','Agency')
+UNION SELECT ic.ResourceAgencyNum, ic.UniqueIDPriorSystem, ic.TaxonomyLevelName, ic.UpdatedOn, /*CASE WHEN ols.OLS_ID IS NOT NULL THEN 1 ELSE 0 END AS IN_CIOC, CASE WHEN dst.BT_DST_ID IS NOT NULL THEN 1 ELSE 0 END AS CODED,*/
+CASE
+	WHEN ic.TaxonomyLevelName='Agency' THEN 2
+	WHEN ic.TaxonomyLevelName='ProgramAtSite' THEN 0
+	ELSE 1 END AS DELETE_ORDER
+FROM dbo.CIC_iCarolImportAllRecords ic
+INNER JOIN dbo.CIC_iCarolImport ii ON ic.ResourceAgencyNum=ii.ResourceAgencyNum AND ic.LangID=ii.LangID AND ic.LangID=0
+LEFT JOIN GBL_BaseTable bt on bt.NUM=ic.UniqueIDPriorSystem
+LEFT JOIN dbo.GBL_BT_OLS ols ON bt.NUM=ols.NUM AND 
+		(ic.TaxonomyLevelName = ('ProgramAtSite') AND ols.OLS_ID IN (3,4))
+		AND ols.QUEUE_FOR_EXPORT<>1
+LEFT JOIN CIC_BT_DST dst on dst.NUM=bt.NUM AND dst.DST_ID=@DST_ID
+WHERE 
+ic.RecordOwner IN ('LON','BTN','OAK','MIL','MHH','TCH','SWL','ACT','CEN','CCD','CEH','YCC','TCC','ONT')
+AND (
+	dst.BT_DST_ID IS NULL
+	OR NOT EXISTS(SELECT * FROM dbo.GBL_BT_OLS_prog_at_site ols WHERE ols.EXTERNAL_ID=ic.ResourceAgencyNum)
+)
+AND ic.TaxonomyLevelName='ProgramAtSite'
+AND ic.iCarolManaged IS DISTINCT FROM 'Yes'
+ORDER BY DELETE_ORDER
+
+
 RETURN @Error
 
 SET NOCOUNT OFF

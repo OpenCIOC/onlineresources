@@ -23,7 +23,7 @@ from cioc.core import constants as const
 from cioc.core import syslanguage
 
 if t.TYPE_CHECKING:
-    from pyodbc import Connection, Row
+    from pyodbc import Connection, Row, Cursor
 
 
 const.update_cache_values()
@@ -136,9 +136,9 @@ def get_changes_to_send(conn: "Connection") -> list["Row"]:
     return conn.execute(sql).fetchall()
 
 
-def get_deletes_to_send(conn: "Connection") -> list["Row"]:
+def get_deletes_to_send(conn: "Connection") -> Cursor:
     sql = "EXEC sp_CIC_iCarolExport_Deleted_l"
-    return conn.execute(sql).fetchall()
+    return conn.execute(sql)
 
 
 def parse_sub_xml(
@@ -425,7 +425,6 @@ def sync_record(
     external_id: t.Optional[str],
     olscode: str,
     datachange: str,
-    skip_program_at_site: bool = False,
 ) -> tuple[t.Optional[str], bool] | tuple[t.Optional[str], bool, bool, bool]:
     record_had_error = False
     try:
@@ -491,7 +490,7 @@ def sync_record(
             args.idmap[(record_num, record.type)] = record_id
 
             related_sites = record_languages[0].related_sites
-            if olscode in ("SERVICE", "TOPIC") and not skip_program_at_site:
+            if olscode in ("SERVICE", "TOPIC"):
                 try:
                     agency_id = record.related[0].id
                 except IndexError:
@@ -636,8 +635,30 @@ def sync_iteration(args: MyArgsType, conn: "Connection", export_date: datetime) 
     return len(changes)
 
 
-def sync_deletes(args: MyArgsType, conn: "Connection") -> int:
-    changes = get_deletes_to_send(conn)
+def purge_record(
+    args: MyArgsType,
+    external_id: int,
+    record_type: str,
+    record_num: str | None,
+):
+    try:
+        args.client.delete_resource(external_id)
+    except Exception as e:
+        print(
+            f"Failed to purge {record_type} {record_num}/{external_id} due to an error.",
+            e,
+            file=sys.stderr,
+        )
+        print(
+            f"Failed to purge {record_type} {record_num}/{external_id} due to an error.",
+            e,
+            file=args.failed_records,
+        )
+
+
+def sync_deletes(args: MyArgsType, conn: "Connection") -> tuple[int, int]:
+    cursor = get_deletes_to_send(conn)
+    changes = cursor.fetchall()
     for change in changes:
         sync_record(
             args,
@@ -645,10 +666,19 @@ def sync_deletes(args: MyArgsType, conn: "Connection") -> int:
             change.EXTERNAL_ID,
             change.OLSCode,
             change.datachange,
-            True,
         )
 
-    return len(changes)
+    cursor.nextset()
+    purges = cursor.fetchall()
+    for purge in purges:
+        purge_record(
+            args,
+            int(purge.ResourceAgencyNum, 10),
+            purge.TaxonomyLevelName,
+            purge.UniqueIDPriorSystem,
+        )
+
+    return len(changes), len(purges)
 
 
 def prep_for_export(conn: "Connection") -> "list[Row]":
@@ -714,8 +744,8 @@ def sync(args: MyArgsType, context: Context) -> None:
         print(f"sent {total_changes} records")
 
         print("Syncing soft deletes")
-        delete_count = sync_deletes(args, conn)
-        print(f"soft deleted {delete_count}")
+        delete_count, purge_count = sync_deletes(args, conn)
+        print(f"soft deleted {delete_count}, purged {purge_count}")
 
         # send_area_change_email(args, area_changes)
 
