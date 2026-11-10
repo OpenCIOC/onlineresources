@@ -659,6 +659,9 @@ def purge_record(
 def sync_deletes(args: MyArgsType, conn: "Connection") -> tuple[int, int]:
     cursor = get_deletes_to_send(conn)
     changes = cursor.fetchall()
+    cursor.nextset()
+    purges = cursor.fetchall()
+
     for change in changes:
         sync_record(
             args,
@@ -668,8 +671,6 @@ def sync_deletes(args: MyArgsType, conn: "Connection") -> tuple[int, int]:
             change.datachange,
         )
 
-    cursor.nextset()
-    purges = cursor.fetchall()
     for purge in purges:
         purge_record(
             args,
