@@ -81,6 +81,7 @@ div.MapSearchShift {
 	top: 0px;
 	left: 0px;
 }
+
 div.MapSearchShiftSide {
 	height: 100%;
 }
@@ -107,7 +108,8 @@ div.MapPopup {
 	}
 }
 
-#bottom-handle, #side-handle {
+#bottom-handle,
+#side-handle {
 	padding: 0px;
 	vertical-align: top;
 	background: #EFEFEF none repeat scroll 0 0;
@@ -116,7 +118,8 @@ div.MapPopup {
 #side-handle {
 	left: 0;
 }
-#bottom-handle{
+
+#bottom-handle {
 	top: 0;
 	height: 10px;
 }
@@ -139,6 +142,7 @@ div.MapPopup {
 	top: 50%;
 	margin-top: -5px;
 }
+
 #map_drag_icon_right {
 	border-color: #EFEFEF #EFEFEF #EFEFEF #666666;
 	border-style: solid;
@@ -188,6 +192,10 @@ ul.MapLegendList {
 	}
 }
 
+.address-mapped {
+	float: left;
+}
+
 @media (max-width: 767px) {
 	div.DetailsMapCanvas {
 		float: none;
@@ -196,14 +204,14 @@ ul.MapLegendList {
 		-moz-box-sizing: border-box;
 		box-sizing: border-box;
 	}
+
+	.address-mapped {
+		float: none;
+	}
 }
 
-.HideMapColumn.ResponsiveResults > thead > tr > th.MapColumn,
-.HideMapColumn.ResponsiveResults > tbody > tr > td.MapColumn,
+.HideMapColumn.ResponsiveResults>thead>tr>th.MapColumn,
+.HideMapColumn.ResponsiveResults>tbody>tr>td.MapColumn,
 .HideMapColumn .MapColumnMobile {
 	display: none;
-}
-
-.address-mapped {
-	float: left;
 }
